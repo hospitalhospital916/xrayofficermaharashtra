@@ -1,0 +1,171 @@
+[3:11 pm, 2/7/2026] Mahesh Hange: <!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>अधिकृत पत्रके - क्ष-किरण वैज्ञानिक अधिकारी संघटना</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gr-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            font-family: Arial, sans-serif;
+            min-height: 60vh;
+        }
+        .page-title { color: #003366; text-align: center; margin-bottom: 10px; font-size: 28px; }
+        .page-subtitle { text-align: center; color: #666; margin-bottom: 40px; font-size: …
+[3:16 pm, 2/7/2026] Mahesh Hange: <!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ऍडमिन पॅनेल - पत्रके व PDF व्यवस्थापन</title>
+    <link rel="stylesheet" href="css/admin.css">
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f6f9; margin: 0; padding: 20px; }
+        .admin-container { max-width: 800px; margin: 30px auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        h2, h3 { color: #003366; border-bottom: 2px solid #003366; padding-bottom: 8px; }
+        .form-section { background: #f9f9f9; padding: 20px; border-radius: 6px; margin-bottom: 30px; border: 1px solid #ddd; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        .btn { padding: 10px 20px; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .btn-blue { background: #003366; }
+        .btn-green { background: #28a745; }
+        .status-msg { margin-top: 10px; font-weight: bold; color: green; }
+    </style>
+</head>
+<body>
+
+<div class="admin-container">
+    <h2>संघटना ऍडमिन डॅशबोर्ड (पत्रके अपलोड सिस्टीम)</h2>
+
+    <!-- भाग १: नवीन सब-फोल्डर तयार करणे -->
+    <div class="form-section">
+        <h3>१. नवीन सब-फोल्डर (वर्गवारी) तयार करा</h3>
+        <form id="create-folder-form">
+            <div class="form-group">
+                <label>सब-फोल्डरचे नाव (उदा. बदली संदर्भातील पत्रे)</label>
+                <input type="text" id="folder-name" required placeholder="फोल्डरचे नाव टाका">
+            </div>
+            <div class="form-group">
+                <label>थोडक्यात माहिती (Description)</label>
+                <input type="text" id="folder-desc" placeholder="या फोल्डरमध्ये कोणत्या फाईल्स असतील ते लिहा">
+            </div>
+            <button type="submit" class="btn btn-blue">फोल्डर तयार करा</button>
+        </form>
+        <div id="folder-status" class="status-msg"></div>
+    </div>
+
+    <!-- भाग २: तयार केलेल्या सब-फोल्डरमध्ये PDF फाईल अपलोड करणे -->
+    <div class="form-section">
+        <h3>२. सब-फोल्डरमध्ये नवीन PDF / GR अपलोड करा</h3>
+        <form id="upload-pdf-form">
+            <div class="form-group">
+                <label>योग्य सब-फोल्डर निवडा</label>
+                <select id="select-folder" required>
+                    <option value="">-- कृपया फोल्डर निवडा --</option>
+                    <!-- डेटाबेसमधून आलेले फोल्डर्स इथे दिसतील -->
+                </select>
+            </div>
+            <div class="form-group">
+                <label>पत्रक / जीआर चे नाव (Title)</label>
+                <input type="text" id="pdf-title" required placeholder="उदा. वरिष्ठ वेतन श्रेणी परिपत्रक २०२६">
+            </div>
+            <div class="form-group">
+                <label>PDF फाईल निवडा (Select PDF फाईल)</label>
+                <input type="file" id="pdf-file" accept="application/pdf" required>
+            </div>
+            <button type="submit" class="btn btn-green">डेटाबेसमध्ये फाईल टाका (Upload)</button>
+        </form>
+        <div id="upload-status" class="status-msg"></div>
+    </div>
+</div>
+
+<!-- Firebase Scripts -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
+
+    const firebaseConfig = {
+        apiKey: "YOUR_API_KEY",
+        authDomain: "YOUR_AUTH_DOMAIN",
+        projectId: "YOUR_PROJECT_ID",
+        storageBucket: "YOUR_STORAGE_BUCKET",
+        messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+        appId: "YOUR_APP_ID"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const storage = getStorage(app);
+
+    // १. नवीन सब-फोल्डर तयार करणे
+    document.getElementById('create-folder-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = document.getElementById('folder-name').value;
+        const description = document.getElementById('folder-desc').value;
+
+        try {
+            await addDoc(collection(db, "subfolders"), {
+                name: name,
+                description: description,
+                createdAt: new Date()
+            });
+            document.getElementById('folder-status').innerText = "✅ नवीन सब-फोल्डर यशस्वीरीत्या तयार झाले!";
+            document.getElementById('create-folder-form').reset();
+            loadFoldersInDropdown(); // ड्रॉपडाऊन लिस्ट अपडेट करा
+        } catch (error) {
+            document.getElementById('folder-status').innerText = "❌ त्रुटी: " + error.message;
+        }
+    });
+
+    // ड्रॉपडाऊनमध्ये सध्याचे सर्व सब-फोल्डर्स लोड करणे
+    async function loadFoldersInDropdown() {
+        const dropdown = document.getElementById('select-folder');
+        dropdown.innerHTML = '<option value="">-- कृपया फोल्डर निवडा --</option>';
+        const querySnapshot = await getDocs(collection(db, "subfolders"));
+        querySnapshot.forEach((doc) => {
+            dropdown.innerHTML += <option value="${doc.id}">${doc.data().name}</option>;
+        });
+    }
+    loadFoldersInDropdown();
+
+    // २. निवडलेल्या सब-फोल्डरमध्ये PDF अपलोड करणे
+    document.getElementById('upload-pdf-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const folderId = document.getElementById('select-folder').value;
+        const title = document.getElementById('pdf-title').value;
+        const file = document.getElementById('pdf-file').files[0];
+        const statusDiv = document.getElementById('upload-status');
+
+        if(!file) return;
+
+        statusDiv.innerText = "⏳ फाईल सुरक्षितपणे अपलोड होत आहे, कृपया थांबून राहा...";
+
+        try {
+            // अ) Firebase Storage मध्ये फाईल अपलोड करणे
+            const storageRef = ref(storage, documents/${Date.now()}_${file.name});
+            const snapshot = await uploadBytes(storageRef, file);
+            const downloadURL = await getDownloadURL(snapshot.ref);
+
+            // ब) Firestore डेटाबेसमध्ये फाईलची माहिती व लिंक सेव्ह करणे
+            await addDoc(collection(db, "documents"), {
+                folderId: folderId,
+                title: title,
+                fileUrl: downloadURL,
+                uploadedAt: new Date()
+            });
+
+            statusDiv.innerText = "✅ पत्रक/जीआर यशस्वीरीत्या अपलोड झाला आणि लाइव्ह सुरू झाला!";
+            document.getElementById('upload-pdf-form').reset();
+        } catch (error) {
+            statusDiv.innerText = "❌ अपलोड अयशस्वी: " + error.message;
+        }
+    });
+</script>
+</body>
+</html>
