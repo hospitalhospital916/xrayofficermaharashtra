@@ -3,153 +3,197 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>अधिकृत पत्रके - क्ष-किरण वैज्ञानिक अधिकारी संघटना</title>
+    <title>क्ष-किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य</title>
+    
+    <!-- मुख्य CSS आणि आयकॉन्स लिंक -->
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        .gr-container {
+        /* मुख्य डिझाईन आणि लेआउट */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+        }
+        header {
+            background-color: #003366;
+            color: white;
+            text-align: center;
+            padding: 30px 0;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 32px;
+        }
+        header h3 {
+            margin: 10px 0 0 0;
+            font-size: 18px;
+            font-weight: normal;
+        }
+        nav {
+            background-color: #002244;
+            text-align: center;
+            padding: 12px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 20px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        nav a:hover {
+            color: #FFB020;
+        }
+        .hero-section {
+            background: linear-gradient(rgba(0, 51, 102, 0.7), rgba(0, 51, 102, 0.7)), url('images/banner.jpg') no-repeat center center/cover;
+            background-color: #3399ff;
+            color: white;
+            text-align: center;
+            padding: 80px 20px;
+        }
+        .hero-section h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+        .hero-section p {
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+        .btn-member {
+            background-color: white;
+            color: #003366;
+            padding: 12px 30px;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 5px;
+            font-size: 16px;
+            display: inline-block;
+            transition: background-color 0.3s;
+        }
+        .btn-member:hover {
+            background-color: #f0f0f0;
+        }
+        .main-container {
             max-width: 1200px;
             margin: 40px auto;
             padding: 0 20px;
-            font-family: Arial, sans-serif;
-            min-height: 60vh;
         }
-        .page-title { color: #003366; text-align: center; margin-bottom: 10px; font-size: 28px; }
-        .page-subtitle { text-align: center; color: #666; margin-bottom: 40px; font-size: 16px; }
-        
-        /* फोल्डर ग्रिड */
-        .folder-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); 
-            gap: 30px; 
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
         }
-        
-        .folder-card {
-            background: #ffffff;
-            border: 1px solid #e0e0e0;
-            border-radius: 12px;
-            padding: 30px 20px;
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
             text-align: center;
-            text-decoration: none;
-            display: block;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            transition: all 0.3s ease;
-            cursor: pointer;
+            border: 1px solid #eee;
+            text-decoration: none;
+            color: #333;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
-        .folder-card:hover {
+        .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-            border-color: #003366;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
         }
-        .folder-icon { font-size: 60px; color: #FFB020; margin-bottom: 15px; }
-        .lock-icon { color: #d9534f; }
-        .folder-name { font-size: 18px; font-weight: bold; color: #003366; margin-bottom: 8px; }
-        .folder-desc { font-size: 14px; color: #777; }
-        
-        #loading-msg { text-align: center; font-size: 18px; color: #666; }
+        .card-icon {
+            font-size: 40px;
+            color: #003366;
+            margin-bottom: 15px;
+        }
+        .card h3 {
+            margin: 10px 0;
+            color: #003366;
+        }
+        .card p {
+            margin: 0;
+            color: #666;
+            font-size: 14px;
+        }
+        footer {
+            background-color: #003366;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 60px;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
 
-    <!-- हेडर आणि मेनू बार -->
-    <header style="background-color: #003366; color: white; text-align: center; padding: 20px 0;">
-        <h1 style="margin: 0; font-size: 26px;">क्ष-किरण वैज्ञानिक अधिकारी संघटना</h1>
-        <h3 style="margin: 5px 0 0 0; font-size: 16px; font-weight: normal;">महाराष्ट्र राज्य</h3>
+    <!-- १. हेडर विभाग -->
+    <header>
+        <h1>क्ष-किरण वैज्ञानिक अधिकारी संघटना</h1>
+        <h3>महाराष्ट्र राज्य</h3>
     </header>
 
-    <nav style="background-color: #002244; text-align: center; padding: 10px 0;">
-        <a href="index.html" style="color: white; text-decoration: none; margin: 0 15px; font-size: 16px;">मुख्यपृष्ठ</a>
-        <a href="about.html" style="color: white; text-decoration: none; margin: 0 15px; font-size: 16px;">संघटनाबद्दल</a>
-        <a href="executive.html" style="color: white; text-decoration: none; margin: 0 15px; font-size: 16px;">कार्यकारिणी</a>
-        <a href="notice.html" style="color: white; text-decoration: none; margin: 0 15px; font-size: 16px;">नोटीस</a>
-        <a href="gr.html" style="color: #FFB020; text-decoration: none; margin: 0 15px; font-size: 16px; font-weight: bold;">इतर पत्रे</a>
-        <a href="gallery.html" style="color: white; text-decoration: none; margin: 0 15px; font-size: 16px;">गॅलरी</a>
-        <a href="contact.html" style="color: white; text-decoration: none; margin: 0 15px; font-size: 16px;">संपर्क</a>
+    <!-- २. मेनू बार (Navigation) -->
+    <nav>
+        <a href="index.html">मुख्यपृष्ठ</a>
+        <a href="about.html">संघटनाबद्दल</a>
+        <a href="executive.html">कार्यकारिणी</a>
+        <a href="notice.html">नोटीस</a>
+        <a href="gr.html" style="color: #FFB020;">GR</a> <!-- इथे लिंक gr.html सेट केली आहे -->
+        <a href="gallery.html">गॅलरी</a>
+        <a href="contact.html">संपर्क</a>
     </nav>
 
-    <!-- मुख्य भाग -->
-    <div class="gr-container">
-        <h2 class="page-title">इतर अधिकृत पत्रे 🔒</h2>
-        <p class="page-subtitle">फक्त अप्रूव्ड (मंजूर) सदस्यांसाठी सुरक्षित सब-फोल्डर्स</p>
-        
-        <div id="loading-msg">माहिती लोड होत आहे, कृपया थांबा...</div>
-        
-        <!-- ऍडमिनने बनवलेले सब-फोल्डर्स इथे ऑटोमॅटिक दिसतील -->
-        <div class="folder-grid" id="folders-container"></div>
+    <!-- ३. स्वागत बॅनर (Hero Section) -->
+    <div class="hero-section">
+        <h2>आपले हार्दिक स्वागत</h2>
+        <p>क्ष-किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य यांच्या अधिकृत संकेतस्थळावर आपले स्वागत आहे.</p>
+        <a href="login.html" class="btn-member">सदस्य व्हा</a>
     </div>
 
-    <!-- फुटर -->
-    <footer style="background-color: #003366; color: white; text-align: center; padding: 15px 0; margin-top: 40px; font-size: 14px;">
+    <!-- ४. क्विक लिंक्स कार्ड्स (Main Features) -->
+    <div class="main-container">
+        <div class="grid-container">
+            
+            <!-- कार्ड १: नवीन सूचना -->
+            <a href="notice.html" class="card">
+                <i class="fa-solid fa-bullhorn card-icon"></i>
+                <h3>नवीन सूचना</h3>
+                <p>संघटना स्तरावरील सर्व महत्वाच्या सूचना येथे पहा.</p>
+            </a>
+
+            <!-- कार्ड २: जीआर (इथेही gr.html लिंक जोडली आहे) -->
+            <a href="gr.html" class="card">
+                <i class="fa-solid fa-file-invoice card-icon"></i>
+                <h3>GR / इतर पत्रे</h3>
+                <p>शासन निर्णय आणि अधिकृत पत्रके डाउनलोड करा.</p>
+            </a>
+
+            <!-- कार्ड ३: कार्यकारिणी -->
+            <a href="executive.html" class="card">
+                <i class="fa-solid fa-users card-icon"></i>
+                <h3>कार्यकारिणी</h3>
+                <p>राज्य कार्यकारिणी सदस्यांची अधिकृत माहिती.</p>
+            </a>
+
+            <!-- कार्ड ४: गॅलरी -->
+            <a href="gallery.html" class="card">
+                <i class="fa-solid fa-images card-icon"></i>
+                <h3>गॅलरी</h3>
+                <p>संघटना कार्यक्रमांचे अधिकृत फोटो.</p>
+            </a>
+
+        </div>
+    </div>
+
+    <!-- ५. फुटर विभाग -->
+    <footer>
         © 2026 क्ष-किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य
     </footer>
 
-    <!-- Firebase सुरक्षा आणि डायनॅमिक फोल्डर स्क्रिप्ट -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, doc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
-        // युझर लॉगिन आणि ऍप्रूव्हल तपासणी
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                // युझरचा डेटाबेस मधील स्टेटस तपासणे (Approved आहे की नाही)
-                const userDoc = await getDoc(doc(db, "users", user.uid));
-                
-                if (userDoc.exists() && userDoc.data().status === "approved") {
-                    // जर युझर मंजूर असेल, तर सब-फोल्डर्स लोड करा
-                    loadSubFolders();
-                } else {
-                    alert("🔒 तुमचा नोंदणी अर्ज अजून ऍडमिनकडून मंजूर (Approved) झालेला नाही. कृपया वाट पाहा.");
-                    window.location.href = "index.html";
-                }
-            } else {
-                alert("🔒 हे सुरक्षित पत्रे पाहण्यासाठी कृपया आधी लॉगिन करा!");
-                window.location.href = "login.html";
-            }
-        });
-
-        // डेटाबेसमधून सब-फोल्डर्स आणणारे फंक्शन
-        async function loadSubFolders() {
-            const querySnapshot = await getDocs(collection(db, "subfolders"));
-            const container = document.getElementById('folders-container');
-            document.getElementById('loading-msg').style.display = 'none';
-            
-            if(querySnapshot.empty) {
-                container.innerHTML = "<p style='grid-column: 1/-1; text-align:center;'>सध्या कोणतेही सब-फोल्डर उपलब्ध नाहीत.</p>";
-                return;
-            }
-
-            querySnapshot.forEach((doc) => {
-                const data = doc.data();
-                const folderHtml = `
-                    <div class="folder-card" onclick="openFolder('${doc.id}')">
-                        <i class="fa-solid fa-folder-open folder-icon"></i>
-                        <div class="folder-name">${data.name}</div>
-                        <div class="folder-desc">${data.description || 'पत्रके पाहण्यासाठी क्लिक करा'}</div>
-                    </div>
-                `;
-                container.innerHTML += folderHtml;
-            });
-        }
-
-        // सब-फोल्डर उघडण्यासाठी फंक्शन
-        window.openFolder = function(folderId) {
-            // फोल्डर आयडीनुसार त्यातील फाईल्स दाखवणाऱ्या पेजवर पाठवणे
-            window.location.href = view-folder.html?id=${folderId};
-        }
-    </script>
 </body>
 </html>
