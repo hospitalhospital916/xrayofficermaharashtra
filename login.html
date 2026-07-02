@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>सदस्य नोंदणी - क्ष-किरण वैज्ञानिक अधिकारी संघटना</title>
+    
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #f4f6f9 0%, #e9edf3 100%);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .reg-wrapper {
+            max-width: 550px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+        .reg-card {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 51, 102, 0.1);
+            overflow: hidden;
+            border: 1px solid rgba(0, 51, 102, 0.05);
+            transition: all 0.3s ease;
+        }
+        .reg-header {
+            background: linear-gradient(135deg, #003366 0%, #002244 100%);
+            color: white;
+            text-align: center;
+            padding: 35px 20px;
+            position: relative;
+        }
+        .reg-header i {
+            font-size: 45px;
+            color: #FFB020;
+            margin-bottom: 12px;
+            animation: pulse 2s infinite;
+        }
+        .reg-header h2 {
+            margin: 0;
+            font-size: 24px;
+            letter-spacing: 0.5px;
+        }
+        .reg-header p {
+            margin: 8px 0 0 0;
+            font-size: 14px;
+            color: #b0c4de;
+        }
+        .reg-body {
+            padding: 40px 35px;
+        }
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #003366;
+            font-size: 15px;
+        }
+        .input-icon-wrap {
+            position: relative;
+        }
+        .input-icon-wrap i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #003366;
+            opacity: 0.6;
+            font-size: 16px;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 14px 14px 14px 45px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 15px;
+            color: #333;
+            background-color: #f8fafc;
+            transition: all 0.3s ease;
+        }
+        .form-group input:focus, .form-group select:focus {
+            border-color: #003366;
+            background-color: #fff;
+            box-shadow: 0 0 0 4px rgba(0, 51, 102, 0.1);
+            outline: none;
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #003366 0%, #002244 100%);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0, 51, 102, 0.2);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 51, 102, 0.3);
+        }
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+        .info-box {
+            background-color: #f0f7ff;
+            border-left: 4px solid #003366;
+            padding: 15px;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #002244;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-top: 25px;
+        }
+        .info-box i {
+            color: #003366;
+            font-size: 16px;
+            margin-top: 2px;
+        }
+        .back-home {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .back-home a {
+            color: #003366;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .back-home a:hover {
+            text-decoration: underline;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="reg-wrapper">
+        <div class="reg-card">
+            <!-- फॉर्म हेडर -->
+            <div class="reg-header">
+                <i class="fa-solid fa-id-card"></i>
+                <h2>अधिकृत सदस्य नोंदणी अर्ज</h2>
+                <p>क्ष-किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य</p>
+            </div>
+
+            <!-- फॉर्म बॉडी -->
+            <div class="reg-body">
+                <form id="proRegistrationForm">
+                    
+                    <!-- १. पूर्ण नाव -->
+                    <div class="form-group">
+                        <label>पूर्ण नाव (Full Name)</label>
+                        <div class="input-icon-wrap">
+                            <i class="fa-solid fa-user"></i>
+                            <input type="text" id="usrName" required placeholder="पहिले नाव - वडिलांचे नाव - आडनाव">
+                        </div>
+                    </div>
+
+                    <!-- २. मोबाईल नंबर -->
+                    <div class="form-group">
+                        <label>मोबाईल नंबर (WhatsApp Number)</label>
+                        <div class="input-icon-wrap">
+                            <i class="fa-solid fa-phone"></i>
+                            <input type="tel" id="usrPhone" pattern="[0-9]{10}" required placeholder="१० अंकी मोबाईल नंबर टाका">
+                        </div>
+                    </div>
+
+                    <!-- ३. ईमेल आयडी -->
+                    <div class="form-group">
+                        <label>ईमेल आयडी (Email ID)</label>
+                        <div class="input-icon-wrap">
+                            <i class="fa-solid fa-envelope"></i>
+                            <input type="email" id="usrEmail" required placeholder="तुमचा ईमेल पत्ता लिहा">
+                        </div>
+                    </div>
+
+                    <!-- ४. कार्यरत ठिकाण -->
+                    <div class="form-group">
+                        <label>कार्यरत जिल्हा व रुग्णालयाचे नाव</label>
+                        <div class="input-icon-wrap">
+                            <i class="fa-solid fa-hospital"></i>
+                            <input type="text" id="usrHospital" required placeholder="उदा. जिल्हा रुग्णालय, बीड">
+                        </div>
+                    </div>
+
+                    <!-- सबमिट बटन -->
+                    <button type="submit" class="submit-btn">नोंदणी अर्ज सादर करा <i class="fa-solid fa-paper-plane" style="margin-left: 5px;"></i></button>
+                </form>
+
+                <!-- स्टाईलिश माहिती बॉक्स -->
+                <div class="info-box">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <div>
+                        <strong>महत्त्वाची नोंद:</strong> अर्ज सबमिट केल्यानंतर संघटना कमिटीद्वारे तुमच्या माहितीची पडताळणी केली जाईल. त्यानंतर *'GR / इतर पत्रे'* विभाग उघडण्यासाठीचा गुपिते पासवर्ड तुमच्या व्हॉट्सॲपवर पाठवला जाईल.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="back-home">
+            <a href="index.html"><i class="fa-solid fa-arrow-left"></i> मुख्यपृष्ठावर परत जा</a>
+        </div>
+    </div>
+
+    <!-- फॉर्म सबमिशनचे मॉडर्न लॉजिक -->
+    <script>
+        document.getElementById('proRegistrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // एकदम प्रोफेशनल अलर्ट मेसेज
+            alert("🎯 अर्ज यशस्वी झाला!\n\nतुमचा नोंदणी अर्ज संघटनेकडे सुरक्षितपणे जमा झाला आहे. कमिटीच्या मंजुरीनंतर पासवर्ड तुमच्या मोबाईलवर पाठवला जाईल.");
+            
+            // फॉर्म रिसेट करून होम पेजवर पाठवणे
+            document.getElementById('proRegistrationForm').reset();
+            window.location.href = "index.html";
+        });
+    </script>
+
+</body>
+</html>
