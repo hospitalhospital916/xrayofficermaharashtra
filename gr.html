@@ -3,7 +3,7 @@
     <h2 class="page-title" style="color: #003366; text-align: center; margin-bottom: 10px; font-size: 28px;">इतर अधिकृत पत्रे 🔒</h2>
     <p class="page-subtitle" style="text-align: center; color: #666; margin-bottom: 40px; font-size: 16px;">फक्त मंजूर सदस्यांसाठी सुरक्षित सब-फोल्डर्स</p>
     
-    <div id="loading-msg" style="text-align: center; font-size: 18px; color: #666;">माहिती लोड होत आहे, कृपया थांबा...</div>
+    <div id="loading-msg" style="text-align: center; font-size: 18px; color: #666;">मा माहित लोड होत आहे, कृपया थांबा...</div>
     
     <!-- इथे तुमचे सर्व फोल्डर्स ग्रिड स्वरूपात दिसतील -->
     <div class="folder-grid" id="folders-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 30px;"></div>
@@ -77,12 +77,13 @@
   // फोल्डर्स लोड करा
   displayFolders();
 
-  // फोल्डरवर क्लिक केल्यावर काय व्हावे (इथे तुम्ही तुमच्या स्वतंत्र फाईल्स किंवा ड्राईव्ह लिंक्स जोडू शकता)
+  // फोल्डरवर क्लिक केल्यावर काय व्हावे
   window.openFolder = function(folderId) {
     if(folderId === "seva_jyeshthata") {
         window.location.href = "seva-jyeshthata.html";
     } else if(folderId === "raja_niyam") {
-        window.location.href = "raja-niyam.html"; 
+        // तुमची गुगल ड्राईव्हची अनलॉक केलेली लिंक इथे जोडली आहे
+        window.open("https://drive.google.com/drive/folders/1kvwI7XLMU7Wz5OlP8Qkk0Q98ELaWJB49?usp=drive_link", "_blank"); 
     } else if(folderId === "home_loan") {
         window.location.href = "home-loan.html";
     } else if(folderId === "income_tax") {
