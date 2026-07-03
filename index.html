@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>अधिकृत पत्रके - क्ष-किरण वैज्ञानिक अधिकारी संघटना</title>
     <title>क्ष-किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य</title>
     
     <!-- मुख्य CSS आणि आयकॉन्स लिंक -->
@@ -11,28 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        .gr-container {
-        /* मुख्य डिझाईन आणि लेआउट */
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f4f6f9;
-        }
-        header {
-            background-color: #00…
-[11:04 am, 3/7/2026] Mahesh Hange: <!DOCTYPE html>
-<html lang="mr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>क्ष-किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य</title>
-    
-    <!-- मुख्य CSS आणि आयकॉन्स लिंक -->
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <style>
+        /* लेआउट आणि रंगांचे फिक्सिंग */
         body {
             margin: 0;
             padding: 0;
@@ -43,7 +21,7 @@
             background-color: #003366;
             color: white;
             text-align: center;
-            padding: 30px 0;
+            padding: 30px 20px;
         }
         header h1 {
             margin: 0;
@@ -57,7 +35,7 @@
         nav {
             background-color: #002244;
             text-align: center;
-            padding: 12px 0;
+            padding: 15px 0;
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -65,28 +43,31 @@
         nav a {
             color: white;
             text-decoration: none;
-            margin: 0 20px;
+            margin: 0 15px;
             font-size: 16px;
             font-weight: bold;
             transition: color 0.3s;
+            display: inline-block;
         }
         nav a:hover {
             color: #FFB020;
         }
         .hero-section {
-            background: linear-gradient(rgba(0, 51, 102, 0.7), rgba(0, 51, 102, 0.7)), url('images/banner.jpg') no-repeat center center/cover;
-            background-color: #3399ff;
+            background: linear-gradient(rgba(0, 51, 102, 0.7), rgba(0, 51, 102, 0.7));
+            background-color: #003366;
             color: white;
             text-align: center;
-            padding: 80px 20px;
+            padding: 60px 20px;
+            border-bottom: 3px solid #FFB020;
         }
         .hero-section h2 {
             font-size: 36px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+            margin-top: 0;
         }
         .hero-section p {
             font-size: 18px;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
         .btn-member {
             background-color: white;
@@ -97,26 +78,27 @@
             border-radius: 5px;
             font-size: 16px;
             display: inline-block;
-            transition: background-color 0.3s;
+            transition: all 0.3s;
+            border: 2px solid white;
         }
         .btn-member:hover {
-            background-color: #f0f0f0;
+            background-color: transparent;
+            color: white;
         }
         .main-container {
             max-width: 1200px;
             margin: 40px auto;
             padding: 0 20px;
-            min-height: 40vh;
         }
         .grid-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 25px;
         }
         .card {
             background: white;
             border-radius: 8px;
-            padding: 25px;
+            padding: 30px 20px;
             text-align: center;
             text-decoration: none;
             display: block;
@@ -138,18 +120,20 @@
         .card h3 {
             margin: 10px 0;
             color: #003366;
+            font-size: 20px;
         }
         .card p {
             margin: 0;
             color: #666;
             font-size: 14px;
+            line-height: 1.5;
         }
         footer {
             background-color: #003366;
             color: white;
             text-align: center;
             padding: 20px 0;
-            margin-top: 60px;
+            margin-top: 40px;
             font-size: 14px;
         }
     </style>
@@ -176,7 +160,7 @@
     <!-- ३. स्वागत बॅनर (Hero Section) -->
     <div class="hero-section">
         <h2>आपले हार्दिक स्वागत</h2>
-        <p>क्ष-किरण वैज्ञानिक अधिकारी संघटना, Maharashtra राज्य यांच्या अधिकृत संकेतस्थळावर आपले स्वागत आहे.</p>
+        <p>क्ष-किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य यांच्या अधिकृत संकेतस्थळावर आपले स्वागत आहे.</p>
         <a href="login.html" class="btn-member">सदस्य व्हा</a>
     </div>
 
@@ -230,12 +214,11 @@
         © 2026 क्ष-किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य
     </footer>
 
-    <!-- Firebase Scripts (आकडे ट्रॅक करण्यासाठी) -->
+    <!-- Firebase Scripts -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <script>
-      // ३६b९ce०f-ae१b-४२२२-८८४१-f३२८६c५a७a३७ मधील तुमचे अचूक फायरबेस कॉन्फिगरेशन
       const firebaseConfig = {
         apiKey: "AIzaSyDDYBnG3-x59Zt_eLzjcMRNVGpQVkKFKgc",
         authDomain: "xrayofficermaharashtra.firebaseapp.com",
@@ -247,14 +230,12 @@
         databaseURL: "https://xrayofficermaharashtra-default-rtdb.firebaseio.com/"
       };
       
-      // Firebase सुरू करा
       if (!firebase.apps.length) {
         firebase.initializeApp(firebaseConfig);
       }
       const database = firebase.database();
       const counterRef = database.ref('visitor_count');
 
-      // व्हिजिट काउंट ट्रॅक आणि डिस्प्ले करा
       counterRef.transaction(function(currentCount) {
         return (currentCount || 0) + 1;
       }, function(error, committed, snapshot) {
