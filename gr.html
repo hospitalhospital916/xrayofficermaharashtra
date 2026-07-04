@@ -1,6 +1,6 @@
-<div class="gr-container" style="max-width: 1200px; margin: 40px auto; padding: 0 20px; font-family: Arial, sans-serif;">
+ <div class="gr-container" style="max-width: 1200px; margin: 40px auto; padding: 0 20px; font-family: Arial, sans-serif;">
     <h2 class="page-title" style="color: #003366; text-align: center; margin-bottom: 10px; font-size: 28px;">इतर अधिकृत पत्रे 🔒</h2>
-    <p class="page-subtitle" style="text-align: center; color: #666; margin-bottom: 40px; font-size: 16px;">फक्त मंजूर सदस्यांसाठी सुरक्षित सब-फोल्डर्स</p>
+    <p class="page-subtitle" style="text-align: center; color: #666; margin-bottom: 40px; font-size: 16px;">फोल्डर्स</p>
     
     <div id="loading-msg" style="text-align: center; font-size: 18px; color: #666;">माहिती लोड होत आहे, कृपया थांबा...</div>
     
@@ -34,7 +34,7 @@
     {
       id: "seva_jyeshthata",
       name: "सेवा ज्येष्ठता यादी",
-      desc: "क्ष-किरण वैज्ञानिक अधिकाऱ्यांची अधिकृत राज्यस्तरीय ज्येष्ठता सूची."
+      desc: "क्ष-किरण वैज्ञानिक अधिकाऱ्यांची अधिकृत  ज्येष्ठता सूची."
     },
     {
       id: "raja_niyam",
@@ -86,6 +86,129 @@
         window.location.href = "home-loan.html";
     } else if(folderId === "income_tax") {
         window.location.href = "income-tax.html";
+    } else {
+        alert(folderId + " चे सुरक्षित कागदपत्रे लवकरच अपलोड केली जातील!");
+    }
+  }
+</script>
+[10:59 am, 4/7/2026] Mahesh Hange: <div class="gr-container" style="max-width: 1200px; margin: 40px auto; padding: 0 20px; font-family: Arial, sans-serif;">
+    <h2 class="page-title" style="color: #003366; text-align: center; margin-bottom: 10px; font-size: 28px;">इतर अधिकृत पत्रे 🔒</h2>
+    <p class="page-subtitle" style="text-align: center; color: #666; margin-bottom: 40px; font-size: 16px;">फक्त मंजूर सदस्यांसाठी सुरक्षित सब-फोल्डर्स</p>
+    
+    <div id="loading-msg" style="text-align: center; font-size: 18px; color: #666;">माहिती लोड होत आहे, कृपया थांबा...</div>
+    
+    <div class="folder-grid" id="folders-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 30px;"></div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+<script>
+  // तुमचे अचूक फायरबेस कॉन्फिगरेशन
+  const firebaseConfig = {
+    apiKey: "AIzaSyDDYBnG3-x59Zt_eLzjcMRNVGpQVkKFKgc",
+    authDomain: "xrayofficermaharashtra.firebaseapp.com",
+    projectId: "xrayofficermaharashtra",
+    storageBucket: "xrayofficermaharashtra.appspot.com",
+    messagingSenderId: "447860581122",
+    appId: "1:447860581122:web:f931bbc0ae219b8c1b581b",
+    measurementId: "G-Y5L3VZWZJZ",
+    databaseURL: "https://xrayofficermaharashtra-default-rtdb.firebaseio.com/"
+  };
+  
+  // Firebase सुरू करा
+  if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  }
+  const database = firebase.database();
+
+  // नवीन ४ फोल्डर्स पूर्णपणे वेगळे करून एकूण ८ फोल्डर्सची सुधारित यादी
+  const myFolders = [
+    {
+      id: "seva_jyeshthata",
+      name: "सेवा ज्येष्ठता यादी",
+      desc: "क्ष-किरण वैज्ञानिक अधिकाऱ्यांची अधिकृत राज्यस्तरीय ज्येष्ठता सूची."
+    },
+    {
+      id: "raja_niyam",
+      name: "रजेसंदर्भात नियम",
+      desc: "सर्व प्रकारच्या नैमित्तिक (CL), अर्जित (EL) रजांचे नियम आणि परिपत्रके."
+    },
+    {
+      id: "home_loan",
+      name: "होम लोन संदर्भात माहिती",
+      desc: "शासकीय कर्मचाऱ्यांसाठी गृहकर्ज नियम, व्याजदर आणि आवश्यक कागदपत्रे."
+    },
+    {
+      id: "income_tax",
+      name: "आयकर संदर्भात माहिती",
+      desc: "वार्षिक प्राप्तिकर (Income Tax) नियम, सवलती आणि इन्व्हेस्टमेंट गाईड."
+    },
+    {
+      id: "seva_pustak",
+      name: "सेवापुस्तक",
+      desc: "सेवापुस्तका संदर्भातील अधिकृत नियम, नोंदी आणि महत्त्वाची माहिती."
+    },
+    {
+      id: "vaidyakiya_deyak",
+      name: "वैद्यकीय देयक",
+      desc: "वैद्यकीय प्रतिपूर्ती (Medical Bill) देयके आणि त्यासंबंधीचे नियम."
+    },
+    {
+      id: "mahatvache_form",
+      name: "महत्त्वाचे फॉर्म",
+      desc: "कार्यालयीन कामकाजासाठी लागणारे सर्व महत्त्वाचे फॉर्म्स आणि नमुने."
+    },
+    {
+      id: "xray_patravyavahar",
+      name: "क्ष-किरण विभाग पत्र व्यवहार",
+      desc: "रेडिएशन सुरक्षा, TLD कार्ड, TB CAMP आणि विभागाशी संबंधित इतर सर्व पत्रे."
+    }
+  ];
+
+  // स्क्रीनवर फोल्डर्स दाखवणारे फंक्शन
+  function displayFolders() {
+    const container = document.getElementById('folders-container');
+    document.getElementById('loading-msg').style.display = 'none';
+    container.innerHTML = ""; 
+
+    myFolders.forEach((folder) => {
+      const folderHtml = `
+        <div class="card" onclick="openFolder('${folder.id}')" style="background: white; border-radius: 12px; padding: 30px 20px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid #e0e0e0; cursor: pointer; transition: all 0.3s ease;">
+            <i class="fa-solid fa-folder-open" style="font-size: 60px; color: #FFB020; margin-bottom: 15px;"></i>
+            <div style="font-size: 18px; font-weight: bold; color: #003366; margin-bottom: 8px;">${folder.name}</div>
+            <div style="font-size: 14px; color: #777;">${folder.desc}</div>
+        </div>
+      `;
+      container.innerHTML += folderHtml;
+    });
+  }
+
+  // फोल्डर्स लोड करा
+  displayFolders();
+
+  // फोल्डरवर क्लिक केल्यावर काय व्हावे
+  window.openFolder = function(folderId) {
+    if(folderId === "seva_jyeshthata") {
+        window.open("https://drive.google.com/drive/folders/12hWVtfMxie3AxTJC2W51TSAZ50e1VLsG?usp=drive_link", "_blank");
+    } else if(folderId === "raja_niyam") {
+        window.open("https://drive.google.com/drive/folders/1kvwI7XLMU7Wz5OlP8Qkk0Q98ELaWJB49?usp=drive_link", "_blank"); 
+    } else if(folderId === "home_loan") {
+        window.location.href = "home-loan.html";
+    } else if(folderId === "income_tax") {
+        window.location.href = "income-tax.html";
+    } else if(folderId === "seva_pustak") {
+        // सेवापुस्तक गुगल ड्राईव्हची लिंक खाली पेस्ट करा
+        window.open("तुमची_सेवापुस्तक_लिंक_इथे_टाका", "_blank");
+    } else if(folderId === "vaidyakiya_deyak") {
+        // वैद्यकीय देयक गुगल ड्राईव्हची लिंक खाली पेस्ट करा
+        window.open("तुमची_वैद्यकीय_देयक_लिंक_इथे_टाका", "_blank");
+    } else if(folderId === "mahatvache_form") {
+        // महत्त्वाचे फॉर्म्स गुगल ड्राईव्हची लिंक खाली पेस्ट करा
+        window.open("तुमची_महत्त्वाचे_फॉर्म_लिंक_इथे_टाका", "_blank");
+    } else if(folderId === "xray_patravyavahar") {
+        // क्ष-किरण विभाग पत्र व्यवहाराची गुगल ड्राईव्हची लिंक खाली पेस्ट करा
+        window.open("तुमची_क्ष_किरण_पत्र_लिंक_इथे_टाका", "_blank");
     } else {
         alert(folderId + " चे सुरक्षित कागदपत्रे लवकरच अपलोड केली जातील!");
     }
