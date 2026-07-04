@@ -4,38 +4,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>क्ष-किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य</title>
-    
-    <!-- मुख्य CSS आणि आयकॉन्स लिंक -->
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <style>
-        /* लेआउट आणि रंगांचे फिक्सिंग */
-        body {
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f4f6f9;
         }
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f6f9;
+            color: #333;
+        }
+        /* हेडर आणि नेव्हिगेशन */
         header {
             background-color: #003366;
             color: white;
             text-align: center;
-            padding: 30px 20px;
+            padding: 30px 10px;
+        }
+        .logo-img {
+            width: 90px;
+            height: auto;
+            margin-bottom: 15px;
+            border-radius: 50%;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            background-color: white;
+            padding: 2px;
         }
         header h1 {
-            margin: 0;
-            font-size: 32px;
+            font-size: 28px;
+            margin-bottom: 5px;
+            letter-spacing: 0.5px;
         }
-        header h3 {
-            margin: 10px 0 0 0;
-            font-size: 18px;
-            font-weight: normal;
+        header p {
+            font-size: 16px;
+            color: #ffcc00;
+            font-weight: bold;
         }
         nav {
-            background-color: #002244;
+            background-color: #1a252f;
             text-align: center;
-            padding: 15px 0;
+            padding: 10px 0;
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -43,96 +52,150 @@
         nav a {
             color: white;
             text-decoration: none;
-            margin: 0 15px;
-            font-size: 16px;
-            font-weight: bold;
-            transition: color 0.3s;
+            padding: 10px 15px;
+            margin: 0 5px;
             display: inline-block;
+            font-size: 16px;
+            transition: 0.3s;
         }
-        nav a:hover {
-            color: #FFB020;
+        nav a:hover, nav a.active {
+            color: #ffcc00;
+            border-bottom: 2px solid #ffcc00;
         }
+        /* मुख्य स्वागत बॅनर */
         .hero-section {
-            background: linear-gradient(rgba(0, 51, 102, 0.7), rgba(0, 51, 102, 0.7));
-            background-color: #003366;
+            background: linear-gradient(rgba(0, 51, 102, 0.85), rgba(0, 51, 102, 0.85)), url('https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center/cover;
             color: white;
             text-align: center;
-            padding: 60px 20px;
-            border-bottom: 3px solid #FFB020;
+            padding: 80px 20px;
         }
         .hero-section h2 {
             font-size: 36px;
             margin-bottom: 15px;
-            margin-top: 0;
         }
         .hero-section p {
             font-size: 18px;
             margin-bottom: 25px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
         }
         .btn-member {
             background-color: white;
             color: #003366;
             padding: 12px 30px;
-            text-decoration: none;
-            font-weight: bold;
-            border-radius: 5px;
+            border: none;
+            border-radius: 4px;
             font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
             display: inline-block;
-            transition: all 0.3s;
-            border: 2px solid white;
+            transition: 0.3s;
         }
         .btn-member:hover {
-            background-color: transparent;
-            color: white;
+            background-color: #ffcc00;
+            color: #003366;
         }
-        .main-container {
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 0 20px;
+        /* संघटनाबद्दल विभाग */
+        .about-container {
+            padding: 60px 20px;
+            background-color: #ffffff;
         }
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 25px;
-        }
-        .card {
-            background: white;
-            border-radius: 8px;
-            padding: 30px 20px;
+        .about-content {
+            max-width: 950px;
+            margin: 0 auto;
             text-align: center;
-            text-decoration: none;
-            display: block;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            border: 1px solid #eee;
-            color: #333;
-            transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
         }
-        .card:hover {
+        .about-content h2 {
+            color: #003366;
+            font-size: 30px;
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+        .about-content h2::after {
+            content: '';
+            width: 60%;
+            height: 3px;
+            background-color: #ffcc00;
+            position: absolute;
+            bottom: 0;
+            left: 20%;
+        }
+        .about-text {
+            font-size: 17px;
+            line-height: 1.8;
+            text-align: justify;
+            color: #444;
+            margin-bottom: 35px;
+        }
+        .objectives-box {
+            text-align: left;
+            background-color: #f8f9fa;
+            padding: 30px;
+            border-left: 5px solid #003366;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .objectives-box h3 {
+            color: #003366;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+        .objectives-box ul {
+            padding-left: 20px;
+        }
+        .objectives-box li {
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 10px;
+            color: #555;
+        }
+        /* मुख्य फीचर्स आयकॉन्स */
+        .features-section {
+            padding: 50px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .feature-card {
+            background: white;
+            padding: 30px 20px;
+            margin: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            display: inline-block;
+            width: 22%;
+            min-width: 240px;
+            vertical-align: top;
+            transition: 0.3s;
+        }
+        .feature-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-            border-color: #003366;
         }
-        .card-icon {
+        .feature-icon {
             font-size: 40px;
             color: #003366;
             margin-bottom: 15px;
         }
-        .card h3 {
-            margin: 10px 0;
+        .feature-card h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
             color: #003366;
-            font-size: 20px;
         }
-        .card p {
-            margin: 0;
-            color: #666;
+        .feature-card p {
             font-size: 14px;
+            color: #666;
             line-height: 1.5;
         }
+        /* फुटर */
         footer {
-            background-color: #003366;
+            background-color: #1a252f;
             color: white;
             text-align: center;
-            padding: 20px 0;
+            padding: 20px;
             margin-top: 40px;
             font-size: 14px;
         }
@@ -140,111 +203,86 @@
 </head>
 <body>
 
-    <!-- १. हेडर विभाग -->
+    <!-- हेडर विभाग (नवीन लोगोसह) -->
     <header>
+        <!-- जर तुम्ही तुमच्या लोगोचे नाव logo.png ठेवले असेल तर हा लोगो आपोआप इथे दिसेल -->
+        <img src="logo.png" alt="संघटना लोगो" class="logo-img">
         <h1>क्ष-किरण वैज्ञानिक अधिकारी संघटना</h1>
-        <h3>महाराष्ट्र राज्य</h3>
+        <p>महाराष्ट्र राज्य</p>
     </header>
 
-    <!-- २. मेनू बार (Navigation) -->
+    <!-- नेव्हिगेशन मेनू (Navbar) -->
     <nav>
-        <a href="index.html" style="color: #FFB020;">मुख्यपृष्ठ</a>
-        <a href="about.html">संघटनाबद्दल</a>
-        <a href="executive.html">कार्यकारिणी</a>
-        <a href="notice.html">नोटीस</a>
+        <a href="#" class="active">मुख्यपृष्ठ</a>
+        <a href="#about-section">संघटनाबद्दल</a>
+        <a href="admin.html">कार्यकारिणी</a>
+        <a href="#">नोटीस</a>
         <a href="gr.html">GR / इतर पत्रे</a>
-        <a href="gallery.html">गॅलरी</a>
-        <a href="contact.html">संपर्क</a>
+        <a href="#">गॅलरी</a>
+        <a href="#">संपर्क</a>
     </nav>
 
-    <!-- ३. स्वागत बॅनर (Hero Section) -->
-    <div class="hero-section">
+    <!-- मुख्य स्वागत बॅनर (Hero Section) -->
+    <section class="hero-section">
         <h2>आपले हार्दिक स्वागत</h2>
         <p>क्ष-किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य यांच्या अधिकृत संकेतस्थळावर आपले स्वागत आहे.</p>
-        <a href="login.html" class="btn-member">सदस्य व्हा</a>
-    </div>
+        <a href="#" class="btn-member">सदस्य व्हा</a>
+    </section>
 
-    <!-- ४. क्विक लिंक्स कार्ड्स (Main Features) -->
-    <div class="main-container">
-        <div class="grid-container">
+    <!-- संघटनाबद्दल विभाग -->
+    <section id="about-section" class="about-container">
+        <div class="about-content">
+            <h2>संघटनाबद्दल</h2>
             
-            <!-- कार्ड १: नवीन सूचना -->
-            <a href="notice.html" class="card">
-                <i class="fa-solid fa-bullhorn card-icon"></i>
-                <h3>नवीन सूचना</h3>
-                <p>संघटना स्तरावरील सर्व महत्वाच्या सूचना येथे पहा.</p>
-            </a>
+            <p class="about-text">
+                क्ष-किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य ही राज्यातील सर्व क्ष-किरण वैज्ञानिक अधिकाऱ्यांचे प्रतिनिधित्व करणारी एक अधिकृत आणि अग्रगण्य संघटना आहे. आपल्या सर्व सदस्यांच्या न्याय्य हक्कांसाठी, व्यावसायिक प्रगतीसाठी आणि त्यांच्या अडीअडचणींचे निवारण करण्यासाठी संघटना सदैव कटिबद्ध आहे. आरोग्य सेवेमध्ये आपले योगदान अधिक प्रभावी बनवणे आणि प्रशासनासोबत समन्वय साधून प्रलंबित प्रश्न सोडवणे हे आमचे मुख्य ध्येय आहे.
+            </p>
 
-            <!-- कार्ड २: जीआर -->
-            <a href="gr.html" class="card">
-                <i class="fa-solid fa-file-invoice card-icon"></i>
-                <h3>GR / इतर पत्रे</h3>
-                <p>शासन निर्णय आणि अधिकृत पत्रके डाउनलोड करा.</p>
-            </a>
-
-            <!-- कार्ड ३: कार्यकारिणी -->
-            <a href="executive.html" class="card">
-                <i class="fa-solid fa-users card-icon"></i>
-                <h3>कार्यकारिणी</h3>
-                <p>राज्य कार्यकारिणी सदस्यांची अधिकृत माहिती.</p>
-            </a>
-
-            <!-- कार्ड ४: गॅलरी -->
-            <a href="gallery.html" class="card">
-                <i class="fa-solid fa-images card-icon"></i>
-                <h3>गॅलरी</h3>
-                <p>संघटना कार्यक्रमांचे अधिकृत फोटो.</p>
-            </a>
-            
+            <div class="objectives-box">
+                <h3>आमची मुख्य उद्दिष्टे:</h3>
+                <ul>
+                    <li>सर्व क्ष-किरण वैज्ञानिक अधिकाऱ्यांमध्ये एकता आणि समन्वय साधणे.</li>
+                    <li>सदस्यांच्या सेवाविषयक, तांत्रिक आणि प्रशासकीय समस्या सोडवण्यासाठी शासन स्तरावर पाठपुरावा करणे.</li>
+                    <li>आरोग्य क्षेत्रात नवीन तंत्रज्ञानाचा वापर आणि प्रशिक्षण याबद्दल जनजागृती करणे.</li>
+                    <li>संघटनेच्या माध्यमातून सामाजिक बांधिलकी जपणे आणि आरोग्य सेवा अधिक बळकट करणे.</li>
+                </ul>
+            </div>
         </div>
-    </div>
+    </section>
 
-    <!-- ५. सुंदर ग्राफिकल व्हिजिटर काउंटर डिझाईन (फायरबेस आधारित) -->
-    <div style="text-align: center; background: linear-gradient(135deg, #0d233a, #1a365d); padding: 20px; border-radius: 10px; border: 1px solid #2b4c7e; max-width: 250px; margin: 30px auto; box-shadow: 0 4px 15px rgba(0,0,0,0.3); clear: both;">
-        <p style="color: #a0aec0; font-family: 'Arial', sans-serif; font-size: 14px; margin: 0 0 10px 0; letter-spacing: 1px; text-transform: uppercase; font-weight: bold;">
-            एकूण भेट देणारे
-        </p>
-        <div id="counter" style="color: #00ffcc; font-family: 'Courier New', Courier, monospace; font-size: 28px; font-weight: bold; background: #071724; padding: 5px 15px; border-radius: 5px; border: 1px solid #00ffcc; display: inline-block; letter-spacing: 2px; box-shadow: 0 0 10px rgba(0, 255, 204, 0.2);">
-            Loading...
+    <!-- चार मुख्य पर्याय (Features Section) -->
+    <section class="features-section">
+        
+        <div class="feature-card">
+            <div class="feature-icon">📢</div>
+            <h3>नवीन सूचना</h3>
+            <p>संघटना स्तरावरील सर्व महत्त्वाच्या सूचना येथे पाहा.</p>
         </div>
-    </div>
 
-    <!-- ६. फुटर विभाग -->
+        <div class="feature-card">
+            <div class="feature-icon">📄</div>
+            <h3>GR / इतर पत्रे</h3>
+            <p>शासन निर्णय आणि अधिकृत पत्रके डाउनलोड करा.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">👥</div>
+            <h3>कार्यकारिणी</h3>
+            <p>राज्य कार्यकारिणी सदस्यांची अधिकृत माहिती.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">🖼️</div>
+            <h3>गॅलरी</h3>
+            <p>संघटना कार्यक्रमांचे अधिकृत फोटो.</p>
+        </div>
+
+    </section>
+
+    <!-- फुटर विभाग -->
     <footer>
-        © 2026 क्ष-किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य
+        <p>&copy; 2026 क्ष-किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य. सर्व हक्क सुरक्षित.</p>
     </footer>
 
-    <!-- Firebase Scripts -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-
-    <script>
-      const firebaseConfig = {
-        apiKey: "AIzaSyDDYBnG3-x59Zt_eLzjcMRNVGpQVkKFKgc",
-        authDomain: "xrayofficermaharashtra.firebaseapp.com",
-        projectId: "xrayofficermaharashtra",
-        storageBucket: "xrayofficermaharashtra.appspot.com",
-        messagingSenderId: "447860581122",
-        appId: "1:447860581122:web:f931bbc0ae219b8c1b581b",
-        measurementId: "G-Y5L3VZWZJZ",
-        databaseURL: "https://xrayofficermaharashtra-default-rtdb.firebaseio.com/"
-      };
-      
-      if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-      }
-      const database = firebase.database();
-      const counterRef = database.ref('visitor_count');
-
-      counterRef.transaction(function(currentCount) {
-        return (currentCount || 0) + 1;
-      }, function(error, committed, snapshot) {
-        if (committed) {
-          document.getElementById('counter').innerText = snapshot.val();
-        } else {
-          console.log("Transaction failed:", error);
-        }
-      });
-    </script>
 </body>
 </html>
