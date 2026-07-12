@@ -39,6 +39,7 @@
         .loading { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
         
         #welcome-user { text-align: center; font-weight: bold; color: #28a745; margin-bottom: 20px; font-size: 18px; }
+        .help-text { font-size: 13px; color: #666; margin-top: 5px; display: block; }
     </style>
 </head>
 <body>
@@ -85,9 +86,10 @@
         <div id="folder-status" class="status-msg" style="display:none;"></div>
     </div>
 
-    <!-- भाग २: तयार केलेल्या सब-फोल्डरमध्ये PDF फाईल अपलोड करणे -->
+    <!-- भाग २: तयार केलेल्या सब-फोल्डरमध्ये Google Drive Link अपलोड करणे -->
     <div class="form-section">
-        <h3>२. सब-फोल्डरमध्ये नवीन PDF / GR अपलोड करा</h3>
+        <h3>२. सब-फोल्डरमध्ये पत्रक / GR ची लिंक टाका</h3>
+        <p style="font-size: 14px; color: #d9534f; font-weight: bold;">(टीप: PDF फाईल आधी Google Drive वर अपलोड करा आणि तिची लिंक 'Anyone with link' करून इथे पेस्ट करा.)</p>
         <form id="upload-pdf-form">
             <div class="form-group">
                 <label>योग्य सब-फोल्डर निवडा</label>
@@ -100,10 +102,11 @@
                 <input type="text" id="pdf-title" required placeholder="उदा. वरिष्ठ वेतन श्रेणी परिपत्रक २०२६">
             </div>
             <div class="form-group">
-                <label>PDF फाईल निवडा (Select PDF)</label>
-                <input type="file" id="pdf-file" accept="application/pdf" required>
+                <label>Google Drive लिंक (Paste Link Here)</label>
+                <input type="url" id="pdf-link" required placeholder="उदा. https://drive.google.com/file/d/...">
+                <span class="help-text">तुमच्या गुगल ड्राईव्हमधील फाईलची लिंक इथे पेस्ट करा.</span>
             </div>
-            <button type="submit" class="btn btn-green">डेटाबेसमध्ये फाईल अपलोड करा</button>
+            <button type="submit" class="btn btn-green">वेबसाईटवर पत्रक जोडा</button>
         </form>
         <div id="upload-status" class="status-msg" style="display:none;"></div>
     </div>
@@ -118,7 +121,6 @@
         const pass = document.getElementById("password").value;
         const errorMsg = document.getElementById("login-error");
 
-        // तुमचे नवीन आयडी आणि पासवर्ड 
         if (uid === "Officer1" && pass === "Mahesh@12345") {
             grantAccess("Officer1 (मुख्य अ‍ॅडमिन)");
         } else if (uid === "officer2" && pass === "Ravindra@12345") {
@@ -136,11 +138,10 @@
     }
 </script>
 
-<!-- Firebase Scripts -->
+<!-- Firebase Scripts (आता फक्त Firestore ची गरज आहे) -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyDDYBnG3-x59Zt_eLzjcMRNVGpQVkKFKgc",
@@ -155,7 +156,6 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-    const storage = getStorage(app);
 
     function showStatus(elementId, message, type) {
         const el = document.getElementById(elementId);
@@ -164,6 +164,7 @@
         el.innerText = message;
     }
 
+    // १. नवीन सब-फोल्डर तयार करणे
     document.getElementById('create-folder-form').addEventListener('submit', async (e) => {
         e.preventDefault();
         const name = document.getElementById('folder-name').value;
@@ -176,7 +177,7 @@
                 name: name,
                 description: description,
                 createdAt: new Date(),
-                createdBy: loggedInUser // कोणी फोल्डर बनवले याची नोंद
+                createdBy: loggedInUser
             });
             showStatus('folder-status', '✅ नवीन सब-फोल्डर यशस्वीरीत्या तयार झाले!', 'success');
             document.getElementById('create-folder-form').reset();
@@ -186,6 +187,7 @@
         }
     });
 
+    // ड्रॉपडाऊनमध्ये फोल्डर्स लोड करणे
     async function loadFoldersInDropdown() {
         const dropdown = document.getElementById('select-folder');
         dropdown.innerHTML = '<option value="">-- कृपया फोल्डर निवडा --</option>';
@@ -200,33 +202,30 @@
     }
     loadFoldersInDropdown();
 
+    // २. लिंक डेटाबेसमध्ये सेव्ह करणे
     document.getElementById('upload-pdf-form').addEventListener('submit', async (e) => {
         e.preventDefault();
         const folderId = document.getElementById('select-folder').value;
         const title = document.getElementById('pdf-title').value;
-        const file = document.getElementById('pdf-file').files[0];
+        const driveLink = document.getElementById('pdf-link').value;
         
-        if(!file) return;
+        if(!driveLink) return;
 
-        showStatus('upload-status', '⏳ फाईल सुरक्षितपणे अपलोड होत आहे, कृपया थांबून राहा...', 'loading');
+        showStatus('upload-status', '⏳ माहिती सुरक्षितपणे सेव्ह होत आहे...', 'loading');
 
         try {
-            const storageRef = ref(storage, `documents/${Date.now()}_${file.name}`);
-            const snapshot = await uploadBytes(storageRef, file);
-            const downloadURL = await getDownloadURL(snapshot.ref);
-
             await addDoc(collection(db, "documents"), {
                 folderId: folderId,
                 title: title,
-                fileUrl: downloadURL,
+                fileUrl: driveLink, // सेव्ह केलेली ड्राईव्ह लिंक
                 uploadedAt: new Date(),
-                uploadedBy: loggedInUser // फाईल कोणी अपलोड केली याची नोंद
+                uploadedBy: loggedInUser
             });
 
-            showStatus('upload-status', '✅ पत्रक/जीआर यशस्वीरीत्या अपलोड झाला!', 'success');
+            showStatus('upload-status', '✅ पत्रक/जीआर यशस्वीरीत्या जोडला गेला!', 'success');
             document.getElementById('upload-pdf-form').reset();
         } catch (error) {
-            showStatus('upload-status', '❌ अपलोड अयशस्वी: ' + error.message, 'error');
+            showStatus('upload-status', '❌ अयशस्वी: ' + error.message, 'error');
         }
     });
 </script>
