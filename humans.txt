@@ -1,0 +1,9 @@
+/* TEAM */
+Website: X-Ray Officer Maharashtra
+Owner: Mahesh Hange
+Organization: X-Ray Scientific Officer Association, Maharashtra
+
+/* SITE */
+URL: https://hospitalhospital916.github.io/xrayofficermaharashtra/
+Language: Marathi, English
+Platform: GitHub Pages
