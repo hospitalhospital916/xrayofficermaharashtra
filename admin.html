@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>अ‍ॅडमिन डॅशबोर्ड - पत्रके व PDF व्यवस्थापन</title>
     <style>
-        /* सुंदर डिझाईन (CSS) */
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #e9ecef; margin: 0; padding: 0; }
         
         header { background: #003366; color: white; padding: 20px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
@@ -14,6 +13,11 @@
         .back-link:hover { background: #ffcc00; color: #003366; }
 
         .admin-container { max-width: 800px; margin: 40px auto; background: #fff; padding: 40px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+        
+        /* लॉगिन बॉक्स डिझाईन */
+        #login-section { max-width: 400px; margin: 50px auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); border-top: 5px solid #003366; }
+        #login-section h2 { text-align: center; color: #003366; margin-bottom: 20px; }
+        
         h2 { color: #003366; text-align: center; border-bottom: 3px solid #ffcc00; padding-bottom: 10px; margin-bottom: 30px; font-size: 26px; }
         h3 { color: #003366; margin-top: 0; font-size: 20px; }
         
@@ -21,8 +25,7 @@
         
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; margin-bottom: 8px; font-weight: bold; color: #444; }
-        .form-group input, .form-group select { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 15px; transition: 0.3s; }
-        .form-group input:focus, .form-group select:focus { border-color: #003366; outline: none; box-shadow: 0 0 5px rgba(0,51,102,0.3); }
+        .form-group input, .form-group select { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 15px; }
         
         .btn { width: 100%; padding: 14px; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 16px; transition: 0.3s; margin-top: 10px; }
         .btn-blue { background: #003366; }
@@ -34,6 +37,8 @@
         .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
         .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
         .loading { background: #fff3cd; color: #856404; border: 1px solid #ffeeba; }
+        
+        #welcome-user { text-align: center; font-weight: bold; color: #28a745; margin-bottom: 20px; font-size: 18px; }
     </style>
 </head>
 <body>
@@ -43,8 +48,25 @@
     <a href="index.html" class="back-link">⬅ मुख्यपृष्ठावर परत जा</a>
 </header>
 
-<div class="admin-container">
+<!-- लॉगिन सिस्टीम -->
+<div id="login-section">
+    <h2>अ‍ॅडमिन लॉगिन</h2>
+    <div class="form-group">
+        <label>युझर आयडी (User ID)</label>
+        <input type="text" id="userid" placeholder="तुमचा आयडी टाका">
+    </div>
+    <div class="form-group">
+        <label>पासवर्ड (Password)</label>
+        <input type="password" id="password" placeholder="तुमचा पासवर्ड टाका">
+    </div>
+    <button onclick="checkLogin()" class="btn btn-blue">लॉगिन करा</button>
+    <div id="login-error" class="status-msg error" style="display:none;">❌ चुकीचा आयडी किंवा पासवर्ड!</div>
+</div>
+
+<!-- मुख्य डॅशबोर्ड (लॉगिन झाल्यावरच दिसेल) -->
+<div class="admin-container" id="dashboard-section" style="display:none;">
     <h2>सिस्टीम व्यवस्थापन</h2>
+    <div id="welcome-user"></div>
 
     <!-- भाग १: नवीन सब-फोल्डर तयार करणे -->
     <div class="form-section">
@@ -71,7 +93,6 @@
                 <label>योग्य सब-फोल्डर निवडा</label>
                 <select id="select-folder" required>
                     <option value="">-- कृपया फोल्डर निवडा --</option>
-                    <!-- डेटाबेसमधून आलेले फोल्डर्स इथे दिसतील -->
                 </select>
             </div>
             <div class="form-group">
@@ -88,13 +109,39 @@
     </div>
 </div>
 
-<!-- Firebase Scripts (तुमच्या अधिकृत वेबसाईटची माहिती) -->
+<script>
+    // युझर आयडी आणि पासवर्ड तपासण्याची सिस्टीम
+    let loggedInUser = "";
+
+    function checkLogin() {
+        const uid = document.getElementById("userid").value;
+        const pass = document.getElementById("password").value;
+        const errorMsg = document.getElementById("login-error");
+
+        // तुमचे नवीन आयडी आणि पासवर्ड 
+        if (uid === "Officer1" && pass === "Mahesh@12345") {
+            grantAccess("Officer1 (मुख्य अ‍ॅडमिन)");
+        } else if (uid === "officer2" && pass === "Ravindra@12345") {
+            grantAccess("officer2 (सह-अ‍ॅडमिन)");
+        } else {
+            errorMsg.style.display = "block";
+        }
+    }
+
+    function grantAccess(userName) {
+        loggedInUser = userName;
+        document.getElementById("login-section").style.display = "none";
+        document.getElementById("dashboard-section").style.display = "block";
+        document.getElementById("welcome-user").innerText = "स्वागत आहे, " + userName + "!";
+    }
+</script>
+
+<!-- Firebase Scripts -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
     import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
-    // तुमची खरी Firebase Config
     const firebaseConfig = {
         apiKey: "AIzaSyDDYBnG3-x59Zt_eLzjcMRNVGpQVkKFKgc",
         authDomain: "xrayofficermaharashtra.firebaseapp.com",
@@ -117,7 +164,6 @@
         el.innerText = message;
     }
 
-    // १. नवीन सब-फोल्डर तयार करणे
     document.getElementById('create-folder-form').addEventListener('submit', async (e) => {
         e.preventDefault();
         const name = document.getElementById('folder-name').value;
@@ -129,7 +175,8 @@
             await addDoc(collection(db, "subfolders"), {
                 name: name,
                 description: description,
-                createdAt: new Date()
+                createdAt: new Date(),
+                createdBy: loggedInUser // कोणी फोल्डर बनवले याची नोंद
             });
             showStatus('folder-status', '✅ नवीन सब-फोल्डर यशस्वीरीत्या तयार झाले!', 'success');
             document.getElementById('create-folder-form').reset();
@@ -139,14 +186,12 @@
         }
     });
 
-    // ड्रॉपडाऊनमध्ये सध्याचे सर्व सब-फोल्डर्स लोड करणे
     async function loadFoldersInDropdown() {
         const dropdown = document.getElementById('select-folder');
         dropdown.innerHTML = '<option value="">-- कृपया फोल्डर निवडा --</option>';
         try {
             const querySnapshot = await getDocs(collection(db, "subfolders"));
             querySnapshot.forEach((doc) => {
-                // Fixed Backticks Syntax
                 dropdown.innerHTML += `<option value="${doc.id}">${doc.data().name}</option>`;
             });
         } catch(error) {
@@ -155,7 +200,6 @@
     }
     loadFoldersInDropdown();
 
-    // २. निवडलेल्या सब-फोल्डरमध्ये PDF अपलोड करणे
     document.getElementById('upload-pdf-form').addEventListener('submit', async (e) => {
         e.preventDefault();
         const folderId = document.getElementById('select-folder').value;
@@ -167,7 +211,6 @@
         showStatus('upload-status', '⏳ फाईल सुरक्षितपणे अपलोड होत आहे, कृपया थांबून राहा...', 'loading');
 
         try {
-            // Fixed Backticks Syntax for Storage Reference
             const storageRef = ref(storage, `documents/${Date.now()}_${file.name}`);
             const snapshot = await uploadBytes(storageRef, file);
             const downloadURL = await getDownloadURL(snapshot.ref);
@@ -176,7 +219,8 @@
                 folderId: folderId,
                 title: title,
                 fileUrl: downloadURL,
-                uploadedAt: new Date()
+                uploadedAt: new Date(),
+                uploadedBy: loggedInUser // फाईल कोणी अपलोड केली याची नोंद
             });
 
             showStatus('upload-status', '✅ पत्रक/जीआर यशस्वीरीत्या अपलोड झाला!', 'success');
