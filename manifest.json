@@ -1,0 +1,9 @@
+{
+  "name": "X-Ray Officer Maharashtra",
+  "short_name": "XRay MH",
+  "start_url": "/xrayofficermaharashtra/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0b5ed7",
+  "icons": []
+}
