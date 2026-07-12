@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>संपर्क - क्ष-किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य</title>
+    <title>संपर्क आणि तक्रार निवारण - क्ष-किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य</title>
     
     <!-- Google Search साठी Meta Tags -->
-    <meta name="description" content="क्ष-किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य यांच्याशी संपर्क साधा. कार्यालयीन पत्ता (उपजिल्हा रुग्णालय फलटण) आणि संपर्क क्रमांकाची माहिती.">
+    <meta name="description" content="क्ष-किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य यांच्याशी संपर्क साधा. कार्यालयीन पत्ता (उपजिल्हा रुग्णालय फलटण), संपर्क क्रमांक आणि ऑनलाईन अडचण निवारण कक्ष.">
     
     <style>
         :root {
@@ -16,6 +16,7 @@
             --bg-color: #f8f9fa;
             --card-bg: #ffffff;
             --text-color: #333;
+            --border-color: #ccc;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
@@ -23,7 +24,13 @@
         body { line-height: 1.6; background-color: var(--bg-color); color: var(--text-color); transition: 0.3s; }
 
         /* डार्क मोड */
-        body.dark-mode { --bg-color: #121212; --card-bg: #1e1e1e; --text-color: #f4f4f4; --light-blue: #2a2a2a; }
+        body.dark-mode { 
+            --bg-color: #121212; 
+            --card-bg: #1e1e1e; 
+            --text-color: #f4f4f4; 
+            --light-blue: #2a2a2a;
+            --border-color: #444;
+        }
         body.dark-mode header { background: #1e1e1e; color: #fff; }
         body.dark-mode nav { background: #000; }
 
@@ -48,7 +55,7 @@
         .page-title { text-align: center; padding: 40px 20px 10px 20px; color: var(--primary-blue); font-size: 2rem; }
         body.dark-mode .page-title { color: var(--secondary-gold); }
 
-        .contact-container { max-width: 1100px; margin: auto; padding: 20px 20px 40px 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        .contact-container { max-width: 1100px; margin: auto; padding: 20px 20px 40px 20px; display: grid; grid-template-columns: 1fr 1.2fr; gap: 40px; }
         @media (max-width: 768px) { .contact-container { grid-template-columns: 1fr; gap: 25px; } }
 
         /* डावी बाजू: संपर्क माहिती कार्ड्स */
@@ -61,10 +68,27 @@
         body.dark-mode .contact-card a { color: #8ab4f8; }
         .contact-card a:hover { text-decoration: underline; }
 
-        /* उजवी बाजू: मेसेज/फॉर्म विभाग */
+        /* उजवी बाजू: फॉर्म विभाग */
         .form-side { background: var(--card-bg); padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border-top: 5px solid var(--primary-blue); }
-        .form-side h2 { color: var(--primary-blue); margin-bottom: 15px; font-size: 1.5rem; }
-        body.dark-mode .form-side h2 { color: #fff; }
+        .form-side h2 { color: var(--primary-blue); margin-bottom: 10px; font-size: 1.5rem; }
+        body.dark-mode .form-side h2 { color: var(--secondary-gold); }
+        
+        /* फॉर्म घटक */
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 0.95rem; }
+        .form-group input, .form-group select, .form-group textarea { 
+            width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 5px; 
+            font-size: 1rem; background-color: var(--card-bg); color: var(--text-color); transition: 0.3s;
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { 
+            border-color: var(--primary-blue); outline: none; box-shadow: 0 0 5px rgba(11, 61, 145, 0.2); 
+        }
+        
+        .submit-btn { 
+            background: var(--primary-blue); color: white; border: none; padding: 12px 20px; 
+            width: 100%; border-radius: 5px; font-weight: bold; font-size: 1rem; cursor: pointer; transition: 0.3s; 
+        }
+        .submit-btn:hover { background: var(--secondary-gold); color: #000; }
 
         /* तळटीप */
         footer { background: #0B2240; color: white; text-align: center; padding: 30px 20px; font-size: 0.95rem; }
@@ -120,16 +144,56 @@
                 </div>
             </div>
 
-            <!-- उजवी बाजू: थेट संदेश किंवा गुगल फॉर्म -->
+            <!-- उजवी बाजू: थेट अडचण निवारण कक्ष फॉर्म -->
             <div class="form-side">
-                <h2>📝 आम्हाला संदेश पाठवा / समस्या नोंदवा</h2>
-                <p style="margin-bottom: 20px; font-size: 0.95rem; color: #555;">तुम्हाला सेवेबाबत काही अडचण असल्यास किंवा संघटनेला कोणताही सल्ला द्यायचा असल्यास खालील फॉर्मचा वापर करा.</p>
+                <h2>📝 ऑनलाईन अडचण निवारण कक्ष</h2>
+                <p style="margin-bottom: 20px; font-size: 0.9rem; color: #666;">तुम्हाला सेवेबाबत काही अडचण असल्यास खालील फॉर्म भरून संघटनेकडे पाठवा.</p>
                 
-                <div style="background: var(--light-blue); padding: 20px; border-radius: 8px; text-align: center; border: 1px dashed var(--primary-blue);">
-                    <p style="font-weight: 500; color: var(--primary-blue);">गूगल फॉर्म सुविधा</p>
-                    <p style="font-size: 0.9rem; margin-top: 5px;">येथे तुमचा गुगल फॉर्म जोडल्यास सदस्य थेट वेबसाईटवरून नाव, जिल्हा आणि आपली समस्या लिहून पाठवू शकतील.</p>
-                    <a href="https://forms.gle/XbdkWManQePhTerA9" target="_blank" style="display:inline-block; margin-top:15px; background:var(--primary-blue); color:white; padding:8px 15px; text-decoration:none; border-radius:5px; font-weight:bold; font-size:0.9rem;">फॉर्म लिंक सेट करा</a>
-                </div>
+                <form id="grievanceForm" onsubmit="submitGrievance(event)">
+                    <div class="form-group">
+                        <label for="memberName">सदस्याचे पूर्ण नाव:</label>
+                        <input type="text" id="memberName" required placeholder="उदा. रामराव विठ्ठल पाटील">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="memberDesignation">पद / हुद्दा:</label>
+                        <select id="memberDesignation" required>
+                            <option value="" disabled selected>निवडा...</option>
+                            <option value="क्ष-किरण वैज्ञानिक अधिकारी (गट-क)">क्ष-किरण वैज्ञानिक अधिकारी (गट-क)</option>
+                            <option value="वरिष्ठ क्ष-किरण वैज्ञानिक अधिकारी">वरिष्ठ क्ष-किरण वैज्ञानिक अधिकारी</option>
+                            <option value="इतर">इतर</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="memberWorkplace">सध्याचे कार्यरत ठिकाण व जिल्हा:</label>
+                        <input type="text" id="memberWorkplace" required placeholder="उदा. उपजिल्हा रुग्णालय फलटण, सातारा">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="memberMobile">मोबाईल क्रमांक:</label>
+                        <input type="tel" id="memberMobile" pattern="[0-9]{10}" required placeholder="10 अंकी मोबाईल क्रमांक">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="issueType">अडचणीचा प्रकार:</label>
+                        <select id="issueType" required>
+                            <option value="" disabled selected>निवडा...</option>
+                            <option value="पदोन्नती (Promotion) संदर्भात">पदोन्नती (Promotion) संदर्भात</option>
+                            <option value="वेतनश्रेणी / वेतनवाढ त्रुटी">वेतनश्रेणी / वेतनवाढ त्रुटी</option>
+                            <option value="रजा किंवा सुट्टीबाबत अडचण">रजा किंवा सुट्टीबाबत अडचण</option>
+                            <option value="तांत्रिक किंवा इतर सेवाविषयक समस्या">तांत्रिक किंवा इतर सेवाविषयक समस्या</option>
+                            <option value="इतर वैयक्तिक अडचण">इतर वैयक्तिक अडचण</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="issueDetails">अडचणीचा सविस्तर तपशील:</label>
+                        <textarea id="issueDetails" rows="4" required placeholder="तुमची समस्या येथे सविस्तर लिहा..."></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-btn">📨 तक्रार / अडचण नोंदवा</button>
+                </form>
             </div>
 
         </div>
@@ -141,7 +205,7 @@
             <a href="gr.html">GR व पत्रे</a> | 
             <a href="contact.html">संपर्क करा</a>
         </div>
-        <p>&copy; २०२६ क्ष-किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य. सर्व हक्क सुरक्षित.</p>
+        <p>&copy; २०२६ क्ष-किरण वैज्ञानिक अधिकारी संघटना,搬 महाराष्ट्र राज्य. सर्व हक्क सुरक्षित.</p>
     </footer>
 
     <script>
@@ -153,6 +217,40 @@
             } else {
                 btn.innerHTML = "🌙 थीम बदला";
             }
+        }
+
+        // व्हॉट्सॲपवर डेटा पाठवणारी मुख्य स्क्रिप्ट
+        function submitGrievance(event) {
+            event.preventDefault();
+            
+            // फॉर्ममधील व्हॅल्यू गोळा करणे
+            var name = document.getElementById("memberName").value;
+            var designation = document.getElementById("memberDesignation").value;
+            var workplace = document.getElementById("memberWorkplace").value;
+            var mobile = document.getElementById("memberMobile").value;
+            var issue = document.getElementById("issueType").value;
+            var details = document.getElementById("issueDetails").value;
+            
+            // मेसेजचे स्वरूप तयार करणे
+            var textMessage = "*🚨 नवीन तक्रार / अडचण अर्ज 🚨*\n\n" +
+                              "*१. नाव:* " + name + "\n" +
+                              "*२. पद:* " + designation + "\n" +
+                              "*३. ठिकाण व जिल्हा:* " + workplace + "\n" +
+                              "*४. मोबाईल क्रमांक:* " + mobile + "\n" +
+                              "*५. अडचणीचा प्रकार:* " + issue + "\n" +
+                              "*६. सविस्तर तपशील:* " + details;
+            
+            // तुमचा व्हॉट्सॲप नंबर (कंट्री कोड सह)
+            var myNumber = "919763192449"; 
+            
+            // सुरक्षित URL तयार करणे
+            var url = "https://wa.me/" + myNumber + "?text=" + encodeURIComponent(textMessage);
+            
+            // व्हॉट्सॲप नवीन टॅबमध्ये ओपन करणे
+            window.open(url, '_blank');
+            
+            // फॉर्म पुन्हा रिकामा (Reset) करणे
+            document.getElementById("grievanceForm").reset();
         }
     </script>
 </body>
