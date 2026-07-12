@@ -1,0 +1,5 @@
+Contact: mailto:your-email@example.com
+Expires: 2027-07-12T00:00:00Z
+Preferred-Languages: mr, en
+Canonical: https://hospitalhospital916.github.io/xrayofficermaharashtra/.well-known/security.txt
+Policy: https://hospitalhospital916.github.io/xrayofficermaharashtra/
