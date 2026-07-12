@@ -5,40 +5,91 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>क्ष-किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य</title>
     
+    <!-- Google Search साठी Meta Tags -->
+    <meta name="description" content="क्ष-किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य - राज्यातील सर्व क्ष-किरण वैज्ञानिक अधिकाऱ्यांच्या हक्कासाठी आणि प्रगतीसाठी समर्पित अधिकृत संघटना.">
+    <meta name="keywords" content="X-Ray Scientific Officer, Maharashtra, क्ष-किरण वैज्ञानिक अधिकारी, संघटना, सरकारी नोकरी, GR, महाराष्ट्र शासन">
+    
     <style>
-        /* CSS व्हेरिएबल्स - इथून रंग बदला */
         :root {
             --primary-blue: #0B3D91;
             --secondary-gold: #FFD700;
-            --bg-color: #f4f4f4;
+            --light-blue: #E6F0FA;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
             --text-color: #333;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
 
         body { line-height: 1.6; background-color: var(--bg-color); color: var(--text-color); transition: 0.3s; }
 
         /* डार्क मोड स्टाईल */
-        body.dark-mode { background-color: #1a1a1a; color: #fff; }
+        body.dark-mode { --bg-color: #121212; --card-bg: #1e1e1e; --text-color: #f4f4f4; --light-blue: #2a2a2a; }
+        body.dark-mode header { background: #1e1e1e; color: #fff; }
         body.dark-mode nav { background: #000; }
 
         /* हेडर आणि लोगो */
-        header { text-align: center; padding: 20px; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .logo-img { max-width: 120px; margin-bottom: 10px; }
-        
-        /* नेव्हिगेशन */
-        nav { background: var(--primary-blue); padding: 10px; text-align: center; display: flex; justify-content: center; flex-wrap: wrap; }
-        nav a { color: white; padding: 12px 15px; text-decoration: none; font-weight: bold; transition: 0.3s; }
-        nav a:hover { background: var(--secondary-gold); color: #000; }
-
-        /* मुख्य भाग */
-        .hero { padding: 50px 20px; text-align: center; background: linear-gradient(to right, #0b3d91, #1e56b5); color: white; }
-        .btn { display: inline-block; padding: 12px 25px; background: var(--secondary-gold); color: #000; font-weight: bold; text-decoration: none; border-radius: 5px; margin-top: 20px; }
-        
-        .section { padding: 40px 20px; max-width: 800px; margin: auto; }
+        header { text-align: center; padding: 25px 20px; background: #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.05); position: relative; }
+        .logo-img { max-width: 100px; height: auto; margin-bottom: 10px; transition: 0.3s; }
+        header h1 { font-size: 1.8rem; color: var(--primary-blue); margin-bottom: 5px; }
+        body.dark-mode header h1 { color: #fff; }
+        header p { font-size: 1.1rem; font-weight: bold; color: #555; }
+        body.dark-mode header p { color: #ccc; }
         
         /* थीम बटण */
-        .theme-btn { padding: 8px 15px; cursor: pointer; border: none; background: #333; color: white; border-radius: 5px; margin-bottom: 10px; }
+        .theme-btn { position: absolute; top: 20px; right: 20px; padding: 8px 15px; cursor: pointer; border: none; background: var(--primary-blue); color: white; border-radius: 20px; font-weight: bold; transition: 0.3s; }
+        .theme-btn:hover { background: var(--secondary-gold); color: #000; }
+
+        /* नेव्हिगेशन */
+        nav { background: var(--primary-blue); padding: 5px; text-align: center; display: flex; justify-content: center; flex-wrap: wrap; sticky: top; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        nav a { color: white; padding: 12px 20px; text-decoration: none; font-weight: bold; transition: 0.3s; font-size: 1rem; }
+        nav a:hover { background: var(--secondary-gold); color: #000; border-radius: 4px; }
+
+        /* हिरो सेक्शन */
+        .hero { padding: 60px 20px; text-align: center; background: linear-gradient(135deg, #0b3d91, #1e56b5); color: white; clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%); }
+        .hero h1 { font-size: 2.3rem; margin-bottom: 15px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        .hero p { font-size: 1.2rem; max-width: 600px; margin: 0 auto 25px auto; opacity: 0.9; }
+        .btn { display: inline-block; padding: 14px 30px; background: var(--secondary-gold); color: #000; font-weight: bold; text-decoration: none; border-radius: 25px; box-shadow: 0 4px 15px rgba(255,215,0,0.4); transition: 0.3s; font-size: 1.1rem; }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(255,215,0,0.6); }
+        
+        /* मुख्य मांडणी (Layout) */
+        .container { max-width: 1100px; margin: auto; padding: 20px; display: grid; grid-template-columns: 2fr 1fr; gap: 30px; }
+        @media (max-width: 768px) { .container { grid-template-columns: 1fr; } .hero h1 { font-size: 1.8rem; } }
+
+        /* सेक्शन्स आणि कार्ड्स */
+        .main-content { display: flex; flex-direction: column; gap: 30px; }
+        .card { background: var(--card-bg); padding: 25px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border-left: 5px solid var(--primary-blue); }
+        .card h2 { color: var(--primary-blue); margin-bottom: 15px; border-bottom: 2px solid var(--light-blue); padding-bottom: 8px; }
+        body.dark-mode .card h2 { color: var(--secondary-gold); }
+
+        /* सूचना फलक (Sidebar Notice) */
+        .sidebar { display: flex; flex-direction: column; gap: 20px; }
+        .notice-box { background: var(--light-blue); padding: 20px; border-radius: 10px; border: 1px dashed var(--primary-blue); }
+        .notice-box h3 { color: var(--primary-blue); margin-bottom: 10px; display: flex; align-items: center; gap: 5px; }
+        body.dark-mode .notice-box h3 { color: #fff; }
+        .notice-list { list-style: none; }
+        .notice-list li { padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.1); font-size: 0.95rem; }
+        .notice-list li a { color: var(--primary-blue); text-decoration: none; font-weight: 500; }
+        body.dark-mode .notice-list li a { color: #8ab4f8; }
+        .notice-list li a:hover { text-decoration: underline; }
+
+        /* उद्दिष्टे ग्रीड */
+        .objectives-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
+        @media (max-width: 500px) { .objectives-grid { grid-template-columns: 1fr; } }
+        .obj-item { background: var(--light-blue); padding: 15px; border-radius: 8px; text-align: center; font-weight: 500; }
+
+        /* पदाधिकारी विभाग */
+        .committee-section { text-align: center; padding: 40px 20px; background: var(--card-bg); border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin: 20px auto; max-width: 1100px; }
+        .committee-grid { display: flex; justify-content: center; flex-wrap: wrap; gap: 30px; margin-top: 20px; }
+        .member-card { background: var(--bg-color); padding: 20px; border-radius: 8px; width: 220px; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .member-img { width: 100px; height: 100px; background: #ccc; border-radius: 50%; margin: 0 auto 15px auto; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: #fff; }
+
+        /* तळटीप (Footer) */
+        footer { background: #0B2240; color: white; text-align: center; padding: 30px 20px; margin-top: 40px; font-size: 0.95rem; }
+        footer a { color: var(--secondary-gold); text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
+        .footer-links { margin-bottom: 15px; }
+        .footer-links a { margin: 0 10px; color: #fff; }
     </style>
 </head>
 
@@ -46,36 +97,111 @@
 
     <header>
         <button class="theme-btn" onclick="toggleDarkMode()">🌙 थीम बदला</button>
-        <img src="logo.png" class="logo-img" alt="लोगो">
+        <!-- लोगो उपलब्ध नसल्यास अल्टरनेट टेक्स्ट दिसेल -->
+        <img src="logo.png" class="logo-img" alt="संगठनाचा लोगो">
         <h1>क्ष-किरण वैज्ञानिक अधिकारी संघटना</h1>
-        <p>महाराष्ट्र राज्य</p>
+        <p>महाराष्ट्र राज्य (नोंदणीकृत)</p>
     </header>
 
     <nav>
         <a href="index.html">मुख्यपृष्ठ</a>
         <a href="#about">संघटनाबद्दल</a>
-        <a href="gr.html">GR / इतर पत्रे</a>
+        <a href="#objectives">उद्दिष्टे</a>
+        <a href="gr.html">GR / परिपत्रके</a>
         <a href="gallery.html">गॅलरी</a>
         <a href="contact.html">संपर्क</a>
-        <a href="https://forms.gle/XbdkWManQePhTerA9" target="_blank">सदस्य नोंदणी</a>
+        <a href="https://forms.gle/XbdkWManQePhTerA9" target="_blank" style="color: var(--secondary-gold);">📢 सदस्य नोंदणी</a>
     </nav>
 
     <main>
         <section class="hero">
             <h1>आपले हार्दिक स्वागत!</h1>
-            <p>राज्यातील क्ष-किरण वैज्ञानिक अधिकाऱ्यांच्या प्रगतीसाठी समर्पित.</p>
-            <a href="https://forms.gle/XbdkWManQePhTerA9" target="_blank" class="btn">सदस्य व्हा</a>
+            <p>राज्यातील सर्व क्ष-किरण वैज्ञानिक अधिकाऱ्यांच्या हक्कासाठी, आरोग्यासाठी आणि उज्ज्वल भविष्यासाठी कटिबद्ध संघटना.</p>
+            <a href="https://forms.gle/XbdkWManQePhTerA9" target="_blank" class="btn">ऑनलाइन सदस्य व्हा</a>
         </section>
 
-        <section id="about" class="section">
-            <h2>संघटनाबद्दल</h2>
-            <p>क्ष-किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य ही एक नोंदणीकृत संघटना आहे जी आपल्या सर्व सभासदांच्या हक्कासाठी आणि आरोग्यासाठी कटिबद्ध आहे.</p>
+        <div class="container">
+            <!-- मुख्य माहिती विभाग -->
+            <div class="main-content">
+                <section id="about" class="card">
+                    <h2>संघटनाबद्दल</h2>
+                    <p>क्ष-किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य ही संपूर्ण महाराष्ट्रातील शासकीय व निमशासकीय रुग्णालयांमध्ये कार्यरत असणाऱ्या क्ष-किरण वैज्ञानिक अधिकाऱ्यांचे प्रतिनिधित्व करणारी अग्रगण्य संघटना आहे. अधिकाऱ्यांच्या सेवाविषयक समस्या सोडवणे, त्यांना न्याय मिळवून देणे आणि तांत्रिक स्तरावर सक्षम करणे हे संघटनेचे मुख्य ध्येय आहे.</p>
+                </section>
+
+                <section id="objectives" class="card">
+                    <h2>ध्येय व उद्दिष्टे</h2>
+                    <p>आमची संघटना खालील प्रमुख उद्दिष्टांवर काम करते:</p>
+                    <div class="objectives-grid">
+                        <div class="obj-item">🤝 सभासदांमध्ये एकजूट निर्माण करणे</div>
+                        <div class="obj-item">⚖️ कायदेशीर व सेवाविषयक हक्कांचे रक्षण</div>
+                        <div class="obj-item">🛡️ रेडिएशन सेफ्टी व आरोग्याविषयी जागृती</div>
+                        <div class="obj-item">📈 व्यावसायिक व तांत्रिक कौशल्य विकास</div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- बाजूचा सूचना फलक विभाग -->
+            <aside class="sidebar">
+                <div class="notice-box">
+                    <h3>🔔 ताज्या घडामोडी / सूचना</h3>
+                    <ul class="notice-list">
+                        <li>
+                            <span style="color: red; font-weight: bold;">[नवीन]</span> 
+                            <a href="gr.html">सन २०२६ चे नवीन सेवाजेष्ठता यादी परिपत्रक पहा.</a>
+                        </li>
+                        <li>
+                            <a href="https://forms.gle/XbdkWManQePhTerA9" target="_blank">नवीन नोंदणी मोहीम सुरू - आजच आपले नाव नोंदवा.</a>
+                        </li>
+                        <li>
+                            <a href="gr.html">रेडिएशन अलाउन्स संदर्भातील नवीन शासन निर्णय (GR).</a>
+                        </li>
+                    </ul>
+                </div>
+            </aside>
+        </div>
+
+        <!-- पदाधिकारी विभाग -->
+        <section class="committee-section">
+            <h2>👥 मुख्य केंद्रीय पदाधिकारी</h2>
+            <div class="committee-grid">
+                <div class="member-card">
+                    <div class="member-img">🧑‍💼</div>
+                    <h4>[पदाधिकाऱ्याचे नाव]</h4>
+                    <p style="color: var(--primary-blue); font-weight: bold;">राज्य अध्यक्ष</p>
+                </div>
+                <div class="member-card">
+                    <div class="member-img">🧑‍💼</div>
+                    <h4>[पदाधिकाऱ्याचे नाव]</h4>
+                    <p style="color: var(--primary-blue); font-weight: bold;">राज्य सरचिटणीस</p>
+                </div>
+                <div class="member-card">
+                    <div class="member-img">🧑‍💼</div>
+                    <h4>[पदाधिकाऱ्याचे नाव]</h4>
+                    <p style="color: var(--primary-blue); font-weight: bold;">राज्य कोषाध्यक्ष</p>
+                </div>
+            </div>
         </section>
     </main>
+
+    <footer>
+        <div class="footer-links">
+            <a href="index.html">मुख्यपृष्ठ</a> | 
+            <a href="gr.html">GR व पत्रे</a> | 
+            <a href="contact.html">संपर्क करा</a>
+        </div>
+        <p>&copy; २०२६ क्ष-किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य. सर्व हक्क सुरक्षित.</p>
+        <p style="font-size: 0.8rem; opacity: 0.7; margin-top: 5px;">Designed for Transparency & Unity</p>
+    </footer>
 
     <script>
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
+            const btn = document.querySelector('.theme-btn');
+            if(document.body.classList.contains('dark-mode')) {
+                btn.innerHTML = "☀️ लाईट मोड";
+            } else {
+                btn.innerHTML = "🌙 थीम बदला";
+            }
         }
     </script>
 </body>
