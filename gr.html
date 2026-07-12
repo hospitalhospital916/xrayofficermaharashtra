@@ -1,12 +1,79 @@
-<div class="gr-container" style="max-width: 1200px; margin: 40px auto; padding: 0 20px; font-family: Arial, sans-serif;">
-    <h2 class="page-title" style="color: #003366; text-align: center; margin-bottom: 10px; font-size: 28px;">इतर अधिकृत पत्रे 🔒</h2>
-    <p class="page-subtitle" style="text-align: center; color: #666; margin-bottom: 40px; font-size: 16px;">फक्त मंजूर सदस्यांसाठी सुरक्षित सब-फोल्डर्स</p>
+<!-- Font Awesome Link (फोल्डर आयकॉन्स दिसण्यासाठी आवश्यक) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+  .gr-container {
+    max-width: 1200px; 
+    margin: 40px auto; 
+    padding: 0 20px; 
+    font-family: Arial, sans-serif;
+  }
+  .page-title {
+    color: #003366; 
+    text-align: center; 
+    margin-bottom: 10px; 
+    font-size: 28px;
+    font-weight: bold;
+  }
+  .page-subtitle {
+    text-align: center; 
+    color: #666; 
+    margin-bottom: 40px; 
+    font-size: 16px;
+  }
+  .folder-grid {
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); 
+    gap: 30px;
+  }
+  .folder-card {
+    background: white; 
+    border-radius: 12px; 
+    padding: 30px 20px; 
+    text-align: center; 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05); 
+    border: 1px solid #e0e0e0; 
+    cursor: pointer; 
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  /* फोल्डरवर माऊस नेल्यावर येणारा इफेक्ट */
+  .folder-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    border-color: #3498db;
+  }
+  .folder-icon {
+    font-size: 60px; 
+    color: #FFB020; 
+    margin-bottom: 15px;
+  }
+  .folder-title {
+    font-size: 18px; 
+    font-weight: bold; 
+    color: #003366; 
+    margin-bottom: 8px;
+  }
+  .folder-desc {
+    font-size: 14px; 
+    color: #777;
+  }
+  #loading-msg {
+    text-align: center; 
+    font-size: 18px; 
+    color: #666;
+  }
+</style>
+
+<div class="gr-container">
+    <h2 class="page-title">इतर अधिकृत पत्रे 🔒</h2>
+    <p class="page-subtitle">फक्त मंजूर सदस्यांसाठी सुरक्षित सब-फोल्डर्स</p>
     
-    <div id="loading-msg" style="text-align: center; font-size: 18px; color: #666;">माहिती लोड होत आहे, कृपया थांबा...</div>
+    <div id="loading-msg">माहिती लोड होत आहे, कृपया थांबा...</div>
     
-    <div class="folder-grid" id="folders-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 30px;"></div>
+    <div class="folder-grid" id="folders-container"></div>
 </div>
 
+<!-- Firebase Scripts -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
@@ -81,18 +148,20 @@
 
     myFolders.forEach((folder) => {
       const folderHtml = `
-        <div class="card" onclick="openFolder('${folder.id}')" style="background: white; border-radius: 12px; padding: 30px 20px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); border: 1px solid #e0e0e0; cursor: pointer; transition: all 0.3s ease;">
-            <i class="fa-solid fa-folder-open" style="font-size: 60px; color: #FFB020; margin-bottom: 15px;"></i>
-            <div style="font-size: 18px; font-weight: bold; color: #003366; margin-bottom: 8px;">${folder.name}</div>
-            <div style="font-size: 14px; color: #777;">${folder.desc}</div>
+        <div class="folder-card" onclick="openFolder('${folder.id}')">
+            <i class="fa-solid fa-folder-open folder-icon"></i>
+            <div class="folder-title">${folder.name}</div>
+            <div class="folder-desc">${folder.desc}</div>
         </div>
       `;
       container.innerHTML += folderHtml;
     });
   }
 
-  // फोल्डर्स लोड करा
-  displayFolders();
+  // पेज लोड झाल्यावर फोल्डर्स दिसावेत यासाठी फंक्शन कॉल
+  window.onload = function() {
+    displayFolders();
+  };
 
   // फोल्डरवर क्लिक केल्यावर काय व्हावे
   window.openFolder = function(folderId) {
@@ -101,23 +170,20 @@
     } else if(folderId === "raja_niyam") {
         window.open("https://drive.google.com/drive/folders/1kvwI7XLMU7Wz5OlP8Qkk0Q98ELaWJB49?usp=drive_link", "_blank"); 
     } else if(folderId === "home_loan") {
-        window.open("https://drive.google.com/drive/folders/1NQmNrfKv60H2vrc62wsrQjQXugaFofTa?uspdrive_link", "_blank");
+        window.open("https://drive.google.com/drive/folders/1NQmNrfKv60H2vrc62wsrQjQXugaFofTa?usp=drive_link", "_blank");
     } else if(folderId === "income_tax") {
         window.location.href = "income-tax.html";
     } else if(folderId === "seva_pustak") {
-        // सेवापुस्तक गुगल ड्राईव्हची लिंक खाली पेस्ट करा
         window.open("https://drive.google.com/drive/folders/1cxIg5I5XqOE6JuOPevEmeexShQpD0qzQ?usp=drive_link", "_blank");
     } else if(folderId === "vaidyakiya_deyak") {
-        // वैद्यकीय देयक गुगल ड्राईव्हची लिंक खाली पेस्ट करा
-        window.open("तुमची_वैद्यकीय_देयक_लिंक_इथे_टाका", "_blank");
+        // टीप: इथे तुमची वैद्यकीय देयकाची गूगल ड्राईव्ह लिंक टाका
+        window.open("येथे_तुमची_वैद्यकीय_देयक_लिंक_टाका", "_blank");
     } else if(folderId === "mahatvache_form") {
-        // महत्त्वाचे फॉर्म्स गुगल ड्राईव्हची लिंक खाली पेस्ट करा
         window.open("https://drive.google.com/drive/folders/1QXIhpY_UbJQqQq2YsNepgIM3mH8Lmgqv?usp=drive_link", "_blank");
     } else if(folderId === "xray_patravyavahar") {
-        // क्ष-किरण विभाग पत्र व्यवहाराची गुगल ड्राईव्हची लिंक खाली पेस्ट करा
         window.open("https://drive.google.com/drive/folders/1GnUX2PJv3E4-rNv4o3GCQ7eCSkzTiUfM?usp=sharing", "_blank");
     } else {
-        alert(folderId + " चे सुरक्षित कागदपत्रे लवकरच अपलोड केली जातील!");
+        alert("या फोल्डरची माहिती लवकरच उपलब्ध होईल!");
     }
   }
 </script>
