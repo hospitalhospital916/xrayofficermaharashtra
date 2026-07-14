@@ -26,22 +26,26 @@
         .btn-generate { width: 100%; padding: 12px; background-color: #1a4f8b; color: white; border: none; border-radius: 5px; font-size: 18px; cursor: pointer; margin-top: 10px; font-weight: bold; }
         .btn-generate:hover { background-color: #12365e; }
         
-        /* 🎯 Hidden PDF Template (Perfect Single Page Formatting) */
+        /* 🎯 Hidden PDF Template */
+        #pdf-wrapper { display: none; } 
+        
         #pdf-template { 
-            display: none; 
-            padding: 20px 30px; /* आतून योग्य मार्जिन */
+            width: 800px; 
+            padding: 40px 60px; 
             font-family: 'Arial', sans-serif; 
-            line-height: 1.6; 
+            line-height: 1.8; 
             color: black; 
             background: white; 
-            font-size: 18px; /* अचूक आणि वाचनीय अक्षर */
+            font-size: 20px; 
+            box-sizing: border-box;
         }
-        .pdf-header { text-align: right; margin-bottom: 25px; }
-        .pdf-to { margin-bottom: 25px; line-height: 1.5; }
-        .pdf-subject { text-align: center; font-weight: bold; margin-bottom: 25px; font-size: 19px; text-decoration: underline; }
-        .pdf-body { text-align: justify; margin-bottom: 30px; }
+        
+        .pdf-header { text-align: right; margin-bottom: 30px; }
+        .pdf-to { margin-bottom: 30px; line-height: 1.5; }
+        .pdf-subject { text-align: center; font-weight: bold; margin-bottom: 30px; font-size: 21px; text-decoration: underline; }
+        .pdf-body { text-align: justify; margin-bottom: 40px; }
         .pdf-body p { margin-bottom: 15px; }
-        .pdf-footer { display: flex; justify-content: space-between; margin-top: 40px; }
+        .pdf-footer { display: flex; justify-content: space-between; margin-top: 50px; }
         .signature-box { text-align: right; line-height: 1.5; }
     </style>
 </head>
@@ -77,9 +81,14 @@
         <button class="back-btn" onclick="goBack()">⬅ मागे जा</button>
         <h3>📝 ऑनलाईन रजा अर्ज जनरेटर</h3>
         
+        <!-- 🎯 अर्जाची तारीख (ऐच्छिक) -->
+        <div class="form-group" style="background: #eef; padding: 10px; border-radius: 5px;">
+            <label>अर्जाची तारीख (ऐच्छिक - नसल्यास कोरी जागा राहील):</label>
+            <input type="date" id="appDate">
+        </div>
+
         <div class="form-group"><label>अर्जदाराचे नाव:</label><input type="text" id="empName" placeholder="उदा. महेश शिवदास हांगे"></div>
         
-        <!-- 🎯 नवीन विभाग: लिंग निवड (Gender) -->
         <div class="form-group"><label>लिंग (Gender):</label>
             <select id="empGender">
                 <option value="Male">पुरुष (Male)</option>
@@ -118,66 +127,50 @@
         <button class="btn-generate" onclick="generatePDF()">📥 रजेचा अर्ज (PDF) डाउनलोड करा</button>
     </div>
 
-    <!-- २. RTI अर्जाचा टॅब -->
-    <div id="rtiTab" class="tab-content">
-        <button class="back-btn" onclick="goBack()">⬅ मागे जा</button>
-        <h3>⚖️ माहिती अधिकार (RTI) अर्ज</h3>
-        <div style="background:#eef; padding:15px; border-radius:5px;"><p><strong>लवकरच उपलब्ध...</strong></p></div>
-    </div>
+    <!-- इतर टॅब्स -->
+    <div id="rtiTab" class="tab-content"><button class="back-btn" onclick="goBack()">⬅ मागे जा</button><h3>⚖️ माहिती अधिकार (RTI) अर्ज</h3><div style="background:#eef; padding:15px; border-radius:5px;"><p><strong>लवकरच उपलब्ध...</strong></p></div></div>
+    <div id="complaintTab" class="tab-content"><button class="back-btn" onclick="goBack()">⬅ मागे जा</button><h3>📢 तक्रार निवारण कक्ष</h3><input type="text" placeholder="विषय" style="margin-bottom:10px;"><textarea rows="4" placeholder="तुमची अडचण सविस्तर लिहा..." style="margin-bottom:10px;"></textarea><button class="btn-generate">तक्रार पाठवा</button></div>
+    <div id="tldTab" class="tab-content"><button class="back-btn" onclick="goBack()">⬅ मागे जा</button><h3>☢️ TLD बॅज कव्हरिंग लेटर</h3><div style="background:#eef; padding:15px; border-radius:5px;"><p><strong>लवकरच उपलब्ध...</strong></p></div></div>
 
-    <!-- ३. तक्रार निवारण टॅब -->
-    <div id="complaintTab" class="tab-content">
-        <button class="back-btn" onclick="goBack()">⬅ मागे जा</button>
-        <h3>📢 तक्रार निवारण कक्ष</h3>
-        <input type="text" placeholder="विषय" style="margin-bottom:10px;">
-        <textarea rows="4" placeholder="तुमची अडचण सविस्तर लिहा..." style="margin-bottom:10px;"></textarea>
-        <button class="btn-generate">तक्रार पाठवा</button>
-    </div>
-
-    <!-- ४. TLD बॅज टॅब -->
-    <div id="tldTab" class="tab-content">
-        <button class="back-btn" onclick="goBack()">⬅ मागे जा</button>
-        <h3>☢️ TLD बॅज कव्हरिंग लेटर</h3>
-        <div style="background:#eef; padding:15px; border-radius:5px;"><p><strong>लवकरच उपलब्ध...</strong></p></div>
-    </div>
-
-    <!-- 🎯 सरकारी अर्जाचा छुपा साचा (Professional PDF Template) -->
-    <div id="pdf-template">
-        <div class="pdf-header">
-            <p>दिनांक: <strong><span id="outDate"></span></strong></p>
-        </div>
-        
-        <div class="pdf-to">
-            <p><strong>प्रति,</strong><br>
-            <strong><span id="outAuthority"></span></strong>,<br>
-            <span id="outOfficeTop"></span>.</p>
-        </div>
-        
-        <div class="pdf-subject">
-            <p>विषय: <strong><span id="outLeaveType"></span> मंजूर मिळणे बाबत.</strong></p>
-        </div>
-        
-        <div class="pdf-body">
-            <p>महोदय / महोदया,</p>
-            <p style="text-indent: 40px;">वरील विषयास अनुसरून सविनय विनंती की, मी <strong><span id="outName"></span></strong>, आपल्या आस्थापनेवर <strong><span id="outPost"></span></strong> या पदावर कार्यरत आहे.</p>
-            
-            <p style="text-indent: 40px;">मला <strong><span id="outReason"></span></strong> या कारणास्तव दिनांक <strong><span id="outStartDate"></span></strong> ते दिनांक <strong><span id="outEndDate"></span></strong> अशी एकूण <strong><span id="outDays"></span></strong> दिवसांची <strong><span id="outLeaveTypeBody"></span></strong> आवश्यक आहे.</p>
-            
-            <p style="text-indent: 40px;">तरी कृपया आपण माझी सदर रजा मंजूर करावी, ही नम्र विनंती.</p>
-        </div>
-        
-        <div class="pdf-footer">
-            <div>
-                <!-- डावीकडील भाग रिकामा ठेवला आहे -->
+    <!-- सरकारी अर्जाचा छुपा साचा -->
+    <div id="pdf-wrapper">
+        <div id="pdf-template">
+            <div class="pdf-header">
+                <!-- अर्जाची तारीख येथे येईल -->
+                <p>दिनांक: <strong><span id="outDate"></span></strong></p>
             </div>
-            <div class="signature-box">
-                <!-- 🎯 येथे आपला/आपली आपोआप येईल -->
-                <p><span id="outYoursFaithfully">आपला नम्र,</span></p>
-                <br><br>
-                <p><strong>(स्वाक्षरी)</strong></p>
-                <p><strong><span id="outNameSign"></span></strong><br>
-                <span id="outPostSign"></span><br>
-                <span id="outOfficeBottom"></span></p>
+            
+            <div class="pdf-to">
+                <p><strong>प्रति,</strong><br>
+                <strong><span id="outAuthority"></span></strong>,<br>
+                <span id="outOfficeTop"></span>.</p>
+            </div>
+            
+            <div class="pdf-subject">
+                <p>विषय: <strong><span id="outLeaveType"></span> मंजूर मिळणे बाबत.</strong></p>
+            </div>
+            
+            <div class="pdf-body">
+                <p>महोदय / महोदया,</p>
+                <p style="text-indent: 40px;">वरील विषयास अनुसरून सविनय विनंती की, मी <strong><span id="outName"></span></strong>, आपल्या आस्थापनेवर <strong><span id="outPost"></span></strong> या पदावर कार्यरत आहे.</p>
+                
+                <p style="text-indent: 40px;">मला <strong><span id="outReason"></span></strong> या कारणास्तव दिनांक <strong><span id="outStartDate"></span></strong> ते दिनांक <strong><span id="outEndDate"></span></strong> अशी एकूण <strong><span id="outDays"></span></strong> दिवसांची <strong><span id="outLeaveTypeBody"></span></strong> आवश्यक आहे.</p>
+                
+                <p style="text-indent: 40px;">तरी कृपया आपण माझी सदर रजा मंजूर करावी, ही नम्र विनंती.</p>
+            </div>
+            
+            <div class="pdf-footer">
+                <div>
+                    <!-- डावीकडील भाग रिकामा ठेवला आहे -->
+                </div>
+                <div class="signature-box">
+                    <p><span id="outYoursFaithfully">आपला नम्र,</span></p>
+                    <br><br>
+                    <p><strong>(स्वाक्षरी)</strong></p>
+                    <p><strong><span id="outNameSign"></span></strong><br>
+                    <span id="outPostSign"></span><br>
+                    <span id="outOfficeBottom"></span></p>
+                </div>
             </div>
         </div>
     </div>
@@ -198,24 +191,30 @@
             document.getElementById('main-menu').style.display = 'grid';
         }
 
-        // तारीख फॉरमॅट करणारी छोटी सिस्टीम
+        // तारीख फॉरमॅट (YYYY-MM-DD to DD/MM/YYYY)
         function formatDate(inputDate) {
             if(!inputDate) return "";
             let d = new Date(inputDate);
             return String(d.getDate()).padStart(2, '0') + '/' + String(d.getMonth() + 1).padStart(2, '0') + '/' + d.getFullYear();
         }
 
-        // PDF बनवण्याचे फंक्शन
+        // PDF बनवण्याचे मुख्य फंक्शन
         function generatePDF() {
             let name = document.getElementById('empName').value;
             let sDate = document.getElementById('startDate').value;
-            if(!name || !sDate) { alert("कृपया नाव आणि तारखा भरा!"); return; }
+            
+            if(!name || !sDate) { alert("कृपया नाव आणि रजेच्या तारखा भरा!"); return; }
 
-            // आजची तारीख
-            let today = new Date();
-            let todayStr = String(today.getDate()).padStart(2, '0') + '/' + String(today.getMonth() + 1).padStart(2, '0') + '/' + today.getFullYear();
+            // 🎯 अर्जाच्या तारखेचे लॉजिक (२०२ काढून पूर्ण जागा रिकामी ठेवली आहे)
+            let appDateInput = document.getElementById('appDate').value;
+            if(appDateInput) {
+                document.getElementById('outDate').innerText = formatDate(appDateInput);
+            } else {
+                // जर तारीख निवडली नाही, तर पेनने लिहिण्यासाठी पूर्ण रिकामी जागा
+                document.getElementById('outDate').innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"; 
+            }
 
-            // 🎯 लिंगानुसार (Gender) 'आपला/आपली' बदलणे
+            // लिंगानुसार (Gender) 'आपला/आपली'
             let gender = document.getElementById('empGender').value;
             if(gender === "Male") {
                 document.getElementById('outYoursFaithfully').innerText = "आपला नम्र,";
@@ -223,8 +222,7 @@
                 document.getElementById('outYoursFaithfully').innerText = "आपली नम्र,";
             }
 
-            // साच्यामध्ये माहिती भरणे
-            document.getElementById('outDate').innerText = todayStr;
+            // साच्यात माहिती भरणे
             document.getElementById('outAuthority').innerText = document.getElementById('authoritySelect').value;
             document.getElementById('outOfficeTop').innerText = document.getElementById('empOffice').value;
             document.getElementById('outOfficeBottom').innerText = document.getElementById('empOffice').value;
@@ -240,21 +238,22 @@
             document.getElementById('outDays').innerText = document.getElementById('totalDays').value;
 
             // साचा उघडणे
+            let wrapper = document.getElementById('pdf-wrapper');
             let element = document.getElementById('pdf-template');
-            element.style.display = 'block'; 
+            wrapper.style.display = 'block'; 
 
-            // 🎯 PDF चे सुधारित सेटिंग्स (Margine मुळे आता दुसऱ्या पानावर जाणार नाही)
+            // PDF चे सेटिंग्स
             let opt = {
-                margin: 0.5, // 0.5 inch कडेने जागा सोडली आहे
+                margin: [0.5, 0.5, 0.5, 0.5], 
                 filename: name + '_Leave_Application.pdf',
                 image: { type: 'jpeg', quality: 1 }, 
-                html2canvas: { scale: 2 }, 
-                jsPDF: { unit: 'in', format: 'A4', orientation: 'portrait' }
+                html2canvas: { scale: 2, windowWidth: 800 }, 
+                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
             };
 
             // PDF सेव्ह झाल्यावर साचा लपवणे
             html2pdf().set(opt).from(element).save().then(() => { 
-                element.style.display = 'none'; 
+                wrapper.style.display = 'none'; 
             });
         }
     </script>
