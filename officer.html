@@ -35,11 +35,6 @@
             transform: translateY(-5px);
             box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.1);
         }
-        .view-btn.active {
-            background-color: #005088;
-            color: white;
-            box-shadow: 0 4px 6px -1px rgba(0, 80, 136, 0.2);
-        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between">
@@ -69,7 +64,7 @@
     <header class="header-gradient text-white py-12 px-4 text-center relative overflow-hidden shadow-md">
         <div class="relative z-10 max-w-4xl mx-auto">
             <span class="bg-cyan-500/20 text-cyan-200 text-xs sm:text-sm font-semibold uppercase tracking-wider px-3 py-1 rounded-full border border-cyan-400/30">
-                (गट-क) कर्मचारी संघटना, Maharashtra State
+                (गट-क) कर्मचारी संघटना, महाराष्ट्र राज्य
             </span>
             <h1 class="text-3xl sm:text-5xl font-extrabold mt-4 brand-title drop-shadow-md">
                 संघटनेचे पदाधिकारी
@@ -77,29 +72,20 @@
         </div>
     </header>
 
-    <!-- ३. मुख्य कन्टेंट एरिया -->
+    <!-- ३. मुख्य कन्टेंट एरिया (सुंदर कार्ड्स ग्रिड) -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-grow w-full">
         
-        <!-- व्ह्यू सिलेक्टर्स बटन्स -->
-        <div class="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4 border-b border-slate-200 pb-5">
-            <p class="text-slate-600 font-medium">
-                <i class="fa-solid fa-user-group text-blue-600 mr-2"></i>एकूण पदाधिकारी: <span class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full text-sm font-bold">८</span>
+        <div class="flex items-center mb-8 border-b border-slate-200 pb-4">
+            <p class="text-slate-700 font-semibold text-lg">
+                <i class="fa-solid fa-user-group text-[#005088] mr-2"></i>राज्य कार्यकारिणी सदस्य यादी
             </p>
-            <div class="flex items-center bg-white p-1 rounded-lg border border-slate-200 shadow-sm">
-                <button onclick="switchView('grid')" id="grid-btn" class="view-btn active px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-200 flex items-center">
-                    <i class="fa-solid fa-grip mr-1.5"></i> कार्ड व्ह्यू (Card)
-                </button>
-                <button onclick="switchView('list')" id="list-btn" class="view-btn px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-200 flex items-center">
-                    <i class="fa-solid fa-list mr-1.5"></i> टेबल व्ह्यू (Table)
-                </button>
-            </div>
         </div>
 
-        <!-- ================= अ. कार्ड लेआउट (CARD VIEW) ================= -->
-        <div id="grid-view" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- कार्ड्स ग्रिड लेआउट -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             
             <!-- १. अध्यक्ष -->
-            <div class="officer-card bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:border-blue-300 relative overflow-hidden flex flex-col justify-between">
+            <div class="officer-card bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:border-blue-400 relative overflow-hidden flex flex-col justify-between">
                 <div class="absolute top-4 right-4">
                     <span class="bg-amber-50 text-amber-700 text-xs font-bold px-2.5 py-1 rounded-full border border-amber-200 flex items-center gap-1.5">
                         <i class="fa-solid fa-crown text-amber-500"></i> अध्यक्ष
@@ -113,17 +99,17 @@
                     <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider mt-1">अध्यक्ष, महाराष्ट्र राज्य</p>
                 </div>
                 <div class="mt-6 pt-4 border-t border-slate-100 space-y-2 text-sm text-slate-600">
-                    <div class="flex items-start"><i class="fa-solid fa-location-dot text-blue-500 w-5 mt-0.5"></i><span class="line-clamp-2">उपजिल्हा रुग्णालय, फलटण जि.सातारा</span></div>
-                    <div class="flex items-center"><i class="fa-solid fa-phone text-emerald-500 w-5"></i><a href="tel:+919763192449" class="hover:text-blue-600 font-medium">+91 97631 92449</a></div>
+                    <div class="flex items-start"><i class="fa-solid fa-location-dot text-blue-500 w-5 mt-0.5 animate-pulse"></i><span class="line-clamp-2">उपजिल्हा रुग्णालय, फलटण जि.सातारा</span></div>
+                    <div class="flex items-center"><i class="fa-solid fa-phone text-emerald-500 w-5"></i><a href="tel:+919763192449" class="hover:text-blue-600 font-semibold text-slate-700">+91 97631 92449</a></div>
                 </div>
                 <div class="flex gap-2 mt-4">
-                    <a href="tel:+919763192449" class="flex-1 bg-slate-50 hover:bg-emerald-50 hover:text-emerald-600 border border-slate-200 py-1.5 rounded-lg text-xs font-medium text-center transition-colors"><i class="fa-solid fa-phone mr-1"></i> कॉल करा</a>
-                    <a href="https://wa.me/919763192449" target="_blank" class="flex-1 bg-slate-50 hover:bg-green-50 hover:text-green-600 border border-slate-200 py-1.5 rounded-lg text-xs font-medium text-center transition-colors"><i class="fa-brands fa-whatsapp mr-1 text-green-500"></i> व्हॉट्सॲप</a>
+                    <a href="tel:+919763192449" class="flex-1 bg-slate-50 hover:bg-emerald-50 hover:text-emerald-600 border border-slate-200 py-2 rounded-lg text-xs font-bold text-center transition-colors shadow-sm"><i class="fa-solid fa-phone mr-1"></i> कॉल करा</a>
+                    <a href="https://wa.me/919763192449" target="_blank" class="flex-1 bg-slate-50 hover:bg-green-50 hover:text-green-600 border border-slate-200 py-2 rounded-lg text-xs font-bold text-center transition-colors shadow-sm"><i class="fa-brands fa-whatsapp mr-1 text-green-500"></i> व्हॉट्सॲप</a>
                 </div>
             </div>
 
             <!-- २. उपाध्यक्ष १ -->
-            <div class="officer-card bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:border-blue-300 relative overflow-hidden flex flex-col justify-between">
+            <div class="officer-card bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:border-blue-400 relative overflow-hidden flex flex-col justify-between">
                 <div class="absolute top-4 right-4">
                     <span class="bg-blue-50 text-blue-700 text-xs font-bold px-2.5 py-1 rounded-full border border-blue-200 flex items-center gap-1.5">
                         <i class="fa-solid fa-user-shield text-blue-500"></i> उपाध्यक्ष
@@ -138,16 +124,16 @@
                 </div>
                 <div class="mt-6 pt-4 border-t border-slate-100 space-y-2 text-sm text-slate-600">
                     <div class="flex items-start"><i class="fa-solid fa-location-dot text-blue-500 w-5 mt-0.5"></i><span class="line-clamp-2">जिल्हा स्त्री रुग्णालय, गडचिरोली</span></div>
-                    <div class="flex items-center"><i class="fa-solid fa-phone text-emerald-500 w-5"></i><a href="tel:+919876543211" class="hover:text-blue-600 font-medium">+91 98765 43211</a></div>
+                    <div class="flex items-center"><i class="fa-solid fa-phone text-emerald-500 w-5"></i><a href="tel:+918275750020" class="hover:text-blue-600 font-semibold text-slate-700">+91 82757 50020</a></div>
                 </div>
                 <div class="flex gap-2 mt-4">
-                    <a href="tel:+919876543211" class="flex-1 bg-slate-50 hover:bg-emerald-50 hover:text-emerald-600 border border-slate-200 py-1.5 rounded-lg text-xs font-medium text-center transition-colors"><i class="fa-solid fa-phone mr-1"></i> कॉल करा</a>
-                    <a href="https://wa.me/919876543211" target="_blank" class="flex-1 bg-slate-50 hover:bg-green-50 hover:text-green-600 border border-slate-200 py-1.5 rounded-lg text-xs font-medium text-center transition-colors"><i class="fa-brands fa-whatsapp mr-1 text-green-500"></i> व्हॉट्सॲप</a>
+                    <a href="tel:+918275750020" class="flex-1 bg-slate-50 hover:bg-emerald-50 hover:text-emerald-600 border border-slate-200 py-2 rounded-lg text-xs font-bold text-center transition-colors shadow-sm"><i class="fa-solid fa-phone mr-1"></i> कॉल करा</a>
+                    <a href="https://wa.me/918275750020" target="_blank" class="flex-1 bg-slate-50 hover:bg-green-50 hover:text-green-600 border border-slate-200 py-2 rounded-lg text-xs font-bold text-center transition-colors shadow-sm"><i class="fa-brands fa-whatsapp mr-1 text-green-500"></i> व्हॉट्सॲप</a>
                 </div>
             </div>
 
             <!-- ३. उपाध्यक्ष २ -->
-            <div class="officer-card bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:border-blue-300 relative overflow-hidden flex flex-col justify-between">
+            <div class="officer-card bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:border-blue-400 relative overflow-hidden flex flex-col justify-between">
                 <div class="absolute top-4 right-4">
                     <span class="bg-blue-50 text-blue-700 text-xs font-bold px-2.5 py-1 rounded-full border border-blue-200 flex items-center gap-1.5">
                         <i class="fa-solid fa-user-shield text-blue-500"></i> उपाध्यक्ष
@@ -162,16 +148,16 @@
                 </div>
                 <div class="mt-6 pt-4 border-t border-slate-100 space-y-2 text-sm text-slate-600">
                     <div class="flex items-start"><i class="fa-solid fa-location-dot text-blue-500 w-5 mt-0.5"></i><span class="line-clamp-2">ग्रामीण रुग्णालय, सिंदखेडराजा</span></div>
-                    <div class="flex items-center"><i class="fa-solid fa-phone text-emerald-500 w-5"></i><a href="tel:+919876543212" class="hover:text-blue-600 font-medium">+91 98765 43212</a></div>
+                    <div class="flex items-center"><i class="fa-solid fa-phone text-emerald-500 w-5"></i><a href="tel:+919423426856" class="hover:text-blue-600 font-semibold text-slate-700">+91 94234 26856</a></div>
                 </div>
                 <div class="flex gap-2 mt-4">
-                    <a href="tel:+919876543212" class="flex-1 bg-slate-50 hover:bg-emerald-50 hover:text-emerald-600 border border-slate-200 py-1.5 rounded-lg text-xs font-medium text-center transition-colors"><i class="fa-solid fa-phone mr-1"></i> कॉल करा</a>
-                    <a href="https://wa.me/919876543212" target="_blank" class="flex-1 bg-slate-50 hover:bg-green-50 hover:text-green-600 border border-slate-200 py-1.5 rounded-lg text-xs font-medium text-center transition-colors"><i class="fa-brands fa-whatsapp mr-1 text-green-500"></i> व्हॉट्सॲप</a>
+                    <a href="tel:+919423426856" class="flex-1 bg-slate-50 hover:bg-emerald-50 hover:text-emerald-600 border border-slate-200 py-2 rounded-lg text-xs font-bold text-center transition-colors shadow-sm"><i class="fa-solid fa-phone mr-1"></i> कॉल करा</a>
+                    <a href="https://wa.me/919423426856" target="_blank" class="flex-1 bg-slate-50 hover:bg-green-50 hover:text-green-600 border border-slate-200 py-2 rounded-lg text-xs font-bold text-center transition-colors shadow-sm"><i class="fa-brands fa-whatsapp mr-1 text-green-500"></i> व्हॉट्सॲप</a>
                 </div>
             </div>
 
             <!-- ४. कोषाध्यक्ष -->
-            <div class="officer-card bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:border-blue-300 relative overflow-hidden flex flex-col justify-between">
+            <div class="officer-card bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:border-blue-400 relative overflow-hidden flex flex-col justify-between">
                 <div class="absolute top-4 right-4">
                     <span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-2.5 py-1 rounded-full border border-emerald-200 flex items-center gap-1.5">
                         <i class="fa-solid fa-wallet text-emerald-500"></i> कोषाध्यक्ष
@@ -186,16 +172,16 @@
                 </div>
                 <div class="mt-6 pt-4 border-t border-slate-100 space-y-2 text-sm text-slate-600">
                     <div class="flex items-start"><i class="fa-solid fa-location-dot text-blue-500 w-5 mt-0.5"></i><span class="line-clamp-2">ग्रामीण रुग्णालय, चामोर्शी, जि.गडचिरोली</span></div>
-                    <div class="flex items-center"><i class="fa-solid fa-phone text-emerald-500 w-5"></i><a href="tel:+919876543213" class="hover:text-blue-600 font-medium">+91 98765 43213</a></div>
+                    <div class="flex items-center"><i class="fa-solid fa-phone text-emerald-500 w-5"></i><a href="tel:+919503886441" class="hover:text-blue-600 font-semibold text-slate-700">+91 95038 86441</a></div>
                 </div>
                 <div class="flex gap-2 mt-4">
-                    <a href="tel:+919876543213" class="flex-1 bg-slate-50 hover:bg-emerald-50 hover:text-emerald-600 border border-slate-200 py-1.5 rounded-lg text-xs font-medium text-center transition-colors"><i class="fa-solid fa-phone mr-1"></i> कॉल करा</a>
-                    <a href="https://wa.me/919876543213" target="_blank" class="flex-1 bg-slate-50 hover:bg-green-50 hover:text-green-600 border border-slate-200 py-1.5 rounded-lg text-xs font-medium text-center transition-colors"><i class="fa-brands fa-whatsapp mr-1 text-green-500"></i> व्हॉट्सॲप</a>
+                    <a href="tel:+919503886441" class="flex-1 bg-slate-50 hover:bg-emerald-50 hover:text-emerald-600 border border-slate-200 py-2 rounded-lg text-xs font-bold text-center transition-colors shadow-sm"><i class="fa-solid fa-phone mr-1"></i> कॉल करा</a>
+                    <a href="https://wa.me/919503886441" target="_blank" class="flex-1 bg-slate-50 hover:bg-green-50 hover:text-green-600 border border-slate-200 py-2 rounded-lg text-xs font-bold text-center transition-colors shadow-sm"><i class="fa-brands fa-whatsapp mr-1 text-green-500"></i> व्हॉट्सॲप</a>
                 </div>
             </div>
 
             <!-- ५. सह-कोषाध्यक्ष -->
-            <div class="officer-card bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:border-blue-300 relative overflow-hidden flex flex-col justify-between">
+            <div class="officer-card bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:border-blue-400 relative overflow-hidden flex flex-col justify-between">
                 <div class="absolute top-4 right-4">
                     <span class="bg-teal-50 text-teal-700 text-xs font-bold px-2.5 py-1 rounded-full border border-teal-200 flex items-center gap-1.5">
                         <i class="fa-solid fa-coins text-teal-500"></i> सह-कोषाध्यक्ष
@@ -210,16 +196,16 @@
                 </div>
                 <div class="mt-6 pt-4 border-t border-slate-100 space-y-2 text-sm text-slate-600">
                     <div class="flex items-start"><i class="fa-solid fa-location-dot text-blue-500 w-5 mt-0.5"></i><span class="line-clamp-2">ग्रामीण रुग्णालय, देवगांव रंगारी जि.छ.संभाजीनगर</span></div>
-                    <div class="flex items-center"><i class="fa-solid fa-phone text-emerald-500 w-5"></i><a href="tel:+919876543214" class="hover:text-blue-600 font-medium">+91 98765 43214</a></div>
+                    <div class="flex items-center"><i class="fa-solid fa-phone text-emerald-500 w-5"></i><a href="tel:+919403688863" class="hover:text-blue-600 font-semibold text-slate-700">+91 94036 88863</a></div>
                 </div>
                 <div class="flex gap-2 mt-4">
-                    <a href="tel:+919876543214" class="flex-1 bg-slate-50 hover:bg-emerald-50 hover:text-emerald-600 border border-slate-200 py-1.5 rounded-lg text-xs font-medium text-center transition-colors"><i class="fa-solid fa-phone mr-1"></i> कॉल करा</a>
-                    <a href="https://wa.me/919876543214" target="_blank" class="flex-1 bg-slate-50 hover:bg-green-50 hover:text-green-600 border border-slate-200 py-1.5 rounded-lg text-xs font-medium text-center transition-colors"><i class="fa-brands fa-whatsapp mr-1 text-green-500"></i> व्हॉट्सॲप</a>
+                    <a href="tel:+919403688863" class="flex-1 bg-slate-50 hover:bg-emerald-50 hover:text-emerald-600 border border-slate-200 py-2 rounded-lg text-xs font-bold text-center transition-colors shadow-sm"><i class="fa-solid fa-phone mr-1"></i> कॉल करा</a>
+                    <a href="https://wa.me/919403688863" target="_blank" class="flex-1 bg-slate-50 hover:bg-green-50 hover:text-green-600 border border-slate-200 py-2 rounded-lg text-xs font-bold text-center transition-colors shadow-sm"><i class="fa-brands fa-whatsapp mr-1 text-green-500"></i> व्हॉट्सॲप</a>
                 </div>
             </div>
 
             <!-- ६. प्रमुख कार्यवाह -->
-            <div class="officer-card bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:border-blue-300 relative overflow-hidden flex flex-col justify-between">
+            <div class="officer-card bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:border-blue-400 relative overflow-hidden flex flex-col justify-between">
                 <div class="absolute top-4 right-4">
                     <span class="bg-violet-50 text-violet-700 text-xs font-bold px-2.5 py-1 rounded-full border border-violet-200 flex items-center gap-1.5">
                         <i class="fa-solid fa-file-signature text-violet-500"></i> प्रमुख कार्यवाह
@@ -234,16 +220,26 @@
                 </div>
                 <div class="mt-6 pt-4 border-t border-slate-100 space-y-2 text-sm text-slate-600">
                     <div class="flex items-start"><i class="fa-solid fa-location-dot text-blue-500 w-5 mt-0.5"></i><span class="line-clamp-2">जिल्हा सामान्य रुग्णालय, गडचिरोली</span></div>
-                    <div class="flex items-center"><i class="fa-solid fa-phone text-emerald-500 w-5"></i><a href="tel:+919876543215" class="hover:text-blue-600 font-medium">+91 98765 43215</a></div>
+                    <div class="flex items-center"><i class="fa-solid fa-phone text-emerald-500 w-5"></i><a href="tel:+919769441271" class="hover:text-blue-600 font-semibold text-slate-700">+91 97694 41271</a></div>
                 </div>
                 <div class="flex gap-2 mt-4">
-                    <a href="tel:+919876543215" class="flex-1 bg-slate-50 hover:bg-emerald-50 hover:text-emerald-600 border border-slate-200 py-1.5 rounded-lg text-xs font-medium text-center transition-colors"><i class="fa-solid fa-phone mr-1"></i> कॉल करा</a>
-                    <a href="https://wa.me/919876543215" target="_blank" class="flex-1 bg-slate-50 hover:bg-green-50 hover:text-green-600 border border-slate-200 py-1.5 rounded-lg text-xs font-medium text-center transition-colors"><i class="fa-brands fa-whatsapp mr-1 text-green-500"></i> व्हॉट्सॲप</a>
+                    <a href="tel:+919769441271" class="flex-1 bg-slate-50 hover:bg-emerald-50 hover:text-emerald-600 border border-slate-200 py-2 rounded-lg text-xs font-bold text-center transition-colors shadow-sm"><i class="fa-solid fa-phone mr-1"></i> कॉल करा</a>
+                    <a href="https://wa.me/919769441271" target="_blank" class="flex-1 bg-slate-50 hover:bg-green-50 hover:text-green-600 border border-slate-200 py-2 rounded-lg text-xs font-bold text-center transition-colors shadow-sm"><i class="fa-brands fa-whatsapp mr-1 text-green-500"></i> व्हॉट्सॲप</a>
                 </div>
             </div>
 
             <!-- ७. कार्यवाह -->
-            <div class="officer-card bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:border-blue-300 relative overflow-hidden flex flex-col justify-between">
+            <div class="officer-card bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:border-blue-400 relative overflow-hidden flex flex-col justify-between">
                 <div class="absolute top-4 right-4">
                     <span class="bg-cyan-50 text-cyan-700 text-xs font-bold px-2.5 py-1 rounded-full border border-cyan-200 flex items-center gap-1.5">
-                        <
+                        <i class="fa-solid fa-file-pen text-cyan-500"></i> कार्यवाह
+                    </span>
+                </div>
+                <div class="text-center pt-4">
+                    <div class="w-24 h-24 bg-gradient-to-tr from-cyan-100 to-slate-50 rounded-full mx-auto flex items-center justify-center border-4 border-white shadow-md relative overflow-hidden">
+                        <i class="fa-solid fa-user text-slate-400 text-4xl"></i>
+                    </div>
+                    <h3 class="text-base font-bold text-slate-800 mt-4"><i class="fa-solid fa-file-pen text-cyan-500 mr-1.5 text-sm"></i>श्री. संजय विठ्ठल गिराम</h3>
+                    <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider mt-1">सह-सरचिटणीस (कार्यवाह)</p>
+                </div>
+                <div class="mt-6 pt-4 border-t border-slate-100 space-y-2 t
