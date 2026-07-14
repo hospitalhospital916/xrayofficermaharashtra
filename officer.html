@@ -19,273 +19,236 @@
     <style>
         body {
             font-family: 'Poppins', 'Noto Sans Devanagari', sans-serif;
-            background-color: #f8fafc;
+            background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
         }
         .brand-title {
             font-family: 'Noto Sans Devanagari', sans-serif;
-            font-weight: 700;
         }
         .header-gradient {
-            background: linear-gradient(135deg, #004070 0%, #0066b2 100%);
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0284c7 100%);
         }
         .officer-card {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .officer-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.1);
+            transform: translateY(-6px);
+            box-shadow: 0 20px 25px -5px rgba(2, 132, 199, 0.1), 0 10px 10px -5px rgba(2, 132, 199, 0.04);
         }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
     <!-- १. नेव्हिगेशन बार -->
-    <nav class="bg-[#005088] text-white shadow-md sticky top-0 z-50">
+    <nav class="bg-[#0f172a]/95 backdrop-blur-md text-white shadow-lg sticky top-0 z-50 border-b border-slate-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
-                <div class="flex items-center">
-                    <span class="text-lg sm:text-xl font-bold tracking-wider brand-title">
-                        <i class="fa-solid fa-wave-square text-cyan-400 mr-2"></i> क्ष किरण वैज्ञानिक अधिकारी संघटना
+                <div class="flex items-center mx-auto md:mx-0">
+                    <span class="text-lg sm:text-xl font-bold tracking-wider brand-title flex items-center gap-2">
+                        <i class="fa-solid fa-wave-square text-cyan-400 animate-pulse"></i> क्ष किरण वैज्ञानिक अधिकारी संघटना
                     </span>
                 </div>
                 <div class="hidden md:flex space-x-6 text-sm font-medium">
-                    <a href="index.html" class="hover:text-cyan-300 transition-colors"><i class="fa-solid fa-house mr-1"></i> मुख्यपृष्ठ</a>
-                    <a href="#" class="hover:text-cyan-300 transition-colors"><i class="fa-solid fa-circle-info mr-1"></i> संघटनाबद्दल</a>
-                    <a href="#" class="hover:text-cyan-300 transition-colors"><i class="fa-solid fa-file-pdf mr-1"></i> GR / परिपत्रके</a>
-                    <a href="#" class="hover:text-cyan-300 transition-colors"><i class="fa-solid fa-image mr-1"></i> गॅलरी</a>
-                    <a href="officer.html" class="text-cyan-300 font-semibold border-b-2 border-cyan-300 pb-1"><i class="fa-solid fa-id-card mr-1"></i> पदाधिकारी</a>
-                    <a href="#" class="hover:text-cyan-300 transition-colors"><i class="fa-solid fa-phone mr-1"></i> संपर्क</a>
+                    <a href="index.html" class="hover:text-cyan-400 transition-colors"><i class="fa-solid fa-house mr-1"></i> मुख्यपृष्ठ</a>
+                    <a href="#" class="hover:text-cyan-400 transition-colors"><i class="fa-solid fa-id-card mr-1"></i> पदाधिकारी</a>
+                    <a href="#" class="hover:text-cyan-400 transition-colors"><i class="fa-solid fa-phone mr-1"></i> संपर्क</a>
                 </div>
             </div>
         </div>
     </nav>
 
     <!-- २. मुख्य शीर्षक विभाग -->
-    <header class="header-gradient text-white py-12 px-4 text-center relative overflow-hidden shadow-md">
+    <header class="header-gradient text-white py-16 px-4 text-center relative overflow-hidden shadow-inner">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-cyan-500/10 via-transparent to-transparent"></div>
         <div class="relative z-10 max-w-4xl mx-auto">
-            <span class="bg-cyan-500/20 text-cyan-200 text-xs sm:text-sm font-semibold uppercase tracking-wider px-3 py-1 rounded-full border border-cyan-400/30">
+            <span class="bg-cyan-500/15 text-cyan-300 text-xs sm:text-sm font-medium uppercase tracking-widest px-4 py-1.5 rounded-full border border-cyan-500/30 backdrop-blur-sm">
                 (गट-क) कर्मचारी संघटना, महाराष्ट्र राज्य
             </span>
-            <h1 class="text-3xl sm:text-5xl font-extrabold mt-4 brand-title drop-shadow-md">
-                संघटनेचे पदाधिकारी
+            <h1 class="text-3xl sm:text-5xl font-extrabold mt-5 brand-title tracking-wide drop-shadow-md">
+                राज्य कार्यकारिणी पदाधिकारी
             </h1>
+            <p class="text-slate-300 text-sm sm:text-base mt-3 max-w-xl mx-auto font-light">संघटनेच्या प्रगतीसाठी कटिबद्ध असलेले आपले खंबीर नेतृत्व</p>
         </div>
     </header>
 
     <!-- ३. मुख्य कन्टेंट एरिया -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-grow w-full">
-        
-        <div class="flex items-center mb-8 border-b border-slate-200 pb-4">
-            <p class="text-slate-700 font-semibold text-lg">
-                <i class="fa-solid fa-user-group text-[#005088] mr-2"></i>राज्य कार्यकारिणी सदस्य यादी (एकूण: ८ पदाधिकारी)
-            </p>
-        </div>
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-grow w-full">
 
-        <!-- ================= ८ सदस्यांचे कार्ड्स ग्रिड लेआउट ================= -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- सदस्यांचे कार्ड्स ग्रिड लेayout -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             
-            <!-- १. अध्यक्ष -->
-            <div class="officer-card bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:border-blue-400 flex flex-col justify-between relative overflow-hidden">
-                <div class="absolute top-4 right-4">
-                    <span class="bg-amber-50 text-amber-700 text-xs font-bold px-2.5 py-1 rounded-full border border-amber-200 flex items-center gap-1.5">
-                        <i class="fa-solid fa-crown text-amber-500"></i> अध्यक्ष
-                    </span>
-                </div>
-                <div class="text-center pt-4">
-                    <div class="w-24 h-24 bg-gradient-to-tr from-amber-100 to-blue-50 rounded-full mx-auto flex items-center justify-center border-4 border-white shadow-md">
-                        <i class="fa-solid fa-user-tie text-slate-400 text-4xl"></i>
+            <!-- अध्यक्ष -->
+            <div class="officer-card bg-white rounded-3xl border border-slate-200/80 p-6 flex flex-col justify-between text-center group hover:border-amber-400/60">
+                <div>
+                    <div class="flex justify-center mb-4">
+                        <span class="bg-amber-50 text-amber-700 text-xs font-bold px-3 py-1 rounded-full border border-amber-200/60 flex items-center gap-1.5 shadow-sm">
+                            <i class="fa-solid fa-crown text-amber-500"></i> अध्यक्ष
+                        </span>
                     </div>
-                    <h3 class="text-base font-bold text-slate-800 mt-4"><i class="fa-solid fa-crown text-amber-500 mr-1.5 text-sm"></i>श्री. रविंद्र मल्हारी पाटील</h3>
+                    <div class="w-24 h-24 bg-gradient-to-tr from-amber-500 to-amber-300 rounded-full mx-auto flex items-center justify-center p-1 shadow-md ring-4 ring-amber-100 group-hover:ring-amber-200 transition-all">
+                        <div class="w-full h-full bg-white rounded-full flex items-center justify-center">
+                            <i class="fa-solid fa-user-tie text-slate-700 text-4xl"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 mt-5 group-hover:text-amber-700 transition-colors">श्री. रविंद्र मल्हारी पाटील</h3>
                     <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider mt-1">अध्यक्ष, महाराष्ट्र राज्य</p>
+                    
+                    <p class="text-sm text-slate-600 mt-4 px-2 py-1.5 bg-slate-50 rounded-xl inline-flex items-center justify-center gap-1.5 w-full">
+                        <i class="fa-solid fa-location-dot text-slate-400 text-xs"></i>
+                        <span class="truncate">उपजिल्हा रुग्णालय, फलटण (सातारा)</span>
+                    </p>
                 </div>
-                <div class="mt-6 pt-4 border-t border-slate-100 space-y-2 text-sm text-slate-600">
-                    <div class="flex items-start"><i class="fa-solid fa-location-dot text-blue-500 w-5 mt-0.5"></i><span class="line-clamp-2">उपजिल्हा रुग्णालय, फलटण जि.सातारा</span></div>
-                    <div class="flex items-center"><i class="fa-solid fa-phone text-emerald-500 w-5"></i><a href="tel:+919763192449" class="hover:text-blue-600 font-semibold text-slate-700">+91 97631 92449</a></div>
-                </div>
-                <div class="flex gap-2 mt-4">
-                    <a href="tel:+919763192449" class="flex-1 bg-slate-50 hover:bg-emerald-50 hover:text-emerald-600 border border-slate-200 py-2 rounded-lg text-xs font-bold text-center transition-colors shadow-sm"><i class="fa-solid fa-phone mr-1"></i> कॉल</a>
-                    <a href="https://wa.me/919763192449" target="_blank" class="flex-1 bg-slate-50 hover:bg-green-50 hover:text-green-600 border border-slate-200 py-2 rounded-lg text-xs font-bold text-center transition-colors shadow-sm"><i class="fa-brands fa-whatsapp mr-1 text-green-500"></i> व्हॉट्सॲप</a>
+                <div class="mt-6 flex gap-2.5">
+                    <a href="tel:+919763192449" class="flex-1 bg-slate-50 hover:bg-emerald-600 hover:text-white border border-slate-200/80 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 text-slate-700 shadow-sm"><i class="fa-solid fa-phone text-emerald-500 group-hover:text-white"></i> कॉल</a>
+                    <a href="https://wa.me/919763192449" target="_blank" class="flex-1 bg-slate-50 hover:bg-green-600 hover:text-white border border-slate-200/80 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 text-slate-700 shadow-sm"><i class="fa-brands fa-whatsapp text-green-500"></i> व्हॉट्सॲप</a>
                 </div>
             </div>
 
-            <!-- २. उपाध्यक्ष १ -->
-            <div class="officer-card bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:border-blue-400 flex flex-col justify-between relative overflow-hidden">
-                <div class="absolute top-4 right-4">
-                    <span class="bg-blue-50 text-blue-700 text-xs font-bold px-2.5 py-1 rounded-full border border-blue-200 flex items-center gap-1.5">
-                        <i class="fa-solid fa-user-shield text-blue-500"></i> उपाध्यक्ष
-                    </span>
-                </div>
-                <div class="text-center pt-4">
-                    <div class="w-24 h-24 bg-gradient-to-tr from-blue-100 to-slate-50 rounded-full mx-auto flex items-center justify-center border-4 border-white shadow-md">
-                        <i class="fa-solid fa-user text-slate-400 text-4xl"></i>
+            <!-- उपाध्यक्ष १ -->
+            <div class="officer-card bg-white rounded-3xl border border-slate-200/80 p-6 flex flex-col justify-between text-center group hover:border-blue-500/60">
+                <div>
+                    <div class="flex justify-center mb-4">
+                        <span class="bg-blue-50 text-blue-700 text-xs font-bold px-3 py-1 rounded-full border border-blue-200/60 flex items-center gap-1.5 shadow-sm">
+                            <i class="fa-solid fa-user-shield text-blue-500"></i> उपाध्यक्ष
+                        </span>
                     </div>
-                    <h3 class="text-base font-bold text-slate-800 mt-4"><i class="fa-solid fa-user-shield text-blue-500 mr-1.5 text-sm"></i>श्री. कोमल विठ्ठलराव चुनरकर</h3>
+                    <div class="w-24 h-24 bg-gradient-to-tr from-blue-600 to-cyan-400 rounded-full mx-auto flex items-center justify-center p-1 shadow-md ring-4 ring-blue-100 group-hover:ring-blue-200 transition-all">
+                        <div class="w-full h-full bg-white rounded-full flex items-center justify-center">
+                            <i class="fa-solid fa-user text-slate-600 text-4xl"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 mt-5 group-hover:text-blue-700 transition-colors">श्री. कोमल विठ्ठलराव चुनरकर</h3>
                     <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider mt-1">उपाध्यक्ष</p>
+                    
+                    <p class="text-sm text-slate-600 mt-4 px-2 py-1.5 bg-slate-50 rounded-xl inline-flex items-center justify-center gap-1.5 w-full">
+                        <i class="fa-solid fa-location-dot text-slate-400 text-xs"></i>
+                        <span class="truncate">जिल्हा स्त्री रुग्णालय, गडचिरोली</span>
+                    </p>
                 </div>
-                <div class="mt-6 pt-4 border-t border-slate-100 space-y-2 text-sm text-slate-600">
-                    <div class="flex items-start"><i class="fa-solid fa-location-dot text-blue-500 w-5 mt-0.5"></i><span class="line-clamp-2">जिल्हा स्त्री रुग्णालय, गडचिरोली</span></div>
-                    <div class="flex items-center"><i class="fa-solid fa-phone text-emerald-500 w-5"></i><a href="tel:+918275750020" class="hover:text-blue-600 font-semibold text-slate-700">+91 82757 50020</a></div>
-                </div>
-                <div class="flex gap-2 mt-4">
-                    <a href="tel:+918275750020" class="flex-1 bg-slate-50 hover:bg-emerald-50 hover:text-emerald-600 border border-slate-200 py-2 rounded-lg text-xs font-bold text-center transition-colors shadow-sm"><i class="fa-solid fa-phone mr-1"></i> कॉल</a>
-                    <a href="https://wa.me/918275750020" target="_blank" class="flex-1 bg-slate-50 hover:bg-green-50 hover:text-green-600 border border-slate-200 py-2 rounded-lg text-xs font-bold text-center transition-colors shadow-sm"><i class="fa-brands fa-whatsapp mr-1 text-green-500"></i> व्हॉट्सॲप</a>
+                <div class="mt-6 flex gap-2.5">
+                    <a href="tel:+918275750020" class="flex-1 bg-slate-50 hover:bg-emerald-600 hover:text-white border border-slate-200/80 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 text-slate-700 shadow-sm"><i class="fa-solid fa-phone text-emerald-500"></i> कॉल</a>
+                    <a href="https://wa.me/918275750020" target="_blank" class="flex-1 bg-slate-50 hover:bg-green-600 hover:text-white border border-slate-200/80 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 text-slate-700 shadow-sm"><i class="fa-brands fa-whatsapp text-green-500"></i> व्हॉट्सॲप</a>
                 </div>
             </div>
 
-            <!-- ३. उपाध्यक्ष २ -->
-            <div class="officer-card bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:border-blue-400 flex flex-col justify-between relative overflow-hidden">
-                <div class="absolute top-4 right-4">
-                    <span class="bg-blue-50 text-blue-700 text-xs font-bold px-2.5 py-1 rounded-full border border-blue-200 flex items-center gap-1.5">
-                        <i class="fa-solid fa-user-shield text-blue-500"></i> उपाध्यक्ष
-                    </span>
-                </div>
-                <div class="text-center pt-4">
-                    <div class="w-24 h-24 bg-gradient-to-tr from-blue-100 to-slate-50 rounded-full mx-auto flex items-center justify-center border-4 border-white shadow-md">
-                        <i class="fa-solid fa-user text-slate-400 text-4xl"></i>
+            <!-- उपाध्यक्ष २ -->
+            <div class="officer-card bg-white rounded-3xl border border-slate-200/80 p-6 flex flex-col justify-between text-center group hover:border-blue-500/60">
+                <div>
+                    <div class="flex justify-center mb-4">
+                        <span class="bg-blue-50 text-blue-700 text-xs font-bold px-3 py-1 rounded-full border border-blue-200/60 flex items-center gap-1.5 shadow-sm">
+                            <i class="fa-solid fa-user-shield text-blue-500"></i> उपाध्यक्ष
+                        </span>
                     </div>
-                    <h3 class="text-base font-bold text-slate-800 mt-4"><i class="fa-solid fa-user-shield text-blue-500 mr-1.5 text-sm"></i>श्री. संतोषकुमार हसनराव देशमुख</h3>
+                    <div class="w-24 h-24 bg-gradient-to-tr from-blue-600 to-cyan-400 rounded-full mx-auto flex items-center justify-center p-1 shadow-md ring-4 ring-blue-100 group-hover:ring-blue-200 transition-all">
+                        <div class="w-full h-full bg-white rounded-full flex items-center justify-center">
+                            <i class="fa-solid fa-user text-slate-600 text-4xl"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 mt-5 group-hover:text-blue-700 transition-colors">श्री. संतोषकुमार हसनराव देशमुख</h3>
                     <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider mt-1">उपाध्यक्ष</p>
+                    
+                    <p class="text-sm text-slate-600 mt-4 px-2 py-1.5 bg-slate-50 rounded-xl inline-flex items-center justify-center gap-1.5 w-full">
+                        <i class="fa-solid fa-location-dot text-slate-400 text-xs"></i>
+                        <span class="truncate">ग्रामीण रुग्णालय, सिंदखेडराजा</span>
+                    </p>
                 </div>
-                <div class="mt-6 pt-4 border-t border-slate-100 space-y-2 text-sm text-slate-600">
-                    <div class="flex items-start"><i class="fa-solid fa-location-dot text-blue-500 w-5 mt-0.5"></i><span class="line-clamp-2">ग्रामीण रुग्णालय, सिंदखेडराजा</span></div>
-                    <div class="flex items-center"><i class="fa-solid fa-phone text-emerald-500 w-5"></i><a href="tel:+919423426856" class="hover:text-blue-600 font-semibold text-slate-700">+91 94234 26856</a></div>
-                </div>
-                <div class="flex gap-2 mt-4">
-                    <a href="tel:+919423426856" class="flex-1 bg-slate-50 hover:bg-emerald-50 hover:text-emerald-600 border border-slate-200 py-2 rounded-lg text-xs font-bold text-center transition-colors shadow-sm"><i class="fa-solid fa-phone mr-1"></i> कॉल</a>
-                    <a href="https://wa.me/919423426856" target="_blank" class="flex-1 bg-slate-50 hover:bg-green-50 hover:text-green-600 border border-slate-200 py-2 rounded-lg text-xs font-bold text-center transition-colors shadow-sm"><i class="fa-brands fa-whatsapp mr-1 text-green-500"></i> व्हॉट्सॲप</a>
+                <div class="mt-6 flex gap-2.5">
+                    <a href="tel:+919423426856" class="flex-1 bg-slate-50 hover:bg-emerald-600 hover:text-white border border-slate-200/80 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 text-slate-700 shadow-sm"><i class="fa-solid fa-phone text-emerald-500"></i> कॉल</a>
+                    <a href="https://wa.me/919423426856" target="_blank" class="flex-1 bg-slate-50 hover:bg-green-600 hover:text-white border border-slate-200/80 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 text-slate-700 shadow-sm"><i class="fa-brands fa-whatsapp text-green-500"></i> व्हॉट्सॲप</a>
                 </div>
             </div>
 
-            <!-- ४. कोषाध्यक्ष -->
-            <div class="officer-card bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:border-blue-400 flex flex-col justify-between relative overflow-hidden">
-                <div class="absolute top-4 right-4">
-                    <span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-2.5 py-1 rounded-full border border-emerald-200 flex items-center gap-1.5">
-                        <i class="fa-solid fa-wallet text-emerald-500"></i> कोषाध्यक्ष
-                    </span>
-                </div>
-                <div class="text-center pt-4">
-                    <div class="w-24 h-24 bg-gradient-to-tr from-emerald-100 to-slate-50 rounded-full mx-auto flex items-center justify-center border-4 border-white shadow-md">
-                        <i class="fa-solid fa-user text-slate-400 text-4xl"></i>
+            <!-- कोषाध्यक्ष -->
+            <div class="officer-card bg-white rounded-3xl border border-slate-200/80 p-6 flex flex-col justify-between text-center group hover:border-emerald-500/60">
+                <div>
+                    <div class="flex justify-center mb-4">
+                        <span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-3 py-1 rounded-full border border-emerald-200/60 flex items-center gap-1.5 shadow-sm">
+                            <i class="fa-solid fa-wallet text-emerald-500"></i> कोषाध्यक्ष
+                        </span>
                     </div>
-                    <h3 class="text-base font-bold text-slate-800 mt-4"><i class="fa-solid fa-wallet text-emerald-500 mr-1.5 text-sm"></i>श्री. विशाल गणेश कायंदे</h3>
+                    <div class="w-24 h-24 bg-gradient-to-tr from-emerald-600 to-teal-400 rounded-full mx-auto flex items-center justify-center p-1 shadow-md ring-4 ring-emerald-100 group-hover:ring-emerald-200 transition-all">
+                        <div class="w-full h-full bg-white rounded-full flex items-center justify-center">
+                            <i class="fa-solid fa-user text-slate-600 text-4xl"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 mt-5 group-hover:text-emerald-700 transition-colors">श्री. विशाल गणेश कायंदे</h3>
                     <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider mt-1">कोषाध्यक्ष</p>
+                    
+                    <p class="text-sm text-slate-600 mt-4 px-2 py-1.5 bg-slate-50 rounded-xl inline-flex items-center justify-center gap-1.5 w-full">
+                        <i class="fa-solid fa-location-dot text-slate-400 text-xs"></i>
+                        <span class="truncate">ग्रामीण रुग्णालय, चामोर्शी (गडचिरोली)</span>
+                    </p>
                 </div>
-                <div class="mt-6 pt-4 border-t border-slate-100 space-y-2 text-sm text-slate-600">
-                    <div class="flex items-start"><i class="fa-solid fa-location-dot text-blue-500 w-5 mt-0.5"></i><span class="line-clamp-2">ग्रामीण रुग्णालय, चामोर्शी, जि.गडचिरोली</span></div>
-                    <div class="flex items-center"><i class="fa-solid fa-phone text-emerald-500 w-5"></i><a href="tel:+919503886441" class="hover:text-blue-600 font-semibold text-slate-700">+91 95038 86441</a></div>
-                </div>
-                <div class="flex gap-2 mt-4">
-                    <a href="tel:+919503886441" class="flex-1 bg-slate-50 hover:bg-emerald-50 hover:text-emerald-600 border border-slate-200 py-2 rounded-lg text-xs font-bold text-center transition-colors shadow-sm"><i class="fa-solid fa-phone mr-1"></i> कॉल</a>
-                    <a href="https://wa.me/919503886441" target="_blank" class="flex-1 bg-slate-50 hover:bg-green-50 hover:text-green-600 border border-slate-200 py-2 rounded-lg text-xs font-bold text-center transition-colors shadow-sm"><i class="fa-brands fa-whatsapp mr-1 text-green-500"></i> व्हॉट्सॲप</a>
+                <div class="mt-6 flex gap-2.5">
+                    <a href="tel:+919503886441" class="flex-1 bg-slate-50 hover:bg-emerald-600 hover:text-white border border-slate-200/80 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 text-slate-700 shadow-sm"><i class="fa-solid fa-phone text-emerald-500"></i> कॉल</a>
+                    <a href="https://wa.me/919503886441" target="_blank" class="flex-1 bg-slate-50 hover:bg-green-600 hover:text-white border border-slate-200/80 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 text-slate-700 shadow-sm"><i class="fa-brands fa-whatsapp text-green-500"></i> व्हॉट्सॲप</a>
                 </div>
             </div>
 
-            <!-- ५. सह-कोषाध्यक्ष -->
-            <div class="officer-card bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:border-blue-400 flex flex-col justify-between relative overflow-hidden">
-                <div class="absolute top-4 right-4">
-                    <span class="bg-teal-50 text-teal-700 text-xs font-bold px-2.5 py-1 rounded-full border border-teal-200 flex items-center gap-1.5">
-                        <i class="fa-solid fa-coins text-teal-500"></i> सह-कोषाध्यक्ष
-                    </span>
-                </div>
-                <div class="text-center pt-4">
-                    <div class="w-24 h-24 bg-gradient-to-tr from-teal-100 to-slate-50 rounded-full mx-auto flex items-center justify-center border-4 border-white shadow-md">
-                        <i class="fa-solid fa-user text-slate-400 text-4xl"></i>
+            <!-- सह-कोषाध्यक्ष -->
+            <div class="officer-card bg-white rounded-3xl border border-slate-200/80 p-6 flex flex-col justify-between text-center group hover:border-teal-500/60">
+                <div>
+                    <div class="flex justify-center mb-4">
+                        <span class="bg-teal-50 text-teal-700 text-xs font-bold px-3 py-1 rounded-full border border-teal-200/60 flex items-center gap-1.5 shadow-sm">
+                            <i class="fa-solid fa-coins text-teal-500"></i> सह-कोषाध्यक्ष
+                        </span>
                     </div>
-                    <h3 class="text-base font-bold text-slate-800 mt-4"><i class="fa-solid fa-coins text-teal-500 mr-1.5 text-sm"></i>श्री. संतोष सुभाषराव गिरी</h3>
+                    <div class="w-24 h-24 bg-gradient-to-tr from-teal-600 to-emerald-400 rounded-full mx-auto flex items-center justify-center p-1 shadow-md ring-4 ring-teal-100 group-hover:ring-teal-200 transition-all">
+                        <div class="w-full h-full bg-white rounded-full flex items-center justify-center">
+                            <i class="fa-solid fa-user text-slate-600 text-4xl"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 mt-5 group-hover:text-teal-700 transition-colors">श्री. संतोष सुभाषराव गिरी</h3>
                     <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider mt-1">सह-कोषाध्यक्ष</p>
+                    
+                    <p class="text-sm text-slate-600 mt-4 px-2 py-1.5 bg-slate-50 rounded-xl inline-flex items-center justify-center gap-1.5 w-full">
+                        <i class="fa-solid fa-location-dot text-slate-400 text-xs"></i>
+                        <span class="truncate">ग्रामीण रुग्णालय, देवगांव रंगारी (छ.संभाजीनगर)</span>
+                    </p>
                 </div>
-                <div class="mt-6 pt-4 border-t border-slate-100 space-y-2 text-sm text-slate-600">
-                    <div class="flex items-start"><i class="fa-solid fa-location-dot text-blue-500 w-5 mt-0.5"></i><span class="line-clamp-2">ग्रामीण रुग्णालय, देवगांव रंगारी जि.छ.संभाजीनगर</span></div>
-                    <div class="flex items-center"><i class="fa-solid fa-phone text-emerald-500 w-5"></i><a href="tel:+919403688863" class="hover:text-blue-600 font-semibold text-slate-700">+91 94036 88863</a></div>
-                </div>
-                <div class="flex gap-2 mt-4">
-                    <a href="tel:+919403688863" class="flex-1 bg-slate-50 hover:bg-emerald-50 hover:text-emerald-600 border border-slate-200 py-2 rounded-lg text-xs font-bold text-center transition-colors shadow-sm"><i class="fa-solid fa-phone mr-1"></i> कॉल</a>
-                    <a href="https://wa.me/919403688863" target="_blank" class="flex-1 bg-slate-50 hover:bg-green-50 hover:text-green-600 border border-slate-200 py-2 rounded-lg text-xs font-bold text-center transition-colors shadow-sm"><i class="fa-brands fa-whatsapp mr-1 text-green-500"></i> व्हॉट्सॲप</a>
+                <div class="mt-6 flex gap-2.5">
+                    <a href="tel:+919403688863" class="flex-1 bg-slate-50 hover:bg-emerald-600 hover:text-white border border-slate-200/80 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 text-slate-700 shadow-sm"><i class="fa-solid fa-phone text-emerald-500"></i> कॉल</a>
+                    <a href="https://wa.me/919403688863" target="_blank" class="flex-1 bg-slate-50 hover:bg-green-600 hover:text-white border border-slate-200/80 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 text-slate-700 shadow-sm"><i class="fa-brands fa-whatsapp text-green-500"></i> व्हॉट्सॲप</a>
                 </div>
             </div>
 
-            <!-- ६. प्रमुख कार्यवाह -->
-            <div class="officer-card bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:border-blue-400 flex flex-col justify-between relative overflow-hidden">
-                <div class="absolute top-4 right-4">
-                    <span class="bg-violet-50 text-violet-700 text-xs font-bold px-2.5 py-1 rounded-full border border-violet-200 flex items-center gap-1.5">
-                        <i class="fa-solid fa-file-signature text-violet-500"></i> प्रमुख कार्यवाह
-                    </span>
-                </div>
-                <div class="text-center pt-4">
-                    <div class="w-24 h-24 bg-gradient-to-tr from-violet-100 to-slate-50 rounded-full mx-auto flex items-center justify-center border-4 border-white shadow-md">
-                        <i class="fa-solid fa-user text-slate-400 text-4xl"></i>
+            <!-- प्रमुख कार्यवाह -->
+            <div class="officer-card bg-white rounded-3xl border border-slate-200/80 p-6 flex flex-col justify-between text-center group hover:border-violet-500/60">
+                <div>
+                    <div class="flex justify-center mb-4">
+                        <span class="bg-violet-50 text-violet-700 text-xs font-bold px-3 py-1 rounded-full border border-violet-200/60 flex items-center gap-1.5 shadow-sm">
+                            <i class="fa-solid fa-file-signature text-violet-500"></i> प्रमुख कार्यवाह
+                        </span>
                     </div>
-                    <h3 class="text-base font-bold text-slate-800 mt-4"><i class="fa-solid fa-file-signature text-violet-500 mr-1.5 text-sm"></i>श्री. शंकर संतोष पाव्हणे</h3>
+                    <div class="w-24 h-24 bg-gradient-to-tr from-violet-600 to-fuchsia-400 rounded-full mx-auto flex items-center justify-center p-1 shadow-md ring-4 ring-violet-100 group-hover:ring-violet-200 transition-all">
+                        <div class="w-full h-full bg-white rounded-full flex items-center justify-center">
+                            <i class="fa-solid fa-user text-slate-600 text-4xl"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 mt-5 group-hover:text-violet-700 transition-colors">श्री. शंकर संतोष पाव्हणे</h3>
                     <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider mt-1">सरचिटणीस (प्रमुख कार्यवाह)</p>
+                    
+                    <p class="text-sm text-slate-600 mt-4 px-2 py-1.5 bg-slate-50 rounded-xl inline-flex items-center justify-center gap-1.5 w-full">
+                        <i class="fa-solid fa-location-dot text-slate-400 text-xs"></i>
+                        <span class="truncate">जिल्हा सामान्य रुग्णालय, गडचिरोली</span>
+                    </p>
                 </div>
-                <div class="mt-6 pt-4 border-t border-slate-100 space-y-2 text-sm text-slate-600">
-                    <div class="flex items-start"><i class="fa-solid fa-location-dot text-blue-500 w-5 mt-0.5"></i><span class="line-clamp-2">जिल्हा सामान्य रुग्णालय, गडचिरोली</span></div>
-                    <div class="flex items-center"><i class="fa-solid fa-phone text-emerald-500 w-5"></i><a href="tel:+919769441271" class="hover:text-blue-600 font-semibold text-slate-700">+91 97694 41271</a></div>
-                </div>
-                <div class="flex gap-2 mt-4">
-                    <a href="tel:+919769441271" class="flex-1 bg-slate-50 hover:bg-emerald-50 hover:text-emerald-600 border border-slate-200 py-2 rounded-lg text-xs font-bold text-center transition-colors shadow-sm"><i class="fa-solid fa-phone mr-1"></i> कॉल</a>
-                    <a href="https://wa.me/919769441271" target="_blank" class="flex-1 bg-slate-50 hover:bg-green-50 hover:text-green-600 border border-slate-200 py-2 rounded-lg text-xs font-bold text-center transition-colors shadow-sm"><i class="fa-brands fa-whatsapp mr-1 text-green-500"></i> व्हॉट्सॲप</a>
+                <div class="mt-6 flex gap-2.5">
+                    <a href="tel:+919769441271" class="flex-1 bg-slate-50 hover:bg-emerald-600 hover:text-white border border-slate-200/80 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 text-slate-700 shadow-sm"><i class="fa-solid fa-phone text-emerald-500"></i> कॉल</a>
+                    <a href="https://wa.me/919769441271" target="_blank" class="flex-1 bg-slate-50 hover:bg-green-600 hover:text-white border border-slate-200/80 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 text-slate-700 shadow-sm"><i class="fa-brands fa-whatsapp text-green-500"></i> व्हॉट्सॲप</a>
                 </div>
             </div>
 
-            <!-- ७. कार्यवाह -->
-            <div class="officer-card bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:border-blue-400 flex flex-col justify-between relative overflow-hidden">
-                <div class="absolute top-4 right-4">
-                    <span class="bg-cyan-50 text-cyan-700 text-xs font-bold px-2.5 py-1 rounded-full border border-cyan-200 flex items-center gap-1.5">
-                        <i class="fa-solid fa-file-pen text-cyan-500"></i> कार्यवाह
-                    </span>
-                </div>
-                <div class="text-center pt-4">
-                    <div class="w-24 h-24 bg-gradient-to-tr from-cyan-100 to-slate-50 rounded-full mx-auto flex items-center justify-center border-4 border-white shadow-md">
-                        <i class="fa-solid fa-user text-slate-400 text-4xl"></i>
+            <!-- कार्यवाह -->
+            <div class="officer-card bg-white rounded-3xl border border-slate-200/80 p-6 flex flex-col justify-between text-center group hover:border-cyan-500/60">
+                <div>
+                    <div class="flex justify-center mb-4">
+                        <span class="bg-cyan-50 text-cyan-700 text-xs font-bold px-3 py-1 rounded-full border border-cyan-200/60 flex items-center gap-1.5 shadow-sm">
+                            <i class="fa-solid fa-file-pen text-cyan-500"></i> कार्यवाह
+                        </span>
                     </div>
-                    <h3 class="text-base font-bold text-slate-800 mt-4"><i class="fa-solid fa-file-pen text-cyan-500 mr-1.5 text-sm"></i>श्री. संजय विठ्ठल गिराम</h3>
-                    <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider mt-1">सह-सरचिटणीस (कार्यवाह)</p>
-                </div>
-                <div class="mt-6 pt-4 border-t border-slate-100 space-y-2 text-sm text-slate-600">
-                    <div class="flex items-start"><i class="fa-solid fa-location-dot text-blue-500 w-5 mt-0.5"></i><span class="line-clamp-2">जिल्हा क्षयरोगा केंद्र, लातूर</span></div>
-                    <div class="flex items-center"><i class="fa-solid fa-phone text-emerald-500 w-5"></i><a href="tel:+919999999999" class="hover:text-blue-600 font-semibold text-slate-700">+91 99999 99999</a></div>
-                </div>
-                <div class="flex gap-2 mt-4">
-                    <a href="tel:+919999999999" class="flex-1 bg-slate-50 hover:bg-emerald-50 hover:text-emerald-600 border border-slate-200 py-2 rounded-lg text-xs font-bold text-center transition-colors shadow-sm"><i class="fa-solid fa-phone mr-1"></i> कॉल</a>
-                    <a href="https://wa.me/919999999999" target="_blank" class="flex-1 bg-slate-50 hover:bg-green-50 hover:text-green-600 border border-slate-200 py-2 rounded-lg text-xs font-bold text-center transition-colors shadow-sm"><i class="fa-brands fa-whatsapp mr-1 text-green-500"></i> व्हॉट्सॲप</a>
-                </div>
-            </div>
-
-            <!-- ८. प्रसिध्दी प्रमुख -->
-            <div class="officer-card bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:border-blue-400 flex flex-col justify-between relative overflow-hidden">
-                <div class="absolute top-4 right-4">
-                    <span class="bg-orange-50 text-orange-700 text-xs font-bold px-2.5 py-1 rounded-full border border-orange-200 flex items-center gap-1.5">
-                        <i class="fa-solid fa-bullhorn text-orange-500"></i> प्रसिध्दी प्रमुख
-                    </span>
-                </div>
-                <div class="text-center pt-4">
-                    <div class="w-24 h-24 bg-gradient-to-tr from-orange-100 to-slate-50 rounded-full mx-auto flex items-center justify-center border-4 border-white shadow-md">
-                        <i class="fa-solid fa-user text-slate-400 text-4xl"></i>
+                    <div class="w-24 h-24 bg-gradient-to-tr from-cyan-600 to-blue-400 rounded-full mx-auto flex items-center justify-center p-1 shadow-md ring-4 ring-cyan-100 group-hover:ring-cyan-200 transition-all">
+                        <div class="w-full h-full bg-white rounded-full flex items-center justify-center">
+                            <i class="fa-solid fa-user text-slate-600 text-4xl"></i>
+                        </div>
                     </div>
-                    <h3 class="text-base font-bold text-slate-800 mt-4"><i class="fa-solid fa-bullhorn text-orange-500 mr-1.5 text-sm"></i>श्री. किरण रविंद्रराव वरघणे</h3>
-                    <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider mt-1">प्रसिध्दी प्रमुख</p>
-                </div>
-                <div class="mt-6 pt-4 border-t border-slate-100 space-y-2 text-sm text-slate-600">
-                    <div class="flex items-start"><i class="fa-solid fa-location-dot text-blue-500 w-5 mt-0.5"></i><span class="line-clamp-2">ग्रामीण रुग्णालय, सुरगाणा जि.नाशिक</span></div>
-                    <div class="flex items-center"><i class="fa-solid fa-phone text-emerald-500 w-5"></i><a href="tel:+919999999999" class="hover:text-blue-600 font-semibold text-slate-700">+91 99999 99999</a></div>
-                </div>
-                <div class="flex gap-2 mt-4">
-                    <a href="tel:+919999999999" class="flex-1 bg-slate-50 hover:bg-emerald-50 hover:text-emerald-600 border border-slate-200 py-2 rounded-lg text-xs font-bold text-center transition-colors shadow-sm"><i class="fa-solid fa-phone mr-1"></i> कॉल</a>
-                    <a href="https://wa.me/919999999999" target="_blank" class="flex-1 bg-slate-50 hover:bg-green-50 hover:text-green-600 border border-slate-200 py-2 rounded-lg text-xs font-bold text-center transition-colors shadow-sm"><i class="fa-brands fa-whatsapp mr-1 text-green-500"></i> व्हॉट्सॲप</a>
-                </div>
-            </div>
-
-        </div>
-
-    </main>
-
-    <!-- ४. फूटर -->
-    <footer class="bg-slate-900 text-slate-400 py-6 text-center text-sm border-t border-slate-800">
-        <div class="max-w-7xl mx-auto px-4">
-            <p>© 2026 क्ष किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य. सर्व हक्क सुरक्षित.</p>
-        </div>
-    </footer>
-
-</body>
-</html>
+                    <h3
