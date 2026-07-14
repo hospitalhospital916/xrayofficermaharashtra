@@ -39,8 +39,9 @@
     import { getFirestore } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
     import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
+    // अपडेट केलेली API Key सह Firebase Config
     const firebaseConfig = {
-        apiKey: "AIzaSyBVRXAra9pKpXbZY04YkvbhuyWLKL8QVyk",
+        apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk",
         authDomain: "xrayunionmah.firebaseapp.com",
         projectId: "xrayunionmah",
         storageBucket: "xrayunionmah.appspot.com",
@@ -63,7 +64,6 @@
             document.getElementById("login-section").style.display = "none";
             document.getElementById("dashboard-section").style.display = "block";
         } catch (error) {
-            // इथे आता खरी एरर समजेल
             alert("एरर आली: " + error.code + " - " + error.message);
             console.error("Firebase Error:", error);
         }
