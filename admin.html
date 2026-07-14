@@ -45,23 +45,23 @@
 <body>
 
 <header>
-    <h1>अ‍ॅडमिन डॅशबोर्ड (पत्रके अपलोड सिस्टीम)</h1>
+    <h1>अ‍ॅडमिन डॅशबोर्ड (पत्रके व PDF व्यवस्थापन)</h1>
     <a href="index.html" class="back-link">⬅ मुख्यपृष्ठावर परत जा</a>
 </header>
 
-<!-- लॉगिन सिस्टीम -->
+<!-- सुरक्षित लॉगिन सिस्टीम -->
 <div id="login-section">
     <h2>अ‍ॅडमिन लॉगिन</h2>
     <div class="form-group">
-        <label>युझर आयडी (User ID)</label>
-        <input type="text" id="userid" placeholder="तुमचा आयडी टाका">
+        <label>अधिकृत ईमेल (Admin Email)</label>
+        <input type="email" id="admin-email" placeholder="तुमचा अधिकृत ईमेल टाका">
     </div>
     <div class="form-group">
         <label>पासवर्ड (Password)</label>
-        <input type="password" id="password" placeholder="तुमचा पासवर्ड टाका">
+        <input type="password" id="admin-password" placeholder="तुमचा पासवर्ड टाका">
     </div>
-    <button onclick="checkLogin()" class="btn btn-blue">लॉगिन करा</button>
-    <div id="login-error" class="status-msg error" style="display:none;">❌ चुकीचा आयडी किंवा पासवर्ड!</div>
+    <button onclick="checkSecureLogin()" class="btn btn-blue">लॉगिन करा</button>
+    <div id="login-error" class="status-msg error" style="display:none;"></div>
 </div>
 
 <!-- मुख्य डॅशबोर्ड (लॉगिन झाल्यावरच दिसेल) -->
@@ -112,37 +112,13 @@
     </div>
 </div>
 
-<script>
-    // युझर आयडी आणि पासवर्ड तपासण्याची सिस्टीम
-    let loggedInUser = "";
-
-    function checkLogin() {
-        const uid = document.getElementById("userid").value;
-        const pass = document.getElementById("password").value;
-        const errorMsg = document.getElementById("login-error");
-
-        if (uid === "Officer1" && pass === "Mahesh@12345") {
-            grantAccess("Officer1 (मुख्य अ‍ॅडमिन)");
-        } else if (uid === "officer2" && pass === "Ravindra@12345") {
-            grantAccess("officer2 (सह-अ‍ॅडमिन)");
-        } else {
-            errorMsg.style.display = "block";
-        }
-    }
-
-    function grantAccess(userName) {
-        loggedInUser = userName;
-        document.getElementById("login-section").style.display = "none";
-        document.getElementById("dashboard-section").style.display = "block";
-        document.getElementById("welcome-user").innerText = "स्वागत आहे, " + userName + "!";
-    }
-</script>
-
-<!-- Firebase Scripts (आता फक्त Firestore ची गरज आहे) -->
+<!-- Firebase Modular Scripts (Firestore + Auth) -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
+    // तुमची अधिकृत Firebase Config
     const firebaseConfig = {
         apiKey: "AIzaSyDDYBnG3-x59Zt_eLzjcMRNVGpQVkKFKgc",
         authDomain: "xrayofficermaharashtra.firebaseapp.com",
@@ -156,6 +132,17 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    let loggedInUser = "";
+
+    // --------------------------------------------------------
+    // अ‍ॅडमिन्सच्या नावांची डिक्शनरी (अधिकृत ईमेल्स)
+    // --------------------------------------------------------
+    const adminNames = {
+        "hospital.hospital916@gmail.com": "महेश हांगे (मुख्य अ‍ॅडमिन)",
+        "xsounion@gmail.com": "रवींद्र पाटील (सह-अ‍ॅडमिन)"
+    };
 
     function showStatus(elementId, message, type) {
         const el = document.getElementById(elementId);
@@ -164,7 +151,42 @@
         el.innerText = message;
     }
 
-    // १. नवीन सब-फोल्डर तयार करणे
+    // १. सुरक्षित लॉगिन तपासण्याची सिस्टीम (Firebase Auth)
+    window.checkSecureLogin = async function() {
+        const email = document.getElementById("admin-email").value;
+        const pass = document.getElementById("admin-password").value;
+
+        if(!email || !pass) {
+            showStatus('login-error', 'कृपया ईमेल आणि पासवर्ड दोन्ही टाका!', 'error');
+            return;
+        }
+
+        showStatus('login-error', '⏳ तपासत आहे...', 'loading');
+
+        try {
+            const userCredential = await signInWithEmailAndPassword(auth, email, pass);
+            const userEmail = userCredential.user.email;
+            
+            // डिक्शनरीमधून नाव शोधणे (नाव नसेल तर फक्त ईमेल दाखवेल)
+            loggedInUser = adminNames[userEmail] || userEmail; 
+            
+            // डॅशबोर्ड दाखवणे
+            document.getElementById("login-section").style.display = "none";
+            document.getElementById("dashboard-section").style.display = "block";
+            
+            // डॅशबोर्डवर थेट नाव दिसेल
+            document.getElementById("welcome-user").innerText = "स्वागत आहे, " + loggedInUser + "!";
+            
+            // डॅशबोर्ड उघडल्यावरच फोल्डर्स लोड करणे
+            loadFoldersInDropdown();
+
+        } catch (error) {
+            showStatus('login-error', '❌ चुकीचा ईमेल किंवा पासवर्ड! पुन्हा प्रयत्न करा.', 'error');
+            console.error(error.message);
+        }
+    }
+
+    // २. नवीन सब-फोल्डर तयार करणे
     document.getElementById('create-folder-form').addEventListener('submit', async (e) => {
         e.preventDefault();
         const name = document.getElementById('folder-name').value;
@@ -187,7 +209,7 @@
         }
     });
 
-    // ड्रॉपडाऊनमध्ये फोल्डर्स लोड करणे
+    // ३. ड्रॉपडाऊनमध्ये फोल्डर्स लोड करणे
     async function loadFoldersInDropdown() {
         const dropdown = document.getElementById('select-folder');
         dropdown.innerHTML = '<option value="">-- कृपया फोल्डर निवडा --</option>';
@@ -200,9 +222,8 @@
             console.error("Error loading folders: ", error);
         }
     }
-    loadFoldersInDropdown();
 
-    // २. लिंक डेटाबेसमध्ये सेव्ह करणे
+    // ४. लिंक डेटाबेसमध्ये सेव्ह करणे
     document.getElementById('upload-pdf-form').addEventListener('submit', async (e) => {
         e.preventDefault();
         const folderId = document.getElementById('select-folder').value;
@@ -217,7 +238,7 @@
             await addDoc(collection(db, "documents"), {
                 folderId: folderId,
                 title: title,
-                fileUrl: driveLink, // सेव्ह केलेली ड्राईव्ह लिंक
+                fileUrl: driveLink,
                 uploadedAt: new Date(),
                 uploadedBy: loggedInUser
             });
