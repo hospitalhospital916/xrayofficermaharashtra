@@ -70,3 +70,19 @@
 </script>
 </body>
 </html>
+    window.checkSecureLogin = async function() {
+        const email = document.getElementById("admin-email").value;
+        const pass = document.getElementById("admin-password").value;
+        
+        try {
+            await signInWithEmailAndPassword(auth, email, pass);
+            alert("लॉगिन यशस्वी!");
+            document.getElementById("login-section").style.display = "none";
+            document.getElementById("dashboard-section").style.display = "block";
+        } catch (error) {
+            // इथे आपल्याला खरी एरर समजेल
+            alert("एरर आली: " + error.code + " - " + error.message);
+            console.error("Firebase Error:", error);
+        }
+    }
+
