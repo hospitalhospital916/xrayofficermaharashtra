@@ -3,205 +3,415 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>संघटनेचे पदाधिकारी - क्ष किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना, महाराष्ट्र राज्य</title>
+    <title>संघटनेचे पदाधिकारी - क्ष किरण वैज्ञानिक अधिकारी संघटना</title>
     
+    <!-- Tailwind CSS (for modern UI styling) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts for Marathi & English Text -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Noto+Sans+Devanagari:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome 6 for Beautiful Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
     <style>
-        :root {
-            --primary-blue: #0B3D91;
-            --secondary-gold: #FFD700;
-            --light-blue: #E6F0FA;
-            --bg-color: #f8f9fa;
-            --card-bg: #ffffff;
-            --text-color: #333;
+        body {
+            font-family: 'Poppins', 'Noto Sans Devanagari', sans-serif;
+            background-color: #f8fafc;
         }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
-
-        body { line-height: 1.6; background-color: var(--bg-color); color: var(--text-color); transition: 0.3s; }
-
-        /* डार्क मोड स्टाईल */
-        body.dark-mode { --bg-color: #121212; --card-bg: #1e1e1e; --text-color: #f4f4f4; --light-blue: #2a2a2a; }
-        body.dark-mode header { background: #1e1e1e; color: #fff; }
-        body.dark-mode nav { background: #000; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
-
-        /* हेडर आणि लोगो */
-        header { text-align: center; padding: 25px 20px; background: #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.05); position: relative; }
-        .logo-img { max-width: 100px; height: auto; margin-bottom: 10px; transition: 0.3s; }
-        header h1 { font-size: 1.8rem; color: var(--primary-blue); margin-bottom: 5px; }
-        body.dark-mode header h1 { color: #fff; }
         
-        /* थीम बटण */
-        .theme-btn { position: absolute; top: 20px; right: 20px; padding: 8px 15px; cursor: pointer; border: none; background: var(--primary-blue); color: white; border-radius: 20px; font-weight: bold; transition: 0.3s; }
-        .theme-btn:hover { background: var(--secondary-gold); color: #000; }
-
-        /* आकर्षक नेव्हिगेशन बार (मुख्यपृष्ठासारखाच) */
-        nav { 
-            background: linear-gradient(90deg, #0B3D91 0%, #1A52B8 100%); 
-            padding: 10px; 
-            text-align: center; 
-            display: flex; 
-            justify-content: center; 
-            gap: 8px; 
-            flex-wrap: wrap; 
-            position: sticky; 
-            top: 0; 
-            z-index: 1000; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15); 
-        }
-        nav a { 
-            color: rgba(255, 255, 255, 0.95); 
-            padding: 10px 18px; 
-            text-decoration: none; 
-            font-weight: 600; 
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
-            font-size: 0.95rem; 
-            border-radius: 25px; 
-            display: inline-flex;
-            align-items: center;
-            gap: 6px; 
-        }
-        nav a:hover { 
-            background: var(--secondary-gold); 
-            color: #000; 
-            transform: translateY(-2px); 
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2); 
-        }
-        /* सध्याच्या पेजचा टॅब पिवळा दाखवण्यासाठी */
-        nav a.active {
-            background: var(--secondary-gold);
-            color: #000;
-        }
-        nav a.register-btn {
-            background: rgba(255, 215, 0, 0.15);
-            border: 1px solid var(--secondary-gold);
-            color: var(--secondary-gold);
-        }
-        nav a.register-btn:hover {
-            background: var(--secondary-gold);
-            color: #000;
+        .brand-title {
+            font-family: 'Noto Sans Devanagari', sans-serif;
+            font-weight: 700;
         }
 
-        /* मुख्य मांडणी */
-        .container { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
-        
-        .card { 
-            background: var(--card-bg); 
-            padding: 30px; 
-            border-radius: 10px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
-            border-top: 5px solid var(--primary-blue); 
+        .header-gradient {
+            background: linear-gradient(135deg, #004070 0%, #0066b2 100%);
         }
-        .card h2 { 
-            color: var(--primary-blue); 
-            margin-bottom: 20px; 
-            text-align: center;
-            font-size: 1.6rem;
-        }
-        body.dark-mode .card h2 { color: var(--secondary-gold); }
 
-        /* तक्ता डिझाईन आणि मोबाईल रिस्पॉन्सिव्हनेस */
-        .table-responsive {
-            width: 100%;
-            overflow-x: auto; /* मोबाईलवर टेबल स्क्रोल होईल, डिझाईन तुटणार नाही */
-            margin-top: 20px;
+        .officer-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            min-width: 700px; /* मोबाईलवर किमान विड्थ राखेल */
+        .officer-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.1);
         }
-        th, td { 
-            border: 1px solid #e0e0e0; 
-            text-align: left; 
-            padding: 14px 12px; 
-            font-size: 0.95rem;
-        }
-        body.dark-mode th, body.dark-mode td { border-color: #333; }
-        th { 
-            background-color: var(--primary-blue); 
-            color: white; 
-            font-weight: 600;
-        }
-        tr:nth-child(even) { background-color: rgba(0, 0, 0, 0.02); }
-        body.dark-mode tr:nth-child(even) { background-color: rgba(255, 255, 255, 0.02); }
 
-        /* तळटीप (Footer) */
-        footer { background: #0B2240; color: white; text-align: center; padding: 30px 20px; margin-top: 60px; font-size: 0.95rem; }
-        footer a { color: var(--secondary-gold); text-decoration: none; }
-        footer a:hover { text-decoration: underline; }
-        .footer-links { margin-bottom: 15px; }
-        .footer-links a { margin: 0 10px; color: #fff; }
+        .view-btn.active {
+            background-color: #005088;
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 80, 136, 0.2);
+        }
     </style>
 </head>
+<body class="min-h-screen flex flex-col justify-between">
 
-<body>
-
-    <header>
-        <button class="theme-btn" onclick="toggleDarkMode()">🌙 थीम बदला</button>
-        <img src="logo.png" class="logo-img" alt="संगठनाचा लोगो">
-        <h1>क्ष किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना, महाराष्ट्र राज्य</h1>
-    </header>
-
-    <nav>
-        <a href="index.html">🏠 मुख्यपृष्ठ</a>
-        <a href="index.html#about">ℹ️ संघटनाबद्दल</a>
-        <a href="gr.html">📄 GR / परिपत्रके</a>
-        <a href="gallery.html">🖼️ गॅलरी</a>
-        <a href="officers.html" class="active">👥 पदाधिकारी</a>
-        <a href="contact.html">📞 संपर्क</a>
-        <a href="https://forms.gle/XbdkWManQePhTerA9" target="_blank" class="register-btn">📢 सदस्य नोंदणी</a>
-        <a href="services.html">🛠️ सदस्यांसाठी सेवा</a>
-    </nav>
-
-    <main class="container">
-        <div class="card">
-            <h2>👥 संघटनेचे केंद्रीय पदाधिकारी (महाराष्ट्र राज्य)</h2>
-            
-            <div class="table-responsive">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>धारण केलेले पद</th>
-                            <th>पदाधिकाऱ्याचे नाव</th>
-                            <th>वय</th>
-                            <th>कार्यरत ठिकाण / पत्ता</th>
-                            <th>व्यवसाय</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr><td><strong>अध्यक्ष</strong></td><td>श्री. रविंद्र मल्हारी पाटील</td><td>४८</td><td>उपजिल्हा रुग्णालय, फलटण जि. सातारा</td><td>क्ष किरण वैज्ञानिक अधिकारी गट-क</td></tr>
-                        <tr><td><strong>उपाध्यक्ष</strong></td><td>१) श्री कोमल विठ्ठलराव चुनरकर</td><td>३९</td><td>जिल्हा स्त्री रुग्णालय, गडचिरोली</td><td>क्ष किरण वैज्ञानिक अधिकारी गट-क</td></tr>
-                        <tr><td><strong>उपाध्यक्ष</strong></td><td>२) संतोषकुमार हसनराव देशमुख</td><td>४७</td><td>ग्रामीण रुग्णालय, सिंदखेडराजा</td><td>क्ष किरण वैज्ञानिक अधिकारी गट-क</td></tr>
-                        <tr><td><strong>कोषाध्यक्ष</strong></td><td>विशाल गणेश कायंदे</td><td>३०</td><td>ग्रामीण रुग्णालय, चामोर्शी, जि. गडचिरोली</td><td>क्ष किरण वैज्ञानिक अधिकारी गट-क</td></tr>
-                        <tr><td><strong>सह-कोषाध्यक्ष</strong></td><td>श्री संतोष सुभाषराव गिरी</td><td>४३</td><td>ग्रामीण रुग्णालय, देवगांव रंगारी जि. छ. संभाजीनगर</td><td>क्ष किरण वैज्ञानिक अधिकारी गट-क</td></tr>
-                        <tr><td><strong>प्रमुख कार्यवाह (सरचिटणीस)</strong></td><td>१) श्री शंकर संतोष पाव्हणे</td><td>३३</td><td>जिल्हा सामान्य रुग्णालय, गडचिरोली</td><td>क्ष किरण वैज्ञानिक अधिकारी गट-क</td></tr>
-                        <tr><td><strong>कार्यवाह (सह-सरचिटणीस)</strong></td><td>संजय विठ्ठल गिराम</td><td>४४</td><td>जिल्हा क्षयरोग केंद्र लातूर</td><td>क्ष किरण वैज्ञानिक अधिकारी गट-क</td></tr>
-                        <tr><td><strong>प्रसिध्दी प्रमुख</strong></td><td>किरण रविंद्रराव वरघणे</td><td>२९</td><td>ग्रामीण रुग्णालय, सुरगाना जि. नाशिक</td><td>क्ष किरण वैज्ञानिक अधिकारी गट-क</td></tr>
-                    </tbody>
-                </table>
+    <!-- १. नेव्हिगेशन बार (Navigation Bar) -->
+    <nav class="bg-[#005088] text-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-lg sm:text-xl font-bold tracking-wider brand-title">
+                        <i class="fa-solid fa-wave-square text-cyan-400 mr-2"></i> क्ष किरण वैज्ञानिक अधिकारी संघटना
+                    </span>
+                </div>
+                <div class="hidden md:flex space-x-6 text-sm font-medium">
+                    <a href="index.html" class="hover:text-cyan-300 transition-colors"><i class="fa-solid fa-house mr-1"></i> मुख्यपृष्ठ</a>
+                    <a href="#" class="hover:text-cyan-300 transition-colors"><i class="fa-solid fa-circle-info mr-1"></i> संघटनाबद्दल</a>
+                    <a href="#" class="hover:text-cyan-300 transition-colors"><i class="fa-solid fa-file-pdf mr-1"></i> GR / परिपत्रके</a>
+                    <a href="#" class="hover:text-cyan-300 transition-colors"><i class="fa-solid fa-image mr-1"></i> गॅलरी</a>
+                    <a href="officer.html" class="text-cyan-300 font-semibold border-b-2 border-cyan-300 pb-1"><i class="fa-solid fa-id-card mr-1"></i> पदाधिकारी</a>
+                    <a href="#" class="hover:text-cyan-300 transition-colors"><i class="fa-solid fa-phone mr-1"></i> संपर्क</a>
+                </div>
             </div>
         </div>
+    </nav>
+
+    <!-- २. मुख्य शीर्षक विभाग (Header Hero Section) -->
+    <header class="header-gradient text-white py-12 px-4 text-center relative overflow-hidden shadow-md">
+        <div class="absolute inset-0 opacity-10">
+            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                        <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" stroke-width="1"/>
+                    </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#grid)" />
+            </svg>
+        </div>
+        
+        <div class="relative z-10 max-w-4xl mx-auto">
+            <span class="bg-cyan-500/20 text-cyan-200 text-xs sm:text-sm font-semibold uppercase tracking-wider px-3 py-1 rounded-full border border-cyan-400/30">
+                (गट-क) कर्मचारी संघटना, महाराष्ट्र राज्य
+            </span>
+            <h1 class="text-3xl sm:text-5xl font-extrabold mt-4 brand-title drop-shadow-md">
+                संघटनेचे पदाधिकारी
+            </h1>
+            <p class="text-slate-200 mt-3 text-sm sm:text-base max-w-2xl mx-auto">
+                राज्यातील सर्व क्ष-किरण वैज्ञानिक अधिकाऱ्यांच्या हक्कासाठी, आरोग्यासाठी आणि उज्ज्वल भविष्यासाठी कटिबद्ध असलेली खंबीर कार्यकारिणी.
+            </p>
+        </div>
+    </header>
+
+    <!-- ३. मुख्य कन्टेंटエリア (Main Content) -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-grow w-full">
+        
+        <!-- व्ह्यू सिलेक्टर्स बटन्स -->
+        <div class="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4 border-b border-slate-200 pb-5">
+            <p class="text-slate-600 font-medium">
+                <i class="fa-solid fa-user-group text-blue-600 mr-2"></i>एकूण पदाधिकारी: <span class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full text-sm font-bold">८</span>
+            </p>
+            <div class="flex items-center bg-white p-1 rounded-lg border border-slate-200 shadow-sm">
+                <button onclick="switchView('grid')" id="grid-btn" class="view-btn active px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-200 flex items-center">
+                    <i class="fa-solid fa-grip mr-1.5"></i> कार्ड व्ह्यू (Card)
+                </button>
+                <button onclick="switchView('list')" id="list-btn" class="view-btn px-4 py-1.5 rounded-md text-sm font-medium transition-all duration-200 flex items-center">
+                    <i class="fa-solid fa-list mr-1.5"></i> टेबल व्ह्यू (Table)
+                </button>
+            </div>
+        </div>
+
+        <!-- ================= अ. कार्ड लेआउट (CARD VIEW) ================= -->
+        <div id="grid-view" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            
+            <!-- १. अध्यक्ष कार्ड -->
+            <div class="officer-card bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:border-blue-300 relative overflow-hidden flex flex-col justify-between">
+                <div class="absolute top-4 right-4">
+                    <span class="bg-amber-50 text-amber-700 text-xs font-bold px-2.5 py-1 rounded-full border border-amber-200 flex items-center gap-1.5">
+                        <i class="fa-solid fa-crown text-amber-500"></i> अध्यक्ष
+                    </span>
+                </div>
+                <div class="text-center pt-4">
+                    <div class="w-24 h-24 bg-gradient-to-tr from-amber-100 to-blue-50 rounded-full mx-auto flex items-center justify-center border-4 border-white shadow-md relative overflow-hidden">
+                        <i class="fa-solid fa-user-tie text-slate-400 text-4xl"></i>
+                    </div>
+                    <h3 class="text-base font-bold text-slate-800 mt-4"><i class="fa-solid fa-crown text-amber-500 mr-1.5 text-sm"></i>श्री. रविंद्र मल्हारी पाटील</h3>
+                    <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider mt-1">अध्यक्ष, महाराष्ट्र राज्य</p>
+                </div>
+                <div class="mt-6 pt-4 border-t border-slate-100 space-y-2.5 text-sm text-slate-600">
+                    <div class="flex items-start"><i class="fa-solid fa-location-dot text-blue-500 w-5 mt-0.5"></i><span>उपजिल्हा रुग्णालय, फलटण जि.सातारा</span></div>
+                </div>
+                <div class="flex gap-2 mt-5">
+                    <a href="#" class="flex-1 bg-slate-50 hover:bg-blue-50 hover:text-blue-600 border border-slate-200 py-1.5 rounded-lg text-xs font-medium text-center transition-colors"><i class="fa-solid fa-address-card mr-1"></i> सविस्तर माहिती</a>
+                </div>
+            </div>
+
+            <!-- २. उपाध्यक्ष कार्ड १ -->
+            <div class="officer-card bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:border-blue-300 relative overflow-hidden flex flex-col justify-between">
+                <div class="absolute top-4 right-4">
+                    <span class="bg-blue-50 text-blue-700 text-xs font-bold px-2.5 py-1 rounded-full border border-blue-200 flex items-center gap-1.5">
+                        <i class="fa-solid fa-user-shield text-blue-500"></i> उपाध्यक्ष
+                    </span>
+                </div>
+                <div class="text-center pt-4">
+                    <div class="w-24 h-24 bg-gradient-to-tr from-blue-100 to-slate-50 rounded-full mx-auto flex items-center justify-center border-4 border-white shadow-md relative overflow-hidden">
+                        <i class="fa-solid fa-user text-slate-400 text-4xl"></i>
+                    </div>
+                    <h3 class="text-base font-bold text-slate-800 mt-4"><i class="fa-solid fa-user-shield text-blue-500 mr-1.5 text-sm"></i>श्री. कोमल विठ्ठलराव चुनरकर</h3>
+                    <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider mt-1">उपाध्यक्ष</p>
+                </div>
+                <div class="mt-6 pt-4 border-t border-slate-100 space-y-2.5 text-sm text-slate-600">
+                    <div class="flex items-start"><i class="fa-solid fa-location-dot text-blue-500 w-5 mt-0.5"></i><span>जिल्हा स्त्री रुग्णालय, गडचिरोली</span></div>
+                </div>
+                <div class="flex gap-2 mt-5">
+                    <a href="#" class="flex-1 bg-slate-50 hover:bg-blue-50 hover:text-blue-600 border border-slate-200 py-1.5 rounded-lg text-xs font-medium text-center transition-colors"><i class="fa-solid fa-address-card mr-1"></i> सविस्तर माहिती</a>
+                </div>
+            </div>
+
+            <!-- ३. उपाध्यक्ष कार्ड २ -->
+            <div class="officer-card bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:border-blue-300 relative overflow-hidden flex flex-col justify-between">
+                <div class="absolute top-4 right-4">
+                    <span class="bg-blue-50 text-blue-700 text-xs font-bold px-2.5 py-1 rounded-full border border-blue-200 flex items-center gap-1.5">
+                        <i class="fa-solid fa-user-shield text-blue-500"></i> उपाध्यक्ष
+                    </span>
+                </div>
+                <div class="text-center pt-4">
+                    <div class="w-24 h-24 bg-gradient-to-tr from-blue-100 to-slate-50 rounded-full mx-auto flex items-center justify-center border-4 border-white shadow-md relative overflow-hidden">
+                        <i class="fa-solid fa-user text-slate-400 text-4xl"></i>
+                    </div>
+                    <h3 class="text-base font-bold text-slate-800 mt-4"><i class="fa-solid fa-user-shield text-blue-500 mr-1.5 text-sm"></i>श्री. संतोषकुमार हसनराव देशमुख</h3>
+                    <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider mt-1">उपाध्यक्ष</p>
+                </div>
+                <div class="mt-6 pt-4 border-t border-slate-100 space-y-2.5 text-sm text-slate-600">
+                    <div class="flex items-start"><i class="fa-solid fa-location-dot text-blue-500 w-5 mt-0.5"></i><span>ग्रामीण रुग्णालय, सिंदखेडराजा</span></div>
+                </div>
+                <div class="flex gap-2 mt-5">
+                    <a href="#" class="flex-1 bg-slate-50 hover:bg-blue-50 hover:text-blue-600 border border-slate-200 py-1.5 rounded-lg text-xs font-medium text-center transition-colors"><i class="fa-solid fa-address-card mr-1"></i> सविस्तर माहिती</a>
+                </div>
+            </div>
+
+            <!-- ४. कोषाध्यक्ष कार्ड -->
+            <div class="officer-card bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:border-blue-300 relative overflow-hidden flex flex-col justify-between">
+                <div class="absolute top-4 right-4">
+                    <span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-2.5 py-1 rounded-full border border-emerald-200 flex items-center gap-1.5">
+                        <i class="fa-solid fa-wallet text-emerald-500"></i> कोषाध्यक्ष
+                    </span>
+                </div>
+                <div class="text-center pt-4">
+                    <div class="w-24 h-24 bg-gradient-to-tr from-emerald-100 to-slate-50 rounded-full mx-auto flex items-center justify-center border-4 border-white shadow-md relative overflow-hidden">
+                        <i class="fa-solid fa-user text-slate-400 text-4xl"></i>
+                    </div>
+                    <h3 class="text-base font-bold text-slate-800 mt-4"><i class="fa-solid fa-wallet text-emerald-500 mr-1.5 text-sm"></i>श्री. विशाल गणेश कायंदे</h3>
+                    <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider mt-1">कोषाध्यक्ष</p>
+                </div>
+                <div class="mt-6 pt-4 border-t border-slate-100 space-y-2.5 text-sm text-slate-600">
+                    <div class="flex items-start"><i class="fa-solid fa-location-dot text-blue-500 w-5 mt-0.5"></i><span>ग्रामीण रुग्णालय, चामोर्शी, जि.गडचिरोली</span></div>
+                </div>
+                <div class="flex gap-2 mt-5">
+                    <a href="#" class="flex-1 bg-slate-50 hover:bg-blue-50 hover:text-blue-600 border border-slate-200 py-1.5 rounded-lg text-xs font-medium text-center transition-colors"><i class="fa-solid fa-address-card mr-1"></i> सविस्तर माहिती</a>
+                </div>
+            </div>
+
+            <!-- ५. सह-कोषाध्यक्ष कार्ड -->
+            <div class="officer-card bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:border-blue-300 relative overflow-hidden flex flex-col justify-between">
+                <div class="absolute top-4 right-4">
+                    <span class="bg-teal-50 text-teal-700 text-xs font-bold px-2.5 py-1 rounded-full border border-teal-200 flex items-center gap-1.5">
+                        <i class="fa-solid fa-coins text-teal-500"></i> सह-कोषाध्यक्ष
+                    </span>
+                </div>
+                <div class="text-center pt-4">
+                    <div class="w-24 h-24 bg-gradient-to-tr from-teal-100 to-slate-50 rounded-full mx-auto flex items-center justify-center border-4 border-white shadow-md relative overflow-hidden">
+                        <i class="fa-solid fa-user text-slate-400 text-4xl"></i>
+                    </div>
+                    <h3 class="text-base font-bold text-slate-800 mt-4"><i class="fa-solid fa-coins text-teal-500 mr-1.5 text-sm"></i>श्री. संतोष सुभाषराव गिरी</h3>
+                    <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider mt-1">सह-कोषाध्यक्ष</p>
+                </div>
+                <div class="mt-6 pt-4 border-t border-slate-100 space-y-2.5 text-sm text-slate-600">
+                    <div class="flex items-start"><i class="fa-solid fa-location-dot text-blue-500 w-5 mt-0.5"></i><span>ग्रामीण रुग्णालय, देवगांव रंगारी जि.छ.संभाजीनगर</span></div>
+                </div>
+                <div class="flex gap-2 mt-5">
+                    <a href="#" class="flex-1 bg-slate-50 hover:bg-blue-50 hover:text-blue-600 border border-slate-200 py-1.5 rounded-lg text-xs font-medium text-center transition-colors"><i class="fa-solid fa-address-card mr-1"></i> सविस्तर माहिती</a>
+                </div>
+            </div>
+
+            <!-- ६. प्रमुख कार्यवाह (सरचिटणीस) कार्ड -->
+            <div class="officer-card bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:border-blue-300 relative overflow-hidden flex flex-col justify-between">
+                <div class="absolute top-4 right-4">
+                    <span class="bg-violet-50 text-violet-700 text-xs font-bold px-2.5 py-1 rounded-full border border-violet-200 flex items-center gap-1.5">
+                        <i class="fa-solid fa-file-signature text-violet-500"></i> प्रमुख कार्यवाह
+                    </span>
+                </div>
+                <div class="text-center pt-4">
+                    <div class="w-24 h-24 bg-gradient-to-tr from-violet-100 to-slate-50 rounded-full mx-auto flex items-center justify-center border-4 border-white shadow-md relative overflow-hidden">
+                        <i class="fa-solid fa-user text-slate-400 text-4xl"></i>
+                    </div>
+                    <h3 class="text-base font-bold text-slate-800 mt-4"><i class="fa-solid fa-file-signature text-violet-500 mr-1.5 text-sm"></i>श्री. शंकर संतोष पाव्हणे</h3>
+                    <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider mt-1">सरचिटणीस</p>
+                </div>
+                <div class="mt-6 pt-4 border-t border-slate-100 space-y-2.5 text-sm text-slate-600">
+                    <div class="flex items-start"><i class="fa-solid fa-location-dot text-blue-500 w-5 mt-0.5"></i><span>जिल्हा सामान्य रुग्णालय, गडचिरोली</span></div>
+                </div>
+                <div class="flex gap-2 mt-5">
+                    <a href="#" class="flex-1 bg-slate-50 hover:bg-blue-50 hover:text-blue-600 border border-slate-200 py-1.5 rounded-lg text-xs font-medium text-center transition-colors"><i class="fa-solid fa-address-card mr-1"></i> सविस्तर माहिती</a>
+                </div>
+            </div>
+
+            <!-- ७. कार्यवाह (सह-सरचिटणीस) कार्ड -->
+            <div class="officer-card bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:border-blue-300 relative overflow-hidden flex flex-col justify-between">
+                <div class="absolute top-4 right-4">
+                    <span class="bg-cyan-50 text-cyan-700 text-xs font-bold px-2.5 py-1 rounded-full border border-cyan-200 flex items-center gap-1.5">
+                        <i class="fa-solid fa-file-pen text-cyan-500"></i> कार्यवाह
+                    </span>
+                </div>
+                <div class="text-center pt-4">
+                    <div class="w-24 h-24 bg-gradient-to-tr from-cyan-100 to-slate-50 rounded-full mx-auto flex items-center justify-center border-4 border-white shadow-md relative overflow-hidden">
+                        <i class="fa-solid fa-user text-slate-400 text-4xl"></i>
+                    </div>
+                    <h3 class="text-base font-bold text-slate-800 mt-4"><i class="fa-solid fa-file-pen text-cyan-500 mr-1.5 text-sm"></i>श्री. संजय विठ्ठल गिराम</h3>
+                    <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider mt-1">सह-सरचिटणीस</p>
+                </div>
+                <div class="mt-6 pt-4 border-t border-slate-100 space-y-2.5 text-sm text-slate-600">
+                    <div class="flex items-start"><i class="fa-solid fa-location-dot text-blue-500 w-5 mt-0.5"></i><span>जिल्हा क्षयरोगा केंद्र, लातूर</span></div>
+                </div>
+                <div class="flex gap-2 mt-5">
+                    <a href="#" class="flex-1 bg-slate-50 hover:bg-blue-50 hover:text-blue-600 border border-slate-200 py-1.5 rounded-lg text-xs font-medium text-center transition-colors"><i class="fa-solid fa-address-card mr-1"></i> सविस्तर माहिती</a>
+                </div>
+            </div>
+
+            <!-- ८. प्रसिध्दी प्रमुख कार्ड -->
+            <div class="officer-card bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:border-blue-300 relative overflow-hidden flex flex-col justify-between">
+                <div class="absolute top-4 right-4">
+                    <span class="bg-orange-50 text-orange-700 text-xs font-bold px-2.5 py-1 rounded-full border border-orange-200 flex items-center gap-1.5">
+                        <i class="fa-solid fa-bullhorn text-orange-500"></i> प्रसिध्दी प्रमुख
+                    </span>
+                </div>
+                <div class="text-center pt-4">
+                    <div class="w-24 h-24 bg-gradient-to-tr from-orange-100 to-slate-50 rounded-full mx-auto flex items-center justify-center border-4 border-white shadow-md relative overflow-hidden">
+                        <i class="fa-solid fa-user text-slate-400 text-4xl"></i>
+                    </div>
+                    <h3 class="text-base font-bold text-slate-800 mt-4"><i class="fa-solid fa-bullhorn text-orange-500 mr-1.5 text-sm"></i>श्री. किरण रविंद्रराव वरघणे</h3>
+                    <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider mt-1">प्रसिध्दी प्रमुख</p>
+                </div>
+                <div class="mt-6 pt-4 border-t border-slate-100 space-y-2.5 text-sm text-slate-600">
+                    <div class="flex items-start"><i class="fa-solid fa-location-dot text-blue-500 w-5 mt-0.5"></i><span>ग्रामीण रुग्णालय, सुरगाणा जि.नाशिक</span></div>
+                </div>
+                <div class="flex gap-2 mt-5">
+                    <a href="#" class="flex-1 bg-slate-50 hover:bg-blue-50 hover:text-blue-600 border border-slate-200 py-1.5 rounded-lg text-xs font-medium text-center transition-colors"><i class="fa-solid fa-address-card mr-1"></i> सविस्तर माहिती</a>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ================= ब. टेबल लेआउट (TABLE VIEW) ================= -->
+        <div id="list-view" class="hidden overflow-x-auto bg-white rounded-2xl border border-slate-200 shadow-sm">
+            <table class="min-w-full divide-y divide-slate-200 text-left text-sm text-slate-600">
+                <thead class="bg-slate-50 text-slate-700 font-semibold uppercase text-xs tracking-wider">
+                    <tr>
+                        <th class="px-6 py-4 text-center">अ.क्र.</th>
+                        <th class="px-6 py-4">संघटनेचे धारण केलेले पद</th>
+                        <th class="px-6 py-4">पदाधिकाऱ्यांचे नाव</th>
+                        <th class="px-6 py-4">कार्यरत ठिकाण (पत्ता)</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-200 bg-white">
+                    <!-- १. अध्यक्ष -->
+                    <tr class="hover:bg-slate-50/80 transition-colors">
+                        <td class="px-6 py-4 text-center font-bold text-slate-400">1</td>
+                        <td class="px-6 py-4 font-semibold text-slate-800">
+                            <span class="flex items-center gap-2"><i class="fa-solid fa-crown text-amber-500"></i> अध्यक्ष</span>
+                        </td>
+                        <td class="px-6 py-4 font-medium text-slate-900">श्री. रविंद्र मल्हारी पाटील</td>
+                        <td class="px-6 py-4">उपजिल्हा रुग्णालय, फलटण जि.सातारा</td>
+                    </tr>
+                    <!-- २. उपाध्यक्ष १ -->
+                    <tr class="hover:bg-slate-50/80 transition-colors">
+                        <td class="px-6 py-4 text-center font-bold text-slate-400">2</td>
+                        <td class="px-6 py-4 font-semibold text-slate-800">
+                            <span class="flex items-center gap-2"><i class="fa-solid fa-user-shield text-blue-500"></i> उपाध्यक्ष</span>
+                        </td>
+                        <td class="px-6 py-4 font-medium text-slate-900">श्री. कोमल विठ्ठलराव चुनरकर</td>
+                        <td class="px-6 py-4">जिल्हा स्त्री रुग्णालय, गडचिरोली</td>
+                    </tr>
+                    <!-- ३. उपाध्यक्ष २ -->
+                    <tr class="hover:bg-slate-50/80 transition-colors">
+                        <td class="px-6 py-4 text-center font-bold text-slate-400">3</td>
+                        <td class="px-6 py-4 font-semibold text-slate-800">
+                            <span class="flex items-center gap-2"><i class="fa-solid fa-user-shield text-blue-500"></i> उपाध्यक्ष</span>
+                        </td>
+                        <td class="px-6 py-4 font-medium text-slate-900">श्री. संतोषकुमार हसनराव देशमुख</td>
+                        <td class="px-6 py-4">ग्रामीण रुग्णालय, simdhakedraajaa (सिंदखेडराजा)</td>
+                    </tr>
+                    <!-- ४. कोषाध्यक्ष -->
+                    <tr class="hover:bg-slate-50/80 transition-colors">
+                        <td class="px-6 py-4 text-center font-bold text-slate-400">4</td>
+                        <td class="px-6 py-4 font-semibold text-slate-800">
+                            <span class="flex items-center gap-2"><i class="fa-solid fa-wallet text-emerald-500"></i> कोषाध्यक्ष</span>
+                        </td>
+                        <td class="px-6 py-4 font-medium text-slate-900">श्री. विशाल गणेश कायंदे</td>
+                        <td class="px-6 py-4">ग्रामीण रुग्णालय, चामोर्शी, जि.गडचिरोली</td>
+                    </tr>
+                    <!-- ५. सह-कोषाध्यक्ष -->
+                    <tr class="hover:bg-slate-50/80 transition-colors">
+                        <td class="px-6 py-4 text-center font-bold text-slate-400">5</td>
+                        <td class="px-6 py-4 font-semibold text-slate-800">
+                            <span class="flex items-center gap-2"><i class="fa-solid fa-coins text-teal-500"></i> सह-कोषाध्यक्ष</span>
+                        </td>
+                        <td class="px-6 py-4 font-medium text-slate-900">श्री. संतोष सुभाषराव गिरी</td>
+                        <td class="px-6 py-4">ग्रामीण रुग्णालय, देवगांव रंगारी जि.छ.संभाजीनगर</td>
+                    </tr>
+                    <!-- ६. प्रमुख कार्यवाह -->
+                    <tr class="hover:bg-slate-50/80 transition-colors">
+                        <td class="px-6 py-4 text-center font-bold text-slate-400">6</td>
+                        <td class="px-6 py-4 font-semibold text-slate-800">
+                            <span class="flex items-center gap-2"><i class="fa-solid fa-file-signature text-violet-500"></i> प्रमुख कार्यवाह (सरचिटणीस)</span>
+                        </td>
+                        <td class="px-6 py-4 font-medium text-slate-900">श्री. शंकर संतोष पाव्हणे</td>
+                        <td class="px-6 py-4">जिल्हा सामान्य रुग्णालय, गडचिरोली</td>
+                    </tr>
+                    <!-- ७. कार्यवाह -->
+                    <tr class="hover:bg-slate-50/80 transition-colors">
+                        <td class="px-6 py-4 text-center font-bold text-slate-400">7</td>
+                        <td class="px-6 py-4 font-semibold text-slate-800">
+                            <span class="flex items-center gap-2"><i class="fa-solid fa-file-pen text-cyan-500"></i> कार्यवाह (सह-सरचिटणीस)</span>
+                        </td>
+                        <td class="px-6 py-4 font-medium text-slate-900">श्री. संजय विठ्ठल गिराम</td>
+                        <td class="px-6 py-4">जिल्हा क्षयरोगा केंद्र, लातूर</td>
+                    </tr>
+                    <!-- ८. प्रसिध्दी प्रमुख -->
+                    <tr class="hover:bg-slate-50/80 transition-colors">
+                        <td class="px-6 py-4 text-center font-bold text-slate-400">8</td>
+                        <td class="px-6 py-4 font-semibold text-slate-800">
+                            <span class="flex items-center gap-2"><i class="fa-solid fa-bullhorn text-orange-500"></i> प्रसिध्दी प्रमुख</span>
+                        </td>
+                        <td class="px-6 py-4 font-medium text-slate-900">श्री. किरण रविंद्रराव वरघणे</td>
+                        <td class="px-6 py-4">ग्रामीण रुग्णालय, सुरगाणा जि.नाशिक</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
     </main>
 
-    <footer>
-        <div class="footer-links">
-            <a href="index.html">मुख्यपृष्ठ</a> | 
-            <a href="gr.html">GR व पत्रे</a> | 
-            <a href="contact.html">संपर्क करा</a>
+    <!-- ४. फूटर (Footer) -->
+    <footer class="bg-slate-900 text-slate-400 py-6 text-center text-sm border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4">
+            <p>© 2026 क्ष किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य. सर्व हक्क सुरक्षित.</p>
         </div>
-        <p>&copy; २०२६ क्ष किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना, महाराष्ट्र राज्य. सर्व हक्क सुरक्षित.</p>
     </footer>
 
+    <!-- ५. JavaScript (View Toggle Function) -->
     <script>
-        function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode');
-            const btn = document.querySelector('.theme-btn');
-            if(document.body.classList.contains('dark-mode')) {
-                btn.innerHTML = "☀️ लाईट मोड";
+        function switchView(view) {
+            const gridView = document.getElementById('grid-view');
+            const listView = document.getElementById('list-view');
+            const gridBtn = document.getElementById('grid-btn');
+            const listBtn = document.getElementById('list-btn');
+            
+            if (view === 'grid') {
+                gridView.classList.remove('hidden');
+                listView.classList.add('hidden');
+                gridBtn.classList.add('active');
+                listBtn.classList.remove('active');
             } else {
-                btn.innerHTML = "🌙 थीम बदला";
+                gridView.classList.add('hidden');
+                listView.classList.remove('hidden');
+                gridBtn.classList.remove('active');
+                listBtn.classList.add('active');
             }
         }
     </script>
+
 </body>
 </html>
