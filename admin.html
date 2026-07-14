@@ -32,15 +32,13 @@
 <div class="admin-container" id="dashboard-section" style="display:none;">
     <h2>डॅशबोर्ड</h2>
     <div id="welcome-user"></div>
-    <!-- बाकीचा तुमचा फॉर्मचा कोड जसाच्या तसा आहे -->
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
     import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-    // नवीन अचूक Firebase Config
     const firebaseConfig = {
         apiKey: "AIzaSyBVRXAra9pKpXbZY04YkvbhuyWLKL8QVyk",
         authDomain: "xrayunionmah.firebaseapp.com",
@@ -58,21 +56,6 @@
     window.checkSecureLogin = async function() {
         const email = document.getElementById("admin-email").value;
         const pass = document.getElementById("admin-password").value;
-        try {
-            await signInWithEmailAndPassword(auth, email, pass);
-            document.getElementById("login-section").style.display = "none";
-            document.getElementById("dashboard-section").style.display = "block";
-            alert("लॉगिन यशस्वी!");
-        } catch (error) {
-            alert("चुकीचा ईमेल किंवा पासवर्ड!");
-        }
-    }
-</script>
-</body>
-</html>
-    window.checkSecureLogin = async function() {
-        const email = document.getElementById("admin-email").value;
-        const pass = document.getElementById("admin-password").value;
         
         try {
             await signInWithEmailAndPassword(auth, email, pass);
@@ -80,9 +63,11 @@
             document.getElementById("login-section").style.display = "none";
             document.getElementById("dashboard-section").style.display = "block";
         } catch (error) {
-            // इथे आपल्याला खरी एरर समजेल
+            // इथे आता खरी एरर समजेल
             alert("एरर आली: " + error.code + " - " + error.message);
             console.error("Firebase Error:", error);
         }
     }
-
+</script>
+</body>
+</html>
