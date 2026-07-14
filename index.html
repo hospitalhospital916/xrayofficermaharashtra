@@ -4,26 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>क्ष किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना, महाराष्ट्र राज्य</title>
-    
     <style>
-        :root { --primary-blue: #0B3D91; --secondary-gold: #FFD700; --light-blue: #E6F0FA; --bg-color: #f8f9fa; --card-bg: #ffffff; --text-color: #333; }
+        :root { --primary-blue: #0B3D91; --secondary-gold: #FFD700; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
-        body { line-height: 1.6; background-color: var(--bg-color); color: var(--text-color); }
-
-        header { text-align: center; padding: 25px 20px; background: #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        h1 { color: var(--primary-blue); font-size: 1.8rem; }
-
+        body { background-color: #f8f9fa; color: #333; line-height: 1.6; }
+        header { text-align: center; padding: 20px; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         nav { background: #0B3D91; padding: 10px; text-align: center; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
-        nav a { color: white; padding: 10px 15px; text-decoration: none; font-weight: 600; border-radius: 20px; }
-        nav a:hover { background: var(--secondary-gold); color: #000; }
-
-        /* फिरणारी पट्टी */
-        .ticker-wrap { background: #FFD700; padding: 10px; overflow: hidden; border: 2px solid #0B3D91; margin: 10px; }
-
-        .container { max-width: 1100px; margin: auto; padding: 20px; display: grid; grid-template-columns: 2fr 1fr; gap: 30px; }
-        .card { background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-left: 5px solid #0B3D91; }
+        nav a { color: white; padding: 8px 15px; text-decoration: none; font-weight: 600; border-radius: 15px; }
+        nav a:hover { background: #FFD700; color: #000; }
         
-        footer { background: #0B2240; color: white; text-align: center; padding: 20px; margin-top: 40px; }
+        /* नवीन प्रोफेशनल निळी पट्टी */
+        .ticker-wrap { 
+            background: #0B3D91; 
+            padding: 10px 20px; 
+            overflow: hidden; 
+            margin: 15px auto; 
+            max-width: 950px; 
+            border-radius: 50px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        #news-ticker { 
+            font-weight: 600; 
+            color: #FFD700; 
+            font-size: 1rem;
+        }
+
+        .container { max-width: 1100px; margin: auto; padding: 20px; display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-left: 5px solid #0B3D91; margin-bottom: 20px; }
+        footer { text-align: center; padding: 20px; background: #0B2240; color: white; margin-top: 30px; }
+        .admin-link { color: #fff; font-size: 12px; text-decoration: underline; margin-top: 10px; display: block; }
     </style>
 </head>
 <body>
@@ -40,41 +49,33 @@
         <a href="services.html">🛠️ सदस्यांसाठी सेवा</a>
     </nav>
 
-    <!-- फिरणारी सूचना पट्टी -->
+    <!-- सुधारित प्रोफेशनल पट्टी -->
     <div class="ticker-wrap">
-        <marquee id="news-ticker" behavior="scroll" direction="left" style="font-weight: bold; color: #0B3D91;">
+        <marquee id="news-ticker" behavior="scroll" direction="left" scrollamount="6">
             माहिती लोड होत आहे...
         </marquee>
     </div>
 
-    <main>
-        <div class="container">
-            <div class="main-content">
-                <section id="about" class="card">
-                    <h2>संघटनाबद्दल</h2>
-                    <p>क्ष-किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य ही संपूर्ण महाराष्ट्रातील शासकीय व निमशासकीय रुग्णालयांमध्ये कार्यरत असणाऱ्या क्ष-किरण वैज्ञानिक अधिकाऱ्यांचे प्रतिनिधित्व करणारी अग्रगण्य संघटना आहे.</p>
-                </section>
-                <br>
-                <section id="objectives" class="card">
-                    <h2>ध्येय व उद्दिष्टे</h2>
-                    <p>आमची संघटना सभासदांमध्ये एकजूट निर्माण करणे आणि हक्कांचे रक्षण करण्यासाठी कटिबद्ध आहे.</p>
-                </section>
-            </div>
-
-            <aside class="sidebar">
-                <div class="card">
-                    <h3>🔔 ताज्या घडामोडी</h3>
-                    <p>येथे नवीन अपडेट्स येतील.</p>
-                </div>
-            </aside>
+    <div class="container">
+        <div class="main-content">
+            <section id="about" class="card">
+                <h2>संघटनाबद्दल</h2>
+                <p>क्ष-किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य ही राज्यातील सर्व क्ष-किरण वैज्ञानिक अधिकाऱ्यांच्या न्याय-हक्कांसाठी समर्पित संघटना आहे.</p>
+            </section>
         </div>
-    </main>
+        <aside class="sidebar">
+            <div class="card">
+                <h3>🔔 ताज्या घडामोडी</h3>
+                <p>येथे नवीन सूचना प्रदर्शित होतील.</p>
+            </div>
+        </aside>
+    </div>
 
     <footer>
-        <p>&copy; २०२६ क्ष किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य.</p>
+        <p>&copy; २०२६ क्ष किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना, महाराष्ट्र राज्य.</p>
+        <a href="admin.html" class="admin-link">Admin Login</a>
     </footer>
 
-    <!-- Firebase Script -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
         import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
