@@ -4,37 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>क्ष किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना, महाराष्ट्र राज्य</title>
+    
     <style>
         :root { --primary-blue: #0B3D91; --secondary-gold: #FFD700; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
-        body { background-color: #f8f9fa; color: #333; line-height: 1.6; }
-        
+        body { background-color: #f4f7f6; color: #333; line-height: 1.6; }
+
         /* हेडर आणि लोगो */
-        header { text-align: center; padding: 25px 20px; background: #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        header { text-align: center; padding: 25px 20px; background: #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         .logo-img { max-width: 100px; height: auto; margin-bottom: 10px; }
-        header h1 { font-size: 1.8rem; color: var(--primary-blue); margin-bottom: 5px; }
+        header h1 { font-size: 1.6rem; color: var(--primary-blue); }
 
-        /* नेव्हिगेशन बार */
-        nav { background: #0B3D91; padding: 10px; text-align: center; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
-        nav a { color: white; padding: 10px 15px; text-decoration: none; font-weight: 600; border-radius: 20px; transition: 0.3s; }
-        nav a:hover { background: #FFD700; color: #000; }
-        .register-btn { background: rgba(255, 215, 0, 0.2); border: 1px solid var(--secondary-gold); color: var(--secondary-gold); }
-        .register-btn:hover { background: var(--secondary-gold) !important; color: #000 !important; }
-        
-        /* प्रोफेशनल निळी सूचना पट्टी */
-        .ticker-wrap { background: #0B3D91; padding: 10px 20px; overflow: hidden; margin: 15px auto; max-width: 950px; border-radius: 50px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        #news-ticker { font-weight: 600; color: #FFD700; font-size: 1rem; }
+        /* जुना नेव्हिगेशन बार (गडद निळा लूक) */
+        nav { background: #0B3D91; padding: 15px; text-align: center; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        nav a { color: #fff; text-decoration: none; font-weight: bold; font-size: 0.95rem; }
+        nav a:hover { color: var(--secondary-gold); }
 
+        /* नवीन फिरणारी पट्टी */
+        .ticker-wrap { background: #0B3D91; border: 2px solid var(--secondary-gold); padding: 10px; margin: 15px auto; max-width: 1000px; border-radius: 5px; }
+        #news-ticker { font-weight: bold; color: var(--secondary-gold); font-size: 1rem; }
+
+        /* कंटेंट एरिया */
         .container { max-width: 1100px; margin: auto; padding: 20px; display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
-        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-left: 5px solid #0B3D91; margin-bottom: 20px; }
-        footer { text-align: center; padding: 20px; background: #0B2240; color: white; margin-top: 30px; }
-        .admin-link { color: #fff; font-size: 12px; text-decoration: underline; margin-top: 10px; display: block; }
+        .card { background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-left: 5px solid var(--primary-blue); margin-bottom: 20px; }
+        
+        footer { background: #0B2240; color: white; text-align: center; padding: 25px; margin-top: 40px; }
+        .admin-link { color: #fff; font-size: 12px; text-decoration: underline; margin-top: 15px; display: block; }
     </style>
 </head>
+
 <body>
 
     <header>
-        <img src="logo.png" class="logo-img" alt="संगठनाचा लोगो">
+        <img src="logo.png" class="logo-img" alt="logo">
         <h1>क्ष किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना, महाराष्ट्र राज्य</h1>
     </header>
 
@@ -46,10 +48,10 @@
         <a href="officer.html">👥 पदाधिकारी</a>
         <a href="contact.html">📞 संपर्क</a>
         <a href="services.html">🛠️ सदस्यांसाठी सेवा</a>
-        <a href="https://forms.gle/XbdkWManQePhTerA9" target="_blank" class="register-btn">📢 सदस्य नोंदणी</a>
+        <a href="https://forms.gle/XbdkWManQePhTerA9" target="_blank" style="color: var(--secondary-gold);">📢 सदस्य नोंदणी</a>
     </nav>
 
-    <!-- प्रोफेशनल निळी सूचना पट्टी -->
+    <!-- सूचना पट्टी -->
     <div class="ticker-wrap">
         <marquee id="news-ticker" behavior="scroll" direction="left" scrollamount="6">
             माहिती लोड होत आहे...
