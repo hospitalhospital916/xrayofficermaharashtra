@@ -26,7 +26,7 @@
         /* डार्क मोड स्टाईल */
         body.dark-mode { --bg-color: #121212; --card-bg: #1e1e1e; --text-color: #f4f4f4; --light-blue: #2a2a2a; }
         body.dark-mode header { background: #1e1e1e; color: #fff; }
-        body.dark-mode nav { background: #000; }
+        body.dark-mode nav { background: #000; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
 
         /* हेडर आणि लोगो */
         header { text-align: center; padding: 25px 20px; background: #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.05); position: relative; }
@@ -40,10 +40,48 @@
         .theme-btn { position: absolute; top: 20px; right: 20px; padding: 8px 15px; cursor: pointer; border: none; background: var(--primary-blue); color: white; border-radius: 20px; font-weight: bold; transition: 0.3s; }
         .theme-btn:hover { background: var(--secondary-gold); color: #000; }
 
-        /* नेव्हिगेशन */
-        nav { background: var(--primary-blue); padding: 5px; text-align: center; display: flex; justify-content: center; flex-wrap: wrap; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-        nav a { color: white; padding: 12px 20px; text-decoration: none; font-weight: bold; transition: 0.3s; font-size: 1rem; }
-        nav a:hover { background: var(--secondary-gold); color: #000; border-radius: 4px; }
+        /* आकर्षक सुधारित नेव्हिगेशन बार */
+        nav { 
+            background: linear-gradient(90deg, #0B3D91 0%, #1A52B8 100%); 
+            padding: 10px; 
+            text-align: center; 
+            display: flex; 
+            justify-content: center; 
+            gap: 8px; 
+            flex-wrap: wrap; 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); 
+        }
+        nav a { 
+            color: rgba(255, 255, 255, 0.95); 
+            padding: 10px 18px; 
+            text-decoration: none; 
+            font-weight: 600; 
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
+            font-size: 0.95rem; 
+            border-radius: 25px; 
+            display: inline-flex;
+            align-items: center;
+            gap: 6px; 
+        }
+        nav a:hover { 
+            background: var(--secondary-gold); 
+            color: #000; 
+            transform: translateY(-2px); 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2); 
+        }
+        /* सदस्य नोंदणी बटण स्टाईल */
+        nav a.register-btn {
+            background: rgba(255, 215, 0, 0.15);
+            border: 1px solid var(--secondary-gold);
+            color: var(--secondary-gold);
+        }
+        nav a.register-btn:hover {
+            background: var(--secondary-gold);
+            color: #000;
+        }
 
         /* हिरो सेक्शन */
         .hero { padding: 60px 20px; text-align: center; background: linear-gradient(135deg, #0b3d91, #1e56b5); color: white; clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%); }
@@ -90,25 +128,25 @@
         <button class="theme-btn" onclick="toggleDarkMode()">🌙 थीम बदला</button>
         <img src="logo.png" class="logo-img" alt="संगठनाचा लोगो">
         <h1>क्ष किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना, महाराष्ट्र राज्य</h1>
-        <p>(नोंदणीकृत)</p>
     </header>
 
+    <!-- 📌 'सदस्यांसाठी सेवा' टॅब सर्वात शेवटी ठेवला आहे -->
     <nav>
-        <a href="index.html">मुख्यपृष्ठ</a>
-        <a href="#about">संघटनाबद्दल</a>
-        <a href="gr.html">GR / परिपत्रके</a>
-        <a href="gallery.html">गॅलरी</a>
-        <a href="officers.html">पदाधिकारी</a>
-        <a href="services.html">सदस्यांसाठी सेवा</a>
-        <a href="contact.html">संपर्क</a>
-        <a href="https://forms.gle/XbdkWManQePhTerA9" target="_blank" style="color: var(--secondary-gold);">📢 सदस्य नोंदणी</a>
+        <a href="index.html">🏠 मुख्यपृष्ठ</a>
+        <a href="#about">ℹ️ संघटनाबद्दल</a>
+        <a href="gr.html">📄 GR / परिपत्रके</a>
+        <a href="gallery.html">🖼️ गॅलरी</a>
+        <a href="officers.html">👥 पदाधिकारी</a>
+        <a href="contact.html">📞 संपर्क</a>
+        <a href="https://forms.gle/XbdkWManQePhTerA9" target="_blank" class="register-btn">📢 सदस्य नोंदणी</a>
+        <a href="services.html">🛠️ सदस्यांसाठी सेवा</a>
     </nav>
 
     <main>
         <section class="hero">
             <h1>आपले हार्दिक स्वागत!</h1>
             <p>राज्यातील सर्व क्ष-किरण वैज्ञानिक अधिकाऱ्यांच्या हक्कासाठी, आरोग्यासाठी आणि उज्ज्वल भविष्यासाठी कटिबद्ध संघटना.</p>
-            <a href="https://forms.gle/XbdkWManQePhTerA9" target="_blank" class="btn">オンライン सदस्य व्हा</a>
+            <a href="https://forms.gle/XbdkWManQePhTerA9" target="_blank" class="btn">ऑनलाइन सदस्य化</a>
         </section>
 
         <div class="container">
@@ -116,7 +154,7 @@
             <div class="main-content">
                 <section id="about" class="card">
                     <h2>संघटनाबद्दल</h2>
-                    <p>क्ष-किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य ही संपूर्ण महाराष्ट्रातील शासकीय व निमशासकीय रुग्णालयांमध्ये कार्यरत असणाऱ्या क्ष-किरण वैज्ञानिक अधिकाऱ्यांचे प्रतिनिधित्व करणारी अग्रगण्य संघटना आहे. अधिकाऱ्यांच्या सेवाविषयक समस्या सोडवणे, त्यांना न्याय मिळवून देणे आणि तांत्रिक स्तरावर सक्षम करणे हे संघटनेचे मुख्य ध्येय आहे.</p>
+                    <p>क्ष-किरण वैज्ञानिक अधिकारी संघटना, - महाराष्ट्र राज्य ही संपूर्ण महाराष्ट्रातील शासकीय व निमशासकीय रुग्णालयांमध्ये कार्यरत असणाऱ्या क्ष-किरण वैज्ञानिक अधिकाऱ्यांचे प्रतिनिधित्व करणारी अग्रगण्य संघटना आहे. अधिकाऱ्यांच्या सेवाविषयक समस्या सोडवणे, त्यांना न्याय मिळवून देणे आणि तांत्रिक स्तरावर सक्षम करणे हे संघटनेचे मुख्य ध्येय आहे.</p>
                 </section>
 
                 <section id="objectives" class="card">
@@ -124,7 +162,7 @@
                     <p>आमची संघटना खालील प्रमुख उद्दिष्टांवर काम करते:</p>
                     <div class="objectives-grid">
                         <div class="obj-item">🤝 सभासदांमध्ये एकजूट निर्माण करणे</div>
-                        <div class="obj-item">⚖️ कायदेशीर व सेवाविषयक हक्कांचे रಕ್ಷಣ</div>
+                        <div class="obj-item">⚖️ कायदेशीर व सेवाविषयक हक्कांचे रक्षण</div>
                         <div class="obj-item">🛡️ रेडिएशन सेफ्टी व आरोग्याविषयी जागृती</div>
                         <div class="obj-item">📈 व्यावसायिक व तांत्रिक कौशल्य विकास</div>
                     </div>
