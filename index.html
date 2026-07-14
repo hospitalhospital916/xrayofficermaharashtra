@@ -3,24 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>क्ष किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य</title>
-    <!-- [तुमचे जुने स्टाईल आणि Meta टॅग्स येथे ठेवा] -->
+    <title>क्ष किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना, महाराष्ट्र राज्य</title>
+    
     <style>
-        .ticker-wrap { background: #FFD700; padding: 10px; overflow: hidden; margin: 10px 0; border: 2px solid #0B3D91; border-radius: 5px; }
+        :root { --primary-blue: #0B3D91; --secondary-gold: #FFD700; --light-blue: #E6F0FA; --bg-color: #f8f9fa; --card-bg: #ffffff; --text-color: #333; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
+        body { line-height: 1.6; background-color: var(--bg-color); color: var(--text-color); }
+        
+        /* हेडर */
+        header { text-align: center; padding: 25px 20px; background: #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        header h1 { font-size: 1.8rem; color: var(--primary-blue); margin-bottom: 5px; }
+
+        /* नेव्हिगेशन */
+        nav { background: linear-gradient(90deg, #0B3D91 0%, #1A52B8 100%); padding: 10px; text-align: center; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+        nav a { color: white; padding: 10px 18px; text-decoration: none; font-weight: 600; border-radius: 25px; }
+        nav a:hover { background: var(--secondary-gold); color: #000; }
+
+        /* नवीन फिरणारी पट्टी */
+        .ticker-wrap { background: #FFD700; padding: 10px; overflow: hidden; margin: 10px 0; border: 2px solid #0B3D91; }
+
+        /* मुख्य भाग */
+        .hero { padding: 60px 20px; text-align: center; background: #0B3D91; color: white; }
+        .container { max-width: 1100px; margin: auto; padding: 20px; }
+        footer { background: #0B2240; color: white; text-align: center; padding: 20px; margin-top: 40px; }
     </style>
 </head>
 <body>
-    <!-- [तुमचे Header आणि Nav जसेच्या तसे] -->
-    <header><h1>क्ष किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना, महाराष्ट्र राज्य</h1></header>
 
-    <!-- फिरणारी पट्टी -->
+    <header>
+        <h1>क्ष किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना, महाराष्ट्र राज्य</h1>
+    </header>
+
+    <nav>
+        <a href="index.html">🏠 मुख्यपृष्ठ</a>
+        <a href="gallery.html">🖼️ गॅलरी</a>
+        <a href="contact.html">📞 संपर्क</a>
+        <a href="admin.html">⚙️ Admin</a>
+    </nav>
+
+    <!-- फिरणारी सूचना पट्टी -->
     <div class="ticker-wrap">
         <marquee id="news-ticker" behavior="scroll" direction="left" style="font-weight: bold; color: #0B3D91;">
             माहिती लोड होत आहे...
         </marquee>
     </div>
 
-    <!-- Firebase Scripts -->
+    <main>
+        <section class="hero">
+            <h1>आपले हार्दिक स्वागत!</h1>
+            <p>राज्यातील सर्व क्ष-किरण वैज्ञानिक अधिकाऱ्यांच्या हक्कासाठी कटिबद्ध संघटना.</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; २०२६ क्ष किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना, महाराष्ट्र राज्य.</p>
+    </footer>
+
+    <!-- Firebase Script -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
         import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
@@ -38,7 +77,6 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // डेटाबेस मधून सूचना वाचणे
         onSnapshot(doc(db, "settings", "marquee"), (doc) => {
             if (doc.exists()) {
                 document.getElementById("news-ticker").innerText = doc.data().text;
