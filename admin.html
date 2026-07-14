@@ -1,32 +1,66 @@
 <!DOCTYPE html>
-<html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <title>ॲडमिन डॅशबोर्ड - सूचना अपडेट</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #f4f4f4; }
+        .card { background: white; padding: 20px; border-radius: 8px; max-width: 400px; margin: auto; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background: #0B3D91; color: white; border: none; border-radius: 4px; cursor: pointer; }
+    </style>
+</head>
 <body>
-    <h2>ॲडमिन: सूचना पट्टी अपडेट करा</h2>
-    <input type="text" id="tickerInput" placeholder="नवीन सूचना लिहा..." style="width: 80%; padding: 10px;">
-    <button onclick="saveTicker()" style="padding: 10px 20px; background: #0B3D91; color: white;">अपडेट करा</button>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
-        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+<div class="card">
+  <h2>ॲडमिन लॉगिन</h2>
+  <input type="password" id="adminPass" placeholder="पासवर्ड टाका">
+  <input type="text" id="tickerInput" placeholder="नवीन सूचना येथे लिहा...">
+  <button onclick="saveTicker()">सूचना अपडेट करा</button>
+  <a href="index.html" style="display:block; margin-top: 15px; text-align: center; color: #666;">मुख्य वेबसाईटवर परत जा</a>
+</div>
 
-        const firebaseConfig = {
-          apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk",
-          authDomain: "xrayunionmah.firebaseapp.com",
-          projectId: "xrayunionmah",
-          storageBucket: "xrayunionmah.firebasestorage.app",
-          messagingSenderId: "763805226978",
-          appId: "1:763805226978:web:6bae81a0b6358b47d88bbb",
-          measurementId: "G-EQS6WH6XLF"
-        };
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+    const firebaseConfig = {
+      apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk",
+      authDomain: "xrayunionmah.firebaseapp.com",
+      projectId: "xrayunionmah",
+      storageBucket: "xrayunionmah.firebasestorage.app",
+      messagingSenderId: "763805226978",
+      appId: "1:763805226978:web:6bae81a0b6358b47d88bbb",
+      measurementId: "G-EQS6WH6XLF"
+    };
 
-        window.saveTicker = async function() {
-            const text = document.getElementById("tickerInput").value;
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    window.saveTicker = async function() {
+        const pass = document.getElementById("adminPass").value;
+        const text = document.getElementById("tickerInput").value;
+
+        // पासवर्ड तपासणी
+        if (pass !== "Mahesh@12345") {
+            alert("चुकीचा पासवर्ड! कृपया पुन्हा प्रयत्न करा.");
+            return;
+        }
+
+        if (text === "") {
+            alert("कृपया सूचना लिहा!");
+            return;
+        }
+
+        try {
             await setDoc(doc(db, "settings", "marquee"), { text: text });
             alert("सूचना यशस्वीरित्या अपडेट झाली!");
+            document.getElementById("tickerInput").value = ""; // बॉक्स रिकामा करा
+        } catch (error) {
+            alert("काहीतरी चूक झाली: " + error.message);
         }
-    </script>
+    }
+</script>
+
 </body>
 </html>
