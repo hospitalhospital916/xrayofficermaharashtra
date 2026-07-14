@@ -8,17 +8,20 @@
         :root { --primary-blue: #0B3D91; --secondary-gold: #FFD700; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
         body { background-color: #f8f9fa; color: #333; line-height: 1.6; }
-        header { text-align: center; padding: 20px; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         
+        /* हेडर आणि लोगो */
+        header { text-align: center; padding: 25px 20px; background: #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .logo-img { max-width: 100px; height: auto; margin-bottom: 10px; }
+        header h1 { font-size: 1.8rem; color: var(--primary-blue); margin-bottom: 5px; }
+
         /* नेव्हिगेशन बार */
         nav { background: #0B3D91; padding: 10px; text-align: center; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
         nav a { color: white; padding: 10px 15px; text-decoration: none; font-weight: 600; border-radius: 20px; transition: 0.3s; }
         nav a:hover { background: #FFD700; color: #000; }
-        /* सदस्य नोंदणी बटण स्टाईल */
         .register-btn { background: rgba(255, 215, 0, 0.2); border: 1px solid var(--secondary-gold); color: var(--secondary-gold); }
         .register-btn:hover { background: var(--secondary-gold) !important; color: #000 !important; }
         
-        /* प्रोफेशनल निळी पट्टी */
+        /* प्रोफेशनल निळी सूचना पट्टी */
         .ticker-wrap { background: #0B3D91; padding: 10px 20px; overflow: hidden; margin: 15px auto; max-width: 950px; border-radius: 50px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         #news-ticker { font-weight: 600; color: #FFD700; font-size: 1rem; }
 
@@ -30,7 +33,10 @@
 </head>
 <body>
 
-    <header><h1>क्ष किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना, महाराष्ट्र राज्य</h1></header>
+    <header>
+        <img src="logo.png" class="logo-img" alt="संगठनाचा लोगो">
+        <h1>क्ष किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना, महाराष्ट्र राज्य</h1>
+    </header>
 
     <nav>
         <a href="index.html">🏠 मुख्यपृष्ठ</a>
@@ -70,6 +76,7 @@
         <a href="admin.html" class="admin-link">Admin Login</a>
     </footer>
 
+    <!-- Firebase Script -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
         import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
