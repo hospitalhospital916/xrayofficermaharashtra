@@ -9,36 +9,35 @@
         :root { --primary-blue: #0B3D91; --secondary-gold: #FFD700; --light-blue: #E6F0FA; --bg-color: #f8f9fa; --card-bg: #ffffff; --text-color: #333; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
         body { line-height: 1.6; background-color: var(--bg-color); color: var(--text-color); }
-        
-        /* हेडर */
-        header { text-align: center; padding: 25px 20px; background: #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        header h1 { font-size: 1.8rem; color: var(--primary-blue); margin-bottom: 5px; }
 
-        /* नेव्हिगेशन */
-        nav { background: linear-gradient(90deg, #0B3D91 0%, #1A52B8 100%); padding: 10px; text-align: center; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
-        nav a { color: white; padding: 10px 18px; text-decoration: none; font-weight: 600; border-radius: 25px; }
+        header { text-align: center; padding: 25px 20px; background: #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        h1 { color: var(--primary-blue); font-size: 1.8rem; }
+
+        nav { background: #0B3D91; padding: 10px; text-align: center; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+        nav a { color: white; padding: 10px 15px; text-decoration: none; font-weight: 600; border-radius: 20px; }
         nav a:hover { background: var(--secondary-gold); color: #000; }
 
-        /* नवीन फिरणारी पट्टी */
-        .ticker-wrap { background: #FFD700; padding: 10px; overflow: hidden; margin: 10px 0; border: 2px solid #0B3D91; }
+        /* फिरणारी पट्टी */
+        .ticker-wrap { background: #FFD700; padding: 10px; overflow: hidden; border: 2px solid #0B3D91; margin: 10px; }
 
-        /* मुख्य भाग */
-        .hero { padding: 60px 20px; text-align: center; background: #0B3D91; color: white; }
-        .container { max-width: 1100px; margin: auto; padding: 20px; }
+        .container { max-width: 1100px; margin: auto; padding: 20px; display: grid; grid-template-columns: 2fr 1fr; gap: 30px; }
+        .card { background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-left: 5px solid #0B3D91; }
+        
         footer { background: #0B2240; color: white; text-align: center; padding: 20px; margin-top: 40px; }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>क्ष किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना, महाराष्ट्र राज्य</h1>
-    </header>
+    <header><h1>क्ष किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना, महाराष्ट्र राज्य</h1></header>
 
     <nav>
         <a href="index.html">🏠 मुख्यपृष्ठ</a>
+        <a href="#about">ℹ️ संघटनाबद्दल</a>
+        <a href="gr.html">📄 GR / परिपत्रके</a>
         <a href="gallery.html">🖼️ गॅलरी</a>
+        <a href="officer.html">👥 पदाधिकारी</a>
         <a href="contact.html">📞 संपर्क</a>
-        <a href="admin.html">⚙️ Admin</a>
+        <a href="services.html">🛠️ सदस्यांसाठी सेवा</a>
     </nav>
 
     <!-- फिरणारी सूचना पट्टी -->
@@ -49,14 +48,30 @@
     </div>
 
     <main>
-        <section class="hero">
-            <h1>आपले हार्दिक स्वागत!</h1>
-            <p>राज्यातील सर्व क्ष-किरण वैज्ञानिक अधिकाऱ्यांच्या हक्कासाठी कटिबद्ध संघटना.</p>
-        </section>
+        <div class="container">
+            <div class="main-content">
+                <section id="about" class="card">
+                    <h2>संघटनाबद्दल</h2>
+                    <p>क्ष-किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य ही संपूर्ण महाराष्ट्रातील शासकीय व निमशासकीय रुग्णालयांमध्ये कार्यरत असणाऱ्या क्ष-किरण वैज्ञानिक अधिकाऱ्यांचे प्रतिनिधित्व करणारी अग्रगण्य संघटना आहे.</p>
+                </section>
+                <br>
+                <section id="objectives" class="card">
+                    <h2>ध्येय व उद्दिष्टे</h2>
+                    <p>आमची संघटना सभासदांमध्ये एकजूट निर्माण करणे आणि हक्कांचे रक्षण करण्यासाठी कटिबद्ध आहे.</p>
+                </section>
+            </div>
+
+            <aside class="sidebar">
+                <div class="card">
+                    <h3>🔔 ताज्या घडामोडी</h3>
+                    <p>येथे नवीन अपडेट्स येतील.</p>
+                </div>
+            </aside>
+        </div>
     </main>
 
     <footer>
-        <p>&copy; २०२६ क्ष किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना, महाराष्ट्र राज्य.</p>
+        <p>&copy; २०२६ क्ष किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य.</p>
     </footer>
 
     <!-- Firebase Script -->
