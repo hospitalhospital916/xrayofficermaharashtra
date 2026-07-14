@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>संघटनेचे पदाधिकारी - क्ष किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना, महाराष्ट्र राज्य</title>
+    
+    <style>
+        :root {
+            --primary-blue: #0B3D91;
+            --secondary-gold: #FFD700;
+            --light-blue: #E6F0FA;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #333;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
+
+        body { line-height: 1.6; background-color: var(--bg-color); color: var(--text-color); transition: 0.3s; }
+
+        /* डार्क मोड स्टाईल */
+        body.dark-mode { --bg-color: #121212; --card-bg: #1e1e1e; --text-color: #f4f4f4; --light-blue: #2a2a2a; }
+        body.dark-mode header { background: #1e1e1e; color: #fff; }
+        body.dark-mode nav { background: #000; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+
+        /* हेडर आणि लोगो */
+        header { text-align: center; padding: 25px 20px; background: #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.05); position: relative; }
+        .logo-img { max-width: 100px; height: auto; margin-bottom: 10px; transition: 0.3s; }
+        header h1 { font-size: 1.8rem; color: var(--primary-blue); margin-bottom: 5px; }
+        body.dark-mode header h1 { color: #fff; }
+        
+        /* थीम बटण */
+        .theme-btn { position: absolute; top: 20px; right: 20px; padding: 8px 15px; cursor: pointer; border: none; background: var(--primary-blue); color: white; border-radius: 20px; font-weight: bold; transition: 0.3s; }
+        .theme-btn:hover { background: var(--secondary-gold); color: #000; }
+
+        /* आकर्षक नेव्हिगेशन बार (मुख्यपृष्ठासारखाच) */
+        nav { 
+            background: linear-gradient(90deg, #0B3D91 0%, #1A52B8 100%); 
+            padding: 10px; 
+            text-align: center; 
+            display: flex; 
+            justify-content: center; 
+            gap: 8px; 
+            flex-wrap: wrap; 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); 
+        }
+        nav a { 
+            color: rgba(255, 255, 255, 0.95); 
+            padding: 10px 18px; 
+            text-decoration: none; 
+            font-weight: 600; 
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
+            font-size: 0.95rem; 
+            border-radius: 25px; 
+            display: inline-flex;
+            align-items: center;
+            gap: 6px; 
+        }
+        nav a:hover { 
+            background: var(--secondary-gold); 
+            color: #000; 
+            transform: translateY(-2px); 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2); 
+        }
+        /* सध्याच्या पेजचा टॅब पिवळा दाखवण्यासाठी */
+        nav a.active {
+            background: var(--secondary-gold);
+            color: #000;
+        }
+        nav a.register-btn {
+            background: rgba(255, 215, 0, 0.15);
+            border: 1px solid var(--secondary-gold);
+            color: var(--secondary-gold);
+        }
+        nav a.register-btn:hover {
+            background: var(--secondary-gold);
+            color: #000;
+        }
+
+        /* मुख्य मांडणी */
+        .container { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
+        
+        .card { 
+            background: var(--card-bg); 
+            padding: 30px; 
+            border-radius: 10px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+            border-top: 5px solid var(--primary-blue); 
+        }
+        .card h2 { 
+            color: var(--primary-blue); 
+            margin-bottom: 20px; 
+            text-align: center;
+            font-size: 1.6rem;
+        }
+        body.dark-mode .card h2 { color: var(--secondary-gold); }
+
+        /* तक्ता डिझाईन आणि मोबाईल रिस्पॉन्सिव्हनेस */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto; /* मोबाईलवर टेबल स्क्रोल होईल, डिझाईन तुटणार नाही */
+            margin-top: 20px;
+        }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            min-width: 700px; /* मोबाईलवर किमान विड्थ राखेल */
+        }
+        th, td { 
+            border: 1px solid #e0e0e0; 
+            text-align: left; 
+            padding: 14px 12px; 
+            font-size: 0.95rem;
+        }
+        body.dark-mode th, body.dark-mode td { border-color: #333; }
+        th { 
+            background-color: var(--primary-blue); 
+            color: white; 
+            font-weight: 600;
+        }
+        tr:nth-child(even) { background-color: rgba(0, 0, 0, 0.02); }
+        body.dark-mode tr:nth-child(even) { background-color: rgba(255, 255, 255, 0.02); }
+
+        /* तळटीप (Footer) */
+        footer { background: #0B2240; color: white; text-align: center; padding: 30px 20px; margin-top: 60px; font-size: 0.95rem; }
+        footer a { color: var(--secondary-gold); text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
+        .footer-links { margin-bottom: 15px; }
+        .footer-links a { margin: 0 10px; color: #fff; }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <button class="theme-btn" onclick="toggleDarkMode()">🌙 थीम बदला</button>
+        <img src="logo.png" class="logo-img" alt="संगठनाचा लोगो">
+        <h1>क्ष किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना, महाराष्ट्र राज्य</h1>
+    </header>
+
+    <nav>
+        <a href="index.html">🏠 मुख्यपृष्ठ</a>
+        <a href="index.html#about">ℹ️ संघटनाबद्दल</a>
+        <a href="gr.html">📄 GR / परिपत्रके</a>
+        <a href="gallery.html">🖼️ गॅलरी</a>
+        <a href="officers.html" class="active">👥 पदाधिकारी</a>
+        <a href="contact.html">📞 संपर्क</a>
+        <a href="https://forms.gle/XbdkWManQePhTerA9" target="_blank" class="register-btn">📢 सदस्य नोंदणी</a>
+        <a href="services.html">🛠️ सदस्यांसाठी सेवा</a>
+    </nav>
+
+    <main class="container">
+        <div class="card">
+            <h2>👥 संघटनेचे केंद्रीय पदाधिकारी (महाराष्ट्र राज्य)</h2>
+            
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>धारण केलेले पद</th>
+                            <th>पदाधिकाऱ्याचे नाव</th>
+                            <th>वय</th>
+                            <th>कार्यरत ठिकाण / पत्ता</th>
+                            <th>व्यवसाय</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>अध्यक्ष</strong></td><td>श्री. रविंद्र मल्हारी पाटील</td><td>४८</td><td>उपजिल्हा रुग्णालय, फलटण जि. सातारा</td><td>क्ष किरण वैज्ञानिक अधिकारी गट-क</td></tr>
+                        <tr><td><strong>उपाध्यक्ष</strong></td><td>१) श्री कोमल विठ्ठलराव चुनरकर</td><td>३९</td><td>जिल्हा स्त्री रुग्णालय, गडचिरोली</td><td>क्ष किरण वैज्ञानिक अधिकारी गट-क</td></tr>
+                        <tr><td><strong>उपाध्यक्ष</strong></td><td>२) संतोषकुमार हसनराव देशमुख</td><td>४७</td><td>ग्रामीण रुग्णालय, सिंदखेडराजा</td><td>क्ष किरण वैज्ञानिक अधिकारी गट-क</td></tr>
+                        <tr><td><strong>कोषाध्यक्ष</strong></td><td>विशाल गणेश कायंदे</td><td>३०</td><td>ग्रामीण रुग्णालय, चामोर्शी, जि. गडचिरोली</td><td>क्ष किरण वैज्ञानिक अधिकारी गट-क</td></tr>
+                        <tr><td><strong>सह-कोषाध्यक्ष</strong></td><td>श्री संतोष सुभाषराव गिरी</td><td>४३</td><td>ग्रामीण रुग्णालय, देवगांव रंगारी जि. छ. संभाजीनगर</td><td>क्ष किरण वैज्ञानिक अधिकारी गट-क</td></tr>
+                        <tr><td><strong>प्रमुख कार्यवाह (सरचिटणीस)</strong></td><td>१) श्री शंकर संतोष पाव्हणे</td><td>३३</td><td>जिल्हा सामान्य रुग्णालय, गडचिरोली</td><td>क्ष किरण वैज्ञानिक अधिकारी गट-क</td></tr>
+                        <tr><td><strong>कार्यवाह (सह-सरचिटणीस)</strong></td><td>संजय विठ्ठल गिराम</td><td>४४</td><td>जिल्हा क्षयरोग केंद्र लातूर</td><td>क्ष किरण वैज्ञानिक अधिकारी गट-क</td></tr>
+                        <tr><td><strong>प्रसिध्दी प्रमुख</strong></td><td>किरण रविंद्रराव वरघणे</td><td>२९</td><td>ग्रामीण रुग्णालय, सुरगाना जि. नाशिक</td><td>क्ष किरण वैज्ञानिक अधिकारी गट-क</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-links">
+            <a href="index.html">मुख्यपृष्ठ</a> | 
+            <a href="gr.html">GR व पत्रे</a> | 
+            <a href="contact.html">संपर्क करा</a>
+        </div>
+        <p>&copy; २०२६ क्ष किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना, महाराष्ट्र राज्य. सर्व हक्क सुरक्षित.</p>
+    </footer>
+
+    <script>
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const btn = document.querySelector('.theme-btn');
+            if(document.body.classList.contains('dark-mode')) {
+                btn.innerHTML = "☀️ लाईट मोड";
+            } else {
+                btn.innerHTML = "🌙 थीम बदला";
+            }
+        }
+    </script>
+</body>
+</html>
