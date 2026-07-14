@@ -3,70 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>अ‍ॅडमिन डॅशबोर्ड - पत्रके व PDF व्यवस्थापन</title>
+    <title>अ‍ॅडमिन डॅशबोर्ड - पूर्ण सिस्टीम</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #e9ecef; margin: 0; padding: 0; }
-        header { background: #003366; color: white; padding: 20px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .admin-container { max-width: 800px; margin: 40px auto; background: #fff; padding: 40px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
-        #login-section { max-width: 400px; margin: 50px auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); border-top: 5px solid #003366; }
-        .form-group { margin-bottom: 20px; }
-        .form-group input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
-        .btn { width: 100%; padding: 14px; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+        header { background: #003366; color: white; padding: 20px; text-align: center; }
+        .admin-container { max-width: 800px; margin: 20px auto; background: #fff; padding: 30px; border-radius: 12px; }
+        .form-section { background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #ddd; }
+        .form-group { margin-bottom: 15px; }
+        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        .btn { width: 100%; padding: 12px; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
         .btn-blue { background: #003366; }
-        .status-msg { margin-top: 15px; font-weight: bold; text-align: center; padding: 10px; border-radius: 5px; }
-        .error { background: #f8d7da; color: #721c24; }
+        .btn-green { background: #28a745; }
+        .status-msg { margin-top: 10px; padding: 10px; border-radius: 5px; display: none; font-weight: bold; text-align: center; }
     </style>
 </head>
 <body>
 
 <header><h1>अ‍ॅडमिन डॅशबोर्ड</h1></header>
 
-<div id="login-section">
-    <h2>अ‍ॅडमिन लॉगिन</h2>
-    <input type="email" id="admin-email" placeholder="ईमेल टाका" class="form-group" style="width:100%; padding:10px; margin-bottom:10px;">
-    <input type="password" id="admin-password" placeholder="पासवर्ड टाका" class="form-group" style="width:100%; padding:10px; margin-bottom:10px;">
-    <button onclick="checkSecureLogin()" class="btn btn-blue">लॉगिन करा</button>
-    <div id="login-error" class="status-msg error" style="display:none;"></div>
+<!-- लॉगिन सेक्शन -->
+<div id="login-section" style="max-width:400px; margin:50px auto; padding:20px; background:white; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.1);">
+    <h2>लॉगिन करा</h2>
+    <input type="email" id="admin-email" placeholder="ईमेल" class="form-group" style="width:100%; padding:10px; margin-bottom:10px;">
+    <input type="password" id="admin-password" placeholder="पासवर्ड" class="form-group" style="width:100%; padding:10px; margin-bottom:10px;">
+    <button onclick="checkSecureLogin()" class="btn btn-blue">लॉगिन</button>
 </div>
 
+<!-- डॅशबोर्ड सेक्शन -->
 <div class="admin-container" id="dashboard-section" style="display:none;">
     <h2>डॅशबोर्ड</h2>
-    <div id="welcome-user"></div>
+    
+    <!-- १. फोल्डर -->
+    <div class="form-section">
+        <h3>१. नवीन फोल्डर तयार करा</h3>
+        <input type="text" id="folder-name" placeholder="फोल्डरचे नाव">
+        <button onclick="createFolder()" class="btn btn-blue" style="margin-top:10px;">फोल्डर तयार करा</button>
+    </div>
+
+    <!-- २. PDF लिंक -->
+    <div class="form-section">
+        <h3>२. पत्रक/जीआर लिंक अपलोड करा</h3>
+        <select id="select-folder"><option value="">फोल्डर निवडा</option></select>
+        <input type="text" id="pdf-title" placeholder="पत्रकाचे नाव" style="margin-top:10px;">
+        <input type="url" id="pdf-link" placeholder="Google Drive लिंक" style="margin-top:10px;">
+        <button onclick="uploadPDF()" class="btn btn-green" style="margin-top:10px;">पत्रक जोडा</button>
+    </div>
+
+    <!-- ३. फोटो अपलोड -->
+    <div class="form-section">
+        <h3>३. गॅलरी फोटो अपलोड</h3>
+        <input type="file" id="photo-upload" accept="image/*">
+        <button onclick="uploadPhoto()" class="btn btn-blue" style="margin-top:10px;">फोटो अपलोड करा</button>
+    </div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
     import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
-    // अपडेट केलेली API Key सह Firebase Config
     const firebaseConfig = {
         apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk",
         authDomain: "xrayunionmah.firebaseapp.com",
         projectId: "xrayunionmah",
         storageBucket: "xrayunionmah.appspot.com",
         messagingSenderId: "763805226978",
-        appId: "1:763805226978:web:6bae81a0b6358b47d88bbb",
-        measurementId: "G-EQS6WH6XLF"
+        appId: "1:763805226978:web:6bae81a0b6358b47d88bbb"
     };
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const auth = getAuth(app);
+    const storage = getStorage(app);
 
-    window.checkSecureLogin = async function() {
-        const email = document.getElementById("admin-email").value;
-        const pass = document.getElementById("admin-password").value;
-        
+    window.checkSecureLogin = async () => {
         try {
-            await signInWithEmailAndPassword(auth, email, pass);
-            alert("लॉगिन यशस्वी!");
-            document.getElementById("login-section").style.display = "none";
-            document.getElementById("dashboard-section").style.display = "block";
-        } catch (error) {
-            alert("एरर आली: " + error.code + " - " + error.message);
-            console.error("Firebase Error:", error);
-        }
+            await signInWithEmailAndPassword(auth, document.getElementById('admin-email').value, document.getElementById('admin-password').value);
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('dashboard-section').style.display = 'block';
+            loadFolders();
+        } catch(e) { alert("लॉगिन अयशस्वी: " + e.message); }
+    };
+
+    window.createFolder = async () => {
+        await addDoc(collection(db, "subfolders"), { name: document.getElementById('folder-name').value });
+        alert("फोल्डर तयार झाले!"); loadFolders();
+    };
+
+    window.uploadPDF = async () => {
+        await addDoc(collection(db, "documents"), { 
+            folderId: document.getElementById('select-folder').value,
+            title: document.getElementById('pdf-title').value,
+            url: document.getElementById('pdf-link').value 
+        });
+        alert("पत्रक अपलोड झाले!");
+    };
+
+    window.uploadPhoto = async () => {
+        const file = document.getElementById('photo-upload').files[0];
+        const storageRef = ref(storage, 'gallery/' + file.name);
+        await uploadBytes(storageRef, file);
+        alert("फोटो अपलोड झाला!");
+    };
+
+    async function loadFolders() {
+        const snap = await getDocs(collection(db, "subfolders"));
+        const select = document.getElementById('select-folder');
+        snap.forEach(doc => select.innerHTML += `<option value="${doc.id}">${doc.data().name}</option>`);
     }
 </script>
 </body>
