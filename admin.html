@@ -5,18 +5,28 @@
   <title>Admin Dashboard</title>
   <style>
     body { font-family: sans-serif; background: #f4f7f6; padding: 20px; }
-    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-    th { background: #0B3D91; color: white; padding: 10px; }
-    td { border-bottom: 1px solid #ddd; padding: 8px; }
+    .card { background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 20px; }
+    table { width: 100%; border-collapse: collapse; }
+    td, th { border: 1px solid #ddd; padding: 10px; }
+    button { padding: 8px; cursor: pointer; border: none; border-radius: 4px; color: white; }
+    input { width: 80%; padding: 10px; margin: 5px; }
   </style>
 </head>
 <body>
+<div class="card">
+  <h2>ॲडमिन पॅनल</h2>
+  <input type="text" id="marqueeInput" placeholder="आडवी पट्टी अपडेट करा">
+  <button style="background:#0B3D91;" onclick="updateData('marquee', 'marqueeInput')">अपडेट पट्टी</button>
+  <br>
+  <input type="text" id="newsInput" placeholder="ताज्या घडामोडी अपडेट करा">
+  <button style="background:#0B3D91;" onclick="updateData('latest_news', 'newsInput')">अपडेट बातम्या</button>
+</div>
 
-<div id="usersList">डेटा लोड होत आहे...</div>
+<div class="card" id="usersList">लोड होत आहे...</div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-  import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+  import { getFirestore, collection, getDocs, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk",
@@ -27,30 +37,25 @@
     appId: "1:763805226978:web:6bae81a0b6358b47d88bbb"
   };
 
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+  const db = getFirestore(initializeApp(firebaseConfig));
+
+  window.updateData = async (docName, inputId) => {
+    const val = document.getElementById(inputId).value;
+    await updateDoc(doc(db, "settings", docName), { text: val });
+    alert("अपडेट झाले!");
+  };
 
   async function loadData() {
     const snap = await getDocs(collection(db, "members"));
-    let html = '<table border="1"><tr><th>पूर्ण नाव</th><th>रुग्णालय</th><th>मोबाईल</th><th>सेवार्थ आयडी</th></tr>';
-    
+    let html = '<table><tr><th>नाव</th><th>मोबाईल</th><th>Action</th></tr>';
     snap.forEach(d => {
       const data = d.data();
-      // तुमच्या डेटाबेस मधील फील्डची नावे जशी आहेत तशी वापरली आहेत
-      const fullName = `${data["नाव"] || ''} ${data["वडिलांचे / मधले नाव"] || ''} ${data["आडनाव"] || ''}`;
-      
-      html += `<tr>
-        <td>${fullName}</td>
-        <td>${data["कार्यरत रुग्णालयाचे नाव व पत्ता"] || ''}</td>
-        <td>${data["मोबाईल क्रमांक"] || ''}</td>
-        <td>${data["सेवार्थ आयडी क्रमांक"] || ''}</td>
-      </tr>`;
+      html += `<tr><td>${data["नाव"]}</td><td>${data["मोबाईल क्रमांक"]}</td>
+      <td><button style="background:green;" onclick="alert('Edit clicked')">Edit</button>
+      <button style="background:red;" onclick="deleteDoc(doc(db,'members','${d.id}')); location.reload()">Del</button></td></tr>`;
     });
-    
-    html += '</table>';
-    document.getElementById("usersList").innerHTML = html;
+    document.getElementById("usersList").innerHTML = html + '</table>';
   }
-
   loadData();
 </script>
 </body>
