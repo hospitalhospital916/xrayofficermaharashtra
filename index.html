@@ -53,7 +53,7 @@
     <aside class="sidebar">
       <div class="card">
         <h3>🔔 ताज्या घडामोडी</h3>
-        <p>येथे नवीन सूचना प्रदर्शित होतील.</p>
+        <p id="latest-news">येथे नवीन सूचना प्रदर्शित होतील.</p>
       </div>
     </aside>
   </div>
@@ -80,8 +80,15 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
+    // 1. आडवी पट्टी (Marquee) अपडेट
     onSnapshot(doc(db, "settings", "marquee"), (snap) => {
       if (snap.exists()) document.getElementById("news-ticker").innerText = snap.data().text || "सूचना नाही.";
+    });
+
+    // 2. ताज्या घडामोडी (Latest News) अपडेट 
+    // टीप: तुमच्या 'settings' कलेक्शनमध्ये 'latest_news' नावाचे डॉक्युमेंट आणि त्यात 'text' फिल्ड बनवा.
+    onSnapshot(doc(db, "settings", "latest_news"), (snap) => {
+      if (snap.exists()) document.getElementById("latest-news").innerText = snap.data().text || "सध्या कोणतीही नवीन सूचना नाही.";
     });
   </script>
 </body>
