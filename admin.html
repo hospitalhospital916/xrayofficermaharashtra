@@ -409,10 +409,135 @@
         const emailLink = email ? `<a href="mailto:${email}">ईमेल</a>` : "-";
 
         tbody.innerHTML += `
-          <tr>
+         <tr>
             <td>${count}</td>
             <td><b>${member["नाव"] || "-"}</b></td>
             <td>${mobLink}</td>
             <td>${emailLink}</td>
             <td>${member["मंडळ"] || "-"}</td>
             <td>${member["जिल्हा"] || "-"}</td>
+            <td>${member["पद"] || "-"}</td>
+            <td>
+              <button class="btn-view" onclick="openViewModal('${member.id}')">👁️ View</button>
+              <button class="btn-edit" onclick="openEditModal('${member.id}')">✏️ Edit</button>
+              <button class="btn-delete" onclick="deleteUser('${member.id}')">🗑️ Delete</button>
+            </td>
+          </tr>
+        `;
+        count++;
+      });
+    }
+
+    document.getElementById("btnAddMember").addEventListener("click", async () => {
+      const newData = {
+        "नाव": document.getElementById("addName").value.trim(),
+        "मोबाईल क्रमांक": document.getElementById("addMobile").value.trim(),
+        "ईमेल": document.getElementById("addEmail").value.trim(),
+        "मंडळ": document.getElementById("addMandal").value,
+        "जिल्हा": document.getElementById("addDistrict").value.trim(),
+        "पद": document.getElementById("addDesignation").value,
+        "स्थिती": "मंजूर" 
+      };
+      if(!newData["नाव"] || !newData["मोबाईल क्रमांक"]) return alert("नाव आणि मोबाईल क्रमांक आवश्यक आहे.");
+      
+      try {
+        await addDoc(collection(db, "members"), newData);
+        alert("✅ सदस्य यशस्वीरित्या जोडला!");
+        fetchMembersFromDB();
+        document.querySelectorAll("input").forEach(input => input.value = ""); 
+      } catch(e) { alert("Error: " + e.message); }
+    });
+
+    window.deleteUser = async function(id) {
+      if(confirm("हा सदस्य कायमचा काढून टाकायचा आहे का?")) {
+        await deleteDoc(doc(db, "members", id));
+        alert("✅ सदस्य काढला.");
+        fetchMembersFromDB();
+      }
+    };
+
+    // Filters Logic
+    function applyFilters() {
+      const searchText = document.getElementById("searchBox").value.toLowerCase();
+      const mandal = document.getElementById("filterMandal").value;
+      const district = document.getElementById("filterDistrict").value.toLowerCase();
+
+      const filtered = allMembersData.filter(m => {
+        const matchNameMob = (m["नाव"] || "").toLowerCase().includes(searchText) || (m["मोबाईल क्रमांक"] || "").includes(searchText);
+        const matchMandal = mandal === "" || (m["मंडळ"] || "") === mandal;
+        const matchDist = district === "" || (m["जिल्हा"] || "").toLowerCase().includes(district);
+        return matchNameMob && matchMandal && matchDist;
+      });
+      renderTable(filtered);
+    }
+
+    document.getElementById("searchBox").addEventListener("input", applyFilters);
+    document.getElementById("filterMandal").addEventListener("change", applyFilters);
+    document.getElementById("filterDistrict").addEventListener("input", applyFilters);
+    
+    document.getElementById("btnResetFilter").addEventListener("click", () => {
+      document.getElementById("searchBox").value = "";
+      document.getElementById("filterMandal").value = "";
+      document.getElementById("filterDistrict").value = "";
+      renderTable(allMembersData);
+    });
+
+    // Modals Logic for View and Edit
+    const viewModal = document.getElementById("viewModal");
+    const editModal = document.getElementById("editModal");
+    document.getElementById("closeViewModal").onclick = () => viewModal.style.display = "none";
+    document.getElementById("closeEditModal").onclick = () => editModal.style.display = "none";
+
+    window.openViewModal = function(id) {
+      const member = allMembersData.find(m => m.id === id);
+      if(member) {
+        document.getElementById("viewName").innerText = member["नाव"] || "नाव उपलब्ध नाही";
+        document.getElementById("viewMobile").innerText = member["मोबाईल क्रमांक"] || "-";
+        document.getElementById("viewEmail").innerText = member["ईमेल"] || "-";
+        document.getElementById("viewDesignation").innerText = member["पद"] || "-";
+        document.getElementById("viewMandal").innerText = member["मंडळ"] || "-";
+        document.getElementById("viewDistrict").innerText = member["जिल्हा"] || "-";
+
+        const btnCall = document.getElementById("linkCall");
+        const btnEmail = document.getElementById("linkEmail");
+        if(member["मोबाईल क्रमांक"]) { btnCall.href = "tel:" + member["मोबाईल क्रमांक"]; btnCall.style.display = "block"; } else { btnCall.style.display = "none"; }
+        if(member["ईमेल"]) { btnEmail.href = "mailto:" + member["ईमेल"]; btnEmail.style.display = "block"; } else { btnEmail.style.display = "none"; }
+        viewModal.style.display = "block";
+      }
+    };
+
+    window.openEditModal = function(id) {
+      const member = allMembersData.find(m => m.id === id);
+      if(member) {
+        document.getElementById("editId").value = member.id;
+        document.getElementById("editName").value = member["नाव"] || "";
+        document.getElementById("editMobile").value = member["मोबाईल क्रमांक"] || "";
+        document.getElementById("editEmail").value = member["ईमेल"] || "";
+        document.getElementById("editMandal").value = member["मंडळ"] || "";
+        document.getElementById("editDistrict").value = member["जिल्हा"] || "";
+        document.getElementById("editDesignation").value = member["पद"] || "";
+        editModal.style.display = "block";
+      }
+    };
+
+    document.getElementById("btnSaveEdit").addEventListener("click", async () => {
+      const id = document.getElementById("editId").value;
+      const updatedData = {
+        "नाव": document.getElementById("editName").value.trim(),
+        "मोबाईल क्रमांक": document.getElementById("editMobile").value.trim(),
+        "ईमेल": document.getElementById("editEmail").value.trim(),
+        "मंडळ": document.getElementById("editMandal").value,
+        "जिल्हा": document.getElementById("editDistrict").value.trim(),
+        "पद": document.getElementById("editDesignation").value.trim()
+      };
+      try {
+        await updateDoc(doc(db, "members", id), updatedData);
+        alert("✅ माहिती अपडेट झाली!");
+        editModal.style.display = "none";
+        fetchMembersFromDB();
+      } catch(e) { alert("Error: " + e.message); }
+    });
+
+  </script>
+</body>
+</html>
