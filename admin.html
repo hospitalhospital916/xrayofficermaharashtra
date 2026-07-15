@@ -13,7 +13,6 @@
     button { padding: 10px 16px; border: none; border-radius: 8px; cursor: pointer; background: var(--primary-color); color: white; font-weight: 600; margin: 5px; }
     button:hover { opacity: 0.9; }
     .btn-del { background-color: #ff4d4d; }
-    .btn-edit { background-color: #28a745; }
     .hidden { display: none; }
     table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; }
     th { background-color: var(--primary-color); color: white; padding: 14px; text-align: left; }
@@ -56,7 +55,7 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
   import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-  import { getFirestore, collection, getDocs, doc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+  import { getFirestore, collection, getDocs, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk",
@@ -79,21 +78,17 @@
   window.logout = () => signOut(auth);
 
   window.loadUsers = async () => {
-    const snap = await getDocs(collection(db, "Member"));
+    const snap = await getDocs(collection(db, "members"));
     document.getElementById("memberCount").textContent = snap.size;
     
-    let html = '<table id="memberTable"><tr><th>नाव</th><th>जिल्हा</th><th>विभाग</th><th>ईमेल</th><th>Action</th></tr>';
+    let html = '<table id="memberTable"><tr><th>नाव</th><th>रुग्णालय/पत्ता</th><th>मोबाईल</th><th>Action</th></tr>';
     snap.forEach(d => {
       const data = d.data();
       html += `<tr class="user-row">
-        <td class="col-name">${data["पूर्ण नाव"] || data["नाव"] || ''}</td>
-        <td class="col-dist">${data["जिल्हा"] || ''}</td>
-        <td class="col-div">${data["विभाग"] || ''}</td>
-        <td>${data["ईमेल"] || data["email"] || ''}</td>
-        <td>
-            <button class="btn-edit" onclick="editMember('${d.id}')">Edit</button>
-            <button class="btn-del" onclick="deleteMember('${d.id}')">Delete</button>
-        </td>
+        <td class="col-name">${data["नाव"] || ''}</td>
+        <td class="col-dist">${data["कार्यरत रुग्णालयाचे नाव व पत्ता"] || ''}</td>
+        <td>${data["मोबाईल क्रमांक"] || ''}</td>
+        <td><button class="btn-del" onclick="deleteMember('${d.id}')">Delete</button></td>
       </tr>`;
     });
     html += '</table>';
@@ -102,21 +97,17 @@
 
   window.filterTable = () => {
     const nameVal = document.getElementById("nameFilter").value.toLowerCase();
-    const distVal = document.getElementById("distFilter").value.toLowerCase();
-    const divVal = document.getElementById("divFilter").value.toLowerCase();
     const rows = document.getElementsByClassName("user-row");
     for(let row of rows) {
       const name = row.querySelector(".col-name").innerText.toLowerCase();
-      const dist = row.querySelector(".col-dist").innerText.toLowerCase();
-      const div = row.querySelector(".col-div").innerText.toLowerCase();
-      row.style.display = (name.includes(nameVal) && dist.includes(distVal) && div.includes(divVal)) ? "" : "none";
+      row.style.display = name.includes(nameVal) ? "" : "none";
     }
   };
 
   window.printTable = () => {
     const divContents = document.getElementById("usersList").innerHTML;
     const printWindow = window.open('', '', 'height=600,width=800');
-    printWindow.document.write('<html><head><title>सदस्य यादी</title><style>table {width:100%; border-collapse:collapse;} th, td {border:1px solid black; padding:8px;}</style></head><body><h2>सदस्य यादी</h2>' + divContents + '</body></html>');
+    printWindow.document.write('<html><body><h2>सदस्य यादी</h2>' + divContents + '</body></html>');
     printWindow.document.close();
     printWindow.print();
   };
@@ -132,17 +123,9 @@
     a.click();
   };
 
-  window.editMember = async (id) => {
-    const newName = prompt("नवीन नाव टाका:");
-    if (newName) {
-      await updateDoc(doc(db, "Member", id), { "पूर्ण नाव": newName });
-      loadUsers();
-    }
-  };
-
   window.deleteMember = async (id) => {
     if(confirm("डिलीट करायचे का?")) {
-      await deleteDoc(doc(db, "Member", id));
+      await deleteDoc(doc(db, "members", id));
       loadUsers();
     }
   };
