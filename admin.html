@@ -4,27 +4,49 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>प्रगत ॲडमिन डॅशबोर्ड - क्ष किरण संघटना</title>
+  
   <style>
-    /* ... (तुमचे जुने सर्व CSS येथे राहू द्या) ... */
     :root { --primary-color: #0B3D91; --secondary-color: #FFD700; --bg-color: #f4f7f6; --text-color: #333; }
-    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg-color); margin: 0; padding: 0; }
-    .header { background: var(--primary-color); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
-    .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; display: none; }
-    .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-bottom: 25px; border-top: 5px solid var(--primary-color); }
-    h3 { color: var(--primary-color); margin-top: 0; border-bottom: 2px solid #eee; padding-bottom: 10px; }
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.95rem; }
-    th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
-    th { background: #f8f9fa; color: var(--primary-color); }
-    button { background: var(--primary-color); color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight:bold;}
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg-color); margin: 0; padding: 0; color: var(--text-color); }
     
-    /* New Styles for Complaints */
-    .btn-reply { background: #ff9800; color: white; }
-    .btn-reply:hover { background: #e68a00; }
-    .btn-whatsapp { background: #25D366; width: 100%; margin-top:10px; font-size: 1.1rem; display: none;}
-    .btn-whatsapp:hover { background: #1ebd5a; }
+    .header { background: var(--primary-color); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    .header h1 { margin: 0; font-size: 1.5rem; }
+    .btn-logout { background: #dc3545; color: white; border: none; padding: 8px 15px; border-radius: 5px; font-weight: bold; cursor: pointer; }
+    
+    .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; display: none; }
+    
+    .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-bottom: 25px; border-top: 5px solid var(--primary-color); }
+    .card h3 { color: var(--primary-color); margin-top: 0; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px; }
+    
+    .input-group { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 15px; }
+    input[type="text"], input[type="email"], select { flex: 1; min-width: 200px; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; outline: none; }
+    
+    button { background: var(--primary-color); color: white; border: none; padding: 10px 15px; border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; }
+    
+    /* Action Buttons */
+    .btn-approve { background: #28a745; padding: 6px 10px; font-size: 0.9rem; margin-right: 5px; border: none; color: white; border-radius: 4px; cursor: pointer; }
+    .btn-view { background: #17a2b8; padding: 6px 10px; font-size: 0.9rem; margin-right: 5px; border: none; color: white; border-radius: 4px; cursor: pointer; }
+    .btn-edit { background: #ffc107; color: black; padding: 6px 10px; font-size: 0.9rem; margin-right: 5px; border: none; border-radius: 4px; cursor: pointer; }
+    .btn-delete { background: #dc3545; padding: 6px 10px; font-size: 0.9rem; border: none; color: white; border-radius: 4px; cursor: pointer; }
+    .btn-reply { background: #ff9800; color: white; padding: 6px 10px; font-size: 0.9rem; border: none; border-radius: 4px; cursor: pointer;}
+    .btn-whatsapp { background: #25D366; width: 100%; margin-top:10px; font-size: 1.1rem; display: none; color: white; border: none; padding: 10px; border-radius: 6px; font-weight: bold; cursor: pointer;}
+    
+    /* Filters Section */
+    .filter-section { background: #e9ecef; padding: 15px; border-radius: 8px; margin-bottom: 15px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; border: 1px solid #ced4da; }
+    .filter-section input, .filter-section select { padding: 8px; font-size: 0.95rem; flex: 1; min-width: 150px; }
+
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; font-size: 0.95rem; }
+    th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; white-space: nowrap; }
+    th { background: #f8f9fa; color: var(--primary-color); }
+    tr:hover { background: #f1f5f9; }
+    td a { color: #0B3D91; text-decoration: none; font-weight: bold; }
+    
+    /* Modals */
     .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); }
-    .modal-content { background-color: white; margin: 5% auto; padding: 25px; border-radius: 12px; width: 90%; max-width: 500px; position: relative; }
-    .close { position: absolute; right: 20px; top: 15px; font-size: 28px; cursor: pointer; }
+    .modal-content { background-color: white; margin: 5% auto; padding: 25px; border-radius: 12px; width: 90%; max-width: 600px; position: relative; }
+    .close { position: absolute; right: 20px; top: 15px; font-size: 28px; font-weight: bold; cursor: pointer; color: #aaa; }
+    .close:hover { color: black; }
+    
     textarea.reply-box { width: 100%; height: 100px; padding: 10px; margin-top:10px; border-radius: 5px; border:1px solid #ccc; font-family: inherit;}
   </style>
 </head>
@@ -32,18 +54,33 @@
 
   <div class="header">
     <h1>⚙️ ॲडमिन कंट्रोल पॅनल</h1>
-    <button id="logoutBtn" style="background:#dc3545;">लॉगआउट</button>
+    <button id="logoutBtn" class="btn-logout">लॉगआउट</button>
   </div>
 
   <div class="container" id="adminContent">
     
-    <!-- नवीन: सदस्यांच्या तक्रारी आणि प्रश्न -->
+    <!-- १. नवीन सदस्य मंजुरी (Pending Approvals) -->
+    <div class="card" style="border-top-color: #ff9800;">
+      <h3 style="color: #ff9800;">⏳ नवीन सदस्य मंजुरी (Pending Approvals)</h3>
+      <div style="overflow-x: auto;">
+        <table>
+          <thead>
+            <tr><th>नाव</th><th>मोबाईल</th><th>ईमेल</th><th>विभाग</th><th>कृती (Approve / Reject)</th></tr>
+          </thead>
+          <tbody id="pendingMembersList">
+            <tr><td colspan="5" style="text-align:center;">लोड होत आहे...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- २. सदस्यांच्या तक्रारी आणि प्रश्न -->
     <div class="card" style="border-top-color: #dc3545;">
       <h3 style="color: #dc3545;">🚨 सदस्यांच्या तक्रारी / सपोर्ट तिकीट</h3>
       <div style="overflow-x: auto;">
         <table>
           <thead>
-            <tr><th>तारीख</th><th>सदस्य & मोबाईल</th><th>विषय & तक्रार</th><th>स्थिती</th><th>कृती (Action)</th></tr>
+            <tr><th>तारीख</th><th>सदस्य & मोबाईल</th><th>विषय & तक्रार</th><th>स्थिती</th><th>कृती</th></tr>
           </thead>
           <tbody id="complaintsList">
             <tr><td colspan="5" style="text-align:center;">लोड होत आहे...</td></tr>
@@ -52,36 +89,134 @@
       </div>
     </div>
 
-    <!-- (येथे खाली तुमचा जुना 'नवीन सदस्य जोडा' आणि 'सदस्य यादी' चा HTML राहील) -->
-    <!-- जागा वाचवण्यासाठी मी तो भाग इथे लिहीत नाही, तो तसाच ठेवा. -->
+    <!-- ३. नवीन सदस्य जोडण्याचा फॉर्म (ॲडमिन स्वतः ॲड करेल ते डायरेक्ट Approved असतील) -->
+    <div class="card" style="border-top-color: #28a745;">
+      <h3 style="color: #28a745;">➕ नवीन सदस्य जोडा (थेट मंजुरी)</h3>
+      <div class="input-group">
+        <input type="text" id="addName" placeholder="संपूर्ण नाव">
+        <input type="text" id="addMobile" placeholder="मोबाईल क्रमांक" maxlength="10">
+        <input type="email" id="addEmail" placeholder="ईमेल आयडी">
+      </div>
+      <div class="input-group">
+        <select id="addDivision">
+          <option value="">-- विभाग निवडा --</option>
+          <option value="कोकण">कोकण</option><option value="पुणे">पुणे</option>
+          <option value="नाशिक">नाशिक</option><option value="छत्रपती संभाजीनगर">छत्रपती संभाजीनगर</option>
+          <option value="अमरावती">अमरावती</option><option value="नागपूर">नागपूर</option>
+        </select>
+        <input type="text" id="addDistrict" placeholder="जिल्हा (उदा. अहमदनगर)">
+        <select id="addDesignation">
+          <option value="क्ष-किरण वैज्ञानिक अधिकारी">क्ष-किरण वैज्ञानिक अधिकारी</option>
+          <option value="क्ष-किरण तंत्रज्ञ">क्ष-किरण तंत्रज्ञ</option>
+          <option value="इतर">इतर</option>
+        </select>
+        <button id="btnAddMember" style="background: #28a745; flex: 1;">सदस्य सेव्ह करा</button>
+      </div>
+    </div>
+
+    <!-- ४. मंजूर सदस्यांची यादी आणि फिल्टर्स -->
+    <div class="card">
+      <h3>👥 अधिकृत सदस्यांची यादी (Approved Members)</h3>
+      
+      <div class="filter-section">
+        <strong>🔍 शोधा:</strong>
+        <input type="text" id="searchBox" placeholder="नाव किंवा मोबाईल नंबर...">
+        <select id="filterDivision">
+          <option value="">सर्व विभाग</option>
+          <option value="कोकण">कोकण</option><option value="पुणे">पुणे</option>
+          <option value="नाशिक">नाशिक</option><option value="छत्रपती संभाजीनगर">छत्रपती संभाजीनगर</option>
+          <option value="अमरावती">अमरावती</option><option value="नागपूर">नागपूर</option>
+        </select>
+        <input type="text" id="filterDistrict" placeholder="जिल्हा टाईप करा...">
+        <button id="btnResetFilter" style="background: #6c757d;">रीसेट</button>
+      </div>
+
+      <div style="overflow-x: auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>अनु.</th>
+              <th>नाव</th>
+              <th>मोबाईल</th>
+              <th>ईमेल</th>
+              <th>विभाग</th>
+              <th>जिल्हा</th>
+              <th>पद</th>
+              <th>कृती (Action)</th>
+            </tr>
+          </thead>
+          <tbody id="membersList">
+            <tr><td colspan="8" style="text-align:center;">माहिती लोड होत आहे...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
   </div>
 
-  <!-- Complaint Reply Modal -->
+  <!-- Modal 1: Complaint Reply Modal -->
   <div id="replyModal" class="modal">
     <div class="modal-content">
       <span class="close" id="closeReplyModal">&times;</span>
       <h3 style="color: var(--primary-color);">💬 तक्रारीला उत्तर द्या</h3>
       <p><strong>सदस्य:</strong> <span id="replyMemName"></span></p>
       <p><strong>समस्या:</strong> <span id="replyMemComp"></span></p>
-      
       <input type="hidden" id="replyCompId">
       <input type="hidden" id="replyMobileNum">
       <input type="hidden" id="replySubject">
-      
       <textarea id="adminReplyText" class="reply-box" placeholder="तुमचे उत्तर येथे टाईप करा..."></textarea>
-      
       <button id="btnSaveReply" style="width: 100%; margin-top: 15px; background: #28a745;">💾 उत्तर सेव्ह करा (तक्रार सोडवली)</button>
-      
-      <!-- WhatsApp Button (उत्तर सेव्ह केल्यावर हे दिसेल) -->
       <button id="btnSendWa" class="btn-whatsapp">🟢 WhatsApp वर सदस्याला कळवा</button>
+    </div>
+  </div>
+
+  <!-- Modal 2: View Member Modal -->
+  <div id="viewModal" class="modal">
+    <div class="modal-content" style="text-align: center;">
+      <span class="close" id="closeViewModal">&times;</span>
+      <h2 id="viewName" style="color: var(--primary-color);">नाव लोड होत आहे...</h2>
+      <p style="color: #28a745; font-weight: bold;">✅ नोंदणीकृत सदस्य</p>
+      <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; text-align: left;">
+        <p><strong>📞 मोबाईल:</strong> <span id="viewMobile"></span></p>
+        <p><strong>✉️ ईमेल:</strong> <span id="viewEmail"></span></p>
+        <p><strong>🏢 पद:</strong> <span id="viewDesignation"></span></p>
+        <p><strong>📍 विभाग:</strong> <span id="viewDivision"></span></p>
+        <p><strong>📍 जिल्हा:</strong> <span id="viewDistrict"></span></p>
+      </div>
+      <div style="display: flex; gap: 10px; margin-top: 20px;">
+        <a id="linkCall" href="#" style="flex: 1; padding: 12px; background: #28a745; color: white; text-decoration: none; border-radius: 6px; font-weight: bold;">📞 कॉल करा</a>
+        <a id="linkEmail" href="#" style="flex: 1; padding: 12px; background: #dc3545; color: white; text-decoration: none; border-radius: 6px; font-weight: bold;">✉️ ईमेल पाठवा</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 3: Edit Member Modal -->
+  <div id="editModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeEditModal">&times;</span>
+      <h3 style="color: var(--primary-color);">✏️ माहिती अपडेट करा</h3>
+      <input type="hidden" id="editId">
+      <div class="input-group"><input type="text" id="editName" placeholder="नाव"></div>
+      <div class="input-group"><input type="text" id="editMobile" placeholder="मोबाईल क्रमांक"></div>
+      <div class="input-group"><input type="email" id="editEmail" placeholder="ईमेल आयडी"></div>
+      <div class="input-group">
+        <select id="editDivision">
+          <option value="">-- विभाग निवडा --</option>
+          <option value="कोकण">कोकण</option><option value="पुणे">पुणे</option>
+          <option value="नाशिक">नाशिक</option><option value="छत्रपती संभाजीनगर">छत्रपती संभाजीनगर</option>
+          <option value="अमरावती">अमरावती</option><option value="नागपूर">नागपूर</option>
+        </select>
+      </div>
+      <div class="input-group"><input type="text" id="editDistrict" placeholder="जिल्हा"></div>
+      <div class="input-group"><input type="text" id="editDesignation" placeholder="पद"></div>
+      <button id="btnSaveEdit" style="width: 100%; margin-top: 10px;">बदल सेव्ह करा</button>
     </div>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-    import { getFirestore, collection, getDocs, doc, updateDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+    import { getFirestore, collection, getDocs, doc, addDoc, deleteDoc, updateDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk",
@@ -96,19 +231,24 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
+    let allMembersData = [];
+    let allComplaints = [];
+
+    // Security Check
     onAuthStateChanged(auth, (user) => {
       if (!user) window.location.href = "login.html";
       else { 
         document.getElementById("adminContent").style.display = "block"; 
+        fetchMembersFromDB();
         loadComplaints(); 
       }
     });
 
     document.getElementById("logoutBtn").onclick = () => signOut(auth).then(() => window.location.href="login.html");
 
-    let allComplaints = [];
-
-    // तक्रारी लोड करणे
+    // ==========================================
+    // 1. COMPLAINTS LOGIC
+    // ==========================================
     async function loadComplaints() {
       const tbody = document.getElementById("complaintsList");
       try {
@@ -126,23 +266,19 @@
 
         allComplaints.forEach(c => {
           let statusStr = c.स्थिती === "प्रलंबित" ? `<span style="color:red; font-weight:bold;">🔴 प्रलंबित</span>` : `<span style="color:green; font-weight:bold;">🟢 सोडवली</span>`;
-          
           tbody.innerHTML += `
             <tr>
-              <td>${c.तारीख.split(',')[0]}</td>
+              <td>${c.तारीख ? c.तारीख.split(',')[0] : '-'}</td>
               <td><b>${c.सदस्य_नाव}</b><br>${c.मोबाईल}</td>
               <td><b>${c.विषय}</b><br><small>${c.तक्रार}</small></td>
               <td>${statusStr}</td>
-              <td>
-                <button class="btn-reply" onclick="openReplyModal('${c.id}')">💬 रिप्लाय द्या</button>
-              </td>
+              <td><button class="btn-reply" onclick="openReplyModal('${c.id}')">💬 रिप्लाय</button></td>
             </tr>
           `;
         });
       } catch(e) { console.error(e); }
     }
 
-    // Modal Logic
     const replyModal = document.getElementById("replyModal");
     document.getElementById("closeReplyModal").onclick = () => { replyModal.style.display = "none"; document.getElementById("btnSendWa").style.display = "none";};
 
@@ -155,48 +291,119 @@
         document.getElementById("replyMobileNum").value = comp.मोबाईल;
         document.getElementById("replySubject").value = comp.विषय;
         document.getElementById("adminReplyText").value = comp.रिप्लाय || "";
-        
-        document.getElementById("btnSendWa").style.display = "none"; // लपवा 
+        document.getElementById("btnSendWa").style.display = "none"; 
         replyModal.style.display = "block";
       }
     }
 
-    // उत्तर सेव्ह करणे आणि WhatsApp बटण दाखवणे
     document.getElementById("btnSaveReply").addEventListener("click", async () => {
       const id = document.getElementById("replyCompId").value;
       const replyText = document.getElementById("adminReplyText").value.trim();
-      
       if(!replyText) return alert("कृपया उत्तर टाईप करा.");
-
       try {
-        await updateDoc(doc(db, "complaints", id), {
-          स्थिती: "सोडवली",
-          रिप्लाय: replyText
-        });
-        alert("✅ उत्तर सेव्ह झाले आणि तक्रार 'सोडवली' म्हणून नोंदवली गेली.");
-        loadComplaints(); // बॅकग्राउंडमध्ये यादी अपडेट करा
-        
-        // आता WhatsApp चे बटण दाखवा
+        await updateDoc(doc(db, "complaints", id), { स्थिती: "सोडवली", रिप्लाय: replyText });
+        alert("✅ उत्तर सेव्ह झाले.");
+        loadComplaints(); 
         document.getElementById("btnSendWa").style.display = "block";
       } catch(e) { alert("Error: " + e.message); }
     });
 
-    // WhatsApp वर मेसेज पाठवणे (Magic Click-to-WhatsApp)
     document.getElementById("btnSendWa").addEventListener("click", () => {
       const mobile = document.getElementById("replyMobileNum").value;
       const name = document.getElementById("replyMemName").innerText;
       const subject = document.getElementById("replySubject").value;
       const reply = document.getElementById("adminReplyText").value;
-
-      // WhatsApp मेसेजचा ड्राफ्ट
       const waText = `नमस्कार *${name}*,\n\nतुमची *'${subject}'* विषयीची तक्रार सोडवण्यात आली आहे.\n\n*ॲडमिनचा रिप्लाय:*\n${reply}\n\n- क्ष-किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य`;
-      
-      // WhatsApp लिंक तयार करणे (+91 जोडून)
-      const waUrl = `https://wa.me/91${mobile}?text=${encodeURIComponent(waText)}`;
-      
-      window.open(waUrl, '_blank'); // नवीन टॅबमध्ये WhatsApp उघडेल
+      window.open(`https://wa.me/91${mobile}?text=${encodeURIComponent(waText)}`, '_blank');
     });
 
-  </script>
-</body>
-</html>
+    // ==========================================
+    // 2. MEMBERS LOGIC (APPROVAL & FILTERS)
+    // ==========================================
+    async function fetchMembersFromDB() {
+      try {
+        const querySnapshot = await getDocs(collection(db, "members"));
+        let approvedMembers = [];
+        let pendingMembers = [];
+
+        querySnapshot.forEach((d) => { 
+          let memberData = { id: d.id, ...d.data() };
+          // जर 'स्थिती' प्रलंबित असेल तर Pending मध्ये, अन्यथा Approved मध्ये (जुन्या डेटासाठी)
+          if(memberData.स्थिती === "प्रलंबित") {
+            pendingMembers.push(memberData);
+          } else {
+            approvedMembers.push(memberData);
+          }
+        });
+
+        allMembersData = approvedMembers; // For filters
+        renderPendingTable(pendingMembers);
+        renderTable(approvedMembers);
+      } catch(err) {
+        console.error(err);
+      }
+    }
+
+    // Pending Members Table
+    function renderPendingTable(pendingArray) {
+      const tbody = document.getElementById("pendingMembersList");
+      tbody.innerHTML = "";
+      if(pendingArray.length === 0) {
+        tbody.innerHTML = "<tr><td colspan='5' style='text-align:center;'>सध्या मंजुरीसाठी कोणीही प्रलंबित नाही.</td></tr>";
+        return;
+      }
+      pendingArray.forEach(member => {
+        tbody.innerHTML += `
+          <tr style="background-color: #fff9e6;">
+            <td><b>${member["नाव"] || "-"}</b></td>
+            <td>${member["मोबाईल क्रमांक"] || "-"}</td>
+            <td>${member["ईमेल"] || "-"}</td>
+            <td>${member["विभाग"] || "-"}</td>
+            <td>
+              <button class="btn-approve" onclick="approveMember('${member.id}')">✅ मंजूर करा</button>
+              <button class="btn-delete" onclick="deleteUser('${member.id}')">❌ नाकारा</button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    // Approve Member Function
+    window.approveMember = async function(id) {
+      if(confirm("या सदस्याला अधिकृत मंजुरी द्यायची आहे का?")) {
+        try {
+          await updateDoc(doc(db, "members", id), { स्थिती: "मंजूर" });
+          alert("✅ सदस्य मंजूर झाला. आता तो मुख्य यादीत दिसेल.");
+          fetchMembersFromDB();
+        } catch(e) { alert("Error: " + e.message); }
+      }
+    };
+
+    // Approved Members Table
+    function renderTable(dataArray) {
+      const tbody = document.getElementById("membersList");
+      tbody.innerHTML = "";
+      if(dataArray.length === 0) {
+        tbody.innerHTML = "<tr><td colspan='8' style='text-align:center;'>कोणताही सदस्य सापडला नाही.</td></tr>";
+        return;
+      }
+      let count = 1;
+      dataArray.forEach(member => {
+        const mob = member["मोबाईल क्रमांक"] || "";
+        const email = member["ईमेल"] || "";
+        const mobLink = mob ? `<a href="tel:${mob}">${mob}</a>` : "-";
+        const emailLink = email ? `<a href="mailto:${email}">ईमेल</a>` : "-";
+
+        tbody.innerHTML += `
+          <tr>
+            <td>${count}</td>
+            <td><b>${member["नाव"] || "-"}</b></td>
+            <td>${mobLink}</td>
+            <td>${emailLink}</td>
+            <td>${member["विभाग"] || "-"}</td>
+            <td>${member["जिल्हा"] || "-"}</td>
+            <td>${member["पद"] || "-"}</td>
+            <td>
+              <button class="btn-view" onclick="openViewModal('${member.id}')">👁️ View</button>
+              <button class="btn-edit" onclick="openEditModal('${member.id}')">✏️ Edit</button>
+              <button class="btn-delete" onclick="deleteUser('${member.id}')">🗑️ Delete</butt
