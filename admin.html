@@ -2,141 +2,59 @@
 <html lang="mr">
 <head>
   <meta charset="UTF-8">
-  <title>Admin Dashboard - X-ray Union</title>
+  <title>Admin Dashboard</title>
   <style>
-    :root { --primary-color: #0B3D91; --accent-color: #f4f7f6; }
-    body { font-family: 'Segoe UI', sans-serif; background: var(--accent-color); padding: 20px; color: #333; }
-    .card { background: #fff; padding: 25px; border-radius: 15px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); margin-bottom: 25px; border-left: 6px solid var(--primary-color); }
-    .stats-box { background: var(--primary-color); color: white; padding: 20px; border-radius: 10px; text-align: center; margin-bottom: 20px; }
-    .filters { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 20px; }
-    input { padding: 12px; border: 1px solid #ddd; border-radius: 8px; width: 90%; }
-    button { padding: 10px 16px; border: none; border-radius: 8px; cursor: pointer; background: var(--primary-color); color: white; font-weight: 600; margin: 5px; }
-    button:hover { opacity: 0.9; }
-    .btn-del { background-color: #ff4d4d; }
-    .hidden { display: none; }
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; }
-    th { background-color: var(--primary-color); color: white; padding: 14px; text-align: left; }
-    td { border-bottom: 1px solid #eee; padding: 12px; font-size: 14px; }
-    tr:hover { background-color: #f0f7ff; }
+    body { font-family: sans-serif; background: #f4f7f6; padding: 20px; }
+    .card { background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 13px; }
+    th { background: #0B3D91; color: white; padding: 10px; text-align: left; }
+    td { border-bottom: 1px solid #ddd; padding: 8px; }
+    button { padding: 5px 8px; cursor: pointer; border: none; border-radius: 4px; color: white; margin: 2px; font-size: 11px; }
+    .btn-wa { background: #25D366; }
+    .btn-call { background: #6610f2; }
   </style>
 </head>
 <body>
 
-<div id="loginBox" class="card">
-  <h3>Admin Login</h3>
-  <input id="email" type="email" placeholder="Email">
-  <input id="password" type="password" placeholder="Password">
-  <button onclick="login()">Login</button>
-  <p id="msg" style="color:red;"></p>
-</div>
-
-<div id="panelBox" class="hidden">
-  <div class="card">
-    <h2>क्ष-किरण वैज्ञानिक अधिकारी संघटना</h2>
-    <div class="stats-box">
-      <h3>एकूण सदस्य संख्या: <span id="memberCount">0</span></h3>
-    </div>
-    <button onclick="loadUsers()">डेटा रिफ्रेश करा</button>
-    <button onclick="printTable()" style="background:#28a745;">📄 प्रिंट (A4)</button>
-    <button onclick="exportToExcel()" style="background:#ffc107; color:black;">📊 एक्सेल डाऊनलोड</button>
-    <button onclick="logout()" style="background:#666;">Logout</button>
-  </div>
-
-  <div class="card">
-    <div class="filters">
-      <input type="text" id="nameFilter" onkeyup="filterTable()" placeholder="नाव शोधा...">
-    </div>
-    <div id="usersList" style="overflow-x:auto;"></div>
-  </div>
+<div class="card">
+  <h2>सभासद डेटा डॅशबोर्ड</h2>
+  <div id="usersList" style="overflow-x:auto;">Loading...</div>
 </div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-  import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-  import { getFirestore, collection, getDocs, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+  import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk",
-    authDomain: "xrayunionmah.firebaseapp.com",
-    projectId: "xrayunionmah",
-    storageBucket: "xrayunionmah.firebasestorage.app",
-    messagingSenderId: "763805226978",
-    appId: "1:763805226978:web:6bae81a0b6358b47d88bbb"
-  };
-
+  const firebaseConfig = { /* तुमचे कॉन्फिगरेशन इथे ठेवा */ };
   const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
   const db = getFirestore(app);
-
-  window.login = async () => {
-    try { await signInWithEmailAndPassword(auth, document.getElementById("email").value, document.getElementById("password").value); }
-    catch (e) { document.getElementById("msg").textContent = e.message; }
-  };
-
-  window.logout = () => signOut(auth);
 
   window.loadUsers = async () => {
     const snap = await getDocs(collection(db, "members"));
-    document.getElementById("memberCount").textContent = snap.size;
+    let html = '<table><tr><th>पूर्ण नाव</th><th>रुग्णालय</th><th>मोबाईल</th><th>सेवार्थ आयडी</th><th>Action</th></tr>';
     
-    let html = '<table id="memberTable"><tr><th>पूर्ण नाव</th><th>रुग्णालय/पत्ता</th><th>मोबाईल</th><th>Action</th></tr>';
     snap.forEach(d => {
       const data = d.data();
-      // नाव पूर्ण दिसण्यासाठी दोन्ही फील्ड तपासली आहेत
-      const fullName = data["पूर्ण नाव"] || data["नाव"] || "N/A";
-      html += `<tr class="user-row">
-        <td class="col-name">${fullName}</td>
+      // पूर्ण नाव तयार करणे
+      const fullName = `${data["नाव"] || ''} ${data["वडिलांचे / मधले नाव"] || ''} ${data["आडनाव"] || ''}`;
+      const mob = data["मोबाईल क्रमांक"] || "";
+      
+      html += `<tr>
+        <td>${fullName}</td>
         <td>${data["कार्यरत रुग्णालयाचे नाव व पत्ता"] || ''}</td>
-        <td>${data["मोबाईल क्रमांक"] || ''}</td>
-        <td><button class="btn-del" onclick="deleteMember('${d.id}')">Delete</button></td>
+        <td>${mob}</td>
+        <td>${data["सेवार्थ आयडी क्रमांक"] || ''}</td>
+        <td>
+            <button class="btn-wa" onclick="window.open('https://wa.me/91${mob}')">💬 WhatsApp</button>
+            <button class="btn-call" onclick="window.location.href='tel:${mob}'">📞 Call</button>
+        </td>
       </tr>`;
     });
     html += '</table>';
     document.getElementById("usersList").innerHTML = html;
   };
 
-  window.filterTable = () => {
-    const nameVal = document.getElementById("nameFilter").value.toLowerCase();
-    const rows = document.getElementsByClassName("user-row");
-    for(let row of rows) {
-      const name = row.querySelector(".col-name").innerText.toLowerCase();
-      row.style.display = name.includes(nameVal) ? "" : "none";
-    }
-  };
-
-  window.printTable = () => {
-    const divContents = document.getElementById("usersList").innerHTML;
-    const printWindow = window.open('', '', 'height=600,width=800');
-    printWindow.document.write('<html><head><style>table {width:100%; border-collapse:collapse;} th, td {border:1px solid #000; padding:8px;}</style></head><body><h2>सदस्य यादी</h2>' + divContents + '</body></html>');
-    printWindow.document.close();
-    printWindow.print();
-  };
-
-  window.exportToExcel = () => {
-    let table = document.getElementById("memberTable");
-    let html = table.outerHTML;
-    let blob = new Blob(['\ufeff', html], { type: 'application/vnd.ms-excel' });
-    let url = URL.createObjectURL(blob);
-    let a = document.createElement('a');
-    a.href = url;
-    a.download = 'सदस्य_यादी.xls';
-    a.click();
-  };
-
-  window.deleteMember = async (id) => {
-    if(confirm("डिलीट करायचे का?")) {
-      await deleteDoc(doc(db, "members", id));
-      loadUsers();
-    }
-  };
-
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      document.getElementById("loginBox").classList.add("hidden");
-      document.getElementById("panelBox").classList.remove("hidden");
-      loadUsers();
-    }
-  });
+  loadUsers();
 </script>
 </body>
 </html>
