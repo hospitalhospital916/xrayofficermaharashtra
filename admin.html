@@ -23,7 +23,6 @@
     
     button { background: var(--primary-color); color: white; border: none; padding: 10px 15px; border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; }
     
-    /* Action Buttons */
     .btn-approve { background: #28a745; padding: 6px 10px; font-size: 0.9rem; margin-right: 5px; border: none; color: white; border-radius: 4px; cursor: pointer; }
     .btn-view { background: #17a2b8; padding: 6px 10px; font-size: 0.9rem; margin-right: 5px; border: none; color: white; border-radius: 4px; cursor: pointer; }
     .btn-edit { background: #ffc107; color: black; padding: 6px 10px; font-size: 0.9rem; margin-right: 5px; border: none; border-radius: 4px; cursor: pointer; }
@@ -31,7 +30,6 @@
     .btn-reply { background: #ff9800; color: white; padding: 6px 10px; font-size: 0.9rem; border: none; border-radius: 4px; cursor: pointer;}
     .btn-whatsapp { background: #25D366; width: 100%; margin-top:10px; font-size: 1.1rem; display: none; color: white; border: none; padding: 10px; border-radius: 6px; font-weight: bold; cursor: pointer;}
     
-    /* Filters Section */
     .filter-section { background: #e9ecef; padding: 15px; border-radius: 8px; margin-bottom: 15px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; border: 1px solid #ced4da; }
     .filter-section input, .filter-section select { padding: 8px; font-size: 0.95rem; flex: 1; min-width: 150px; }
 
@@ -41,13 +39,14 @@
     tr:hover { background: #f1f5f9; }
     td a { color: #0B3D91; text-decoration: none; font-weight: bold; }
     
-    /* Modals */
     .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); }
     .modal-content { background-color: white; margin: 5% auto; padding: 25px; border-radius: 12px; width: 90%; max-width: 600px; position: relative; }
     .close { position: absolute; right: 20px; top: 15px; font-size: 28px; font-weight: bold; cursor: pointer; color: #aaa; }
     .close:hover { color: black; }
     
     textarea.reply-box { width: 100%; height: 100px; padding: 10px; margin-top:10px; border-radius: 5px; border:1px solid #ccc; font-family: inherit;}
+
+    @media (max-width: 768px) { .header { flex-direction: column; gap: 10px; text-align: center; } }
   </style>
 </head>
 <body>
@@ -59,13 +58,12 @@
 
   <div class="container" id="adminContent">
     
-    <!-- १. नवीन सदस्य मंजुरी -->
     <div class="card" style="border-top-color: #ff9800;">
       <h3 style="color: #ff9800;">⏳ नवीन सदस्य मंजुरी (Pending Approvals)</h3>
       <div style="overflow-x: auto;">
         <table>
           <thead>
-            <tr><th>नाव</th><th>मोबाईल</th><th>ईमेल</th><th>मंडळ</th><th>कृती (Approve / Reject)</th></tr>
+            <tr><th>नाव</th><th>मोबाईल</th><th>ईमेल</th><th>मंडळ</th><th>कृती</th></tr>
           </thead>
           <tbody id="pendingMembersList">
             <tr><td colspan="5" style="text-align:center;">लोड होत आहे...</td></tr>
@@ -74,7 +72,6 @@
       </div>
     </div>
 
-    <!-- २. सदस्यांच्या तक्रारी -->
     <div class="card" style="border-top-color: #dc3545;">
       <h3 style="color: #dc3545;">🚨 सदस्यांच्या तक्रारी / सपोर्ट तिकीट</h3>
       <div style="overflow-x: auto;">
@@ -89,7 +86,6 @@
       </div>
     </div>
 
-    <!-- ३. नवीन सदस्य जोडा -->
     <div class="card" style="border-top-color: #28a745;">
       <h3 style="color: #28a745;">➕ नवीन सदस्य जोडा (थेट मंजुरी)</h3>
       <div class="input-group">
@@ -115,7 +111,6 @@
       </div>
     </div>
 
-    <!-- ४. मंजूर सदस्यांची यादी -->
     <div class="card">
       <h3>👥 अधिकृत सदस्यांची यादी (Approved Members)</h3>
       <div class="filter-section">
@@ -153,7 +148,7 @@
       <p><strong>समस्या:</strong> <span id="replyMemComp"></span></p>
       <input type="hidden" id="replyCompId"><input type="hidden" id="replyMobileNum"><input type="hidden" id="replySubject">
       <textarea id="adminReplyText" class="reply-box" placeholder="तुमचे उत्तर येथे टाईप करा..."></textarea>
-      <button id="btnSaveReply" style="width: 100%; margin-top: 15px; background: #28a745;">💾 उत्तर सेव्ह करा</button>
+      <button id="btnSaveReply" style="width: 100%; margin-top: 15px; background: #28a745;">💾 उत्तर सेव्ह करा (तक्रार सोडवली)</button>
       <button id="btnSendWa" class="btn-whatsapp">🟢 WhatsApp वर सदस्याला कळवा</button>
     </div>
   </div>
@@ -166,8 +161,13 @@
         <p><strong>📞 मोबाईल:</strong> <span id="viewMobile"></span></p>
         <p><strong>✉️ ईमेल:</strong> <span id="viewEmail"></span></p>
         <p><strong>🏢 पद:</strong> <span id="viewDesignation"></span></p>
+        <p><strong>🏥 कार्यरत रुग्णालय:</strong> <span id="viewHospital"></span></p>
         <p><strong>📍 मंडळ:</strong> <span id="viewMandal"></span></p>
         <p><strong>📍 जिल्हा:</strong> <span id="viewDistrict"></span></p>
+      </div>
+      <div style="display: flex; gap: 10px; margin-top: 20px;">
+        <a id="linkCall" href="#" style="flex: 1; padding: 12px; background: #28a745; color: white; text-decoration: none; border-radius: 6px; font-weight: bold;">📞 कॉल करा</a>
+        <a id="linkEmail" href="#" style="flex: 1; padding: 12px; background: #dc3545; color: white; text-decoration: none; border-radius: 6px; font-weight: bold;">✉️ ईमेल पाठवा</a>
       </div>
     </div>
   </div>
@@ -177,7 +177,7 @@
       <span class="close" id="closeEditModal">&times;</span>
       <h3 style="color: var(--primary-color);">✏️ माहिती अपडेट करा</h3>
       <input type="hidden" id="editId">
-      <div class="input-group"><input type="text" id="editName" placeholder="नाव"></div>
+      <div class="input-group"><input type="text" id="editName" placeholder="संपूर्ण नाव"></div>
       <div class="input-group"><input type="text" id="editMobile" placeholder="मोबाईल क्रमांक"></div>
       <div class="input-group"><input type="email" id="editEmail" placeholder="ईमेल आयडी"></div>
       <div class="input-group">
@@ -285,19 +285,26 @@
     });
 
     // ==========================================
-    // 2. MEMBERS LOGIC (SMART DATA READER)
+    // 2. SMART DATA EXTRACTOR & MEMBERS LOGIC
     // ==========================================
-    // हे फंक्शन एक्सेल मधील चुकीच्या हेडिंग्जला सुद्धा ओळखेल
     function extractData(member) {
+      // एकत्र नाव बनवणे (नाव + वडिलांचे नाव + आडनाव)
+      let firstName = member["नाव"] || "";
+      let middleName = member["वडिलांचे / मधले नाव"] || "";
+      let lastName = member["आडनाव"] || "";
+      let fullName = `${firstName} ${middleName} ${lastName}`.trim();
+      if(!fullName) fullName = "-";
+
       return {
         id: member.id,
-        नाव: member["नाव"] || member["Name"] || member["name"] || member["नाव "] || "-",
-        मोबाईल: member["मोबाईल क्रमांक"] || member["मोबाईल"] || member["Mobile"] || member["mobile"] || member["Phone"] || "-",
-        ईमेल: member["ईमेल"] || member["Email"] || member["email"] || member["Email ID"] || "-",
-        मंडळ: member["मंडळ"] || member["विभाग"] || member["Mandal"] || member["Division"] || member["division"] || "-",
-        जिल्हा: member["जिल्हा"] || member["District"] || member["district"] || "-",
-        पद: member["पद"] || member["Designation"] || member["designation"] || "-",
-        स्थिती: member["स्थिती"] || member["Status"] || "मंजूर" // Default to मंजूर if uploaded from Excel
+        नाव: fullName,
+        मोबाईल: member["मोबाईल क्रमांक"] || "-",
+        ईमेल: member["ईमेल"] || "-",
+        मंडळ: member["मंडळ"] || "-",
+        जिल्हा: member["जिल्हा"] || "-",
+        पद: member["पदाचे नाव"] || member["पद"] || "-",
+        स्थिती: member["स्थिती"] || "मंजूर",
+        रुग्णालय: member["कार्यरत रुग्णालयाचे नाव / पत्ता"] || "-"
       };
     }
 
@@ -309,12 +316,8 @@
 
         querySnapshot.forEach((d) => { 
           let memberData = extractData({ id: d.id, ...d.data() });
-          
-          if(memberData.स्थिती === "प्रलंबित") {
-            pendingMembers.push(memberData);
-          } else {
-            approvedMembers.push(memberData);
-          }
+          if(memberData.स्थिती === "प्रलंबित") { pendingMembers.push(memberData); } 
+          else { approvedMembers.push(memberData); }
         });
 
         allMembersData = approvedMembers; 
@@ -358,7 +361,7 @@
       }
       let count = 1;
       dataArray.forEach(member => {
-        const mobLink = member.मोबाईल !== "-" ? `<a href="tel:${member.मोबाईल}">${member.मोबाईल}</a>` : "-";
+        const mobLink = (member.मोबाईल !== "-" && member.मोबाईल.length >= 10) ? `<a href="tel:${member.मोबाईल}">${member.मोबाईल}</a>` : member.मोबाईल;
         const emailLink = member.ईमेल !== "-" && member.ईमेल.includes('@') ? `<a href="mailto:${member.ईमेल}">ईमेल</a>` : "-";
 
         tbody.innerHTML += `
@@ -375,7 +378,7 @@
               <button class="btn-edit" onclick="openEditModal('${member.id}')">✏️ Edit</button>
               <button class="btn-delete" onclick="deleteUser('${member.id}')">🗑️ Delete</button>
             </td>
-          </tr>
+</tr>
         `;
         count++;
       });
@@ -392,7 +395,6 @@
         "स्थिती": "मंजूर" 
       };
       if(!newData["नाव"] || !newData["मोबाईल क्रमांक"]) return alert("नाव आणि मोबाईल क्रमांक आवश्यक आहे.");
-      
       try {
         await addDoc(collection(db, "members"), newData);
         alert("✅ सदस्य यशस्वीरित्या जोडला!");
@@ -445,6 +447,7 @@
         document.getElementById("viewMobile").innerText = member.मोबाईल;
         document.getElementById("viewEmail").innerText = member.ईमेल;
         document.getElementById("viewDesignation").innerText = member.पद;
+        document.getElementById("viewHospital").innerText = member.रुग्णालय;
         document.getElementById("viewMandal").innerText = member.मंडळ;
         document.getElementById("viewDistrict").innerText = member.जिल्हा;
         viewModal.style.display = "block";
@@ -467,22 +470,28 @@
 
     document.getElementById("btnSaveEdit").addEventListener("click", async () => {
       const id = document.getElementById("editId").value;
+      // जेव्हा आपण एडिट करू, तेव्हा डेटाबेस मधील जुने फील्ड्स 'नाव', 'आडनाव' एकत्र करून नवीन 'नाव' रकान्यात सेव्ह करू
       const updatedData = {
         "नाव": document.getElementById("editName").value.trim(),
         "मोबाईल क्रमांक": document.getElementById("editMobile").value.trim(),
         "ईमेल": document.getElementById("editEmail").value.trim(),
         "मंडळ": document.getElementById("editMandal").value,
         "जिल्हा": document.getElementById("editDistrict").value.trim(),
-        "पद": document.getElementById("editDesignation").value.trim()
+        "पद": document.getElementById("editDesignation").value.trim(),
+        // जुने नको असलेले फील्ड्स रिकामे करून टाकू
+        "आडनाव": "",
+        "वडिलांचे / मधले नाव": "",
+        "पदाचे नाव": ""
       };
       try {
         await updateDoc(doc(db, "members", id), updatedData);
         alert("✅ माहिती अपडेट झाली!");
         editModal.style.display = "none";
-        fetchMembersFromDB(); // This will pull fresh data
+        fetchMembersFromDB(); 
       } catch(e) { alert("Error: " + e.message); }
     });
 
   </script>
 </body>
-</html>
+</html
+       
