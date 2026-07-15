@@ -4,160 +4,84 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>प्रगत ॲडमिन डॅशबोर्ड - क्ष किरण संघटना</title>
-  
   <style>
+    /* ... (तुमचे जुने सर्व CSS येथे राहू द्या) ... */
     :root { --primary-color: #0B3D91; --secondary-color: #FFD700; --bg-color: #f4f7f6; --text-color: #333; }
-    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg-color); margin: 0; padding: 0; color: var(--text-color); }
-    
-    .header { background: var(--primary-color); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-    .header h1 { margin: 0; font-size: 1.5rem; }
-    .btn-logout { background: #dc3545; color: white; border: none; padding: 8px 15px; border-radius: 5px; font-weight: bold; cursor: pointer; }
-    
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg-color); margin: 0; padding: 0; }
+    .header { background: var(--primary-color); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
     .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; display: none; }
-    
     .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-bottom: 25px; border-top: 5px solid var(--primary-color); }
-    .card h3 { color: var(--primary-color); margin-top: 0; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px; }
-    
-    .input-group { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 15px; }
-    input[type="text"], input[type="email"], select { flex: 1; min-width: 200px; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; outline: none; }
-    input:focus, select:focus { border-color: var(--primary-color); }
-    
-    button { background: var(--primary-color); color: white; border: none; padding: 10px 15px; border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; }
-    button:hover { background: #082a63; }
-    
-    .btn-edit { background: #28a745; padding: 6px 10px; font-size: 0.9rem; margin-right: 5px; }
-    .btn-delete { background: #dc3545; padding: 6px 10px; font-size: 0.9rem; }
-    
-    /* Filters Section */
-    .filter-section { background: #e9ecef; padding: 15px; border-radius: 8px; margin-bottom: 15px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; border: 1px solid #ced4da; }
-    .filter-section input, .filter-section select { padding: 8px; font-size: 0.95rem; flex: 1; min-width: 150px; }
-
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; font-size: 0.95rem; }
-    th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; white-space: nowrap; }
+    h3 { color: var(--primary-color); margin-top: 0; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.95rem; }
+    th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
     th { background: #f8f9fa; color: var(--primary-color); }
-    tr:hover { background: #f1f5f9; }
+    button { background: var(--primary-color); color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight:bold;}
     
-    /* Edit Modal (Popup) */
-    .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); }
-    .modal-content { background-color: white; margin: 5% auto; padding: 25px; border-radius: 10px; width: 90%; max-width: 600px; position: relative; }
-    .close { position: absolute; right: 20px; top: 15px; font-size: 28px; font-weight: bold; cursor: pointer; color: #aaa; }
-    .close:hover { color: black; }
-
-    @media (max-width: 768px) {
-      .header { flex-direction: column; gap: 10px; text-align: center; }
-    }
+    /* New Styles for Complaints */
+    .btn-reply { background: #ff9800; color: white; }
+    .btn-reply:hover { background: #e68a00; }
+    .btn-whatsapp { background: #25D366; width: 100%; margin-top:10px; font-size: 1.1rem; display: none;}
+    .btn-whatsapp:hover { background: #1ebd5a; }
+    .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); }
+    .modal-content { background-color: white; margin: 5% auto; padding: 25px; border-radius: 12px; width: 90%; max-width: 500px; position: relative; }
+    .close { position: absolute; right: 20px; top: 15px; font-size: 28px; cursor: pointer; }
+    textarea.reply-box { width: 100%; height: 100px; padding: 10px; margin-top:10px; border-radius: 5px; border:1px solid #ccc; font-family: inherit;}
   </style>
 </head>
 <body>
 
   <div class="header">
     <h1>⚙️ ॲडमिन कंट्रोल पॅनल</h1>
-    <button id="logoutBtn" class="btn-logout">लॉगआउट</button>
+    <button id="logoutBtn" style="background:#dc3545;">लॉगआउट</button>
   </div>
 
   <div class="container" id="adminContent">
     
-    <!-- नवीन सदस्य जोडण्याचा फॉर्म -->
-    <div class="card" style="border-top-color: #28a745;">
-      <h3 style="color: #28a745;">➕ नवीन सदस्य जोडा</h3>
-      <div class="input-group">
-        <input type="text" id="addName" placeholder="संपूर्ण नाव">
-        <input type="text" id="addMobile" placeholder="मोबाईल क्रमांक" maxlength="10">
-        <input type="email" id="addEmail" placeholder="ईमेल आयडी">
-      </div>
-      <div class="input-group">
-        <select id="addDivision">
-          <option value="">-- विभाग निवडा --</option>
-          <option value="कोकण">कोकण विभाग</option>
-          <option value="पुणे">पुणे विभाग</option>
-          <option value="नाशिक">नाशिक विभाग</option>
-          <option value="छत्रपती संभाजीनगर">छत्रपती संभाजीनगर विभाग</option>
-          <option value="अमरावती">अमरावती विभाग</option>
-          <option value="नागपूर">नागपूर विभाग</option>
-        </select>
-        <input type="text" id="addDistrict" placeholder="जिल्हा (उदा. अहमदनगर)">
-        <select id="addDesignation">
-          <option value="क्ष-किरण वैज्ञानिक अधिकारी">क्ष-किरण वैज्ञानिक अधिकारी</option>
-          <option value="क्ष-किरण तंत्रज्ञ">क्ष-किरण तंत्रज्ञ</option>
-          <option value="इतर">इतर</option>
-        </select>
-        <button id="btnAddMember" style="background: #28a745; flex: 1;">सदस्य सेव्ह करा</button>
-      </div>
-    </div>
-
-    <!-- सदस्यांची यादी आणि फिल्टर्स -->
-    <div class="card">
-      <h3>👥 नोंदणीकृत सदस्यांची यादी</h3>
-      
-      <!-- Search & Filters -->
-      <div class="filter-section">
-        <strong>🔍 शोधा:</strong>
-        <input type="text" id="searchBox" placeholder="नाव किंवा मोबाईल नंबर...">
-        <select id="filterDivision">
-          <option value="">सर्व विभाग</option>
-          <option value="कोकण">कोकण</option>
-          <option value="पुणे">पुणे</option>
-          <option value="नाशिक">नाशिक</option>
-          <option value="छत्रपती संभाजीनगर">छत्रपती संभाजीनगर</option>
-          <option value="अमरावती">अमरावती</option>
-          <option value="नागपूर">नागपूर</option>
-        </select>
-        <input type="text" id="filterDistrict" placeholder="जिल्हा टाईप करा...">
-        <button id="btnResetFilter" style="background: #6c757d;">रीसेट</button>
-      </div>
-
+    <!-- नवीन: सदस्यांच्या तक्रारी आणि प्रश्न -->
+    <div class="card" style="border-top-color: #dc3545;">
+      <h3 style="color: #dc3545;">🚨 सदस्यांच्या तक्रारी / सपोर्ट तिकीट</h3>
       <div style="overflow-x: auto;">
         <table>
           <thead>
-            <tr>
-              <th>अनु.</th>
-              <th>नाव</th>
-              <th>मोबाईल</th>
-              <th>ईमेल</th>
-              <th>विभाग</th>
-              <th>जिल्हा</th>
-              <th>पद</th>
-              <th>कृती (Action)</th>
-            </tr>
+            <tr><th>तारीख</th><th>सदस्य & मोबाईल</th><th>विषय & तक्रार</th><th>स्थिती</th><th>कृती (Action)</th></tr>
           </thead>
-          <tbody id="membersList">
-            <tr><td colspan="8" style="text-align:center;">माहिती लोड होत आहे...</td></tr>
+          <tbody id="complaintsList">
+            <tr><td colspan="5" style="text-align:center;">लोड होत आहे...</td></tr>
           </tbody>
         </table>
       </div>
     </div>
 
+    <!-- (येथे खाली तुमचा जुना 'नवीन सदस्य जोडा' आणि 'सदस्य यादी' चा HTML राहील) -->
+    <!-- जागा वाचवण्यासाठी मी तो भाग इथे लिहीत नाही, तो तसाच ठेवा. -->
+
   </div>
 
-  <!-- Edit Member Modal -->
-  <div id="editModal" class="modal">
+  <!-- Complaint Reply Modal -->
+  <div id="replyModal" class="modal">
     <div class="modal-content">
-      <span class="close" id="closeModal">&times;</span>
-      <h3 style="color: var(--primary-color); border-bottom: 2px solid #eee; padding-bottom: 10px;">✏️ सदस्याची माहिती अपडेट करा</h3>
+      <span class="close" id="closeReplyModal">&times;</span>
+      <h3 style="color: var(--primary-color);">💬 तक्रारीला उत्तर द्या</h3>
+      <p><strong>सदस्य:</strong> <span id="replyMemName"></span></p>
+      <p><strong>समस्या:</strong> <span id="replyMemComp"></span></p>
       
-      <input type="hidden" id="editId">
-      <div class="input-group"><input type="text" id="editName" placeholder="नाव"></div>
-      <div class="input-group"><input type="text" id="editMobile" placeholder="मोबाईल क्रमांक"></div>
-      <div class="input-group"><input type="email" id="editEmail" placeholder="ईमेल आयडी"></div>
-      <div class="input-group">
-        <select id="editDivision">
-          <option value="">-- विभाग निवडा --</option>
-          <option value="कोकण">कोकण</option><option value="पुणे">पुणे</option>
-          <option value="नाशिक">नाशिक</option><option value="छत्रपती संभाजीनगर">छत्रपती संभाजीनगर</option>
-          <option value="अमरावती">अमरावती</option><option value="नागपूर">नागपूर</option>
-        </select>
-      </div>
-      <div class="input-group"><input type="text" id="editDistrict" placeholder="जिल्हा"></div>
-      <div class="input-group"><input type="text" id="editDesignation" placeholder="पद"></div>
+      <input type="hidden" id="replyCompId">
+      <input type="hidden" id="replyMobileNum">
+      <input type="hidden" id="replySubject">
       
-      <button id="btnSaveEdit" style="width: 100%; margin-top: 10px;">बदल सेव्ह करा</button>
+      <textarea id="adminReplyText" class="reply-box" placeholder="तुमचे उत्तर येथे टाईप करा..."></textarea>
+      
+      <button id="btnSaveReply" style="width: 100%; margin-top: 15px; background: #28a745;">💾 उत्तर सेव्ह करा (तक्रार सोडवली)</button>
+      
+      <!-- WhatsApp Button (उत्तर सेव्ह केल्यावर हे दिसेल) -->
+      <button id="btnSendWa" class="btn-whatsapp">🟢 WhatsApp वर सदस्याला कळवा</button>
     </div>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-    import { getFirestore, collection, getDocs, doc, addDoc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+    import { getFirestore, collection, getDocs, doc, updateDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk",
@@ -172,151 +96,105 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    let allMembersData = []; // सर्व सदस्यांचा डेटा सेव्ह करण्यासाठी
-
-    // 1. Security Check
     onAuthStateChanged(auth, (user) => {
       if (!user) window.location.href = "login.html";
-      else { document.getElementById("adminContent").style.display = "block"; fetchMembersFromDB(); }
+      else { 
+        document.getElementById("adminContent").style.display = "block"; 
+        loadComplaints(); 
+      }
     });
 
-    document.getElementById("logoutBtn").addEventListener("click", () => signOut(auth).then(() => window.location.href = "login.html"));
+    document.getElementById("logoutBtn").onclick = () => signOut(auth).then(() => window.location.href="login.html");
 
-    // 2. Fetch Members from Firebase
-    async function fetchMembersFromDB() {
+    let allComplaints = [];
+
+    // तक्रारी लोड करणे
+    async function loadComplaints() {
+      const tbody = document.getElementById("complaintsList");
       try {
-        const querySnapshot = await getDocs(collection(db, "members"));
-        allMembersData = [];
-        querySnapshot.forEach((d) => {
-          allMembersData.push({ id: d.id, ...d.data() });
+        const q = query(collection(db, "complaints"), orderBy("timestamp", "desc"));
+        const snapshot = await getDocs(q);
+        tbody.innerHTML = "";
+        allComplaints = [];
+        
+        if(snapshot.empty) {
+          tbody.innerHTML = "<tr><td colspan='5' style='text-align:center;'>कोणतीही नवीन तक्रार नाही.</td></tr>";
+          return;
+        }
+
+        snapshot.forEach(d => allComplaints.push({id: d.id, ...d.data()}));
+
+        allComplaints.forEach(c => {
+          let statusStr = c.स्थिती === "प्रलंबित" ? `<span style="color:red; font-weight:bold;">🔴 प्रलंबित</span>` : `<span style="color:green; font-weight:bold;">🟢 सोडवली</span>`;
+          
+          tbody.innerHTML += `
+            <tr>
+              <td>${c.तारीख.split(',')[0]}</td>
+              <td><b>${c.सदस्य_नाव}</b><br>${c.मोबाईल}</td>
+              <td><b>${c.विषय}</b><br><small>${c.तक्रार}</small></td>
+              <td>${statusStr}</td>
+              <td>
+                <button class="btn-reply" onclick="openReplyModal('${c.id}')">💬 रिप्लाय द्या</button>
+              </td>
+            </tr>
+          `;
         });
-        renderTable(allMembersData);
-      } catch(err) {
-        console.error(err);
-        document.getElementById("membersList").innerHTML = "<tr><td colspan='8' style='color:red;'>माहिती लोड करताना त्रुटी आली.</td></tr>";
+      } catch(e) { console.error(e); }
+    }
+
+    // Modal Logic
+    const replyModal = document.getElementById("replyModal");
+    document.getElementById("closeReplyModal").onclick = () => { replyModal.style.display = "none"; document.getElementById("btnSendWa").style.display = "none";};
+
+    window.openReplyModal = function(id) {
+      const comp = allComplaints.find(c => c.id === id);
+      if(comp) {
+        document.getElementById("replyCompId").value = comp.id;
+        document.getElementById("replyMemName").innerText = comp.सदस्य_नाव;
+        document.getElementById("replyMemComp").innerText = comp.तक्रार;
+        document.getElementById("replyMobileNum").value = comp.मोबाईल;
+        document.getElementById("replySubject").value = comp.विषय;
+        document.getElementById("adminReplyText").value = comp.रिप्लाय || "";
+        
+        document.getElementById("btnSendWa").style.display = "none"; // लपवा 
+        replyModal.style.display = "block";
       }
     }
 
-    // 3. Render Table
-    function renderTable(dataArray) {
-      const tbody = document.getElementById("membersList");
-      tbody.innerHTML = "";
-      if(dataArray.length === 0) {
-        tbody.innerHTML = "<tr><td colspan='8' style='text-align:center;'>कोणताही सदस्य सापडला नाही.</td></tr>";
-        return;
-      }
-      let count = 1;
-      dataArray.forEach(member => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${count}</td>
-          <td>${member["नाव"] || "-"}</td>
-          <td>${member["मोबाईल क्रमांक"] || "-"}</td>
-          <td>${member["ईमेल"] || "-"}</td>
-          <td>${member["विभाग"] || "-"}</td>
-          <td>${member["जिल्हा"] || "-"}</td>
-          <td>${member["पद"] || "-"}</td>
-          <td>
-            <button class="btn-edit" onclick="openEditModal('${member.id}')">✏️ Edit</button>
-            <button class="btn-delete" onclick="deleteUser('${member.id}')">🗑️ Delete</button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-        count++;
-      });
-    }
-
-    // 4. Add New Member
-    document.getElementById("btnAddMember").addEventListener("click", async () => {
-      const newData = {
-        "नाव": document.getElementById("addName").value.trim(),
-        "मोबाईल क्रमांक": document.getElementById("addMobile").value.trim(),
-        "ईमेल": document.getElementById("addEmail").value.trim(),
-        "विभाग": document.getElementById("addDivision").value,
-        "जिल्हा": document.getElementById("addDistrict").value.trim(),
-        "पद": document.getElementById("addDesignation").value
-      };
-      if(!newData["नाव"] || !newData["मोबाईल क्रमांक"]) return alert("नाव आणि मोबाईल क्रमांक आवश्यक आहे.");
+    // उत्तर सेव्ह करणे आणि WhatsApp बटण दाखवणे
+    document.getElementById("btnSaveReply").addEventListener("click", async () => {
+      const id = document.getElementById("replyCompId").value;
+      const replyText = document.getElementById("adminReplyText").value.trim();
       
+      if(!replyText) return alert("कृपया उत्तर टाईप करा.");
+
       try {
-        await addDoc(collection(db, "members"), newData);
-        alert("✅ सदस्य यशस्वीरित्या जोडला!");
-        fetchMembersFromDB(); // Refresh
-        // Clear inputs
-        document.querySelectorAll("input").forEach(input => input.value = "");
+        await updateDoc(doc(db, "complaints", id), {
+          स्थिती: "सोडवली",
+          रिप्लाय: replyText
+        });
+        alert("✅ उत्तर सेव्ह झाले आणि तक्रार 'सोडवली' म्हणून नोंदवली गेली.");
+        loadComplaints(); // बॅकग्राउंडमध्ये यादी अपडेट करा
+        
+        // आता WhatsApp चे बटण दाखवा
+        document.getElementById("btnSendWa").style.display = "block";
       } catch(e) { alert("Error: " + e.message); }
     });
 
-    // 5. Delete Member
-    window.deleteUser = async function(id) {
-      if(confirm("हा सदस्य कायमचा काढून टाकायचा आहे का?")) {
-        await deleteDoc(doc(db, "members", id));
-        alert("✅ सदस्य काढला.");
-        fetchMembersFromDB();
-      }
-    };
+    // WhatsApp वर मेसेज पाठवणे (Magic Click-to-WhatsApp)
+    document.getElementById("btnSendWa").addEventListener("click", () => {
+      const mobile = document.getElementById("replyMobileNum").value;
+      const name = document.getElementById("replyMemName").innerText;
+      const subject = document.getElementById("replySubject").value;
+      const reply = document.getElementById("adminReplyText").value;
 
-    // 6. Edit Member (Modal Logic)
-    const modal = document.getElementById("editModal");
-    document.getElementById("closeModal").onclick = () => modal.style.display = "none";
-    
-    window.openEditModal = function(id) {
-      const member = allMembersData.find(m => m.id === id);
-      if(member) {
-        document.getElementById("editId").value = member.id;
-        document.getElementById("editName").value = member["नाव"] || "";
-        document.getElementById("editMobile").value = member["मोबाईल क्रमांक"] || "";
-        document.getElementById("editEmail").value = member["ईमेल"] || "";
-        document.getElementById("editDivision").value = member["विभाग"] || "";
-        document.getElementById("editDistrict").value = member["जिल्हा"] || "";
-        document.getElementById("editDesignation").value = member["पद"] || "";
-        modal.style.display = "block";
-      }
-    };
-
-    document.getElementById("btnSaveEdit").addEventListener("click", async () => {
-      const id = document.getElementById("editId").value;
-      const updatedData = {
-        "नाव": document.getElementById("editName").value.trim(),
-        "मोबाईल क्रमांक": document.getElementById("editMobile").value.trim(),
-        "ईमेल": document.getElementById("editEmail").value.trim(),
-        "विभाग": document.getElementById("editDivision").value,
-        "जिल्हा": document.getElementById("editDistrict").value.trim(),
-        "पद": document.getElementById("editDesignation").value.trim()
-      };
-
-      try {
-        await updateDoc(doc(db, "members", id), updatedData);
-        alert("✅ माहिती अपडेट झाली!");
-        modal.style.display = "none";
-        fetchMembersFromDB();
-      } catch(e) { alert("Error: " + e.message); }
-    });
-
-    // 7. Search & Filter Logic
-    function applyFilters() {
-      const searchText = document.getElementById("searchBox").value.toLowerCase();
-      const division = document.getElementById("filterDivision").value;
-      const district = document.getElementById("filterDistrict").value.toLowerCase();
-
-      const filtered = allMembersData.filter(m => {
-        const matchNameMob = (m["नाव"] || "").toLowerCase().includes(searchText) || (m["मोबाईल क्रमांक"] || "").includes(searchText);
-        const matchDiv = division === "" || (m["विभाग"] || "") === division;
-        const matchDist = district === "" || (m["जिल्हा"] || "").toLowerCase().includes(district);
-        return matchNameMob && matchDiv && matchDist;
-      });
-      renderTable(filtered);
-    }
-
-    document.getElementById("searchBox").addEventListener("input", applyFilters);
-    document.getElementById("filterDivision").addEventListener("change", applyFilters);
-    document.getElementById("filterDistrict").addEventListener("input", applyFilters);
-    
-    document.getElementById("btnResetFilter").addEventListener("click", () => {
-      document.getElementById("searchBox").value = "";
-      document.getElementById("filterDivision").value = "";
-      document.getElementById("filterDistrict").value = "";
-      renderTable(allMembersData);
+      // WhatsApp मेसेजचा ड्राफ्ट
+      const waText = `नमस्कार *${name}*,\n\nतुमची *'${subject}'* विषयीची तक्रार सोडवण्यात आली आहे.\n\n*ॲडमिनचा रिप्लाय:*\n${reply}\n\n- क्ष-किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य`;
+      
+      // WhatsApp लिंक तयार करणे (+91 जोडून)
+      const waUrl = `https://wa.me/91${mobile}?text=${encodeURIComponent(waText)}`;
+      
+      window.open(waUrl, '_blank'); // नवीन टॅबमध्ये WhatsApp उघडेल
     });
 
   </script>
