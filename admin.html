@@ -1,4 +1,4 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="mr">
 <head>
   <meta charset="UTF-8">
@@ -26,9 +26,7 @@
     /* ================= MAIN CONTENT ================= */
     .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
     .top-header { background: white; padding: 15px 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; }
-    .ticker-container { flex: 1; margin: 0 20px; background: #fff3cd; color: #856404; padding: 8px 15px; border-radius: 20px; overflow: hidden; border: 1px solid #ffeeba; display: flex; align-items: center; }
-    
-    .content-area { padding: 25px; overflow-y: auto; flex: 1; display: none; }
+    .content-area { padding: 20px 25px; overflow-y: auto; flex: 1; display: none; }
     .content-area.active { display: block; }
 
     /* ================= CARDS & UI ================= */
@@ -38,38 +36,47 @@
     .stat-info h3 { margin: 0; font-size: 1.8rem; }
     
     .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 25px; border-top: 4px solid var(--primary); }
-    .card-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px; }
+    .card-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 15px; }
     
     .input-group { display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 15px; }
-    .input-group label { width: 100%; margin-bottom: -10px; font-weight: bold; color: #555; font-size: 0.9rem; }
-    input[type="text"], input[type="date"], select, input[type="file"], textarea { flex: 1; min-width: 180px; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-family: inherit; }
-    .btn { background: var(--primary); color: white; border: none; padding: 8px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 0.9rem; text-decoration: none; }
-    .btn-success { background: #28a745; } .btn-danger { background: #dc3545; } .btn-warning { background: #ffc107; color: black; } .btn-info { background: #17a2b8; }
+    input[type="text"], input[type="email"], select, textarea { flex: 1; min-width: 150px; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-family: inherit; font-size: 0.9rem; }
     
-    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-    th, td { padding: 10px; text-align: left; border-bottom: 1px solid #ddd; white-space: nowrap; }
-    th { background: #f8f9fa; color: var(--primary); }
-    tr:hover { background: #f1f5f9; }
+    .btn { border: none; padding: 8px 12px; border-radius: 4px; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; font-size: 0.85rem; transition: 0.2s; color: white; }
+    .btn:hover { opacity: 0.85; }
+    .btn-primary { background: var(--primary); }
+    .btn-success { background: #28a745; } 
+    .btn-danger { background: #dc3545; } 
+    .btn-info { background: #17a2b8; }
+    .btn-warning { background: #ffc107; color: #000; }
+    .btn-secondary { background: #6c757d; }
+
+    /* ================= FILTER BAR (Like Image) ================= */
+    .filter-bar { background: #f8f9fa; border: 1px solid #ddd; padding: 12px; border-radius: 6px; display: flex; gap: 15px; margin-bottom: 15px; align-items: center; }
+    .filter-bar input, .filter-bar select { border: 1px solid #ccc; padding: 8px 12px; border-radius: 4px; font-size: 0.9rem; outline: none; }
     
-    .badge-paid { background: #d4edda; color: #155724; padding: 5px 10px; border-radius: 15px; font-weight: bold; font-size: 0.8rem; }
-    .badge-unpaid { background: #f8d7da; color: #721c24; padding: 5px 10px; border-radius: 15px; font-weight: bold; font-size: 0.8rem; }
+    /* ================= CLASSIC TABLE (Like Image) ================= */
+    .table-container { overflow-x: auto; border: 1px solid #eaeaea; border-radius: 6px; background: white; }
+    .classic-table { width: 100%; border-collapse: collapse; text-align: left; }
+    .classic-table th { background: #f1f5f9; color: var(--primary); padding: 12px 10px; font-size: 0.85rem; font-weight: bold; border-bottom: 2px solid #ddd; white-space: nowrap; }
+    .classic-table td { padding: 10px; border-bottom: 1px solid #eee; font-size: 0.85rem; color: #333; vertical-align: middle; white-space: nowrap; }
+    .classic-table tr:hover { background: #f9f9f9; }
+    
+    /* Small Action Buttons (Like Image) */
+    .action-btn { padding: 5px 10px; font-size: 0.75rem; border-radius: 4px; border: none; cursor: pointer; color: white; display: inline-flex; align-items: center; gap: 4px; font-weight: bold; }
+    .btn-view { background: #17a2b8; }
+    .btn-edit { background: #ffc107; color: #000; }
+    .btn-del { background: #dc3545; }
 
-    /* Modals */
-    .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); }
-    .modal-content { background: white; margin: 5% auto; padding: 25px; border-radius: 12px; width: 90%; max-width: 600px; position: relative; }
-    .close { position: absolute; right: 20px; top: 15px; font-size: 28px; cursor: pointer; color: #aaa; }
-
-    /* Print */
+    /* Print Setup */
     @media print {
-      @page { size: landscape; margin: 15mm; }
+      @page { size: landscape; margin: 10mm; }
       body { background: white; }
-      .sidebar, .top-header, .card-header, .input-group, .no-print { display: none !important; }
+      .sidebar, .top-header, .filter-bar, .no-print, .card-header button { display: none !important; }
       .main-content { overflow: visible !important; height: auto !important; }
       .content-area { display: none !important; }
-      #tab-members, #tab-finance { display: block !important; padding: 0 !important; margin-bottom: 20px; }
-      .card { box-shadow: none; border: none; padding: 0; }
-      table { width: 100%; border-collapse: collapse; }
-      th, td { border: 1px solid #000 !important; color: #000 !important; }
+      #tab-members { display: block !important; padding: 0 !important; }
+      .card { box-shadow: none; border: none; padding: 0; border-top: none; }
+      .classic-table th, .classic-table td { border: 1px solid #000 !important; }
     }
   </style>
 </head>
@@ -80,267 +87,277 @@
     <div class="sidebar-header"><h2><i class="fa-solid fa-user-shield"></i> सुपर ॲडमिन</h2></div>
     <div class="sidebar-menu">
       <div class="menu-item active" onclick="showTab('tab-dashboard')"><i class="fa-solid fa-chart-pie"></i> डॅशबोर्ड</div>
-      <div class="menu-item" onclick="showTab('tab-members')"><i class="fa-solid fa-users"></i> सदस्य व्यवस्थापन</div>
-      <div class="menu-item" onclick="showTab('tab-finance')"><i class="fa-solid fa-indian-rupee-sign"></i> वर्गणी व आर्थिक <span style="background:red; color:white; padding:2px 6px; border-radius:10px; font-size:0.7rem; margin-left:5px;">New</span></div>
-      <div class="menu-item" onclick="showTab('tab-events')"><i class="fa-solid fa-calendar-check"></i> इव्हेंट / अहवाल <span style="background:red; color:white; padding:2px 6px; border-radius:10px; font-size:0.7rem; margin-left:5px;">New</span></div>
+      <div class="menu-item" onclick="showTab('tab-members')"><i class="fa-solid fa-users"></i> सदस्य यादी (Classic)</div>
+      <div class="menu-item" onclick="showTab('tab-finance')"><i class="fa-solid fa-indian-rupee-sign"></i> वर्गणी व आर्थिक</div>
+      <div class="menu-item" onclick="showTab('tab-events')"><i class="fa-solid fa-calendar-check"></i> इव्हेंट / अहवाल</div>
       <div class="menu-item" onclick="showTab('tab-library')"><i class="fa-solid fa-cloud-arrow-up"></i> ई-लायब्ररी अपलोड</div>
-      <div class="menu-item" onclick="showTab('tab-complaints')"><i class="fa-solid fa-triangle-exclamation"></i> तक्रारी / सपोर्ट</div>
     </div>
     <div class="sidebar-footer"><button id="logoutBtn" class="btn btn-danger" style="width:100%;"><i class="fa-solid fa-right-from-bracket"></i> लॉगआउट</button></div>
   </div>
-  <div class="content-area active" id="tab-dashboard">
+
+  <div class="main-content">
+    
+    <div class="top-header no-print"><h3 style="margin:0; color:var(--primary);">क्ष किरण संघटना - ERP पॅनल</h3></div>
+
+    <!-- TAB 1: Dashboard -->
+    <div class="content-area active" id="tab-dashboard">
       <div class="dashboard-stats">
         <div class="stat-card"><div class="stat-icon"><i class="fa-solid fa-users"></i></div><div class="stat-info"><h3 id="statTotalMembers">0</h3><p>अधिकृत सदस्य</p></div></div>
         <div class="stat-card"><div class="stat-icon" style="color: #ffc107;"><i class="fa-solid fa-user-clock"></i></div><div class="stat-info"><h3 id="statPendingMembers">0</h3><p>मंजुरी प्रतीक्षेत</p></div></div>
-        <!-- 💰 New Finance Stat -->
-        <div class="stat-card"><div class="stat-icon" style="color: #28a745; background:#e6f4ea;"><i class="fa-solid fa-wallet"></i></div><div class="stat-info"><h3>₹ <span id="statTotalFunds">0</span></h3><p>एकूण जमा वर्गणी</p></div></div>
-        <div class="stat-card"><div class="stat-icon" style="color: #dc3545;"><i class="fa-solid fa-ticket"></i></div><div class="stat-info"><h3 id="statComplaints">0</h3><p>प्रलंबित तक्रारी</p></div></div>
+        <div class="stat-card"><div class="stat-icon" style="color: #28a745; background:#e6f4ea;"><i class="fa-solid fa-wallet"></i></div><div class="stat-info"><h3>₹ <span id="statTotalFunds">0</span></h3><p>जमा वर्गणी</p></div></div>
       </div>
       <div class="card"><div class="card-header"><h3>मंडळानुसार सदस्य संख्या</h3></div><canvas id="mandalChart" height="80"></canvas></div>
     </div>
 
-    <!-- TAB 2: Members Management -->
+    <!-- TAB 2: Members Management (CLASSIC VIEW as per Image) -->
     <div class="content-area" id="tab-members">
+      
+      <!-- 1. Add New Member (Direct Add) -->
+      <div class="card no-print" style="border-top-color: #28a745; padding-bottom:10px;">
+        <h3 style="color: #28a745; margin-top:0; font-size:1.1rem;"><i class="fa-solid fa-plus"></i> नवीन सदस्य जोडा (थेट मंजुरी)</h3>
+        <div class="input-group">
+          <input type="text" id="dirName" placeholder="संपूर्ण नाव">
+          <input type="text" id="dirMobile" placeholder="मोबाईल क्रमांक" maxlength="10">
+          <input type="email" id="dirEmail" placeholder="ईमेल आयडी">
+        </div>
+        <div class="input-group">
+          <select id="dirMandal">
+            <option value="">-- आरोग्य मंडळ निवडा --</option>
+            <option value="ठाणे">ठाणे</option><option value="पुणे">पुणे</option><option value="नाशिक">नाशिक</option>
+            <option value="कोल्हापूर">कोल्हापूर</option><option value="छत्रपती संभाजीनगर">छत्रपती संभाजीनगर</option>
+            <option value="लातूर">लातूर</option><option value="अकोला">अकोला</option><option value="नागपूर">नागपूर</option>
+          </select>
+          <input type="text" id="dirDistrict" placeholder="जिल्हा (उदा. अहमदनगर)">
+          <select id="dirDesignation">
+            <option value="क्ष-किरण वैज्ञानिक अधिकारी">क्ष-किरण वैज्ञानिक अधिकारी</option>
+            <option value="क्ष-किरण तंत्रज्ञ">क्ष-किरण तंत्रज्ञ</option>
+          </select>
+          <button class="btn btn-success" onclick="addDirectMember()" style="padding:10px 20px;">सदस्य सेव्ह करा</button>
+        </div>
+      </div>
+
       <!-- Pending Table -->
-      <div class="card no-print" id="pendingCard" style="border-top-color: #ffc107;">
-        <div class="card-header"><h3 style="color: #ff9800;">⏳ मंजुरीच्या प्रतीक्षेत</h3></div>
-        <div style="overflow-x: auto;">
-          <table>
-            <thead><tr><th>नाव</th><th>मोबाईल</th><th>मंडळ</th><th>डॉक्युमेंट</th><th>कृती (मंजुरी)</th></tr></thead>
-            <tbody id="pendingMembersList"><tr><td colspan="5">लोड होत आहे...</td></tr></tbody>
+<div class="card no-print" id="pendingCard" style="border-top-color: #ffc107;">
+        <h3 style="color: #ff9800; margin-top:0; font-size:1.1rem;">⏳ मंजुरीच्या प्रतीक्षेत</h3>
+        <div class="table-container">
+          <table class="classic-table">
+            <thead><tr><th>नाव</th><th>मोबाईल</th><th>मंडळ</th><th>डॉक्युमेंट</th><th>कृती</th></tr></thead>
+            <tbody id="pendingMembersList"></tbody>
           </table>
         </div>
       </div>
 
-      <!-- Approved Table -->
+      <!-- 2. Approved Members List -->
       <div class="card" id="approvedCard">
-        <div class="card-header no-print">
-          <h3>👥 अधिकृत सदस्यांची यादी</h3>
-          <div><button onclick="downloadExcel()" class="btn btn-success"><i class="fa-solid fa-file-excel"></i> Excel</button> <button onclick="window.print()" class="btn"><i class="fa-solid fa-print"></i> 🖨️ Print</button></div>
+        <div class="card-header no-print" style="border:none; margin-bottom:0;">
+          <h3 style="color:var(--primary); font-size:1.2rem; margin:0;"><i class="fa-solid fa-users"></i> अधिकृत सदस्यांची यादी (Approved Members)</h3>
+          <div>
+            <button onclick="downloadExcel()" class="btn btn-success"><i class="fa-solid fa-file-excel"></i> Excel</button>
+            <button onclick="window.print()" class="btn btn-secondary"><i class="fa-solid fa-print"></i> Print</button>
+          </div>
         </div>
-        <div class="input-group no-print"><input type="text" id="searchBox" placeholder="🔍 नाव किंवा मोबाईल शोधा..."></div>
-        <div style="overflow-x: auto;">
-          <table id="printTable">
-            <thead><tr><th>अनु.</th><th>नाव</th><th>मोबाईल</th><th>मंडळ</th><th>पद</th><th class="no-print">डॉक्युमेंट</th><th class="no-print">लॉगिन स्थिती</th><th class="no-print">कृती</th></tr></thead>
-            <tbody id="membersList"><tr><td colspan="8">लोड होत आहे...</td></tr></tbody>
+        
+        <!-- Filter Bar -->
+        <div class="filter-bar no-print">
+          <span style="color:#0B3D91; font-weight:bold;"><i class="fa-solid fa-magnifying-glass"></i> शोधा:</span>
+          <input type="text" id="searchName" placeholder="नाव किंवा मोबाईल नंबर..." style="flex:2;" onkeyup="applyFilters()">
+          <select id="searchMandal" style="flex:1;" onchange="applyFilters()">
+            <option value="">सर्व मंडळे</option>
+            <option value="ठाणे">ठाणे</option><option value="पुणे">पुणे</option><option value="नाशिक">नाशिक</option><option value="कोल्हापूर">कोल्हापूर</option><option value="छत्रपती संभाजीनगर">छत्रपती संभाजीनगर</option><option value="लातूर">लातूर</option><option value="अकोला">अकोला</option><option value="नागपूर">नागपूर</option>
+          </select>
+          <input type="text" id="searchDistrict" placeholder="जिल्हा टाईप करा..." style="flex:1;" onkeyup="applyFilters()">
+          <button class="btn btn-secondary" onclick="resetFilters()">रीसेट</button>
+        </div>
+
+        <!-- Classic Table (Like Image) -->
+        <div class="table-container">
+          <table class="classic-table" id="printTable">
+            <thead>
+              <tr>
+                <th>नाव</th>
+                <th>मोबाईल</th>
+                <th>ईमेल</th>
+                <th>मंडळ</th>
+                <th>जिल्हा</th>
+                <th>पद</th>
+                <th class="no-print" style="text-align:center;">कृती (Action)</th>
+              </tr>
+            </thead>
+            <tbody id="membersList"><tr><td colspan="7">लोड होत आहे...</td></tr></tbody>
           </table>
         </div>
       </div>
     </div>
 
-    <!-- TAB 3: 💰 Finance & Subscription (NEW) -->
+    <!-- TAB 3: Finance -->
     <div class="content-area" id="tab-finance">
       <div class="card" style="border-top-color: #28a745;">
-        <div class="card-header">
-          <h3 style="color: #28a745;"><i class="fa-solid fa-indian-rupee-sign"></i> वार्षिक वर्गणी ट्रॅकिंग (२०२६-२७)</h3>
-          <button onclick="window.print()" class="btn no-print"><i class="fa-solid fa-print"></i> रिपोर्ट प्रिंट करा</button>
-        </div>
-        <p class="no-print">सदस्यांची वार्षिक फी (रु. ५००/-) भरल्याची नोंद येथे करा. ज्यांची बाकी आहे त्यांना WhatsApp मेसेज पाठवा.</p>
-        
-        <div style="overflow-x: auto;">
-          <table>
-            <thead>
-              <tr><th>नाव</th><th>मोबाईल</th><th>मंडळ</th><th>फी स्थिती</th><th>तारीख</th><th class="no-print">कृती (Action)</th></tr>
-            </thead>
-            <tbody id="financeList"><tr><td colspan="6">लोड होत आहे...</td></tr></tbody>
+        <div class="card-header"><h3 style="color: #28a745;"><i class="fa-solid fa-indian-rupee-sign"></i> वर्गणी ट्रॅकिंग</h3></div>
+        <div class="table-container">
+          <table class="classic-table">
+            <thead><tr><th>नाव</th><th>मोबाईल</th><th>फी स्थिती</th><th>कृती</th></tr></thead>
+            <tbody id="financeList"></tbody>
           </table>
         </div>
       </div>
     </div>
 
-    <!-- TAB 4: 📅 Event & Meeting Reports (NEW) -->
+    <!-- TAB 4: Events -->
     <div class="content-area" id="tab-events">
       <div class="card" style="border-top-color: #6f42c1;">
-        <div class="card-header"><h3 style="color: #6f42c1;"><i class="fa-solid fa-calendar-plus"></i> नवीन मीटिंग अहवाल / ठराव जोडा</h3></div>
-        
-        <div class="input-group">
-          <label>मीटिंगचा विषय किंवा ठराव</label>
-          <input type="text" id="eventTitle" placeholder="उदा. राज्यस्तरीय कार्यकारिणी बैठक...">
-          <label>तारीख</label>
-          <input type="date" id="eventDate">
-        </div>
-        <div class="input-group">
-          <label>सविस्तर माहिती / इतिवृत्त (Minutes)</label>
-          <textarea id="eventDesc" rows="3" placeholder="मीटिंगमध्ये काय निर्णय झाले ते येथे लिहा..."></textarea>
-        </div>
-        <button id="btnSaveEvent" class="btn" style="background:#6f42c1;"><i class="fa-solid fa-paper-plane"></i> अहवाल पब्लिश करा</button>
-      </div>
-
-      <div class="card">
-        <h3><i class="fa-solid fa-list"></i> मागील मीटिंग आणि ठराव</h3>
-        <div style="overflow-x: auto;">
-          <table>
-            <thead><tr><th>तारीख</th><th>विषय / ठराव</th><th>माहिती</th><th>कृती</th></tr></thead>
-            <tbody id="eventsList"><tr><td colspan="4">लोड होत आहे...</td></tr></tbody>
-          </table>
-        </div>
+        <div class="card-header"><h3 style="color: #6f42c1;"><i class="fa-solid fa-calendar-plus"></i> नवीन अहवाल जोडा</h3></div>
+        <div class="input-group"><input type="text" id="eventTitle" placeholder="मीटिंगचा विषय"><input type="date" id="eventDate"></div>
+        <div class="input-group"><textarea id="eventDesc" rows="3" placeholder="इतिवृत्त..."></textarea></div>
+        <button id="btnSaveEvent" class="btn" style="background:#6f42c1;">पब्लिश करा</button>
       </div>
     </div>
 
-    <!-- TAB 5: Admin Library Upload -->
+    <!-- TAB 5: Library -->
     <div class="content-area" id="tab-library">
       <div class="card" style="border-top-color: #17a2b8;">
-        <div class="card-header"><h3 style="color: #17a2b8;"><i class="fa-solid fa-cloud-arrow-up"></i> नवीन G.R. किंवा दस्तऐवज अपलोड करा</h3></div>
-        <div class="input-group">
-          <input type="text" id="docTitle" placeholder="दस्तऐवजाचे नाव">
-          <select id="docType"><option value="public">पब्लिक (डाऊनलोड करता येईल)</option><option value="confidential">गोपनीय (फक्त वाचता येईल)</option></select>
-        </div>
-        <div class="input-group"><input type="file" id="docFile" accept=".pdf, image/*"><button id="btnUploadAdminDoc" class="btn btn-info">अपलोड करा</button></div>
+        <div class="card-header"><h3 style="color: #17a2b8;"><i class="fa-solid fa-cloud-arrow-up"></i> G.R. अपलोड करा</h3></div>
+        <div class="input-group"><input type="text" id="docTitle" placeholder="दस्तऐवजाचे नाव"><select id="docType"><option value="public">पब्लिक</option><option value="confidential">गोपनीय</option></select></div>
+        <div class="input-group"><input type="file" id="docFile"><button id="btnUploadAdminDoc" class="btn btn-info">अपलोड</button></div>
         <div id="uploadStatusBox"></div>
       </div>
     </div>
 
-    <!-- TAB 6: Complaints -->
-    <div class="content-area" id="tab-complaints">
-      <div class="card" style="border-top-color: #dc3545;">
-        <div class="card-header"><h3 style="color: #dc3545;">🚨 सदस्यांच्या तक्रारी / सपोर्ट</h3></div>
-        <div style="overflow-x: auto;">
-          <table>
-            <thead><tr><th>तारीख</th><th>सदस्य & मोबाईल</th><th>विषय & तक्रार</th><th>स्थिती</th><th>कृती</th></tr></thead>
-            <tbody id="complaintsList"></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- Modals (Reply to Complaints) -->
-  <div id="replyModal" class="modal">
-    <div class="modal-content"><span class="close" onclick="closeModal('replyModal')">&times;</span>
-      <h3>💬 तक्रारीला उत्तर द्या</h3>
-      <p><b>समस्या:</b> <span id="replyMemComp"></span></p>
-      <input type="hidden" id="replyCompId">
-      <textarea id="adminReplyText" style="width:100%; height:80px; padding:10px;" placeholder="उत्तर टाईप करा..."></textarea>
-      <button id="btnSaveReply" class="btn btn-success" style="width:100%; margin-top:10px;">उत्तर सेव्ह करा</button>
-    </div>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-    import { getFirestore, collection, getDocs, doc, updateDoc, deleteDoc, addDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
-    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-storage.js";
+    import { getFirestore, collection, getDocs, doc, updateDoc, deleteDoc, addDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
     const firebaseConfig = { apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk", authDomain: "xrayunionmah.firebaseapp.com", projectId: "xrayunionmah", storageBucket: "xrayunionmah.firebasestorage.app", messagingSenderId: "763805226978", appId: "1:763805226978:web:6bae81a0b6358b47d88bbb" };
-    const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db = getFirestore(app); const storage = getStorage(app);
+    const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db = getFirestore(app);
 
-    let allMembersData = [], allComplaints = [];
+    let allApprovedMembers = []; // For filtering
 
     window.showTab = function(id) { document.querySelectorAll('.content-area').forEach(t=>t.classList.remove('active')); document.querySelectorAll('.menu-item').forEach(m=>m.classList.remove('active')); document.getElementById(id).classList.add('active'); event.currentTarget.classList.add('active'); }
-    window.closeModal = function(id) { document.getElementById(id).style.display = 'none'; }
-
-    onAuthStateChanged(auth, (user) => { if(!user) window.location.href="login.html"; else { fetchMembersFromDB(); loadComplaints(); loadEvents(); } });
+    
+    onAuthStateChanged(auth, (user) => { if(!user) window.location.href="login.html"; else { fetchMembersFromDB(); } });
     document.getElementById("logoutBtn").onclick = () => signOut(auth).then(()=>window.location.href="login.html");
 
-    // ================= 1. MEMBERS & FINANCE DATA =================
+    // ================= 1. FETCH & ORGANIZE DATA =================
     async function fetchMembersFromDB() {
       const snap = await getDocs(collection(db, "members"));
-      let apprv=[], pend=[], mandalCount={}, totalFunds=0;
+      let apprv=[], pend=[], totalFunds=0, mandalCount={};
+      
       snap.forEach(d => {
-        let m = {id: d.id, ...d.data(), नाव: (d.data().नाव || "")+" "+(d.data().आडनाव || ""), फी_स्थिती: d.data().फी_स्थिती || "बाकी", फी_तारीख: d.data().फी_तारीख || "-"};
+        let raw = d.data();
+        let fName = raw.नाव || ""; let mName = raw.मधले_नाव || raw.मधले || ""; let lName = raw.आडनाव || "";
+        let finalName = `${fName} ${mName} ${lName}`.trim().replace(/\s+/g, ' ');
+        if(finalName === "") finalName = "नाव उपलब्ध नाही";
+
+        let m = {id: d.id, ...raw, पूर्ण_नाव: finalName, ईमेल: raw.ईमेल || "-", जिल्हा: raw.जिल्हा || "-", मंडळ: raw.मंडळ || "-", पद: raw.पद || "-", मोबाईल: raw.मोबाईल_क्रमांक || raw.मोबाईल || "-", फी_स्थिती: raw.फी_स्थिती || "बाकी", स्थिती: raw.स्थिती || "मंजूर"};
+        
         if(m.स्थिती==="प्रलंबित") pend.push(m); 
-        else { 
-          apprv.push(m); 
-          mandalCount[m.मंडळ] = (mandalCount[m.मंडळ] || 0) + 1; 
-          if(m.फी_स्थिती === "जमा") totalFunds += 500; // Rs 500 fee logic
-        }
+        else { apprv.push(m); mandalCount[m.मंडळ] = (mandalCount[m.मंडळ] || 0) + 1; if(m.फी_स्थिती === "जमा") totalFunds += 500; }
       });
-      allMembersData = apprv;
+      
+      allApprovedMembers = apprv; // Save for filter
       document.getElementById("statTotalMembers").innerText = apprv.length; 
       document.getElementById("statPendingMembers").innerText = pend.length;
       document.getElementById("statTotalFunds").innerText = totalFunds;
       
-      renderPending(pend); renderTable(apprv); renderFinanceTable(apprv); updateChart(mandalCount);
+      renderPending(pend); 
+      renderTable(apprv); 
+      renderFinanceTable(apprv);
+      // updateChart(mandalCount); // Optional chart update
     }
 
+    // ================= 2. RENDER TABLES =================
     function renderPending(data) {
-      const pt = document.getElementById("pendingMembersList"); pt.innerHTML = data.length ? "" : "<tr><td colspan='5'>कोणीही प्रलंबित नाही.</td></tr>";
+      const pt = document.getElementById("pendingMembersList"); pt.innerHTML = data.length ? "" : "<tr><td colspan='5' style='text-align:center;'>कोणीही प्रतीक्षेत नाही.</td></tr>";
       data.forEach(m => {
-        let docBtn = m.ओळखपत्र_लिंक ? `<a href="${m.ओळखपत्र_लिंक}" target="_blank" class="btn btn-info btn-sm">📄 पहा</a>` : `<span style="color:red;">❌ नाही</span>`;
-        pt.innerHTML+=`<tr><td><b>${m.नाव}</b></td><td>${m.मोबाईल}</td><td>${m.मंडळ}</td><td>${docBtn}</td><td><button class="btn btn-success btn-sm" onclick="approveMember('${m.id}')">✅ मंजूर करा</button></td></tr>`;
+        let docBtn = m.ओळखपत्र_लिंक ? `<a href="${m.ओळखपत्र_लिंक}" target="_blank" style="color:blue;">पहा</a>` : `-`;
+        pt.innerHTML += `<tr><td>${m.पूर्ण_नाव}</td><td>${m.मोबाईल}</td><td>${m.मंडळ}</td><td>${docBtn}</td><td><button class="btn btn-success btn-sm" onclick="approveMember('${m.id}')">✅ मंजूर</button></td></tr>`;
       });
     }
 
     function renderTable(data) {
-      const tb = document.getElementById("membersList"); tb.innerHTML = data.length ? "" : "<tr><td colspan='8'>डेटा नाही.</td></tr>";
-      data.forEach((m,i) => {
-        let accBtn = m.अॅक्सेस==="बंद" ? `<button class="btn btn-danger btn-sm" onclick="toggleAccess('${m.id}','चालू')">🚫 बंद</button>` : `<button class="btn btn-success btn-sm" onclick="toggleAccess('${m.id}','बंद')">✅ चालू</button>`;
-        let docBtn = m.ओळखपत्र_लिंक ? `<a href="${m.ओळखपत्र_लिंक}" target="_blank" style="color:blue;">📄 पहा</a>` : `-`;
-        tb.innerHTML+=`<tr><td>${i+1}</td><td><b>${m.नाव}</b></td><td>${m.मोबाईल}</td><td>${m.मंडळ}</td><td>${m.पद}</td><td class="no-print">${docBtn}</td><td class="no-print">${accBtn}</td><td class="no-print"><button class="btn btn-danger btn-sm" onclick="deleteUser('${m.id}')">🗑️</button></td></tr>`;
-      });
-    }
-
-    window.approveMember = async (id) => { if(confirm("मंजुरी द्यायची?")) { await updateDoc(doc(db,"members",id),{स्थिती:"मंजूर", अॅक्सेस:"चालू", फी_स्थिती:"बाकी"}); fetchMembersFromDB(); } };
-    window.toggleAccess = async (id,st) => { if(confirm(`लॉगिन ${st} करायचे?`)) { await updateDoc(doc(db,"members",id),{अॅक्सेस:st}); fetchMembersFromDB(); } };
-    window.deleteUser = async (id) => { if(confirm("डिलीट करायचा?")) { await deleteDoc(doc(db,"members",id)); fetchMembersFromDB(); } };
-
-    // ================= 2. FINANCE LOGIC =================
-    function renderFinanceTable(data) {
-      const ft = document.getElementById("financeList"); ft.innerHTML = data.length ? "" : "<tr><td colspan='6'>माहिती नाही.</td></tr>";
+      const tb = document.getElementById("membersList"); tb.innerHTML = data.length ? "" : "<tr><td colspan='7' style='text-align:center;'>डेटा नाही.</td></tr>";
       data.forEach(m => {
-        let statusBadge = m.फी_स्थिती === "जमा" ? `<span class="badge-paid">✅ जमा (रु. ५००)</span>` : `<span class="badge-unpaid">🔴 बाकी</span>`;
-        let actionBtn = m.फी_स्थिती === "जमा" 
-          ? `<button class="btn btn-sm" style="background:#6c757d; cursor:not-allowed;" disabled>जमा झाली</button>` 
-          : `<button class="btn btn-success btn-sm" onclick="markFeePaid('${m.id}')">💰 फी जमा करा</button> <button class="btn btn-sm" style="background:#25d366;" onclick="sendWhatsAppReminder('${m.मोबाईल}','${m.नाव}')"><i class="fa-brands fa-whatsapp"></i> रिमाइंडर</button>`;
-        
-        ft.innerHTML += `<tr><td><b>${m.नाव}</b></td><td>${m.मोबाईल}</td><td>${m.मंडळ}</td><td>${statusBadge}</td><td>${m.फी_तारीख}</td><td class="no-print">${actionBtn}</td></tr>`;
+        tb.innerHTML += `
+          <tr>
+            <td style="color:#0B3D91; font-weight:bold;">${m.पूर्ण_नाव}</td>
+            <td style="color:#0056b3; font-weight:bold;">${m.मोबाईल}</td>
+            <td>${m.ईमेल}</td>
+            <td>${m.मंडळ}</td>
+            <td>${m.जिल्हा}</td>
+            <td>${m.पद}</td>
+            <td class="no-print" style="text-align:center; white-space:nowrap;">
+              <button class="action-btn btn-view" onclick="viewUser('${m.id}')"><i class="fa-solid fa-eye"></i> View</button>
+              <button class="action-btn btn-edit" onclick="editUser('${m.id}')"><i class="fa-solid fa-pen"></i> Edit</button>
+              <button class="action-btn btn-del" onclick="deleteUser('${m.id}')"><i class="fa-solid fa-trash"></i> Delete</button>
+            </td>
+          </tr>`;
       });
     }
 
-    window.markFeePaid = async (id) => {
-      if(confirm("या सदस्याची रु. ५००/- फी जमा झाल्याची नोंद करायची?")) {
-        const dateStr = new Date().toLocaleDateString('mr-IN');
-        await updateDoc(doc(db,"members",id),{फी_स्थिती:"जमा", फी_तारीख: dateStr}); 
-        fetchMembersFromDB();
-      }
-    };
+    // ================= 3. FILTER LOGIC =================
+    window.applyFilters = () => {
+      let sName = document.getElementById("searchName").value.toLowerCase();
+      let sMandal = document.getElementById("searchMandal").value;
+      let sDist = document.getElementById("searchDistrict").value.toLowerCase();
+      
+      let filtered = allApprovedMembers.filter(m => {
+        let matchName = m.पूर्ण_नाव.toLowerCase().includes(sName) || m.मोबाईल.includes(sName);
+        let matchMandal = sMandal === "" || m.मंडळ === sMandal;
+        let matchDist = sDist === "" || m.जिल्हा.toLowerCase().includes(sDist);
+        return matchName && matchMandal && matchDist;
+      });
+      renderTable(filtered);
+    }
     
-    window.sendWhatsAppReminder = (mobile, name) => {
-      let msg = `सप्रेम नमस्कार ${name} साहेब,\n\nक्ष-किरण संघटनेची या वर्षाची वर्गणी फी (रु. ५००/-) भरणे बाकी आहे. कृपया लवकरात लवकर फी जमा करावी ही विनंती.\n- ॲडमिन, क्ष किरण संघटना`;
-      window.open(`https://wa.me/91${mobile}?text=${encodeURIComponent(msg)}`, '_blank');
+    window.resetFilters = () => {
+      document.getElementById("searchName").value = "";
+      document.getElementById("searchMandal").value = "";
+      document.getElementById("searchDistrict").value = "";
+      renderTable(allApprovedMembers);
+    }
+
+    // ================= 4. DIRECT ADD MEMBER =================
+    window.addDirectMember = async () => {
+      let n = document.getElementById("dirName").value; let m = document.getElementById("dirMobile").value;
+      let e = document.getElementById("dirEmail").value; let md = document.getElementById("dirMandal").value;
+      let d = document.getElementById("dirDistrict").value; let p = document.getElementById("dirDesignation").value;
+      
+      if(!n || !m || !md) return alert("किमान नाव, मोबाईल आणि मंडळ टाकणे आवश्यक आहे.");
+      
+      try {
+        await addDoc(collection(db, "members"), {
+          नाव: n, मोबाईल_क्रमांक: m, ईमेल: e, मंडळ: md, जिल्हा: d, पद: p, स्थिती: "मंजूर", अॅक्सेस: "चालू"
+        });
+        alert("✅ नवीन सदस्य थेट मंजूर झाला!");
+        document.getElementById("dirName").value=""; document.getElementById("dirMobile").value=""; 
+        document.getElementById("dirDistrict").value=""; fetchMembersFromDB();
+      } catch(er) { alert("❌ चूक झाली"); console.error(er); }
+    }
+
+    // Action Buttons
+    window.approveMember = async (id) => { if(confirm("मंजुरी द्यायची?")) { await updateDoc(doc(db,"members",id),{स्थिती:"मंजूर"}); fetchMembersFromDB(); } };
+    window.deleteUser = async (id) => { if(confirm("सदस्य डिलीट करायचा?")) { await deleteDoc(doc(db,"members",id)); fetchMembersFromDB(); } };
+    window.viewUser = (id) => { alert("येथे सदस्याची सविस्तर माहिती उघडेल. (Next Update)"); };
+    window.editUser = (id) => { alert("येथे सदस्याची माहिती एडिट करता येईल. (Next Update)"); };
+
+    // Excel & Finance Logic
+    window.downloadExcel = () => {
+      let data = allApprovedMembers.map((m,i)=>({"Sr":i+1, "Name":m.पूर्ण_नाव, "Mobile":m.मोबाईल, "Email":m.ईमेल, "Mandal":m.मंडळ, "District":m.जिल्हा, "Post":m.पद}));
+      let ws = XLSX.utils.json_to_sheet(data); let wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Members"); XLSX.writeFile(wb, "Members_List.xlsx");
     };
 
-    // ================= 3. EVENTS & MEETINGS LOGIC =================
-    document.getElementById("btnSaveEvent").onclick = async () => {
-      const title = document.getElementById("eventTitle").value.trim();
-      const date = document.getElementById("eventDate").value;
-      const desc = document.getElementById("eventDesc").value.trim();
-      
-      if(!title || !date || !desc) return alert("सर्व माहिती भरणे आवश्यक आहे.");
-      
-      await addDoc(collection(db, "events"), { शीर्षक: title, तारीख: date, माहिती: desc, timestamp: Date.now() });
-      alert("✅ अहवाल पब्लिश झाला!");
-      document.getElementById("eventTitle").value = ""; document.getElementById("eventDate").value = ""; document.getElementById("eventDesc").value = "";
-      loadEvents();
-    };
-
-    async function loadEvents() {
-      const snap = await getDocs(query(collection(db, "events"), orderBy("timestamp", "desc")));
-      const tb = document.getElementById("eventsList"); tb.innerHTML="";
-      snap.forEach(d => {
-        let e = d.data();
-        tb.innerHTML += `<tr><td>${e.तारीख}</td><td><b>${e.शीर्षक}</b></td><td><div style="max-width:300px; white-space:normal; font-size:0.85rem;">${e.माहिती}</div></td><td><button class="btn btn-danger btn-sm" onclick="deleteEvent('${d.id}')">डिलीट</button></td></tr>`;
+    function renderFinanceTable(data) {
+      const ft = document.getElementById("financeList"); ft.innerHTML = data.length ? "" : "<tr><td colspan='4'>डेटा नाही.</td></tr>";
+      data.forEach(m => {
+        let st = m.फी_स्थिती === "जमा" ? `<span style="color:green;font-weight:bold;">✅ जमा</span>` : `<span style="color:red;font-weight:bold;">🔴 बाकी</span>`;
+        let act = m.फी_स्थिती === "जमा" ? `-` : `<button class="btn btn-success btn-sm" onclick="markFeePaid('${m.id}')">💰 फी जमा करा</button>`;
+        ft.innerHTML += `<tr><td>${m.पूर्ण_नाव}</td><td>${m.मोबाईल}</td><td>${st}</td><td>${act}</td></tr>`;
       });
     }
-    window.deleteEvent = async (id) => { if(confirm("अहवाल डिलीट करायचा?")) { await deleteDoc(doc(db,"events",id)); loadEvents(); } };
+    window.markFeePaid = async (id) => { if(confirm("फी जमा करायची?")) { await updateDoc(doc(db,"members",id),{फी_स्थिती:"जमा"}); fetchMembersFromDB(); } };
 
-    // ================= OTHERS (Library, Complaints, Excel) =================
-    document.getElementById("btnUploadAdminDoc").addEventListener("click", async () => { /* Same as before... */ });
-    async function loadComplaints() { /* Same as before... */ }
-    window.downloadExcel = () => { /* Same as before... */ };
-    let chart; function updateChart(data) { /* Same Chart Logic */ }
   </script>
 </body>
 </html>
-  <div class="main-content">
-    
-    <!-- Top Header -->
-    <div class="top-header no-print">
-      <h3 style="margin:0; color:var(--primary);">क्ष किरण संघटना - ERP पॅनल</h3>
-      <div class="ticker-container" id="liveTickerContainer">
-        <i class="fa-solid fa-bolt"></i><div class="ticker-text" id="liveTickerText">नवीन सूचना अपडेट केलेली नाही...</div>
-      </div>
-    </div>
-
-    <!-- TAB 1: Dashboard -->
