@@ -45,8 +45,6 @@
   <div class="card">
     <div class="filters">
       <input type="text" id="nameFilter" onkeyup="filterTable()" placeholder="नाव शोधा...">
-      <input type="text" id="distFilter" onkeyup="filterTable()" placeholder="जिल्हा शोधा...">
-      <input type="text" id="divFilter" onkeyup="filterTable()" placeholder="विभाग शोधा...">
     </div>
     <div id="usersList" style="overflow-x:auto;"></div>
   </div>
@@ -81,12 +79,14 @@
     const snap = await getDocs(collection(db, "members"));
     document.getElementById("memberCount").textContent = snap.size;
     
-    let html = '<table id="memberTable"><tr><th>नाव</th><th>रुग्णालय/पत्ता</th><th>मोबाईल</th><th>Action</th></tr>';
+    let html = '<table id="memberTable"><tr><th>पूर्ण नाव</th><th>रुग्णालय/पत्ता</th><th>मोबाईल</th><th>Action</th></tr>';
     snap.forEach(d => {
       const data = d.data();
+      // नाव पूर्ण दिसण्यासाठी दोन्ही फील्ड तपासली आहेत
+      const fullName = data["पूर्ण नाव"] || data["नाव"] || "N/A";
       html += `<tr class="user-row">
-        <td class="col-name">${data["नाव"] || ''}</td>
-        <td class="col-dist">${data["कार्यरत रुग्णालयाचे नाव व पत्ता"] || ''}</td>
+        <td class="col-name">${fullName}</td>
+        <td>${data["कार्यरत रुग्णालयाचे नाव व पत्ता"] || ''}</td>
         <td>${data["मोबाईल क्रमांक"] || ''}</td>
         <td><button class="btn-del" onclick="deleteMember('${d.id}')">Delete</button></td>
       </tr>`;
@@ -107,7 +107,7 @@
   window.printTable = () => {
     const divContents = document.getElementById("usersList").innerHTML;
     const printWindow = window.open('', '', 'height=600,width=800');
-    printWindow.document.write('<html><body><h2>सदस्य यादी</h2>' + divContents + '</body></html>');
+    printWindow.document.write('<html><head><style>table {width:100%; border-collapse:collapse;} th, td {border:1px solid #000; padding:8px;}</style></head><body><h2>सदस्य यादी</h2>' + divContents + '</body></html>');
     printWindow.document.close();
     printWindow.print();
   };
