@@ -65,7 +65,7 @@
       <div style="overflow-x: auto;">
         <table>
           <thead>
-            <tr><th>नाव</th><th>मोबाईल</th><th>ईमेल</th><th>विभाग</th><th>कृती (Approve / Reject)</th></tr>
+            <tr><th>नाव</th><th>मोबाईल</th><th>ईमेल</th><th>मंडळ</th><th>कृती (Approve / Reject)</th></tr>
           </thead>
           <tbody id="pendingMembersList">
             <tr><td colspan="5" style="text-align:center;">लोड होत आहे...</td></tr>
@@ -89,7 +89,7 @@
       </div>
     </div>
 
-    <!-- ३. नवीन सदस्य जोडण्याचा फॉर्म (ॲडमिन स्वतः ॲड करेल ते डायरेक्ट Approved असतील) -->
+    <!-- ३. नवीन सदस्य जोडण्याचा फॉर्म -->
     <div class="card" style="border-top-color: #28a745;">
       <h3 style="color: #28a745;">➕ नवीन सदस्य जोडा (थेट मंजुरी)</h3>
       <div class="input-group">
@@ -98,11 +98,17 @@
         <input type="email" id="addEmail" placeholder="ईमेल आयडी">
       </div>
       <div class="input-group">
-        <select id="addDivision">
-          <option value="">-- विभाग निवडा --</option>
-          <option value="कोकण">कोकण</option><option value="पुणे">पुणे</option>
-          <option value="नाशिक">नाशिक</option><option value="छत्रपती संभाजीनगर">छत्रपती संभाजीनगर</option>
-          <option value="अमरावती">अमरावती</option><option value="नागपूर">नागपूर</option>
+        <!-- मंडळ निवड -->
+        <select id="addMandal">
+          <option value="">-- आरोग्य मंडळ निवडा --</option>
+          <option value="ठाणे">ठाणे मंडळ</option>
+          <option value="पुणे">पुणे मंडळ</option>
+          <option value="नाशिक">नाशिक मंडळ</option>
+          <option value="कोल्हापूर">कोल्हापूर मंडळ</option>
+          <option value="छत्रपती संभाजीनगर">छत्रपती संभाजीनगर मंडळ</option>
+          <option value="लातूर">लातूर मंडळ</option>
+          <option value="अकोला">अकोला मंडळ</option>
+          <option value="नागपूर">नागपूर मंडळ</option>
         </select>
         <input type="text" id="addDistrict" placeholder="जिल्हा (उदा. अहमदनगर)">
         <select id="addDesignation">
@@ -121,11 +127,16 @@
       <div class="filter-section">
         <strong>🔍 शोधा:</strong>
         <input type="text" id="searchBox" placeholder="नाव किंवा मोबाईल नंबर...">
-        <select id="filterDivision">
-          <option value="">सर्व विभाग</option>
-          <option value="कोकण">कोकण</option><option value="पुणे">पुणे</option>
-          <option value="नाशिक">नाशिक</option><option value="छत्रपती संभाजीनगर">छत्रपती संभाजीनगर</option>
-          <option value="अमरावती">अमरावती</option><option value="नागपूर">नागपूर</option>
+        <select id="filterMandal">
+          <option value="">सर्व मंडळे</option>
+          <option value="ठाणे">ठाणे मंडळ</option>
+          <option value="पुणे">पुणे मंडळ</option>
+          <option value="नाशिक">नाशिक मंडळ</option>
+          <option value="कोल्हापूर">कोल्हापूर मंडळ</option>
+          <option value="छत्रपती संभाजीनगर">छत्रपती संभाजीनगर मंडळ</option>
+          <option value="लातूर">लातूर मंडळ</option>
+          <option value="अकोला">अकोला मंडळ</option>
+          <option value="नागपूर">नागपूर मंडळ</option>
         </select>
         <input type="text" id="filterDistrict" placeholder="जिल्हा टाईप करा...">
         <button id="btnResetFilter" style="background: #6c757d;">रीसेट</button>
@@ -139,7 +150,7 @@
               <th>नाव</th>
               <th>मोबाईल</th>
               <th>ईमेल</th>
-              <th>विभाग</th>
+              <th>मंडळ</th>
               <th>जिल्हा</th>
               <th>पद</th>
               <th>कृती (Action)</th>
@@ -180,7 +191,7 @@
         <p><strong>📞 मोबाईल:</strong> <span id="viewMobile"></span></p>
         <p><strong>✉️ ईमेल:</strong> <span id="viewEmail"></span></p>
         <p><strong>🏢 पद:</strong> <span id="viewDesignation"></span></p>
-        <p><strong>📍 विभाग:</strong> <span id="viewDivision"></span></p>
+        <p><strong>📍 मंडळ:</strong> <span id="viewMandal"></span></p>
         <p><strong>📍 जिल्हा:</strong> <span id="viewDistrict"></span></p>
       </div>
       <div style="display: flex; gap: 10px; margin-top: 20px;">
@@ -200,11 +211,16 @@
       <div class="input-group"><input type="text" id="editMobile" placeholder="मोबाईल क्रमांक"></div>
       <div class="input-group"><input type="email" id="editEmail" placeholder="ईमेल आयडी"></div>
       <div class="input-group">
-        <select id="editDivision">
-          <option value="">-- विभाग निवडा --</option>
-          <option value="कोकण">कोकण</option><option value="पुणे">पुणे</option>
-          <option value="नाशिक">नाशिक</option><option value="छत्रपती संभाजीनगर">छत्रपती संभाजीनगर</option>
-          <option value="अमरावती">अमरावती</option><option value="नागपूर">नागपूर</option>
+        <select id="editMandal">
+          <option value="">-- आरोग्य मंडळ निवडा --</option>
+          <option value="ठाणे">ठाणे मंडळ</option>
+          <option value="पुणे">पुणे मंडळ</option>
+          <option value="नाशिक">नाशिक मंडळ</option>
+          <option value="कोल्हापूर">कोल्हापूर मंडळ</option>
+          <option value="छत्रपती संभाजीनगर">छत्रपती संभाजीनगर मंडळ</option>
+          <option value="लातूर">लातूर मंडळ</option>
+          <option value="अकोला">अकोला मंडळ</option>
+          <option value="नागपूर">नागपूर मंडळ</option>
         </select>
       </div>
       <div class="input-group"><input type="text" id="editDistrict" placeholder="जिल्हा"></div>
@@ -328,7 +344,6 @@
 
         querySnapshot.forEach((d) => { 
           let memberData = { id: d.id, ...d.data() };
-          // जर 'स्थिती' प्रलंबित असेल तर Pending मध्ये, अन्यथा Approved मध्ये (जुन्या डेटासाठी)
           if(memberData.स्थिती === "प्रलंबित") {
             pendingMembers.push(memberData);
           } else {
@@ -336,7 +351,7 @@
           }
         });
 
-        allMembersData = approvedMembers; // For filters
+        allMembersData = approvedMembers; 
         renderPendingTable(pendingMembers);
         renderTable(approvedMembers);
       } catch(err) {
@@ -358,7 +373,7 @@
             <td><b>${member["नाव"] || "-"}</b></td>
             <td>${member["मोबाईल क्रमांक"] || "-"}</td>
             <td>${member["ईमेल"] || "-"}</td>
-            <td>${member["विभाग"] || "-"}</td>
+            <td>${member["मंडळ"] || "-"}</td>
             <td>
               <button class="btn-approve" onclick="approveMember('${member.id}')">✅ मंजूर करा</button>
               <button class="btn-delete" onclick="deleteUser('${member.id}')">❌ नाकारा</button>
@@ -368,7 +383,6 @@
       });
     }
 
-    // Approve Member Function
     window.approveMember = async function(id) {
       if(confirm("या सदस्याला अधिकृत मंजुरी द्यायची आहे का?")) {
         try {
@@ -400,10 +414,5 @@
             <td><b>${member["नाव"] || "-"}</b></td>
             <td>${mobLink}</td>
             <td>${emailLink}</td>
-            <td>${member["विभाग"] || "-"}</td>
+            <td>${member["मंडळ"] || "-"}</td>
             <td>${member["जिल्हा"] || "-"}</td>
-            <td>${member["पद"] || "-"}</td>
-            <td>
-              <button class="btn-view" onclick="openViewModal('${member.id}')">👁️ View</button>
-              <button class="btn-edit" onclick="openEditModal('${member.id}')">✏️ Edit</button>
-              <button class="btn-delete" onclick="deleteUser('${member.id}')">🗑️ Delete</butt
