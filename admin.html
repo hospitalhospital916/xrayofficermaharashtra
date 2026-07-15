@@ -2,132 +2,102 @@
 <html lang="mr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Panel - X-ray Union</title>
   <style>
-    :root { --primary-blue:#0B3D91; --gold:#FFD700; }
-    body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#f4f7f6;color:#333}
-    .wrap{max-width:1100px;margin:30px auto;padding:20px}
-    .card{background:#fff;border-radius:12px;box-shadow:0 8px 22px rgba(0,0,0,.12);padding:24px;margin-bottom:18px}
-    input,textarea{width:100%;padding:12px;border:1px solid #cfd7e3;border-radius:8px;font-size:15px;margin:8px 0 14px}
-    button{border:0;border-radius:8px;padding:10px 16px;cursor:pointer;font-weight:600}
-    .btn{background:var(--primary-blue);color:#fff}
-    .btn2{background:#e8eef8;color:#0B3D91;margin-top:5px}
-    .hidden{display:none}
-    .row{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
-    .box{background:#f8fbff;border:1px solid #dde8ff;border-radius:10px;padding:16px;margin-bottom:10px}
-    .top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
-    .badge{background:#eef4ff;color:#0B3D91;padding:6px 10px;border-radius:999px;font-size:13px}
-    .err{color:#b00020;margin-top:10px}
-    .ok{color:#0a7a2f;margin-top:10px}
+    body { font-family: Arial, sans-serif; background: #f4f7f6; padding: 20px; }
+    .card { background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); margin-bottom: 20px; }
+    input, button { padding: 10px; margin: 5px; }
+    .hidden { display: none; }
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+    th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+    th { background-color: #0B3D91; color: white; }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="card top">
-      <div><h2>Admin Panel</h2><div id="status" class="badge">Checking...</div></div>
-      <a href="index.html">← Home</a>
-    </div>
 
-    <div id="loginBox" class="card hidden">
-      <h3>Admin Login</h3>
-      <input id="email" type="email" placeholder="Email">
-      <input id="password" type="password" placeholder="Password">
-      <button class="btn" onclick="login()">Login</button>
-      <div id="msg" class="err"></div>
-    </div>
+<div id="loginBox" class="card">
+  <h3>Admin Login</h3>
+  <input id="email" type="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Password">
+  <button onclick="login()">Login</button>
+  <p id="msg" style="color:red;"></p>
+</div>
 
-    <div id="panelBox" class="hidden">
-      <div class="card">
-        <h3>Quick Actions</h3>
-        <div class="row">
-          <div class="box">
-            <h4>Marquee Text</h4>
-            <textarea id="marqueeText" rows="3"></textarea>
-            <button class="btn" onclick="saveMarquee()">Update News</button>
-            <div id="saveMsg"></div>
-          </div>
-          <div class="box">
-            <h4>Manage Members</h4>
-            <button class="btn2" onclick="loadUsers()">Load & Approve Members</button>
-          </div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="top"><h3>User List</h3><button class="btn2" onclick="logout()">Logout</button></div>
-        <div id="usersList"></div>
-      </div>
-    </div>
-  </div>
+<div id="panelBox" class="hidden" class="card">
+  <h3>सदस्य यादी (Members List)</h3>
+  <button onclick="loadUsers()">सदस्य लोड करा</button>
+  <button onclick="logout()">Logout</button>
+  <input type="text" id="searchInput" onkeyup="filterUsers()" placeholder="नाव किंवा रुग्णालय शोधा...">
+  
+  <div id="usersList"></div>
+</div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-    import { getFirestore, doc, getDoc, setDoc, collection, getDocs, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+  import { getFirestore, collection, getDocs, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk",
-      authDomain: "xrayunionmah.firebaseapp.com",
-      projectId: "xrayunionmah",
-      storageBucket: "xrayunionmah.firebasestorage.app",
-      messagingSenderId: "763805226978",
-      appId: "1:763805226978:web:6bae81a0b6358b47d88bbb",
-      measurementId: "G-EQS6WH6XLF"
-    };
+  const firebaseConfig = {
+    apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk",
+    authDomain: "xrayunionmah.firebaseapp.com",
+    projectId: "xrayunionmah",
+    storageBucket: "xrayunionmah.firebasestorage.app",
+    messagingSenderId: "763805226978",
+    appId: "1:763805226978:web:6bae81a0b6358b47d88bbb"
+  };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
 
-    window.login = async () => {
-      try { await signInWithEmailAndPassword(auth, document.getElementById("email").value, document.getElementById("password").value); }
-      catch (e) { document.getElementById("msg").textContent = e.message; }
-    };
+  window.login = async () => {
+    try { await signInWithEmailAndPassword(auth, document.getElementById("email").value, document.getElementById("password").value); }
+    catch (e) { document.getElementById("msg").textContent = e.message; }
+  };
 
-    window.logout = () => signOut(auth);
+  window.logout = () => signOut(auth);
 
-    window.saveMarquee = async () => {
-      await setDoc(doc(db, "settings", "marquee"), { text: document.getElementById("marqueeText").value }, { merge: true });
-      alert("Updated!");
-    };
-
-    window.loadUsers = async () => {
-      const snap = await getDocs(collection(db, "users"));
-      const listDiv = document.getElementById("usersList");
-      listDiv.innerHTML = "";
-      snap.forEach(d => {
-        const data = d.data();
-        const div = document.createElement("div");
-        div.className = "box";
-        div.innerHTML = `<p><strong>User:</strong> ${data.email}</p>
-                         <p><strong>Status:</strong> ${data.approved ? 'Approved ✅' : 'Pending ⏳'}</p>
-                         ${!data.approved ? <button class="btn" onclick="approveUser('${d.id}')">Approve</button> : ''}`;
-        listDiv.appendChild(div);
-      });
-    };
-
-    window.approveUser = async (uid) => {
-      await updateDoc(doc(db, "users", uid), { approved: true });
-      alert("Member Approved!");
-      loadUsers();
-    };
-
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        const snap = await getDoc(doc(db, "users", user.uid));
-        if (snap.exists() && snap.data().role === "admin") {
-          document.getElementById("loginBox").classList.add("hidden");
-          document.getElementById("panelBox").classList.remove("hidden");
-          document.getElementById("status").textContent = "Admin: " + user.email;
-        } else {
-          document.getElementById("msg").textContent = "Access Denied.";
-          signOut(auth);
-        }
-      } else {
-        document.getElementById("loginBox").classList.remove("hidden");
-        document.getElementById("panelBox").classList.add("hidden");
-      }
+  window.loadUsers = async () => {
+    const snap = await getDocs(collection(db, "members"));
+    let html = <table><tr><th>नाव</th><th>रुग्णालय</th><th>मोबाईल</th><th>Action</th></tr>;
+    snap.forEach(d => {
+      const data = d.data();
+      html += `<tr class="user-row">
+        <td>${data.नाव || ''}</td>
+        <td>${data["कार्यरत रुग्णालयाचे नाव व पत्ता"] || ''}</td>
+        <td>${data["मोबाईल क्रमांक"] || ''}</td>
+        <td><button onclick="deleteMember('${d.id}')">Delete</button></td>
+      </tr>`;
     });
-  </script>
+    html += </table>;
+    document.getElementById("usersList").innerHTML = html;
+  };
+
+  window.deleteMember = async (id) => {
+    if(confirm("डिलीट करायचे का?")) {
+      await deleteDoc(doc(db, "members", id));
+      alert("डिलीट झाले!");
+      loadUsers();
+    }
+  };
+
+  window.filterUsers = () => {
+    const val = document.getElementById("searchInput").value.toLowerCase();
+    const rows = document.getElementsByClassName("user-row");
+    for(let row of rows) {
+      row.style.display = row.innerText.toLowerCase().includes(val) ? "" : "none";
+    }
+  };
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      document.getElementById("loginBox").classList.add("hidden");
+      document.getElementById("panelBox").classList.remove("hidden");
+    } else {
+      document.getElementById("loginBox").classList.remove("hidden");
+      document.getElementById("panelBox").classList.add("hidden");
+    }
+  });
+</script>
 </body>
 </html>
