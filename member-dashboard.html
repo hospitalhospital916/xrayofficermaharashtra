@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>सदस्य डॅशबोर्ड - क्ष किरण संघटना</title>
+  <!-- EmailJS Library -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <style>
+    :root { --primary-color: #0B3D91; --secondary-color: #FFD700; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f7f6; margin: 0; padding: 0; }
+    
+    .header { background: var(--primary-color); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    .header h1 { margin: 0; font-size: 1.5rem; }
+    .btn-logout { background: #dc3545; color: white; border: none; padding: 8px 15px; border-radius: 5px; font-weight: bold; cursor: pointer; }
+    
+    .container { max-width: 900px; margin: 30px auto; padding: 0 20px; }
+    .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 25px; border-top: 5px solid var(--primary-color); }
+    
+    h3 { color: var(--primary-color); margin-top: 0; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+    
+    /* Form Styles */
+    label { font-weight: bold; margin-top: 10px; display: block; color: #555; }
+    select, textarea { width: 100%; padding: 12px; margin-top: 5px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; box-sizing: border-box; font-family: inherit;}
+    textarea { resize: vertical; min-height: 100px; }
+    button.submit-btn { background: #28a745; color: white; border: none; padding: 12px 20px; border-radius: 6px; font-size: 1.1rem; font-weight: bold; cursor: pointer; width: 100%; transition: 0.3s; }
+    button.submit-btn:hover { background: #218838; }
+
+    /* Table Styles */
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.95rem; }
+    th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+    th { background: #f8f9fa; color: var(--primary-color); }
+    .status-pending { color: #dc3545; font-weight: bold; background: #ffeeba; padding: 4px 8px; border-radius: 4px; }
+    .status-resolved { color: #28a745; font-weight: bold; background: #d4edda; padding: 4px 8px; border-radius: 4px; }
+    .admin-reply-box { background: #e9ecef; padding: 10px; border-left: 4px solid #0B3D91; margin-top: 5px; font-size: 0.9rem; border-radius: 4px;}
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>नमस्कार, <span id="headerName">सदस्य</span>!</h1>
+    <button id="logoutBtn" class="btn-logout">लॉगआउट</button>
+  </div>
+
+  <div class="container">
+    
+    <!-- प्रोफाईल माहिती -->
+    <div class="card" style="border-top-color: var(--secondary-color); text-align: center;">
+      <h2 style="color: var(--primary-color); margin:0;">तुमचे प्रोफाईल</h2>
+      <p style="color: green; font-weight: bold; margin-top: 5px;">✅ नोंदणीकृत अधिकृत सदस्य</p>
+      <p><strong>मोबाईल:</strong> <span id="profileMobile">-</span> | <strong>जिल्हा:</strong> <span id="profileDistrict">-</span></p>
+    </div>
+
+    <!-- तक्रार फॉर्म -->
+    <div class="card">
+      <h3>📩 नवीन तक्रार / प्रश्न नोंदवा</h3>
+      <label>तक्रारीचा विषय (Category)</label>
+      <select id="compCategory">
+        <option value="बदली (Transfer) समस्या">बदली (Transfer) समस्या</option>
+        <option value="पगार / भत्ते समस्या">पगार / भत्ते समस्या</option>
+        <option value="प्रशासकीय काम / माहिती अधिकार">प्रशासकीय काम / माहिती अधिकार</option>
+        <option value="वेबसाईट तांत्रिक अडचण">वेबसाईट तांत्रिक अडचण</option>
+        <option value="इतर">इतर</option>
+      </select>
+
+      <label>सविस्तर माहिती लिहा</label>
+      <textarea id="compDesc" placeholder="तुमची समस्या किंवा प्रश्न येथे सविस्तर लिहा..."></textarea>
+
+      <button id="btnSubmitComp" class="submit-btn">तक्रार सबमिट करा</button>
+      <p id="compMsg" style="text-align:center; font-weight:bold; margin-top:10px;"></p>
+    </div>
+
+    <!-- जुन्या तक्रारींची यादी -->
+    <div class="card">
+      <h3>📋 तुमच्या पूर्वीच्या तक्रारी</h3>
+      <div style="overflow-x: auto;">
+        <table>
+          <thead>
+            <tr><th>तारीख</th><th>विषय</th><th>स्थिती</th><th>ॲडमिनचा रिप्लाय</th></tr>
+          </thead>
+          <tbody id="myComplaintsList">
+            <tr><td colspan="4" style="text-align:center;">माहिती लोड होत आहे...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+    import { getFirestore, collection, addDoc, query, where, getDocs, orderBy } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+    // Firebase Init
+    const firebaseConfig = {
+      apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk",
+      authDomain: "xrayunionmah.firebaseapp.com",
+      projectId: "xrayunionmah",
+      storageBucket: "xrayunionmah.firebasestorage.app",
+      messagingSenderId: "763805226978",
+      appId: "1:763805226978:web:6bae81a0b6358b47d88bbb"
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // EmailJS Init (येथे तुमची पब्लिक की टाका नंतर)
+    emailjs.init("YOUR_EMAILJS_PUBLIC_KEY"); 
+
+    // युजर चेक करा
+    const memberDataString = localStorage.getItem("loggedInMember");
+    if (!memberDataString) window.location.href = "member-login.html";
+    const memberData = JSON.parse(memberDataString);
+    
+    document.getElementById("headerName").innerText = memberData["नाव"] || "";
+    document.getElementById("profileMobile").innerText = memberData["मोबाईल क्रमांक"] || "-";
+    document.getElementById("profileDistrict").innerText = memberData["जिल्हा"] || "-";
+
+    document.getElementById("logoutBtn").onclick = () => { localStorage.clear(); window.location.href = "member-login.html"; };
+
+    // तक्रार सबमिट करणे
+    document.getElementById("btnSubmitComp").addEventListener("click", async () => {
+      const category = document.getElementById("compCategory").value;
+      const desc = document.getElementById("compDesc").value.trim();
+      const msgBox = document.getElementById("compMsg");
+
+      if(!desc) return alert("कृपया तुमची समस्या लिहा.");
+      
+      msgBox.innerText = "सबमिट करत आहे... ⏳";
+      msgBox.style.color = "blue";
+      document.getElementById("btnSubmitComp").disabled = true;
+
+      const dateStr = new Date().toLocaleString('mr-IN');
+
+      try {
+        // फायरबेस मध्ये सेव्ह करणे
+        await addDoc(collection(db, "complaints"), {
+          सदस्य_नाव: memberData["नाव"],
+          मोबाईल: memberData["मोबाईल क्रमांक"],
+          विषय: category,
+          तक्रार: desc,
+          तारीख: dateStr,
+          स्थिती: "प्रलंबित", // Pending
+          रिप्लाय: "",
+          timestamp: Date.now()
+        });
+
+        msgBox.innerText = "✅ तुमची तक्रार यशस्वीरित्या ॲडमिनकडे पाठवली गेली आहे!";
+        msgBox.style.color = "green";
+        document.getElementById("compDesc").value = "";
+        
+        loadMyComplaints(); // टेबल रिफ्रेश करा
+
+        // ईमेल पाठवणे (हे बॅकग्राउंड मध्ये होईल)
+        emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
+          admin_email: "tumcha-email@gmail.com", // तुमचा ईमेल
+          member_name: memberData["नाव"],
+          category: category,
+          message: desc
+        });
+
+      } catch(e) {
+        msgBox.innerText = "❌ एरर आला. कृपया पुन्हा प्रयत्न करा.";
+        msgBox.style.color = "red";
+      }
+      document.getElementById("btnSubmitComp").disabled = false;
+    });
+
+    // जुन्या तक्रारी लोड करणे
+    async function loadMyComplaints() {
+      const tbody = document.getElementById("myComplaintsList");
+      try {
+        const q = query(collection(db, "complaints"), where("मोबाईल", "==", memberData["मोबाईल क्रमांक"]));
+        const snapshot = await getDocs(q);
+        
+        tbody.innerHTML = "";
+        if(snapshot.empty) {
+          tbody.innerHTML = "<tr><td colspan='4' style='text-align:center;'>तुम्ही अद्याप कोणतीही तक्रार केलेली नाही.</td></tr>";
+          return;
+        }
+
+        let complaints = [];
+        snapshot.forEach(doc => complaints.push(doc.data()));
+        complaints.sort((a, b) => b.timestamp - a.timestamp); // नवीन वर
+
+        complaints.forEach(c => {
+          let statusBadge = c.स्थिती === "प्रलंबित" ? `<span class="status-pending">🔴 प्रलंबित</span>` : `<span class="status-resolved">🟢 सोडवली</span>`;
+          let replyUI = c.रिप्लाय ? `<div class="admin-reply-box"><b>ॲडमिन:</b> ${c.रिप्लाय}</div>` : `<span style="color:#888;">अद्याप रिप्लाय नाही.</span>`;
+          
+          tbody.innerHTML += `
+            <tr>
+              <td>${c.तारीख.split(',')[0]}</td>
+              <td><b>${c.विषय}</b><br><small>${c.तक्रार}</small></td>
+              <td>${statusBadge}</td>
+              <td>${replyUI}</td>
+            </tr>
+          `;
+        });
+      } catch(e) {
+        tbody.innerHTML = "<tr><td colspan='4' style='color:red;'>डेटा लोड करताना त्रुटी.</td></tr>";
+      }
+    }
+
+    loadMyComplaints();
+  </script>
+</body>
+</html>
