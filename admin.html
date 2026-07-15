@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Panel</title>
+  <title>Admin Panel - X-ray Union</title>
   <style>
     :root { --primary-blue:#0B3D91; --gold:#FFD700; }
     body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#f4f7f6;color:#333}
@@ -12,28 +12,24 @@
     input,textarea{width:100%;padding:12px;border:1px solid #cfd7e3;border-radius:8px;font-size:15px;margin:8px 0 14px}
     button{border:0;border-radius:8px;padding:10px 16px;cursor:pointer;font-weight:600}
     .btn{background:var(--primary-blue);color:#fff}
-    .btn2{background:#e8eef8;color:#0B3D91}
+    .btn2{background:#e8eef8;color:#0B3D91;margin-top:5px}
     .hidden{display:none}
     .row{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
-    .box{background:#f8fbff;border:1px solid #dde8ff;border-radius:10px;padding:16px}
+    .box{background:#f8fbff;border:1px solid #dde8ff;border-radius:10px;padding:16px;margin-bottom:10px}
     .top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
     .badge{background:#eef4ff;color:#0B3D91;padding:6px 10px;border-radius:999px;font-size:13px}
     .err{color:#b00020;margin-top:10px}
     .ok{color:#0a7a2f;margin-top:10px}
-    a{color:var(--primary-blue);text-decoration:none}
   </style>
 </head>
 <body>
   <div class="wrap">
     <div class="card top">
-      <div>
-        <h2>Admin Panel</h2>
-        <div id="status" class="badge">Checking...</div>
-      </div>
+      <div><h2>Admin Panel</h2><div id="status" class="badge">Checking...</div></div>
       <a href="index.html">← Home</a>
     </div>
 
-    <div id="loginBox" class="card">
+    <div id="loginBox" class="card hidden">
       <h3>Admin Login</h3>
       <input id="email" type="email" placeholder="Email">
       <input id="password" type="password" placeholder="Password">
@@ -47,29 +43,19 @@
         <div class="row">
           <div class="box">
             <h4>Marquee Text</h4>
-            <textarea id="marqueeText" rows="4" placeholder="नवीन सूचना लिहा"></textarea>
-            <button class="btn" onclick="saveMarquee()">Update</button>
+            <textarea id="marqueeText" rows="3"></textarea>
+            <button class="btn" onclick="saveMarquee()">Update News</button>
             <div id="saveMsg"></div>
           </div>
           <div class="box">
-            <h4>Users</h4>
-            <p>Members / admins load करा.</p>
-            <button class="btn2" onclick="loadUsers()">Load Users</button>
-          </div>
-          <div class="box">
-            <h4>Notices</h4>
-            <p>GR / notices manage करा.</p>
-            <button class="btn2">Open Section</button>
+            <h4>Manage Members</h4>
+            <button class="btn2" onclick="loadUsers()">Load & Approve Members</button>
           </div>
         </div>
       </div>
-
       <div class="card">
-        <div class="top">
-          <h3>System Data</h3>
-          <button class="btn2" onclick="logout()">Logout</button>
-        </div>
-        <pre id="usersList" style="white-space:pre-wrap;margin:0"></pre>
+        <div class="top"><h3>User List</h3><button class="btn2" onclick="logout()">Logout</button></div>
+        <div id="usersList"></div>
       </div>
     </div>
   </div>
@@ -77,7 +63,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-    import { getFirestore, doc, getDoc, setDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, setDoc, collection, getDocs, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk",
@@ -93,69 +79,53 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
-    async function isAdmin(uid) {
-      const snap = await getDoc(doc(db, "users", uid));
-      return snap.exists() && snap.data().role === "admin";
-    }
-
-    window.login = async function () {
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value.trim();
-      const msg = document.getElementById("msg");
-      msg.textContent = "";
-      try {
-        await signInWithEmailAndPassword(auth, email, password);
-      } catch (e) {
-        msg.textContent = "Login failed: " + e.message;
-      }
+    window.login = async () => {
+      try { await signInWithEmailAndPassword(auth, document.getElementById("email").value, document.getElementById("password").value); }
+      catch (e) { document.getElementById("msg").textContent = e.message; }
     };
 
-    window.logout = async function () {
-      await signOut(auth);
+    window.logout = () => signOut(auth);
+
+    window.saveMarquee = async () => {
+      await setDoc(doc(db, "settings", "marquee"), { text: document.getElementById("marqueeText").value }, { merge: true });
+      alert("Updated!");
     };
 
-    window.saveMarquee = async function () {
-      const text = document.getElementById("marqueeText").value.trim();
-      const saveMsg = document.getElementById("saveMsg");
-      try {
-        await setDoc(doc(db, "settings", "marquee"), { text, updatedAt: Date.now() }, { merge: true });
-        saveMsg.className = "ok";
-        saveMsg.textContent = "Updated successfully.";
-      } catch (e) {
-        saveMsg.className = "err";
-        saveMsg.textContent = e.message;
-      }
-    };
-
-    window.loadUsers = async function () {
+    window.loadUsers = async () => {
       const snap = await getDocs(collection(db, "users"));
-      const arr = [];
-      snap.forEach(d => arr.push(`${d.id}: ${JSON.stringify(d.data())}`));
-      document.getElementById("usersList").textContent = arr.join("\n\n") || "No users found.";
+      const listDiv = document.getElementById("usersList");
+      listDiv.innerHTML = "";
+      snap.forEach(d => {
+        const data = d.data();
+        const div = document.createElement("div");
+        div.className = "box";
+        div.innerHTML = `<p><strong>User:</strong> ${data.email}</p>
+                         <p><strong>Status:</strong> ${data.approved ? 'Approved ✅' : 'Pending ⏳'}</p>
+                         ${!data.approved ? <button class="btn" onclick="approveUser('${d.id}')">Approve</button> : ''}`;
+        listDiv.appendChild(div);
+      });
+    };
+
+    window.approveUser = async (uid) => {
+      await updateDoc(doc(db, "users", uid), { approved: true });
+      alert("Member Approved!");
+      loadUsers();
     };
 
     onAuthStateChanged(auth, async (user) => {
-      const loginBox = document.getElementById("loginBox");
-      const panelBox = document.getElementById("panelBox");
-      const status = document.getElementById("status");
-
-      if (!user) {
-        loginBox.classList.remove("hidden");
-        panelBox.classList.add("hidden");
-        status.textContent = "Logged out";
-        return;
-      }
-
-      const ok = await isAdmin(user.uid);
-      if (ok) {
-        loginBox.classList.add("hidden");
-        panelBox.classList.remove("hidden");
-        status.textContent = "Admin: " + user.email;
-        const marqueeSnap = await getDoc(doc(db, "settings", "marquee"));
-        if (marqueeSnap.exists()) document.getElementById("marqueeText").value = marqueeSnap.data().text || "";
+      if (user) {
+        const snap = await getDoc(doc(db, "users", user.uid));
+        if (snap.exists() && snap.data().role === "admin") {
+          document.getElementById("loginBox").classList.add("hidden");
+          document.getElementById("panelBox").classList.remove("hidden");
+          document.getElementById("status").textContent = "Admin: " + user.email;
+        } else {
+          document.getElementById("msg").textContent = "Access Denied.";
+          signOut(auth);
+        }
       } else {
-        await signOut(auth);
-        document.getElementById("msg").textContent = "Admin access नाही.";
+        document.getElementById("loginBox").classList.remove("hidden");
+        document.getElementById("panelBox").classList.add("hidden");
       }
     });
   </script>
