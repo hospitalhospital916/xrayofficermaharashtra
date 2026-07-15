@@ -2,204 +2,65 @@
 <html lang="mr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>नवीन सदस्य नोंदणी - क्ष किरण संघटना</title>
-  
+  <title>नवीन नोंदणी | क्ष किरण संघटना</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
   <style>
-    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #eef2f7; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px 0; }
-    
-    .register-wrapper { background: white; padding: 30px 40px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 600px; text-align: center; border-top: 6px solid #28a745; position: relative; }
-    
-    .register-icon { background: #28a745; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.8rem; margin: -60px auto 20px auto; box-shadow: 0 4px 10px rgba(40, 167, 69, 0.4); border: 4px solid white; }
-    
-    h2 { color: #0B3D91; margin-top: 0; margin-bottom: 5px; font-size: 1.6rem; }
-    p.subtitle { color: #666; font-size: 0.9rem; margin-bottom: 25px; border-bottom: 1px dashed #ccc; padding-bottom: 15px; }
-
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; text-align: left; }
-    
-    @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
-
-    .input-box { margin-bottom: 15px; text-align: left; }
-    .input-box label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; font-size: 0.9rem; }
-    .input-box input, .input-box select { width: 100%; padding: 12px 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; outline: none; box-sizing: border-box; transition: 0.3s; }
-    .input-box input:focus, .input-box select:focus { border-color: #28a745; box-shadow: 0 0 8px rgba(40, 167, 69, 0.2); }
-
-    /* File Upload Box Design */
-    .file-upload-box { border: 2px dashed #0B3D91; padding: 15px; border-radius: 8px; text-align: center; background: #f8f9fa; transition: 0.3s; }
-    .file-upload-box:hover { background: #eef2f7; }
-    .file-upload-box input[type="file"] { display: none; }
-    .file-upload-label { cursor: pointer; color: #0B3D91; font-weight: bold; display: flex; flex-direction: column; align-items: center; gap: 5px; }
-    .file-upload-label i { font-size: 1.5rem; color: #dc3545; }
-    #fileNameDisplay { display: block; margin-top: 10px; font-size: 0.85rem; color: #28a745; font-weight: bold; }
-
-    button { width: 100%; background: #28a745; color: white; border: none; padding: 14px; border-radius: 8px; font-size: 1.1rem; cursor: pointer; font-weight: bold; transition: 0.3s; box-shadow: 0 4px 10px rgba(40, 167, 69, 0.2); margin-top: 10px; }
-    button:hover { background: #218838; transform: translateY(-2px); box-shadow: 0 6px 15px rgba(40, 167, 69, 0.3); }
-    button:disabled { background: #999; cursor: not-allowed; transform: none; box-shadow: none; }
-
-    #messageBox { margin-top: 15px; font-size: 0.95rem; font-weight: bold; min-height: 20px; }
-    
-    .login-link { display: block; margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee; font-size: 0.95rem; color: #555; }
-    .login-link a { color: #0B3D91; font-weight: bold; text-decoration: none; }
-    .login-link a:hover { text-decoration: underline; }
+    body { font-family: 'Segoe UI', sans-serif; background: #eef2f7; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+    .reg-wrapper { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); width: 100%; max-width: 500px; border-top: 6px solid #0B3D91; }
+    h2 { color: #0B3D91; text-align: center; margin-bottom: 20px; }
+    .input-box { margin-bottom: 15px; }
+    .input-box label { display: block; font-weight: bold; margin-bottom: 5px; color: #444; }
+    .input-box input, .input-box select, .input-box textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; }
+    button { width: 100%; background: #28a745; color: white; border: none; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer; }
   </style>
 </head>
 <body>
-
-  <div class="register-wrapper">
-    <div class="register-icon"><i class="fa-solid fa-user-plus"></i></div>
+  <div class="reg-wrapper">
     <h2>नवीन सदस्य नोंदणी</h2>
-    <p class="subtitle">क्ष किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य</p>
-
-    <div class="grid-2">
-      <div class="input-box"><label>पहिले नाव</label><input type="text" id="fName" placeholder="उदा. महेश" required></div>
-      <div class="input-box"><label>आडनाव</label><input type="text" id="lName" placeholder="उदा. हांगे" required></div>
-    </div>
-
-    <div class="grid-2">
-      <div class="input-box"><label>मोबाईल क्रमांक</label><input type="text" id="mobile" placeholder="१० अंकी नंबर" maxlength="10" required></div>
-      <div class="input-box"><label>ईमेल आयडी (हाच लॉगिन आयडी असेल)</label><input type="email" id="email" placeholder="तुमचा ईमेल" required></div>
-    </div>
-
+    <div class="input-box"><label>नाव</label><input type="text" id="firstName" placeholder="पहिले नाव" required></div>
+    <div class="input-box"><label>वडिलांचे / मधले नाव</label><input type="text" id="middleName" placeholder="मधले नाव"></div>
+    <div class="input-box"><label>आडनाव</label><input type="text" id="lastName" placeholder="आडनाव" required></div>
+    
+    <!-- नवीन रकाना -->
     <div class="input-box">
-      <label>कायमचा पत्ता</label>
-      <input type="text" id="address" placeholder="संपूर्ण पत्ता..." required>
+      <label>लिंग (Gender)</label>
+      <select id="gender">
+        <option value="पुरुष">पुरुष (Male)</option>
+        <option value="महिला">महिला (Female)</option>
+      </select>
     </div>
 
-    <div class="grid-2">
-      <div class="input-box">
-        <label>आरोग्य मंडळ</label>
-        <select id="mandal" required>
-          <option value="">-- मंडळ निवडा --</option>
-          <option value="ठाणे">ठाणे मंडळ</option><option value="पुणे">पुणे मंडळ</option><option value="नाशिक">नाशिक मंडळ</option><option value="कोल्हापूर">कोल्हापूर मंडळ</option><option value="छत्रपती संभाजीनगर">छत्रपती संभाजीनगर मंडळ</option><option value="लातूर">लातूर मंडळ</option><option value="अकोला">अकोला मंडळ</option><option value="नागपूर">नागपूर मंडळ</option>
-        </select>
-      </div>
-      <div class="input-box">
-        <label>सध्याचे पद</label>
-        <select id="designation" required>
-          <option value="क्ष-किरण वैज्ञानिक अधिकारी">क्ष-किरण वैज्ञानिक अधिकारी</option><option value="क्ष-किरण तंत्रज्ञ">क्ष-किरण तंत्रज्ञ</option><option value="इतर">इतर</option>
-        </select>
-      </div>
-    </div>
-
-    <!-- 📄 PDF/Photo Upload Box -->
-    <div class="input-box">
-      <label>ओळखपत्र किंवा नियुक्ती पत्र अपलोड करा (PDF / Photo) *</label>
-      <div class="file-upload-box">
-        <label class="file-upload-label">
-          <i class="fa-solid fa-cloud-arrow-up"></i>
-          <span>फाईल निवडण्यासाठी येथे क्लिक करा</span>
-          <input type="file" id="idProofFile" accept=".pdf, image/*" required>
-        </label>
-        <span id="fileNameDisplay">कोणतीही फाईल निवडलेली नाही</span>
-      </div>
-    </div>
-
-    <div class="grid-2">
-      <div class="input-box"><label>पासवर्ड तयार करा</label><input type="password" id="password" placeholder="कमीत कमी ६ अक्षरे" required></div>
-      <div class="input-box"><label>पासवर्ड पुन्हा टाका</label><input type="password" id="confirmPassword" placeholder="पासवर्ड कन्फर्म करा" required></div>
-    </div>
-
-    <button id="registerBtn">नोंदणी पूर्ण करा</button>
-    <div id="messageBox"></div>
-
-    <div class="login-link">
-      आधीच नोंदणी केली आहे का? <a href="login.html">येथे लॉगिन करा</a>
-    </div>
+    <div class="input-box"><label>मोबाईल क्रमांक</label><input type="tel" id="mobile" required></div>
+    <div class="input-box"><label>ईमेल आयडी</label><input type="email" id="email" required></div>
+    <div class="input-box"><label>कायमचा पत्ता</label><textarea id="address" rows="2"></textarea></div>
+    <div class="input-box"><label>पासवर्ड</label><input type="password" id="password" required></div>
+    <button id="regBtn">नोंदणी करा</button>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
-    
-    // 📂 Firebase Storage Import (नवीन जोडले)
-    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-storage.js";
+    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
     const firebaseConfig = { apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk", authDomain: "xrayunionmah.firebaseapp.com", projectId: "xrayunionmah", storageBucket: "xrayunionmah.firebasestorage.app", messagingSenderId: "763805226978", appId: "1:763805226978:web:6bae81a0b6358b47d88bbb" };
-    
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-    const storage = getStorage(app); // Storage सुरु केले
+    const auth = getAuth(initializeApp(firebaseConfig));
+    const db = getFirestore(initializeApp(firebaseConfig));
 
-    // फाईल निवडल्यावर तिचे नाव बॉक्समध्ये दाखवणे
-    const fileInput = document.getElementById("idProofFile");
-    const fileNameDisplay = document.getElementById("fileNameDisplay");
-    fileInput.addEventListener("change", function() {
-      if(this.files && this.files[0]) {
-        fileNameDisplay.innerHTML = `✅ फाईल निवडली: ${this.files[0].name}`;
-      } else {
-        fileNameDisplay.innerHTML = "कोणतीही फाईल निवडलेली नाही";
-      }
-    });
-
-    document.getElementById("registerBtn").addEventListener("click", async () => {
-      const fName = document.getElementById("fName").value.trim();
-      const lName = document.getElementById("lName").value.trim();
-      const mobile = document.getElementById("mobile").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const address = document.getElementById("address").value.trim();
-      const mandal = document.getElementById("mandal").value;
-      const designation = document.getElementById("designation").value;
-      const password = document.getElementById("password").value;
-      const confirmPassword = document.getElementById("confirmPassword").value;
-      const file = fileInput.files[0];
-      
-      const msgBox = document.getElementById("messageBox");
-      const regBtn = document.getElementById("registerBtn");
-
-      // 1. रिकामे रकाने आणि फाईल चेक करणे
-      if (!fName || !lName || !mobile || !email || !address || !mandal || !designation || !password) {
-        msgBox.innerHTML = "<span style='color:red;'>⚠️ कृपया सर्व माहिती भरा.</span>"; return;
-      }
-      if (!file) {
-        msgBox.innerHTML = "<span style='color:red;'>⚠️ कृपया ओळखपत्र किंवा नियुक्ती पत्र अपलोड करा.</span>"; return;
-      }
-      if (mobile.length !== 10) { msgBox.innerHTML = "<span style='color:red;'>⚠️ मोबाईल क्रमांक १० अंकी असावा.</span>"; return; }
-      if (password !== confirmPassword) { msgBox.innerHTML = "<span style='color:red;'>❌ दोन्ही पासवर्ड जुळत नाहीत.</span>"; return; }
-      if (password.length < 6) { msgBox.innerHTML = "<span style='color:red;'>⚠️ पासवर्ड ६ अक्षरांचा असावा.</span>"; return; }
-
-      msgBox.innerHTML = "<span style='color:blue;'><i class='fa-solid fa-spinner fa-spin'></i> फाईल अपलोड होत आहे, कृपया पेज बंद करू नका...</span>";
-      regBtn.disabled = true;
-
+    document.getElementById("regBtn").onclick = async () => {
       try {
-        // 2. Firebase Auth मध्ये युजर तयार करणे
-        await createUserWithEmailAndPassword(auth, email, password);
-
-        // 3. 📂 फाईल Firebase Storage मध्ये अपलोड करणे
-        const timestamp = Date.now();
-        const storageRef = ref(storage, `member_id_proofs/${mobile}_${timestamp}_${file.name}`);
-        
-        await uploadBytes(storageRef, file); // फाईल अपलोड
-        const fileDownloadURL = await getDownloadURL(storageRef); // फाईलची लिंक मिळवणे
-
-        msgBox.innerHTML = "<span style='color:blue;'><i class='fa-solid fa-spinner fa-spin'></i> माहिती सेव्ह होत आहे...</span>";
-
-        // 4. Firestore मध्ये माहिती + फाईलची लिंक सेव्ह करणे
-        await addDoc(collection(db, "members"), {
-          नाव: fName,
-          आडनाव: lName,
-          "मोबाईल क्रमांक": mobile,
-          ईमेल: email,
-          "कायमचा पत्ता": address,
-          मंडळ: mandal,
-          पद: designation,
-          "ओळखपत्र_लिंक": fileDownloadURL, // 📄 इथे पीडीएफ/फोटोची लिंक सेव्ह होईल
+        const userCredential = await createUserWithEmailAndPassword(auth, document.getElementById("email").value, document.getElementById("password").value);
+        await setDoc(doc(db, "members", userCredential.user.uid), {
+          पूर्ण_नाव: `${document.getElementById("firstName").value} ${document.getElementById("middleName").value} ${document.getElementById("lastName").value}`,
+          लिंग: document.getElementById("gender").value, // लिंग सेव्ह होत आहे
+          मोबाईल: document.getElementById("mobile").value,
+          ईमेल: document.getElementById("email").value,
+          कायमचा_पत्ता: document.getElementById("address").value,
           स्थिती: "प्रलंबित",
-          अॅक्सेस: "बंद"
+          अॅक्सेस: "चालू"
         });
-
-        await signOut(auth); // सुरक्षेसाठी लॉगआउट
-        msgBox.innerHTML = "<span style='color:green;'>✅ नोंदणी यशस्वी! तुमचा अर्ज व डॉक्युमेंट ॲडमिनकडे गेले आहेत.</span>";
-        setTimeout(() => { window.location.href = "login.html"; }, 3000);
-
-      } catch (error) {
-        if (error.code === 'auth/email-already-in-use') { msgBox.innerHTML = "<span style='color:red;'>❌ या ईमेलवर आधीच नोंदणी झालेली आहे.</span>"; }
-        else { msgBox.innerHTML = "<span style='color:red;'>❌ काहीतरी चूक झाली. फाईल जास्त मोठी असू शकते (कमीत कमी साईझची फाईल वापरा).</span>"; console.error(error); }
-      } finally { regBtn.disabled = false; }
-    });
+        alert("नोंदणी यशस्वी!");
+      } catch (e) { alert("एरर: " + e.message); }
+    };
   </script>
 </body>
 </html>
