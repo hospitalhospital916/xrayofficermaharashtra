@@ -59,7 +59,7 @@
 
   <div class="container" id="adminContent">
     
-    <!-- १. नवीन सदस्य मंजुरी (Pending Approvals) -->
+    <!-- १. नवीन सदस्य मंजुरी -->
     <div class="card" style="border-top-color: #ff9800;">
       <h3 style="color: #ff9800;">⏳ नवीन सदस्य मंजुरी (Pending Approvals)</h3>
       <div style="overflow-x: auto;">
@@ -74,7 +74,7 @@
       </div>
     </div>
 
-    <!-- २. सदस्यांच्या तक्रारी आणि प्रश्न -->
+    <!-- २. सदस्यांच्या तक्रारी -->
     <div class="card" style="border-top-color: #dc3545;">
       <h3 style="color: #dc3545;">🚨 सदस्यांच्या तक्रारी / सपोर्ट तिकीट</h3>
       <div style="overflow-x: auto;">
@@ -89,7 +89,7 @@
       </div>
     </div>
 
-    <!-- ३. नवीन सदस्य जोडण्याचा फॉर्म -->
+    <!-- ३. नवीन सदस्य जोडा -->
     <div class="card" style="border-top-color: #28a745;">
       <h3 style="color: #28a745;">➕ नवीन सदस्य जोडा (थेट मंजुरी)</h3>
       <div class="input-group">
@@ -98,17 +98,12 @@
         <input type="email" id="addEmail" placeholder="ईमेल आयडी">
       </div>
       <div class="input-group">
-        <!-- मंडळ निवड -->
         <select id="addMandal">
           <option value="">-- आरोग्य मंडळ निवडा --</option>
-          <option value="ठाणे">ठाणे मंडळ</option>
-          <option value="पुणे">पुणे मंडळ</option>
-          <option value="नाशिक">नाशिक मंडळ</option>
-          <option value="कोल्हापूर">कोल्हापूर मंडळ</option>
+          <option value="ठाणे">ठाणे मंडळ</option><option value="पुणे">पुणे मंडळ</option>
+          <option value="नाशिक">नाशिक मंडळ</option><option value="कोल्हापूर">कोल्हापूर मंडळ</option>
           <option value="छत्रपती संभाजीनगर">छत्रपती संभाजीनगर मंडळ</option>
-          <option value="लातूर">लातूर मंडळ</option>
-          <option value="अकोला">अकोला मंडळ</option>
-          <option value="नागपूर">नागपूर मंडळ</option>
+          <option value="लातूर">लातूर मंडळ</option><option value="अकोला">अकोला मंडळ</option><option value="नागपूर">नागपूर मंडळ</option>
         </select>
         <input type="text" id="addDistrict" placeholder="जिल्हा (उदा. अहमदनगर)">
         <select id="addDesignation">
@@ -120,41 +115,26 @@
       </div>
     </div>
 
-    <!-- ४. मंजूर सदस्यांची यादी आणि फिल्टर्स -->
+    <!-- ४. मंजूर सदस्यांची यादी -->
     <div class="card">
       <h3>👥 अधिकृत सदस्यांची यादी (Approved Members)</h3>
-      
       <div class="filter-section">
         <strong>🔍 शोधा:</strong>
         <input type="text" id="searchBox" placeholder="नाव किंवा मोबाईल नंबर...">
         <select id="filterMandal">
           <option value="">सर्व मंडळे</option>
-          <option value="ठाणे">ठाणे मंडळ</option>
-          <option value="पुणे">पुणे मंडळ</option>
-          <option value="नाशिक">नाशिक मंडळ</option>
-          <option value="कोल्हापूर">कोल्हापूर मंडळ</option>
+          <option value="ठाणे">ठाणे मंडळ</option><option value="पुणे">पुणे मंडळ</option>
+          <option value="नाशिक">नाशिक मंडळ</option><option value="कोल्हापूर">कोल्हापूर मंडळ</option>
           <option value="छत्रपती संभाजीनगर">छत्रपती संभाजीनगर मंडळ</option>
-          <option value="लातूर">लातूर मंडळ</option>
-          <option value="अकोला">अकोला मंडळ</option>
-          <option value="नागपूर">नागपूर मंडळ</option>
+          <option value="लातूर">लातूर मंडळ</option><option value="अकोला">अकोला मंडळ</option><option value="नागपूर">नागपूर मंडळ</option>
         </select>
         <input type="text" id="filterDistrict" placeholder="जिल्हा टाईप करा...">
         <button id="btnResetFilter" style="background: #6c757d;">रीसेट</button>
       </div>
-
       <div style="overflow-x: auto;">
         <table>
           <thead>
-            <tr>
-              <th>अनु.</th>
-              <th>नाव</th>
-              <th>मोबाईल</th>
-              <th>ईमेल</th>
-              <th>मंडळ</th>
-              <th>जिल्हा</th>
-              <th>पद</th>
-              <th>कृती (Action)</th>
-            </tr>
+            <tr><th>अनु.</th><th>नाव</th><th>मोबाईल</th><th>ईमेल</th><th>मंडळ</th><th>जिल्हा</th><th>पद</th><th>कृती (Action)</th></tr>
           </thead>
           <tbody id="membersList">
             <tr><td colspan="8" style="text-align:center;">माहिती लोड होत आहे...</td></tr>
@@ -162,31 +142,26 @@
         </table>
       </div>
     </div>
-
   </div>
 
-  <!-- Modal 1: Complaint Reply Modal -->
+  <!-- Modals -->
   <div id="replyModal" class="modal">
     <div class="modal-content">
       <span class="close" id="closeReplyModal">&times;</span>
       <h3 style="color: var(--primary-color);">💬 तक्रारीला उत्तर द्या</h3>
       <p><strong>सदस्य:</strong> <span id="replyMemName"></span></p>
       <p><strong>समस्या:</strong> <span id="replyMemComp"></span></p>
-      <input type="hidden" id="replyCompId">
-      <input type="hidden" id="replyMobileNum">
-      <input type="hidden" id="replySubject">
+      <input type="hidden" id="replyCompId"><input type="hidden" id="replyMobileNum"><input type="hidden" id="replySubject">
       <textarea id="adminReplyText" class="reply-box" placeholder="तुमचे उत्तर येथे टाईप करा..."></textarea>
-      <button id="btnSaveReply" style="width: 100%; margin-top: 15px; background: #28a745;">💾 उत्तर सेव्ह करा (तक्रार सोडवली)</button>
+      <button id="btnSaveReply" style="width: 100%; margin-top: 15px; background: #28a745;">💾 उत्तर सेव्ह करा</button>
       <button id="btnSendWa" class="btn-whatsapp">🟢 WhatsApp वर सदस्याला कळवा</button>
     </div>
   </div>
 
-  <!-- Modal 2: View Member Modal -->
   <div id="viewModal" class="modal">
     <div class="modal-content" style="text-align: center;">
       <span class="close" id="closeViewModal">&times;</span>
       <h2 id="viewName" style="color: var(--primary-color);">नाव लोड होत आहे...</h2>
-      <p style="color: #28a745; font-weight: bold;">✅ नोंदणीकृत सदस्य</p>
       <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; text-align: left;">
         <p><strong>📞 मोबाईल:</strong> <span id="viewMobile"></span></p>
         <p><strong>✉️ ईमेल:</strong> <span id="viewEmail"></span></p>
@@ -194,14 +169,9 @@
         <p><strong>📍 मंडळ:</strong> <span id="viewMandal"></span></p>
         <p><strong>📍 जिल्हा:</strong> <span id="viewDistrict"></span></p>
       </div>
-      <div style="display: flex; gap: 10px; margin-top: 20px;">
-        <a id="linkCall" href="#" style="flex: 1; padding: 12px; background: #28a745; color: white; text-decoration: none; border-radius: 6px; font-weight: bold;">📞 कॉल करा</a>
-        <a id="linkEmail" href="#" style="flex: 1; padding: 12px; background: #dc3545; color: white; text-decoration: none; border-radius: 6px; font-weight: bold;">✉️ ईमेल पाठवा</a>
-      </div>
     </div>
   </div>
 
-  <!-- Modal 3: Edit Member Modal -->
   <div id="editModal" class="modal">
     <div class="modal-content">
       <span class="close" id="closeEditModal">&times;</span>
@@ -213,14 +183,10 @@
       <div class="input-group">
         <select id="editMandal">
           <option value="">-- आरोग्य मंडळ निवडा --</option>
-          <option value="ठाणे">ठाणे मंडळ</option>
-          <option value="पुणे">पुणे मंडळ</option>
-          <option value="नाशिक">नाशिक मंडळ</option>
-          <option value="कोल्हापूर">कोल्हापूर मंडळ</option>
+          <option value="ठाणे">ठाणे मंडळ</option><option value="पुणे">पुणे मंडळ</option>
+          <option value="नाशिक">नाशिक मंडळ</option><option value="कोल्हापूर">कोल्हापूर मंडळ</option>
           <option value="छत्रपती संभाजीनगर">छत्रपती संभाजीनगर मंडळ</option>
-          <option value="लातूर">लातूर मंडळ</option>
-          <option value="अकोला">अकोला मंडळ</option>
-          <option value="नागपूर">नागपूर मंडळ</option>
+          <option value="लातूर">लातूर मंडळ</option><option value="अकोला">अकोला मंडळ</option><option value="नागपूर">नागपूर मंडळ</option>
         </select>
       </div>
       <div class="input-group"><input type="text" id="editDistrict" placeholder="जिल्हा"></div>
@@ -250,7 +216,6 @@
     let allMembersData = [];
     let allComplaints = [];
 
-    // Security Check
     onAuthStateChanged(auth, (user) => {
       if (!user) window.location.href = "login.html";
       else { 
@@ -272,27 +237,13 @@
         const snapshot = await getDocs(q);
         tbody.innerHTML = "";
         allComplaints = [];
-        
-        if(snapshot.empty) {
-          tbody.innerHTML = "<tr><td colspan='5' style='text-align:center;'>कोणतीही नवीन तक्रार नाही.</td></tr>";
-          return;
-        }
-
+        if(snapshot.empty) { tbody.innerHTML = "<tr><td colspan='5' style='text-align:center;'>कोणतीही नवीन तक्रार नाही.</td></tr>"; return; }
         snapshot.forEach(d => allComplaints.push({id: d.id, ...d.data()}));
-
         allComplaints.forEach(c => {
           let statusStr = c.स्थिती === "प्रलंबित" ? `<span style="color:red; font-weight:bold;">🔴 प्रलंबित</span>` : `<span style="color:green; font-weight:bold;">🟢 सोडवली</span>`;
-          tbody.innerHTML += `
-            <tr>
-              <td>${c.तारीख ? c.तारीख.split(',')[0] : '-'}</td>
-              <td><b>${c.सदस्य_नाव}</b><br>${c.मोबाईल}</td>
-              <td><b>${c.विषय}</b><br><small>${c.तक्रार}</small></td>
-              <td>${statusStr}</td>
-              <td><button class="btn-reply" onclick="openReplyModal('${c.id}')">💬 रिप्लाय</button></td>
-            </tr>
-          `;
+          tbody.innerHTML += `<tr><td>${c.तारीख ? c.तारीख.split(',')[0] : '-'}</td><td><b>${c.सदस्य_नाव}</b><br>${c.मोबाईल}</td><td><b>${c.विषय}</b><br><small>${c.तक्रार}</small></td><td>${statusStr}</td><td><button class="btn-reply" onclick="openReplyModal('${c.id}')">💬 रिप्लाय</button></td></tr>`;
         });
-      } catch(e) { console.error(e); }
+      } catch(e) {}
     }
 
     const replyModal = document.getElementById("replyModal");
@@ -321,7 +272,7 @@
         alert("✅ उत्तर सेव्ह झाले.");
         loadComplaints(); 
         document.getElementById("btnSendWa").style.display = "block";
-      } catch(e) { alert("Error: " + e.message); }
+      } catch(e) {}
     });
 
     document.getElementById("btnSendWa").addEventListener("click", () => {
@@ -334,8 +285,22 @@
     });
 
     // ==========================================
-    // 2. MEMBERS LOGIC (APPROVAL & FILTERS)
+    // 2. MEMBERS LOGIC (SMART DATA READER)
     // ==========================================
+    // हे फंक्शन एक्सेल मधील चुकीच्या हेडिंग्जला सुद्धा ओळखेल
+    function extractData(member) {
+      return {
+        id: member.id,
+        नाव: member["नाव"] || member["Name"] || member["name"] || member["नाव "] || "-",
+        मोबाईल: member["मोबाईल क्रमांक"] || member["मोबाईल"] || member["Mobile"] || member["mobile"] || member["Phone"] || "-",
+        ईमेल: member["ईमेल"] || member["Email"] || member["email"] || member["Email ID"] || "-",
+        मंडळ: member["मंडळ"] || member["विभाग"] || member["Mandal"] || member["Division"] || member["division"] || "-",
+        जिल्हा: member["जिल्हा"] || member["District"] || member["district"] || "-",
+        पद: member["पद"] || member["Designation"] || member["designation"] || "-",
+        स्थिती: member["स्थिती"] || member["Status"] || "मंजूर" // Default to मंजूर if uploaded from Excel
+      };
+    }
+
     async function fetchMembersFromDB() {
       try {
         const querySnapshot = await getDocs(collection(db, "members"));
@@ -343,7 +308,8 @@
         let pendingMembers = [];
 
         querySnapshot.forEach((d) => { 
-          let memberData = { id: d.id, ...d.data() };
+          let memberData = extractData({ id: d.id, ...d.data() });
+          
           if(memberData.स्थिती === "प्रलंबित") {
             pendingMembers.push(memberData);
           } else {
@@ -354,12 +320,9 @@
         allMembersData = approvedMembers; 
         renderPendingTable(pendingMembers);
         renderTable(approvedMembers);
-      } catch(err) {
-        console.error(err);
-      }
+      } catch(err) {}
     }
 
-    // Pending Members Table
     function renderPendingTable(pendingArray) {
       const tbody = document.getElementById("pendingMembersList");
       tbody.innerHTML = "";
@@ -370,10 +333,7 @@
       pendingArray.forEach(member => {
         tbody.innerHTML += `
           <tr style="background-color: #fff9e6;">
-            <td><b>${member["नाव"] || "-"}</b></td>
-            <td>${member["मोबाईल क्रमांक"] || "-"}</td>
-            <td>${member["ईमेल"] || "-"}</td>
-            <td>${member["मंडळ"] || "-"}</td>
+            <td><b>${member.नाव}</b></td><td>${member.मोबाईल}</td><td>${member.ईमेल}</td><td>${member.मंडळ}</td>
             <td>
               <button class="btn-approve" onclick="approveMember('${member.id}')">✅ मंजूर करा</button>
               <button class="btn-delete" onclick="deleteUser('${member.id}')">❌ नाकारा</button>
@@ -385,15 +345,10 @@
 
     window.approveMember = async function(id) {
       if(confirm("या सदस्याला अधिकृत मंजुरी द्यायची आहे का?")) {
-        try {
-          await updateDoc(doc(db, "members", id), { स्थिती: "मंजूर" });
-          alert("✅ सदस्य मंजूर झाला. आता तो मुख्य यादीत दिसेल.");
-          fetchMembersFromDB();
-        } catch(e) { alert("Error: " + e.message); }
+        try { await updateDoc(doc(db, "members", id), { स्थिती: "मंजूर" }); fetchMembersFromDB(); } catch(e) {}
       }
     };
 
-    // Approved Members Table
     function renderTable(dataArray) {
       const tbody = document.getElementById("membersList");
       tbody.innerHTML = "";
@@ -403,20 +358,18 @@
       }
       let count = 1;
       dataArray.forEach(member => {
-        const mob = member["मोबाईल क्रमांक"] || "";
-        const email = member["ईमेल"] || "";
-        const mobLink = mob ? `<a href="tel:${mob}">${mob}</a>` : "-";
-        const emailLink = email ? `<a href="mailto:${email}">ईमेल</a>` : "-";
+        const mobLink = member.मोबाईल !== "-" ? `<a href="tel:${member.मोबाईल}">${member.मोबाईल}</a>` : "-";
+        const emailLink = member.ईमेल !== "-" && member.ईमेल.includes('@') ? `<a href="mailto:${member.ईमेल}">ईमेल</a>` : "-";
 
         tbody.innerHTML += `
-         <tr>
+          <tr>
             <td>${count}</td>
-            <td><b>${member["नाव"] || "-"}</b></td>
+            <td><b>${member.नाव}</b></td>
             <td>${mobLink}</td>
             <td>${emailLink}</td>
-            <td>${member["मंडळ"] || "-"}</td>
-            <td>${member["जिल्हा"] || "-"}</td>
-            <td>${member["पद"] || "-"}</td>
+            <td>${member.मंडळ}</td>
+            <td>${member.जिल्हा}</td>
+            <td>${member.पद}</td>
             <td>
               <button class="btn-view" onclick="openViewModal('${member.id}')">👁️ View</button>
               <button class="btn-edit" onclick="openEditModal('${member.id}')">✏️ Edit</button>
@@ -432,112 +385,4 @@
       const newData = {
         "नाव": document.getElementById("addName").value.trim(),
         "मोबाईल क्रमांक": document.getElementById("addMobile").value.trim(),
-        "ईमेल": document.getElementById("addEmail").value.trim(),
-        "मंडळ": document.getElementById("addMandal").value,
-        "जिल्हा": document.getElementById("addDistrict").value.trim(),
-        "पद": document.getElementById("addDesignation").value,
-        "स्थिती": "मंजूर" 
-      };
-      if(!newData["नाव"] || !newData["मोबाईल क्रमांक"]) return alert("नाव आणि मोबाईल क्रमांक आवश्यक आहे.");
-      
-      try {
-        await addDoc(collection(db, "members"), newData);
-        alert("✅ सदस्य यशस्वीरित्या जोडला!");
-        fetchMembersFromDB();
-        document.querySelectorAll("input").forEach(input => input.value = ""); 
-      } catch(e) { alert("Error: " + e.message); }
-    });
-
-    window.deleteUser = async function(id) {
-      if(confirm("हा सदस्य कायमचा काढून टाकायचा आहे का?")) {
-        await deleteDoc(doc(db, "members", id));
-        alert("✅ सदस्य काढला.");
-        fetchMembersFromDB();
-      }
-    };
-
-    // Filters Logic
-    function applyFilters() {
-      const searchText = document.getElementById("searchBox").value.toLowerCase();
-      const mandal = document.getElementById("filterMandal").value;
-      const district = document.getElementById("filterDistrict").value.toLowerCase();
-
-      const filtered = allMembersData.filter(m => {
-        const matchNameMob = (m["नाव"] || "").toLowerCase().includes(searchText) || (m["मोबाईल क्रमांक"] || "").includes(searchText);
-        const matchMandal = mandal === "" || (m["मंडळ"] || "") === mandal;
-        const matchDist = district === "" || (m["जिल्हा"] || "").toLowerCase().includes(district);
-        return matchNameMob && matchMandal && matchDist;
-      });
-      renderTable(filtered);
-    }
-
-    document.getElementById("searchBox").addEventListener("input", applyFilters);
-    document.getElementById("filterMandal").addEventListener("change", applyFilters);
-    document.getElementById("filterDistrict").addEventListener("input", applyFilters);
-    
-    document.getElementById("btnResetFilter").addEventListener("click", () => {
-      document.getElementById("searchBox").value = "";
-      document.getElementById("filterMandal").value = "";
-      document.getElementById("filterDistrict").value = "";
-      renderTable(allMembersData);
-    });
-
-    // Modals Logic for View and Edit
-    const viewModal = document.getElementById("viewModal");
-    const editModal = document.getElementById("editModal");
-    document.getElementById("closeViewModal").onclick = () => viewModal.style.display = "none";
-    document.getElementById("closeEditModal").onclick = () => editModal.style.display = "none";
-
-    window.openViewModal = function(id) {
-      const member = allMembersData.find(m => m.id === id);
-      if(member) {
-        document.getElementById("viewName").innerText = member["नाव"] || "नाव उपलब्ध नाही";
-        document.getElementById("viewMobile").innerText = member["मोबाईल क्रमांक"] || "-";
-        document.getElementById("viewEmail").innerText = member["ईमेल"] || "-";
-        document.getElementById("viewDesignation").innerText = member["पद"] || "-";
-        document.getElementById("viewMandal").innerText = member["मंडळ"] || "-";
-        document.getElementById("viewDistrict").innerText = member["जिल्हा"] || "-";
-
-        const btnCall = document.getElementById("linkCall");
-        const btnEmail = document.getElementById("linkEmail");
-        if(member["मोबाईल क्रमांक"]) { btnCall.href = "tel:" + member["मोबाईल क्रमांक"]; btnCall.style.display = "block"; } else { btnCall.style.display = "none"; }
-        if(member["ईमेल"]) { btnEmail.href = "mailto:" + member["ईमेल"]; btnEmail.style.display = "block"; } else { btnEmail.style.display = "none"; }
-        viewModal.style.display = "block";
-      }
-    };
-
-    window.openEditModal = function(id) {
-      const member = allMembersData.find(m => m.id === id);
-      if(member) {
-        document.getElementById("editId").value = member.id;
-        document.getElementById("editName").value = member["नाव"] || "";
-        document.getElementById("editMobile").value = member["मोबाईल क्रमांक"] || "";
-        document.getElementById("editEmail").value = member["ईमेल"] || "";
-        document.getElementById("editMandal").value = member["मंडळ"] || "";
-        document.getElementById("editDistrict").value = member["जिल्हा"] || "";
-        document.getElementById("editDesignation").value = member["पद"] || "";
-        editModal.style.display = "block";
-      }
-    };
-
-    document.getElementById("btnSaveEdit").addEventListener("click", async () => {
-      const id = document.getElementById("editId").value;
-      const updatedData = {
-        "नाव": document.getElementById("editName").value.trim(),
-        "मोबाईल क्रमांक": document.getElementById("editMobile").value.trim(),
-        "ईमेल": document.getElementById("editEmail").value.trim(),
-        "मंडळ": document.getElementById("editMandal").value,
-        "जिल्हा": document.getElementById("editDistrict").value.trim(),
-        "पद": document.getElementById("editDesignation").value.trim()
-      };
-      try {
-        await updateDoc(doc(db, "members", id), updatedData);
-        alert("✅ माहिती अपडेट झाली!");
-        editModal.style.display = "none";
-        fetchMembersFromDB();
-      } catch(e) { alert("Error: " + e.message); }
-    });
-
-  </script>
-</body>
-</html>
+        "ईमे
