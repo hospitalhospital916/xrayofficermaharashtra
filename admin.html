@@ -57,7 +57,7 @@
     
     .action-btn { padding: 5px 10px; font-size: 0.75rem; border-radius: 4px; border: none; cursor: pointer; color: white; display: inline-flex; align-items: center; gap: 4px; font-weight: bold; }
     
-    /* MODALS (View, Edit, Reply) */
+    /* MODALS */
     .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
     .modal-box { background: white; padding: 25px; border-radius: 12px; width: 100%; max-width: 700px; max-height: 90vh; overflow-y: auto; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
     .modal-close { position: absolute; top: 15px; right: 20px; font-size: 1.5rem; cursor: pointer; color: #666; background: none; border: none; }
@@ -80,7 +80,6 @@
 </head>
 <body>
 
-  <!-- Sidebar -->
   <div class="sidebar no-print">
     <div class="sidebar-header"><h2><i class="fa-solid fa-user-shield"></i> सुपर ॲडमिन</h2></div>
     <div class="sidebar-menu">
@@ -98,7 +97,6 @@
     
     <div class="top-header no-print"><h3 style="margin:0; color:var(--primary);">क्ष किरण संघटना - ERP पॅनल</h3></div>
 
-    <!-- TAB 1: Dashboard -->
     <div class="content-area active" id="tab-dashboard">
       <div class="dashboard-stats">
         <div class="stat-card"><div class="stat-icon"><i class="fa-solid fa-users"></i></div><div class="stat-info"><h3 id="statTotalMembers">0</h3><p>अधिकृत सदस्य</p></div></div>
@@ -112,29 +110,25 @@
     <!-- TAB 2: Members Management -->
     <div class="content-area" id="tab-members">
       
-      <!-- Pending Approvals (User's Favorite) -->
       <div class="card no-print" id="pendingCard" style="border-top-color: #ffc107;">
-        <h3 style="color: #ff9800; margin-top:0; font-size:1.2rem;"><i class="fa-solid fa-user-clock"></i> मंजुरीच्या प्रतीक्षेत असलेले सदस्य (Pending)</h3>
-        <p style="font-size:0.9rem; color:#555;">नवीन नोंदणी केलेल्या सदस्यांचे डॉक्युमेंट तपासून त्यांना मंजुरी द्या.</p>
+        <h3 style="color: #ff9800; margin-top:0; font-size:1.2rem;"><i class="fa-solid fa-user-clock"></i> मंजुरीच्या प्रतीक्षेत (Pending)</h3>
         <div class="table-container">
           <table class="classic-table">
-            <thead><tr><th>नाव</th><th>मोबाईल</th><th>मंडळ</th><th>डॉक्युमेंट / नियुक्ती पत्र</th><th>कृती (मंजुरी)</th></tr></thead>
+            <thead><tr><th>नाव</th><th>मोबाईल</th><th>ईमेल</th><th>मंडळ</th><th>डॉक्युमेंट</th><th>कृती (मंजुरी)</th></tr></thead>
             <tbody id="pendingMembersList"></tbody>
           </table>
         </div>
       </div>
 
-      <!-- Approved Members List -->
       <div class="card" id="approvedCard">
         <div class="card-header no-print" style="border:none; margin-bottom:0;">
-          <h3 style="color:var(--primary); font-size:1.2rem; margin:0;"><i class="fa-solid fa-users"></i> अधिकृत सदस्यांची यादी (Approved Members)</h3>
+          <h3 style="color:var(--primary); font-size:1.2rem; margin:0;"><i class="fa-solid fa-users"></i> अधिकृत सदस्यांची यादी</h3>
           <div>
             <button onclick="downloadExcel()" class="btn btn-success"><i class="fa-solid fa-file-excel"></i> Excel</button>
             <button onclick="window.print()" class="btn btn-secondary"><i class="fa-solid fa-print"></i> Print</button>
           </div>
         </div>
         
-        <!-- Filter Bar -->
         <div class="filter-bar no-print">
           <span style="color:#0B3D91; font-weight:bold;"><i class="fa-solid fa-magnifying-glass"></i> शोधा:</span>
           <input type="text" id="searchName" placeholder="नाव किंवा मोबाईल नंबर..." onkeyup="applyFilters()">
@@ -153,20 +147,23 @@
               <tr>
                 <th>नाव</th>
                 <th>मोबाईल</th>
+                <th>ईमेल</th>
                 <th>मंडळ</th>
                 <th>जिल्हा</th>
-                <th>पद</th>
+                <!-- Changed 'Post' to 'Address' here -->
+                <th>कायमचा पत्ता</th>
+                <th class="no-print" style="text-align:center;">लॉगिन</th>
                 <th class="no-print" style="text-align:center;">कृती (Action)</th>
               </tr>
             </thead>
-            <tbody id="membersList"><tr><td colspan="6">लोड होत आहे...</td></tr></tbody>
+            <tbody id="membersList"><tr><td colspan="8">लोड होत आहे...</td></tr></tbody>
           </table>
         </div>
       </div>
     </div>
 
     <!-- TAB 3: Finance -->
-<div class="content-area" id="tab-finance">
+    <div class="content-area" id="tab-finance">
       <div class="card" style="border-top-color: #28a745;">
         <div class="card-header"><h3 style="color: #28a745;"><i class="fa-solid fa-indian-rupee-sign"></i> वर्गणी ट्रॅकिंग</h3></div>
         <div class="table-container">
@@ -213,25 +210,21 @@
 
   </div>
 
-  <!-- ================= MODALS (POP-UPS) ================= -->
-
-  <!-- 1. VIEW MEMBER MODAL -->
+  <!-- MODALS -->
   <div id="viewModal" class="modal-overlay">
     <div class="modal-box">
       <button class="modal-close" onclick="closeModal('viewModal')"><i class="fa-solid fa-xmark"></i></button>
       <h3 style="color:var(--primary); margin-top:0;"><i class="fa-solid fa-id-card"></i> सदस्याची संपूर्ण माहिती</h3>
-      
       <div class="view-grid">
         <div class="view-item"><label>संपूर्ण नाव</label><div id="vName"></div></div>
         <div class="view-item"><label>मोबाईल क्रमांक</label><div id="vMobile"></div></div>
         <div class="view-item"><label>ईमेल आयडी</label><div id="vEmail"></div></div>
-        <div class="view-item"><label>पद (Designation)</label><div id="vPost"></div></div>
+        <div class="view-item"><label>पद</label><div id="vPost"></div></div>
         <div class="view-item"><label>मंडळ व जिल्हा</label><div id="vMandalDist"></div></div>
         <div class="view-item"><label>सेवार्थ आयडी</label><div id="vSevarth"></div></div>
         <div class="view-item" style="grid-column: 1 / -1;"><label>कायमचा पत्ता / रुग्णालय</label><div id="vAddress"></div></div>
         <div class="view-item" style="grid-column: 1 / -1;"><label>अपलोड केलेले डॉक्युमेंट</label><div id="vDoc"></div></div>
       </div>
-
       <h4 style="color:#dc3545; border-bottom:1px solid #ddd; padding-bottom:5px;">या सदस्याने केलेल्या तक्रारी</h4>
       <div class="table-container">
         <table class="classic-table">
@@ -242,12 +235,10 @@
     </div>
   </div>
 
-  <!-- 2. EDIT MEMBER MODAL -->
   <div id="editModal" class="modal-overlay">
     <div class="modal-box" style="max-width: 500px;">
       <button class="modal-close" onclick="closeModal('editModal')"><i class="fa-solid fa-xmark"></i></button>
       <h3 style="color:#ffc107; margin-top:0;"><i class="fa-solid fa-pen-to-square"></i> माहिती दुरुस्त करा</h3>
-      
       <input type="hidden" id="editId">
       <div class="input-group" style="flex-direction:column; gap:10px;">
         <label>संपूर्ण नाव:</label> <input type="text" id="editName">
@@ -261,7 +252,6 @@
     </div>
   </div>
 
-  <!-- 3. COMPLAINT REPLY MODAL -->
   <div id="replyModal" class="modal-overlay">
     <div class="modal-box" style="max-width: 500px;">
       <button class="modal-close" onclick="closeModal('replyModal')"><i class="fa-solid fa-xmark"></i></button>
@@ -281,17 +271,14 @@
     const firebaseConfig = { apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk", authDomain: "xrayunionmah.firebaseapp.com", projectId: "xrayunionmah", storageBucket: "xrayunionmah.firebasestorage.app", messagingSenderId: "763805226978", appId: "1:763805226978:web:6bae81a0b6358b47d88bbb" };
     const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db = getFirestore(app);
 
-    let allApprovedMembers = []; 
-    let allComplaints = [];
+    let allApprovedMembers = []; let allComplaints = [];
 
-    // Navigation & Modals
     window.showTab = function(id) { document.querySelectorAll('.content-area').forEach(t=>t.classList.remove('active')); document.querySelectorAll('.menu-item').forEach(m=>m.classList.remove('active')); document.getElementById(id).classList.add('active'); event.currentTarget.classList.add('active'); }
     window.closeModal = function(id) { document.getElementById(id).style.display = 'none'; }
 
     onAuthStateChanged(auth, (user) => { if(!user) window.location.href="login.html"; else { fetchMembersFromDB(); loadComplaints(); } });
     document.getElementById("logoutBtn").onclick = () => signOut(auth).then(()=>window.location.href="login.html");
 
-    // ================= 1. MEMBERS & PENDING LOGIC =================
     async function fetchMembersFromDB() {
       const snap = await getDocs(collection(db, "members"));
       let apprv=[], pend=[], totalFunds=0, mandalCount={};
@@ -302,7 +289,7 @@
         let finalName = raw.पूर्ण_नाव || `${fName} ${mName} ${lName}`.trim().replace(/\s+/g, ' ');
         if(finalName === "") finalName = "नाव उपलब्ध नाही";
 
-        let m = {id: d.id, ...raw, पूर्ण_नाव: finalName, ईमेल: raw.ईमेल || "-", जिल्हा: raw.जिल्हा || "-", मंडळ: raw.मंडळ || "-", पद: raw.पद || "क्ष-किरण वैज्ञानिक अधिकारी", मोबाईल: raw.मोबाईल_क्रमांक || raw.मोबाईल || "-", फी_स्थिती: raw.फी_स्थिती || "बाकी", स्थिती: raw.स्थिती || "मंजूर", ओळखपत्र_लिंक: raw.ओळखपत्र_लिंक || null, पत्ता: raw.कायमचा_पत्ता || raw.पत्ता || "-", सेवार्थ_आयडी: raw.सेवार्थ_आयडी || "-"};
+        let m = {id: d.id, ...raw, पूर्ण_नाव: finalName, ईमेल: raw.ईमेल || "-", जिल्हा: raw.जिल्हा || "-", मंडळ: raw.मंडळ || "-", पद: raw.पद || "क्ष-किरण वैज्ञानिक अधिकारी", मोबाईल: raw.मोबाईल_क्रमांक || raw.मोबाईल || "-", फी_स्थिती: raw.फी_स्थिती || "बाकी", स्थिती: raw.स्थिती || "मंजूर", अॅक्सेस: raw.अॅक्सेस || "चालू", ओळखपत्र_लिंक: raw.ओळखपत्र_लिंक || null, पत्ता: raw.कायमचा_पत्ता || raw.पत्ता || "-", सेवार्थ_आयडी: raw.सेवार्थ_आयडी || "-"};
         
         if(m.स्थिती==="प्रलंबित") pend.push(m); 
         else { apprv.push(m); mandalCount[m.मंडळ] = (mandalCount[m.मंडळ] || 0) + 1; if(m.फी_स्थिती === "जमा") totalFunds += 500; }
@@ -316,129 +303,94 @@
       renderPending(pend); renderTable(apprv); renderFinanceTable(apprv);
     }
 
-    // Pending Approvals with Document View
     function renderPending(data) {
-      const pt = document.getElementById("pendingMembersList"); pt.innerHTML = data.length ? "" : "<tr><td colspan='5' style='text-align:center;'>कोणीही मंजुरीच्या प्रतीक्षेत नाही.</td></tr>";
+     const pt = document.getElementById("pendingMembersList"); pt.innerHTML = data.length ? "" : "<tr><td colspan='6' style='text-align:center;'>कोणीही मंजुरीच्या प्रतीक्षेत नाही.</td></tr>";
       data.forEach(m => {
-        let docBtn = m.ओळखपत्र_लिंक ? `<a href="${m.ओळखपत्र_लिंक}" target="_blank" class="btn btn-info"><i class="fa-solid fa-file-pdf"></i> फाईल पहा</a>` : `<span style="color:red; font-weight:bold;">❌ उपलब्ध नाही</span>`;
-        pt.innerHTML += `<tr><td><b>${m.पूर्ण_नाव}</b></td><td>${m.मोबाईल}</td><td>${m.मंडळ}</td><td>${docBtn}</td><td><button class="btn btn-success" onclick="approveMember('${m.id}')">✅ मंजूर करा</button> <button class="btn btn-danger" onclick="deleteUser('${m.id}')">🗑️ रद्द</button></td></tr>`;
+        let docBtn = m.ओळखपत्र_लिंक ? `<a href="${m.ओळखपत्र_लिंक}" target="_blank" class="btn btn-info"><i class="fa-solid fa-file-pdf"></i> पहा</a>` : `<span style="color:red; font-weight:bold;">❌ नाही</span>`;
+        pt.innerHTML += `<tr><td><b>${m.पूर्ण_नाव}</b></td><td>${m.मोबाईल}</td><td>${m.ईमेल}</td><td>${m.मंडळ}</td><td>${docBtn}</td><td><button class="btn btn-success" onclick="approveMember('${m.id}')">✅ मंजूर</button></td></tr>`;
       });
     }
 
     function renderTable(data) {
-      const tb = document.getElementById("membersList"); tb.innerHTML = data.length ? "" : "<tr><td colspan='6' style='text-align:center;'>डेटा नाही.</td></tr>";
+      const tb = document.getElementById("membersList"); tb.innerHTML = data.length ? "" : "<tr><td colspan='8' style='text-align:center;'>डेटा नाही.</td></tr>";
       data.forEach(m => {
+        let accessBtn = m.अॅक्सेस === "बंद" ? 
+          `<button class="action-btn" style="background:#dc3545;" onclick="toggleAccess('${m.id}','चालू')"><i class="fa-solid fa-ban"></i> बंद</button>` : 
+          `<button class="action-btn" style="background:#28a745;" onclick="toggleAccess('${m.id}','बंद')"><i class="fa-solid fa-check"></i> चालू</button>`;
+
+        // UI Tweak for Address to prevent table stretching
+        let shortAddress = m.पत्ता.length > 30 ? m.पत्ता.substring(0, 30) + '...' : m.पत्ता;
+
         tb.innerHTML += `
           <tr>
             <td style="color:#0B3D91; font-weight:bold;">${m.पूर्ण_नाव}</td>
             <td style="color:#0056b3; font-weight:bold;">${m.मोबाईल}</td>
+            <td>${m.ईमेल}</td>
             <td>${m.मंडळ}</td>
             <td>${m.जिल्हा}</td>
-            <td>${m.पद}</td>
+            <td style="max-width: 200px; white-space: normal; font-size: 0.8rem; color: #555;" title="${m.पत्ता}">${m.पत्ता}</td>
+            <td class="no-print" style="text-align:center;">${accessBtn}</td>
             <td class="no-print" style="text-align:center; white-space:nowrap;">
               <button class="action-btn" style="background:#17a2b8;" onclick="viewUser('${m.id}')"><i class="fa-solid fa-eye"></i> View</button>
               <button class="action-btn" style="background:#ffc107; color:#000;" onclick="editUser('${m.id}')"><i class="fa-solid fa-pen"></i> Edit</button>
-              <button class="action-btn" style="background:#dc3545;" onclick="deleteUser('${m.id}')"><i class="fa-solid fa-trash"></i> Delete</button>
+              <button class="action-btn" style="background:#dc3545;" onclick="deleteUser('${m.id}')"><i class="fa-solid fa-trash"></i> Del</button>
             </td>
           </tr>`;
       });
     }
 
-    // ================= 2. ACTION BUTTONS (VIEW, EDIT, DELETE) =================
+    window.toggleAccess = async (id, st) => {
+      let msg = st === 'बंद' ? "या सदस्याचे लॉगिन 'बंद' (Block) करायचे आहे का?" : "या सदस्याचे लॉगिन पुन्हा 'चालू' (Unblock) करायचे आहे का?";
+      if(confirm(msg)) {
+        await updateDoc(doc(db, "members", id), { अॅक्सेस: st });
+        fetchMembersFromDB();
+      }
+    };
+
     window.viewUser = (id) => {
-let m = allApprovedMembers.find(x => x.id === id);
-      if(!m) return;
-      document.getElementById("vName").innerText = m.पूर्ण_नाव;
-      document.getElementById("vMobile").innerText = m.मोबाईल;
-      document.getElementById("vEmail").innerText = m.ईमेल;
-      document.getElementById("vPost").innerText = m.पद;
-      document.getElementById("vMandalDist").innerText = `${m.मंडळ} / ${m.जिल्हा}`;
-      document.getElementById("vSevarth").innerText = m.सेवार्थ_आयडी;
+      let m = allApprovedMembers.find(x => x.id === id); if(!m) return;
+      document.getElementById("vName").innerText = m.पूर्ण_नाव; document.getElementById("vMobile").innerText = m.मोबाईल;
+      document.getElementById("vEmail").innerText = m.ईमेल; document.getElementById("vPost").innerText = m.पद;
+      document.getElementById("vMandalDist").innerText = `${m.मंडळ} / ${m.जिल्हा}`; document.getElementById("vSevarth").innerText = m.सेवार्थ_आयडी;
       document.getElementById("vAddress").innerText = m.पत्ता;
       document.getElementById("vDoc").innerHTML = m.ओळखपत्र_लिंक ? `<a href="${m.ओळखपत्र_लिंक}" target="_blank" style="color:blue; text-decoration:underline;">📄 ओळखपत्र पहा</a>` : "उपलब्ध नाही";
 
-      // Filter complaints by this member's mobile
-      let userComps = allComplaints.filter(c => c.मोबाईल === m.मोबाईल);
-      let cTable = document.getElementById("vComplaintsList");
-      cTable.innerHTML = userComps.length ? "" : "<tr><td colspan='3'>या सदस्याने कोणतीही तक्रार केलेली नाही.</td></tr>";
-      userComps.forEach(c => {
-        let st = c.स्थिती==="प्रलंबित" ? `<span style="color:red">🔴 प्रलंबित</span>` : `<span style="color:green">🟢 सोडवली</span>`;
-        cTable.innerHTML += `<tr><td>${c.तारीख||'-'}</td><td>${c.विषय}</td><td>${st}</td></tr>`;
-      });
-
+      let userComps = allComplaints.filter(c => c.मोबाईल === m.मोबाईल); let cTable = document.getElementById("vComplaintsList");
+      cTable.innerHTML = userComps.length ? "" : "<tr><td colspan='3'>कोणतीही तक्रार नाही.</td></tr>";
+      userComps.forEach(c => { let st = c.स्थिती==="प्रलंबित" ? `<span style="color:red">🔴 प्रलंबित</span>` : `<span style="color:green">🟢 सोडवली</span>`; cTable.innerHTML += `<tr><td>${c.तारीख||'-'}</td><td>${c.विषय}</td><td>${st}</td></tr>`; });
       document.getElementById("viewModal").style.display = 'flex';
     };
 
     window.editUser = (id) => {
-      let m = allApprovedMembers.find(x => x.id === id);
-      if(!m) return;
-      document.getElementById("editId").value = m.id;
-      document.getElementById("editName").value = m.पूर्ण_नाव;
-      document.getElementById("editMobile").value = m.मोबाईल;
-      document.getElementById("editEmail").value = m.ईमेल;
-      document.getElementById("editMandal").value = m.मंडळ;
-      document.getElementById("editDistrict").value = m.जिल्हा;
-      document.getElementById("editAddress").value = m.पत्ता;
-      
-      document.getElementById("editModal").style.display = 'flex';
+      let m = allApprovedMembers.find(x => x.id === id); if(!m) return;
+      document.getElementById("editId").value = m.id; document.getElementById("editName").value = m.पूर्ण_नाव;
+      document.getElementById("editMobile").value = m.मोबाईल; document.getElementById("editEmail").value = m.ईमेल;
+      document.getElementById("editMandal").value = m.मंडळ; document.getElementById("editDistrict").value = m.जिल्हा;
+      document.getElementById("editAddress").value = m.पत्ता; document.getElementById("editModal").style.display = 'flex';
     };
 
     window.saveEditMember = async () => {
       let id = document.getElementById("editId").value;
       try {
-        await updateDoc(doc(db,"members",id),{
-          पूर्ण_नाव: document.getElementById("editName").value,
-          मोबाईल: document.getElementById("editMobile").value,
-          मोबाईल_क्रमांक: document.getElementById("editMobile").value,
-          ईमेल: document.getElementById("editEmail").value,
-          मंडळ: document.getElementById("editMandal").value,
-          जिल्हा: document.getElementById("editDistrict").value,
-          पत्ता: document.getElementById("editAddress").value
-        });
-        alert("✅ माहिती यशस्वीरित्या बदलली!");
-        closeModal('editModal');
-        fetchMembersFromDB();
-      } catch(e) { alert("❌ चूक झाली."); console.error(e); }
+        await updateDoc(doc(db,"members",id),{ पूर्ण_नाव: document.getElementById("editName").value, मोबाईल: document.getElementById("editMobile").value, मोबाईल_क्रमांक: document.getElementById("editMobile").value, ईमेल: document.getElementById("editEmail").value, मंडळ: document.getElementById("editMandal").value, जिल्हा: document.getElementById("editDistrict").value, पत्ता: document.getElementById("editAddress").value, कायमचा_पत्ता: document.getElementById("editAddress").value });
+        alert("✅ माहिती सेव्ह झाली!"); closeModal('editModal'); fetchMembersFromDB();
+      } catch(e) { alert("❌ चूक झाली."); }
     };
 
-    window.deleteUser = async (id) => { if(confirm("⚠️ हा सदस्य डेटाबेसमधून कायमचा डिलीट करायचा का?")) { await deleteDoc(doc(db,"members",id)); fetchMembersFromDB(); } };
-    window.approveMember = async (id) => { if(confirm("या सदस्याला अधिकृत मंजुरी द्यायची?")) { await updateDoc(doc(db,"members",id),{स्थिती:"मंजूर"}); fetchMembersFromDB(); } };
+    window.deleteUser = async (id) => { if(confirm("⚠️ हा सदस्य कायमचा डिलीट करायचा का?")) { await deleteDoc(doc(db,"members",id)); fetchMembersFromDB(); } };
+    window.approveMember = async (id) => { if(confirm("मंजुरी द्यायची?")) { await updateDoc(doc(db,"members",id),{स्थिती:"मंजूर"}); fetchMembersFromDB(); } };
 
-    // ================= 3. FILTER, FINANCE, COMPLAINTS =================
-    window.applyFilters = () => {
-      let sName = document.getElementById("searchName").value.toLowerCase();
-      let sMandal = document.getElementById("searchMandal").value;
-      let filtered = allApprovedMembers.filter(m => (m.पूर्ण_नाव.toLowerCase().includes(sName) || m.मोबाईल.includes(sName)) && (sMandal === "" || m.मंडळ === sMandal));
-      renderTable(filtered);
-    }
+    window.applyFilters = () => { let sName = document.getElementById("searchName").value.toLowerCase(); let sMandal = document.getElementById("searchMandal").value; let filtered = allApprovedMembers.filter(m => (m.पूर्ण_नाव.toLowerCase().includes(sName) || m.मोबाईल.includes(sName)) && (sMandal === "" || m.मंडळ === sMandal)); renderTable(filtered); }
     window.resetFilters = () => { document.getElementById("searchName").value = ""; document.getElementById("searchMandal").value = ""; renderTable(allApprovedMembers); }
 
-    function renderFinanceTable(data) {
-      const ft = document.getElementById("financeList"); ft.innerHTML = data.length ? "" : "<tr><td colspan='5'>डेटा नाही.</td></tr>";
-      data.forEach(m => {
-        let st = m.फी_स्थिती === "जमा" ? `<span style="color:green;font-weight:bold;">✅ जमा</span>` : `<span style="color:red;font-weight:bold;">🔴 बाकी</span>`;
-        let act = m.फी_स्थिती === "जमा" ? `-` : `<button class="btn btn-success" onclick="markFeePaid('${m.id}')">💰 फी जमा करा</button>`;
-        ft.innerHTML += `<tr><td>${m.पूर्ण_नाव}</td><td>${m.मोबाईल}</td><td>${m.मंडळ}</td><td>${st}</td><td>${act}</td></tr>`;
-      });
-    }
+    function renderFinanceTable(data) { const ft = document.getElementById("financeList"); ft.innerHTML = data.length ? "" : "<tr><td colspan='5'>डेटा नाही.</td></tr>"; data.forEach(m => { let st = m.फी_स्थिती === "जमा" ? `<span style="color:green;font-weight:bold;">✅ जमा</span>` : `<span style="color:red;font-weight:bold;">🔴 बाकी</span>`; let act = m.फी_स्थिती === "जमा" ? `-` : `<button class="btn btn-success" onclick="markFeePaid('${m.id}')">💰 फी जमा करा</button>`; ft.innerHTML += `<tr><td>${m.पूर्ण_नाव}</td><td>${m.मोबाईल}</td><td>${m.मंडळ}</td><td>${st}</td><td>${act}</td></tr>`; }); }
     window.markFeePaid = async (id) => { if(confirm("फी जमा करायची?")) { await updateDoc(doc(db,"members",id),{फी_स्थिती:"जमा"}); fetchMembersFromDB(); } };
 
-    async function loadComplaints() {
-      const snap = await getDocs(query(collection(db, "complaints"), orderBy("timestamp", "desc")));
-      allComplaints=[]; snap.forEach(d => allComplaints.push({id: d.id, ...d.data()}));
-      const tb = document.getElementById("complaintsList"); tb.innerHTML="";
-      document.getElementById("statComplaints").innerText = allComplaints.length;
-      allComplaints.forEach(c => {
-        let st = c.स्थिती==="प्रलंबित" ? `<span style="color:red; font-weight:bold;">🔴 प्रलंबित</span>`:`<span style="color:green; font-weight:bold;">🟢 सोडवली</span>`;
-        let act = c.स्थिती==="प्रलंबित" ? `<button class="btn btn-warning" onclick="openReplyModal('${c.id}')">उत्तर द्या</button>` : `-`;
-        tb.innerHTML+=`<tr><td>${c.तारीख||'-'}</td><td><b>${c.सदस्य_नाव}</b><br>${c.मोबाईल}</td><td><b>${c.विषय}</b><br>${c.तक्रार}</td><td>${st}</td><td>${act}</td></tr>`;
-      });
-    }
+    async function loadComplaints() { const snap = await getDocs(query(collection(db, "complaints"), orderBy("timestamp", "desc"))); allComplaints=[]; snap.forEach(d => allComplaints.push({id: d.id, ...d.data()})); const tb = document.getElementById("complaintsList"); tb.innerHTML=""; document.getElementById("statComplaints").innerText = allComplaints.length; allComplaints.forEach(c => { let st = c.स्थिती==="प्रलंबित" ? `<span style="color:red; font-weight:bold;">🔴 प्रलंबित</span>`:`<span style="color:green; font-weight:bold;">🟢 सोडवली</span>`; let act = c.स्थिती==="प्रलंबित" ? `<button class="btn btn-warning" onclick="openReplyModal('${c.id}')">उत्तर द्या</button>` : `-`; tb.innerHTML+=`<tr><td>${c.तारीख||'-'}</td><td><b>${c.सदस्य_नाव}</b><br>${c.मोबाईल}</td><td><b>${c.विषय}</b><br>${c.तक्रार}</td><td>${st}</td><td>${act}</td></tr>`; }); }
     window.openReplyModal = (id) => { let c = allComplaints.find(x=>x.id===id); document.getElementById("replyCompId").value=c.id; document.getElementById("replyMemComp").innerText=c.तक्रार; document.getElementById("replyModal").style.display='flex'; };
     window.saveReply = async () => { await updateDoc(doc(db,"complaints",document.getElementById("replyCompId").value), {स्थिती:"सोडवली", रिप्लाय:document.getElementById("adminReplyText").value}); alert("✅ उत्तर सेव्ह झाले!"); loadComplaints(); closeModal('replyModal'); };
 
-    // Excel
-    window.downloadExcel = () => { let data = allApprovedMembers.map((m,i)=>({"Sr":i+1, "Name":m.पूर्ण_नाव, "Mobile":m.मोबाईल, "Email":m.ईमेल, "Mandal":m.मंडळ, "District":m.जिल्हा, "Post":m.पद})); let ws = XLSX.utils.json_to_sheet(data); let wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Members"); XLSX.writeFile(wb, "Members_List.xlsx"); };
+    window.downloadExcel = () => { let data = allApprovedMembers.map((m,i)=>({"Sr":i+1, "Name":m.पूर्ण_नाव, "Mobile":m.मोबाईल, "Email":m.ईमेल, "Mandal":m.मंडळ, "District":m.जिल्हा, "Address":m.पत्ता})); let ws = XLSX.utils.json_to_sheet(data); let wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Members"); XLSX.writeFile(wb, "Members_List.xlsx"); };
   </script>
 </body>
 </html>
