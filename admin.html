@@ -2,61 +2,179 @@
 <html lang="mr">
 <head>
   <meta charset="UTF-8">
-  <title>Admin Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ॲडमिन डॅशबोर्ड - क्ष किरण संघटना</title>
+  
   <style>
-    body { font-family: sans-serif; background: #f4f7f6; padding: 20px; }
-    .card { background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 20px; }
-    table { width: 100%; border-collapse: collapse; }
-    td, th { border: 1px solid #ddd; padding: 10px; }
-    button { padding: 8px; cursor: pointer; border: none; border-radius: 4px; color: white; }
-    input { width: 80%; padding: 10px; margin: 5px; }
+    :root { --primary-color: #0B3D91; --secondary-color: #FFD700; --bg-color: #f4f7f6; --text-color: #333; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg-color); margin: 0; padding: 0; color: var(--text-color); }
+    
+    .header { background: var(--primary-color); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    .header h1 { margin: 0; font-size: 1.5rem; }
+    .btn-logout { background: #dc3545; color: white; border: none; padding: 8px 15px; border-radius: 5px; font-weight: bold; cursor: pointer; }
+    .btn-logout:hover { background: #c82333; }
+    
+    .container { max-width: 1000px; margin: 30px auto; padding: 0 20px; display: none; /* लॉगिन होईपर्यंत लपवून ठेवा */ }
+    
+    .status-bar { padding: 15px; border-radius: 6px; text-align: center; font-weight: bold; margin-bottom: 20px; background: #d4edda; color: #155724; }
+    
+    .card { background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-bottom: 25px; border-top: 5px solid var(--primary-color); }
+    .card h3 { color: var(--primary-color); margin-top: 0; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px; }
+    
+    .input-group { display: flex; gap: 15px; flex-wrap: wrap; }
+    input[type="text"] { flex: 1; min-width: 250px; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; outline: none; }
+    button { background: var(--primary-color); color: white; border: none; padding: 12px 20px; border-radius: 6px; font-size: 1rem; font-weight: bold; cursor: pointer; }
+    
+    .btn-delete { background: #dc3545; padding: 8px 12px; font-size: 0.9rem; color: white; border:none; border-radius: 4px; cursor:pointer;}
+    
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; }
+    th, td { padding: 15px; text-align: left; border-bottom: 1px solid #ddd; }
+    th { background: #f8f9fa; color: var(--primary-color); }
+    
+    @media (max-width: 600px) {
+      .header { flex-direction: column; gap: 10px; text-align: center; }
+      .input-group { flex-direction: column; }
+    }
   </style>
 </head>
 <body>
-<div class="card">
-  <h2>ॲडमिन पॅनल</h2>
-  <input type="text" id="marqueeInput" placeholder="आडवी पट्टी अपडेट करा">
-  <button style="background:#0B3D91;" onclick="updateData('marquee', 'marqueeInput')">अपडेट पट्टी</button>
-  <br>
-  <input type="text" id="newsInput" placeholder="ताज्या घडामोडी अपडेट करा">
-  <button style="background:#0B3D91;" onclick="updateData('latest_news', 'newsInput')">अपडेट बातम्या</button>
-</div>
 
-<div class="card" id="usersList">लोड होत आहे...</div>
+  <div class="header">
+    <h1>⚙️ ॲडमिन कंट्रोल पॅनल</h1>
+    <button id="logoutBtn" class="btn-logout">लॉगआउट (Logout)</button>
+  </div>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-  import { getFirestore, collection, getDocs, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+  <!-- हा भाग फक्त लॉगिन झाल्यावरच दिसेल -->
+  <div class="container" id="adminContent">
+    
+    <div class="status-bar">✅ तुम्ही यशस्वीरित्या लॉगिन आहात.</div>
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk",
-    authDomain: "xrayunionmah.firebaseapp.com",
-    projectId: "xrayunionmah",
-    storageBucket: "xrayunionmah.firebasestorage.app",
-    messagingSenderId: "763805226978",
-    appId: "1:763805226978:web:6bae81a0b6358b47d88bbb"
-  };
+    <div class="card">
+      <h3>📢 आडवी पट्टी (Marquee) अपडेट करा</h3>
+      <div class="input-group">
+        <input type="text" id="marqueeInput" placeholder="येथे नवीन सूचना टाईप करा...">
+        <button id="btnMarquee">अपडेट करा</button>
+      </div>
+    </div>
 
-  const db = getFirestore(initializeApp(firebaseConfig));
+    <div class="card">
+      <h3>🔔 ताज्या घडामोडी (Latest News) अपडेट करा</h3>
+      <div class="input-group">
+        <input type="text" id="newsInput" placeholder="येथे ताज्या घडामोडी टाईप करा...">
+        <button id="btnNews">अपडेट करा</button>
+      </div>
+    </div>
 
-  window.updateData = async (docName, inputId) => {
-    const val = document.getElementById(inputId).value;
-    await updateDoc(doc(db, "settings", docName), { text: val });
-    alert("अपडेट झाले!");
-  };
+    <div class="card">
+      <h3>👥 नोंदणीकृत सदस्यांची यादी</h3>
+      <div style="overflow-x: auto;">
+        <table>
+          <thead>
+            <tr><th>नाव</th><th>मोबाईल क्रमांक</th><th>कृती (Action)</th></tr>
+          </thead>
+          <tbody id="membersList">
+            <tr><td colspan="3" style="text-align:center;">माहिती लोड होत आहे...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-  async function loadData() {
-    const snap = await getDocs(collection(db, "members"));
-    let html = '<table><tr><th>नाव</th><th>मोबाईल</th><th>Action</th></tr>';
-    snap.forEach(d => {
-      const data = d.data();
-      html += `<tr><td>${data["नाव"]}</td><td>${data["मोबाईल क्रमांक"]}</td>
-      <td><button style="background:green;" onclick="alert('Edit clicked')">Edit</button>
-      <button style="background:red;" onclick="deleteDoc(doc(db,'members','${d.id}')); location.reload()">Del</button></td></tr>`;
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+    import { getFirestore, collection, getDocs, doc, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk",
+      authDomain: "xrayunionmah.firebaseapp.com",
+      projectId: "xrayunionmah",
+      storageBucket: "xrayunionmah.firebasestorage.app",
+      messagingSenderId: "763805226978",
+      appId: "1:763805226978:web:6bae81a0b6358b47d88bbb"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // 1. Check if user is logged in
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        // जर लॉगिन नसेल, तर login.html वर फेकून द्या
+        window.location.href = "login.html";
+      } else {
+        // जर लॉगिन असेल, तर डॅशबोर्ड दाखवा
+        document.getElementById("adminContent").style.display = "block";
+        loadMembers(); // सदस्य लोड करा
+      }
     });
-    document.getElementById("usersList").innerHTML = html + '</table>';
-  }
-  loadData();
-</script>
+
+    // 2. Logout Function
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      signOut(auth).then(() => {
+        window.location.href = "login.html";
+      }).catch((error) => {
+        alert("लॉगआउट करताना एरर आला.");
+      });
+    });
+
+    // 3. Update Marquee Function
+    document.getElementById("btnMarquee").addEventListener("click", async () => {
+      const val = document.getElementById("marqueeInput").value.trim();
+      if(!val) return alert("⚠️ कृपया सूचना टाईप करा.");
+      try {
+        await setDoc(doc(db, "settings", "marquee"), { text: val });
+        alert("✅ आडवी पट्टी अपडेट झाली!");
+        document.getElementById("marqueeInput").value = "";
+      } catch(e) { alert("त्रुटी आली: " + e.message); }
+    });
+
+    // 4. Update News Function
+    document.getElementById("btnNews").addEventListener("click", async () => {
+      const val = document.getElementById("newsInput").value.trim();
+      if(!val) return alert("⚠️ कृपया बातमी टाईप करा.");
+      try {
+        await setDoc(doc(db, "settings", "latest_news"), { text: val });
+        alert("✅ ताज्या घडामोडी अपडेट झाल्या!");
+        document.getElementById("newsInput").value = "";
+      } catch(e) { alert("त्रुटी आली: " + e.message); }
+    });
+
+    // 5. Load Members Function
+    async function loadMembers() {
+      const tbody = document.getElementById("membersList");
+      try {
+        const querySnapshot = await getDocs(collection(db, "members"));
+        tbody.innerHTML = "";
+        if(querySnapshot.empty) {
+            tbody.innerHTML = "<tr><td colspan='3' style='text-align:center;'>सध्या कोणताही सदस्य नाही.</td></tr>";
+            return;
+        }
+        querySnapshot.forEach((d) => {
+          const data = d.data();
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${data["नाव"] || "नाव उपलब्ध नाही"}</td>
+            <td>${data["मोबाईल क्रमांक"] || "-"}</td>
+            <td><button class="btn-delete" onclick="deleteUser('${d.id}')">🗑️ Delete</button></td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch(err) {
+        tbody.innerHTML = "<tr><td colspan='3' style='text-align:center; color:red;'>माहिती लोड करताना त्रुटी आली.</td></tr>";
+      }
+    }
+
+    // 6. Delete User Function (Global Scope)
+    window.deleteUser = async function(id) {
+      if(confirm("हा सदस्य कायमचा डिलीट करायचा आहे?")) {
+        await deleteDoc(doc(db, "members", id));
+        alert("✅ सदस्य डिलीट झाला.");
+        loadMembers();
+      }
+    };
+  </script>
 </body>
 </html>
