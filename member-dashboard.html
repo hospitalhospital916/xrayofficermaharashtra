@@ -3,204 +3,368 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>सदस्य डॅशबोर्ड - क्ष किरण संघटना</title>
-  <!-- EmailJS Library -->
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-  <style>
-    :root { --primary-color: #0B3D91; --secondary-color: #FFD700; }
-    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f7f6; margin: 0; padding: 0; }
-    
-    .header { background: var(--primary-color); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-    .header h1 { margin: 0; font-size: 1.5rem; }
-    .btn-logout { background: #dc3545; color: white; border: none; padding: 8px 15px; border-radius: 5px; font-weight: bold; cursor: pointer; }
-    
-    .container { max-width: 900px; margin: 30px auto; padding: 0 20px; }
-    .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 25px; border-top: 5px solid var(--primary-color); }
-    
-    h3 { color: var(--primary-color); margin-top: 0; border-bottom: 2px solid #eee; padding-bottom: 10px; }
-    
-    /* Form Styles */
-    label { font-weight: bold; margin-top: 10px; display: block; color: #555; }
-    select, textarea { width: 100%; padding: 12px; margin-top: 5px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; box-sizing: border-box; font-family: inherit;}
-    textarea { resize: vertical; min-height: 100px; }
-    button.submit-btn { background: #28a745; color: white; border: none; padding: 12px 20px; border-radius: 6px; font-size: 1.1rem; font-weight: bold; cursor: pointer; width: 100%; transition: 0.3s; }
-    button.submit-btn:hover { background: #218838; }
+  <title>माझा डॅशबोर्ड - क्ष किरण संघटना</title>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    /* Table Styles */
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.95rem; }
-    th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
-    th { background: #f8f9fa; color: var(--primary-color); }
-    .status-pending { color: #dc3545; font-weight: bold; background: #ffeeba; padding: 4px 8px; border-radius: 4px; }
-    .status-resolved { color: #28a745; font-weight: bold; background: #d4edda; padding: 4px 8px; border-radius: 4px; }
-    .admin-reply-box { background: #e9ecef; padding: 10px; border-left: 4px solid #0B3D91; margin-top: 5px; font-size: 0.9rem; border-radius: 4px;}
+  <style>
+    :root { --primary: #0B3D91; --secondary: #FFD700; --bg: #f4f7f6; --text: #333; --sidebar-bg: #072559; }
+    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background: var(--bg); margin: 0; padding: 0; color: var(--text); display: flex; height: 100vh; overflow: hidden; }
+    
+    /* ================= SIDEBAR ================= */
+    .sidebar { width: 260px; background: var(--sidebar-bg); color: white; display: flex; flex-direction: column; z-index: 100; transition: 0.3s; }
+    .sidebar-header { padding: 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .sidebar-header h2 { margin: 0; font-size: 1.2rem; color: var(--secondary); }
+    .sidebar-menu { flex: 1; overflow-y: auto; padding: 15px 0; }
+    .menu-item { padding: 12px 20px; cursor: pointer; display: flex; align-items: center; gap: 15px; color: #cfd8dc; transition: 0.2s; border-left: 4px solid transparent; }
+    .menu-item:hover, .menu-item.active { background: rgba(255,255,255,0.1); color: white; border-left-color: var(--secondary); }
+    .sidebar-footer { padding: 15px; border-top: 1px solid rgba(255,255,255,0.1); }
+    
+    /* ================= MAIN CONTENT ================= */
+    .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    .top-header { background: white; padding: 15px 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; }
+    .top-header h3 { margin: 0; color: var(--primary); }
+    .btn-logout { background: #dc3545; color: white; border: none; padding: 8px 15px; border-radius: 5px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+    
+    .content-area { padding: 25px; overflow-y: auto; flex: 1; display: none; }
+    .content-area.active { display: block; }
+
+    /* ================= CARDS & UI ================= */
+    .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 25px; border-top: 4px solid var(--primary); }
+    .card h3 { margin-top: 0; color: var(--primary); border-bottom: 2px solid #eee; padding-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+    /* Profile & ID Card */
+    .profile-info p { margin: 10px 0; font-size: 1rem; border-bottom: 1px dashed #ddd; padding-bottom: 8px; }
+    .profile-info strong { color: #555; display: inline-block; width: 120px; }
+
+    .id-card-wrapper { display: flex; flex-direction: column; align-items: center; }
+    .id-card { background: linear-gradient(135deg, #0B3D91, #072559); width: 100%; max-width: 320px; border-radius: 10px; padding: 20px; color: white; text-align: center; box-shadow: 0 10px 20px rgba(0,0,0,0.2); position: relative; overflow: hidden; border: 2px solid var(--secondary); }
+    .id-card::before { content: ""; position: absolute; top: -50px; right: -50px; width: 150px; height: 150px; background: rgba(255, 215, 0, 0.1); border-radius: 50%; }
+    .id-card img { width: 80px; height: 80px; border-radius: 50%; border: 3px solid var(--secondary); margin-bottom: 10px; background: white; object-fit: cover; }
+    .id-card h4 { margin: 5px 0; font-size: 1.3rem; color: var(--secondary); text-transform: uppercase; }
+    .union-title { font-size: 0.85rem; font-weight: bold; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 10px; margin-bottom: 15px; }
+
+    /* Buttons & Inputs */
+    .btn { background: var(--primary); color: white; border: none; padding: 10px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: 0.3s; }
+    .btn-success { background: #28a745; } .btn-danger { background: #dc3545; }
+    .input-group { margin-bottom: 15px; }
+    .input-group label { display: block; margin-bottom: 5px; font-weight: bold; color: #555; }
+    .input-group input, .input-group textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; }
+
+    /* ================= E-LIBRARY (Folder Style) ================= */
+    .folder-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; }
+    .doc-item { background: #f8f9fa; border: 1px solid #ddd; padding: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; transition: 0.3s; }
+    .doc-item:hover { box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    .doc-icon { font-size: 2rem; color: #dc3545; }
+    
+    .confidential-item { border-left: 5px solid #dc3545; background: #fff5f5; }
+    .public-item { border-left: 5px solid #28a745; }
+
+    /* ================= CONFIDENTIAL VIEWER MODAL ================= */
+    .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); justify-content: center; align-items: center; }
+    .viewer-content { background: white; width: 90%; max-width: 800px; height: 85vh; border-radius: 10px; position: relative; overflow: hidden; display: flex; flex-direction: column; }
+    .viewer-header { background: #dc3545; color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
+    
+    /* 🛡️ No Select & Anti-Piracy */
+    .no-select { user-select: none; -webkit-user-select: none; }
+    .doc-body { flex: 1; padding: 30px; overflow-y: auto; position: relative; background: #fff; }
+    
+    /* 🛡️ Dynamic Watermark */
+    .watermark-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; z-index: 10; display: flex; flex-wrap: wrap; justify-content: center; align-content: center; opacity: 0.15; }
+    .watermark-text { font-size: 24px; color: #000; font-weight: bold; transform: rotate(-30deg); padding: 50px; text-transform: uppercase; }
+
+    /* ================= PRINT CSS (Only ID Card) ================= */
+    @media print {
+      body * { visibility: hidden !important; }
+      #printIdCard, #printIdCard * { visibility: visible !important; }
+      #printIdCard { position: absolute; left: 50%; top: 50px; transform: translateX(-50%); width: 350px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
   </style>
 </head>
 <body>
 
-  <div class="header">
-    <h1>नमस्कार, <span id="headerName">सदस्य</span>!</h1>
-    <button id="logoutBtn" class="btn-logout">लॉगआउट</button>
+  <!-- Sidebar -->
+  <div class="sidebar no-print">
+    <div class="sidebar-header">
+      <h2><i class="fa-solid fa-user-tie"></i> माझा डॅशबोर्ड</h2>
+      <small style="color: #aaa;" id="sidebarName">लोड होत आहे...</small>
+    </div>
+    <div class="sidebar-menu">
+      <div class="menu-item active" onclick="showTab('tab-profile')"><i class="fa-solid fa-id-card"></i> प्रोफाईल आणि ओळखपत्र</div>
+      <div class="menu-item" onclick="showTab('tab-library')"><i class="fa-solid fa-book-open"></i> ई-लायब्ररी (फाईल्स)</div>
+      <div class="menu-item" onclick="showTab('tab-voting')"><i class="fa-solid fa-check-to-slot"></i> ऑनलाईन मतदान</div>
+      <div class="menu-item" onclick="showTab('tab-complaints')"><i class="fa-solid fa-headset"></i> तक्रार / सपोर्ट</div>
+    </div>
+    <div class="sidebar-footer">
+      <button id="logoutBtn" class="btn-logout" style="width:100%;"><i class="fa-solid fa-right-from-bracket"></i> लॉगआउट</button>
+    </div>
   </div>
 
-  <div class="container">
+  <div class="main-content">
     
-    <!-- प्रोफाईल माहिती -->
-    <div class="card" style="border-top-color: var(--secondary-color); text-align: center;">
-      <h2 style="color: var(--primary-color); margin:0;">तुमचे प्रोफाईल</h2>
-      <p style="color: green; font-weight: bold; margin-top: 5px;">✅ नोंदणीकृत अधिकृत सदस्य</p>
-      <p><strong>मोबाईल:</strong> <span id="profileMobile">-</span> | <strong>जिल्हा:</strong> <span id="profileDistrict">-</span></p>
+    <!-- Top Header -->
+    <div class="top-header no-print">
+      <h3>क्ष किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र</h3>
+      <span style="color: green; font-weight: bold;">✅ अधिकृत सदस्य</span>
     </div>
 
-    <!-- तक्रार फॉर्म -->
-    <div class="card">
-      <h3>📩 नवीन तक्रार / प्रश्न नोंदवा</h3>
-      <label>तक्रारीचा विषय (Category)</label>
-      <select id="compCategory">
-        <option value="बदली (Transfer) समस्या">बदली (Transfer) समस्या</option>
-        <option value="पगार / भत्ते समस्या">पगार / भत्ते समस्या</option>
-        <option value="प्रशासकीय काम / माहिती अधिकार">प्रशासकीय काम / माहिती अधिकार</option>
-        <option value="वेबसाईट तांत्रिक अडचण">वेबसाईट तांत्रिक अडचण</option>
-        <option value="इतर">इतर</option>
-      </select>
+    <!-- TAB 1: Profile & ID Card -->
+    <div class="content-area active" id="tab-profile">
+      <div class="grid-2">
+        <div class="card" style="border-top-color: var(--secondary);">
+          <h3><i class="fa-solid fa-id-badge"></i> डिजिटल ओळखपत्र</h3>
+          <div class="id-card-wrapper">
+            <div class="id-card" id="printIdCard">
+              <div class="union-title">क्ष-किरण वैज्ञानिक अधिकारी संघटना<br>महाराष्ट्र राज्य</div>
+              <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Profile">
+              <h4 id="cardName">नाव लोड होत आहे</h4>
+              <p id="cardDesignation" style="font-weight:bold; color: #eef2f7;">पद</p>
+              <p><i class="fa-solid fa-phone"></i> <span id="cardMobile"></span></p>
+              <p><i class="fa-solid fa-location-dot"></i> <span id="cardMandal"></span> मंडळ</p>
+            </div>
+            <button class="btn btn-success" onclick="window.print()" style="margin-top:15px; width:100%; max-width:320px;"><i class="fa-solid fa-print"></i> आयडी कार्ड प्रिंट करा</button>
+          </div>
+        </div>
 
-      <label>सविस्तर माहिती लिहा</label>
-      <textarea id="compDesc" placeholder="तुमची समस्या किंवा प्रश्न येथे सविस्तर लिहा..."></textarea>
-
-      <button id="btnSubmitComp" class="submit-btn">तक्रार सबमिट करा</button>
-      <p id="compMsg" style="text-align:center; font-weight:bold; margin-top:10px;"></p>
+        <div class="card">
+          <h3><i class="fa-solid fa-user"></i> माझी माहिती</h3>
+          <div class="profile-info">
+            <p><strong>संपूर्ण नाव:</strong> <span id="profName"></span></p>
+            <p><strong>मोबाईल क्र.:</strong> <span id="profMobile"></span></p>
+            <p><strong>ईमेल आयडी:</strong> <span id="profEmail"></span></p>
+            <p><strong>कायमचा पत्ता:</strong> <span id="profAddress"></span></p>
+            <p><strong>पद:</strong> <span id="profDesignation"></span></p>
+            <p><strong>मंडळ & जिल्हा:</strong> <span id="profLocation"></span></p>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- जुन्या तक्रारींची यादी -->
-    <div class="card">
-      <h3>📋 तुमच्या पूर्वीच्या तक्रारी</h3>
-      <div style="overflow-x: auto;">
-        <table>
-          <thead>
-            <tr><th>तारीख</th><th>विषय</th><th>स्थिती</th><th>ॲडमिनचा रिप्लाय</th></tr>
-          </thead>
-          <tbody id="myComplaintsList">
-            <tr><td colspan="4" style="text-align:center;">माहिती लोड होत आहे...</td></tr>
-          </tbody>
-        </table>
+    <!-- TAB 2: Secure E-Library -->
+    <div class="content-area" id="tab-library">
+      <h2 style="margin-top:0; color:var(--primary);">📚 ई-लायब्ररी आणि शासन निर्णय</h2>
+      
+      <!-- Public G.R. Folder -->
+      <div class="card" style="border-top-color: #28a745;">
+        <h3 style="color: #28a745;"><i class="fa-solid fa-folder-open"></i> सार्वजनिक कागदपत्रे (Public G.R.)</h3>
+        <p style="color: #666; font-size: 0.9rem;">हे शासन निर्णय तुम्ही डाऊनलोड करून इतरांना शेअर करू शकता.</p>
+        <div class="folder-grid">
+          <div class="doc-item public-item">
+            <div style="display:flex; gap:15px; align-items:center;">
+              <i class="fa-solid fa-file-pdf doc-icon"></i>
+              <div><b>७ वा वेतन आयोग G.R.</b><br><small>२ जुलै २०२६</small></div>
+            </div>
+            <button class="btn btn-success"><i class="fa-solid fa-download"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Confidential Folder -->
+      <div class="card" style="border-top-color: #dc3545;">
+        <h3 style="color: #dc3545;"><i class="fa-solid fa-user-secret"></i> गोपनीय कागदपत्रे (Confidential RTI / ठराव)</h3>
+        <p style="color: #dc3545; font-size: 0.9rem; font-weight:bold;">⚠️ अत्यंत गोपनीय: हे दस्तऐवज डाऊनलोड, कॉपी किंवा प्रिंट करण्यास सक्त मनाई आहे.</p>
+        <div class="folder-grid">
+          <div class="doc-item confidential-item">
+            <div style="display:flex; gap:15px; align-items:center;">
+              <i class="fa-solid fa-file-shield doc-icon"></i>
+              <div><b>मंत्रालय RTI अहवाल</b><br><small>केवळ अंतर्गत माहितीसाठी</small></div>
+            </div>
+            <button class="btn btn-danger" onclick="openConfidentialDoc('मंत्रालय RTI अहवाल')"><i class="fa-solid fa-eye"></i> सुरक्षितपणे वाचा</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: Voting System (Demo UI) -->
+    <div class="content-area" id="tab-voting">
+      <div class="card">
+        <h3><i class="fa-solid fa-check-to-slot"></i> सद्यस्थितीतील जनमत / मतदान</h3>
+        <div style="background: #eef2f7; padding: 20px; border-radius: 8px; margin-top: 15px; border-left: 5px solid var(--secondary);">
+          <h4 style="margin-top:0; font-size:1.2rem;">विषय: राज्यव्यापी संपावर जाण्याबाबत संघटनेचा निर्णय</h4>
+          <p style="color:#555;">अंतिम मुदत: २० जुलै २०२६ | तुमचे मत गुप्त राहील.</p>
+          <hr style="border:0; border-top:1px solid #ddd; margin:15px 0;">
+          <form id="votingForm">
+            <label style="display:block; margin-bottom:10px; font-size:1.1rem; cursor:pointer;">
+              <input type="radio" name="vote" value="yes" style="transform:scale(1.5); margin-right:10px;"> होय, संपावर जावे.
+            </label>
+            <label style="display:block; margin-bottom:10px; font-size:1.1rem; cursor:pointer;">
+              <input type="radio" name="vote" value="no" style="transform:scale(1.5); margin-right:10px;"> नाही, चर्चा करावी.
+            </label>
+            <button type="button" class="btn" style="margin-top:15px;" onclick="submitVote()"><i class="fa-solid fa-paper-plane"></i> माझे मत नोंदवा</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: Complaints -->
+    <div class="content-area" id="tab-complaints">
+      <div class="card" style="border-top-color: #dc3545; max-width: 600px;">
+        <h3 style="color: #dc3545;"><i class="fa-solid fa-headset"></i> तक्रार / सपोर्ट तिकीट</h3>
+        <p style="font-size: 0.9rem; color: #666;">प्रशासकीय अडचण किंवा मशीन बिघाड थेट ॲडमिनला कळवा.</p>
+        
+        <div class="input-group">
+          <label>विषय (Subject)</label>
+          <input type="text" id="compSubject" placeholder="उदा. बदली संदर्भात, एक्स-रे मशीन बिघाड...">
+        </div>
+        <div class="input-group">
+          <label>सविस्तर माहिती (Details)</label>
+          <textarea id="compDetails" rows="4" placeholder="तुमची अडचण सविस्तर लिहा..."></textarea>
+        </div>
+        <button id="btnSubmitComplaint" class="btn" style="width:100%;"><i class="fa-solid fa-paper-plane"></i> तक्रार ॲडमिनला पाठवा</button>
       </div>
     </div>
 
   </div>
 
+  <!-- 🛡️ CONFIDENTIAL VIEWER MODAL 🛡️ -->
+  <div id="confidentialModal" class="modal">
+    <div class="viewer-content">
+      <div class="viewer-header">
+        <h3 style="margin:0;"><i class="fa-solid fa-shield-halved"></i> सुरक्षित दस्तऐवज: <span id="docTitle"></span></h3>
+        <button class="btn" style="background:white; color:red;" onclick="closeConfidential()"><i class="fa-solid fa-xmark"></i> बंद करा</button>
+      </div>
+      
+      <!-- Anti-Piracy Body -->
+      <div class="doc-body no-select" id="docBody">
+        
+        <!-- Dynamic Watermark Layer -->
+        <div class="watermark-layer" id="watermarkLayer">
+          <!-- JS will fill this with user's name & MS_HANGE -->
+        </div>
+
+        <!-- Dummy Content -->
+        <div style="position:relative; z-index:1; padding:20px; font-size:1.1rem; line-height:1.8;">
+          <h2 style="text-align:center;">गोपनीय माहिती अहवाल</h2>
+          <p>ही फाईल अत्यंत गोपनीय आहे. यामध्ये संघटनेच्या अंतर्गत रणनीतीची आणि माहितीच्या अधिकाराखाली मिळवलेल्या कागदपत्रांची माहिती आहे.</p>
+          <p>कृपया ही माहिती कोणत्याही सार्वजनिक ग्रुपवर किंवा सोशल मीडियावर शेअर करू नये. तसे केल्यास शिस्तभंगाची कारवाई केली जाईल.</p>
+          <br><br><br><br><br><br><p>(येथे तुमची मुख्य PDF किंवा माहिती दिसेल)</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-    import { getFirestore, collection, addDoc, query, where, getDocs, orderBy } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+    import { getFirestore, collection, query, where, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-    // Firebase Init
-    const firebaseConfig = {
-      apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk",
-      authDomain: "xrayunionmah.firebaseapp.com",
-      projectId: "xrayunionmah",
-      storageBucket: "xrayunionmah.firebasestorage.app",
-      messagingSenderId: "763805226978",
-      appId: "1:763805226978:web:6bae81a0b6358b47d88bbb"
-    };
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    const firebaseConfig = { apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk", authDomain: "xrayunionmah.firebaseapp.com", projectId: "xrayunionmah", storageBucket: "xrayunionmah.firebasestorage.app", messagingSenderId: "763805226978", appId: "1:763805226978:web:6bae81a0b6358b47d88bbb" };
+    const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db = getFirestore(app);
 
-    // EmailJS Init (येथे तुमची पब्लिक की टाका नंतर)
-    emailjs.init("YOUR_EMAILJS_PUBLIC_KEY"); 
+    let currentMember = null;
+    let memberFullName = "";
 
-    // युजर चेक करा
-    const memberDataString = localStorage.getItem("loggedInMember");
-    if (!memberDataString) window.location.href = "member-login.html";
-    const memberData = JSON.parse(memberDataString);
-    
-    document.getElementById("headerName").innerText = memberData["नाव"] || "";
-    document.getElementById("profileMobile").innerText = memberData["मोबाईल क्रमांक"] || "-";
-    document.getElementById("profileDistrict").innerText = memberData["जिल्हा"] || "-";
-
-    document.getElementById("logoutBtn").onclick = () => { localStorage.clear(); window.location.href = "member-login.html"; };
-
-    // तक्रार सबमिट करणे
-    document.getElementById("btnSubmitComp").addEventListener("click", async () => {
-      const category = document.getElementById("compCategory").value;
-      const desc = document.getElementById("compDesc").value.trim();
-      const msgBox = document.getElementById("compMsg");
-
-      if(!desc) return alert("कृपया तुमची समस्या लिहा.");
-      
-      msgBox.innerText = "सबमिट करत आहे... ⏳";
-      msgBox.style.color = "blue";
-      document.getElementById("btnSubmitComp").disabled = true;
-
-      const dateStr = new Date().toLocaleString('mr-IN');
-
-      try {
-        // फायरबेस मध्ये सेव्ह करणे
-        await addDoc(collection(db, "complaints"), {
-          सदस्य_नाव: memberData["नाव"],
-          मोबाईल: memberData["मोबाईल क्रमांक"],
-          विषय: category,
-          तक्रार: desc,
-          तारीख: dateStr,
-          स्थिती: "प्रलंबित", // Pending
-          रिप्लाय: "",
-          timestamp: Date.now()
-        });
-
-        msgBox.innerText = "✅ तुमची तक्रार यशस्वीरित्या ॲडमिनकडे पाठवली गेली आहे!";
-        msgBox.style.color = "green";
-        document.getElementById("compDesc").value = "";
-        
-        loadMyComplaints(); // टेबल रिफ्रेश करा
-
-        // ईमेल पाठवणे (हे बॅकग्राउंड मध्ये होईल)
-        emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
-          admin_email: "tumcha-email@gmail.com", // तुमचा ईमेल
-          member_name: memberData["नाव"],
-          category: category,
-          message: desc
-        });
-
-      } catch(e) {
-        msgBox.innerText = "❌ एरर आला. कृपया पुन्हा प्रयत्न करा.";
-        msgBox.style.color = "red";
-      }
-      document.getElementById("btnSubmitComp").disabled = false;
-    });
-
-    // जुन्या तक्रारी लोड करणे
-    async function loadMyComplaints() {
-      const tbody = document.getElementById("myComplaintsList");
-      try {
-        const q = query(collection(db, "complaints"), where("मोबाईल", "==", memberData["मोबाईल क्रमांक"]));
-        const snapshot = await getDocs(q);
-        
-        tbody.innerHTML = "";
-        if(snapshot.empty) {
-          tbody.innerHTML = "<tr><td colspan='4' style='text-align:center;'>तुम्ही अद्याप कोणतीही तक्रार केलेली नाही.</td></tr>";
-          return;
-        }
-
-        let complaints = [];
-        snapshot.forEach(doc => complaints.push(doc.data()));
-        complaints.sort((a, b) => b.timestamp - a.timestamp); // नवीन वर
-
-        complaints.forEach(c => {
-          let statusBadge = c.स्थिती === "प्रलंबित" ? `<span class="status-pending">🔴 प्रलंबित</span>` : `<span class="status-resolved">🟢 सोडवली</span>`;
-          let replyUI = c.रिप्लाय ? `<div class="admin-reply-box"><b>ॲडमिन:</b> ${c.रिप्लाय}</div>` : `<span style="color:#888;">अद्याप रिप्लाय नाही.</span>`;
-          
-          tbody.innerHTML += `
-            <tr>
-              <td>${c.तारीख.split(',')[0]}</td>
-              <td><b>${c.विषय}</b><br><small>${c.तक्रार}</small></td>
-              <td>${statusBadge}</td>
-              <td>${replyUI}</td>
-            </tr>
-          `;
-        });
-      } catch(e) {
-        tbody.innerHTML = "<tr><td colspan='4' style='color:red;'>डेटा लोड करताना त्रुटी.</td></tr>";
-      }
+    // 1. Tab Switching
+    window.showTab = function(id) {
+      document.querySelectorAll('.content-area').forEach(t=>t.classList.remove('active'));
+      document.querySelectorAll('.menu-item').forEach(m=>m.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      event.currentTarget.classList.add('active');
     }
 
-    loadMyComplaints();
+    // 2. Security Check & Data Fetch
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) window.location.href = "login.html";
+      else {
+        const q = query(collection(db, "members"), where("ईमेल", "==", user.email));
+        const querySnapshot = await getDocs(q);
+        if (!querySnapshot.empty) {
+          querySnapshot.forEach((doc) => { currentMember = doc.data(); });
+          populateData(currentMember);
+        } else {
+          alert("तुम्ही ॲडमिन आहात. ॲडमिन पॅनलवर जात आहे...");
+          window.location.href = "admin.html";
+        }
+      }
+    });
+
+    function populateData(m) {
+      memberFullName = (m["नाव"] || "") + " " + (m["आडनाव"] || "");
+      document.getElementById("sidebarName").innerText = memberFullName;
+      document.getElementById("cardName").innerText = memberFullName;
+      document.getElementById("cardDesignation").innerText = m["पद"] || m["पदाचे नाव"] || "-";
+      document.getElementById("cardMobile").innerText = m["मोबाईल क्रमांक"] || "-";
+      document.getElementById("cardMandal").innerText = m["मंडळ"] || "-";
+      document.getElementById("profName").innerText = memberFullName;
+      document.getElementById("profMobile").innerText = m["मोबाईल क्रमांक"] || "-";
+      document.getElementById("profEmail").innerText = m["ईमेल"] || "-";
+      document.getElementById("profAddress").innerText = m["कायमचा पत्ता"] || "-";
+      document.getElementById("profDesignation").innerText = m["पद"] || m["पदाचे नाव"] || "-";
+      document.getElementById("profLocation").innerText = (m["मंडळ"] || "-") + " / " + (m["जिल्हा"] || "-");
+    }
+
+    // 3. Complaints
+    document.getElementById("btnSubmitComplaint").onclick = async () => {
+      const subject = document.getElementById("compSubject").value.trim();
+      const details = document.getElementById("compDetails").value.trim();
+      if (!subject || !details) return alert("⚠️ विषय आणि तक्रार सविस्तर लिहा.");
+      try {
+        await addDoc(collection(db, "complaints"), {
+          सदस्य_नाव: memberFullName, मोबाईल: currentMember["मोबाईल क्रमांक"], ईमेल: currentMember["ईमेल"], विषय: subject, तक्रार: details, स्थिती: "प्रलंबित", तारीख: new Date().toLocaleString(), timestamp: Date.now()
+        });
+        alert("✅ तक्रार ॲडमिनला पाठवली!"); document.getElementById("compSubject").value = ""; document.getElementById("compDetails").value = "";
+      } catch (e) { alert("❌ चूक झाली."); }
+    };
+
+    // 4. Voting Logic (Demo)
+    window.submitVote = function() {
+      const vote = document.querySelector('input[name="vote"]:checked');
+      if(vote) {
+        alert("✅ तुमचे मतदान गुप्तपणे नोंदवले गेले आहे! धन्यवाद.");
+        document.getElementById("votingForm").innerHTML = "<h3 style='color:green;'><i class='fa-solid fa-circle-check'></i> तुम्ही आधीच मतदान केले आहे.</h3>";
+      } else alert("कृपया एक पर्याय निवडा.");
+    }
+
+    // 5. 🛡️ CONFIDENTIAL E-LIBRARY LOGIC 🛡️
+    window.openConfidentialDoc = function(title) {
+      document.getElementById("docTitle").innerText = title;
+      
+      // Generate Dynamic Watermark (Name + MS_HANGE)
+      const watermarkLayer = document.getElementById("watermarkLayer");
+      watermarkLayer.innerHTML = "";
+      const watermarkText = `${memberFullName} | xsounion | ${currentMember["मोबाईल क्रमांक"]} &nbsp;&nbsp;&nbsp;&nbsp;`;
+      // Repeat the text 50 times to cover the whole screen
+      for(let i=0; i<50; i++) {
+        const span = document.createElement("span");
+        span.className = "watermark-text";
+        span.innerHTML = watermarkText;
+        watermarkLayer.appendChild(span);
+      }
+
+      document.getElementById("confidentialModal").style.display = "flex";
+    }
+
+    window.closeConfidential = function() { document.getElementById("confidentialModal").style.display = "none"; }
+
+    // 🛡️ ANTI-PIRACY SECURITY (Right Click & Shortcuts Block)
+    const viewer = document.getElementById("docBody");
+    viewer.addEventListener("contextmenu", (e) => { e.preventDefault(); alert("⚠️ गोपनीय फाईल: राईट-क्लिक (Right Click) बंद आहे."); });
+    
+    document.addEventListener("keydown", (e) => {
+      // If modal is open, block Ctrl+P (Print), Ctrl+S (Save), Ctrl+C (Copy)
+      if (document.getElementById("confidentialModal").style.display === "flex") {
+        if (e.ctrlKey && (e.key === 'p' || e.key === 's' || e.key === 'c' || e.key === 'P' || e.key === 'S' || e.key === 'C')) {
+          e.preventDefault();
+          alert("⚠️ सिक्युरिटी अलर्ट: ही गोपनीय फाईल प्रिंट, कॉपी किंवा सेव्ह करण्यास सक्त मनाई आहे!");
+        }
+      }
+    });
+
+    document.getElementById("logoutBtn").onclick = () => { signOut(auth).then(() => { window.location.href = "login.html"; }); };
   </script>
 </body>
 </html>
+      // Repeat the text 50 times to cover the whole screen
+      for(let i=0; i<50; i++) {
+        const span = document.createElement("span");
+        span.className = "watermark-text";
+        span.innerHTML = watermarkText;
+        watermarkLayer.appendChild(span);
+      }
+
+      document.getElementById("confidentialModal").style.display = "flex";
+    }
+
+    window.closeCo
