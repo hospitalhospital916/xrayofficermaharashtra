@@ -1,28 +1,83 @@
 <!DOCTYPE html>
 <html lang="mr">
 <head>
-    <meta charset="UTF-8">
-    <title>ॲडमिन डॅशबोर्ड - सूचना अपडेट</title>
-    <style>
-        body { font-family: sans-serif; padding: 20px; background: #f4f4f4; }
-        .card { background: white; padding: 20px; border-radius: 8px; max-width: 400px; margin: auto; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        button { width: 100%; padding: 10px; background: #0B3D91; color: white; border: none; border-radius: 4px; cursor: pointer; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel</title>
+  <style>
+    :root { --primary-blue:#0B3D91; --gold:#FFD700; }
+    body{margin:0;font-family:Segoe UI,Arial,sans-serif;background:#f4f7f6;color:#333}
+    .wrap{max-width:1100px;margin:30px auto;padding:20px}
+    .card{background:#fff;border-radius:12px;box-shadow:0 8px 22px rgba(0,0,0,.12);padding:24px;margin-bottom:18px}
+    input,textarea{width:100%;padding:12px;border:1px solid #cfd7e3;border-radius:8px;font-size:15px;margin:8px 0 14px}
+    button{border:0;border-radius:8px;padding:10px 16px;cursor:pointer;font-weight:600}
+    .btn{background:var(--primary-blue);color:#fff}
+    .btn2{background:#e8eef8;color:#0B3D91}
+    .hidden{display:none}
+    .row{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+    .box{background:#f8fbff;border:1px solid #dde8ff;border-radius:10px;padding:16px}
+    .top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+    .badge{background:#eef4ff;color:#0B3D91;padding:6px 10px;border-radius:999px;font-size:13px}
+    .err{color:#b00020;margin-top:10px}
+    .ok{color:#0a7a2f;margin-top:10px}
+    a{color:var(--primary-blue);text-decoration:none}
+  </style>
 </head>
 <body>
+  <div class="wrap">
+    <div class="card top">
+      <div>
+        <h2>Admin Panel</h2>
+        <div id="status" class="badge">Checking...</div>
+      </div>
+      <a href="index.html">← Home</a>
+    </div>
 
-<div class="card">
-  <h2>ॲडमिन लॉगिन</h2>
-  <input type="password" id="adminPass" placeholder="पासवर्ड टाका">
-  <input type="text" id="tickerInput" placeholder="नवीन सूचना येथे लिहा...">
-  <button onclick="saveTicker()">सूचना अपडेट करा</button>
-  <a href="index.html" style="display:block; margin-top: 15px; text-align: center; color: #666;">मुख्य वेबसाईटवर परत जा</a>
-</div>
+    <div id="loginBox" class="card">
+      <h3>Admin Login</h3>
+      <input id="email" type="email" placeholder="Email">
+      <input id="password" type="password" placeholder="Password">
+      <button class="btn" onclick="login()">Login</button>
+      <div id="msg" class="err"></div>
+    </div>
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
-    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+    <div id="panelBox" class="hidden">
+      <div class="card">
+        <h3>Quick Actions</h3>
+        <div class="row">
+          <div class="box">
+            <h4>Marquee Text</h4>
+            <textarea id="marqueeText" rows="4" placeholder="नवीन सूचना लिहा"></textarea>
+            <button class="btn" onclick="saveMarquee()">Update</button>
+            <div id="saveMsg"></div>
+          </div>
+          <div class="box">
+            <h4>Users</h4>
+            <p>Members / admins load करा.</p>
+            <button class="btn2" onclick="loadUsers()">Load Users</button>
+          </div>
+          <div class="box">
+            <h4>Notices</h4>
+            <p>GR / notices manage करा.</p>
+            <button class="btn2">Open Section</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="top">
+          <h3>System Data</h3>
+          <button class="btn2" onclick="logout()">Logout</button>
+        </div>
+        <pre id="usersList" style="white-space:pre-wrap;margin:0"></pre>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk",
@@ -35,32 +90,74 @@
     };
 
     const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
     const db = getFirestore(app);
 
-    window.saveTicker = async function() {
-        const pass = document.getElementById("adminPass").value;
-        const text = document.getElementById("tickerInput").value;
-
-        // पासवर्ड तपासणी
-        if (pass !== "Mahesh@12345") {
-            alert("चुकीचा पासवर्ड! कृपया पुन्हा प्रयत्न करा.");
-            return;
-        }
-
-        if (text === "") {
-            alert("कृपया सूचना लिहा!");
-            return;
-        }
-
-        try {
-            await setDoc(doc(db, "settings", "marquee"), { text: text });
-            alert("सूचना यशस्वीरित्या अपडेट झाली!");
-            document.getElementById("tickerInput").value = ""; // बॉक्स रिकामा करा
-        } catch (error) {
-            alert("काहीतरी चूक झाली: " + error.message);
-        }
+    async function isAdmin(uid) {
+      const snap = await getDoc(doc(db, "users", uid));
+      return snap.exists() && snap.data().role === "admin";
     }
-</script>
 
+    window.login = async function () {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const msg = document.getElementById("msg");
+      msg.textContent = "";
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+      } catch (e) {
+        msg.textContent = "Login failed: " + e.message;
+      }
+    };
+
+    window.logout = async function () {
+      await signOut(auth);
+    };
+
+    window.saveMarquee = async function () {
+      const text = document.getElementById("marqueeText").value.trim();
+      const saveMsg = document.getElementById("saveMsg");
+      try {
+        await setDoc(doc(db, "settings", "marquee"), { text, updatedAt: Date.now() }, { merge: true });
+        saveMsg.className = "ok";
+        saveMsg.textContent = "Updated successfully.";
+      } catch (e) {
+        saveMsg.className = "err";
+        saveMsg.textContent = e.message;
+      }
+    };
+
+    window.loadUsers = async function () {
+      const snap = await getDocs(collection(db, "users"));
+      const arr = [];
+      snap.forEach(d => arr.push(`${d.id}: ${JSON.stringify(d.data())}`));
+      document.getElementById("usersList").textContent = arr.join("\n\n") || "No users found.";
+    };
+
+    onAuthStateChanged(auth, async (user) => {
+      const loginBox = document.getElementById("loginBox");
+      const panelBox = document.getElementById("panelBox");
+      const status = document.getElementById("status");
+
+      if (!user) {
+        loginBox.classList.remove("hidden");
+        panelBox.classList.add("hidden");
+        status.textContent = "Logged out";
+        return;
+      }
+
+      const ok = await isAdmin(user.uid);
+      if (ok) {
+        loginBox.classList.add("hidden");
+        panelBox.classList.remove("hidden");
+        status.textContent = "Admin: " + user.email;
+        const marqueeSnap = await getDoc(doc(db, "settings", "marquee"));
+        if (marqueeSnap.exists()) document.getElementById("marqueeText").value = marqueeSnap.data().text || "";
+      } else {
+        await signOut(auth);
+        document.getElementById("msg").textContent = "Admin access नाही.";
+      }
+    });
+  </script>
 </body>
 </html>
