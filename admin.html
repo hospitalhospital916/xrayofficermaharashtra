@@ -5,16 +5,17 @@
   <title>Admin Panel - X-ray Union</title>
   <style>
     :root { --primary-color: #0B3D91; --accent-color: #f4f7f6; }
-    body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--accent-color); padding: 30px; color: #333; }
-    .card { background: #fff; padding: 25px; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.08); margin-bottom: 25px; border-left: 5px solid var(--primary-color); }
-    input { padding: 12px; margin: 5px 0; border: 1px solid #ddd; border-radius: 8px; width: 95%; }
-    button { padding: 10px 20px; margin: 5px; border: none; border-radius: 8px; cursor: pointer; background: var(--primary-color); color: white; font-weight: 600; transition: 0.3s; }
-    button:hover { opacity: 0.9; transform: translateY(-2px); }
+    body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--accent-color); padding: 20px; color: #333; }
+    .card { background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-bottom: 20px; border-left: 5px solid var(--primary-color); }
+    input { padding: 10px; margin: 5px 0; border: 1px solid #ddd; border-radius: 6px; width: 90%; }
+    button { padding: 8px 15px; margin: 5px; border: none; border-radius: 6px; cursor: pointer; background: var(--primary-color); color: white; font-weight: 600; }
+    button:hover { opacity: 0.9; }
     .btn-del { background-color: #ff4d4d; }
+    .btn-edit { background-color: #28a745; }
     .hidden { display: none; }
-    table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; }
-    th { background-color: var(--primary-color); color: white; padding: 15px; text-align: left; }
-    td { border-bottom: 1px solid #eee; padding: 12px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+    th { background-color: var(--primary-color); color: white; padding: 12px; text-align: left; }
+    td { border-bottom: 1px solid #eee; padding: 10px; }
     tr:hover { background-color: #f9f9f9; }
   </style>
 </head>
@@ -40,7 +41,7 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
   import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-  import { getFirestore, collection, getDocs, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+  import { getFirestore, collection, getDocs, doc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk",
@@ -64,20 +65,33 @@
 
   window.loadUsers = async () => {
     const snap = await getDocs(collection(db, "members"));
-    let html = '<table><tr><th>नाव</th><th>रुग्णालय</th><th>मोबाईल</th><th>Action</th></tr>';
+    let html = '<table><tr><th>पूर्ण नाव</th><th>रुग्णालय</th><th>मोबाईल</th><th>Action</th></tr>';
     
     snap.forEach(d => {
       const data = d.data();
+      const name = data["पूर्ण नाव"] || data["नाव"] || "N/A";
       html += `<tr class="user-row">
-        <td>${data.नाव || ''}</td>
+        <td>${name}</td>
         <td>${data["कार्यरत रुग्णालयाचे नाव व पत्ता"] || ''}</td>
         <td>${data["मोबाईल क्रमांक"] || ''}</td>
-        <td><button class="btn-del" onclick="deleteMember('${d.id}')">Delete</button></td>
+        <td>
+            <button class="btn-edit" onclick="editMember('${d.id}', '${name}')">Edit</button>
+            <button class="btn-del" onclick="deleteMember('${d.id}')">Delete</button>
+        </td>
       </tr>`;
     });
     
     html += '</table>';
     document.getElementById("usersList").innerHTML = html;
+  };
+
+  window.editMember = async (id, currentName) => {
+    const newName = prompt("नवीन नाव टाका:", currentName);
+    if (newName) {
+      await updateDoc(doc(db, "members", id), { "पूर्ण नाव": newName });
+      alert("नाव अपडेट झाले!");
+      loadUsers();
+    }
   };
 
   window.deleteMember = async (id) => {
