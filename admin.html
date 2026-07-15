@@ -11,6 +11,7 @@
     table { width: 100%; border-collapse: collapse; margin-top: 15px; }
     th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
     th { background-color: #0B3D91; color: white; }
+    .btn-del { background-color: #ff4d4d; color: white; border: none; padding: 5px 10px; cursor: pointer; }
   </style>
 </head>
 <body>
@@ -59,24 +60,26 @@
 
   window.loadUsers = async () => {
     const snap = await getDocs(collection(db, "members"));
-    let html = <table><tr><th>नाव</th><th>रुग्णालय</th><th>मोबाईल</th><th>Action</th></tr>;
+    let html = '<table border="1" style="width:100%; border-collapse:collapse;"><tr><th>नाव</th><th>रुग्णालय</th><th>मोबाईल</th><th>Action</th></tr>';
+    
     snap.forEach(d => {
       const data = d.data();
       html += `<tr class="user-row">
-        <td>${data.नाव || ''}</td>
-        <td>${data["कार्यरत रुग्णालयाचे नाव व पत्ता"] || ''}</td>
-        <td>${data["मोबाईल क्रमांक"] || ''}</td>
-        <td><button onclick="deleteMember('${d.id}')">Delete</button></td>
+        <td style="padding:10px;">${data.नाव || ''}</td>
+        <td style="padding:10px;">${data["कार्यरत रुग्णालयाचे नाव व पत्ता"] || ''}</td>
+        <td style="padding:10px;">${data["मोबाईल क्रमांक"] || ''}</td>
+        <td style="padding:10px;"><button class="btn-del" onclick="deleteMember('${d.id}')">Delete</button></td>
       </tr>`;
     });
-    html += </table>;
+    
+    html += '</table>';
     document.getElementById("usersList").innerHTML = html;
   };
 
   window.deleteMember = async (id) => {
-    if(confirm("डिलीट करायचे का?")) {
+    if(confirm("तुम्हाला हा सदस्य डिलीट करायचा आहे का?")) {
       await deleteDoc(doc(db, "members", id));
-      alert("डिलीट झाले!");
+      alert("सदस्य डिलीट झाला!");
       loadUsers();
     }
   };
