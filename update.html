@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ऑटो-अपडेट (मोबाईल व्हर्जन)</title>
+  <title>डेटाबेस स्मार्ट अपडेटर (मोबाईल)</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <style>
     body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #eef2f7; padding: 20px; text-align: center; }
-    .container { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-top: 6px solid #0B3D91; margin-top: 20px; }
+    .container { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-top: 6px solid #dc3545; margin-top: 20px; }
     h3 { color: #0B3D91; margin-top: 0; }
     input[type="file"] { margin: 15px 0; padding: 10px; border: 2px dashed #0B3D91; width: 100%; box-sizing: border-box; border-radius: 8px; background: #f8f9fa; }
-    button { background: #28a745; color: white; border: none; padding: 15px; border-radius: 8px; font-size: 1.1rem; cursor: pointer; font-weight: bold; width: 100%; box-shadow: 0 4px 10px rgba(40,167,69,0.3); }
-    button:disabled { background: #999; box-shadow: none; }
-    #status { margin-top: 20px; font-weight: bold; font-size: 1rem; color: #dc3545; padding: 10px; border-radius: 8px; }
+    button { background: #28a745; color: white; border: none; padding: 15px; border-radius: 8px; font-size: 1.1rem; cursor: pointer; font-weight: bold; width: 100%; }
+    button:disabled { background: #999; }
+    #status { margin-top: 20px; font-weight: bold; font-size: 1rem; color: #0B3D91; padding: 10px; border-radius: 8px; }
   </style>
 </head>
 <body>
 
   <div class="container">
-    <h3>🚀 डेटाबेस स्मार्ट अपडेटर</h3>
-    <p style="font-size: 0.9rem; color: #555;">मोबाईल फाईल मॅनेजरमधून एक्सेल फाईल निवडा आणि खालील बटनावर क्लिक करा.</p>
+    <h3>🔄 जुने डिलीट आणि नवीन ॲड करा</h3>
+    <p style="font-size: 0.9rem; color: #555;">तुमची १७४ जणांची एक्सेल फाईल निवडा. सिस्टीम जुना खराब डेटा डिलीट करून नवीन अचूक डेटा सेव्ह करेल.</p>
     
     <input type="file" id="excelFile" accept=".xlsx, .xls">
     <button id="processBtn">डेटाबेस अपडेट सुरू करा</button>
@@ -47,8 +47,10 @@
       const statusBox = document.getElementById('status');
       const btn = document.getElementById('processBtn');
 
-      if(!file) { alert("⚠️ कृपया आधी एक्सेल फाईल निवडा."); return; }
+      if(!file) { alert("⚠️ कृपया आधी तुमची एक्सेल फाईल (सभासद data) निवडा."); return; }
       
+      if(!confirm("⚠️ खात्री आहे ना? जुने सर्व सदस्य डिलीट होतील आणि फाईलमधील नवीन १७४ सदस्य ॲड होतील!")) return;
+
       btn.disabled = true;
       const reader = new FileReader();
       
@@ -59,7 +61,7 @@
           const sheet = workbook.Sheets[workbook.SheetNames[0]];
           const rows = XLSX.utils.sheet_to_json(sheet);
           
-          // १. जुना डेटा डिलीट करणे
+          // १. जुना डेटा डिलीट करणे (Delete Old)
           statusBox.innerHTML = "⏳ जुना डेटा डिलीट करत आहे...";
           statusBox.style.background = "#fff3cd";
           const snap = await getDocs(collection(db, "members"));
@@ -70,7 +72,7 @@
             statusBox.innerHTML = `⏳ जुने ${delCount} रेकॉर्ड्स डिलीट झाले...`;
           }
           
-          // २. नवीन डेटा ॲड करणे
+          // २. नवीन डेटा ॲड करणे (Add New 174 Members)
           statusBox.innerHTML = "⏳ नवीन सदस्य जोडत आहे... थांबा.";
           let successCount = 0;
           
@@ -80,14 +82,14 @@
             if(mobile.length > 10) mobile = mobile.slice(-10);
             if(mobile.length < 10) continue; 
             
-            // नावे एकत्र करणे आणि 'श्री' काढणे
+            // नावे स्वच्छ करणे (श्री/श्रीमती काढणे)
             let rawFName = String(row["नाव"] || "").replace(/^(श्री|श्रीमती|श्री\.)\s*/, "").trim();
-            let rawMName = String(row["वडिलांचे / मधले नाव"] || "").replace(/^(श्री|श्रीमती|श्री\.)\s*/, "").trim();
+            let rawMName = String(row["वडिलांचे \/ मधले नाव"] || "").replace(/^(श्री|श्रीमती|श्री\.)\s*/, "").trim();
             let rawLName = String(row["आडनाव"] || "").trim();
             
             let parts = [...rawFName.split(" "), ...rawMName.split(" "), ...rawLName.split(" ")];
             let uniqueParts = [];
-            parts.forEach(p => { if(p && p !== "nan" && !uniqueParts.includes(p)) uniqueParts.push(p); });
+            parts.forEach(p => { if(p && p !== "nan" && p !== "undefined" && !uniqueParts.includes(p)) uniqueParts.push(p); });
             let fullName = uniqueParts.join(" ");
             
             if(fullName === "") continue;
@@ -96,16 +98,19 @@
             let designation = row["पदाचे नाव"] || "क्ष-किरण वैज्ञानिक अधिकारी";
             
             await addDoc(collection(db, "members"), {
-              पूर्ण_नाव: fullName, नाव: rawFName, आडनाव: rawLName, मोबाईल: mobile, मोबाईल_क्रमांक: mobile,
-              पत्ता: address, कायमचा_पत्ता: address, पद: designation, सेवार्थ_आयडी: row["सेवार्थ आयडी क्रमांक"] || "-",
-              मंडळ: "-", जिल्हा: "-", ईमेल: "-", स्थिती: "मंजूर", अॅक्सेस: "चालू", फी_स्थिती: "बाकी"
+              पूर्ण_नाव: fullName, नाव: rawFName, आडनाव: rawLName, 
+              मोबाईल: mobile, मोबाईल_क्रमांक: mobile,
+              पत्ता: address, कायमचा_पत्ता: address, 
+              पद: designation, सेवार्थ_आयडी: row["सेवार्थ आयडी क्रमांक"] || "-",
+              मंडळ: "-", जिल्हा: "-", ईमेल: "-", 
+              स्थिती: "मंजूर", अॅक्सेस: "चालू", फी_स्थिती: "बाकी"
             });
             
             successCount++;
-            statusBox.innerHTML = `⏳ ${successCount} सदस्य जोडले...`;
+            statusBox.innerHTML = `⏳ ${successCount} नवीन सदस्य जोडले...`;
           }
           
-          statusBox.innerHTML = `✅ अभिनंदन! सर्व जुना डेटा डिलीट झाला आहे आणि <b>${successCount}</b> नवीन सदस्य अचूक नावांसह जोडले गेले आहेत.`;
+          statusBox.innerHTML = `✅ अभिनंदन! जुना डेटा डिलीट झाला आहे आणि <b>${successCount}</b> नवीन सदस्य अचूक नावांसह जोडले गेले आहेत.`;
           statusBox.style.color = "#155724";
           statusBox.style.background = "#d4edda";
 
