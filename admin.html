@@ -3,13 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>सुपर-ॲडमिन डॅशबोर्ड - क्ष-किरण संघटना</title>
+    <title>सुपर-ॲडमिन आणि मेंबर डॅशबोर्ड (Live)</title>
   
-    <!-- Libraries -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Mukta:wght@300;400;600;700&display=swap');
 
@@ -21,384 +18,387 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mukta', sans-serif; }
-
         body { background-color: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
 
-        /* Sidebar */
-        .sidebar { width: 260px; background-color: var(--dark); color: var(--white); display: flex; flex-direction: column; }
-        .sidebar-header { padding: 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); background: var(--primary); }
-        .sidebar-header h2 { font-size: 1.4rem; color: var(--secondary); }
-        
-        .nav-links { list-style: none; padding: 10px 0; flex: 1; overflow-y: auto; }
-        .nav-links li { padding: 15px 20px; cursor: pointer; transition: 0.2s; font-size: 1.05rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .nav-links li:hover, .nav-links li.active { background-color: var(--primary); border-left: 5px solid var(--secondary); }
-        .nav-links li i { margin-right: 12px; width: 20px; text-align: center; }
-        .badge { background: var(--danger); padding: 2px 8px; border-radius: 10px; font-size: 0.8rem; float: right; }
+        /* --- LOGIN SCREEN --- */
+        #login-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #0B3D91, #1a5cce); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+        .login-box { background: white; padding: 40px 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); width: 380px; text-align: center; }
+        .login-box h2 { margin-bottom: 25px; color: var(--primary); font-weight: 700; }
+        .login-box input, .login-box select { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; outline: none; }
+        .login-box input:focus { border-color: var(--primary); }
+        .btn-login { width: 100%; padding: 12px; background: var(--success); color: white; border: none; border-radius: 8px; font-size: 1.2rem; cursor: pointer; font-weight: bold; box-shadow: 0 4px #1e7e34; transition: 0.2s; }
+        .btn-login:active { box-shadow: 0 0 #1e7e34; transform: translateY(4px); }
 
-        /* Main Content */
-        .main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
-        .topbar { background: var(--white); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 10;}
-        .topbar .actions button { padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; margin-left: 10px; font-weight: 600; color: white; }
-        .btn-excel { background-color: var(--success); } .btn-print { background-color: var(--primary); }
+        /* --- LAYOUT --- */
+        .sidebar { width: 260px; background-color: var(--dark); color: var(--white); display: flex; flex-direction: column; }
+        .sidebar-header { padding: 20px; text-align: center; background: var(--primary); border-bottom: 3px solid var(--secondary); }
+        .nav-links { list-style: none; padding: 10px 0; overflow-y: auto; }
+        .nav-links li { padding: 15px 20px; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05); transition: 0.3s; }
+        .nav-links li:hover, .nav-links li.active { background-color: #1a5cce; border-left: 5px solid var(--secondary); }
+        .nav-links li i { margin-right: 12px; width: 20px; }
+        
+        .main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; position: relative; }
+        .topbar { background: var(--white); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
         
         .content-area { padding: 20px; display: none; }
-        .content-area.active { display: block; animation: fadeIn 0.3s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .content-area.active { display: block; animation: fadeIn 0.4s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Cards & Grid */
-        .card { background: var(--white); border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 20px; padding: 20px; }
-        .card-header { font-size: 1.2rem; font-weight: 600; color: var(--primary); margin-bottom: 15px; display: flex; align-items: center; border-bottom: 2px solid var(--border); padding-bottom: 10px; justify-content: space-between; }
+        /* --- TABLES & CARDS --- */
+        .card { background: var(--white); border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .card-header { font-size: 1.3rem; font-weight: bold; color: var(--primary); border-bottom: 2px solid var(--border); padding-bottom: 10px; margin-bottom: 15px; }
         
-        .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
-        .stat-box { padding: 20px; border-radius: 8px; color: white; text-align: center; }
-        .stat-box h3 { font-size: 2rem; margin-bottom: 5px; }
-        .bg-1 { background: linear-gradient(45deg, #0B3D91, #1a5cce); }
-        .bg-2 { background: linear-gradient(45deg, #28a745, #44d966); }
-        .bg-3 { background: linear-gradient(45deg, #dc3545, #f05b6a); }
-        .bg-4 { background: linear-gradient(45deg, #ffc107, #ffcd38); color: #000; }
-
-        /* Toggle Switch */
-        .switch { position: relative; display: inline-block; width: 40px; height: 20px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 20px; }
-        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; }
-        input:checked + .slider { background-color: var(--success); }
-        input:checked + .slider:before { transform: translateX(20px); }
-
-        /* Tables */
-        table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+        table { width: 100%; border-collapse: collapse; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); }
-        th { background-color: #f8f9fa; color: var(--primary); white-space: nowrap; }
-        .table-footer { font-weight: bold; background: #e9ecef; }
+        th { background: #f8f9fa; color: var(--primary); font-size: 1.05rem; }
+        .clickable-name { color: #1a5cce; font-weight: bold; cursor: pointer; text-decoration: none; transition: 0.2s; }
+        .clickable-name:hover { color: var(--danger); text-decoration: underline; }
         
-        /* Inputs & Buttons */
-        input[type="text"], input[type="number"], select { padding: 8px; border: 1px solid var(--border); border-radius: 4px; width: 100%; }
-        .btn { padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; color: white; font-size: 0.85rem; margin-right: 5px; }
-        .btn-approve { background: var(--success); } .btn-reject { background: var(--danger); }
-        .btn-update { background: var(--info); }
+        /* --- 3D ATTRACTIVE BUTTONS --- */
+        .btn-3d { padding: 8px 15px; border: none; border-radius: 6px; cursor: pointer; color: white; font-weight: bold; font-size: 0.9rem; margin-right: 5px; transition: all 0.1s ease-in-out; text-transform: uppercase; letter-spacing: 0.5px; }
+        .btn-view { background-color: var(--info); box-shadow: 0 4px #117a8b; }
+        .btn-view:active { box-shadow: 0 0 #117a8b; transform: translateY(4px); }
         
-        .fee-input { width: 80px !important; display: inline-block; }
+        .btn-resolve { background-color: var(--success); box-shadow: 0 4px #1e7e34; }
+        .btn-resolve:active { box-shadow: 0 0 #1e7e34; transform: translateY(4px); }
+        
+        .btn-logout { background-color: var(--danger); box-shadow: 0 4px #bd2130; padding: 10px 20px; }
+        .btn-logout:active { box-shadow: 0 0 #bd2130; transform: translateY(4px); }
+
+        .badge { padding: 5px 10px; border-radius: 20px; font-size: 0.8rem; color: white; font-weight: bold; }
+        .bg-red { background: var(--danger); } .bg-green { background: var(--success); }
+
+        /* --- SMOOTH ANIMATED MODAL (POPUP) --- */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: all 0.3s ease; }
+        .modal-overlay.show { opacity: 1; visibility: visible; }
+        
+        .modal-content { background: white; width: 500px; padding: 25px; border-radius: 12px; box-shadow: 0 15px 30px rgba(0,0,0,0.3); transform: scale(0.7); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .modal-overlay.show .modal-content { transform: scale(1); }
+        
+        .close-btn { float: right; cursor: pointer; font-size: 1.8rem; color: var(--danger); line-height: 1; transition: 0.2s; }
+        .close-btn:hover { transform: rotate(90deg); }
+        
+        .modal-header { color: var(--primary); margin-bottom: 15px; border-bottom: 2px solid #eee; padding-bottom: 10px; font-size: 1.4rem; }
     </style>
 </head>
 <body>
 
-    <!-- Sidebar -->
-    <div class="sidebar">
+    <!-- 1. LOGIN SCREEN -->
+    <div id="login-screen">
+        <div class="login-box">
+            <h2>संघटना लॉगिन</h2>
+            <select id="loginType">
+                <option value="admin">Admin Login</option>
+                <option value="member">Member Login</option>
+            </select>
+            <input type="text" id="username" placeholder="मोबाईल नंबर / User ID" value="admin">
+            <input type="password" id="password" placeholder="पासवर्ड" value="admin">
+            <button class="btn-login" onclick="login()" id="loginBtnTxt">लॉगिन करा <i class="fa-solid fa-arrow-right-to-bracket"></i></button>
+            <p id="loginError" style="color:red; display:none; margin-top:10px; font-weight:bold;">चुकीचा आयडी किंवा पासवर्ड!</p>
+        </div>
+    </div>
+
+    <!-- 2. SIDEBAR -->
+    <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <h2>क्ष-किरण संघटना</h2>
-            <p style="font-size: 0.85rem;">सुपर-ॲडमिन पॅनेल</p>
+            <p id="user-role-label" style="font-size: 0.9rem; color:var(--secondary); font-weight:bold;">सुपर-ॲडमिन</p>
         </div>
-        <ul class="nav-links">
-            <li class="active" onclick="switchTab('dashboard')"><i class="fa-solid fa-chart-pie"></i> डॅशबोर्ड</li>
-            <li onclick="switchTab('approvals')"><i class="fa-solid fa-user-clock"></i> प्रलंबित मंजुरी <span class="badge" id="pendingCount">2</span></li>
-            <li onclick="switchTab('members')"><i class="fa-solid fa-users"></i> सर्व सदस्य</li>
-            <li onclick="switchTab('fees')"><i class="fa-solid fa-indian-rupee-sign"></i> फी/वर्गणी व्यवस्थापन</li>
-            <li onclick="switchTab('website')"><i class="fa-solid fa-globe"></i> वेबसाईट नियंत्रण</li>
+        
+        <ul class="nav-links" id="menu-admin" style="display:none;">
+            <li class="active" onclick="switchTab('admin-members')"><i class="fa-solid fa-users"></i> सर्व सदस्य</li>
+            <li onclick="switchTab('admin-complaints')"><i class="fa-solid fa-envelope-open-text"></i> तक्रार पेटी <span class="badge bg-red" id="pendCompBadge">0</span></li>
+        </ul>
+
+        <ul class="nav-links" id="menu-member" style="display:none;">
+            <li class="active" onclick="switchTab('member-profile')"><i class="fa-solid fa-user"></i> माझी माहिती</li>
+            <li onclick="switchTab('member-complaints')"><i class="fa-solid fa-comment-dots"></i> माझी तक्रार</li>
         </ul>
     </div>
 
-    <!-- Main Content -->
+    <!-- 3. MAIN CONTENT -->
     <div class="main-content">
         <div class="topbar">
-            <h3 id="page-title">डॅशबोर्ड</h3>
-            <div class="actions">
-                <button class="btn-excel" onclick="alert('Excel Exported!')"><i class="fa-solid fa-file-excel"></i> Excel</button>
-                <button class="btn-print" onclick="window.print()"><i class="fa-solid fa-print"></i> Print</button>
-            </div>
+            <h3 id="page-title">सर्व सदस्य</h3>
+            <button class="btn-3d btn-logout" onclick="logout()"><i class="fa-solid fa-power-off"></i> लॉगआउट</button>
         </div>
 
-        <!-- 1. Dashboard Tab -->
-        <div id="dashboard-panel" class="content-area active">
-            <div class="stat-grid">
-                <div class="stat-box bg-1">
-                    <h3 id="totMembers">0</h3><p>एकूण मंजूर सदस्य</p>
-                </div>
-                <div class="stat-box bg-2">
-                    <h3 id="totFee">₹0</h3><p>एकूण जमा फी</p>
-                </div>
-                <div class="stat-box bg-3">
-                    <h3 id="pendFee">₹0</h3><p>थकबाकी (Pending)</p>
-                </div>
-                <div class="stat-box bg-4">
-                    <h3>८</h3><p>आरोग्य मंडळे</p>
-                </div>
-            </div>
-            <div class="card" style="max-width: 600px; margin: 0 auto;">
-                <div class="card-header">विभागानुसार आकडेवारी</div>
-                <canvas id="mandalChart"></canvas>
-            </div>
-        </div>
-
-        <!-- 2. Pending Approvals Tab -->
-        <div id="approvals-panel" class="content-area">
+        <!-- A. Admin Members -->
+        <div id="admin-members-panel" class="content-area">
             <div class="card">
-                <div class="card-header">नवीन रजिस्ट्रेशन (मंजुरीच्या प्रतीक्षेत)</div>
-                <table id="pendingTable">
+                <div class="card-header"><i class="fa-solid fa-list"></i> अधिकृत सदस्यांची यादी (Live Database)</div>
+                <table>
                     <thead>
                         <tr>
-                            <th>नाव</th>
-                            <th>मोबाईल</th>
-                            <th>मंडळ</th>
+                            <th>सदस्याचे नाव</th>
+                            <th>मोबाईल नंबर</th>
+                            <th>ईमेल आयडी</th>
                             <th>जिल्हा</th>
-                            <th>पद</th>
                             <th>कृती (Action)</th>
                         </tr>
                     </thead>
-                    <tbody id="pendingBody"></tbody>
+                    <tbody id="adminMembersBody">
+                        <tr><td colspan="5" style="text-align:center;">डेटा लोड होत आहे...</td></tr>
+                    </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- 3. All Members Tab -->
-        <div id="members-panel" class="content-area">
+        <!-- B. Admin Complaints -->
+        <div id="admin-complaints-panel" class="content-area">
             <div class="card">
-                <div class="card-header">
-                    मंजूर सदस्य यादी
-                    <input type="text" id="searchMember" placeholder="🔍 शोधा..." style="width: 250px;" onkeyup="renderMembers()">
-                </div>
-                <div style="overflow-x: auto;">
-                    <table id="membersTable">
-                        <thead>
-                            <tr>
-                                <th>नाव</th>
-                                <th>मोबाईल</th>
-                                <th>मंडळ</th>
-                                <th>जिल्हा</th>
-                                <th>ॲक्टिव्ह / इनॲक्टिव्ह</th>
-                                <th>कृती</th>
-                            </tr>
-                        </thead>
-                        <tbody id="membersBody"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- 4. Fees Management Tab -->
-        <div id="fees-panel" class="content-area">
-            <div class="card">
-                <div class="card-header">फी / वर्गणी व्यवस्थापन (Auto-Calculator)</div>
-                <div style="overflow-x: auto;">
-                    <table id="feesTable">
-                        <thead>
-                            <tr>
-                                <th>नाव</th>
-                                <th>जिल्हा</th>
-                                <th>एकूण फी (₹)</th>
-                                <th>जमा फी (₹)</th>
-                                <th>थकबाकी (₹)</th>
-                                <th>मॅन्युअल अपडेट</th>
-                            </tr>
-                        </thead>
-                        <tbody id="feesBody"></tbody>
-                        <tfoot>
-                            <tr class="table-footer">
-                                <td colspan="2" style="text-align: right;">एकूण (Total):</td>
-                                <td id="tf-total">₹0</td>
-                                <td id="tf-paid" style="color: green;">₹0</td>
-                                <td id="tf-pending" style="color: red;">₹0</td>
-                                <td></td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- 5. Website Control Tab -->
-        <div id="website-panel" class="content-area">
-            <div class="card">
-                <div class="card-header"><i class="fa-solid fa-cogs"></i> वेबसाईट सेटिंग्ज (मास्टर कंट्रोल)</div>
-                <table style="max-width: 600px;">
-                    <tr>
-                        <td>नवीन रजिस्ट्रेशन फॉर्म चालू ठेवा</td>
-                        <td>
-                            <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>वेबसाईटवर नोटीस/अलर्ट दाखवा</td>
-                        <td>
-                            <label class="switch"><input type="checkbox"><span class="slider"></span></label>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>डेटाबेस मेन्टेनन्स मोड (Maintenance)</td>
-                        <td>
-                            <label class="switch"><input type="checkbox"><span class="slider"></span></label>
-                        </td>
-                    </tr>
+                <div class="card-header"><i class="fa-solid fa-box-open"></i> सदस्यांच्या तक्रारी (Live)</div>
+                <table>
+                    <thead><tr><th>सदस्य</th><th>तक्रार</th><th>स्टेटस</th><th>कृती</th></tr></thead>
+                    <tbody id="adminComplaintsBody"></tbody>
                 </table>
-                
-                <hr style="margin: 20px 0; border: 0; border-top: 1px solid var(--border);">
-                
-                <h4>महत्त्वाची सूचना (Notice Board Update)</h4>
-                <div style="margin-top: 10px; display: flex; gap: 10px;">
-                    <input type="text" placeholder="वेबसाईटवर दिसणारी सूचना टाईप करा..." style="flex: 1;">
-                    <button class="btn btn-update" style="padding: 10px 20px;">अपडेट करा</button>
-                </div>
             </div>
         </div>
 
+        <!-- C. Member Profile -->
+        <div id="member-profile-panel" class="content-area">
+            <div class="card">
+                <div class="card-header">माझे प्रोफाईल</div>
+                <div id="myProfileDetails" style="font-size: 1.1rem; line-height: 2.2;"></div>
+            </div>
+        </div>
+
+        <!-- D. Member Complaints -->
+        <div id="member-complaints-panel" class="content-area">
+            <div class="card">
+                <div class="card-header">नवीन तक्रार नोंदवा</div>
+                <input type="text" id="newComplaintText" placeholder="तुमची अडचण किंवा तक्रार येथे लिहा..." style="width:70%; padding:10px; border-radius:5px; border:1px solid #ccc;">
+                <button class="btn-3d btn-resolve" onclick="submitComplaint()">तक्रार पाठवा <i class="fa-solid fa-paper-plane"></i></button>
+            </div>
+            <div class="card">
+                <div class="card-header">माझ्या मागील तक्रारींचे स्टेटस</div>
+                <ul id="myComplaintsList" style="list-style:none; line-height:2.5;"></ul>
+            </div>
+        </div>
     </div>
 
-    <script>
-        // ८ आरोग्य मंडळे: मुंबई, पुणे, नाशिक, कोल्हापूर, छत्रपती संभाजीनगर, लातूर, अकोला, नागपूर
-        
-        // Mock Database
-        let usersDB = [
-            { id: 1, name: "गणेश शिंदे", mobile: "9876543210", mandal: "पुणे", district: "सातारा", designation: "क्ष-किरण वैज्ञानिक अधिकारी", status: true, approved: true, totalFee: 1000, paidFee: 500 },
-            { id: 2, name: "प्रणाली देशमुख", mobile: "9988776655", mandal: "मुंबई", district: "ठाणे", designation: "वरिष्ठ क्ष-किरण तंत्रज्ञ", status: true, approved: true, totalFee: 1000, paidFee: 1000 },
-            { id: 3, name: "विकास जाधव", mobile: "9765174712", mandal: "नाशिक", district: "अहमदनगर", designation: "क्ष-किरण वैज्ञानिक अधिकारी", status: false, approved: true, totalFee: 1000, paidFee: 0 },
-            // Pending Users (From Registration Form)
-            { id: 4, name: "सुमित पवार", mobile: "8877665544", mandal: "कोल्हापूर", district: "सांगली", designation: "क्ष-किरण वैज्ञानिक अधिकारी", status: false, approved: false, totalFee: 1000, paidFee: 0 },
-            { id: 5, name: "अमित जोशी", mobile: "7766554433", mandal: "नागपूर", district: "वर्धा", designation: "वरिष्ठ क्ष-किरण तंत्रज्ञ", status: false, approved: false, totalFee: 1000, paidFee: 0 }
-        ];
-
-        // UI Update Functions
-        function switchTab(tab) {
-            document.querySelectorAll('.content-area').forEach(e => e.classList.remove('active'));
-            document.querySelectorAll('.nav-links li').forEach(e => e.classList.remove('active'));
-            document.getElementById(tab + '-panel').classList.add('active');
-            event.currentTarget.classList.add('active');
+    <!-- 4. ANIMATED 3D MODAL -->
+    <div id="memberModal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h3 class="modal-header"><i class="fa-solid fa-id-card"></i> सदस्य सविस्तर माहिती</h3>
+            <div id="modalDetails" style="font-size: 1.1rem; line-height: 2;"></div>
             
-            const titles = { 'dashboard': 'डॅशबोर्ड', 'approvals': 'प्रलंबित मंजुरी', 'members': 'सदस्य व्यवस्थापन', 'fees': 'फीस व्यवस्थापन', 'website': 'वेबसाईट नियंत्रण' };
-            document.getElementById('page-title').innerText = titles[tab];
-        }
+            <h4 style="margin-top:20px; color:var(--danger); border-bottom:1px solid #eee; padding-bottom:5px;">या सदस्याच्या तक्रारी:</h4>
+            <ul id="modalComplaints" style="background:#f8f9fa; padding:15px; border-radius:8px; margin-top:10px;"></ul>
+        </div>
+    </div>
 
-        function initApp() {
-            renderApprovals();
-            renderMembers();
-            renderFees();
-            updateDashboard();
-        }
+    <!-- 5. FIREBASE MODULE & LOGIC -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, updateDoc, doc, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // 1. Approvals Logic
-        function renderApprovals() {
-            const pending = usersDB.filter(u => !u.approved);
-            document.getElementById('pendingCount').innerText = pending.length;
-            let html = '';
-            pending.forEach(u => {
-                html += `<tr>
-                    <td>${u.name}</td><td>${u.mobile}</td><td>${u.mandal}</td><td>${u.district}</td><td>${u.designation}</td>
-                    <td>
-                        <button class="btn btn-approve" onclick="approveUser(${u.id})"><i class="fa-solid fa-check"></i> Approve</button>
-                        <button class="btn btn-reject" onclick="rejectUser(${u.id})"><i class="fa-solid fa-xmark"></i> Reject</button>
-                    </td>
-                </tr>`;
-            });
-            document.getElementById('pendingBody').innerHTML = html || '<tr><td colspan="6" style="text-align:center;">कोणतेही नवीन रजिस्ट्रेशन प्रलंबित नाही.</td></tr>';
-        }
+        // तुमचा Live Firebase Config Code
+        const firebaseConfig = {
+            apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk",
+            authDomain: "xrayunionmah.firebaseapp.com",
+            projectId: "xrayunionmah",
+            storageBucket: "xrayunionmah.firebasestorage.app",
+            messagingSenderId: "763805226978",
+            appId: "1:763805226978:web:6bae81a0b6358b47d88bbb",
+            measurementId: "G-EQS6WH6XLF"
+        };
 
-        function approveUser(id) {
-            let user = usersDB.find(u => u.id === id);
-            user.approved = true; user.status = true; // Auto active on approve
-            initApp();
-            alert(`${user.name} यांना मंजुरी दिली!`);
-        }
-        function rejectUser(id) {
-            usersDB = usersDB.filter(u => u.id !== id);
-            initApp();
-        }
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
-        // 2. Members Logic (Active/Inactive Toggle)
-        function renderMembers() {
-            const search = document.getElementById('searchMember').value.toLowerCase();
-            const approved = usersDB.filter(u => u.approved && (u.name.toLowerCase().includes(search) || u.mobile.includes(search)));
-            let html = '';
-            approved.forEach(u => {
-                html += `<tr>
-                    <td>${u.name}</td><td>${u.mobile}</td><td>${u.mandal}</td><td>${u.district}</td>
-                    <td>
-                        <label class="switch">
-                            <input type="checkbox" ${u.status ? 'checked' : ''} onchange="toggleStatus(${u.id})">
-                            <span class="slider"></span>
-                        </label>
-                    </td>
-                    <td>
-                        <button class="btn btn-update"><i class="fa-solid fa-edit"></i> Edit</button>
-                    </td>
-                </tr>`;
-            });
-            document.getElementById('membersBody').innerHTML = html;
-        }
+        let membersDB = [];
+        let complaintsDB = [];
+        let currentUser = null;
 
-        function toggleStatus(id) {
-            let user = usersDB.find(u => u.id === id);
-            user.status = !user.status;
-            // No need to re-render everything, checkbox handles visual state
-        }
-
-        // 3. Fees Management Logic (Auto Calculator)
-        function renderFees() {
-         const approved = usersDB.filter(u => u.approved);
-            let html = '';
-            let tTotal = 0, tPaid = 0, tPending = 0;
-
-            approved.forEach(u => {
-                let pending = u.totalFee - u.paidFee;
-                tTotal += u.totalFee; tPaid += u.paidFee; tPending += pending;
-
-                html += `<tr>
-                    <td>${u.name}</td><td>${u.district}</td>
-                    <td>₹${u.totalFee}</td>
-                    <td style="color: green; font-weight: bold;">₹${u.paidFee}</td>
-                    <td style="color: red; font-weight: bold;">₹${pending}</td>
-                    <td>
-                        <input type="number" id="fee_in_${u.id}" class="fee-input" value="${u.paidFee}" min="0" max="${u.totalFee}">
-                        <button class="btn btn-update" onclick="updateFee(${u.id})">Save</button>
-                    </td>
-                </tr>`;
-            });
-            document.getElementById('feesBody').innerHTML = html;
-            
-            // Update Footer Auto-Calculations
-            document.getElementById('tf-total').innerText = '₹' + tTotal;
-            document.getElementById('tf-paid').innerText = '₹' + tPaid;
-            document.getElementById('tf-pending').innerText = '₹' + tPending;
-
-            // Update Dashboard cards
-            document.getElementById('totFee').innerText = '₹' + tPaid;
-            document.getElementById('pendFee').innerText = '₹' + tPending;
-            document.getElementById('totMembers').innerText = approved.length;
-        }
-
-        function updateFee(id) {
-            let inputVal = document.getElementById(`fee_in_${id}`).value;
-            let user = usersDB.find(u => u.id === id);
-            if(inputVal >= 0 && inputVal <= user.totalFee) {
-                user.paidFee = parseInt(inputVal);
-                renderFees();
-                updateDashboard(); // Update chart and cards
-                alert('फीस यशस्वीरित्या अपडेट झाली!');
-            } else {
-                alert('चुकीची रक्कम! कृपया योग्य रक्कम टाका.');
+        // Auto-seed data if database is totally empty (For testing purpose)
+        async function checkAndSeedData() {
+            const snap = await getDocs(collection(db, "members"));
+            if(snap.empty) {
+                await addDoc(collection(db, "members"), { name: "महेश शिवदास हांगे", mobile: "9876543210", pass: "1234", email: "mahesh@email.com", district: "अहमदनगर", designation: "क्ष-किरण वैज्ञानिक अधिकारी" });
+                await addDoc(collection(db, "members"), { name: "प्रा. गणेश कुलमेथे", mobile: "9988776655", pass: "1234", email: "ganesh@email.com", district: "सातारा", designation: "वाहन व्यवस्थापक" });
             }
         }
 
-        // Dashboard Chart Update
-        let myChart;
-        function updateDashboard() {
-            const approved = usersDB.filter(u => u.approved);
-            const counts = {};
-            approved.forEach(u => counts[u.mandal] = (counts[u.mandal] || 0) + 1);
+        // Globalizing functions so HTML buttons can access them
+        window.login = async function() {
+            document.getElementById('loginBtnTxt').innerHTML = 'प्रतीक्षा करा...';
+            await checkAndSeedData(); // Ensure DB has data
 
-            const ctx = document.getElementById('mandalChart').getContext('2d');
-            if (myChart) myChart.destroy();
-            myChart = new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: Object.keys(counts),
-                    datasets: [{
-                        data: Object.values(counts),
-                        backgroundColor: ['#0B3D91', '#28a745', '#dc3545', '#ffc107', '#17a2b8', '#6f42c1', '#e83e8c', '#fd7e14']
-                    }]
+            const type = document.getElementById('loginType').value;
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+
+            if (type === 'admin' && user === 'admin' && pass === 'admin') {
+                currentUser = { role: 'admin' };
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('menu-admin').style.display = 'block';
+                window.switchTab('admin-members');
+                await loadAdminData();
+            } else if (type === 'member') {
+                const q = query(collection(db, "members"), where("mobile", "==", user), where("pass", "==", pass));
+                const querySnapshot = await getDocs(q);
+                
+                if (!querySnapshot.empty) {
+                    let userData = null;
+                    querySnapshot.forEach((doc) => { userData = { id: doc.id, ...doc.data() }; });
+                    currentUser = { role: 'member', data: userData };
+                    
+                    document.getElementById('login-screen').style.display = 'none';
+                    document.getElementById('menu-member').style.display = 'block';
+                    document.getElementById('user-role-label').innerText = 'सदस्य पॅनेल';
+                    window.switchTab('member-profile');
+                    await loadMemberData();
+                } else {
+                    document.getElementById('loginError').style.display = 'block';
+                    document.getElementById('loginBtnTxt').innerHTML = 'लॉगिन करा <i class="fa-solid fa-arrow-right-to-bracket"></i>';
                 }
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+                document.getElementById('loginBtnTxt').innerHTML = 'लॉगिन करा <i class="fa-solid fa-arrow-right-to-bracket"></i>';
+            }
+        };
+
+        window.logout = function() { location.reload(); };
+
+        window.switchTab = function(tabId) {
+            document.querySelectorAll('.content-area').forEach(e => e.classList.remove('active'));
+            document.querySelectorAll('.nav-links li').forEach(e => e.classList.remove('active'));
+            document.getElementById(tabId + '-panel').classList.add('active');
+            event.currentTarget.classList.add('active');
+            
+            const titles = {'admin-members': 'सर्व सदस्य', 'admin-complaints': 'तक्रार पेटी', 'member-profile': 'माझे प्रोफाईल', 'member-complaints': 'माझी तक्रार'};
+            document.getElementById('page-title').innerText = titles[tabId];
+        };
+
+        // --- ADMIN LIVE DATA ---
+     async function loadAdminData() {
+            // Fetch Members
+            membersDB = [];
+            const memSnap = await getDocs(collection(db, "members"));
+            let memHtml = '';
+            memSnap.forEach(doc => {
+                let m = { id: doc.id, ...doc.data() };
+                membersDB.push(m);
+                memHtml += `<tr>
+                    <td><span class="clickable-name" onclick="openMemberModal('${m.id}')"><i class="fa-solid fa-user-tie"></i> ${m.name}</span></td>
+                    <td><i class="fa-solid fa-phone"></i> ${m.mobile}</td>
+                    <td>${m.email}</td>
+                    <td>${m.district}</td>
+                    <td><button class="btn-3d btn-view" onclick="openMemberModal('${m.id}')"><i class="fa-solid fa-eye"></i> View</button></td>
+                </tr>`;
             });
+            document.getElementById('adminMembersBody').innerHTML = memHtml;
+
+            // Fetch Complaints
+            await loadAdminComplaints();
         }
 
-        // Initialize Everything
-        window.onload = initApp;
+        async function loadAdminComplaints() {
+            complaintsDB = [];
+            const compSnap = await getDocs(collection(db, "complaints"));
+            let pendingCount = 0;
+            let compHtml = '';
+            
+            compSnap.forEach(docSnap => {
+                let c = { id: docSnap.id, ...docSnap.data() };
+                complaintsDB.push(c);
+                let m = membersDB.find(x => x.id === c.m_id);
+                let mName = m ? m.name : "अज्ञात सदस्य";
+                let badge = c.status === 'Pending' ? '<span class="badge bg-red">प्रलंबित</span>' : '<span class="badge bg-green">सुटलेली</span>';
+                if(c.status === 'Pending') pendingCount++;
+                
+                compHtml += `<tr>
+                    <td style="font-weight:bold;">${mName}</td>
+                    <td>${c.text}</td>
+                    <td>${badge}</td>
+                    <td>${c.status === 'Pending' ? `<button class="btn-3d btn-resolve" onclick="resolveComplaint('${c.id}')"><i class="fa-solid fa-check"></i> Resolve</button>` : '<i class="fa-solid fa-check-double" style="color:green;"></i>'}</td>
+                </tr>`;
+            });
+            document.getElementById('adminComplaintsBody').innerHTML = compHtml || '<tr><td colspan="4">कोणतीही तक्रार नाही.</td></tr>';
+            document.getElementById('pendCompBadge').innerText = pendingCount;
+        }
+
+        window.resolveComplaint = async function(cid) {
+            const compRef = doc(db, "complaints", cid);
+            await updateDoc(compRef, { status: "Resolved" });
+            loadAdminComplaints(); // Refresh live data
+        };
+
+        // --- SMOOTH MODAL LOGIC ---
+        window.openMemberModal = function(id) {
+            let m = membersDB.find(x => x.id === id);
+            let myComps = complaintsDB.filter(c => c.m_id === id);
+            
+            document.getElementById('modalDetails').innerHTML = `
+                <b><i class="fa-solid fa-user"></i> नाव:</b> ${m.name} <br>
+                <b><i class="fa-solid fa-phone"></i> मोबाईल:</b> ${m.mobile} <br>
+                <b><i class="fa-solid fa-envelope"></i> ईमेल:</b> ${m.email} <br>
+                <b><i class="fa-solid fa-location-dot"></i> जिल्हा:</b> ${m.district} <br>
+                <b><i class="fa-solid fa-briefcase"></i> पद:</b> ${m.designation} <br>
+            `;
+            
+            let compList = '';
+            myComps.forEach(c => {
+                let color = c.status === 'Pending' ? 'red' : 'green';
+                let icon = c.status === 'Pending' ? 'fa-clock' : 'fa-check-circle';
+                compList += `<li><i class="fa-solid ${icon}" style="color:${color};"></i> ${c.text} <span style="color:${color}; font-weight:bold;">(${c.status})</span></li>`;
+            });
+            document.getElementById('modalComplaints').innerHTML = compList || 'या सदस्याची कोणतीही तक्रार नाही.';
+            
+            document.getElementById('memberModal').classList.add('show');
+        };
+
+        window.closeModal = function() {
+            document.getElementById('memberModal').classList.remove('show');
+        };
+
+        // --- MEMBER LIVE DATA ---
+        async function loadMemberData() {
+            let m = currentUser.data;
+            document.getElementById('myProfileDetails').innerHTML = `
+                <b>नाव:</b> ${m.name} <br>
+                <b>मोबाईल:</b> ${m.mobile} <br>
+                <b>ईमेल:</b> ${m.email} <br>
+                <b>जिल्हा:</b> ${m.district} <br>
+                <b>पद:</b> ${m.designation} <br>
+            `;
+            await renderMemberComplaints();
+        }
+
+        async function renderMemberComplaints() {
+            let m = currentUser.data;
+            const q = query(collection(db, "complaints"), where("m_id", "==", m.id));
+            const querySnapshot = await getDocs(q);
+            
+            let compList = '';
+            querySnapshot.forEach((doc) => {
+                let c = doc.data();
+                let badge = c.status === 'Pending' ? '<span class="badge bg-red">प्रलंबित</span>' : '<span class="badge bg-green">पूर्ण झाली</span>';
+                compList += `<li style="border-bottom:1px solid #ddd; padding:8px 0;">
+                    <b>तक्रार:</b> ${c.text} &nbsp; ${badge}
+                </li>`;
+            });
+            document.getElementById('myComplaintsList').innerHTML = compList || 'तुम्ही कोणतीही तक्रार नोंदवलेली नाही.';
+        }
+
+        window.submitComplaint = async function() {
+            let text = document.getElementById('newComplaintText').value;
+            if(!text) { alert("कृपया तक्रार टाईप करा!"); return; }
+            
+            document.getElementById('newComplaintText').value = 'पाठवत आहे...';
+            await addDoc(collection(db, "complaints"), {
+                m_id: currentUser.data.id,
+                text: text,
+                status: 'Pending',
+                time: new Date()
+            });
+            
+            document.getElementById('newComplaintText').value = '';
+            await renderMemberComplaints();
+            alert("तुमची तक्रार ॲडमिनकडे थेट पाठवली आहे!");
+        };
     </script>
 </body>
 </html>
