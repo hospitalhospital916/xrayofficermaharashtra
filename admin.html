@@ -14,270 +14,70 @@
         @import url('https://fonts.googleapis.com/css2?family=Mukta:wght@300;400;600;700&display=swap');
 
         :root { 
-            --primary: #0B3D91; 
-            --secondary: #FFD700; 
-            --bg: #f4f7f6; 
-            --text: #333;
-            --success: #28a745;
-            --danger: #dc3545;
-            --info: #17a2b8;
-            --warning: #ffc107;
-            --white: #ffffff;
-            --border: #dee2e6;
+            --primary: #0B3D91; --secondary: #FFD700; --bg: #f4f7f6; 
+            --text: #333; --success: #28a745; --danger: #dc3545; 
+            --info: #17a2b8; --warning: #ffc107; --white: #ffffff; 
+            --border: #dee2e6; --dark: #343a40;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Mukta', sans-serif;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mukta', sans-serif; }
 
-        body {
-            background-color: var(--bg);
-            color: var(--text);
-            display: flex;
-            height: 100vh;
-            overflow: hidden;
-        }
+        body { background-color: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
 
         /* Sidebar */
-        .sidebar {
-            width: 250px;
-            background-color: var(--primary);
-            color: var(--white);
-            display: flex;
-            flex-direction: column;
-            transition: all 0.3s;
-        }
-
-        .sidebar-header {
-            padding: 20px;
-            text-align: center;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .sidebar-header h2 {
-            font-size: 1.5rem;
-            color: var(--secondary);
-        }
-
-        .nav-links {
-            list-style: none;
-            padding: 20px 0;
-        }
-
-        .nav-links li {
-            padding: 15px 20px;
-            cursor: pointer;
-            transition: 0.2s;
-            font-size: 1.1rem;
-        }
-
-        .nav-links li:hover, .nav-links li.active {
-            background-color: rgba(255,255,255,0.1);
-            border-left: 4px solid var(--secondary);
-        }
-
-        .nav-links li i {
-            margin-right: 10px;
-            width: 20px;
-            text-align: center;
-        }
+        .sidebar { width: 260px; background-color: var(--dark); color: var(--white); display: flex; flex-direction: column; }
+        .sidebar-header { padding: 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); background: var(--primary); }
+        .sidebar-header h2 { font-size: 1.4rem; color: var(--secondary); }
+        
+        .nav-links { list-style: none; padding: 10px 0; flex: 1; overflow-y: auto; }
+        .nav-links li { padding: 15px 20px; cursor: pointer; transition: 0.2s; font-size: 1.05rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .nav-links li:hover, .nav-links li.active { background-color: var(--primary); border-left: 5px solid var(--secondary); }
+        .nav-links li i { margin-right: 12px; width: 20px; text-align: center; }
+        .badge { background: var(--danger); padding: 2px 8px; border-radius: 10px; font-size: 0.8rem; float: right; }
 
         /* Main Content */
-        .main-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-        }
-
-        .topbar {
-            background: var(--white);
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .topbar .actions button {
-            padding: 8px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-left: 10px;
-            font-weight: 600;
-            color: white;
-            transition: 0.2s;
-        }
-
-        .btn-excel { background-color: var(--success); }
-        .btn-print { background-color: var(--primary); }
-        .btn-excel:hover, .btn-print:hover { opacity: 0.8; }
-
-        .content-area {
-            padding: 20px;
-            display: none; /* Toggled via JS */
-        }
-
-        .content-area.active {
-            display: block;
-        }
-
-        /* Cards */
-        .card {
-            background: var(--white);
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            margin-bottom: 20px;
-            padding: 20px;
-        }
-
-        .card-header {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--primary);
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            border-bottom: 2px solid var(--border);
-            padding-bottom: 10px;
-        }
+        .main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
+        .topbar { background: var(--white); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 10;}
+        .topbar .actions button { padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; margin-left: 10px; font-weight: 600; color: white; }
+        .btn-excel { background-color: var(--success); } .btn-print { background-color: var(--primary); }
         
-        .card-header i { margin-right: 10px; }
+        .content-area { padding: 20px; display: none; }
+        .content-area.active { display: block; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Forms */
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .form-group label {
-            margin-bottom: 5px;
-            font-size: 0.9rem;
-            color: #555;
-        }
-
-        .form-group input, .form-group select {
-            padding: 10px;
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            outline: none;
-        }
-
-        .form-group input:focus, .form-group select:focus {
-            border-color: var(--primary);
-        }
-
-        .btn-submit {
-            background-color: var(--success);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            margin-top: 15px;
-            width: 100%;
-        }
-
-        /* Filter Section */
-        .filter-section {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-            background: #f8f9fa;
-            padding: 10px;
-            border-radius: 5px;
-        }
-
-        .filter-section input, .filter-section select {
-            padding: 8px;
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            flex: 1;
-        }
-
-        .btn-reset {
-            background-color: #6c757d;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        /* Table */
-        .table-responsive {
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.95rem;
-        }
-
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid var(--border);
-        }
-
-        th {
-            background-color: #f8f9fa;
-            color: var(--primary);
-            font-weight: 600;
-            white-space: nowrap;
-        }
-
-        td { color: #444; }
-
-        tr:hover { background-color: #f1f5f9; }
-
-        /* Action Buttons */
-        .action-btns button {
-            padding: 5px 10px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            color: white;
-            font-size: 0.8rem;
-            margin-right: 5px;
-        }
+        /* Cards & Grid */
+        .card { background: var(--white); border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 20px; padding: 20px; }
+        .card-header { font-size: 1.2rem; font-weight: 600; color: var(--primary); margin-bottom: 15px; display: flex; align-items: center; border-bottom: 2px solid var(--border); padding-bottom: 10px; justify-content: space-between; }
         
-        .btn-view { background-color: var(--info); }
-        .btn-edit { background-color: var(--warning); color: #000 !important; }
-        .btn-delete { background-color: var(--danger); }
+        .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .stat-box { padding: 20px; border-radius: 8px; color: white; text-align: center; }
+        .stat-box h3 { font-size: 2rem; margin-bottom: 5px; }
+        .bg-1 { background: linear-gradient(45deg, #0B3D91, #1a5cce); }
+        .bg-2 { background: linear-gradient(45deg, #28a745, #44d966); }
+        .bg-3 { background: linear-gradient(45deg, #dc3545, #f05b6a); }
+        .bg-4 { background: linear-gradient(45deg, #ffc107, #ffcd38); color: #000; }
 
-        /* Charts */
-        .chart-container {
-            width: 100%;
-            max-width: 600px;
-            margin: 0 auto;
-        }
+        /* Toggle Switch */
+        .switch { position: relative; display: inline-block; width: 40px; height: 20px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 20px; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--success); }
+        input:checked + .slider:before { transform: translateX(20px); }
 
-        /* Print Media Query */
-        @media print {
-            .sidebar, .topbar, .filter-section, .action-btns, .card-header, .form-grid, .btn-submit, th:last-child, td:last-child {
-                display: none !important;
-            }
-            .main-content { margin: 0; padding: 0; }
-            .card { box-shadow: none; border: none; margin: 0; padding: 0; }
-            body { background: white; }
-            table { border: 1px solid #000; }
-            th, td { border: 1px solid #000; padding: 8px; }
-            #members-panel { display: block !important; }
-            #dashboard-panel { display: none !important; }
-        }
+        /* Tables */
+        table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); }
+        th { background-color: #f8f9fa; color: var(--primary); white-space: nowrap; }
+        .table-footer { font-weight: bold; background: #e9ecef; }
+        
+        /* Inputs & Buttons */
+        input[type="text"], input[type="number"], select { padding: 8px; border: 1px solid var(--border); border-radius: 4px; width: 100%; }
+        .btn { padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; color: white; font-size: 0.85rem; margin-right: 5px; }
+        .btn-approve { background: var(--success); } .btn-reject { background: var(--danger); }
+        .btn-update { background: var(--info); }
+        
+        .fee-input { width: 80px !important; display: inline-block; }
     </style>
 </head>
 <body>
@@ -286,11 +86,14 @@
     <div class="sidebar">
         <div class="sidebar-header">
             <h2>क्ष-किरण संघटना</h2>
-            <p style="font-size: 0.8rem; color: #ccc;">सुपर-ॲडमिन पॅनेल</p>
+            <p style="font-size: 0.85rem;">सुपर-ॲडमिन पॅनेल</p>
         </div>
         <ul class="nav-links">
             <li class="active" onclick="switchTab('dashboard')"><i class="fa-solid fa-chart-pie"></i> डॅशबोर्ड</li>
-            <li onclick="switchTab('members')"><i class="fa-solid fa-users"></i> सदस्य व्यवस्थापन</li>
+            <li onclick="switchTab('approvals')"><i class="fa-solid fa-user-clock"></i> प्रलंबित मंजुरी <span class="badge" id="pendingCount">2</span></li>
+            <li onclick="switchTab('members')"><i class="fa-solid fa-users"></i> सर्व सदस्य</li>
+            <li onclick="switchTab('fees')"><i class="fa-solid fa-indian-rupee-sign"></i> फी/वर्गणी व्यवस्थापन</li>
+            <li onclick="switchTab('website')"><i class="fa-solid fa-globe"></i> वेबसाईट नियंत्रण</li>
         </ul>
     </div>
 
@@ -299,289 +102,303 @@
         <div class="topbar">
             <h3 id="page-title">डॅशबोर्ड</h3>
             <div class="actions">
-                <button class="btn-excel" onclick="exportToExcel()"><i class="fa-solid fa-file-excel"></i> Excel डाउनलोड</button>
-                <button class="btn-print" onclick="window.print()"><i class="fa-solid fa-print"></i> Print / PDF</button>
+                <button class="btn-excel" onclick="alert('Excel Exported!')"><i class="fa-solid fa-file-excel"></i> Excel</button>
+                <button class="btn-print" onclick="window.print()"><i class="fa-solid fa-print"></i> Print</button>
             </div>
         </div>
 
-        <!-- Dashboard Panel -->
+        <!-- 1. Dashboard Tab -->
         <div id="dashboard-panel" class="content-area active">
-            <div class="card">
-                <div class="card-header"><i class="fa-solid fa-chart-bar"></i> विभागानुसार सदस्य आकडेवारी</div>
-                <div class="chart-container">
-                    <canvas id="mandalChart"></canvas>
+            <div class="stat-grid">
+                <div class="stat-box bg-1">
+                    <h3 id="totMembers">0</h3><p>एकूण मंजूर सदस्य</p>
                 </div>
+                <div class="stat-box bg-2">
+                    <h3 id="totFee">₹0</h3><p>एकूण जमा फी</p>
+                </div>
+                <div class="stat-box bg-3">
+                    <h3 id="pendFee">₹0</h3><p>थकबाकी (Pending)</p>
+                </div>
+                <div class="stat-box bg-4">
+                    <h3>८</h3><p>आरोग्य मंडळे</p>
+                </div>
+            </div>
+            <div class="card" style="max-width: 600px; margin: 0 auto;">
+                <div class="card-header">विभागानुसार आकडेवारी</div>
+                <canvas id="mandalChart"></canvas>
             </div>
         </div>
 
-        <!-- Members Panel -->
-        <div id="members-panel" class="content-area">
-            
-            <!-- Add Member Form -->
+        <!-- 2. Pending Approvals Tab -->
+        <div id="approvals-panel" class="content-area">
             <div class="card">
-                <div class="card-header" style="color: var(--success);"><i class="fa-solid fa-plus-circle"></i> नवीन सदस्य जोडा (थेट मंजुरी)</div>
-                <form id="addMemberForm" onsubmit="addMember(event)">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label>संपूर्ण नाव</label>
-                            <input type="text" id="m_name" placeholder="उदा. रमेश पाटील" required>
-                        </div>
-                        <div class="form-group">
-                            <label>मोबाईल क्रमांक</label>
-                            <input type="tel" id="m_mobile" placeholder="उदा. 9876543210" required>
-                        </div>
-                        <div class="form-group">
-                            <label>ईमेल आयडी</label>
-                            <input type="email" id="m_email" placeholder="email@example.com">
-                        </div>
-                        <div class="form-group">
-                            <label>लिंग</label>
-                            <select id="m_gender" required>
-                                <option value="">-- लिंग निवडा --</option>
-                                <option value="पुरुष">पुरुष</option>
-                                <option value="स्त्री">स्त्री</option>
-                                <option value="इतर">इतर</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>मंडळ (विभाग)</label>
-                            <select id="m_mandal" required>
-                                <option value="">-- आरोग्य मंडळ निवडा --</option>
-                                <option value="पुणे">पुणे</option>
-                                <option value="मुंबई">मुंबई</option>
-                                <option value="नागपूर">नागपूर</option>
-                                <option value="छत्रपती संभाजीनगर">छत्रपती संभाजीनगर</option>
-                                <option value="नाशिक">नाशिक</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>जिल्हा</label>
-                            <input type="text" id="m_district" placeholder="उदा. अहमदनगर" required>
-                        </div>
-                        <div class="form-group">
-                            <label>पद</label>
-                            <select id="m_designation" required>
-                                <option value="क्ष-किरण वैज्ञानिक अधिकारी">क्ष-किरण वैज्ञानिक अधिकारी</option>
-                                <option value="वरिष्ठ क्ष-किरण तंत्रज्ञ">वरिष्ठ क्ष-किरण तंत्रज्ञ</option>
-                            </select>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn-submit">सदस्य सेव्ह करा</button>
-                </form>
+                <div class="card-header">नवीन रजिस्ट्रेशन (मंजुरीच्या प्रतीक्षेत)</div>
+                <table id="pendingTable">
+                    <thead>
+                        <tr>
+                            <th>नाव</th>
+                            <th>मोबाईल</th>
+                            <th>मंडळ</th>
+                            <th>जिल्हा</th>
+                            <th>पद</th>
+                            <th>कृती (Action)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pendingBody"></tbody>
+                </table>
             </div>
+        </div>
 
-            <!-- Members List -->
+        <!-- 3. All Members Tab -->
+        <div id="members-panel" class="content-area">
             <div class="card">
-                <div class="card-header"><i class="fa-solid fa-users"></i> अधिकृत सदस्यांची यादी (Approved Members)</div>
-                
-                <!-- Filters -->
-                <div class="filter-section">
-                    <input type="text" id="search" placeholder="🔍 शोधा: नाव किंवा मोबाईल नंबर..." onkeyup="filterTable()">
-                    <select id="filterMandal" onchange="filterTable()">
-                        <option value="">सर्व मंडळे</option>
-                        <option value="पुणे">पुणे</option>
-                        <option value="मुंबई">मुंबई</option>
-                        <option value="नागपूर">नागपूर</option>
-                        <option value="छत्रपती संभाजीनगर">छत्रपती संभाजीनगर</option>
-                        <option value="नाशिक">नाशिक</option>
-                    </select>
-                    <input type="text" id="filterDistrict" placeholder="जिल्हा टाईप करा..." onkeyup="filterTable()">
-                    <button class="btn-reset" onclick="resetFilters()">रीसेट</button>
+                <div class="card-header">
+                    मंजूर सदस्य यादी
+                    <input type="text" id="searchMember" placeholder="🔍 शोधा..." style="width: 250px;" onkeyup="renderMembers()">
                 </div>
-
-                <div class="table-responsive">
+                <div style="overflow-x: auto;">
                     <table id="membersTable">
                         <thead>
                             <tr>
                                 <th>नाव</th>
                                 <th>मोबाईल</th>
-                                <th>ईमेल</th>
-                                <th>लिंग</th>
                                 <th>मंडळ</th>
                                 <th>जिल्हा</th>
-                                <th>पद</th>
-                                <th>कृती (Action)</th>
+                                <th>ॲक्टिव्ह / इनॲक्टिव्ह</th>
+                                <th>कृती</th>
                             </tr>
                         </thead>
-                        <tbody id="tableBody">
-                            <!-- Data will be populated here via JS -->
-                        </tbody>
+                        <tbody id="membersBody"></tbody>
                     </table>
                 </div>
             </div>
-
         </div>
+
+        <!-- 4. Fees Management Tab -->
+        <div id="fees-panel" class="content-area">
+            <div class="card">
+                <div class="card-header">फी / वर्गणी व्यवस्थापन (Auto-Calculator)</div>
+                <div style="overflow-x: auto;">
+                    <table id="feesTable">
+                        <thead>
+                            <tr>
+                                <th>नाव</th>
+                                <th>जिल्हा</th>
+                                <th>एकूण फी (₹)</th>
+                                <th>जमा फी (₹)</th>
+                                <th>थकबाकी (₹)</th>
+                                <th>मॅन्युअल अपडेट</th>
+                            </tr>
+                        </thead>
+                        <tbody id="feesBody"></tbody>
+                        <tfoot>
+                            <tr class="table-footer">
+                                <td colspan="2" style="text-align: right;">एकूण (Total):</td>
+                                <td id="tf-total">₹0</td>
+                                <td id="tf-paid" style="color: green;">₹0</td>
+                                <td id="tf-pending" style="color: red;">₹0</td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. Website Control Tab -->
+        <div id="website-panel" class="content-area">
+            <div class="card">
+                <div class="card-header"><i class="fa-solid fa-cogs"></i> वेबसाईट सेटिंग्ज (मास्टर कंट्रोल)</div>
+                <table style="max-width: 600px;">
+                    <tr>
+                        <td>नवीन रजिस्ट्रेशन फॉर्म चालू ठेवा</td>
+                        <td>
+                            <label class="switch"><input type="checkbox" checked><span class="slider"></span></label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>वेबसाईटवर नोटीस/अलर्ट दाखवा</td>
+                        <td>
+                            <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>डेटाबेस मेन्टेनन्स मोड (Maintenance)</td>
+                        <td>
+                            <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+                        </td>
+                    </tr>
+                </table>
+                
+                <hr style="margin: 20px 0; border: 0; border-top: 1px solid var(--border);">
+                
+                <h4>महत्त्वाची सूचना (Notice Board Update)</h4>
+                <div style="margin-top: 10px; display: flex; gap: 10px;">
+                    <input type="text" placeholder="वेबसाईटवर दिसणारी सूचना टाईप करा..." style="flex: 1;">
+                    <button class="btn btn-update" style="padding: 10px 20px;">अपडेट करा</button>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <script>
-        // Sample Initial Data
-        let membersData = [
-            { id: 1, name: "गणेश शिंदे", mobile: "9876543210", email: "ganesh@email.com", gender: "पुरुष", mandal: "पुणे", district: "सातारा", designation: "क्ष-किरण वैज्ञानिक अधिकारी" },
-            { id: 2, name: "प्रणाली देशमुख", mobile: "9988776655", email: "pranali@email.com", gender: "स्त्री", mandal: "मुंबई", district: "ठाणे", designation: "वरिष्ठ क्ष-किरण तंत्रज्ञ" },
-            { id: 3, name: "HASIM UDDIN", mobile: "8421718481", email: "-", gender: "पुरुष", mandal: "छत्रपती संभाजीनगर", district: "परभणी", designation: "क्ष-किरण वैज्ञानिक अधिकारी" },
-            { id: 4, name: "विकास जाधव", mobile: "9765174712", email: "-", gender: "पुरुष", mandal: "नाशिक", district: "अहमदनगर", designation: "क्ष-किरण वैज्ञानिक अधिकारी" }
+        // ८ आरोग्य मंडळे: मुंबई, पुणे, नाशिक, कोल्हापूर, छत्रपती संभाजीनगर, लातूर, अकोला, नागपूर
+        
+        // Mock Database
+        let usersDB = [
+            { id: 1, name: "गणेश शिंदे", mobile: "9876543210", mandal: "पुणे", district: "सातारा", designation: "क्ष-किरण वैज्ञानिक अधिकारी", status: true, approved: true, totalFee: 1000, paidFee: 500 },
+            { id: 2, name: "प्रणाली देशमुख", mobile: "9988776655", mandal: "मुंबई", district: "ठाणे", designation: "वरिष्ठ क्ष-किरण तंत्रज्ञ", status: true, approved: true, totalFee: 1000, paidFee: 1000 },
+            { id: 3, name: "विकास जाधव", mobile: "9765174712", mandal: "नाशिक", district: "अहमदनगर", designation: "क्ष-किरण वैज्ञानिक अधिकारी", status: false, approved: true, totalFee: 1000, paidFee: 0 },
+            // Pending Users (From Registration Form)
+            { id: 4, name: "सुमित पवार", mobile: "8877665544", mandal: "कोल्हापूर", district: "सांगली", designation: "क्ष-किरण वैज्ञानिक अधिकारी", status: false, approved: false, totalFee: 1000, paidFee: 0 },
+            { id: 5, name: "अमित जोशी", mobile: "7766554433", mandal: "नागपूर", district: "वर्धा", designation: "वरिष्ठ क्ष-किरण तंत्रज्ञ", status: false, approved: false, totalFee: 1000, paidFee: 0 }
         ];
 
-        // Tab Switching Logic
-        function switchTab(tabName) {
-            document.querySelectorAll('.content-area').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.nav-links li').forEach(li => li.classList.remove('active'));
-            
-            document.getElementById(tabName + '-panel').classList.add('active');
+        // UI Update Functions
+        function switchTab(tab) {
+            document.querySelectorAll('.content-area').forEach(e => e.classList.remove('active'));
+            document.querySelectorAll('.nav-links li').forEach(e => e.classList.remove('active'));
+            document.getElementById(tab + '-panel').classList.add('active');
             event.currentTarget.classList.add('active');
-
-            document.getElementById('page-title').innerText = tabName === 'dashboard' ? 'डॅशबोर्ड' : 'सदस्य व्यवस्थापन';
-        }
-
-        // Render Table Data
-        function renderTable(data) {
-            const tbody = document.getElementById('tableBody');
-            tbody.innerHTML = '';
             
-            data.forEach((member, index) => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${member.name}</td>
-                    <td style="color:var(--primary); font-weight:bold;">${member.mobile}</td>
-                    <td>${member.email}</td>
-                    <td>${member.gender}</td>
-                    <td>${member.mandal}</td>
-                    <td>${member.district}</td>
-                    <td>${member.designation}</td>
-                    <td class="action-btns">
-                        <button class="btn-view" onclick="viewMember(${index})"><i class="fa-solid fa-eye"></i> View</button>
-                        <button class="btn-edit" onclick="editMember(${index})"><i class="fa-solid fa-edit"></i> Edit</button>
-                        <button class="btn-delete" onclick="deleteMember(${index})"><i class="fa-solid fa-trash"></i> Delete</button>
+            const titles = { 'dashboard': 'डॅशबोर्ड', 'approvals': 'प्रलंबित मंजुरी', 'members': 'सदस्य व्यवस्थापन', 'fees': 'फीस व्यवस्थापन', 'website': 'वेबसाईट नियंत्रण' };
+            document.getElementById('page-title').innerText = titles[tab];
+        }
+
+        function initApp() {
+            renderApprovals();
+            renderMembers();
+            renderFees();
+            updateDashboard();
+        }
+
+        // 1. Approvals Logic
+        function renderApprovals() {
+            const pending = usersDB.filter(u => !u.approved);
+            document.getElementById('pendingCount').innerText = pending.length;
+            let html = '';
+            pending.forEach(u => {
+                html += `<tr>
+                    <td>${u.name}</td><td>${u.mobile}</td><td>${u.mandal}</td><td>${u.district}</td><td>${u.designation}</td>
+                    <td>
+                        <button class="btn btn-approve" onclick="approveUser(${u.id})"><i class="fa-solid fa-check"></i> Approve</button>
+                        <button class="btn btn-reject" onclick="rejectUser(${u.id})"><i class="fa-solid fa-xmark"></i> Reject</button>
                     </td>
-                `;
-                tbody.appendChild(tr);
+                </tr>`;
             });
+            document.getElementById('pendingBody').innerHTML = html || '<tr><td colspan="6" style="text-align:center;">कोणतेही नवीन रजिस्ट्रेशन प्रलंबित नाही.</td></tr>';
         }
 
-        // Add Member
-        function addMember(e) {
-            e.preventDefault();
-            const newMember = {
-                id: Date.now(),
-                name: document.getElementById('m_name').value,
-                mobile: document.getElementById('m_mobile').value,
-                email: document.getElementById('m_email').value || "-",
-                gender: document.getElementById('m_gender').value,
-                mandal: document.getElementById('m_mandal').value,
-                district: document.getElementById('m_district').value,
-                designation: document.getElementById('m_designation').value
-            };
-            membersData.unshift(newMember); // Add to top
-            renderTable(membersData);
-            updateChart();
-            document.getElementById('addMemberForm').reset();
-            alert("सदस्य यशस्वीरित्या जोडला गेला!");
+        function approveUser(id) {
+            let user = usersDB.find(u => u.id === id);
+            user.approved = true; user.status = true; // Auto active on approve
+            initApp();
+            alert(`${user.name} यांना मंजुरी दिली!`);
+        }
+        function rejectUser(id) {
+            usersDB = usersDB.filter(u => u.id !== id);
+            initApp();
         }
 
-        // Action Functions
-        function deleteMember(index) {
-            if(confirm("तुम्हाला खात्री आहे का की तुम्ही हा सदस्य डिलीट करू इच्छिता?")) {
-                membersData.splice(index, 1);
-                renderTable(membersData);
-                updateChart();
+        // 2. Members Logic (Active/Inactive Toggle)
+        function renderMembers() {
+            const search = document.getElementById('searchMember').value.toLowerCase();
+            const approved = usersDB.filter(u => u.approved && (u.name.toLowerCase().includes(search) || u.mobile.includes(search)));
+            let html = '';
+            approved.forEach(u => {
+                html += `<tr>
+                    <td>${u.name}</td><td>${u.mobile}</td><td>${u.mandal}</td><td>${u.district}</td>
+                    <td>
+                        <label class="switch">
+                            <input type="checkbox" ${u.status ? 'checked' : ''} onchange="toggleStatus(${u.id})">
+                            <span class="slider"></span>
+                        </label>
+                    </td>
+                    <td>
+                        <button class="btn btn-update"><i class="fa-solid fa-edit"></i> Edit</button>
+                    </td>
+                </tr>`;
+            });
+            document.getElementById('membersBody').innerHTML = html;
+        }
+
+        function toggleStatus(id) {
+            let user = usersDB.find(u => u.id === id);
+            user.status = !user.status;
+            // No need to re-render everything, checkbox handles visual state
+        }
+
+        // 3. Fees Management Logic (Auto Calculator)
+        function renderFees() {
+         const approved = usersDB.filter(u => u.approved);
+            let html = '';
+            let tTotal = 0, tPaid = 0, tPending = 0;
+
+            approved.forEach(u => {
+                let pending = u.totalFee - u.paidFee;
+                tTotal += u.totalFee; tPaid += u.paidFee; tPending += pending;
+
+                html += `<tr>
+                    <td>${u.name}</td><td>${u.district}</td>
+                    <td>₹${u.totalFee}</td>
+                    <td style="color: green; font-weight: bold;">₹${u.paidFee}</td>
+                    <td style="color: red; font-weight: bold;">₹${pending}</td>
+                    <td>
+                        <input type="number" id="fee_in_${u.id}" class="fee-input" value="${u.paidFee}" min="0" max="${u.totalFee}">
+                        <button class="btn btn-update" onclick="updateFee(${u.id})">Save</button>
+                    </td>
+                </tr>`;
+            });
+            document.getElementById('feesBody').innerHTML = html;
+            
+            // Update Footer Auto-Calculations
+            document.getElementById('tf-total').innerText = '₹' + tTotal;
+            document.getElementById('tf-paid').innerText = '₹' + tPaid;
+            document.getElementById('tf-pending').innerText = '₹' + tPending;
+
+            // Update Dashboard cards
+            document.getElementById('totFee').innerText = '₹' + tPaid;
+            document.getElementById('pendFee').innerText = '₹' + tPending;
+            document.getElementById('totMembers').innerText = approved.length;
+        }
+
+        function updateFee(id) {
+            let inputVal = document.getElementById(`fee_in_${id}`).value;
+            let user = usersDB.find(u => u.id === id);
+            if(inputVal >= 0 && inputVal <= user.totalFee) {
+                user.paidFee = parseInt(inputVal);
+                renderFees();
+                updateDashboard(); // Update chart and cards
+                alert('फीस यशस्वीरित्या अपडेट झाली!');
+            } else {
+                alert('चुकीची रक्कम! कृपया योग्य रक्कम टाका.');
             }
         }
 
-        function editMember(index) {
-            const member = membersData[index];
-            document.getElementById('m_name').value = member.name;
-            document.getElementById('m_mobile').value = member.mobile;
-            document.getElementById('m_email').value = member.email !== '-' ? member.email : '';
-            document.getElementById('m_gender').value = member.gender;
-            document.getElementById('m_mandal').value = member.mandal;
-            document.getElementById('m_district').value = member.district;
-            document.getElementById('m_designation').value = member.designation;
-            
-            // Note: In real app, you would change "Save" button to "Update" and handle update logic.
-            // For now, this populates the form for editing.
-            deleteMember(index); // Removes old entry so user can save updated one
-            window.scrollTo(0, 0);
-        }
-
-        function viewMember(index) {
-          const m = membersData[index];
-            alert(`सदस्याची माहिती:\nनाव: ${m.name}\nमोबाईल: ${m.mobile}\nलिंग: ${m.gender}\nमंडळ: ${m.mandal}\nजिल्हा: ${m.district}`);
-        }
-
-        // Filter Logic
-        function filterTable() {
-            const searchTxt = document.getElementById('search').value.toLowerCase();
-            const mandal = document.getElementById('filterMandal').value;
-            const district = document.getElementById('filterDistrict').value.toLowerCase();
-
-            const filteredData = membersData.filter(m => {
-                const matchSearch = m.name.toLowerCase().includes(searchTxt) || m.mobile.includes(searchTxt);
-                const matchMandal = mandal === "" || m.mandal === mandal;
-                const matchDistrict = district === "" || m.district.toLowerCase().includes(district);
-                return matchSearch && matchMandal && matchDistrict;
-            });
-
-            renderTable(filteredData);
-        }
-
-        function resetFilters() {
-            document.getElementById('search').value = '';
-            document.getElementById('filterMandal').value = '';
-            document.getElementById('filterDistrict').value = '';
-            renderTable(membersData);
-        }
-
-        // Export to Excel using SheetJS
-        function exportToExcel() {
-            // Remove 'Action' column for export by mapping data
-            const exportData = membersData.map(({id, ...rest}) => rest);
-            const worksheet = XLSX.utils.json_to_sheet(exportData);
-            const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, "Members");
-            XLSX.writeFile(workbook, "Members_List.xlsx");
-        }
-
-        // Chart.js Setup
+        // Dashboard Chart Update
         let myChart;
-        function updateChart() {
+        function updateDashboard() {
+            const approved = usersDB.filter(u => u.approved);
+            const counts = {};
+            approved.forEach(u => counts[u.mandal] = (counts[u.mandal] || 0) + 1);
+
             const ctx = document.getElementById('mandalChart').getContext('2d');
-            
-            // Count members per mandal
-            const mandalCounts = {};
-            membersData.forEach(m => {
-                mandalCounts[m.mandal] = (mandalCounts[m.mandal] || 0) + 1;
-            });
-
-            if (myChart) myChart.destroy(); // Destroy old chart before rendering new
-
+            if (myChart) myChart.destroy();
             myChart = new Chart(ctx, {
-                type: 'pie', // Or 'bar'
+                type: 'pie',
                 data: {
-                    labels: Object.keys(mandalCounts),
+                    labels: Object.keys(counts),
                     datasets: [{
-                        label: 'सदस्य संख्या',
-                        data: Object.values(mandalCounts),
-                        backgroundColor: [
-                            '#0B3D91', '#FFD700', '#28a745', '#dc3545', '#17a2b8'
-                        ]
+                        data: Object.values(counts),
+                        backgroundColor: ['#0B3D91', '#28a745', '#dc3545', '#ffc107', '#17a2b8', '#6f42c1', '#e83e8c', '#fd7e14']
                     }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: { position: 'bottom' }
-                    }
                 }
             });
         }
 
-        // Initialize App
-        window.onload = () => {
-            renderTable(membersData);
-            updateChart();
-        };
-
+        // Initialize Everything
+        window.onload = initApp;
     </script>
 </body>
 </html>
-            
