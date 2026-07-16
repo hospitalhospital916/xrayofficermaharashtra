@@ -1,507 +1,587 @@
 <!DOCTYPE html>
 <html lang="mr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>सुपर-ॲडमिन डॅशबोर्ड - क्ष किरण संघटना</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>सुपर-ॲडमिन डॅशबोर्ड - क्ष-किरण संघटना</title>
   
-  <!-- Libraries -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <!-- Libraries -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
-  <style>
-    :root { 
-        --primary: #0B3D91; --secondary: #FFD700; --bg: #f4f7f6; --text: #2d3748; 
-        --sidebar-bg: linear-gradient(180deg, #072559 0%, #0B3D91 100%);
-        --success: #10b981; --warning: #f59e0b; --danger: #ef4444; --info: #3b82f6;
-    }
-    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    body { background: var(--bg); margin: 0; padding: 0; color: var(--text); display: flex; height: 100vh; overflow: hidden; }
-    
-    /* ================= SIDEBAR ================= */
-    .sidebar { width: 260px; background: var(--sidebar-bg); color: white; display: flex; flex-direction: column; z-index: 100; transition: 0.3s; box-shadow: 4px 0 15px rgba(0,0,0,0.1); }
-    .sidebar-header { padding: 25px 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
-    .sidebar-header h2 { margin: 0; font-size: 1.3rem; color: var(--secondary); letter-spacing: 1px; }
-    .sidebar-menu { flex: 1; overflow-y: auto; padding: 15px 0; }
-    .menu-item { padding: 15px 25px; cursor: pointer; display: flex; align-items: center; gap: 15px; color: #cfd8dc; transition: all 0.3s ease; border-left: 4px solid transparent; font-weight: 500; }
-    .menu-item:hover, .menu-item.active { background: rgba(255,255,255,0.15); color: white; border-left-color: var(--secondary); }
-    .home-btn { border-bottom: 1px solid rgba(255,255,255,0.1); color: var(--secondary); margin-bottom: 10px; }
-    .sidebar-footer { padding: 20px; border-top: 1px solid rgba(255,255,255,0.1); }
-    
-    /* ================= MAIN CONTENT ================= */
-    .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-    .top-header { background: white; padding: 18px 30px; box-shadow: 0 2px 15px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; z-index: 10; }
-    .top-header h3 { margin: 0; color: var(--primary); font-size: 1.4rem; font-weight: 700; }
-    
-    .content-area { padding: 25px 30px; overflow-y: auto; flex: 1; display: none; animation: fadeIn 0.4s ease; }
-    .content-area.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Mukta:wght@300;400;600;700&display=swap');
 
-    /* ================= CARDS & UI ================= */
-    .dashboard-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 25px; margin-bottom: 30px; }
-    .stat-card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.04); display: flex; align-items: center; gap: 20px; border-bottom: 4px solid var(--primary); }
-    .stat-icon { font-size: 2.2rem; color: var(--primary); background: #eef2f7; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; border-radius: 12px; }
-    .stat-info h3 { margin: 0 0 5px 0; font-size: 1.8rem; color: #1a202c; }
-    
-    .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.04); margin-bottom: 30px; border-top: 4px solid var(--primary); }
-    .card-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #edf2f7; padding-bottom: 15px; margin-bottom: 20px; }
-    .card-header h3 { margin: 0; font-size: 1.2rem; }
-    
-    .input-group { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 20px; }
-    input[type="text"], input[type="email"], input[type="number"], input[type="date"], input[type="time"], select, textarea { flex: 1; min-width: 180px; padding: 12px 15px; border: 1px solid #cbd5e0; border-radius: 8px; font-size: 0.95rem; }
-    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(11, 61, 145, 0.1); }
-    
-    .btn { border: none; padding: 10px 18px; border-radius: 6px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; font-size: 0.9rem; color: white; transition: 0.2s; }
-    .btn:hover { filter: brightness(110%); }
-    .btn-primary { background: var(--primary); } .btn-success { background: var(--success); } .btn-danger { background: var(--danger); } 
-    .btn-info { background: var(--info); } .btn-warning { background: var(--warning); color: white; } .btn-secondary { background: #64748b; }
+        :root { 
+            --primary: #0B3D91; 
+            --secondary: #FFD700; 
+            --bg: #f4f7f6; 
+            --text: #333;
+            --success: #28a745;
+            --danger: #dc3545;
+            --info: #17a2b8;
+            --warning: #ffc107;
+            --white: #ffffff;
+            --border: #dee2e6;
+        }
 
-    /* ================= TOGGLE SWITCH (लॉगिन ॲक्सेस) ================= */
-    .switch { position: relative; display: inline-block; width: 46px; height: 24px; }
-    .switch input { opacity: 0; width: 0; height: 0; }
-    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e0; transition: .4s; border-radius: 34px; }
-    .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
-    input:checked + .slider { background-color: var(--success); }
-    input:checked + .slider:before { transform: translateX(22px); }
-    .status-text { font-size: 0.8rem; font-weight: bold; margin-left: 8px; vertical-align: super; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Mukta', sans-serif;
+        }
 
-    /* ================= MODAL ================= */
-    .modal-overlay { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); align-items: center; justify-content: center; }
-    .modal-overlay.active { display: flex; }
-    .modal-box { background: white; padding: 30px; border-radius: 12px; width: 90%; max-width: 500px; box-shadow: 0 15px 30px rgba(0,0,0,0.2); }
-    .modal-box h3 { margin-top: 0; color: var(--primary); border-bottom: 2px solid #edf2f7; padding-bottom: 10px; }
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
 
-    /* ================= CLASSIC TABLE ================= */
-    .table-container { overflow-x: auto; border: 1px solid #e2e8f0; border-radius: 8px; background: white; }
-    .classic-table { width: 100%; border-collapse: collapse; text-align: left; }
-    .classic-table th { background: #f8fafc; color: var(--primary); padding: 15px; font-size: 0.9rem; border-bottom: 2px solid #e2e8f0; white-space: nowrap; }
-    .classic-table td { padding: 12px 15px; border-bottom: 1px solid #edf2f7; font-size: 0.9rem; color: #4a5568; vertical-align: middle; white-space: nowrap; }
-    .classic-table tr:hover { background: #f8fafc; }
-    
-    .action-btn { padding: 6px 12px; font-size: 0.8rem; border-radius: 4px; border: none; cursor: pointer; color: white; margin:0 2px; }
-    .btn-view { background: #06b6d4; } .btn-edit { background: var(--warning); } .btn-del { background: var(--danger); }
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: var(--primary);
+            color: var(--white);
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s;
+        }
 
-    /* Print Setup - Optimizing for PDF Output via Print */
-    @media print {
-      @page { size: landscape; margin: 10mm; }
-      body { background: white; }
-      .sidebar, .top-header, .filter-bar, .no-print, .card-header button { display: none !important; }
-      .main-content { overflow: visible !important; height: auto !important; }
-      .content-area { display: none !important; }
-      .content-area.active { display: block !important; padding: 0 !important; }
-      .card { box-shadow: none; border: none; padding: 0; }
-      .classic-table th, .classic-table td { border: 1px solid #000 !important; white-space: normal; }
-    }
-  </style>
+        .sidebar-header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar-header h2 {
+            font-size: 1.5rem;
+            color: var(--secondary);
+        }
+
+        .nav-links {
+            list-style: none;
+            padding: 20px 0;
+        }
+
+        .nav-links li {
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 1.1rem;
+        }
+
+        .nav-links li:hover, .nav-links li.active {
+            background-color: rgba(255,255,255,0.1);
+            border-left: 4px solid var(--secondary);
+        }
+
+        .nav-links li i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .topbar {
+            background: var(--white);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .topbar .actions button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
+            font-weight: 600;
+            color: white;
+            transition: 0.2s;
+        }
+
+        .btn-excel { background-color: var(--success); }
+        .btn-print { background-color: var(--primary); }
+        .btn-excel:hover, .btn-print:hover { opacity: 0.8; }
+
+        .content-area {
+            padding: 20px;
+            display: none; /* Toggled via JS */
+        }
+
+        .content-area.active {
+            display: block;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            padding: 20px;
+        }
+
+        .card-header {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+        }
+        
+        .card-header i { margin-right: 10px; }
+
+        /* Forms */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .form-group input, .form-group select {
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            outline: none;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            border-color: var(--primary);
+        }
+
+        .btn-submit {
+            background-color: var(--success);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 15px;
+            width: 100%;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .filter-section input, .filter-section select {
+            padding: 8px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            flex: 1;
+        }
+
+        .btn-reset {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* Table */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background-color: #f8f9fa;
+            color: var(--primary);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        td { color: #444; }
+
+        tr:hover { background-color: #f1f5f9; }
+
+        /* Action Buttons */
+        .action-btns button {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            color: white;
+            font-size: 0.8rem;
+            margin-right: 5px;
+        }
+        
+        .btn-view { background-color: var(--info); }
+        .btn-edit { background-color: var(--warning); color: #000 !important; }
+        .btn-delete { background-color: var(--danger); }
+
+        /* Charts */
+        .chart-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Print Media Query */
+        @media print {
+            .sidebar, .topbar, .filter-section, .action-btns, .card-header, .form-grid, .btn-submit, th:last-child, td:last-child {
+                display: none !important;
+            }
+            .main-content { margin: 0; padding: 0; }
+            .card { box-shadow: none; border: none; margin: 0; padding: 0; }
+            body { background: white; }
+            table { border: 1px solid #000; }
+            th, td { border: 1px solid #000; padding: 8px; }
+            #members-panel { display: block !important; }
+            #dashboard-panel { display: none !important; }
+        }
+    </style>
 </head>
 <body>
 
-  <!-- Sidebar -->
-  <div class="sidebar no-print">
-    <div class="sidebar-header"><h2><i class="fa-solid fa-user-shield"></i> सुपर ॲडमिन</h2></div>
-    <div class="sidebar-menu">
-      <div class="menu-item home-btn" onclick="window.location.href='index.html'"><i class="fa-solid fa-house"></i> मुख्य वेबसाईट (Home)</div>
-      <div class="menu-item active" onclick="showTab('tab-dashboard')"><i class="fa-solid fa-chart-pie"></i> डॅशबोर्ड (Dashboard)</div>
-      <div class="menu-item" onclick="showTab('tab-members')"><i class="fa-solid fa-users-gear"></i> सदस्य नियंत्रण (Access)</div>
-      <div class="menu-item" onclick="showTab('tab-finance')"><i class="fa-solid fa-indian-rupee-sign"></i> वर्गणी व आर्थिक</div>
-      <div class="menu-item" onclick="showTab('tab-events')"><i class="fa-solid fa-calendar-check"></i> इव्हेंट / अहवाल</div>
-      <div class="menu-item" onclick="showTab('tab-library')"><i class="fa-solid fa-cloud-arrow-up"></i> ई-लायब्ररी अपलोड</div>
-    </div>
-    <div class="sidebar-footer"><button id="logoutBtn" class="btn btn-danger" style="width:100%; justify-content:center;"><i class="fa-solid fa-right-from-bracket"></i> लॉगआउट (Logout)</button></div>
-  </div>
-
-  <div class="main-content">
-    <div class="top-header no-print">
-        <h3>क्ष किरण संघटना महाराष्ट्र - ERP पॅनल</h3>
-        <span style="color: #64748b; font-weight: 500;"><i class="fa-solid fa-circle-user"></i> Admin</span>
-    </div>
-
-    <!-- TAB 1: Dashboard -->
-    <div class="content-area active" id="tab-dashboard">
-      <div class="dashboard-stats">
-        <div class="stat-card"><div class="stat-icon"><i class="fa-solid fa-users"></i></div><div class="stat-info"><h3 id="statTotalMembers">0</h3><p>अधिकृत सदस्य</p></div></div>
-        <div class="stat-card"><div class="stat-icon" style="color: var(--success); background:#ecfdf5;"><i class="fa-solid fa-wallet"></i></div><div class="stat-info"><h3>₹ <span id="statTotalFunds">0</span></h3><p>एकूण जमा वर्गणी</p></div></div>
-      </div>
-      <div class="card">
-        <div class="card-header"><h3 style="color:var(--primary);">मंडळानुसार सदस्य आलेख (Graph)</h3></div>
-        <!-- Canvas for Chart.js -->
-        <div style="height: 300px; width: 100%;"><canvas id="mandalChart"></canvas></div>
-      </div>
-    </div>
-
-    <!-- TAB 2: Members Control -->
-    <div class="content-area" id="tab-members">
-      <div class="card">
-        <div class="card-header no-print">
-          <h3 style="color:var(--primary);"><i class="fa-solid fa-users-gear"></i> सदस्य ॲक्सेस नियंत्रण (Login Permissions)</h3>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2>क्ष-किरण संघटना</h2>
+            <p style="font-size: 0.8rem; color: #ccc;">सुपर-ॲडमिन पॅनेल</p>
         </div>
-        <div class="table-container">
-          <table class="classic-table">
-            <thead>
-              <tr>
-                <th>नाव</th>
-                <th>मोबाईल</th>
-                <th>पद</th>
-                <th style="text-align:center;">लॉगिन परवानगी (चालू / बंद)</th>
-                <th class="no-print">कृती</th>
-              </tr>
-            </thead>
-            <tbody id="membersList"><tr><td colspan="5" style="text-align:center;">लोड होत आहे...</td></tr></tbody>
-          </table>
-        </div>
-      </div>
+        <ul class="nav-links">
+            <li class="active" onclick="switchTab('dashboard')"><i class="fa-solid fa-chart-pie"></i> डॅशबोर्ड</li>
+            <li onclick="switchTab('members')"><i class="fa-solid fa-users"></i> सदस्य व्यवस्थापन</li>
+        </ul>
     </div>
 
-    <!-- TAB 3: Finance -->
-    <div class="content-area" id="tab-finance">
-      <div class="card" style="border-top-color: var(--success);">
-        <div class="card-header no-print">
-            <h3 style="color: var(--success);"><i class="fa-solid fa-indian-rupee-sign"></i> वर्गणी / फी ट्रॅकिंग</h3>
-            <div style="display:flex; gap:10px;">
-                <button onclick="downloadFinanceExcel()" class="btn btn-success"><i class="fa-solid fa-file-excel"></i> Excel डाउनलोड</button>
-                <button onclick="window.print()" class="btn btn-secondary"><i class="fa-solid fa-file-pdf"></i> Print / PDF काढा</button>
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="topbar">
+            <h3 id="page-title">डॅशबोर्ड</h3>
+            <div class="actions">
+                <button class="btn-excel" onclick="exportToExcel()"><i class="fa-solid fa-file-excel"></i> Excel डाउनलोड</button>
+                <button class="btn-print" onclick="window.print()"><i class="fa-solid fa-print"></i> Print / PDF</button>
             </div>
         </div>
-        
-        <!-- Summary Strip for Print -->
-        <div style="background:#f8fafc; padding:15px; margin-bottom:15px; border-radius:8px; border:1px solid #e2e8f0; font-size:1.1rem; color:var(--primary);">
-            <b>एकूण जमा वर्गणी:</b> ₹ <span id="financePrintTotal">0</span>
+
+        <!-- Dashboard Panel -->
+        <div id="dashboard-panel" class="content-area active">
+            <div class="card">
+                <div class="card-header"><i class="fa-solid fa-chart-bar"></i> विभागानुसार सदस्य आकडेवारी</div>
+                <div class="chart-container">
+                    <canvas id="mandalChart"></canvas>
+                </div>
+            </div>
         </div>
 
-        <div class="table-container">
-          <table class="classic-table" id="financeTable">
-            <thead>
-                <tr>
-                    <th>नाव</th>
-                    <th>मोबाईल</th>
-                    <th>मंडळ</th>
-                    <th>स्थिती</th>
-                    <th>जमा रक्कम (₹)</th>
-                    <th class="no-print">महिती बदला (Edit)</th>
-                </tr>
-            </thead>
-            <tbody id="financeList"></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- TAB 4: Events (Detailed) -->
-    <div class="content-area" id="tab-events">
-      <div class="card no-print" style="border-top-color: #8b5cf6;">
-        <div class="card-header"><h3 style="color: #8b5cf6;"><i class="fa-solid fa-calendar-plus"></i> सविस्तर अहवाल / मीटिंग जोडा</h3></div>
-        <div class="input-group">
-            <input type="text" id="evTitle" placeholder="मीटिंगचा विषय / इव्हेंटचे नाव">
-            <input type="date" id="evDate">
-            <input type="time" id="evTime">
-        </div>
-        <div class="input-group">
-            <input type="text" id="evLocation" placeholder="ठिकाण (उदा. पुणे कार्यालय)">
-            <select id="evStatus">
-                <option value="आगामी">आगामी (Upcoming)</option>
-                <option value="पूर्ण झाले">पूर्ण झाले (Completed)</option>
-            </select>
-        </div>
-        <div class="input-group"><textarea id="evDesc" rows="3" placeholder="मीटिंगमधील महत्त्वाचे मुद्दे, उपस्थिती किंवा इतिवृत्त टाईप करा..."></textarea></div>
-        <button onclick="saveEvent()" class="btn" style="background:#8b5cf6;"><i class="fa-solid fa-paper-plane"></i> माहिती सेव्ह करा</button>
-      </div>
-
-      <!-- History Table -->
-      <div class="card" style="border-top-color: #4c1d95;">
-        <div class="card-header"><h3><i class="fa-solid fa-clock-rotate-left"></i> पूर्वीचे अहवाल व इव्हेंट्स</h3></div>
-        <div class="table-container">
-          <table class="classic-table">
-            <thead><tr><th>दिनांक व वेळ</th><th>विषय</th><th>ठिकाण</th><th>स्थिती</th><th>कृती</th></tr></thead>
-            <tbody id="eventsHistoryList">
-                <!-- Data will come from Firestore -->
-                <tr><td colspan="5" style="text-align:center;">माहिती उपलब्ध नाही</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- TAB 5: Library -->
-    <div class="content-area" id="tab-library">
-      <div class="card no-print" style="border-top-color: #06b6d4;">
-        <div class="card-header"><h3 style="color: #06b6d4;"><i class="fa-solid fa-cloud-arrow-up"></i> नवीन G.R. / दस्तऐवज अपलोड करा</h3></div>
-        <div class="input-group">
-            <input type="text" id="docTitle" placeholder="दस्तऐवजाचे नाव / विषय">
-            <input type="date" id="docDate">
-            <select id="docType"><option value="पब्लिक">पब्लिक (सर्वांसाठी)</option><option value="गोपनीय">गोपनीय (फक्त सदस्यांसाठी)</option></select>
-        </div>
-        <div class="input-group">
-            <input type="file" id="docFile" style="padding: 9px;">
-            <button onclick="uploadDocument()" class="btn btn-info"><i class="fa-solid fa-upload"></i> फाईल अपलोड करा</button>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-header"><h3><i class="fa-solid fa-folder-open"></i> अपलोड केलेल्या फाईल्स (Library)</h3></div>
-        <div class="table-container">
-          <table class="classic-table">
-            <thead><tr><th>दिनांक</th><th>दस्तऐवजाचे नाव</th><th>प्रकार</th><th>फाईल</th><th class="no-print">कृती</th></tr></thead>
-            <tbody id="libraryList">
-                <tr><td colspan="5" style="text-align:center;">कोणतीही फाईल अपलोड केलेली नाही</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- EDIT FINANCE & MEMBER MODAL -->
-  <div id="editMemberModal" class="modal-overlay">
-    <div class="modal-box">
-        <h3><i class="fa-solid fa-pen-to-square"></i> सदस्याची माहिती एडिट करा</h3>
-        <p style="color:#64748b; margin-bottom: 5px;">नाव:</p>
-        <h4 id="editMemName" style="margin-top: 0; color:var(--primary); font-size:1.2rem;">-</h4>
-        
-        <div class="input-group" style="margin-top:15px; flex-direction:column; gap:10px;">
-            <label style="font-weight:bold; font-size:0.9rem;">मंडळ निवडा:</label>
-            <select id="editMemMandal">
-                <option value="ठाणे">ठाणे</option><option value="पुणे">पुणे</option><option value="नाशिक">नाशिक</option>
-                <option value="कोल्हापूर">कोल्हापूर</option><option value="छत्रपती संभाजीनगर">छत्रपती संभाजीनगर</option>
-                <option value="लातूर">लातूर</option><option value="अकोला">अकोला</option><option value="नागपूर">नागपूर</option>
-            </select>
+        <!-- Members Panel -->
+        <div id="members-panel" class="content-area">
             
-            <label style="font-weight:bold; font-size:0.9rem;">फी / वर्गणी स्थिती:</label>
-            <select id="editMemFeeStatus">
-                <option value="बाकी">🔴 बाकी (Unpaid)</option>
-                <option value="जमा">✅ जमा (Paid)</option>
-            </select>
-            
-            <label style="font-weight:bold; font-size:0.9rem;">जमा रक्कम (₹):</label>
-            <input type="number" id="editMemFeeAmount" placeholder="उदा. 500">
-        </div>
+            <!-- Add Member Form -->
+            <div class="card">
+                <div class="card-header" style="color: var(--success);"><i class="fa-solid fa-plus-circle"></i> नवीन सदस्य जोडा (थेट मंजुरी)</div>
+                <form id="addMemberForm" onsubmit="addMember(event)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>संपूर्ण नाव</label>
+                            <input type="text" id="m_name" placeholder="उदा. रमेश पाटील" required>
+                        </div>
+                        <div class="form-group">
+                            <label>मोबाईल क्रमांक</label>
+                            <input type="tel" id="m_mobile" placeholder="उदा. 9876543210" required>
+                        </div>
+                        <div class="form-group">
+                            <label>ईमेल आयडी</label>
+                            <input type="email" id="m_email" placeholder="email@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label>लिंग</label>
+                            <select id="m_gender" required>
+                                <option value="">-- लिंग निवडा --</option>
+                                <option value="पुरुष">पुरुष</option>
+                                <option value="स्त्री">स्त्री</option>
+                                <option value="इतर">इतर</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>मंडळ (विभाग)</label>
+                            <select id="m_mandal" required>
+                                <option value="">-- आरोग्य मंडळ निवडा --</option>
+                                <option value="पुणे">पुणे</option>
+                                <option value="मुंबई">मुंबई</option>
+                                <option value="नागपूर">नागपूर</option>
+                                <option value="छत्रपती संभाजीनगर">छत्रपती संभाजीनगर</option>
+                                <option value="नाशिक">नाशिक</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>जिल्हा</label>
+                            <input type="text" id="m_district" placeholder="उदा. अहमदनगर" required>
+                        </div>
+                        <div class="form-group">
+                            <label>पद</label>
+                            <select id="m_designation" required>
+                                <option value="क्ष-किरण वैज्ञानिक अधिकारी">क्ष-किरण वैज्ञानिक अधिकारी</option>
+                                <option value="वरिष्ठ क्ष-किरण तंत्रज्ञ">वरिष्ठ क्ष-किरण तंत्रज्ञ</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-submit">सदस्य सेव्ह करा</button>
+                </form>
+            </div>
 
-        <div style="display: flex; gap: 10px; margin-top:20px;">
-            <button class="btn btn-success" onclick="saveEditedMember()" style="flex:1;"><i class="fa-solid fa-check"></i> सेव्ह करा</button>
-            <button class="btn btn-secondary" onclick="closeEditModal()" style="flex:1;">रद्द करा</button>
+            <!-- Members List -->
+            <div class="card">
+                <div class="card-header"><i class="fa-solid fa-users"></i> अधिकृत सदस्यांची यादी (Approved Members)</div>
+                
+                <!-- Filters -->
+                <div class="filter-section">
+                    <input type="text" id="search" placeholder="🔍 शोधा: नाव किंवा मोबाईल नंबर..." onkeyup="filterTable()">
+                    <select id="filterMandal" onchange="filterTable()">
+                        <option value="">सर्व मंडळे</option>
+                        <option value="पुणे">पुणे</option>
+                        <option value="मुंबई">मुंबई</option>
+                        <option value="नागपूर">नागपूर</option>
+                        <option value="छत्रपती संभाजीनगर">छत्रपती संभाजीनगर</option>
+                        <option value="नाशिक">नाशिक</option>
+                    </select>
+                    <input type="text" id="filterDistrict" placeholder="जिल्हा टाईप करा..." onkeyup="filterTable()">
+                    <button class="btn-reset" onclick="resetFilters()">रीसेट</button>
+                </div>
+
+                <div class="table-responsive">
+                    <table id="membersTable">
+                        <thead>
+                            <tr>
+                                <th>नाव</th>
+                                <th>मोबाईल</th>
+                                <th>ईमेल</th>
+                                <th>लिंग</th>
+                                <th>मंडळ</th>
+                                <th>जिल्हा</th>
+                                <th>पद</th>
+                                <th>कृती (Action)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <!-- Data will be populated here via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
         </div>
     </div>
-  </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-    import { getFirestore, collection, getDocs, doc, updateDoc, deleteDoc, addDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+    <script>
+        // Sample Initial Data
+        let membersData = [
+            { id: 1, name: "गणेश शिंदे", mobile: "9876543210", email: "ganesh@email.com", gender: "पुरुष", mandal: "पुणे", district: "सातारा", designation: "क्ष-किरण वैज्ञानिक अधिकारी" },
+            { id: 2, name: "प्रणाली देशमुख", mobile: "9988776655", email: "pranali@email.com", gender: "स्त्री", mandal: "मुंबई", district: "ठाणे", designation: "वरिष्ठ क्ष-किरण तंत्रज्ञ" },
+            { id: 3, name: "HASIM UDDIN", mobile: "8421718481", email: "-", gender: "पुरुष", mandal: "छत्रपती संभाजीनगर", district: "परभणी", designation: "क्ष-किरण वैज्ञानिक अधिकारी" },
+            { id: 4, name: "विकास जाधव", mobile: "9765174712", email: "-", gender: "पुरुष", mandal: "नाशिक", district: "अहमदनगर", designation: "क्ष-किरण वैज्ञानिक अधिकारी" }
+        ];
 
-    const firebaseConfig = { apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk", authDomain: "xrayunionmah.firebaseapp.com", projectId: "xrayunionmah", storageBucket: "xrayunionmah.firebasestorage.app", messagingSenderId: "763805226978", appId: "1:763805226978:web:6bae81a0b6358b47d88bbb" };
-    const app = initializeApp(firebaseConfig); const auth = getAuth(app); const db = getFirestore(app);
-
-    let allApprovedMembers = [];
-    let currentEditId = null;
-    let dashboardChart = null; // To track chart instance
-
-    window.showTab = function(id) { 
-        document.querySelectorAll('.content-area').forEach(t=>t.classList.remove('active')); 
-        document.querySelectorAll('.menu-item').forEach(m=>m.classList.remove('active')); 
-        document.getElementById(id).classList.add('active'); 
-        event.currentTarget.classList.add('active'); 
-    }
-    
-    onAuthStateChanged(auth, (user) => { if(!user) window.location.href="login.html"; else { fetchMembersFromDB(); } });
-    document.getElementById("logoutBtn").onclick = () => signOut(auth).then(()=>window.location.href="login.html");
-
-    // ================= 1. FETCH DATA =================
-    async function fetchMembersFromDB() {
-      const snap = await getDocs(collection(db, "members"));
-      let apprv=[], totalFunds=0, mandalCount={"ठाणे":0, "पुणे":0, "नाशिक":0, "कोल्हापूर":0, "छत्रपती संभाजीनगर":0, "लातूर":0, "अकोला":0, "नागपूर":0};
-      
-      snap.forEach(d => {
-        let raw = d.data();
-        let fName = raw.नाव || ""; let mName = raw.मधले_नाव || raw.मधले || ""; let lName = raw.आडनाव || "";
-        let finalName = `${fName} ${mName} ${lName}`.trim().replace(/\s+/g, ' ');
-        if(finalName === "") finalName = "नाव उपलब्ध नाही";
-
-        let m = {
-            id: d.id, ...raw, 
-            पूर्ण_नाव: finalName, 
-            मंडळ: raw.मंडळ || "इतर", 
-            पद: raw.पद || "-", 
-            मोबाईल: raw.मोबाईल_क्रमांक || raw.मोबाईल || "-", 
-            फी_स्थिती: raw.फी_स्थिती || "बाकी", 
-            स्थिती: raw.स्थिती || "मंजूर",
-            फी_रक्कम: Number(raw.फी_रक्कम) || 0,
-            अॅक्सेस: raw.अॅक्सेस || "चालू" // Login permission field
-        };
-        
-        if(m.स्थिती==="मंजूर") {
-            apprv.push(m);
-            if(mandalCount[m.मंडळ] !== undefined) mandalCount[m.मंडळ]++;
-            else mandalCount[m.मंडळ] = 1;
+        // Tab Switching Logic
+        function switchTab(tabName) {
+            document.querySelectorAll('.content-area').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.nav-links li').forEach(li => li.classList.remove('active'));
             
-            if(m.फी_स्थिती === "जमा") {
-                totalFunds += m.फी_रक्कम > 0 ? m.फी_रक्कम : 500;
+            document.getElementById(tabName + '-panel').classList.add('active');
+            event.currentTarget.classList.add('active');
+
+            document.getElementById('page-title').innerText = tabName === 'dashboard' ? 'डॅशबोर्ड' : 'सदस्य व्यवस्थापन';
+        }
+
+        // Render Table Data
+        function renderTable(data) {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+            
+            data.forEach((member, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${member.name}</td>
+                    <td style="color:var(--primary); font-weight:bold;">${member.mobile}</td>
+                    <td>${member.email}</td>
+                    <td>${member.gender}</td>
+                    <td>${member.mandal}</td>
+                    <td>${member.district}</td>
+                    <td>${member.designation}</td>
+                    <td class="action-btns">
+                        <button class="btn-view" onclick="viewMember(${index})"><i class="fa-solid fa-eye"></i> View</button>
+                        <button class="btn-edit" onclick="editMember(${index})"><i class="fa-solid fa-edit"></i> Edit</button>
+                        <button class="btn-delete" onclick="deleteMember(${index})"><i class="fa-solid fa-trash"></i> Delete</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Add Member
+        function addMember(e) {
+            e.preventDefault();
+            const newMember = {
+                id: Date.now(),
+                name: document.getElementById('m_name').value,
+                mobile: document.getElementById('m_mobile').value,
+                email: document.getElementById('m_email').value || "-",
+                gender: document.getElementById('m_gender').value,
+                mandal: document.getElementById('m_mandal').value,
+                district: document.getElementById('m_district').value,
+                designation: document.getElementById('m_designation').value
+            };
+            membersData.unshift(newMember); // Add to top
+            renderTable(membersData);
+            updateChart();
+            document.getElementById('addMemberForm').reset();
+            alert("सदस्य यशस्वीरित्या जोडला गेला!");
+        }
+
+        // Action Functions
+        function deleteMember(index) {
+            if(confirm("तुम्हाला खात्री आहे का की तुम्ही हा सदस्य डिलीट करू इच्छिता?")) {
+                membersData.splice(index, 1);
+                renderTable(membersData);
+                updateChart();
             }
         }
-      });
-      
-      allApprovedMembers = apprv;
-      document.getElementById("statTotalMembers").innerText = apprv.length; 
-      document.getElementById("statTotalFunds").innerText = totalFunds.toLocaleString('en-IN');
-      document.getElementById("financePrintTotal").innerText = totalFunds.toLocaleString('en-IN');
-      
-      renderMembersTable(apprv); 
-      renderFinanceTable(apprv);
-      drawChart(mandalCount);
-    }
 
-    // ================= CHART.JS LOGIC =================
-    function drawChart(mandalCount) {
-        const ctx = document.getElementById('mandalChart').getContext('2d');
-        if(dashboardChart) dashboardChart.destroy(); // Destroy old chart before redrawing
+        function editMember(index) {
+            const member = membersData[index];
+            document.getElementById('m_name').value = member.name;
+            document.getElementById('m_mobile').value = member.mobile;
+            document.getElementById('m_email').value = member.email !== '-' ? member.email : '';
+            document.getElementById('m_gender').value = member.gender;
+            document.getElementById('m_mandal').value = member.mandal;
+            document.getElementById('m_district').value = member.district;
+            document.getElementById('m_designation').value = member.designation;
+            
+            // Note: In real app, you would change "Save" button to "Update" and handle update logic.
+            // For now, this populates the form for editing.
+            deleteMember(index); // Removes old entry so user can save updated one
+            window.scrollTo(0, 0);
+        }
 
-        const labels = Object.keys(mandalCount);
-        const data = Object.values(mandalCount);
+        function viewMember(index) {
+          const m = membersData[index];
+            alert(`सदस्याची माहिती:\nनाव: ${m.name}\nमोबाईल: ${m.mobile}\nलिंग: ${m.gender}\nमंडळ: ${m.mandal}\nजिल्हा: ${m.district}`);
+        }
 
-        dashboardChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'सदस्य संख्या',
-                    data: data,
-                    backgroundColor: '#FFD700', // Gold
-                    borderColor: '#0B3D91', // Blue border
-                    borderWidth: 1,
-                    borderRadius: 4
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
-            }
-        });
-    }
+        // Filter Logic
+        function filterTable() {
+            const searchTxt = document.getElementById('search').value.toLowerCase();
+            const mandal = document.getElementById('filterMandal').value;
+            const district = document.getElementById('filterDistrict').value.toLowerCase();
 
-    // ================= MEMBERS TABLE (Login Toggle) =================
-    function renderMembersTable(data) {
-      const tb = document.getElementById("membersList"); tb.innerHTML = data.length ? "" : "<tr><td colspan='5'>माहिती उपलब्ध नाही.</td></tr>";
-      data.forEach(m => {
-        let isAccessOn = m.अॅक्सेस === "चालू";
-        let toggleHTML = `
-            <label class="switch">
-              <input type="checkbox" onchange="toggleLoginAccess('${m.id}', this.checked)" ${isAccessOn ? 'checked' : ''}>
-              <span class="slider"></span>
-            </label>
-            <span class="status-text" style="color:${isAccessOn ? 'green' : 'red'}">${isAccessOn ? 'सुरू' : 'बंद'}</span>
-        `;
-
-        tb.innerHTML += `
-          <tr>
-            <td style="color:var(--primary); font-weight:bold;">${m.पूर्ण_नाव}</td>
-            <td>${m.मोबाईल}</td>
-            <td>${m.पद}</td>
-            <td style="text-align:center;">${toggleHTML}</td>
-            <td class="no-print"><button class="action-btn btn-del" onclick="deleteUser('${m.id}')"><i class="fa-solid fa-trash"></i> डिलीट</button></td>
-          </tr>`;
-      });
-    }
-
-    window.toggleLoginAccess = async (id, isChecked) => {
-        let newStatus = isChecked ? "चालू" : "बंद";
-        try {
-            await updateDoc(doc(db, "members", id), { अॅक्सेस: newStatus });
-            // Status changed silently in DB, UI updates automatically via the toggle button visually
-        } catch(e) { alert("एरर: ॲक्सेस बदलता आला नाही."); }
-    };
-
-    // ================= FINANCE TABLE & EDIT LOGIC =================
-    function renderFinanceTable(data) {
-      const ft = document.getElementById("financeList"); ft.innerHTML = data.length ? "" : "<tr><td colspan='6'>डेटा नाही.</td></tr>";
-      data.forEach(m => {
-        let isPaid = m.फी_स्थिती === "जमा";
-        let statusBadge = isPaid ? `<span style="color:#059669; font-weight:bold;">✅ जमा</span>` : `<span style="color:#dc2626; font-weight:bold;">🔴 बाकी</span>`;
-        let displayAmount = isPaid ? (m.फी_रक्कम > 0 ? m.फी_रक्कम : 500) : 0;
-        
-        ft.innerHTML += `
-          <tr>
-            <td><b>${m.पूर्ण_नाव}</b></td>
-            <td>${m.मोबाईल}</td>
-            <td>${m.मंडळ}</td>
-            <td>${statusBadge}</td>
-            <td style="font-weight:bold;">₹ ${displayAmount}</td>
-            <td class="no-print">
-                <button class="action-btn btn-edit" onclick="openEditModal('${m.id}')"><i class="fa-solid fa-pen"></i> एडिट करा</button>
-            </td>
-          </tr>`;
-      });
-    }
-
-    // Edit Modal Functions
-    window.openEditModal = (id) => {
-        currentEditId = id;
-        let member = allApprovedMembers.find(m => m.id === id);
-        if(!member) return;
-
-        document.getElementById("editMemName").innerText = member.पूर्ण_नाव;
-        document.getElementById("editMemMandal").value = member.मंडळ;
-        document.getElementById("editMemFeeStatus").value = member.फी_स्थिती;
-        document.getElementById("editMemFeeAmount").value = member.फी_स्थिती === "जमा" ? (member.फी_रक्कम > 0 ? member.फी_रक्कम : 500) : 0;
-        
-        document.getElementById("editMemberModal").classList.add("active");
-    };
-
-    window.closeEditModal = () => document.getElementById("editMemberModal").classList.remove("active");
-
-    window.saveEditedMember = async () => {
-        let mandal = document.getElementById("editMemMandal").value;
-        let status = document.getElementById("editMemFeeStatus").value;
-        let amount = document.getElementById("editMemFeeAmount").value;
-
-        try {
-            await updateDoc(doc(db, "members", currentEditId), {
-                मंडळ: mandal,
-                फी_स्थिती: status,
-                फी_रक्कम: Number(amount)
+            const filteredData = membersData.filter(m => {
+                const matchSearch = m.name.toLowerCase().includes(searchTxt) || m.mobile.includes(searchTxt);
+                const matchMandal = mandal === "" || m.mandal === mandal;
+                const matchDistrict = district === "" || m.district.toLowerCase().includes(district);
+                return matchSearch && matchMandal && matchDistrict;
             });
-            closeEditModal();
-            fetchMembersFromDB(); // Refresh UI
-            alert("✅ माहिती यशस्वीरित्या अपडेट झाली!");
-        } catch(e) { alert("एरर: माहिती सेव्ह झाली नाही."); }
-    };
 
-    // Export Finance Excel
-    window.downloadFinanceExcel = () => {
-      let exportData = allApprovedMembers.map((m,i)=>({
-          "अनुक्रमांक": i+1, 
-          "सदस्याचे नाव": m.पूर्ण_नाव, 
-          "मोबाईल": m.मोबाईल, 
-          "मंडळ": m.मंडळ, 
-          "फी स्थिती": m.फी_स्थिती, 
-          "जमा रक्कम (Rs)": m.फी_स्थिती === "जमा" ? (m.फी_रक्कम > 0 ? m.फी_रक्कम : 500) : 0
-      }));
-      let ws = XLSX.utils.json_to_sheet(exportData); 
-      let wb = XLSX.utils.book_new(); 
-      XLSX.utils.book_append_sheet(wb, ws, "Finance_Report"); 
-      XLSX.writeFile(wb, "Xray_Union_Finance_Report.xlsx");
-    };
+            renderTable(filteredData);
+        }
 
-    // ================= EVENTS & LIBRARY (Mock UI Logic for Demonstration) =================
-    // (Note: To save actual files, Firebase Storage integration is needed. Here we save metadata to Firestore)
-    
-    window.saveEvent = async () => {
-        let t = document.getElementById("evTitle").value;
-        if(!t) return alert("कृपया विषय टाका!");
-        
-        alert("✅ अहवाल सेव्ह झाला! (हा डेमो आहे, डेटाबेस लिंक करण्यासाठी Firebase Collection ऍड करा लागेल)");
-        document.getElementById("evTitle").value = "";
-    };
+        function resetFilters() {
+            document.getElementById('search').value = '';
+            document.getElementById('filterMandal').value = '';
+            document.getElementById('filterDistrict').value = '';
+            renderTable(membersData);
+        }
 
-    window.uploadDocument = () => {
-        let file = document.getElementById("docFile").files[0];
-        if(!file) return alert("कृपया फाईल निवडा!");
-        alert("✅ फाईल यशस्वीरित्या अपलोड झाली! (फाईल स्टोअरेजसाठी Firebase Storage Rules सेट करावे लागतील)");
-        document.getElementById("docFile").value = "";
-    };
+        // Export to Excel using SheetJS
+        function exportToExcel() {
+            // Remove 'Action' column for export by mapping data
+            const exportData = membersData.map(({id, ...rest}) => rest);
+            const worksheet = XLSX.utils.json_to_sheet(exportData);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Members");
+            XLSX.writeFile(workbook, "Members_List.xlsx");
+        }
 
-    window.deleteUser = async (id) => { if(confirm("हा सदस्य कायमचा डिलीट करायचा")) { await deleteDoc(doc(db,"members",id)); fetchMembersFromDB(); } };
+        // Chart.js Setup
+        let myChart;
+        function updateChart() {
+            const ctx = document.getElementById('mandalChart').getContext('2d');
+            
+            // Count members per mandal
+            const mandalCounts = {};
+            membersData.forEach(m => {
+                mandalCounts[m.mandal] = (mandalCounts[m.mandal] || 0) + 1;
+            });
 
-  </script>
+            if (myChart) myChart.destroy(); // Destroy old chart before rendering new
+
+            myChart = new Chart(ctx, {
+                type: 'pie', // Or 'bar'
+                data: {
+                    labels: Object.keys(mandalCounts),
+                    datasets: [{
+                        label: 'सदस्य संख्या',
+                        data: Object.values(mandalCounts),
+                        backgroundColor: [
+                            '#0B3D91', '#FFD700', '#28a745', '#dc3545', '#17a2b8'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        }
+
+        // Initialize App
+        window.onload = () => {
+            renderTable(membersData);
+            updateChart();
+        };
+
+    </script>
 </body>
 </html>
+            
