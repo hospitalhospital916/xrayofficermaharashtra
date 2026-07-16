@@ -2,65 +2,203 @@
 <html lang="mr">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>नवीन नोंदणी | क्ष किरण संघटना</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     body { font-family: 'Segoe UI', sans-serif; background: #eef2f7; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
-    .reg-wrapper { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); width: 100%; max-width: 500px; border-top: 6px solid #0B3D91; }
+    .reg-wrapper { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); width: 100%; max-width: 600px; border-top: 6px solid #0B3D91; }
     h2 { color: #0B3D91; text-align: center; margin-bottom: 20px; }
+    
+    /* Grid for names to look neat */
+    .name-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+    @media (max-width: 500px) { .name-grid { grid-template-columns: 1fr; } }
+
     .input-box { margin-bottom: 15px; }
-    .input-box label { display: block; font-weight: bold; margin-bottom: 5px; color: #444; }
-    .input-box input, .input-box select, .input-box textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; }
-    button { width: 100%; background: #28a745; color: white; border: none; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer; }
+    .input-box label { display: block; font-weight: bold; margin-bottom: 5px; color: #444; font-size: 0.9rem; }
+    .input-box label span { color: red; } /* For required asterisk */
+    .input-box input, .input-box select, .input-box textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+    
+    .divider { height: 1px; background: #ddd; margin: 20px 0; }
+    
+    button { width: 100%; background: #28a745; color: white; border: none; padding: 12px; border-radius: 6px; font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: 0.3s; }
+    button:hover { background: #218838; }
+    button:disabled { background: #6c757d; cursor: not-allowed; }
+    
+    #loadingMsg { text-align: center; color: #0B3D91; font-weight: bold; margin-bottom: 15px; display: none; }
   </style>
 </head>
 <body>
   <div class="reg-wrapper">
-    <h2>नवीन सदस्य नोंदणी</h2>
-    <div class="input-box"><label>नाव</label><input type="text" id="firstName" placeholder="पहिले नाव" required></div>
-    <div class="input-box"><label>वडिलांचे / मधले नाव</label><input type="text" id="middleName" placeholder="मधले नाव"></div>
-    <div class="input-box"><label>आडनाव</label><input type="text" id="lastName" placeholder="आडनाव" required></div>
+    <h2><i class="fa-solid fa-user-plus"></i> नवीन सदस्य नोंदणी</h2>
     
-    <!-- नवीन रकाना -->
-    <div class="input-box">
-      <label>लिंग (Gender)</label>
-      <select id="gender">
-        <option value="पुरुष">पुरुष (Male)</option>
-        <option value="महिला">महिला (Female)</option>
-      </select>
-    </div>
+    <form id="registrationForm">
+      <!-- १. वैयक्तिक माहिती (फिक्स रकाने) -->
+      <label style="font-weight: bold; color: #0B3D91;">संपूर्ण नाव <span>*</span></label>
+      <div class="name-grid">
+        <div><input type="text" id="firstName" placeholder="स्वतःचे नाव" required></div>
+        <div><input type="text" id="middleName" placeholder="वडिलांचे नाव" required></div>
+        <div><input type="text" id="lastName" placeholder="आडनाव" required></div>
+      </div>
 
-    <div class="input-box"><label>मोबाईल क्रमांक</label><input type="tel" id="mobile" required></div>
-    <div class="input-box"><label>ईमेल आयडी</label><input type="email" id="email" required></div>
-    <div class="input-box"><label>कायमचा पत्ता</label><textarea id="address" rows="2"></textarea></div>
-    <div class="input-box"><label>पासवर्ड</label><input type="password" id="password" required></div>
-    <button id="regBtn">नोंदणी करा</button>
+      <div class="input-box">
+        <label>लिंग (Gender) <span>*</span></label>
+        <select id="gender" required>
+          <option value="">निवडा...</option>
+          <option value="पुरुष">पुरुष (Male)</option>
+          <option value="महिला">महिला (Female)</option>
+        </select>
+      </div>
+
+      <div class="input-box"><label>मोबाईल क्रमांक <span>*</span></label><input type="tel" id="mobile" pattern="[0-9]{10}" placeholder="१० अंकी नंबर" required></div>
+      <div class="input-box"><label>कायमचा पत्ता <span>*</span></label><textarea id="address" rows="2" placeholder="संपूर्ण पत्ता लिहा" required></textarea></div>
+
+      <div class="divider"></div>
+      
+      <!-- २. डायनॅमिक रकाने (ॲडमिन पॅनेलमधून येतील, उदा. मंडळ, डॉक्युमेंट अपलोड) -->
+      <div id="dynamicFieldsContainer">
+        <p style="text-align:center; color:#888;">अतिरिक्त माहिती लोड होत आहे...</p>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- ३. लॉगिन माहिती -->
+      <div class="input-box"><label>ईमेल आयडी (लॉगिनसाठी) <span>*</span></label><input type="email" id="email" required></div>
+      <div class="input-box"><label>पासवर्ड <span>*</span></label><input type="password" id="password" minlength="6" placeholder="किमान ६ अक्षरे/अंक" required></div>
+      
+      <div id="loadingMsg"><i class="fa-solid fa-spinner fa-spin"></i> नोंदणी होत आहे, कृपया थोडा वेळ थांबा... (फाईल अपलोड होत आहे)</div>
+      <button type="submit" id="regBtn">नोंदणी करा</button>
+    </form>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+    import { getFirestore, doc, setDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+    // Storage import for file upload
+    import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-storage.js";
 
     const firebaseConfig = { apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk", authDomain: "xrayunionmah.firebaseapp.com", projectId: "xrayunionmah", storageBucket: "xrayunionmah.firebasestorage.app", messagingSenderId: "763805226978", appId: "1:763805226978:web:6bae81a0b6358b47d88bbb" };
-    const auth = getAuth(initializeApp(firebaseConfig));
-    const db = getFirestore(initializeApp(firebaseConfig));
+    
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const storage = getStorage(app);
 
-    document.getElementById("regBtn").onclick = async () => {
+    let dynamicFieldsConfig = [];
+
+    // पेज उघडताच ॲडमिनचे रकाने फायरबेसमधून आणणे
+    async function loadDynamicFields() {
+      const container = document.getElementById("dynamicFieldsContainer");
       try {
-        const userCredential = await createUserWithEmailAndPassword(auth, document.getElementById("email").value, document.getElementById("password").value);
-        await setDoc(doc(db, "members", userCredential.user.uid), {
-          पूर्ण_नाव: `${document.getElementById("firstName").value} ${document.getElementById("middleName").value} ${document.getElementById("lastName").value}`,
-          लिंग: document.getElementById("gender").value, // लिंग सेव्ह होत आहे
+        const snap = await getDocs(collection(db, "form_fields"));
+        container.innerHTML = ""; // Clear loading text
+        
+        if(snap.empty) { container.innerHTML = ""; return; }
+
+        snap.forEach(doc => {
+          let field = doc.data();
+          dynamicFieldsConfig.push(field); // सेव्ह करण्यासाठी माहिती साठवून ठेवणे
+          
+          let reqStar = field.required ? '<span>*</span>' : '';
+          let reqAttr = field.required ? 'required' : '';
+          
+          let html = `<div class="input-box"><label>${field.label} ${reqStar}</label>`;
+          
+          if(field.type === 'dropdown') {
+            html += `<select id="dyn_${field.field_id}" ${reqAttr}><option value="">निवडा...</option>`;
+            let options = field.options ? field.options.split(',') : [];
+            options.forEach(opt => html += `<option value="${opt.trim()}">${opt.trim()}</option>`);
+            html += `</select>`;
+          } else if (field.type === 'file') {
+            // डॉक्युमेंट अपलोड करण्यासाठी
+            html += `<input type="file" id="dyn_${field.field_id}" ${reqAttr} accept=".pdf, .jpg, .jpeg, .png">`;
+          } else {
+            // इतर Text, Number, Date साठी
+            html += `<input type="${field.type}" id="dyn_${field.field_id}" ${reqAttr}>`;
+          }
+          
+          html += `</div>`;
+          container.innerHTML += html;
+        });
+      } catch (error) {
+        console.error("Dynamic fields load error:", error);
+        container.innerHTML = `<p style="color:red; text-align:center;">माहिती लोड करताना एरर आला.</p>`;
+      }
+    }
+
+    // पेज लोड झाल्यावर फंक्शन कॉल करणे
+    window.onload = loadDynamicFields;
+
+    // फॉर्म सबमिट केल्यावर
+    document.getElementById("registrationForm").addEventListener("submit", async (e) => {
+      e.preventDefault(); // पेज रिफ्रेश होण्यापासून थांबवणे
+      
+      const btn = document.getElementById("regBtn");
+      const loading = document.getElementById("loadingMsg");
+      btn.disabled = true;
+      loading.style.display = "block";
+
+      try {
+        // १. युजरचे खाते बनवणे (Authentication)
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const uid = userCredential.user.uid;
+
+        // २. डायनॅमिक रकाण्यांचा डेटा आणि फाईल अपलोड गोळा करणे
+        let dynamicData = {};
+        for(let field of dynamicFieldsConfig) {
+          let el = document.getElementById(`dyn_${field.field_id}`);
+          if(!el) continue;
+
+          if(field.type === 'file') {
+            if(el.files.length > 0) {
+              // फाईल Storage मध्ये अपलोड करणे
+              const file = el.files[0];
+              const fileRef = ref(storage, `member_documents/${uid}_${field.field_id}_${file.name}`);
+              await uploadBytes(fileRef, file);
+              const downloadURL = await getDownloadURL(fileRef);
+              dynamicData[field.field_id] = downloadURL; // फाईलची लिंक डेटाबेसमध्ये जाईल
+            } else {
+              dynamicData[field.field_id] = null;
+            }
+          } else {
+            dynamicData[field.field_id] = el.value;
+          }
+        }
+
+        // ३. नावे एकत्र करणे
+        const fullName = `${document.getElementById("firstName").value} ${document.getElementById("middleName").value} ${document.getElementById("lastName").value}`;
+
+        // ४. सर्व माहिती Firestore मध्ये 'members' कलेक्शनमध्ये सेव्ह करणे
+        let finalMemberData = {
+          पूर्ण_नाव: fullName,
+          पहिले_नाव: document.getElementById("firstName").value,
+          मधले_नाव: document.getElementById("middleName").value,
+          आडनाव: document.getElementById("lastName").value,
+          लिंग: document.getElementById("gender").value,
           मोबाईल: document.getElementById("mobile").value,
-          ईमेल: document.getElementById("email").value,
+          ईमेल: email,
           कायमचा_पत्ता: document.getElementById("address").value,
           स्थिती: "प्रलंबित",
-          अॅक्सेस: "चालू"
-        });
-        alert("नोंदणी यशस्वी!");
-      } catch (e) { alert("एरर: " + e.message); }
-    };
+          अॅक्सेस: "चालू",
+          फी_स्थिती: "बाकी",
+          ...dynamicData // डायनॅमिक डेटा (मंडळ, फाईल लिंक इ.) यात जोडला जाईल
+        };
+
+        await setDoc(doc(db, "members", uid), finalMemberData);
+        
+        alert("✅ नोंदणी यशस्वी झाली! लवकरच ॲडमिनकडून मंजुरी मिळेल.");
+        window.location.reload(); // फॉर्म रिसेट करणे
+        
+      } catch (error) {
+        console.error(error);
+        alert("❌ एरर: " + error.message);
+        btn.disabled = false;
+        loading.style.display = "none";
+      }
+    });
   </script>
 </body>
 </html>
