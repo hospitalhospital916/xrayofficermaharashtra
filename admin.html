@@ -500,7 +500,7 @@
         document.getElementById("docFile").value = "";
     };
 
-    window.deleteUser = async (id) => { if(confirm("हा सदस्य कायमचा डिलीट करायचा?")) { await deleteDoc(doc(db,"members",id)); fetchMembersFromDB(); } };
+    window.deleteUser = async (id) => { if(confirm("हा सदस्य कायमचा डिलीट करायचा")) { await deleteDoc(doc(db,"members",id)); fetchMembersFromDB(); } };
 
   </script>
 </body>
