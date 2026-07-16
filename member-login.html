@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>सदस्य लॉगिन व नोंदणी | क्ष-किरण संघटना</title>
+    
+    <!-- Google Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- SweetAlert2 (सुंदर पॉपअप मेसेजसाठी) -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mukta', sans-serif; }
+        
+        /* 🌟 खतरनाक ॲनिमेटेड बॅकग्राऊंड */
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(-45deg, #0B3D91, #1e293b, #0B3D91, #f39c12);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            padding: 20px;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* 🌟 काचेसारखा (Glassmorphism) इफेक्ट */
+        .glass-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 500px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .header-box {
+            background: #0B3D91;
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+            border-bottom: 4px solid #f39c12;
+        }
+        .header-box h2 { font-size: 1.8rem; font-weight: 800; }
+        .header-box p { font-size: 1rem; opacity: 0.9; }
+
+        /* 🌟 टॉगल बटने (Login / Register Switch) */
+        .toggle-box {
+            display: flex;
+            margin: 20px;
+            background: #e2e8f0;
+            border-radius: 30px;
+            position: relative;
+        }
+        .toggle-btn {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            color: #555;
+            z-index: 1;
+            transition: 0.3s;
+        }
+        .toggle-btn.active { color: white; }
+        .toggle-slider {
+            position: absolute;
+            top: 0; left: 0;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(90deg, #0B3D91, #1e3a8a);
+            border-radius: 30px;
+            transition: 0.4s ease-in-out;
+            z-index: 0;
+            box-shadow: 0 4px 10px rgba(11, 61, 145, 0.4);
+        }
+
+        /* 🌟 फॉर्म डिझाईन */
+        .form-area { padding: 0 30px 30px 30px; }
+        .input-group { margin-bottom: 20px; position: relative; }
+        .input-group i {
+            position: absolute;
+            top: 15px; left: 15px;
+            color: #0B3D91;
+            font-size: 1.2rem;
+        }
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 14px 14px 14px 45px;
+            border: 2px solid #cbd5e1;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            background: #f8fafc;
+            transition: 0.3s;
+            outline: none;
+        }
+        .input-group input:focus, .input-group select:focus {
+            border-color: #f39c12;
+            background: white;
+            box-shadow: 0 0 10px rgba(243, 156, 18, 0.2);
+        }
+        
+        /* 🌟 सबमिट बटन */
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(90deg, #f39c12, #f1c40f);
+            color: #1e293b;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(243, 156, 18, 0.4);
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(243, 156, 18, 0.6);
+            color: black;
+        }
+
+        /* लपवण्यासाठी क्लास */
+        .hidden { display: none; }
+        
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #0B3D91;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        .back-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <div class="glass-container">
+        <!-- Header -->
+        <div class="header-box">
+            <h2><i class="fa fa-shield-alt"></i> सदस्य कक्ष</h2>
+            <p>क्ष-किरण वैज्ञानिक अधिकारी संघटना</p>
+        </div>
+
+        <!-- Toggle Buttons -->
+        <div class="toggle-box">
+            <div class="toggle-slider" id="slider"></div>
+            <div class="toggle-btn active" id="btn-login" onclick="switchTab('login')">लॉगिन करा</div>
+            <div class="toggle-btn" id="btn-register" onclick="switchTab('register')">नवीन नोंदणी</div>
+        </div>
+
+        <!-- 1️⃣ LOGIN FORM -->
+        <div class="form-area" id="login-form">
+            <form onsubmit="handleLogin(event)">
+                <div class="input-group">
+                    <i class="fa fa-phone"></i>
+                    <input type="tel" id="login_mobile" placeholder="नोंदणीकृत मोबाईल नंबर" required autocomplete="off">
+                </div>
+                <div class="input-group">
+                    <i class="fa fa-lock"></i>
+                    <input type="password" id="login_pass" placeholder="पासवर्ड टाका" required>
+                </div>
+                <button type="submit" class="submit-btn"><i class="fa fa-sign-in-alt"></i> लॉगिन करा</button>
+            </form>
+            <a href="index.html" class="back-link"><i class="fa fa-arrow-left"></i> मुख्यपृष्ठावर परत जा</a>
+        </div>
+
+        <!-- 2️⃣ REGISTRATION FORM (सुरवातीला लपवलेला असेल) -->
+        <div class="form-area hidden" id="register-form">
+            <form onsubmit="handleRegister(event)">
+                <div class="input-group">
+                    <i class="fa fa-user"></i>
+                    <input type="text" id="reg_name" placeholder="संपूर्ण नाव (उदा. श्री. रमेश पाटील)" required>
+                </div>
+                <div class="input-group">
+                    <i class="fa fa-phone"></i>
+                    <input type="tel" id="reg_mobile" placeholder="कायमचा मोबाईल नंबर (WhatsApp)" required>
+                </div>
+                <div class="input-group">
+                    <i class="fa fa-hospital"></i>
+                    <input type="text" id="reg_workplace" placeholder="कार्यरत ठिकाण (उदा. सामान्य रुग्णालय, पुणे)" required>
+                </div>
+                <div class="input-group">
+                    <i class="fa fa-map-marker-alt"></i>
+                    <select id="reg_mandal" required>
+                        <option value="">-- आरोग्य मंडळ (विभाग) निवडा --</option>
+                        <option value="पुणे मंडळ">पुणे मंडळ</option> <option value="नागपूर मंडळ">नागपूर मंडळ</option>
+                        <option value="नाशिक मंडळ">नाशिक मंडळ</option> <option value="अकोला मंडळ">अकोला मंडळ</option>
+                        <option value="कोल्हापूर मंडळ">कोल्हापूर मंडळ</option> <option value="छत्रपती संभाजीनगर मंडळ">छत्रपती संभाजीनगर मंडळ</option>
+                        <option value="लातूर मंडळ">लातूर मंडळ</option> <option value="ठाणे मंडळ">ठाणे मंडळ</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <i class="fa fa-key"></i>
+                    <input type="password" id="reg_pass" placeholder="नवीन पासवर्ड तयार करा (लॉगिनसाठी)" required>
+                </div>
+                <button type="submit" class="submit-btn" style="background: linear-gradient(90deg, #10b981, #059669); color:white;"><i class="fa fa-user-plus"></i> नोंदणी पूर्ण करा</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase & Logic Scripts -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // तुमचा फायरबेस कॉन्फिग
+        const firebaseConfig = {
+            apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk",
+            authDomain: "xrayunionmah.firebaseapp.com",
+            projectId: "xrayunionmah",
+            storageBucket: "xrayunionmah.firebasestorage.app",
+            messagingSenderId: "763805226978",
+            appId: "1:763805226978:web:6bae81a0b6358b47d88bbb"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // --- टॉगल ॲनिमेशन (Login <-> Register) ---
+        window.switchTab = function(tab) {
+            const slider = document.getElementById('slider');
+            const loginBtn = document.getElementById('btn-login');
+            const regBtn = document.getElementById('btn-register');
+            const loginForm = document.getElementById('login-form');
+            const regForm = document.getElementById('register-form');
+
+            if(tab === 'login') {
+                slider.style.left = '0';
+                loginBtn.classList.add('active'); regBtn.classList.remove('active');
+                loginForm.classList.remove('hidden'); regForm.classList.add('hidden');
+            } else {
+                slider.style.left = '50%';
+                regBtn.classList.add('active'); loginBtn.classList.remove('active');
+                regForm.classList.remove('hidden'); loginForm.classList.add('hidden');
+            }
+        };
+
+        // --- 2️⃣ नवीन नोंदणीची प्रक्रिया (Registration Logic) ---
+        window.handleRegister = async function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('reg_name').value;
+            const mobile = document.getElementById('reg_mobile').value;
+            const workplace = document.getElementById('reg_workplace').value;
+            const mandal = document.getElementById('reg_mandal').value;
+            const pass = document.getElementById('reg_pass').value;
+
+            // लोडिंग ॲनिमेशन सुरु करा
+            Swal.fire({title: 'नोंदणी करत आहे...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
+
+            try {
+                // १. आधी चेक करा की हा मोबाईल नंबर आधीच रजिस्टर आहे का?
+                const q = query(collection(db, "members"), where("mobile", "==", mobile));
+                const querySnapshot = await getDocs(q);
+
+                if (!querySnapshot.empty) {
+                    Swal.fire('थांबा!', 'या मोबाईल नंबरवर आधीच नोंदणी झालेली आहे.', 'warning');
+                    return;
+                }
+
+                // २. नवीन माहिती डेटाबेसमध्ये सेव्ह करा (स्टेटस: Pending)
+                await addDoc(collection(db, "members"), {
+                    name: name,
+                    mobile: mobile,
+                    workplace: workplace,
+                    mandal: mandal,
+                    pass: pass,
+                    designation: "क्ष-किरण वैज्ञानिक अधिकारी",
+                    district: "-",
+                    status: "Pending",  // सर्वात महत्त्वाचे - ॲडमिन मंजुरीसाठी प्रलंबित!
+                    feeStatus: "Unpaid",
+                    docUrl: ""
+                });
+
+                // ३. नोंदणी झाल्यावर ॲडमिन मंजुरीचा मेसेज
+                Swal.fire({
+                    icon: 'success',
+                    title: 'नोंदणी यशस्वी!',
+                    html: '<b style="color:red;">तुमचा फॉर्म ॲडमिनच्या मंजुरीसाठी (Approval) पाठवला आहे.</b><br><br>ॲडमिनने तुमचा फॉर्म मंजूर केल्यावरच तुम्हाला मोबाईल नंबर व पासवर्ड टाकून लॉगिन करता येईल.',
+                    confirmButtonText: 'ठीक आहे'
+                }).then(() => {
+                    e.target.reset(); // फॉर्म रिकामा करा
+                    switchTab('login'); // पुन्हा लॉगिन पेजवर आणा
+                });
+
+            } catch (error) {
+                Swal.fire('त्रुटी', 'नोंदणी करताना काही अडचण आली: ' + error.message, 'error');
+            }
+        };
+
+        // --- 1️⃣ लॉगिनची प्रक्रिया (Login Logic) ---
+        window.handleLogin = async function(e) {
+            e.preventDefault();
+            
+            const mobile = document.getElementById('login_mobile').value;
+            const pass = document.getElementById('login_pass').value;
+
+            Swal.fire({title: 'लॉगिन तपासत आहे...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
+
+            try {
+                // फायरबेस मध्ये नंबर आणि पासवर्ड शोधा
+                const q = query(collection(db, "members"), where("mobile", "==", mobile), where("pass", "==", pass));
+                const querySnapshot = await getDocs(q);
+
+                if (querySnapshot.empty) {
+                    Swal.fire('अयशस्वी', 'मोबाईल नंबर किंवा पासवर्ड चुकीचा आहे.', 'error');
+                } else {
+                    // डेटा सापडला! आता त्याचे 'स्टेटस' (Pending की Approved) तपासा
+                    let memberData = null;
+                    let memberId = null;
+                    querySnapshot.forEach((doc) => { memberData = doc.data(); memberId = doc.id; });
+
+                    if (memberData.status === "Pending") {
+                        // जर ॲडमिनने अजून मंजूर केले नसेल
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'प्रलंबित (Pending)',
+                            text: 'तुमची नोंदणी ॲडमिनकडे मंजुरीसाठी प्रलंबित आहे. कृपया मंजुरी मिळेपर्यंत प्रतीक्षा करा.'
+                        });
+                    } else if (memberData.status === "Approved") {
+                        // जर मंजूर असेल, तर डॅशबोर्डला पाठवा
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'लॉगिन यशस्वी!',
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(() => {
+                            // सदस्याचा ID लोकल स्टोरेजमध्ये सेव्ह करा आणि डॅशबोर्डवर पाठवा
+                            localStorage.setItem("loggedInMemberId", memberId);
+                            window.location.href = "member-dashboard.html"; // हे पेज आपण पुढे बनवू
+                        });
+                    }
+                }
+            } catch (error) {
+                Swal.fire('त्रुटी', 'लॉगिन करताना अडचण आली: ' + error.message, 'error');
+            }
+        };
+    </script>
+</body>
