@@ -15,7 +15,7 @@
         :root { 
             --bg: #f4f6f9; --white: #ffffff; --text: #333;
             --primary: #0056b3; --success: #28a745; --danger: #dc3545; 
-            --info: #17a2b8; --warning: #ffc107; --border: #dee2e6;
+            --info: #17a2b8; --warning: #ffc107; --purple: #6f42c1; --border: #dee2e6;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mukta', sans-serif; }
@@ -32,48 +32,49 @@
         .navbar h2 { color: var(--primary); font-weight: 700; }
         .btn-logout { background: var(--danger); color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
 
-        /* --- MAIN CONTAINER --- */
+        /* --- MAIN CONTAINER & PANELS --- */
         .container { max-width: 1400px; margin: 20px auto; padding: 0 15px; }
-
-        /* --- PANELS (Like Screenshot) --- */
         .panel { background: var(--white); border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); margin-bottom: 25px; overflow: hidden; }
         .panel-header { padding: 15px 20px; font-size: 1.2rem; font-weight: 700; background: #f8f9fa; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
         .header-green { border-top: 4px solid var(--success); color: var(--success); }
         .header-blue { border-top: 4px solid var(--primary); color: var(--primary); }
         .panel-body { padding: 20px; }
 
-        /* --- FORMS & INPUTS --- */
+        /* --- FORMS & FILTERS --- */
         .form-row { display: flex; flex-wrap: wrap; gap: 15px; align-items: center; }
-        .form-control { flex: 1; min-width: 150px; padding: 10px; border: 1px solid #ced4da; border-radius: 5px; font-size: 0.95rem; outline: none; transition: 0.3s; }
+        .form-control { flex: 1; min-width: 150px; padding: 10px; border: 1px solid #ced4da; border-radius: 5px; font-size: 0.95rem; outline: none; }
         .form-control:focus { border-color: var(--primary); box-shadow: 0 0 5px rgba(0,86,179,0.2); }
-        .btn-save { background: var(--success); color: white; border: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; cursor: pointer; white-space: nowrap; }
-        .btn-save:hover { background: #218838; }
-
-        /* --- FILTERS --- */
+        .btn-save { background: var(--success); color: white; border: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; cursor: pointer; white-space: nowrap; transition: 0.2s; }
+        .btn-save:hover { opacity: 0.9; }
+        
         .filter-box { background: #e9ecef; padding: 15px; border-radius: 5px; margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
         .btn-reset { background: #6c757d; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
 
         /* --- TABLE --- */
         .table-responsive { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; min-width: 1000px; }
+        table { width: 100%; border-collapse: collapse; min-width: 1100px; }
         th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.95rem; }
         th { background: #f8f9fa; color: var(--primary); font-weight: 700; white-space: nowrap; }
         tr:hover { background-color: #f1f3f5; }
-        td { color: var(--primary); font-weight: 600; } /* Text color like screenshot */
+        td { color: var(--primary); font-weight: 600; }
         td.normal-text { color: var(--text); font-weight: 400; }
 
         /* --- ACTION BUTTONS --- */
         .action-btns { display: flex; gap: 5px; }
         .btn-action { border: none; padding: 6px 12px; border-radius: 4px; color: white; font-size: 0.85rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: 0.2s; }
+        .btn-idcard { background-color: var(--purple); } .btn-idcard:hover { background-color: #5a32a3; }
         .btn-view { background-color: var(--info); } .btn-view:hover { background-color: #138496; }
         .btn-edit { background-color: var(--warning); color: #000; } .btn-edit:hover { background-color: #e0a800; }
         .btn-del { background-color: var(--danger); } .btn-del:hover { background-color: #c82333; }
 
-        /* Edit Modal Custom Styling */
-        .edit-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; text-align: left; }
-        .edit-grid label { font-weight: bold; font-size: 0.9rem; color: #555; }
-        .edit-grid input, .edit-grid select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; margin-top: 5px; }
-
+        /* ID Card Modal Grid */
+        .idcard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; text-align: left; background: #f8f9fa; padding: 20px; border-radius: 10px; border: 1px solid #ccc; }
+        .idcard-grid label { font-weight: bold; font-size: 0.9rem; color: #555; margin-bottom: 5px; display: block; }
+        .idcard-grid input, .idcard-grid select { width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 5px; font-size: 1rem; }
+        .idcard-grid input:focus { border-color: var(--purple); outline: none; }
+        
+        .badge { padding: 4px 8px; border-radius: 12px; font-size: 0.8rem; color: white; }
+        .bg-success { background: var(--success); } .bg-secondary { background: #6c757d; }
     </style>
 </head>
 <body style="display: none;" id="main-body">
@@ -93,6 +94,7 @@
         <h2><i class="fa-solid fa-users-gear"></i> मास्टर ॲडमिन पॅनेल</h2>
         <div>
             <button class="btn-save" onclick="exportExcel()" style="background:var(--primary); margin-right:10px;"><i class="fa-solid fa-file-excel"></i> Export Excel</button>
+            <button class="btn-save" onclick="printTable()" style="background:var(--info); margin-right:10px;"><i class="fa-solid fa-print"></i> प्रिंट काढा</button>
             <button class="btn-logout" onclick="logoutAdmin()"><i class="fa-solid fa-power-off"></i> लॉगआउट</button>
         </div>
     </div>
@@ -135,8 +137,8 @@
             </div>
         </div>
 
-        <!-- 2. MEMBERS LIST PANEL --> 
- <div class="panel">
+        <!-- 2. MEMBERS LIST PANEL -->
+    <div class="panel">
             <div class="panel-header header-blue">
                 <span><i class="fa-solid fa-users"></i> अधिकृत सदस्यांची यादी (Approved Members) <span id="totalCount" style="color:red; font-size:1rem; margin-left:10px;">(0)</span></span>
             </div>
@@ -169,17 +171,14 @@
                                 <th>अ.क्र.</th>
                                 <th>नाव</th>
                                 <th>मोबाईल</th>
-                                <th>ईमेल</th>
                                 <th>मंडळ</th>
                                 <th>जिल्हा / ठिकाण</th>
-                                <th>पद</th>
-                                <th>एकूण फी</th>
-                                <th>जमा फी</th>
+                                <th>आयकार्ड स्टेटस</th>
                                 <th>कृती (Action)</th>
                             </tr>
                         </thead>
                         <tbody id="membersBody">
-                            <tr><td colspan="10" style="text-align:center;">डेटा लोड होत आहे...</td></tr>
+                            <tr><td colspan="7" style="text-align:center;">डेटा लोड होत आहे...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -228,12 +227,8 @@
             if(!email || !pass) return Swal.fire('त्रुटी', 'माहिती भरा', 'warning');
             
             btn.innerText = 'तपासत आहे...';
-            try {
-                await signInWithEmailAndPassword(auth, email, pass);
-            } catch(e) {
-                Swal.fire('Error', 'चुकीचा ईमेल किंवा पासवर्ड', 'error');
-                btn.innerText = 'लॉगिन करा';
-            }
+            try { await signInWithEmailAndPassword(auth, email, pass); } 
+            catch(e) { Swal.fire('Error', 'चुकीचा ईमेल किंवा पासवर्ड', 'error'); btn.innerText = 'लॉगिन करा'; }
         };
 
         window.logoutAdmin = function() { signOut(auth); };
@@ -245,17 +240,15 @@
                 membersData = [];
                 snap.forEach(doc => { 
                     let d = doc.data();
-                    // Set defaults for missing fields from old excel data
                     d.mandal = d.mandal || "-";
                     d.email = d.email || "-";
                     d.totalFee = d.totalFee || 1000;
                     d.paidFee = d.paidFee || 0;
+                    d.idCardStatus = d.idCardStatus || "Pending"; // Default Status
                     membersData.push({ id: doc.id, ...d }); 
                 });
                 renderTable();
-            } catch (error) {
-                Swal.fire('Error', 'डेटा लोड झाला नाही.', 'error');
-            }
+            } catch (error) { Swal.fire('Error', 'डेटा लोड झाला नाही.', 'error'); }
         }
 
         // --- RENDER TABLE ---
@@ -263,7 +256,6 @@
             const tbody = document.getElementById('membersBody');
             let html = '';
             
-            // Apply Filters
             let sName = document.getElementById('searchName').value.toLowerCase();
             let sMandal = document.getElementById('searchMandal').value;
             let sDist = document.getElementById('searchDist').value.toLowerCase();
@@ -284,26 +276,25 @@
             document.getElementById('totalCount').innerText = `(${filtered.length})`;
 
             filtered.forEach((m, i) => {
+                let idBadge = m.idCardStatus === 'Approved' ? '<span class="badge bg-success">मंजूर (Approved)</span>' : '<span class="badge bg-secondary">प्रलंबित (Pending)</span>';
+                
                 html += `<tr>
                     <td class="normal-text">${i+1}</td>
                     <td>${m.name}</td>
                     <td>${m.mobile}</td>
-                    <td class="normal-text">${m.email}</td>
                     <td class="normal-text">${m.mandal}</td>
                     <td class="normal-text">${m.district}</td>
-                    <td class="normal-text">${m.designation}</td>
-                    <td class="normal-text">₹${m.totalFee}</td>
-                    <td style="color:green; font-weight:bold;">₹${m.paidFee}</td>
+                    <td>${idBadge}</td>
                     <td>
                         <div class="action-btns">
-                            <button class="btn-action btn-view" onclick="viewMember('${m.id}')"><i class="fa fa-eye"></i> View</button>
-                            <button class="btn-action btn-edit" onclick="editMember('${m.id}')"><i class="fa fa-edit"></i> Edit</button>
-                            <button class="btn-action btn-del" onclick="deleteMember('${m.id}')"><i class="fa fa-trash"></i> Delete</button>
+                            <button class="btn-action btn-idcard" onclick="openIdCardApproval('${m.id}')" title="आयकार्ड अप्रूवल"><i class="fa-solid fa-id-badge"></i> ID Card</button>
+                            <button class="btn-action btn-edit" onclick="editMember('${m.id}')" title="माहिती बदला"><i class="fa fa-edit"></i> Edit</button>
+                            <button class="btn-action btn-del" onclick="deleteMember('${m.id}')" title="डिलीट करा"><i class="fa fa-trash"></i></button>
                         </div>
                     </td>
                 </tr>`;
             });
-            tbody.innerHTML = html || '<tr><td colspan="10" style="text-align:center;">कोणताही डेटा सापडला नाही.</td></tr>';
+            tbody.innerHTML = html || '<tr><td colspan="7" style="text-align:center;">कोणताही डेटा सापडला नाही.</td></tr>';
         };
 
         window.filterTable = renderTable;
@@ -314,22 +305,60 @@
             renderTable();
         };
 
-        // --- ADD MEMBER ---
+        // --- ID CARD APPROVAL & ADVANCED EDIT ---
+        window.openIdCardApproval = function(id) {
+            let m = membersData.find(x => x.id === id);
+            Swal.fire({
+                title: '<i class="fa-solid fa-id-card" style="color:var(--purple);"></i> आयकार्ड मंजुरी फॉर्म',
+                html: `
+                    <div style="margin-bottom:15px; color:#555; font-size:0.95rem;">कृपया आयकार्डवर छापण्यासाठी लागणारी सर्व माहिती तपासून मगच मंजुरी द्या.</div>
+                    <div class="idcard-grid">
+                        <div><label>संपूर्ण नाव (Name)</label><input type="text" id="id_name" value="${m.name || ''}"></div>
+                        <div><label>मोबाईल क्रमांक</label><input type="text" id="id_mob" value="${m.mobile || ''}"></div>
+                        
+                        <!-- NEW ID CARD FIELDS -->
+                        <div><label>रक्तगट (Blood Group)</label><input type="text" id="id_bg" value="${m.bloodGroup || ''}" placeholder="उदा. O+"></div>
+                        <div><label>जन्म तारीख (DOB)</label><input type="date" id="id_dob" value="${m.dob || ''}"></div>
+                        <div style="grid-column: span 2;"><label>संपूर्ण पत्ता (Address)</label><input type="text" id="id_address" value="${m.address || ''}" placeholder="सदस्याचा पूर्ण पत्ता टाका"></div>
+                        
+                        <div><label>आरोग्य मंडळ</label><input type="text" id="id_mandal" value="${m.mandal !== '-' ? m.mandal : ''}"></div>
+                        <div><label>जिल्हा / ठिकाण</label><input type="text" id="id_dist" value="${m.district || ''}"></div>
+                        <div style="grid-column: span 2;"><label>पद (Designation)</label><input type="text" id="id_desig" value="${m.designation || ''}"></div>
+                    </div>
+                `,
+                width: '750px', showCancelButton: true, confirmButtonText: '<i class="fa-solid fa-check-circle"></i> Approve & Save ID Card', confirmButtonColor: '#6f42c1', cancelButtonText: 'रद्द करा',
+                preConfirm: () => {
+                    return {
+                        name: document.getElementById('id_name').value,
+                        mobile: document.getElementById('id_mob').value,
+                        bloodGroup: document.getElementById('id_bg').value,
+                        dob: document.getElementById('id_dob').value,
+                        address: document.getElementById('id_address').value,
+                        mandal: document.getElementById('id_mandal').value,
+                        district: document.getElementById('id_dist').value,
+                        designation: document.getElementById('id_desig').value,
+                        idCardStatus: 'Approved' // <--- This changes the status to Approved!
+                    }
+                }
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    await updateDoc(doc(db, "members", id), result.value);
+                    Swal.fire({title: 'Approved!', text: 'आयकार्डचा डेटा सेव्ह आणि मंजूर झाला आहे!', icon: 'success', timer: 2000});
+                    loadData();
+                }
+            });
+        };
+
+        // --- NORMAL EDIT, ADD, DELETE ---
         window.addNewMember = async function(e) {
             e.preventDefault();
             const btn = document.getElementById('saveBtn');
             btn.innerText = 'सेव्ह करत आहे...'; btn.disabled = true;
-
             const newMem = {
-                name: document.getElementById('add_name').value,
-                mobile: document.getElementById('add_mobile').value,
-                email: document.getElementById('add_email').value || "-",
-                mandal: document.getElementById('add_mandal').value,
-                district: document.getElementById('add_district').value,
-                designation: document.getElementById('add_desig').value,
-                pass: "1234", approved: true, totalFee: 1000, paidFee: 0
+                name: document.getElementById('add_name').value, mobile: document.getElementById('add_mobile').value, email: document.getElementById('add_email').value || "-",
+                mandal: document.getElementById('add_mandal').value, district: document.getElementById('add_district').value, designation: document.getElementById('add_desig').value,
+                pass: "1234", approved: true, totalFee: 1000, paidFee: 0, idCardStatus: "Pending"
             };
-
             await addDoc(collection(db, "members"), newMem);
             Swal.fire({title: 'यशस्वी!', text: 'सदस्य ॲड झाला आहे.', icon: 'success', timer: 1500, showConfirmButton: false});
             document.getElementById('addForm').reset();
@@ -337,94 +366,61 @@
             loadData();
         };
 
-        // --- VIEW, EDIT, DELETE ---
-        window.viewMember = function(id) {
-            let m = membersData.find(x => x.id === id);
-            Swal.fire({
-                title: m.name,
-                html: `<div style="text-align:left; line-height:2; font-size:1.1rem;">
-                    <b>मोबाईल:</b> ${m.mobile}<br><b>ईमेल:</b> ${m.email}<br>
-                    <b>मंडळ:</b> ${m.mandal}<br><b>जिल्हा:</b> ${m.district}<br>
-                    <b>पद:</b> ${m.designation}<br><hr>
-                    <b>एकूण फी:</b> ₹${m.totalFee} | <b style="color:green;">भरलेली फी:</b> ₹${m.paidFee}<br>
-                    <b>पासवर्ड:</b> ${m.pass}
-                </div>`,
-                icon: 'info'
-            });
-        };
-
-        // ADVANCED EDIT SYSTEM
         window.editMember = function(id) {
             let m = membersData.find(x => x.id === id);
             Swal.fire({
-                title: 'सदस्याची माहिती अपडेट करा',
+                title: 'फी आणि बेसिक माहिती बदला',
                 html: `
-                    <div class="edit-grid">
-                        <div><label>नाव</label><input type="text" id="e_name" value="${m.name}"></div>
-                        <div><label>मोबाईल</label><input type="text" id="e_mob" value="${m.mobile}"></div>
-                        <div><label>ईमेल</label><input type="email" id="e_email" value="${m.email !== '-' ? m.email : ''}"></div>
-                        <div>
-                            <label>मंडळ</label>
-                            <select id="e_mandal">
-                                <option value="पुणे मंडळ" ${m.mandal=='पुणे मंडळ'?'selected':''}>पुणे मंडळ</option>
-                                <option value="नागपूर मंडळ" ${m.mandal=='नागपूर मंडळ'?'selected':''}>नागपूर मंडळ</option>
-                                <option value="नाशिक मंडळ" ${m.mandal=='नाशिक मंडळ'?'selected':''}>नाशिक मंडळ</option>
-                                <option value="अकोला मंडळ" ${m.mandal=='अकोला मंडळ'?'selected':''}>अकोला मंडळ</option>
-                                <option value="कोल्हापूर मंडळ" ${m.mandal=='कोल्हापूर मंडळ'?'selected':''}>कोल्हापूर मंडळ</option>
-                                <option value="छत्रपती संभाजीनगर मंडळ" ${m.mandal=='छत्रपती संभाजीनगर मंडळ'?'selected':''}>छत्रपती संभाजीनगर मंडळ</option>
-                                <option value="लातूर मंडळ" ${m.mandal=='लातूर मंडळ'?'selected':''}>लातूर मंडळ</option>
-                                <option value="ठाणे मंडळ" ${m.mandal=='ठाणे मंडळ'?'selected':''}>ठाणे मंडळ</option>
-                                <option value="-" ${m.mandal=='-'?'selected':''}>-</option>
-                            </select>
-                        </div>
-                        <div><label>जिल्हा / ठिकाण</label><input type="text" id="e_dist" value="${m.district}"></div>
-                        <div><label>पद</label><input type="text" id="e_desig" value="${m.designation}"></div>
-                        <div><label>एकूण फी (Total Fee)</label><input type="number" id="e_tfee" value="${m.totalFee}"></div>
-                        <div><label style="color:green;">जमा केलेली फी (Paid Fee)</label><input type="number" id="e_pfee" value="${m.paidFee}"></div>
+                    <div style="display:flex; flex-direction:column; gap:10px; text-align:left; margin-top:10px;">
+                        <label>एकूण फी (Total Fee)</label><input type="number" id="e_tfee" class="form-control" value="${m.totalFee}">
+                        <label style="color:green;">जमा केलेली फी (Paid Fee)</label><input type="number" id="e_pfee" class="form-control" value="${m.paidFee}">
                     </div>
                 `,
-                width: '600px', showCancelButton: true, confirmButtonText: 'सेव्ह करा', confirmButtonColor: '#28a745',
-                preConfirm: () => {
-                    return {
-                        name: document.getElementById('e_name').value, mobile: document.getElementById('e_mob').value,
-                        email: document.getElementById('e_email').value || "-", mandal: document.getElementById('e_mandal').value,
-                        district: document.getElementById('e_dist').value, designation: document.getElementById('e_desig').value,
-                        totalFee: parseInt(document.getElementById('e_tfee').value) || 0, paidFee: parseInt(document.getElementById('e_pfee').value) || 0
-                    }
-                }
+                showCancelButton: true, confirmButtonText: 'अपडेट करा', confirmButtonColor: '#28a745',
+                preConfirm: () => { return { totalFee: parseInt(document.getElementById('e_tfee').value) || 0, paidFee: parseInt(document.getElementById('e_pfee').value) || 0 } }
             }).then(async (result) => {
                 if (result.isConfirmed) {
                     await updateDoc(doc(db, "members", id), result.value);
-                    Swal.fire({title: 'Updated!', text: 'माहिती यशस्वीरित्या बदलली आहे.', icon: 'success', timer: 1500});
+                    Swal.fire({title: 'Updated!', text: 'माहिती बदलली आहे.', icon: 'success', timer: 1500});
                     loadData();
                 }
             });
         };
 
         window.deleteMember = function(id) {
-            Swal.fire({
-                title: 'तुम्हाला खात्री आहे?', text: "हा सदस्य कायमचा डिलीट होईल!", icon: 'warning',
-                showCancelButton: true, confirmButtonColor: '#dc3545', confirmButtonText: 'होय, डिलीट करा'
-            }).then(async (result) => {
-                if (result.isConfirmed) {
-                    await deleteDoc(doc(db, "members", id));
-                    loadData();
-                }
-            });
+            Swal.fire({ title: 'तुम्हाला खात्री आहे?', text: "हा सदस्य कायमचा डिलीट होईल!", icon: 'warning', showCancelButton: true, confirmButtonColor: '#dc3545', confirmButtonText: 'होय, डिलीट करा' })
+            .then(async (result) => { if (result.isConfirmed) { await deleteDoc(doc(db, "members", id)); loadData(); } });
         };
 
         // --- EXPORT TO EXCEL ---
-        window.exportExcel = function() {
+      window.exportExcel = function() {
             const expData = membersData.map((m, i) => ({
-                "अ.क्र.": i + 1, "नाव": m.name, "मोबाईल": m.mobile, "ईमेल": m.email,
-                "मंडळ": m.mandal, "जिल्हा": m.district, "पद": m.designation, 
+                "अ.क्र.": i + 1, "नाव": m.name, "मोबाईल": m.mobile, "रक्तगट": m.bloodGroup || "-", "पत्ता": m.address || "-",
+                "मंडळ": m.mandal, "जिल्हा": m.district, "पद": m.designation, "आयकार्ड स्टेटस": m.idCardStatus, 
                 "एकूण फी": m.totalFee, "जमा फी": m.paidFee, "पासवर्ड": m.pass
             }));
-            const ws = XLSX.utils.json_to_sheet(expData);
-            const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Members");
+            const ws = XLSX.utils.json_to_sheet(expData); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Members");
             XLSX.writeFile(wb, "KshKiran_Members_List.xlsx");
+        };
+
+        // --- PRINT FUNCTION ---
+        window.printTable = function() {
+            let printContent = document.getElementById('membersTable').outerHTML;
+            let printWindow = window.open('', '', 'width=900,height=700');
+            printWindow.document.write(`
+                <html><head><title>सदस्य यादी प्रिंट</title>
+                <style>
+                    body { font-family: Arial, sans-serif; padding: 20px; }
+                    h2 { text-align: center; color: #0056b3; border-bottom: 2px solid #ccc; padding-bottom: 10px; }
+                    table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px; }
+                    th, td { border: 1px solid #000; padding: 8px; text-align: left; }
+                    th { background-color: #e9ecef; }
+                    tr th:last-child, tr td:last-child { display: none !important; }
+                </style></head><body><h2>क्ष-किरण संघटना - अधिकृत सदस्यांची यादी</h2>${printContent}</body></html>
+            `);
+            printWindow.document.close(); printWindow.focus();
+            setTimeout(function() { printWindow.print(); printWindow.close(); }, 500);
         };
     </script>
 </body>
 </html>
-    
