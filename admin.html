@@ -398,9 +398,65 @@
         };
         window.logoutAdmin = function() { signOut(auth); };
 
-        // --- LOAD MASTER DATA ---
-        async function loadData() {
-            try {
+// --- LOAD MASTER DATA ---
+async function loadData() {
+    try {
+        // 1. Load Members
+        const snap = await getDocs(collection(db, "members"));
+        membersData = [];
+        snap.forEach(doc => { 
+            let d = doc.data();
+            membersData.push({ 
+                id: doc.id,
+                name: d.name || "अज्ञात", mobile: d.mobile || "-", email: d.email || "-",
+                mandal: d.mandal || "-", district: d.district || "-", permAddress: d.permAddress || "-",
+                designation: d.designation || "-", bloodGroup: d.bloodGroup || "-", dob: d.dob || "-",
+                pass: d.pass || "1234",
+                totalFee: d.totalFee !== undefined ? d.totalFee : 1000, 
+                paidFee: d.paidFee !== undefined ? d.paidFee : 0, 
+                specialFund: d.specialFund !== undefined ? d.specialFund : 0,
+                status: d.status || (d.approved ? "Approved" : "Pending"), 
+                photoUrl: d.photoUrl || "https://via.placeholder.com/100x120?text=Photo",
+                signUrl: d.signUrl || "https://via.placeholder.com/80x40?text=Sign",
+                stampUrl: d.stampUrl || "https://via.placeholder.com/80x80?text=Stamp"
+            }); 
+        });
+        
+        // 2. Load CMS & Committee
+        const [nSnap, pSnap, cSnap] = await Promise.all([getDocs(collection(db, "notices")), getDocs(collection(db, "polls")), getDocs(collection(db, "committee"))]);
+        noticesData = []; nSnap.forEach(doc => noticesData.push({id: doc.id, ...doc.data()}));
+        pollsData = []; pSnap.forEach(doc => pollsData.push({id: doc.id, ...doc.data()}));
+        committeeData = []; cSnap.forEach(doc => committeeData.push({id: doc.id, ...doc.data()}));
+
+        // Update Dashboard Cards
+        document.getElementById('totMem').innerText = membersData.length;
+        document.getElementById('appMem').innerText = membersData.filter(m=>m.status==='Approved').length;
+        document.getElementById('penMem').innerText = membersData.filter(m=>m.status==='Pending').length;
+        document.getElementById('susMem').innerText = membersData.filter(m=>m.status==='Suspended').length;
+
+        // Render UI
+        renderMembers(); 
+        renderFees(); 
+        renderCMS(); 
+        
+        // Safe Chart Rendering (ग्राफ्स क्रॅश होऊ नये म्हणून)
+        try {
+            if (typeof Chart !== 'undefined') {
+                renderCharts();
+            } else {
+                console.warn("Chart.js फाईल लोड झालेली नाही.");
+            }
+        } catch(chartErr) {
+            console.error("Chart Error:", chartErr);
+        }
+
+    } catch(e) { 
+        console.error(e); 
+        // नेमका एरर काय आहे तो स्क्रीनवर दाखवा
+        Swal.fire('तांत्रिक त्रुटी (Error)', e.message, 'error'); 
+    }
+}
+           try {
                 // 1. Load Members
                 const snap = await getDocs(collection(db, "members"));
                 membersData = [];
