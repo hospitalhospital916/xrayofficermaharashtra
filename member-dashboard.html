@@ -13,7 +13,7 @@
     /* ================= THEME & VARIABLES ================= */
     :root { 
         --primary: #0B3D91; 
-        --secondary: #FFD700; /* तुमची अधिकृत गोल्डन थीम */
+        --secondary: #FFD700; 
         --bg: #f4f7f6; 
         --text: #333; 
         --sidebar-bg: #072559; 
@@ -119,7 +119,7 @@
       <div class="menu-item" onclick="showTab('tab-complaints')"><i class="fa-solid fa-headset"></i> तक्रार व सपोर्ट</div>
     </div>
     <div class="sidebar-footer">
-      <button onclick="logout()" class="btn-logout"><i class="fa-solid fa-right-from-bracket"></i> सुरक्षित लॉगआउट</button>
+      <button class="btn-logout"><i class="fa-solid fa-right-from-bracket"></i> सुरक्षित लॉगआउट</button>
     </div>
   </div>
 
@@ -281,10 +281,9 @@
 
   <!-- ================= FIREBASE & JAVASCRIPT LOGIC ================= -->
   <script type="module">
-    // 1. Firebase Imports (v10.12.5 as requested)
+    // 1. Firebase Imports (v10.12.5)
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-    import { getFirestore, collection, query, where, getDocs, addDoc, updateDoc, doc, increment, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+    import { getFirestore, collection, query, where, getDocs, addDoc, updateDoc, doc, getDoc, increment, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
     // Firebase Config
     const firebaseConfig = {
@@ -297,7 +296,6 @@
     };
 
     const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
     const db = getFirestore(app);
 
     let currentMember = null;
@@ -312,79 +310,101 @@
       event.currentTarget.classList.add('active');
     }
 
-    // 3. 🔒 Firebase Auth & Admin Redirect Logic
-    onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-          window.location.href = "member-login.html"; // If not logged in
-      } else {
-        // Fetch data using Marathi Keys
-        const q = query(collection(db, "members"), where("ईमेल", "==", user.email));
-        const querySnapshot = await getDocs(q);
+    // 3. 🔒 Local Storage Login Check Logic (लॉगिन तपासणी)
+    async function checkLoginStatus() {
+        const loggedInId = localStorage.getItem("loggedInMemberId");
         
-        if (!querySnapshot.empty) {
-          querySnapshot.forEach((docSnap) => { 
-              currentMember = docSnap.data(); 
-              memberDocId = docSnap.id;
-          });
-          populateData(currentMember);
-          document.getElementById('loading-screen').style.display = 'none';
-          
-          // Load sub-modules
-          loadCandidates();
-          loadMyComplaints();
-        } else {
-          // If email not found in 'members', they must be admin
-          Swal.fire({ icon: 'info', title: 'ॲडमिन पॅनल', text: 'तुम्ही ॲडमिन आहात. ॲडमिन पॅनलवर पाठवत आहे...' }).then(() => {
-              window.location.href = "admin.html";
-          });
+        if (!loggedInId) {
+            window.location.href = "member-login.html"; // लॉगिन केले नसेल तर परत पाठवा
+            return;
         }
-      }
-    });
 
-    // 4. Populate Marathi Database Info to HTML
+        try {
+            const docRef = doc(db, "members", loggedInId);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                currentMember = docSnap.data();
+                memberDocId = docSnap.id;
+                
+                populateData(currentMember); // माहिती भरा
+                document.getElementById('loading-screen').style.display = 'none'; // लोडिंग थांबवा
+                
+                loadCandidates();
+                loadMyComplaints();
+            } else {
+                window.location.href = "member-login.html";
+            }
+        } catch (error) {
+            console.error("Error fetching data:", error);
+            Swal.fire('त्रुटी', 'माहिती लोड करताना अडचण आली.', 'error');
+        }
+    }
+    
+    // पेज उघडताच वरील फंक्शन सुरु करा
+    checkLoginStatus();
+
+    // 4. Populate Database Info to HTML (इंग्रजी फील्ड्सनुसार)
     function populateData(m) {
-      memberFullName = (m["नाव"] || "") + " " + (m["आडनाव"] || "");
-      const desig = m["पद"] || m["पदाचे नाव"] || "क्ष-किरण वैज्ञानिक अधिकारी";
-      const mobile = m["मोबाईल क्रमांक"] || "-";
+      memberFullName = m.name || "-";
+      const desig = m.designation || "क्ष-किरण वैज्ञानिक अधिकारी";
+      const mobile = m.mobile || "-";
       
       document.getElementById("sidebarName").innerText = memberFullName;
       document.getElementById("cardName").innerText = memberFullName;
       document.getElementById("cardDesignation").innerText = desig;
       document.getElementById("cardMobile").innerText = mobile;
-      document.getElementById("cardMandal").innerText = m["मंडळ"] || "-";
+      document.getElementById("cardMandal").innerText = m.mandal || "-";
       
       document.getElementById("profName").innerText = memberFullName;
       document.getElementById("profMobile").innerText = mobile;
-      document.getElementById("profEmail").innerText = m["ईमेल"] || "-";
-      document.getElementById("profAddress").innerText = m["कायमचा पत्ता"] || "-";
+      document.getElementById("profEmail").innerText = m.email || "-";
+      document.getElementById("profAddress").innerText = m.permAddress || m.workplace || "-";
       document.getElementById("profDesignation").innerText = desig;
-      document.getElementById("profMandal").innerText = m["मंडळ"] || "-";
+      document.getElementById("profMandal").innerText = m.mandal || "-";
 
       if(m.docUrl) { document.getElementById('cardPhoto').src = m.docUrl; }
     }
 
-    // 5. 📸 Photo Upload via Google Apps Script
+    // 5. 📸 Photo Upload via Google Apps Script (गुगल ड्राईव्हमध्ये फोटो सेव्ह करणे)
     window.uploadPhoto = async function() {
+        // ⚠️ महत्त्वाची सूचना: खालील लाईनमध्ये तुम्हाला तुमच्या Apps Script ची लिंक टाकायची आहे.
         const SCRIPT_URL = "येथे_तुमची_WEB_APP_URL_टाका"; 
+        
         if(SCRIPT_URL === "येथे_तुमची_WEB_APP_URL_टाका") {
-            Swal.fire('थांबा', 'ॲडमिनने अपलोड सिस्टीम सुरु केलेली नाही.', 'warning'); return;
+            Swal.fire('थांबा', 'फोटो अपलोड सिस्टीमची लिंक अद्याप जोडलेली नाही.', 'warning'); 
+            return;
         }
 
-        const { value: file } = await Swal.fire({ title: 'प्रोफाईल फोटो निवडा', input: 'file', inputAttributes: { 'accept': 'image/*' }, showCancelButton: true });
+        const { value: file } = await Swal.fire({ 
+            title: 'प्रोफाईल फोटो निवडा', 
+            input: 'file', 
+            inputAttributes: { 'accept': 'image/*' }, 
+            showCancelButton: true 
+        });
+
         if (file) {
-            Swal.fire({title: 'सेव्ह होत आहे...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
+            Swal.fire({title: 'गुगल ड्राईव्हवर सेव्ह होत आहे...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
+            
             let reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = async function () {
                 let base64 = reader.result.split(',')[1];
                 let obj = { data: base64, filename: file.name, mimetype: file.type };
+                
                 try {
                     let response = await fetch(SCRIPT_URL, { method: "POST", body: new URLSearchParams(obj) });
                     let driveUrl = await response.text();
+                    
+                    // ड्राईव्हची लिंक फायरबेस मध्ये सेव्ह करा
                     await updateDoc(doc(db, "members", memberDocId), { docUrl: driveUrl });
+                    
+                    // ओळखपत्रावर नवीन फोटो दाखवा
                     document.getElementById('cardPhoto').src = driveUrl;
                     Swal.fire('यशस्वी!', 'तुमचा फोटो ओळखपत्रावर जोडला गेला आहे.', 'success'); 
-                } catch(e) { Swal.fire('त्रुटी', 'अपलोड अयशस्वी.', 'error'); }
+                } catch(e) { 
+                    Swal.fire('त्रुटी', 'अपलोड अयशस्वी.', 'error'); 
+                }
             };
         }
     };
@@ -395,9 +415,9 @@
       const watermarkLayer = document.getElementById("watermarkLayer");
       watermarkLayer.innerHTML = "";
       
-      // Strict Format: xsounion | Full Name | Mobile | Email
-      const emailText = currentMember["ईमेल"] ? currentMember["ईमेल"] : "No_Email";
-      const watermarkText = `xsounion | ${memberFullName} | ${currentMember["मोबाईल क्रमांक"]} | ${emailText} &nbsp;&nbsp;&nbsp;&nbsp;`;
+      const emailText = currentMember.email ? currentMember.email : "No_Email";
+      const mobileText = currentMember.mobile ? currentMember.mobile : "No_Mobile";
+      const watermarkText = `xsounion | ${memberFullName} | ${mobileText} | ${emailText} &nbsp;&nbsp;&nbsp;&nbsp;`;
       
       for(let i=0; i<60; i++) {
         const span = document.createElement("span");
@@ -482,7 +502,7 @@
         });
     };
 
-    // 8. 🎫 COMPLAINTS USING MARATHI KEYS
+    // 8. 🎫 COMPLAINTS USING ENGLISH KEYS (तक्रार सिस्टीम)
     window.submitComplaint = async function() {
       const subject = document.getElementById("compSubject").value.trim();
       const details = document.getElementById("compDetails").value.trim();
@@ -493,8 +513,8 @@
       try {
         await addDoc(collection(db, "complaints"), {
           सदस्य_नाव: memberFullName, 
-          मोबाईल: currentMember["मोबाईल क्रमांक"], 
-          ईमेल: currentMember["ईमेल"] || "नाही", 
+          मोबाईल: currentMember.mobile || "-", 
+          ईमेल: currentMember.email || "नाही", 
           विषय: subject, 
           तक्रार: details, 
           स्थिती: "प्रलंबित", 
@@ -509,7 +529,7 @@
     };
 
     async function loadMyComplaints() {
-        const q = query(collection(db, "complaints"), where("मोबाईल", "==", currentMember["मोबाईल क्रमांक"]));
+        const q = query(collection(db, "complaints"), where("मोबाईल", "==", currentMember.mobile || "-"));
         const snap = await getDocs(q);
         let html = '';
         snap.forEach(docSnap => {
@@ -523,9 +543,10 @@
         document.getElementById('my-complaints-area').innerHTML = html || '<p style="color:gray;">कोणतीही तक्रार नाही.</p>';
     }
 
-    // 9. 🚪 LOGOUT LOGIC
+    // 9. 🚪 LOGOUT LOGIC (लॉगआउट सिस्टीम)
     document.querySelector('.btn-logout').onclick = () => { 
-        signOut(auth).then(() => { window.location.href = "member-login.html"; }); 
+        localStorage.removeItem("loggedInMemberId");
+        window.location.href = "member-login.html"; 
     };
   </script>
 </body>
