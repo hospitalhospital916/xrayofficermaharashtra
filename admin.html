@@ -225,9 +225,10 @@
             // Similar logic to previous code...
         };
 
-        // ================= TAB 1: MASTER MEMBERS =================
+                 =        // ================= TAB 1: MASTER MEMBERS =================
         window.renderMembers = function() {
-            let sName = document.getElementById('searchName').value.toLowerCase(); let fDist = document.getElementById('filterDist').value;
+            let sName = document.getElementById('searchName').value.toLowerCase(); 
+            let fDist = document.getElementById('filterDist').value;
             let filtered = membersData.filter(m => {
                 let isApproved = m.status !== 'Pending';
                 let matchName = (m.name || '').toLowerCase().includes(sName) || (m.mobile || '').includes(sName);
@@ -235,12 +236,25 @@
                 return isApproved && matchName && matchDist;
             });
             document.getElementById('totalCount').innerText = `(${filtered.length})`; let html = '';
+            
             filtered.forEach((m, i) => {
-                let photoBadge = m.photoUrl ? `<span class="badge bg-success">फोटो ✔</span>` : `<span class="badge bg-danger">फोटो ✘</span>`;
-                let docBadge = m.docUrl ? `<span class="badge bg-success">डॉक ✔</span>` : `<span class="badge bg-danger">डॉक ✘</span>`;
+                // १. फोटो असल्यास छोटा गोल फोटो दाखवा, त्यावर क्लिक केल्यावर मोठा दिसेल
+                let photoBadge = m.photoUrl 
+                    ? `<img src="${m.photoUrl}" onclick="showImagePreview('${m.photoUrl}')" style="width:45px; height:45px; border-radius:50%; object-fit:cover; cursor:pointer; border:2px solid var(--success); box-shadow:0 2px 5px rgba(0,0,0,0.2);" title="फोटो मोठा करण्यासाठी क्लिक करा">` 
+                    : `<span class="badge bg-danger">फोटो नाही</span>`;
                 
-                html += `<tr><td><b>${i+1}</b></td><td><b style="color:var(--primary);">${m.name || '-'}</b><br><small>${m.designation || '-'}</small></td><td>${m.mobile || '-'}</td><td>${m.workplace || '-'}</td><td>${m.district || '-'}</td>
-                <td>${photoBadge} <br> ${docBadge}</td>
+                // २. कागदपत्र असल्यास 'पहा' बटन दाखवा
+                let docBadge = m.docUrl 
+                    ? `<a href="${m.docUrl}" target="_blank" class="badge bg-info" style="text-decoration:none;"><i class="fa fa-eye"></i> डॉक पहा</a>` 
+                    : `<span class="badge bg-danger">डॉक नाही</span>`;
+                
+                html += `<tr>
+                <td><b>${i+1}</b></td>
+                <td><b style="color:var(--primary);">${m.name || '-'}</b><br><small>${m.designation || '-'}</small></td>
+                <td>${m.mobile || '-'}</td>
+                <td>${m.workplace || '-'}</td>
+                <td>${m.district || '-'}</td>
+                <td style="text-align:center; vertical-align:middle;">${photoBadge} <br><div style="margin-top:5px;">${docBadge}</div></td>
                 <td class="no-print">
                     <button class="btn-action btn-photo" onclick="uploadFile('${m.id}', 'photoUrl')" title="चेहऱ्याचा फोटो अपलोड"><i class="fa fa-camera"></i></button> 
                     <button class="btn-action btn-doc" onclick="uploadFile('${m.id}', 'docUrl')" title="कागदपत्रे अपलोड"><i class="fa fa-file-pdf"></i></button> 
@@ -251,6 +265,20 @@
             });
             document.getElementById('membersBody').innerHTML = html || '<tr><td colspan="7">डेटा उपलब्ध नाही.</td></tr>';
         };
+
+        // --- मोठा फोटो पाहण्यासाठी नवीन फंक्शन (SweetAlert Preview) ---
+        window.showImagePreview = function(url) {
+            Swal.fire({
+                imageUrl: url,
+                imageAlt: 'सदस्याचा फोटो',
+                showConfirmButton: false,
+                showCloseButton: true,
+                background: '#fff',
+                backdrop: `rgba(0,0,0,0.8)`,
+                width: 'auto'
+            });
+        };
+
 
         // --- DOUBLE UPLOAD FUNCTION ---
         window.uploadFile = async function(id, fieldType) {
