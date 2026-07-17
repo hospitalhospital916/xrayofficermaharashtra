@@ -3,423 +3,591 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>सुपर ॲडमिन | क्ष-किरण संघटना महाराष्ट्र</title>
-  
+    <title>क्ष-किरण संघटना महाराष्ट्र - ऍडमिन व लेटर पॅड पॅनल</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Mukta:wght@300;400;600;700;800&display=swap');
-
-        :root { 
-            --bg: #f0f4f8; --white: #ffffff; --text: #2d3748;
-            --primary: #0B3D91; --secondary: #f39c12; --success: #10b981; 
-            --danger: #ef4444; --info: #3b82f6; --warning: #f59e0b; 
-            --dark: #1e293b; --verified: #e6ffed;
-        }
-
-        /* Anti-Copy Protection (Screen only) */
-        @media screen { * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mukta', sans-serif; user-select: none; } }
-        body { background-color: var(--bg); color: var(--text); overflow-x: hidden; }
-
-        /* --- LOGIN SCREEN --- */
-        #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, var(--dark), var(--primary)); display: flex; justify-content: center; align-items: center; z-index: 9999; }
-        .login-box { background: rgba(255, 255, 255, 0.95); padding: 45px; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); width: 400px; text-align: center; }
-        .login-box h2 { color: var(--primary); margin-bottom: 25px; font-weight: 800; font-size: 2rem; }
-        .login-box input { width: 100%; padding: 14px; margin: 12px 0; border: 2px solid #ccc; border-radius: 10px; font-size: 1.1rem; user-select: auto; }
-        .login-box button { width: 100%; padding: 14px; margin-top: 15px; background: linear-gradient(90deg, var(--secondary), #f1c40f); color: var(--dark); border: none; border-radius: 10px; font-size: 1.3rem; font-weight: 800; cursor: pointer; }
-
-        /* --- NAVBAR & TABS --- */
-        .navbar { background: var(--white); padding: 15px 35px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border-bottom: 4px solid var(--secondary); }
-        .navbar h2 { color: var(--primary); font-weight: 800; font-size: 1.8rem; }
-        .tab-menu { display: flex; gap: 8px; flex-wrap: wrap; background: var(--primary); padding: 15px 35px; }
-        .tab-btn { padding: 12px 20px; border: none; background: rgba(255,255,255,0.1); color: white; font-size: 1.05rem; font-weight: 700; cursor: pointer; border-radius: 8px; transition: 0.3s; }
-        .tab-btn.active { background: var(--secondary); color: var(--dark); }
-        .btn-logout { background: var(--danger); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 700; }
-
-        /* --- DASHBOARD GRIDS & CHARTS --- */
-        .mandal-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 25px; }
-        .mandal-card { background: white; padding: 15px; border-radius: 12px; text-align: center; border: 2px solid var(--primary); cursor: pointer; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .mandal-card:hover { transform: translateY(-5px); background: var(--primary); color: white; }
-        .mandal-card h3 { font-size: 1rem; margin-bottom: 5px; } .mandal-card h2 { font-size: 1.8rem; font-weight: 800; color: var(--secondary); }
-        .mandal-card:hover h2 { color: white; }
-        .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px; }
-
-        /* --- LAYOUT & PANELS --- */
-        .container { max-width: 1500px; margin: 30px auto; padding: 0 20px; }
-        .tab-content { display: none; } .tab-content.active { display: block; }
-        .panel { background: var(--white); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 35px; border: 1px solid #e2e8f0; overflow: hidden; }
-        .panel-header { padding: 15px 25px; font-size: 1.3rem; font-weight: 800; background: #f8fafc; border-bottom: 1px solid #e2e8f0; border-top: 6px solid var(--primary); display: flex; justify-content: space-between; align-items: center;}
-        .panel-body { padding: 25px; }
-
-        /* --- FORMS & TABLES --- */
-        .form-row { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px; align-items: center;}
-        .form-control { flex: 1; min-width: 200px; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 1.05rem; user-select: auto;}
-        .table-responsive { overflow-x: auto; border-radius: 12px; border: 1px solid #e2e8f0; }
-        table { width: 100%; border-collapse: collapse; min-width: 1200px; background: white; }
-        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #e2e8f0; font-size: 1rem; vertical-align: middle; }
-        th { background: var(--primary); color: white; font-weight: 800; }
-        .verified-row { background-color: var(--verified); border-left: 5px solid var(--success) !important; }
-        .pending-row { background-color: #fff0f0; border-left: 5px solid var(--danger) !important; }
-
-        .btn-save { background: var(--success); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; }
-        .btn-hub { background: var(--dark); color: white; border: none; padding: 8px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1);}
-        .btn-hub:hover { background: var(--primary); }
-
-        /* Action Grid */
-        .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
-        .action-btn { padding: 12px; font-size: 1rem; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; color: white; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .a-photo { background: #ec4899; } .a-doc { background: #8b5cf6; } .a-id { background: #f59e0b; color:#000; } .a-edit { background: #3b82f6; } .a-wp { background: #10b981; } .a-del { background: #ef4444; grid-column: span 2; }
-
-        /* --- PERFECT PRINT MEDIA QUERY --- */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700&display=swap');
+        body { font-family: 'Noto Sans Devanagari', sans-serif; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        /* Print Styles */
         @media print {
-            @page { size: A4 landscape; margin: 10mm; }
-            body { background: white; color: black; }
-            .navbar, .tab-menu, .mandal-grid, .charts-grid, .no-print, .panel-header button, .form-row { display: none !important; }
-            .container { margin: 0; padding: 0; }
-            .panel { border: none; box-shadow: none; }
-            .panel-header { border-top: none; padding: 0; margin-bottom: 15px; }
-            .tab-content { display: none; }
-            .tab-content.active { display: block !important; }
-            table { width: 100%; min-width: 100%; border-collapse: collapse; font-size: 11pt; }
-            th, td { border: 1px solid #000; padding: 8px; color: #000; }
-            th { background-color: #f0f0f0 !important; color: #000 !important; -webkit-print-color-adjust: exact; }
-            .verified-row, .pending-row { border-left: none !important; background: transparent !important; }
+            body * { visibility: hidden; }
+            #printArea, #printArea * { visibility: visible; }
+            #letterpadPrintView, #letterpadPrintView * { visibility: visible; }
+            
+            /* If printing letterpad */
+            .printing-letterpad #letterpadPrintView { 
+                position: absolute; left: 0; top: 0; width: 100%; min-height: 100vh; display: flex !important; 
+            }
+            /* If printing member profile */
+            .printing-member #printArea { 
+                position: absolute; left: 0; top: 0; width: 100%; display: block !important; 
+            }
+            .no-print { display: none !important; }
         }
     </style>
 </head>
-<body>
+<body class="bg-slate-100 min-h-screen flex flex-col">
 
-    <!-- LOGIN -->
-    <div id="login-screen">
-        <div class="login-box">
-            <h2>सुपर ॲडमिन कक्ष</h2>
-            <input type="email" id="adminEmail" placeholder="नोंदणीकृत Email" autocomplete="off">
-            <input type="password" id="adminPass" placeholder="Password">
-            <button onclick="loginAdmin()">लॉगिन करा <i class="fa fa-arrow-right"></i></button>
+    <!-- TOP HEADER BAR -->
+    <header class="bg-blue-950 text-white px-6 py-4 flex justify-between items-center shadow-md no-print">
+        <div class="flex items-center space-x-3">
+            <i class="fa-solid fa-shield-halved text-2xl text-yellow-400"></i>
+            <h1 class="text-xl font-bold tracking-wide">क्ष-किरण वैज्ञानिक अधिकारी संघटना (ऍडमिन कक्ष)</h1>
+        </div>
+        <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-semibold flex items-center gap-2 transition cursor-pointer">
+            <i class="fa-solid fa-right-from-bracket"></i> लॉगआउट
+        </button>
+    </header>
+
+    <!-- LIVE NOTICE PREVIEW -->
+    <div class="bg-yellow-100 border-b border-yellow-200 py-2 no-print">
+        <div class="container mx-auto px-4 flex items-center">
+            <span class="bg-red-600 text-white text-xs font-bold px-2 py-1 rounded mr-3 whitespace-nowrap">थेट सूचना लाईन:</span>
+            <marquee id="liveMarquee" class="text-sm font-semibold text-slate-800">सर्व सदस्यांनी आपले आयडी कार्ड फोटो, ईमेल आणि कार्यरत ठिकाणची माहिती अद्ययावत करून घ्यावी.</marquee>
         </div>
     </div>
 
-    <!-- MAIN APP -->
-    <div id="app-content" style="display: none;">
-        <div class="navbar">
-            <h2><i class="fa fa-shield-alt"></i> क्ष-किरण संघटना महाराष्ट्र</h2>
-            <div>
-                <span id="timerDisplay" style="color:red; font-weight:bold; margin-right:20px; font-size:1.1rem;"><i class="fa fa-clock"></i> 10:00</span>
-                <button class="btn-logout" onclick="logoutAdmin()"><i class="fa fa-power-off"></i> लॉगआउट</button>
+    <!-- MAIN NAVIGATION BUTTONS -->
+    <nav class="bg-slate-800 p-4 no-print shadow-inner">
+        <div class="container mx-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 lg:grid-cols-11 gap-2">
+            <!-- 1. डॅशबोर्ड (पहिले) -->
+            <button onclick="switchTab('dashboard')" id="btn-dashboard" class="tab-btn active bg-amber-500 text-slate-900 font-bold p-3 rounded-lg flex flex-col items-center justify-center gap-1 transition shadow cursor-pointer text-center text-xs">
+                <i class="fa-solid fa-chart-pie text-lg"></i> स्मार्ट डॅशबोर्ड
+            </button>
+            <!-- नवीन जोडलेले: २. लेटर पॅड जनरेटर -->
+            <button onclick="switchTab('letterpad-gen')" id="btn-letterpad-gen" class="tab-btn bg-blue-700 hover:bg-blue-600 text-white font-medium p-3 rounded-lg flex flex-col items-center justify-center gap-1 transition text-center text-xs cursor-pointer">
+                <i class="fa-solid fa-file-signature text-lg"></i> लेटर पॅड जनरेटर
+            </button>
+            <!-- नवीन जोडलेले: ३. बल्क ईमेल सिस्टीम -->
+            <button onclick="switchTab('bulk-email')" id="btn-bulk-email" class="tab-btn bg-blue-700 hover:bg-blue-600 text-white font-medium p-3 rounded-lg flex flex-col items-center justify-center gap-1 transition text-center text-xs cursor-pointer">
+                <i class="fa-solid fa-envelope-open-text text-lg"></i> बल्क ई-मेल कक्ष
+            </button>
+            <button onclick="switchTab('pending-req')" id="btn-pending-req" class="tab-btn bg-blue-700 hover:bg-blue-600 text-white font-medium p-3 rounded-lg flex flex-col items-center justify-center gap-1 transition text-center text-xs cursor-pointer">
+                <i class="fa-solid fa-clock text-lg"></i> प्रलंबित विनंत्या
+            </button>
+            <button onclick="switchTab('members-room')" id="btn-members-room" class="tab-btn bg-blue-700 hover:bg-blue-600 text-white font-medium p-3 rounded-lg flex flex-col items-center justify-center gap-1 transition text-center text-xs cursor-pointer">
+                <i class="fa-solid fa-user-plus text-lg"></i> नवीन नोंदणी
+            </button>
+            <button onclick="switchTab('finance-room')" id="btn-finance-room" class="tab-btn bg-blue-700 hover:bg-blue-600 text-white font-medium p-3 rounded-lg flex flex-col items-center justify-center gap-1 transition text-center text-xs cursor-pointer">
+                <i class="fa-solid fa-indian-rupee-sign text-lg"></i> आर्थिक / फी कक्ष
+            </button>
+            <button onclick="switchTab('elections')" id="btn-elections" class="tab-btn bg-blue-700 hover:bg-blue-600 text-white font-medium p-3 rounded-lg flex flex-col items-center justify-center gap-1 transition text-center text-xs cursor-pointer">
+                <i class="fa-solid fa-box-archive text-lg"></i> निवडणूक कक्ष
+            </button>
+            <button onclick="switchTab('index-control')" id="btn-index-control" class="tab-btn bg-blue-700 hover:bg-blue-600 text-white font-medium p-3 rounded-lg flex flex-col items-center justify-center gap-1 transition text-center text-xs cursor-pointer">
+                <i class="fa-solid fa-bullhorn text-lg"></i> सूचना फलक (Index)
+            </button>
+            <button onclick="switchTab('complaints')" id="btn-complaints" class="tab-btn bg-blue-700 hover:bg-blue-600 text-white font-medium p-3 rounded-lg flex flex-col items-center justify-center gap-1 transition text-center text-xs cursor-pointer">
+                <i class="fa-solid fa-comments text-lg"></i> तक्रार कक्ष
+            </button>
+            <button onclick="switchTab('idcard-stamp')" id="btn-idcard-stamp" class="tab-btn bg-blue-700 hover:bg-blue-600 text-white font-medium p-3 rounded-lg flex flex-col items-center justify-center gap-1 transition text-center text-xs cursor-pointer">
+                <i class="fa-solid fa-id-card text-lg"></i> आय कार्ड व शिक्का
+            </button>
+            <!-- ११. महाराष्ट्रातील सर्व कर्मचारी (शेवटी) -->
+            <button onclick="switchTab('all-employees')" id="btn-all-employees" class="tab-btn bg-emerald-700 hover:bg-emerald-600 text-white font-bold p-3 rounded-lg flex flex-col items-center justify-center gap-1 transition text-center text-xs cursor-pointer">
+                <i class="fa-solid fa-address-book text-lg"></i> सर्व कर्मचारी (म.रा.)
+            </button>
+        </div>
+    </nav>
+
+    <!-- MAIN BODY CONTAINER -->
+    <main class="container mx-auto p-4 md:p-6 flex-grow">
+
+        <!-- TAB 1: SMART DASHBOARD -->
+        <div id="tab-dashboard" class="tab-content active space-y-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-blue-700 text-white p-5 rounded-xl shadow flex flex-col justify-between items-center text-center">
+                    <span class="text-sm font-medium opacity-90">एकूण सक्रिय सदस्य</span>
+                    <h2 class="text-4xl font-bold my-2">१NT</h2>
+                    <i class="fa-solid fa-user-check text-xl opacity-70"></i>
+                </div>
+                <div class="bg-amber-600 text-white p-5 rounded-xl shadow flex flex-col justify-between items-center text-center">
+                    <span class="text-sm font-medium opacity-90">ईमेल जोडलेले सदस्य</span>
+                    <h2 class="text-4xl font-bold my-2">३ / ३</h2>
+                    <i class="fa-solid fa-envelope-circle-check text-xl opacity-70"></i>
+                </div>
+                <div class="bg-emerald-600 text-white p-5 rounded-xl shadow flex flex-col justify-between items-center text-center">
+                    <span class="text-sm font-medium opacity-90">फी भरलेले सदस्य</span>
+                    <h2 class="text-4xl font-bold my-2">१</h2>
+                    <i class="fa-solid fa-wallet text-xl opacity-70"></i>
+                </div>
+                <div class="bg-red-500 text-white p-5 rounded-xl shadow flex flex-col justify-between items-center text-center">
+                    <span class="text-sm font-medium opacity-90">प्रलंबित तक्रारी</span>
+                    <h2 class="text-4xl font-bold my-2">०</h2>
+                    <i class="fa-solid fa-triangle-exclamation text-xl opacity-70"></i>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white p-5 rounded-xl shadow flex flex-col items-center">
+                    <h3 class="text-slate-700 font-bold mb-4 text-center"><i class="fa-solid fa-chart-pie text-blue-600 mr-2"></i>विभागानुसार सदस्य</h3>
+                    <div class="w-64 h-64"><canvas id="divisionChart"></canvas></div>
+                </div>
+                <div class="bg-white p-5 rounded-xl shadow flex flex-col items-center">
+                    <h3 class="text-slate-700 font-bold mb-4 text-center"><i class="fa-solid fa-chart-line text-amber-500 mr-2"></i>जिल्ह्यानुसार टॉप डेटा</h3>
+                    <div class="w-64 h-64"><canvas id="districtChart"></canvas></div>
+                </div>
             </div>
         </div>
 
-        <div class="tab-menu">
-            <button class="tab-btn active" onclick="openTab('tab-dash')"><i class="fa fa-chart-pie"></i> स्मार्ट डॅशबोर्ड</button>
-            <button class="tab-btn" onclick="openTab('tab-members')"><i class="fa fa-user-check"></i> मान्य सदस्य यादी</button>
-            <button class="tab-btn" onclick="openTab('tab-other')"><i class="fa fa-users"></i> इतर कर्मचारी (DB)</button>
-            <button class="tab-btn" onclick="openTab('tab-add')"><i class="fa fa-user-plus"></i> नवीन नोंदणी</button>
-            <button class="tab-btn" onclick="openTab('tab-pending')"><i class="fa fa-clock"></i> प्रलंबित विनंत्या</button>
+        <!-- NEW FEATURE: TAB 2: DIGITAL LETTERPAD GENERATOR -->
+    <div id="tab-letterpad-gen" class="tab-content space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Control Panel Editor (Left) -->
+                <div class="lg:col-span-5 bg-white p-5 rounded-xl shadow space-y-4 no-print">
+                    <h3 class="text-lg font-bold text-slate-800 border-b pb-2"><i class="fa-solid fa-pen-fancy text-blue-900 mr-2"></i>लेटर पॅड मजकूर संपादक</h3>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">जावक क्रमांक (Outward No.)</label>
+                        <input type="text" id="lpOutward" oninput="updateLetterpad()" class="w-full border p-2 text-sm rounded bg-slate-50" placeholder="उदा. क्ष-किर/२४/२०२६">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">दिनांक (Date)</label>
+                        <input type="date" id="lpDate" oninput="updateLetterpad()" class="w-full border p-2 text-sm rounded bg-slate-50">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">विषय (Subject)</label>
+                        <input type="text" id="lpSubject" oninput="updateLetterpad()" class="w-full border p-2 text-sm rounded bg-slate-50 font-semibold" placeholder="पत्राचा मुख्य विषय...">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">पत्राचा मुख्य मजकूर (Main Body Content)</label>
+                        <textarea id="lpBody" oninput="updateLetterpad()" rows="10" class="w-full border p-2 text-sm rounded bg-slate-50" placeholder="इथे सविस्तर मजकूर टाईप करा. हा मजकूर उजवीकडील लेटरपॅडवर थेट दिसेल..."></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">स्वाक्षरी पद (Signatory)</label>
+                        <select id="lpSignatory" onchange="updateLetterpad()" class="w-full border p-2 text-sm rounded bg-white">
+                            <option value="श्री रविंद्र मल्हारी पाटील (अध्यक्ष)">श्री रविंद्र मल्हारी पाटील (अध्यक्ष)</option>
+                            <option value="श्री किरण रवींद्रराव वरणे (प्रमुख कार्यवाह)">श्री किरण रवींद्रराव वरणे (प्रमुख कार्यवाह)</option>
+                        </select>
+                    </div>
+                    <button onclick="printLetterpad()" class="w-full bg-blue-900 text-white font-bold py-2.5 rounded shadow hover:bg-blue-800 transition cursor-pointer text-sm">
+                        <i class="fa-solid fa-print mr-1"></i> अधिकृत लेटर पॅड प्रिंट काढा
+                    </button>
+                </div>
+
+                <!-- Live Letterpad Preview (Right) -->
+                <div class="lg:col-span-7 bg-white p-2 rounded-xl shadow border overflow-x-auto flex justify-center">
+                    <div id="letterpadPrintView" class="w-[650px] min-h-[850px] bg-white text-black p-4 flex flex-col border border-slate-300 shadow-sm text-[12px]">
+                        <!-- Top Header (Exact Match) -->
+                        <div class="flex items-center justify-between border-b-2 border-blue-900 pb-2">
+                            <!-- Logo Wrapper -->
+                            <div class="w-16 h-16 bg-blue-950 rounded-full flex items-center justify-center text-white font-bold text-xs text-center p-1 border-2 border-yellow-500">
+                                क्ष-किरण लोगो
+                            </div>
+                            <div class="text-center flex-1 px-2">
+                                <h2 class="text-base font-bold text-blue-900 leading-tight">क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना. महाराष्ट्र राज्य</h2>
+                                <p class="text-[10px] font-semibold text-amber-600">सार्वजनिक आरोग्य विभाग, महाराष्ट्र शासन अंतर्गत</p>
+                                <p class="text-[9px] text-slate-600 mt-1"><i class="fa-solid fa-location-dot text-red-500"></i> मुख्यालय - क्ष-किरण विभाग, उपजिल्हा रुग्णालय फलटण, जिल्हा सातारा. ४१५५२३</p>
+                                <p class="text-[8px] text-blue-700">https://xrayunionmah.web.app | xsounion@gmail.com</p>
+                            </div>
+                        </div>
+
+                        <!-- Mid Content Layout (Sidebar + Body) -->
+                        <div class="flex flex-grow mt-3">
+                            <!-- Left Sidebar: Office Bearers (As per Image) -->
+                            <div class="w-44 border-r border-slate-300 pr-2 text-[9px] space-y-2 bg-slate-50 p-1">
+                                <div class="bg-blue-900 text-white text-center font-bold py-0.5 rounded text-[10px]">पदाधिकारी</div>
+                                
+                                <div>
+                                    <span class="font-bold text-red-700">अध्यक्ष</span><br>
+                                    <span class="font-semibold">श्री रविंद्र मल्हारी पाटील</span><br><span class="text-slate-500">सातारा | मो.९७६३१९२४४९</span>
+                                </div>
+                                <div>
+                                    <span class="font-bold text-red-700">उपाध्यक्ष</span><br>
+                                    <span class="font-semibold">श्री कोमल विठ्ठलराव चुनारकर</span><br><span class="text-slate-500">गडचिरोली | मो.८२७५७५००२०</span>
+                                </div>
+                                <div>
+                                    <span class="font-semibold">श्री संतोषकुमार हसनराव देशमुख</span><br><span class="text-slate-500">सिंदखेडराजा | मो.९४२३४२६८५६</span>
+                                </div>
+                                <div>
+                                    <span class="font-bold text-red-700">कोषाध्यक्ष</span><br>
+                                    <span class="font-semibold">श्री संतोष सुभाषराव गिरी</span><br><span class="text-slate-500">छ.संभाजी नगर | मो.९४०३६८८८६३</span>
+                                </div>
+                                <div>
+                                    <span class="font-bold text-red-700">सहकोषाध्यक्ष</span><br>
+                                    <span class="font-semibold">श्री विशाल गणेश कायंदे</span><br><span class="text-slate-500">गडचिरोली | मो.९५०३८८६४४१</span>
+                                </div>
+                                <div>
+                                    <span class="font-bold text-red-700">प्रमुख कार्यवाह</span><br>
+                                    <span class="font-semibold">श्री किरण रवींद्रराव वरणे</span><br><span class="text-slate-500">नाशिक | मो.९५९५७४२८८९</span>
+                                </div>
+                                <div>
+                                    <span class="font-bold text-red-700">कार्यवाह</span><br>
+                                    <span class="font-semibold">श्री संजय विठ्ठल गिराम</span><br><span class="text-slate-500">लातूर | मो.९०२१०४८५८६</span>
+                                </div>
+                                <div class="border-t pt-1">
+                                    <span class="font-bold text-blue-900 text-[8px]">माहिती तंत्रज्ञान विभाग</span><br>
+                                    <span class="font-semibold text-slate-800">श्री शंकर संतोष पव्हाणे</span><br><span class="text-slate-500">मो.९७६६७५५८९५</span>
+                                </div>
+                                <div>
+                                    <span class="font-bold text-blue-900 text-[8px]">वेबसाईट व्यवस्थापन</span><br>
+                                    <span class="font-semibold text-slate-800">श्री महेश शिवदास हंगे</span><br><span class="text-slate-500">मो.९६२३७९०९१६</span>
+                                </div>
+                            </div>
+
+                            <!-- Right Side: Editable Dynamic Text Area -->
+                            <div class="flex-1 pl-4 flex flex-col justify-between pt-2">
+                                <div>
+                                    <!-- Outward & Date Row -->
+                                    <div class="flex justify-between font-semibold text-slate-700 mb-4">
+                                        <span id="viewOutward">जावक क्र: ________________</span>
+                                        <span id="viewDate">दिनांक: __/__/____</span>
+                                    </div>
+                                    
+                                    <!-- Subject Row -->
+                                    <div class="mb-4 border-b border-dashed pb-2">
+                                        <span class="font-bold">विषय: </span>
+                                        <span id="viewSubject" class="font-bold text-slate-900">__________________________________________</span>
+                                    </div>
+
+                                    <!-- Body Text Container -->
+                                    <div id="viewBody" class="whitespace-pre-wrap text-slate-800 leading-relaxed text-justify min-h-[300px]">
+                                        कृपया डाव्या बाजूच्या संपादकामध्ये मजकूर टाईप करा. तो येथे स्वयंचलित पद्धतीने मांडला जाईल...
+                                    </div>
+                                </div>
+
+                                <!-- Signature Element -->
+                                <div class="self-end text-center mt-8 pr-6">
+                                    <p class="mb-10 text-slate-400 text-[10px]">(स्वाक्षरी/शिक्का)</p>
+                                    <p id="viewSignatory" class="font-bold text-slate-900 border-t border-slate-400 pt-1">श्री रविंद्र मल्हारी पाटील (अध्यक्ष)</p>
+                                    <p class="text-[9px] text-slate-600">क्ष-किरण वैज्ञानिक अधिकारी संघटना, म.रा.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="container">
+       <!-- NEW FEATURE: TAB 3: BULK EMAIL MODULE -->
+        <div id="tab-bulk-email" class="tab-content bg-white p-6 rounded-xl shadow space-y-4">
+            <h3 class="text-lg font-bold text-slate-800 border-b pb-2"><i class="fa-solid fa-paper-plane text-emerald-600 mr-2"></i>बल्क ई-मेल (Mass Mailer) नियंत्रण प्रणाली</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Composer Form -->
+                <div class="md:col-span-2 space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">ई-मेलचा विषय (Email Subject) *</label>
+                        <input type="text" id="emailSubject" class="w-full border p-2 text-sm rounded bg-slate-50" placeholder="उदा. नवीन कार्यकारणी बैठक सूचना किंवा थकबाकी फी बाबत...">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">ई-मेल मजकूर संदेश (HTML / Text Body) *</label>
+                        <textarea id="emailBody" rows="6" class="w-full border p-2 text-sm rounded bg-slate-50" placeholder="सर्व सदस्यांना पाठवायचा अधिकृत निरोप किंवा सूचना इथे लिहा..."></textarea>
+                    </div>
+                    <button onclick="triggerBulkEmail()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-2.5 rounded shadow text-sm transition cursor-pointer">
+                        <i class="fa-solid fa-paper-plane mr-1"></i> सर्व सदस्यांना बल्क ई-मेल पाठवा
+                    </button>
+                    <!-- Simulated Status Progress -->
+                    <div id="emailProgress" class="hidden bg-slate-100 p-3 rounded border text-xs space-y-2">
+                        <div class="flex justify-between font-bold"><span class="text-blue-900">मेल प्रक्रिया सुरू आहे...</span><span id="progressPercent">0%</span></div>
+                        <div class="w-full bg-slate-300 h-2 rounded overflow-hidden"><div id="progressBar" class="bg-emerald-500 h-full w-0 transition-all duration-300"></div></div>
+                    </div>
+                </div>
+                <!-- Target Target Members List View -->
+                <div class="bg-slate-50 p-4 rounded-xl border space-y-2">
+                    <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider border-b pb-1">प्राप्तकर्ते यादी (३ मुख्य ई-मेल आयडी)</h4>
+                    <ul class="text-xs space-y-1 text-slate-600">
+                        <li><i class="fa-solid fa-circle text-[8px] text-green-500 mr-1"></i> anand@gmail.com</li>
+                        <li><i class="fa-solid fa-circle text-[8px] text-green-500 mr-1"></i> sunil.mane@yahoo.com</li>
+                        <li><i class="fa-solid fa-circle text-[8px] text-green-500 mr-1"></i> mahapatil@gmail.com</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 5: REGISTER NEW MEMBERS FORM -->
+      <div id="tab-members-room" class="tab-content bg-white p-6 rounded-xl shadow">
+            <h3 class="text-lg font-bold text-slate-800 border-b pb-3 mb-4"><i class="fa-solid fa-user-plus text-emerald-600 mr-2"></i>नवीन सदस्य नोंदणी फॉर्म</h3>
+            <form class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div><label class="block text-xs font-semibold text-slate-600 mb-1">पूर्ण नाव *</label><input type="text" class="w-full border p-1.5 text-sm rounded focus:outline-blue-500" required></div>
+                <div><label class="block text-xs font-semibold text-slate-600 mb-1">मोबाईल क्रमांक *</label><input type="tel" class="w-full border p-1.5 text-sm rounded focus:outline-blue-500" required></div>
+                <div><label class="block text-xs font-semibold text-slate-600 mb-1">ईमेल आयडी *</label><input type="email" class="w-full border p-1.5 text-sm rounded focus:outline-blue-500" required></div>
+                <div><label class="block text-xs font-semibold text-slate-600 mb-1">पदनाम</label><input type="text" class="w-full border p-1.5 text-sm rounded focus:outline-blue-500"></div>
+                <div><label class="block text-xs font-semibold text-slate-600 mb-1">विभाग</label><input type="text" class="w-full border p-1.5 text-sm rounded focus:outline-blue-500"></div>
+                <div><label class="block text-xs font-semibold text-slate-600 mb-1">जिल्हा</label><input type="text" class="w-full border p-1.5 text-sm rounded focus:outline-blue-500"></div>
+                <div class="md:col-span-2"><label class="block text-xs font-semibold text-slate-600 mb-1">कार्यरत ठिकाण</label><input type="text" class="w-full border p-1.5 text-sm rounded focus:outline-blue-500"></div>
+                <div><label class="block text-xs font-semibold text-slate-600 mb-1">कायमचा मूळ पत्ता</label><input type="text" class="w-full border p-1.5 text-sm rounded focus:outline-blue-500"></div>
+                <div class="md:col-span-3 flex justify-end"><button type="button" class="bg-emerald-600 text-white font-bold px-6 py-2 rounded text-sm cursor-pointer">डेटा सेव्ह करा</button></div>
+            </form>
+        </div>
+
+        <!-- ADDITIONAL FILLER TABS FOR BACKWARD COMPATIBILITY -->
+        <div id="tab-pending-req" class="tab-content bg-white p-6 rounded-xl shadow text-center"><h3 class="text-xl font-bold text-slate-700">कोणतीही प्रलंबित विनंती नाही.</h3></div>
+        <div id="tab-finance-room" class="tab-content bg-white p-6 rounded-xl shadow text-center"><h3 class="text-xl font-bold text-slate-700">आर्थिक / फी कक्ष विभाग</h3></div>
+        <div id="tab-elections" class="tab-content bg-white p-6 rounded-xl shadow text-center"><h3 class="text-xl font-bold text-slate-700">निवडणूक व्यवस्थापन पोर्टल</h3></div>
+        <div id="tab-complaints" class="tab-content bg-white p-6 rounded-xl shadow text-center"><h3 class="text-xl font-bold text-slate-700">तक्रार निवारण मंच</h3></div>
+        <div id="tab-idcard-stamp" class="tab-content bg-white p-6 rounded-xl shadow text-center"><h3 class="text-xl font-bold text-slate-700">आयडी कार्ड फोटो व शिक्का अपलोड विभाग</h3></div>
+        <div id="tab-index-control" class="tab-content bg-white p-6 rounded-xl shadow space-y-4">
+            <h3 class="text-lg font-bold text-slate-800 border-b pb-2">होम पेज फिरती लाईन कंट्रोल</h3>
+            <textarea id="marqueeInput" rows="2" class="w-full border p-2 text-sm rounded bg-slate-50" placeholder="मजकूर टाका..."></textarea>
+            <button onclick="updateMarquee()" class="bg-blue-600 text-white text-xs font-bold px-4 py-2 rounded cursor-pointer">अपडेट करा</button>
+        </div>
+
+        <!-- TAB 11: ALL EMPLOYEES OF MAHARASHTRA (LAST OPTION WITH EDIT) -->
+        <div id="tab-all-employees" class="tab-content space-y-4">
+            <div class="bg-white p-4 rounded-xl shadow flex flex-col sm:flex-row justify-between items-center gap-4">
+                <h3 class="font-bold text-slate-800"><i class="fa-solid fa-users-viewfinder text-emerald-600 mr-2"></i>मास्टर कर्मचारी यादी (महाराष्ट्र राज्य)</h3>
+                <div class="flex gap-2">
+                    <button onclick="downloadCSV()" class="bg-emerald-600 text-white text-xs px-3 py-2 rounded shadow font-semibold cursor-pointer"><i class="fa-solid fa-file-excel mr-1"></i>Excel डाउनलोड</button>
+                    <button onclick="window.print()" class="bg-slate-800 text-white text-xs px-3 py-2 rounded shadow font-semibold cursor-pointer"><i class="fa-solid fa-print mr-1"></i>सर्व यादी प्रिंट</button>
+                </div>
+            </div>
+
+            <!-- TABLE -->
+            <div class="bg-white rounded-xl shadow overflow-x-auto">
+                <table class="w-full min-w-[1000px] text-sm" id="employeeTable">
+                    <thead>
+                        <tr class="bg-blue-900 text-white text-xs text-left">
+                            <th class="p-3">कर्मचाऱ्याचे पूर्ण नाव</th>
+                            <th class="p-3">मोबाईल</th>
+                            <th class="p-3">ई-मेल आयडी</th>
+                            <th class="p-3">पदनाम</th>
+                            <th class="p-3">विभाग (मंडळ)</th>
+                            <th class="p-3">जिल्हा</th>
+                            <th class="p-3">कार्यरत ठिकाण</th>
+                            <th class="p-3">कायमचा मूळ पत्ता</th>
+                            <th class="p-3 text-center no-print">ॲक्शन</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-200 text-slate-700">
+                        <!-- Row 1 -->
+                        <tr id="row-1" class="hover:bg-slate-50">
+                            <td class="p-3 font-semibold text-slate-900 data-name">डॉ. आनंद सूर्यवंशी</td>
+                            <td class="p-3 data-phone">९८७६५४३२िओ</td>
+                            <td class="p-3 data-email text-blue-600">anand@gmail.com</td>
+                            <td class="p-3 data-post">वैज्ञानिक अधिकारी</td>
+                            <td class="p-3 data-division">कोल्हापूर मंडळ</td>
+                            <td class="p-3 data-district">भंडारा</td>
+                            <td class="p-3 data-place">ग्रामीण रुग्णालय</td>
+                            <td class="p-3 data-address text-xs">मु.पो. वडगाव, जि. भंडारा</td>
+                            <td class="p-3 text-center no-print flex gap-1 justify-center">
+                                <button onclick="printSingleMember('row-1')" class="bg-blue-600 text-white p-1.5 rounded text-xs cursor-pointer shadow"><i class="fa-solid fa-print"></i></button>
+                                <button onclick="openEditModal('row-1')" class="bg-amber-500 text-slate-900 p-1.5 rounded text-xs cursor-pointer shadow font-bold"><i class="fa-solid fa-pen-to-square"></i></button>
+                            </td>
+                        </tr>
+                        <!-- Row 2 -->
+                        <tr id="row-2" class="hover:bg-slate-50">
+                            <td class="p-3 font-semibold text-slate-900 data-name">सुनील रामचंद्र माने</td>
+                            <td class="p-3 data-phone">९१२३४५६७८९</td>
+                            <td class="p-3 data-email text-blue-600">sunil.mane@yahoo.com</td>
+                            <td class="p-3 data-post">मुख्य टेक्निशियन</td>
+                            <td class="p-3 data-division">कोल्हापूर मंडळ</td>
+                            <td class="p-3 data-district">कोल्हापूर</td>
+                            <td class="p-3 data-place">जिल्हा रुग्णालय</td>
+                            <td class="p-3 data-address text-xs">शाहूपुरी, कोल्हापूर</td>
+                            <td class="p-3 text-center no-print flex gap-1 justify-center">
+                                <button onclick="printSingleMember('row-2')" class="bg-blue-600 text-white p-1.5 rounded text-xs cursor-pointer shadow"><i class="fa-solid fa-print"></i></button>
+                                <button onclick="openEditModal('row-2')" class="bg-amber-500 text-slate-900 p-1.5 rounded text-xs cursor-pointer shadow font-bold"><i class="fa-solid fa-pen-to-square"></i></button>
+                            </td>
+                        </tr>
+                        <!-- Row 3 -->
+                        <tr id="row-3" class="hover:bg-slate-50">
+                            <td class="p-3 font-semibold text-slate-900 data-name">महेश विठ्ठल पाटील</td>
+                            <td class="p-3 data-phone">८८८८७७७७६६</td>
+                            <td class="p-3 data-email text-blue-600">mahapatil@gmail.com</td>
+                            <td class="p-3 data-post">क्ष-किरण तज्ज्ञ</td>
+                            <td class="p-3 data-division">पुणे मंडळ</td>
+                            <td class="p-3 data-district">सांगली</td>
+                            <td class="p-3 data-place">उपजिल्हा रुग्णालय</td>
+                            <td class="p-3 data-address text-xs">मिरज रोड, सांगली</td>
+                            <td class="p-3 text-center no-print flex gap-1 justify-center">
+                                <button onclick="printSingleMember('row-3')" class="bg-blue-600 text-white p-1.5 rounded text-xs cursor-pointer shadow"><i class="fa-solid fa-print"></i></button>
+                                <button onclick="openEditModal('row-3')" class="bg-amber-500 text-slate-900 p-1.5 rounded text-xs cursor-pointer shadow font-bold"><i class="fa-solid fa-pen-to-square"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- LIVE POPUP EDIT MODAL (FOR ALL FIELDS) -->
+ <div id="editModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center p-4 z-50 no-print">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-lg overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+            <div class="bg-blue-950 text-white p-4 flex justify-between items-center">
+                <h3 class="font-bold text-sm"><i class="fa-solid fa-user-pen mr-2"></i>सदस्य माहिती संपादन कक्ष</h3>
+                <button onclick="closeEditModal()" class="text-white hover:text-slate-200 text-xl cursor-pointer">&times;</button>
+            </div>
+            <div class="p-5 space-y-3 text-sm">
+                <input type="hidden" id="editRowId">
+                <div><label class="block text-xs font-bold text-slate-600 mb-0.5">पूर्ण नाव</label><input type="text" id="editName" class="w-full border p-2 rounded"></div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div><label class="block text-xs font-bold text-slate-600 mb-0.5">मोबाईल</label><input type="text" id="editPhone" class="w-full border p-2 rounded"></div>
+                    <div><label class="block text-xs font-bold text-slate-600 mb-0.5">ई-मेल आयडी</label><input type="email" id="editEmail" class="w-full border p-2 rounded"></div>
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <div><label class="block text-xs font-bold text-slate-600 mb-0.5">विभाग (मंडळ)</label><input type="text" id="editDivision" class="w-full border p-2 rounded"></div>
+                    <div><label class="block text-xs font-bold text-slate-600 mb-0.5">जिल्हा</label><input type="text" id="editDistrict" class="w-full border p-2 rounded"></div>
+                </div>
+                <div><label class="block text-xs font-bold text-slate-600 mb-0.5">पदनाम</label><input type="text" id="editPost" class="w-full border p-2 rounded"></div>
+                <div><label class="block text-xs font-bold text-slate-600 mb-0.5">कार्यरत ठिकाण</label><input type="text" id="editPlace" class="w-full border p-2 rounded"></div>
+                <div><label class="block text-xs font-bold text-slate-600 mb-0.5">कायमचा मूळ पत्ता</label><input type="text" id="editAddress" class="w-full border p-2 rounded"></div>
+            </div>
+            <div class="bg-slate-100 p-3 flex justify-end gap-2 border-t">
+                <button onclick="closeEditModal()" class="bg-slate-400 text-white px-4 py-1.5 rounded font-medium cursor-pointer text-xs">रद्द करा</button>
+                <button onclick="saveEditedData()" class="bg-emerald-600 text-white px-5 py-1.5 rounded font-bold cursor-pointer text-xs shadow"><i class="fa-solid fa-floppy-disk mr-1"></i>माहिती अपडेट करा</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- HIDDEN INDIVIDUAL PROFILE PRINT LAYOUT -->
+    <div id="printArea" class="hidden p-8 bg-white text-black text-xs">
+        <div class="text-center border-b-2 border-slate-800 pb-2 mb-4">
+            <h1 class="text-xl font-bold">क्ष-किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य</h1>
+            <p class="text-[10px]">वैयक्तिक सदस्य डेटा संच</p>
+        </div>
+        <div id="printDetails" class="space-y-2"></div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC ENGINE -->
+    <script>
+        // Tab Router Control
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                b.className = "tab-btn bg-blue-700 hover:bg-blue-600 text-white font-medium p-3 rounded-lg flex flex-col items-center justify-center gap-1 transition text-center text-xs cursor-pointer";
+            });
+            document.getElementById('tab-' + tabId).classList.add('active');
             
-         <!-- TAB: DASHBOARD -->
-            <div id="tab-dash" class="tab-content active">
-                <div class="mandal-grid">
-                    <div class="mandal-card" onclick="openTab('tab-members'); filterByMandal('All')"><h3>एकूण मान्य सदस्य</h3><h2 id="cnt-all">0</h2></div>
-                    <div class="mandal-card" onclick="openTab('tab-members'); filterByMandal('पुणे मंडळ')"><h3>पुणे मंडळ</h3><h2 id="cnt-pune">0</h2></div>
-                    <div class="mandal-card" onclick="openTab('tab-members'); filterByMandal('मुंबई मंडळ')"><h3>मुंबई मंडळ</h3><h2 id="cnt-mumbai">0</h2></div>
-                    <div class="mandal-card" onclick="openTab('tab-members'); filterByMandal('नागपूर मंडळ')"><h3>नागपूर मंडळ</h3><h2 id="cnt-nagpur">0</h2></div>
-                    <div class="mandal-card" onclick="openTab('tab-members'); filterByMandal('नाशिक मंडळ')"><h3>नाशिक मंडळ</h3><h2 id="cnt-nashik">0</h2></div>
-                    <div class="mandal-card" onclick="openTab('tab-members'); filterByMandal('कोल्हापूर मंडळ')"><h3>कोल्हापूर मंडळ</h3><h2 id="cnt-kop">0</h2></div>
-                    <div class="mandal-card" onclick="openTab('tab-members'); filterByMandal('छत्रपती संभाजीनगर मंडळ')"><h3>संभाजीनगर मंडळ</h3><h2 id="cnt-csn">0</h2></div>
-                    <div class="mandal-card" onclick="openTab('tab-members'); filterByMandal('लातूर मंडळ')"><h3>लातूर मंडळ</h3><h2 id="cnt-latur">0</h2></div>
-                    <div class="mandal-card" onclick="openTab('tab-members'); filterByMandal('अकोला मंडळ')"><h3>अकोला मंडळ</h3><h2 id="cnt-akola">0</h2></div>
-                </div>
-                
-                <div class="charts-grid">
-                    <div class="panel">
-                        <div class="panel-header"><span><i class="fa fa-chart-pie"></i> मंडळानुसार सदस्य (टक्केवारी)</span></div>
-                        <div class="panel-body"><canvas id="mandalChart" height="250"></canvas></div>
-                    </div>
-                    <div class="panel">
-                        <div class="panel-header"><span><i class="fa fa-chart-pie"></i> टॉप १० जिल्हे</span></div>
-                        <div class="panel-body"><canvas id="distChart" height="250"></canvas></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB: OFFICIAL MEMBERS -->
-            <div id="tab-members" class="tab-content">
-                <div class="panel">
-                    <div class="panel-header">
-                        <span><i class="fa fa-list"></i> राज्यस्तरीय मान्य सदस्य यादी <span id="currentMandalView" style="color:var(--danger);">(सर्व मंडळे)</span></span>
-                        <div style="display:flex; gap:10px;" class="no-print">
-                            <input type="text" id="searchName" class="form-control" placeholder="🔍 नाव किंवा मोबाईल शोधा..." onkeyup="renderMembers()" style="width:250px; padding:8px;">
-                            <button class="btn-save" onclick="exportToExcel('membersTable', 'Official_Members')"><i class="fa fa-file-excel"></i> Export</button>
-                            <button class="btn-save" style="background:var(--dark);" onclick="window.print()"><i class="fa fa-print"></i> Print PDF</button>
-                        </div>
-                    </div>
-                    <div class="panel-body">
-                        <div class="table-responsive">
-                            <table id="membersTable">
-                                <thead><tr><th>क्र.</th><th class="no-print">फोटो</th><th>नाव, पद व मोबाईल</th><th>कार्यरत ठिकाण</th><th>जिल्हा व मंडळ</th><th>स्टेटस</th><th class="no-print" style="text-align:center;">ॲक्शन</th></tr></thead>
-                                <tbody id="membersBody"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB: OTHER STAFF (DB) -->
-            <div id="tab-other" class="tab-content">
-                <div class="panel">
-                    <div class="panel-header" style="border-top-color:var(--purple);">
-                        <span><i class="fa fa-users"></i> राज्यातील इतर क्ष-किरण कर्मचारी (Non-Members)</span>
-                        <button class="btn-save no-print" onclick="window.print()"><i class="fa fa-print"></i> Print List</button>
-                    </div>
-                    <div class="panel-body">
-                        <form id="otherForm" onsubmit="addOtherStaff(event)" class="no-print" style="background:#f1f5f9; padding:15px; border-radius:10px; margin-bottom:20px;">
-                            <div class="form-row">
-                                <input type="text" id="o_name" class="form-control" placeholder="संपूर्ण नाव *" required>
-                                <input type="tel" id="o_mob" class="form-control" placeholder="मोबाईल *" required>
-                                <input type="text" id="o_work" class="form-control" placeholder="कार्यरत ठिकाण *" required>
-                            </div>
-                            <div class="form-row">
-                                <select id="o_dist" class="form-control" onchange="autoMandalForOther()" required>
-                                    <option value="">-- जिल्हा --</option><option value="पुणे">पुणे</option><option value="सातारा">सातारा</option><option value="नागपूर">नागपूर</option><option value="अकोला">अकोला</option> <!-- Add all districts here -->
-                                </select>
-                                <input type="text" id="o_mandal" class="form-control" placeholder="मंडळ (ऑटो)" readonly>
-                                <input type="text" id="o_native" class="form-control" placeholder="मूळ पत्ता / गाव">
-                                <button type="submit" class="btn-save" style="background:var(--purple);"><i class="fa fa-plus"></i> डेटाबेसमध्ये जोडा</button>
-                            </div>
-                        </form>
-                        <div class="table-responsive">
-                            <table id="otherTable">
-                                <thead><tr><th>क्र.</th><th>नाव</th><th>मोबाईल</th><th>कार्यरत ठिकाण</th><th>जिल्हा व मंडळ</th><th>मूळ पत्ता</th><th class="no-print">ॲक्शन</th></tr></thead>
-                                <tbody id="otherBody"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB: ADD MEMBER -->
-            <div id="tab-add" class="tab-content">
-                <!-- Same form as previously discussed -->
-                <div class="panel">
-                    <div class="panel-header" style="border-top-color:var(--success);"><span><i class="fa fa-user-plus"></i> अधिकृत सदस्य नोंदणी फॉर्म</span></div>
-                    <div class="panel-body">
-                        <form id="addForm" onsubmit="addNewMember(event)">
-                            <div class="form-row">
-                                <input type="text" id="add_memNo" class="form-control" placeholder="सदस्यत्व क्र. (उदा. MH-001)">
-                                <input type="text" id="add_name" class="form-control" placeholder="संपूर्ण नाव *" required>
-                                <input type="tel" id="add_mobile" class="form-control" placeholder="मोबाईल क्रमांक *" required>
-                                <input type="text" id="add_bg" class="form-control" placeholder="रक्तगट (उदा. O+)">
-                            </div>
-                            <div class="form-row">
-                                <input type="text" id="add_desig" class="form-control" placeholder="पद (उदा. क्ष-किरण अधिकारी)" required>
-                                <input type="text" id="add_workplace" class="form-control" placeholder="कार्यरत ठिकाण" required>
-                                <select id="add_district" class="form-control" onchange="autoSelectMandal()" required>
-                                    <option value="">-- कार्यरत जिल्हा --</option>
-                                    <option value="अहमदनगर">अहमदनगर</option><option value="अकोला">अकोला</option><option value="अमरावती">अमरावती</option><option value="छत्रपती संभाजीनगर">छत्रपती संभाजीनगर</option><option value="बीड">बीड</option><option value="भंडारा">भंडारा</option><option value="बुलढाणा">बुलढाणा</option><option value="चंद्रपूर">चंद्रपूर</option><option value="धुळे">धुळे</option><option value="गडचिरोली">गडचिरोली</option><option value="गोंदिया">गोंदिया</option><option value="हिंगोली">हिंगोली</option><option value="जळगाव">जळगाव</option><option value="जालना">जालना</option><option value="कोल्हापूर">कोल्हापूर</option><option value="लातूर">लातूर</option><option value="मुंबई शहर">मुंबई शहर</option><option value="मुंबई उपनगर">मुंबई उपनगर</option><option value="नागपूर">नागपूर</option><option value="नांदेड">नांदेड</option><option value="नंदुरबार">नंदुरबार</option><option value="नाशिक">नाशिक</option><option value="धाराशिव">धाराशिव</option><option value="पालघर">पालघर</option><option value="परभणी">परभणी</option><option value="पुणे">पुणे</option><option value="रायगड">रायगड</option><option value="रत्नागिरी">रत्नागिरी</option><option value="सांगली">सांगली</option><option value="सातारा">सातारा</option><option value="सिंधुदुर्ग">सिंधुदुर्ग</option><option value="सोलापूर">सोलापूर</option><option value="ठाणे">ठाणे</option><option value="वर्धा">वर्धा</option><option value="वाशिम">वाशिम</option><option value="यवतमाळ">यवतमाळ</option>
-                                </select>
-                                <input type="text" id="add_mandal" class="form-control" placeholder="मंडळ (ऑटो)" readonly>
-                            </div>
-                            <div class="form-row">
-                                <select id="add_fee" class="form-control"><option value="Paid">फी भरली (Paid)</option><option value="Unpaid">फी बाकी (Unpaid)</option></select>
-                                <input type="text" id="add_pass" class="form-control" placeholder="पासवर्ड (उदा. 1234)" value="1234" required>
-                                <button type="submit" class="btn-save" style="flex:2;"><i class="fa fa-save"></i> सेव्ह करा</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB: PENDING APPROVALS -->
-            <div id="tab-pending" class="tab-content">
-                <div class="panel">
-                    <div class="panel-header" style="border-top-color:var(--danger);"><span><i class="fa fa-clock"></i> सदस्यांनी केलेले बदल (Approve / Reject)</span></div>
-                    <div class="panel-body">
-                        <!-- Table for pending will go here in next update -->
-                        <p style="text-align:center; color:#666;">सध्या कोणतीही प्रलंबित विनंती नाही.</p>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <!-- FIREBASE & MAIN SCRIPTS -->
-    <script type="module">
-       import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-       import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-       import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-       import { getStorage, ref as sRef, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
-        
-        const firebaseConfig = {
-            apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk", authDomain: "xrayunionmah.firebaseapp.com",
-            projectId: "xrayunionmah", storageBucket: "xrayunionmah.firebasestorage.app",
-            messagingSenderId: "763805226978", appId: "1:763805226978:web:6bae81a0b6358b47d88bbb"
-        };
-        const app = initializeApp(firebaseConfig); const db = getFirestore(app); const auth = getAuth(app); const storage = getStorage(app);
-        
-        let membersData = []; let otherStaffData = []; let currentFilterMandal = 'All'; let mandalChart, distChart;
-
-        /* --- AUTO LOGOUT & ANTI-COPY --- */
-        document.addEventListener('contextmenu', e => e.preventDefault());
-        document.addEventListener('keydown', e => { if (e.ctrlKey && ['c','p','u','s'].includes(e.key)) e.preventDefault(); });
-        
-        let inactivityTime = function() {
-            let time; let timerDisplay = document.getElementById('timerDisplay'); let timeLimit = 600;
-            window.onload = resetTimer; document.onmousemove = resetTimer; document.onkeypress = resetTimer;
-            function updateDisplay() {
-                let m = Math.floor(timeLimit / 60); let s = timeLimit % 60;
-                timerDisplay.innerHTML = `<i class="fa fa-clock"></i> ${m}:${s < 10 ? '0' : ''}${s}`;
-                if (timeLimit <= 0) window.logoutAdmin(); else timeLimit--;
-            }
-            function resetTimer() { timeLimit = 600; clearInterval(time); time = setInterval(updateDisplay, 1000); }
-        };
-
-        const mandalMapping = {
-            "अहमदनगर": "पुणे मंडळ", "पुणे": "पुणे मंडळ", "सातारा": "पुणे मंडळ", "सोलापूर": "पुणे मंडळ",
-            "कोल्हापूर": "कोल्हापूर मंडळ", "सांगली": "कोल्हापूर मंडळ", "रत्नागिरी": "कोल्हापूर मंडळ", "सिंधुदुर्ग": "कोल्हापूर मंडळ",
-            "अकोला": "अकोला मंडळ", "अमरावती": "अकोला मंडळ", "बुलढाणा": "अकोला मंडळ", "वाशिम": "अकोला मंडळ", "यवतमाळ": "अकोला मंडळ",
-            "नाशिक": "नाशिक मंडळ", "धुळे": "नाशिक मंडळ", "जळगाव": "नाशिक मंडळ", "नंदुरबार": "नाशिक मंडळ",
-            "नागपूर": "नागपूर मंडळ", "भंडारा": "नागपूर मंडळ", "चंद्रपूर": "नागपूर मंडळ", "गडचिरोली": "नागपूर मंडळ", "गोंदिया": "नागपूर मंडळ", "वर्धा": "नागपूर मंडळ",
-            "छत्रपती संभाजीनगर": "छत्रपती संभाजीनगर मंडळ", "जालना": "छत्रपती संभाजीनगर मंडळ", "परभणी": "छत्रपती संभाजीनगर मंडळ", "हिंगोली": "छत्रपती संभाजीनगर मंडळ",
-            "लातूर": "लातूर मंडळ", "बीड": "लातूर मंडळ", "नांदेड": "लातूर मंडळ", "धाराशिव": "लातूर मंडळ",
-            "ठाणे": "ठाणे मंडळ", "मुंबई शहर": "मुंबई मंडळ", "मुंबई उपनगर": "मुंबई मंडळ", "पालघर": "ठाणे मंडळ", "रायगड": "ठाणे मंडळ"
-        };
-        window.autoSelectMandal = () => { document.getElementById('add_mandal').value = mandalMapping[document.getElementById('add_district').value] || ""; };
-        window.autoMandalForOther = () => { document.getElementById('o_mandal').value = mandalMapping[document.getElementById('o_dist').value] || ""; };
-
-        window.openTab = function(tabId) {
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active'); event.currentTarget.classList.add('active');
-            if(tabId === 'tab-dash') setTimeout(renderCharts, 200);
-        };
-
-        onAuthStateChanged(auth, (user) => {
-            if (user) { document.getElementById('login-screen').style.display = 'none'; document.getElementById('app-content').style.display = 'block'; inactivityTime(); loadData(); } 
-            else { document.getElementById('login-screen').style.display = 'flex'; document.getElementById('app-content').style.display = 'none'; }
-        });
-        
-        window.loginAdmin = async () => { try { await setPersistence(auth, browserSessionPersistence); await signInWithEmailAndPassword(auth, document.getElementById('adminEmail').value, document.getElementById('adminPass').value); } catch(e) { Swal.fire('Error', 'चुकीचा पासवर्ड', 'error'); } };
-        window.logoutAdmin = () => signOut(auth);
-
-        async function loadData() {
-            try {
-                // Load Official Members
-                const snap = await getDocs(collection(db, "members")); membersData = [];
-                let counts = { 'All':0, 'पुणे मंडळ':0, 'मुंबई मंडळ':0, 'नागपूर मंडळ':0, 'नाशिक मंडळ':0, 'कोल्हापूर मंडळ':0, 'छत्रपती संभाजीनगर मंडळ':0, 'लातूर मंडळ':0, 'अकोला मंडळ':0 };
-                snap.forEach(doc => { 
-                    let d = doc.data(); membersData.push({ id: doc.id, ...d }); 
-                    if(d.status !== 'Pending') { counts['All']++; if(counts[d.mandal] !== undefined) counts[d.mandal]++; }
-                });
-                
-                // Update Cards
-                Object.keys(counts).forEach(k => { if(document.getElementById(k === 'All' ? 'cnt-all' : 'cnt-'+ (k.includes('पुणे')?'pune':k.includes('मुंबई')?'mumbai':k.includes('नागपूर')?'nagpur':k.includes('नाशिक')?'nashik':k.includes('कोल्हापूर')?'kop':k.includes('संभाजीनगर')?'csn':k.includes('लातूर')?'latur':'akola')))) document.getElementById(k === 'All' ? 'cnt-all' : 'cnt-'+ (k.includes('पुणे')?'pune':k.includes('मुंबई')?'mumbai':k.includes('नागपूर')?'nagpur':k.includes('नाशिक')?'nashik':k.includes('कोल्हापूर')?'kop':k.includes('संभाजीनगर')?'csn':k.includes('लातूर')?'latur':'akola')).innerText = counts[k]; });
-
-                // Load Other Staff
-                const otherSnap = await getDocs(collection(db, "other_staff")); otherStaffData = [];
-                otherSnap.forEach(doc => otherStaffData.push({ id: doc.id, ...doc.data() }));
-
-                renderMembers(); renderOtherStaff(); renderCharts();
-            } catch(e) { console.error(e); }
+            const activeBtn = document.getElementById('btn-' + tabId);
+            if(tabId === 'all-employees') activeBtn.className = "tab-btn active bg-emerald-500 text-white font-bold p-3 rounded-lg flex flex-col items-center justify-center gap-1 transition shadow cursor-pointer text-center text-xs";
+            else activeBtn.className = "tab-btn active bg-amber-500 text-slate-900 font-bold p-3 rounded-lg flex flex-col items-center justify-center gap-1 transition shadow cursor-pointer text-center text-xs";
         }
 
-        window.filterByMandal = (mandal) => { currentFilterMandal = mandal; document.getElementById('currentMandalView').innerText = `(${mandal})`; renderMembers(); };
-
-        /* --- 1. RENDER OFFICIAL MEMBERS --- */
-        window.renderMembers = function() {
-            let sName = document.getElementById('searchName').value.toLowerCase(); 
-            let filtered = membersData.filter(m => m.status !== 'Pending' && (currentFilterMandal === 'All' || m.mandal === currentFilterMandal) && ((m.name||'').toLowerCase().includes(sName) || (m.mobile||'').includes(sName)));
-            let html = '';
-            filtered.forEach((m, i) => {
-                let isVerified = (m.feeStatus === 'Paid'); let rowClass = isVerified ? 'verified-row' : 'pending-row';
-                let statBadge = isVerified ? `<span style="color:var(--success); font-weight:bold;">✔ मान्य</span>` : `<span style="color:var(--danger); font-weight:bold;">! फी बाकी</span>`;
-                let photoHtml = m.photoUrl ? `<img src="${m.photoUrl}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;">` : `<div style="width:40px;height:40px;border-radius:50%;background:#ccc;text-align:center;line-height:40px;"><i class="fa fa-user"></i></div>`;
-                
-                html += `<tr class="${rowClass}">
-                <td>${i+1}</td> <td class="no-print">${photoHtml}</td>
-                <td><b>${m.name||'-'}</b><br><small>${m.designation||'-'} | 📱 ${m.mobile||'-'}</small></td>
-                <td>${m.workplace||'-'}</td> <td><b>${m.district||'-'}</b><br><small>${m.mandal||'-'}</small></td>
-                <td>${statBadge}</td>
-                <td class="no-print" style="text-align:center;"><button class="btn-hub" onclick="openControlPanel('${m.id}')"><i class="fa fa-cog"></i> कंट्रोल</button></td>
-                </tr>`;
-            });
-            document.getElementById('membersBody').innerHTML = html || '<tr><td colspan="7">डेटा नाही.</td></tr>';
-        };
-
-        /* --- 2. RENDER OTHER STAFF --- */
-        window.renderOtherStaff = function() {
-            let html = '';
-            otherStaffData.forEach((s, i) => {
-                html += `<tr><td>${i+1}</td><td><b>${s.name}</b></td><td>${s.mobile}</td><td>${s.workplace}</td><td><b>${s.district}</b><br><small>${s.mandal}</small></td><td>${s.native||'-'}</td><td class="no-print"><button class="btn-action a-del" onclick="delOther('${s.id}')" style="padding:5px 10px;"><i class="fa fa-trash"></i></button></td></tr>`;
-            });
-            document.getElementById('otherBody').innerHTML = html || '<tr><td colspan="7">इतर कर्मचारी डेटा नाही.</td></tr>';
-        };
-
-        window.addOtherStaff = async (e) => {
-            e.preventDefault();
-            await addDoc(collection(db, "other_staff"), { name: document.getElementById('o_name').value, mobile: document.getElementById('o_mob').value, workplace: document.getElementById('o_work').value, district: document.getElementById('o_dist').value, mandal: document.getElementById('o_mandal').value, native: document.getElementById('o_native').value });
-            Swal.fire('यशस्वी', 'इतर कर्मचारी डेटाबेसमध्ये सेव्ह झाला.', 'success'); document.getElementById('otherForm').reset(); loadData();
-        };
-        window.delOther = async (id) => { if(confirm("डिलीट करायचे?")) { await deleteDoc(doc(db, "other_staff", id)); loadData(); } };
-
-        /* --- ACTION HUB & FIREBASE STORAGE UPLOAD --- */
-        window.openControlPanel = function(id) {
-            let m = membersData.find(x => x.id === id);
-            Swal.fire({
-                title: `कंट्रोल पॅनेल<br><small>${m.name}</small>`,
-                html: `<div class="action-grid">
-                    <button class="action-btn a-photo" onclick="uploadToFirebase('${id}', 'photoUrl')"><i class="fa fa-camera"></i> फोटो बदला</button>
-                    <button class="action-btn a-doc" onclick="uploadToFirebase('${id}', 'docUrl')"><i class="fa fa-file-pdf"></i> कागदपत्रे</button>
-                    <button class="action-btn a-id" onclick="generateID('${id}')"><i class="fa fa-id-card"></i> आयडी प्रिंट</button>
-                    <button class="action-btn a-wp" onclick="window.open('https://wa.me/91${m.mobile}', '_blank')"><i class="fab fa-whatsapp"></i> WhatsApp</button>
-                    <button class="action-btn a-del" onclick="strictDelete('${id}')"><i class="fa fa-trash"></i> डिलीट करा</button>
-                </div>`, showConfirmButton: false, showCloseButton: true
-            });
-        };
-
-        window.uploadToFirebase = async function(id, fieldType) {
-            const { value: file } = await Swal.fire({ title: 'फाईल निवडा', input: 'file', showCancelButton: true });
-            if(file) {
-                Swal.fire({title: 'फायरबेसवर अपलोड होत आहे...', didOpen: () => { Swal.showLoading() }});
-                const fileRef = sRef(storage, `members/${id}/${fieldType}_${file.name}`);
-                try {
-                    await uploadBytesResumable(fileRef, file);
-                    const url = await getDownloadURL(fileRef);
-                    let updateData = {}; updateData[fieldType] = url;
-                    await updateDoc(doc(db, "members", id), updateData);
-                    Swal.fire('यशस्वी', 'फाईल सेव्ह झाली!', 'success'); loadData();
-                } catch(e) { Swal.fire('त्रुटी', e.message, 'error'); }
-            }
-        };
-
-        /* --- SMART ID CARD --- */
-        window.generateID = function(id) {
-            let m = membersData.find(x => x.id === id) || {}; let printWin = window.open('', '', 'height=700,width=500'); 
-            printWin.document.write(`<html><head><title>ID Card</title><style>body{display:flex;justify-content:center;font-family:sans-serif;} .card{width:300px;border:2px solid #0B3D91;border-radius:10px;text-align:center;overflow:hidden;position:relative;} .head{background:#0B3D91;color:#fff;padding:10px;} .mem{background:#f39c12;font-weight:bold;} .photo{width:100px;height:100px;margin:10px auto;border:2px solid #0B3D91;} .photo img{width:100%;height:100%;object-fit:cover;} .details{text-align:left;padding:10px 20px;font-size:14px;line-height:1.6;} .signs{display:flex;justify-content:space-between;padding:10px 20px;margin-top:20px;font-size:10px;} .signs div{border-top:1px solid #000;width:80px;text-align:center;} .print-btn{position:absolute;top:10px;right:10px;padding:10px;background:green;color:white;} @media print{.print-btn{display:none;}}</style></head><body><button class="print-btn" onclick="window.print()">Print</button><div class="card"><div class="head">क्ष-किरण संघटना महाराष्ट्र</div><div class="mem">ID: ${m.memberNo||'-'}</div><div class="photo">${m.photoUrl?`<img src="${m.photoUrl}">`:'Photo'}</div><h3>${m.name||'-'}</h3><h4 style="color:#e67e22;margin:0;">${m.designation||'-'}</h4><div class="details"><b>रक्तगट:</b> ${m.bloodGroup||'-'}<br><b>मोबाईल:</b> ${m.mobile||'-'}<br><b>जिल्हा:</b> ${m.district||'-'}</div><div class="signs"><div>सदस्य सही</div><div>अध्यक्ष सही</div></div><div style="background:#0B3D91;color:#fff;padding:5px;font-size:10px;">Valid Member</div></div></body></html>`); printWin.document.close();
-        };
-
-        window.addNewMember = async (e) => { e.preventDefault(); /* Similar to addOtherStaff but to 'members' collection */ };
-        window.strictDelete = async (id) => { if(confirm("डिलीट?")) { await deleteDoc(doc(db, "members", id)); Swal.close(); loadData(); } };
-        window.exportToExcel = (tableID, filename) => { let clone = document.getElementById(tableID).cloneNode(true); clone.querySelectorAll('.no-print').forEach(el => el.remove()); XLSX.writeFile(XLSX.utils.table_to_book(clone, {sheet:"Sheet1"}), filename+".xlsx"); };
-
-        /* --- CHARTS --- */
-        function renderCharts() {
-            let mCounts = {}; let dCounts = {}; 
-            membersData.filter(m=>m.status!=='Pending').forEach(m => { 
-                if(m.mandal) mCounts[m.mandal] = (mCounts[m.mandal]||0)+1; 
-                if(m.district) dCounts[m.district] = (dCounts[m.district]||0)+1; 
-            });
-            if(mandalChart) mandalChart.destroy(); if(distChart) distChart.destroy();
-            mandalChart = new Chart(document.getElementById('mandalChart'), { type: 'doughnut', data: { labels: Object.keys(mCounts), datasets: [{ data: Object.values(mCounts), backgroundColor: ['#0B3D91','#f39c12','#10b981','#ef4444','#3b82f6','#8b5cf6','#f59e0b','#d97706'] }] }});
-            let sortedDist = Object.entries(dCounts).sort((a,b)=>b[1]-a[1]).slice(0,10);
-            distChart = new Chart(document.getElementById('distChart'), { type: 'pie', data: { labels: sortedDist.map(x=>x[0]), datasets: [{ data: sortedDist.map(x=>x[1]), backgroundColor: ['#8b5cf6','#3b82f6','#ef4444','#10b981','#f59e0b','#0B3D91','#d97706','#059669','#1e293b','#b45309'] }] }});
+        // Live Real-Time Letterpad Updates
+        function updateLetterpad() {
+            document.getElementById('viewOutward').innerText = "जावक क्र: " + (document.getElementById('lpOutward').value || "________________");
+            
+            const dateVal = document.getElementById('lpDate').value;
+            document.getElementById('viewDate').innerText = "दिनांक: " + (dateVal ? dateVal.split('-').reverse().join('/') : "__/__/____");
+            
+            document.getElementById('viewSubject').innerText = document.getElementById('lpSubject').value || "__________________________________________";
+            document.getElementById('viewBody').innerText = document.getElementById('lpBody').value || "कृपया डाव्या बाजूच्या संपादकामध्ये मजकूर टाईप करा. तो येथे स्वयंचलित पद्धतीने मांडला जाईल...";
+            document.getElementById('viewSignatory').innerText = document.getElementById('lpSignatory').value;
         }
+
+        // Print Isolated Action Handlers
+        function printLetterpad() {
+            document.body.classList.add('printing-letterpad');
+            window.print();
+            document.body.classList.remove('printing-letterpad');
+        }
+
+        function printSingleMember(rowId) {
+            const row = document.getElementById(rowId);
+            const content = `
+                <table class="w-full border border-slate-400 p-2 text-left">
+                    <tr class="bg-slate-100"><th class="p-2 border border-slate-300 w-1/3">नाव:</th><td class="p-2 border border-slate-300 font-bold">${row.querySelector('.data-name').innerText}</td></tr>
+                    <tr><th class="p-2 border border-slate-300">मोबाईल:</th><td class="p-2 border border-slate-300">${row.querySelector('.data-phone').innerText}</td></tr>
+                    <tr class="bg-slate-100"><th class="p-2 border border-slate-300">ई-मेल:</th><td class="p-2 border border-slate-300 text-blue-700 font-semibold">${row.querySelector('.data-email').innerText}</td></tr>
+                    <tr><th class="p-2 border border-slate-300">पदनाम:</th><td class="p-2 border border-slate-300">${row.querySelector('.data-post').innerText}</td></tr>
+                    <tr class="bg-slate-100"><th class="p-2 border border-slate-300">विभाग:</th><td class="p-2 border border-slate-300">${row.querySelector('.data-division').innerText}</td></tr>
+                    <tr><th class="p-2 border border-slate-300">जिल्हा:</th><td class="p-2 border border-slate-300">${row.querySelector('.data-district').innerText}</td></tr>
+                    <tr class="bg-slate-100"><th class="p-2 border border-slate-300">कार्यरत ठिकाण:</th><td class="p-2 border border-slate-300">${row.querySelector('.data-place').innerText}</td></tr>
+                    <tr><th class="p-2 border border-slate-300">कायमचा पत्ता:</th><td class="p-2 border border-slate-300">${row.querySelector('.data-address').innerText}</td></tr>
+                </table>
+            `;
+            document.getElementById('printDetails').innerHTML = content;
+            document.body.classList.add('printing-member');
+            window.print();
+            document.body.classList.remove('printing-member');
+        }
+
+        // Row Editor Modal Controls
+        function openEditModal(rowId) {
+            const row = document.getElementById(rowId);
+            document.getElementById('editRowId').value = rowId;
+            document.getElementById('editName').value = row.querySelector('.data-name').innerText;
+            document.getElementById('editPhone').value = row.querySelector('.data-phone').innerText;
+            document.getElementById('editEmail').value = row.querySelector('.data-email').innerText;
+            document.getElementById('editPost').value = row.querySelector('.data-post').innerText;
+            document.getElementById('editDivision').value = row.querySelector('.data-division').innerText;
+            document.getElementById('editDistrict').value = row.querySelector('.data-district').innerText;
+            document.getElementById('editPlace').value = row.querySelector('.data-place').innerText;
+            document.getElementById('editAddress').value = row.querySelector('.data-address').innerText;
+            
+            document.getElementById('editModal').style.display = 'flex';
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+
+        function saveEditedData() {
+            const rowId = document.getElementById('editRowId').value;
+            const row = document.getElementById(rowId);
+            
+            row.querySelector('.data-name').innerText = document.getElementById('editName').value;
+            row.querySelector('.data-phone').innerText = document.getElementById('editPhone').value;
+            row.querySelector('.data-email').innerText = document.getElementById('editEmail').value;
+            row.querySelector('.data-post').innerText = document.getElementById('editPost').value;
+            row.querySelector('.data-division').innerText = document.getElementById('editDivision').value;
+            row.querySelector('.data-district').innerText = document.getElementById('editDistrict').value;
+            row.querySelector('.data-place').innerText = document.getElementById('editPlace').value;
+            row.querySelector('.data-address').innerText = document.getElementById('editAddress').value;
+            
+            closeEditModal();
+            alert("मास्टर यादीमधील डेटा यशस्वीरीत्या अपडेट करण्यात आला आहे!");
+        }
+
+        // Bulk Email Simulation Bar
+        function triggerBulkEmail() {
+            const sub = document.getElementById('emailSubject').value;
+            const body = document.getElementById('emailBody').value;
+            if(!sub || !body) return alert("कृपया विषय आणि निरोप मजकूर दोन्ही प्रविष्ट करा!");
+
+            const progressDiv = document.getElementById('emailProgress');
+            const bar = document.getElementById('progressBar');
+            const pct = document.getElementById('progressPercent');
+            
+            progressDiv.classList.remove('hidden');
+            let width = 0;
+            const interval = setInterval(() => {
+                if(width >= 100) {
+                    clearInterval(interval);
+                    alert("सर्व ३ सक्रिय सदस्यांना बल्क ई-मेल यशस्वीरीत्या पाठवला गेला आहे!");
+                    progressDiv.classList.add('hidden');
+                    bar.style.width = '0%';
+                } else {
+                    width += 20;
+                    bar.style.width = width + '%';
+                    pct.innerText = width + '%';
+                }
+            }, 300);
+        }
+
+        function updateMarquee() {
+            document.getElementById('liveMarquee').innerText = document.getElementById('marqueeInput').value || "माहिती अद्ययावत करा.";
+            alert("इंडेक्स फिरती लाईन यशस्वीरीत्या बदलली!");
+        }
+
+        function downloadCSV() {
+            let csv = 'नाव,मोबाईल,ईमेल,पदनाम,विभाग,जिल्हा,कार्यरत ठिकाण,पत्ता\n';
+            csv += 'डॉ. आनंद सूर्यवंशी,9876543210,anand@gmail.com,वैज्ञानिक अधिकारी,कोल्हापूर मंडळ,भंडारा,ग्रामीण रुग्णालय,वडगाव\n';
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.setAttribute("download", "कर्मचारी_यादी_मास्टर.csv");
+            link.click();
+        }
+
+        // Charts Initialization
+        window.onload = function() {
+            new Chart(document.getElementById('divisionChart').getContext('2d'), {
+                type: 'pie',
+                data: { labels: ['कोल्हापूर मंडळ', 'पुणे मंडळ'], datasets: [{ data: [2, 1], backgroundColor: ['#1e3a8a', '#f59e0b'] }] }
+            });
+            new Chart(document.getElementById('districtChart').getContext('2d'), {
+                type: 'doughnut',
+                data: { labels: ['भंडारा', 'कोल्हापूर', 'सांगली'], datasets: [{ data: [1, 1, 1], backgroundColor: ['#a855f7', '#3b82f6', '#ef4444'] }] }
+            });
+        };
     </script>
 </body>
 </html>
