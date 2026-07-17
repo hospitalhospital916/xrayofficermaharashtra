@@ -110,7 +110,7 @@
         <div class="container">
             
             <!-- NEW TAB: PENDING REQUESTS -->
-             <div id="tab-pending" class="tab-content">
+            <div id="tab-pending" class="tab-content">
                 <div class="panel">
                     <div class="panel-header h-red">
                         <span><i class="fa fa-clock"></i> नवीन सदस्यांच्या प्रलंबित विनंत्या</span>
@@ -149,7 +149,7 @@
                             <div class="form-row">
                                 <input type="email" id="add_email" class="form-control" placeholder="ईमेल आयडी">
                                 <input type="text" id="add_desig" class="form-control" placeholder="पद (उदा. क्ष-किरण वैज्ञानिक अधिकारी)">
-                                <input type="text" id="add_workplace" class="form-control" placeholder="कार्यरत ठिकाण">
+                                <input type="text" id="add_pass" class="form-control" placeholder="पासवर्ड (उदा. 1234)" required>
                             </div>
                             <div class="form-row">
                                 <select id="add_district" class="form-control"><option value="">-- कार्यरत जिल्हा --</option></select>
@@ -160,6 +160,7 @@
                                     <option value="कोल्हापूर मंडळ">कोल्हापूर मंडळ</option> <option value="छत्रपती संभाजीनगर मंडळ">छत्रपती संभाजीनगर मंडळ</option>
                                     <option value="लातूर मंडळ">लातूर मंडळ</option> <option value="ठाणे मंडळ">ठाणे मंडळ</option>
                                 </select>
+                                <input type="text" id="add_workplace" class="form-control" placeholder="कार्यरत ठिकाण">
                                 <input type="text" id="add_perm_address" class="form-control" placeholder="कायमचा मूळ पत्ता">
                             </div>
                             <button type="submit" class="btn-save"><i class="fa fa-save"></i> थेट सदस्य सेव्ह करा</button>
@@ -218,6 +219,7 @@
                     <div class="panel-header h-warning">
                         <span><i class="fa fa-rupee-sign"></i> सदस्यांची आर्थिक व फी माहिती</span>
                         <div style="display:flex; gap:10px;">
+                            <button class="btn-save" onclick="exportToExcel('feesTable', 'Fee_Status_List')" style="background:var(--success);"><i class="fa fa-file-excel"></i> Export</button>
                             <button class="btn-save" onclick="printTable('feesTable', 'फी भरलेल्या सदस्यांची यादी')" style="background:var(--dark);"><i class="fa fa-print"></i> Print</button>
                             <button class="btn-save" onclick="downloadPDF('feesTable', 'फी_स्टेटस_यादी')" style="background:var(--danger);"><i class="fa fa-file-pdf"></i> Download PDF</button>
                         </div>
@@ -309,7 +311,7 @@
                     <div class="panel-body">
                         <div class="table-responsive">
                             <table id="complaintsTable">
-                                <thead><tr><th>तारीख</th><th>सदस्याचे नाव</th><th>विषय / तक्रार</th><th>स्टेटस</th><th class="no-print">निर्णय (Action)</th></tr></thead>
+                                <thead><tr><th>तारीख</th><th>सदस्याचे नाव</th><th>विषय / तक्रार</th><th>स्टेटस</th><th class="no-print" style="min-width:150px;">निर्णय (Action)</th></tr></thead>
                                 <tbody id="complaintsBody"></tbody>
                             </table>
                         </div>
@@ -362,7 +364,6 @@
             document.getElementById('filterDist').innerHTML += `<option value="${d}">${d}</option>`; 
         });
 
-        // TAB NAVIGATION
         window.openTab = function(tabId) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -371,20 +372,18 @@
             if(tabId === 'tab-dash') { setTimeout(renderCharts, 200); }
         };
 
-        // AUTHENTICATION
         onAuthStateChanged(auth, (user) => {
             if (user) { document.getElementById('login-screen').style.display = 'none'; document.getElementById('app-content').style.display = 'block'; loadData(); } 
             else { document.getElementById('login-screen').style.display = 'flex'; document.getElementById('app-content').style.display = 'none'; }
         });
+        
         window.loginAdmin = async function() {
-            try {
-                await setPersistence(auth, browserSessionPersistence);
-                await signInWithEmailAndPassword(auth, document.getElementById('adminEmail').value, document.getElementById('adminPass').value);
-            } catch(e) { Swal.fire('त्रुटी', 'चुकीचा ईमेल किंवा पासवर्ड', 'error'); }
+            try { await setPersistence(auth, browserSessionPersistence); await signInWithEmailAndPassword(auth, document.getElementById('adminEmail').value, document.getElementById('adminPass').value); } 
+            catch(e) { Swal.fire('त्रुटी', 'चुकीचा ईमेल किंवा पासवर्ड', 'error'); }
         };
+        
         window.logoutAdmin = function() { signOut(auth); };
 
-        // MASTER LOAD DATA
         async function loadData() {
             try {
                 const snap = await getDocs(collection(db, "members")); membersData = [];
@@ -399,14 +398,12 @@
                 const noticeSnap = await getDocs(collection(db, "notices")); noticesData = [];
                 noticeSnap.forEach(doc => noticesData.push({id: doc.id, ...doc.data()}));
 
-                // Dashboard counts - जुने नवीन सर्व सदस्य दिसण्यासाठीची सुरक्षित पद्धत
                 let approvedMembers = membersData.filter(m => m.status !== 'Pending');
                 let pendingMembers = membersData.filter(m => m.status === 'Pending');
                 
                 document.getElementById('totMem').innerText = approvedMembers.length;
                 document.getElementById('pendMemCard').innerText = pendingMembers.length;
                 document.getElementById('pendingBadge').innerText = pendingMembers.length;
-                
                 document.getElementById('paidMem').innerText = approvedMembers.filter(m => m.feeStatus === 'Paid').length;
                 document.getElementById('pendComp').innerText = complaintsData.filter(c => c.status !== 'Resolved').length;
 
@@ -415,24 +412,12 @@
             } catch(e) { console.error("Error loading data: ", e); }
         }
 
-        // ================= PENDING REQUESTS =================
+        // ================= TAB 1: PENDING & APPROVAL (WITH WHATSAPP) =================
         window.renderPending = function() {
-            let pending = membersData.filter(m => m.status === 'Pending');
-            let html = '';
+            let pending = membersData.filter(m => m.status === 'Pending'); let html = '';
             pending.forEach((m, i) => {
-                html += `<tr>
-                    <td><b>${i+1}</b></td>
-                    <td><b style="color:var(--primary);">${m.name || '-'}</b><br><small>${m.designation || '-'}</small></td>
-                    <td><i class="fa fa-phone"></i> ${m.mobile || '-'}<br><i class="fa fa-envelope" style="color:gray;"></i> ${m.email || '-'}</td>
-                    <td><b>${m.district || '-'}</b><br><small>${m.mandal || '-'}</small></td>
-                    <td>${m.workplace || '-'}</td>
-                    <td class="no-print">
-                        <button class="btn-action btn-approve" onclick="reviewAndApprove('${m.id}')" title="तपासून मान्यता द्या"><i class="fa fa-user-check"></i> तपासून ॲड करा</button>
-                        <button class="btn-action btn-del" onclick="rejectMember('${m.id}')" title="विनंती रद्द करा"><i class="fa fa-times"></i> डिलीट</button>
-                    </td>
-                </tr>`;
-            });
-            document.getElementById('pendingBody').innerHTML = html || '<tr><td colspan="6">कोणतीही प्रलंबित विनंती नाही.</td></tr>';
+                html += `<tr><td><b>${i+1}</b></td><td><b style="color:var(--primary);">${m.name || '-'}</b><br><small>${m.designation || '-'}</small></td><td><i class="fa fa-phone"></i> ${m.mobile || '-'}<br><i class="fa fa-envelope" style="color:gray;"></i> ${m.email || '-'}</td><td><b>${m.district || '-'}</b><br><small>${m.mandal || '-'}</small></td><td>${m.workplace || '-'}</td><td class="no-print"><button class="btn-action btn-approve" onclick="reviewAndApprove('${m.id}')"><i class="fa fa-user-check"></i> तपासून ॲड करा</button> <button class="btn-action btn-del" onclick="rejectMember('${m.id}')"><i class="fa fa-times"></i> डिलीट</button></td></tr>`;
+            }); document.getElementById('pendingBody').innerHTML = html || '<tr><td colspan="6">कोणतीही प्रलंबित विनंती नाही.</td></tr>';
         };
 
         window.reviewAndApprove = function(id) {
@@ -440,125 +425,74 @@
             let distOpts = mhDistricts.map(d => `<option value="${d}" ${m.district===d?'selected':''}>${d}</option>`).join('');
             Swal.fire({
                 title: 'माहिती तपासा आणि मान्यता द्या',
-                html: `
-                    <div class="swal-grid">
-                        <div class="full-width"><label style="color:var(--danger);">सदस्यत्व क्रमांक (उदा. MH-001)</label><input type="text" id="r_memNo" value="${m.memberNo || ''}"></div>
-                        <div><label>नाव</label><input type="text" id="r_name" value="${m.name || ''}"></div>
-                        <div><label>पद</label><input type="text" id="r_desig" value="${m.designation || ''}"></div>
-                        <div><label>मोबाईल</label><input type="text" id="r_mob" value="${m.mobile || ''}"></div>
-                        <div><label>ईमेल</label><input type="email" id="r_email" value="${m.email || ''}"></div>
-                        <div class="full-width"><label>कार्यरत ठिकाण</label><input type="text" id="r_work" value="${m.workplace || ''}"></div>
-                        <div><label>जिल्हा</label><select id="r_dist"><option value="">-- निवडा --</option>${distOpts}</select></div>
-                        <div><label>विभाग</label><select id="r_mandal">
-                            <option value="">-- निवडा --</option>
-                            <option value="पुणे मंडळ" ${m.mandal==='पुणे मंडळ'?'selected':''}>पुणे</option> <option value="नागपूर मंडळ" ${m.mandal==='नागपूर मंडळ'?'selected':''}>नागपूर</option>
-                            <option value="नाशिक मंडळ" ${m.mandal==='नाशिक मंडळ'?'selected':''}>नाशिक</option> <option value="अकोला मंडळ" ${m.mandal==='अकोला मंडळ'?'selected':''}>अकोला</option>
-                            <option value="कोल्हापूर मंडळ" ${m.mandal==='कोल्हापूर मंडळ'?'selected':''}>कोल्हापूर</option> <option value="छत्रपती संभाजीनगर मंडळ" ${m.mandal==='छत्रपती संभाजीनगर मंडळ'?'selected':''}>छ. संभाजीनगर</option>
-                            <option value="लातूर मंडळ" ${m.mandal==='लातूर मंडळ'?'selected':''}>लातूर</option> <option value="ठाणे मंडळ" ${m.mandal==='ठाणे मंडळ'?'selected':''}>ठाणे</option>
-                        </select></div>
-                        <div class="full-width"><label>मूळ पत्ता</label><input type="text" id="r_addr" value="${m.permAddress || ''}"></div>
-                    </div>
-                `,
-                width: '800px', showCancelButton: true, confirmButtonText: 'Approve करा', cancelButtonText: 'रद्द करा'
+                html: `<div class="swal-grid"><div class="full-width"><label style="color:var(--danger);">सदस्यत्व क्रमांक (उदा. MH-001)</label><input type="text" id="r_memNo" value="${m.memberNo || ''}"></div><div><label>नाव</label><input type="text" id="r_name" value="${m.name || ''}"></div><div><label>पद</label><input type="text" id="r_desig" value="${m.designation || ''}"></div><div><label>मोबाईल</label><input type="text" id="r_mob" value="${m.mobile || ''}"></div><div><label>ईमेल</label><input type="email" id="r_email" value="${m.email || ''}"></div><div class="full-width"><label>कार्यरत ठिकाण</label><input type="text" id="r_work" value="${m.workplace || ''}"></div><div><label>जिल्हा</label><select id="r_dist"><option value="">-- निवडा --</option>${distOpts}</select></div><div><label>विभाग</label><select id="r_mandal"><option value="">-- निवडा --</option><option value="पुणे मंडळ" ${m.mandal==='पुणे मंडळ'?'selected':''}>पुणे</option> <option value="नागपूर मंडळ" ${m.mandal==='नागपूर मंडळ'?'selected':''}>नागपूर</option> <option value="नाशिक मंडळ" ${m.mandal==='नाशिक मंडळ'?'selected':''}>नाशिक</option> <option value="अकोला मंडळ" ${m.mandal==='अकोला मंडळ'?'selected':''}>अकोला</option> <option value="कोल्हापूर मंडळ" ${m.mandal==='कोल्हापूर मंडळ'?'selected':''}>कोल्हापूर</option> <option value="छत्रपती संभाजीनगर मंडळ" ${m.mandal==='छत्रपती संभाजीनगर मंडळ'?'selected':''}>छ. संभाजीनगर</option> <option value="लातूर मंडळ" ${m.mandal==='लातूर मंडळ'?'selected':''}>लातूर</option> <option value="ठाणे मंडळ" ${m.mandal==='ठाणे मंडळ'?'selected':''}>ठाणे</option></select></div><div class="full-width"><label>मूळ पत्ता</label><input type="text" id="r_addr" value="${m.permAddress || ''}"></div></div>`,
+                width: '800px', showCancelButton: true, confirmButtonText: 'Approve करा'
             }).then(async (result) => { 
                 if (result.isConfirmed) { 
-                    let updatedData = { 
-                        memberNo: document.getElementById('r_memNo').value, name: document.getElementById('r_name').value, 
-                        designation: document.getElementById('r_desig').value, mobile: document.getElementById('r_mob').value, 
-                        email: document.getElementById('r_email').value, district: document.getElementById('r_dist').value, 
-                        mandal: document.getElementById('r_mandal').value, workplace: document.getElementById('r_work').value, 
-                        permAddress: document.getElementById('r_addr').value, status: "Approved" 
-                    };
+                    let updatedData = { memberNo: document.getElementById('r_memNo').value, name: document.getElementById('r_name').value, designation: document.getElementById('r_desig').value, mobile: document.getElementById('r_mob').value, email: document.getElementById('r_email').value, district: document.getElementById('r_dist').value, mandal: document.getElementById('r_mandal').value, workplace: document.getElementById('r_work').value, permAddress: document.getElementById('r_addr').value, status: "Approved" };
                     await updateDoc(doc(db, "members", id), updatedData); 
-                    Swal.fire('मान्यता दिली!', 'सदस्य मुख्य यादीत गेला.', 'success'); loadData(); 
+                    
+                    Swal.fire({
+                        title: 'मान्यता दिली!',
+                        text: 'सदस्याला याबद्दल WhatsApp वर मेसेज पाठवायचा आहे का?',
+                        icon: 'success',
+                        showCancelButton: true,
+                        confirmButtonText: 'हो, WhatsApp पाठवा',
+                        cancelButtonText: 'नको',
+                        confirmButtonColor: '#25D366'
+                    }).then((waResult) => {
+                        if (waResult.isConfirmed && updatedData.mobile) {
+                            let finalMobile = updatedData.mobile.replace(/\D/g,''); 
+                            if(finalMobile.length === 10) { finalMobile = '91' + finalMobile; }
+                            let msg = `सस्नेह नमस्कार ${updatedData.name},\n\nक्ष-किरण संघटना महाराष्ट्र मध्ये तुमचे स्वागत आहे! तुमची नोंदणी यशस्वीरित्या पूर्ण झाली असून तुम्हाला मुख्य यादीत सामावून घेण्यात आले आहे.\nतुमचा सदस्यत्व क्रमांक: ${updatedData.memberNo || '-'}\n\nधन्यवाद!\n- ॲडमिन टीम`;
+                            window.open(`https://wa.me/${finalMobile}?text=${encodeURIComponent(msg)}`, '_blank');
+                        }
+                        loadData(); 
+                    });
                 } 
             });
         };
 
-        window.rejectMember = async function(id) {
-            if(confirm("ही विनंती रद्द करून कायमची डिलीट करायची का?")) { await deleteDoc(doc(db, "members", id)); loadData(); }
-        };
+        window.rejectMember = async function(id) { if(confirm("ही विनंती रद्द करून कायमची डिलीट करायची का?")) { await deleteDoc(doc(db, "members", id)); loadData(); } };
 
-        // ================= TAB 1: MASTER MEMBERS LIST =================
+        // ================= TAB 2: MASTER MEMBERS =================
         window.renderMembers = function() {
-            let sName = document.getElementById('searchName').value.toLowerCase();
-            let fDist = document.getElementById('filterDist').value;
-            let fMandal = document.getElementById('filterMandal').value;
-
-            // सुरक्षित फिल्टर - जुने सदस्य ज्यांचे कॉलम अपूर्ण आहेत तेही दिसतील
+            let sName = document.getElementById('searchName').value.toLowerCase(); let fDist = document.getElementById('filterDist').value; let fMandal = document.getElementById('filterMandal').value;
             let filtered = membersData.filter(m => {
-                let isApproved = m.status !== 'Pending'; // फक्त पेंडिंग सोडून सगळे दिसतील
-                
-                let safeName = (m.name || '').toString().toLowerCase();
-                let safeMobile = (m.mobile || '').toString().toLowerCase();
-                let safeMemNo = (m.memberNo || '').toString().toLowerCase();
+                let isApproved = m.status !== 'Pending';
+                let safeName = (m.name || '').toString().toLowerCase(); let safeMobile = (m.mobile || '').toString().toLowerCase(); let safeMemNo = (m.memberNo || '').toString().toLowerCase();
                 let matchName = safeName.includes(sName) || safeMobile.includes(sName) || safeMemNo.includes(sName);
-                
-                let matchDist = fDist === 'All' || m.district === fDist;
-                let matchMandal = fMandal === 'All' || m.mandal === fMandal;
-                
+                let matchDist = fDist === 'All' || m.district === fDist; let matchMandal = fMandal === 'All' || m.mandal === fMandal;
                 return isApproved && matchName && matchDist && matchMandal;
             });
-
-            document.getElementById('totalCount').innerText = `(${filtered.length})`;
-
-            let html = '';
+            document.getElementById('totalCount').innerText = `(${filtered.length})`; let html = '';
             filtered.forEach((m, i) => {
                 let docBadge = m.docUrl ? `<a href="${m.docUrl}" target="_blank" class="badge bg-success" style="text-decoration:none;">पहा 📄</a>` : `<span class="badge bg-danger">नाही</span>`;
                 let memNoBadge = m.memberNo ? `<span class="badge bg-dark" style="margin-bottom:5px;">${m.memberNo}</span><br>` : '';
-
-                html += `<tr>
-                    <td><b>${i+1}</b></td>
-                    <td>${memNoBadge}<b style="color:var(--primary);">${m.name || '-'}</b><br><small>${m.designation || '-'}</small></td>
-                    <td><i class="fa fa-phone"></i> ${m.mobile || '-'}<br><i class="fa fa-envelope" style="color:gray;"></i> ${m.email || '-'}</td>
-                    <td>${m.workplace || '-'}</td>
-                    <td><b>${m.district || '-'}</b></td>
-                    <td>${m.mandal || '-'}</td>
-                    <td>${m.permAddress || '-'}</td>
-                    <td>${docBadge}</td>
-                    <td class="no-print">
-                        <button class="btn-action btn-doc" onclick="uploadDoc('${m.id}')" title="Upload Document"><i class="fa fa-upload"></i></button>
-                        <button class="btn-action btn-edit" onclick="fullEdit('${m.id}')" title="Edit Data"><i class="fa fa-pen"></i></button>
-                        <button class="btn-action btn-id" onclick="generateID('${m.id}')" title="Print ID Card"><i class="fa fa-id-card"></i></button>
-                        <button class="btn-action btn-wp" onclick="window.open('https://wa.me/91${m.mobile || ''}', '_blank')" title="WhatsApp"><i class="fab fa-whatsapp"></i></button>
-                        <button class="btn-action btn-del" onclick="deleteMember('${m.id}')" title="Delete Member"><i class="fa fa-trash"></i></button>
-                    </td>
-                </tr>`;
+                html += `<tr><td><b>${i+1}</b></td><td>${memNoBadge}<b style="color:var(--primary);">${m.name || '-'}</b><br><small>${m.designation || '-'}</small></td><td><i class="fa fa-phone"></i> ${m.mobile || '-'}<br><i class="fa fa-envelope" style="color:gray;"></i> ${m.email || '-'}</td><td>${m.workplace || '-'}</td><td><b>${m.district || '-'}</b></td><td>${m.mandal || '-'}</td><td>${m.permAddress || '-'}</td><td>${docBadge}</td><td class="no-print"><button class="btn-action btn-doc" onclick="uploadDoc('${m.id}')" title="Upload Document"><i class="fa fa-upload"></i></button> <button class="btn-action btn-edit" onclick="fullEdit('${m.id}')" title="Edit Data"><i class="fa fa-pen"></i></button> <button class="btn-action btn-id" onclick="generateID('${m.id}')" title="Print ID Card"><i class="fa fa-id-card"></i></button> <button class="btn-action btn-wp" onclick="window.open('https://wa.me/91${m.mobile || ''}', '_blank')" title="WhatsApp"><i class="fab fa-whatsapp"></i></button> <button class="btn-action btn-del" onclick="deleteMember('${m.id}')" title="Delete Member"><i class="fa fa-trash"></i></button></td></tr>`;
             });
             document.getElementById('membersBody').innerHTML = html || '<tr><td colspan="9">डेटा उपलब्ध नाही.</td></tr>';
         };
 
         window.addNewMember = async function(e) {
             e.preventDefault();
-            const newMem = { 
-                memberNo: document.getElementById('add_memNo').value || '', name: document.getElementById('add_name').value || '', 
-                mobile: document.getElementById('add_mobile').value || '', email: document.getElementById('add_email').value || '', 
-                mandal: document.getElementById('add_mandal').value || '', district: document.getElementById('add_district').value || '', 
-                workplace: document.getElementById('add_workplace').value || '', designation: document.getElementById('add_desig').value || '', 
-                permAddress: document.getElementById('add_perm_address').value || '', pass: "1234", status: "Approved", feeStatus: "Unpaid", docUrl: "" 
-            };
+            const newMem = { memberNo: document.getElementById('add_memNo').value || '', name: document.getElementById('add_name').value || '', mobile: document.getElementById('add_mobile').value || '', email: document.getElementById('add_email').value || '', mandal: document.getElementById('add_mandal').value || '', district: document.getElementById('add_district').value || '', workplace: document.getElementById('add_workplace').value || '', designation: document.getElementById('add_desig').value || '', permAddress: document.getElementById('add_perm_address').value || '', pass: document.getElementById('add_pass').value || '1234', status: "Approved", feeStatus: "Unpaid", docUrl: "" };
             await addDoc(collection(db, "members"), newMem); Swal.fire('यशस्वी!', 'सदस्य थेट जोडला गेला', 'success'); document.getElementById('addForm').reset(); loadData();
         };
 
-        // ================= DOCUMENT UPLOAD & EDIT =================
         window.uploadDoc = async function(id) {
             const SCRIPT_URL = "येथे_तुमची_WEB_APP_URL_टाका"; 
             if(SCRIPT_URL === "येथे_तुमची_WEB_APP_URL_टाका") { Swal.fire('थांबा!', 'कृपया आधी Google Apps Script ची URL कोडमध्ये टाका.', 'warning'); return; }
-
             const { value: file } = await Swal.fire({ title: 'ओळखपत्र / कागदपत्र निवडा', input: 'file', inputAttributes: { 'accept': 'image/*,application/pdf' }, showCancelButton: true });
-            
             if (file) {
                 Swal.fire({title: 'फाईल ड्राईव्हवर सेव्ह होत आहे...', html: 'कृपया थांबा...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
                 let reader = new FileReader(); reader.readAsDataURL(file);
                 reader.onload = async function () {
-                    let base64 = reader.result.split(',')[1];
-                    let obj = { data: base64, filename: file.name, mimetype: file.type };
+                    let base64 = reader.result.split(',')[1]; let obj = { data: base64, filename: file.name, mimetype: file.type };
                     try {
-                        let response = await fetch(SCRIPT_URL, { method: "POST", body: new URLSearchParams(obj) });
-                        let driveUrl = await response.text();
+                        let response = await fetch(SCRIPT_URL, { method: "POST", body: new URLSearchParams(obj) }); let driveUrl = await response.text();
                         if(driveUrl.includes('Error')) { Swal.fire('त्रुटी', 'अपलोड अयशस्वी: ' + driveUrl, 'error'); return; }
-                        await updateDoc(doc(db, "members", id), { docUrl: driveUrl });
-                        Swal.fire('यशस्वी!', 'कागदपत्र सेव्ह झाले.', 'success'); loadData();
+                        await updateDoc(doc(db, "members", id), { docUrl: driveUrl }); Swal.fire('यशस्वी!', 'कागदपत्र सेव्ह झाले.', 'success'); loadData();
                     } catch(e) { Swal.fire('त्रुटी', 'अपलोड करताना चूक झाली.', 'error'); console.error(e); }
                 };
             }
@@ -569,20 +503,7 @@
             let distOpts = mhDistricts.map(d => `<option value="${d}" ${m.district===d?'selected':''}>${d}</option>`).join('');
             Swal.fire({
                 title: 'माहिती दुरुस्त करा',
-                html: `
-                    <div class="swal-grid">
-                        <div class="full-width"><label>सदस्य क्रमांक</label><input type="text" id="e_memNo" value="${m.memberNo || ''}"></div>
-                        <div><label>नाव</label><input type="text" id="e_name" value="${m.name || ''}"></div>
-                        <div><label>पद</label><input type="text" id="e_desig" value="${m.designation || ''}"></div>
-                        <div><label>मोबाईल</label><input type="text" id="e_mob" value="${m.mobile || ''}"></div>
-                        <div><label>ईमेल</label><input type="email" id="e_email" value="${m.email || ''}"></div>
-                        <div class="full-width"><label>कार्यरत ठिकाण</label><input type="text" id="e_work" value="${m.workplace || ''}"></div>
-                        <div><label>जिल्हा</label><select id="e_dist"><option value="">-- निवडा --</option>${distOpts}</select></div>
-                        <div><label>विभाग</label><select id="e_mandal"><option value="">-- निवडा --</option><option value="पुणे मंडळ" ${m.mandal==='पुणे मंडळ'?'selected':''}>पुणे</option> <option value="नागपूर मंडळ" ${m.mandal==='नागपूर मंडळ'?'selected':''}>नागपूर</option> <option value="नाशिक मंडळ" ${m.mandal==='नाशिक मंडळ'?'selected':''}>नाशिक</option> <option value="अकोला मंडळ" ${m.mandal==='अकोला मंडळ'?'selected':''}>अकोला</option> <option value="कोल्हापूर मंडळ" ${m.mandal==='कोल्हापूर मंडळ'?'selected':''}>कोल्हापूर</option> <option value="छत्रपती संभाजीनगर मंडळ" ${m.mandal==='छत्रपती संभाजीनगर मंडळ'?'selected':''}>छ. संभाजीनगर</option> <option value="लातूर मंडळ" ${m.mandal==='लातूर मंडळ'?'selected':''}>लातूर</option> <option value="ठाणे मंडळ" ${m.mandal==='ठाणे मंडळ'?'selected':''}>ठाणे</option></select></div>
-                        <div class="full-width"><label>मूळ पत्ता</label><input type="text" id="e_addr" value="${m.permAddress || ''}"></div>
-                        <div><label>पासवर्ड</label><input type="text" id="e_pass" value="${m.pass || '1234'}"></div>
-                    </div>
-                `,
+                html: `<div class="swal-grid"><div class="full-width"><label>सदस्य क्रमांक</label><input type="text" id="e_memNo" value="${m.memberNo || ''}"></div><div><label>नाव</label><input type="text" id="e_name" value="${m.name || ''}"></div><div><label>पद</label><input type="text" id="e_desig" value="${m.designation || ''}"></div><div><label>मोबाईल</label><input type="text" id="e_mob" value="${m.mobile || ''}"></div><div><label>ईमेल</label><input type="email" id="e_email" value="${m.email || ''}"></div><div class="full-width"><label>कार्यरत ठिकाण</label><input type="text" id="e_work" value="${m.workplace || ''}"></div><div><label>जिल्हा</label><select id="e_dist"><option value="">-- निवडा --</option>${distOpts}</select></div><div><label>विभाग</label><select id="e_mandal"><option value="">-- निवडा --</option><option value="पुणे मंडळ" ${m.mandal==='पुणे मंडळ'?'selected':''}>पुणे</option> <option value="नागपूर मंडळ" ${m.mandal==='नागपूर मंडळ'?'selected':''}>नागपूर</option> <option value="नाशिक मंडळ" ${m.mandal==='नाशिक मंडळ'?'selected':''}>नाशिक</option> <option value="अकोला मंडळ" ${m.mandal==='अकोला मंडळ'?'selected':''}>अकोला</option> <option value="कोल्हापूर मंडळ" ${m.mandal==='कोल्हापूर मंडळ'?'selected':''}>कोल्हापूर</option> <option value="छत्रपती संभाजीनगर मंडळ" ${m.mandal==='छत्रपती संभाजीनगर मंडळ'?'selected':''}>छ. संभाजीनगर</option> <option value="लातूर मंडळ" ${m.mandal==='लातूर मंडळ'?'selected':''}>लातूर</option> <option value="ठाणे मंडळ" ${m.mandal==='ठाणे मंडळ'?'selected':''}>ठाणे</option></select></div><div class="full-width"><label>मूळ पत्ता</label><input type="text" id="e_addr" value="${m.permAddress || ''}"></div><div><label>पासवर्ड</label><input type="text" id="e_pass" value="${m.pass || '1234'}"></div></div>`,
                 width: '800px', showCancelButton: true, confirmButtonText: 'सेव्ह करा',
                 preConfirm: () => { return { memberNo: document.getElementById('e_memNo').value, name: document.getElementById('e_name').value, designation: document.getElementById('e_desig').value, mobile: document.getElementById('e_mob').value, email: document.getElementById('e_email').value, district: document.getElementById('e_dist').value, mandal: document.getElementById('e_mandal').value, workplace: document.getElementById('e_work').value, permAddress: document.getElementById('e_addr').value, pass: document.getElementById('e_pass').value } }
             }).then(async (result) => { if (result.isConfirmed) { await updateDoc(doc(db, "members", id), result.value); Swal.fire('अपडेट!', '', 'success'); loadData(); } });
@@ -591,36 +512,24 @@
         window.deleteMember = async function(id) { if(confirm("सदस्य कायमचा डिलीट होईल!")) { await deleteDoc(doc(db, "members", id)); loadData(); } };
         
         window.generateID = function(id) {
-            let m = membersData.find(x => x.id === id) || {};
-            let memNoText = m.memberNo ? `<div style="background:#f39c12; color:#000; font-weight:bold; padding:3px; font-size:12px;">ID: ${m.memberNo}</div>` : '';
-            let idWindow = window.open('', '', 'height=600,width=400');
-            idWindow.document.write(`<html><head><title>ID Card - ${m.name || '-'}</title><style>body { font-family: 'Arial', sans-serif; display: flex; justify-content: center; padding: 20px; background:#f0f0f0;} .id-card { width: 300px; height: 450px; background: white; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); overflow: hidden; border: 2px solid #0B3D91; text-align: center; position:relative;} .header { background: #0B3D91; color: white; padding: 15px 5px; font-weight: bold; font-size: 14px; } .photo { width: 100px; height: 100px; background: #e0e0e0; border-radius: 50%; margin: 15px auto; border: 3px solid #f39c12; display:flex; justify-content:center; align-items:center; color:#888; overflow:hidden;} .photo img {width:100%; height:100%; object-fit:cover;} .name { font-size: 20px; font-weight: bold; color: #0B3D91; margin: 10px 0 5px 0;} .desig { font-size: 14px; color: #e67e22; font-weight: bold; margin-bottom: 10px;} .details { font-size: 13px; text-align: left; padding: 0 20px; line-height: 1.8; } .footer { background: #0B3D91; color: #fff; position: absolute; bottom: 0; width: 100%; padding: 10px 0; font-size: 12px; font-weight: bold;} @media print { body { background: white; } .no-print { display: none; } }</style></head><body><div class="id-card"><div class="header">क्ष-किरण संघटना महाराष्ट्र</div>${memNoText}<div class="photo">${m.docUrl ? `<img src="${m.docUrl}">` : 'Photo'}</div><div class="name">${m.name || '-'}</div><div class="desig">${m.designation || '-'}</div><div class="details"><b>मोबाईल:</b> ${m.mobile || '-'}<br><b>विभाग:</b> ${m.mandal || '-'}<br><b>जिल्हा:</b> ${m.district || '-'}<br><b>कार्यरत:</b> ${m.workplace || '-'}</div><div class="footer">अध्यक्ष / सचिव स्वाक्षरी</div></div><div class="no-print" style="position:absolute; top:20px; right:20px;"><button onclick="window.print()" style="padding:10px 20px; background:#0B3D91; color:white; border:none; cursor:pointer;">Print ID</button></div></body></html>`);
-            idWindow.document.close();
+            let m = membersData.find(x => x.id === id) || {}; let memNoText = m.memberNo ? `<div style="background:#f39c12; color:#000; font-weight:bold; padding:3px; font-size:12px;">ID: ${m.memberNo}</div>` : '';
+            let idWindow = window.open('', '', 'height=600,width=400'); idWindow.document.write(`<html><head><title>ID Card</title><style>body { font-family: 'Arial', sans-serif; display: flex; justify-content: center; padding: 20px; background:#f0f0f0;} .id-card { width: 300px; height: 450px; background: white; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); overflow: hidden; border: 2px solid #0B3D91; text-align: center; position:relative;} .header { background: #0B3D91; color: white; padding: 15px 5px; font-weight: bold; font-size: 14px; } .photo { width: 100px; height: 100px; background: #e0e0e0; border-radius: 50%; margin: 15px auto; border: 3px solid #f39c12; display:flex; justify-content:center; align-items:center; color:#888; overflow:hidden;} .photo img {width:100%; height:100%; object-fit:cover;} .name { font-size: 20px; font-weight: bold; color: #0B3D91; margin: 10px 0 5px 0;} .desig { font-size: 14px; color: #e67e22; font-weight: bold; margin-bottom: 10px;} .details { font-size: 13px; text-align: left; padding: 0 20px; line-height: 1.8; } .footer { background: #0B3D91; color: #fff; position: absolute; bottom: 0; width: 100%; padding: 10px 0; font-size: 12px; font-weight: bold;} @media print { body { background: white; } .no-print { display: none; } }</style></head><body><div class="id-card"><div class="header">क्ष-किरण संघटना महाराष्ट्र</div>${memNoText}<div class="photo">${m.docUrl ? `<img src="${m.docUrl}">` : 'Photo'}</div><div class="name">${m.name || '-'}</div><div class="desig">${m.designation || '-'}</div><div class="details"><b>मोबाईल:</b> ${m.mobile || '-'}<br><b>विभाग:</b> ${m.mandal || '-'}<br><b>जिल्हा:</b> ${m.district || '-'}<br><b>कार्यरत:</b> ${m.workplace || '-'}</div><div class="footer">अध्यक्ष / सचिव स्वाक्षरी</div></div><div class="no-print" style="position:absolute; top:20px; right:20px;"><button onclick="window.print()" style="padding:10px 20px; background:#0B3D91; color:white; border:none; cursor:pointer;">Print ID</button></div></body></html>`); idWindow.document.close();
         };
 
-        // ================= TAB 2: FEES =================
+        // ================= TAB 3: FEES =================
         window.renderFees = function() {
-            let filter = document.getElementById('feeFilter').value;
-            let appMem = membersData.filter(m => m.status !== 'Pending');
+            let filter = document.getElementById('feeFilter').value; let appMem = membersData.filter(m => m.status !== 'Pending');
             let fData = (filter === 'Paid') ? appMem.filter(m=>m.feeStatus === 'Paid') : (filter === 'Unpaid') ? appMem.filter(m=>m.feeStatus !== 'Paid') : appMem;
-            
             let html = '';
-            fData.forEach((m, i) => {
-                let statusBadge = m.feeStatus === 'Paid' ? '<span class="badge bg-success">Paid</span>' : '<span class="badge bg-danger">Unpaid</span>';
-                let amtText = m.feeStatus === 'Paid' ? `₹ ${m.feeAmount || '-'} <br><small>Rec: ${m.feeReceipt || '-'}</small>` : '-';
-                html += `<tr><td>${i+1}</td><td><b>${m.name || '-'}</b></td><td>${m.mobile || '-'}</td><td>${statusBadge}</td><td>${amtText}</td><td class="no-print"><button class="btn-action bg-warning" onclick="updateFee('${m.id}')">अपडेट फी</button> ${m.feeStatus === 'Paid' ? `<button class="btn-action btn-id" onclick="printReceipt('${m.id}')">पावती</button>` : ''}</td></tr>`;
-            });
+            fData.forEach((m, i) => { let statusBadge = m.feeStatus === 'Paid' ? '<span class="badge bg-success">Paid</span>' : '<span class="badge bg-danger">Unpaid</span>'; let amtText = m.feeStatus === 'Paid' ? `₹ ${m.feeAmount || '-'} <br><small>Rec: ${m.feeReceipt || '-'}</small>` : '-'; html += `<tr><td>${i+1}</td><td><b>${m.name || '-'}</b></td><td>${m.mobile || '-'}</td><td>${statusBadge}</td><td>${amtText}</td><td class="no-print"><button class="btn-action bg-warning" onclick="updateFee('${m.id}')">अपडेट फी</button> ${m.feeStatus === 'Paid' ? `<button class="btn-action btn-id" onclick="printReceipt('${m.id}')">पावती</button>` : ''}</td></tr>`; });
             document.getElementById('feesBody').innerHTML = html || '<tr><td colspan="6">डेटा नाही.</td></tr>';
         };
 
-        window.updateFee = function(id) {
-            Swal.fire({ title: 'फी अपडेट करा', html: `<select id="f_stat" class="form-control" style="margin-bottom:10px;"><option value="Paid">Paid (भरली)</option><option value="Unpaid">Unpaid (बाकी)</option></select><input type="number" id="f_amt" class="form-control" placeholder="रक्कम (उदा. 1000)" style="margin-bottom:10px;"><input type="text" id="f_rec" class="form-control" placeholder="पावती क्र. / Transaction ID">`, confirmButtonText: 'सेव्ह करा', preConfirm: () => { return { feeStatus: document.getElementById('f_stat').value, feeAmount: document.getElementById('f_amt').value, feeReceipt: document.getElementById('f_rec').value } }
-            }).then(async (result) => { if (result.isConfirmed) { await updateDoc(doc(db, "members", id), result.value); Swal.fire('सेव्ह झाले!', '', 'success'); loadData(); } });
-        };
+        window.updateFee = function(id) { Swal.fire({ title: 'फी अपडेट करा', html: `<select id="f_stat" class="form-control" style="margin-bottom:10px;"><option value="Paid">Paid (भरली)</option><option value="Unpaid">Unpaid (बाकी)</option></select><input type="number" id="f_amt" class="form-control" placeholder="रक्कम (उदा. 1000)" style="margin-bottom:10px;"><input type="text" id="f_rec" class="form-control" placeholder="पावती क्र. / Transaction ID">`, confirmButtonText: 'सेव्ह करा', preConfirm: () => { return { feeStatus: document.getElementById('f_stat').value, feeAmount: document.getElementById('f_amt').value, feeReceipt: document.getElementById('f_rec').value } } }).then(async (result) => { if (result.isConfirmed) { await updateDoc(doc(db, "members", id), result.value); Swal.fire('सेव्ह झाले!', '', 'success'); loadData(); } }); };
         
         window.printReceipt = function(id) { let m = membersData.find(x => x.id === id) || {}; let w = window.open('','','height=600,width=800'); w.document.write(`<html><head><title>पावती</title><style>body{font-family:sans-serif; padding:40px;} .box{border:2px solid #000; padding:20px;} h2{text-align:center; color:#0B3D91; text-decoration:underline;} .no-print{display:none;}</style></head><body><div class="box"><h2>क्ष-किरण संघटना महाराष्ट्र - पावती</h2><p style="text-align:right;"><b>दिनांक:</b> ${new Date().toLocaleDateString()}</p><p><b>पावती क्र:</b> ${m.feeReceipt || '-'}</p><p>श्री/श्रीमती <b>${m.name || '-'}</b> (${m.mobile || '-'}) यांच्याकडून संघटनेच्या कार्यासाठी <b>₹ ${m.feeAmount || '-'}</b> प्राप्त झाले. धन्यवाद!</p><p style="text-align:right; margin-top:50px;"><b>खजिनदार / प्राप्तकर्ता</b></p></div><button onclick="window.print()" style="margin-top:20px; padding:10px;">Print Receipt</button></body></html>`); w.document.close(); };
 
-        // ================= TAB 3,4,5 =================
+        // ================= TAB 4 & 5: ELECTIONS & NOTICES =================
         window.addCandidate = async function(e) { e.preventDefault(); const c = { post: document.getElementById('cand_post').value, name: document.getElementById('cand_name').value, info: document.getElementById('cand_info').value, votes: 0 }; await addDoc(collection(db, "candidates"), c); Swal.fire('उमेदवार जोडला!', '', 'success'); e.target.reset(); loadData(); };
         window.renderCandidates = function() { let html = ''; candidatesData.forEach(c => { html += `<tr><td><b style="color:var(--primary);">${c.post}</b></td><td><b>${c.name}</b></td><td>${c.info}</td><td><h2>${c.votes}</h2></td><td class="no-print"><button class="btn-action btn-del" onclick="deleteCandidate('${c.id}')"><i class="fa fa-trash"></i></button></td></tr>`; }); document.getElementById('candidatesBody').innerHTML = html || '<tr><td colspan="5">सध्या उमेदवार नाहीत.</td></tr>'; };
         window.deleteCandidate = async function(id) { if(confirm("उमेदवार हटवायचा?")) { await deleteDoc(doc(db, "candidates", id)); loadData(); } };
@@ -629,10 +538,79 @@
         window.renderNotices = function() { let html = ''; noticesData.forEach(n => { html += `<tr><td>${n.date}</td><td><b>${n.title}</b></td><td>${n.desc}</td><td class="no-print"><button class="btn-action btn-del" onclick="deleteNotice('${n.id}')"><i class="fa fa-trash"></i></button></td></tr>`; }); document.getElementById('noticesBody').innerHTML = html || '<tr><td colspan="4">कोणतीही सूचना नाही.</td></tr>'; };
         window.deleteNotice = async function(id) { if(confirm("ही सूचना डिलीट करायची?")) { await deleteDoc(doc(db, "notices", id)); loadData(); } };
 
-        window.renderComplaints = function() { let html = ''; complaintsData.forEach((c) => { let badge = c.status === 'Resolved' ? '<span class="badge bg-success">सोडवली</span>' : '<span class="badge bg-warning">प्रलंबित</span>'; html += `<tr><td>${c.date || '-'}</td><td><b>${c.memberName || '-'}</b><br><small>${c.memberMobile || '-'}</small></td><td><b style="color:var(--danger);">${c.subject || '-'}</b><br><small>${c.description || '-'}</small></td><td>${badge}</td><td class="no-print">${c.status !== 'Resolved' ? `<button class="btn-action bg-success" onclick="resolveComp('${c.id}')">पूर्ण केली</button>` : `<span style="color:green;font-weight:bold;">✔ OK</span>`}</td></tr>`; }); document.getElementById('complaintsBody').innerHTML = html || '<tr><td colspan="5">तक्रार नाही.</td></tr>'; };
-        window.resolveComp = async function(id) { if(confirm("ही तक्रार सोडवली आहे का?")) { await updateDoc(doc(db, "complaints", id), { status: 'Resolved' }); loadData(); } };
+        // ================= TAB 6: COMPLAINTS (WITH DELETE FUNCTION) =================
+        window.renderComplaints = function() { 
+            let html = ''; 
+            complaintsData.forEach((c) => { 
+                let safeName = c.memberName || c.name || c.member_name || '-';
+                let safeMobile = c.memberMobile || c.mobile || c.phone || '-';
+                let badge = c.status === 'Resolved' ? '<span class="badge bg-success">सोडवली</span>' : '<span class="badge bg-warning">प्रलंबित</span>'; 
+                
+                // पूर्ण केली बटन आणि डिलीट बटन (Trash) एकत्र
+                let actionBtn = c.status !== 'Resolved' 
+                    ? `<button class="btn-action bg-success" onclick="resolveComp('${c.id}')" style="margin-right:10px;">पूर्ण केली</button>` 
+                    : `<span style="color:green;font-weight:bold; margin-right:10px;">✔ OK</span>`;
+                actionBtn += `<button class="btn-action btn-del" onclick="deleteComplaint('${c.id}')" title="तक्रार कायमची डिलीट करा"><i class="fa fa-trash"></i></button>`;
 
-        // ================= UTILITIES =================
+                html += `<tr>
+                    <td>${c.date || '-'}</td>
+                    <td><b>${safeName}</b><br><small>${safeMobile}</small></td>
+                    <td><b style="color:var(--danger);">${c.subject || '-'}</b><br><small>${c.description || '-'}</small></td>
+                    <td>${badge}</td>
+                    <td class="no-print">${actionBtn}</td>
+                </tr>`; 
+            }); 
+            document.getElementById('complaintsBody').innerHTML = html || '<tr><td colspan="5">तक्रार नाही.</td></tr>'; 
+        };
+
+        window.resolveComp = async function(id) { 
+            let c = complaintsData.find(x => x.id === id);
+            let safeName = c.memberName || c.name || c.member_name || 'सदस्य';
+            let safeMobile = c.memberMobile || c.mobile || c.phone || '';
+            let subj = c.subject || c.title || '-';
+
+            Swal.fire({
+                title: "ही तक्रार सोडवली आहे का?",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonText: "हो, सोडवली",
+                cancelButtonText: "नाही, रद्द करा",
+                confirmButtonColor: "#10b981"
+            }).then(async (result) => {
+                if (result.isConfirmed) { 
+                    await updateDoc(doc(db, "complaints", id), { status: 'Resolved' }); 
+                    Swal.fire({
+                        title: 'तक्रार सोडवली!',
+                        text: 'सदस्याला याबद्दल WhatsApp वर मेसेज पाठवायचा आहे का?',
+                        icon: 'success',
+                        showCancelButton: true,
+                        confirmButtonText: 'हो, WhatsApp पाठवा',
+                        cancelButtonText: 'नको',
+                        confirmButtonColor: '#25D366'
+                    }).then((waResult) => {
+                        if (waResult.isConfirmed && safeMobile) {
+                            let finalMobile = safeMobile.replace(/\D/g,''); 
+                            if(finalMobile.length === 10) { finalMobile = '91' + finalMobile; }
+                            let msg = `सस्नेह नमस्कार ${safeName},\n\nक्ष-किरण संघटना महाराष्ट्र कडे तुम्ही केलेली तक्रार / मागणी ('${subj}') यशस्वीरित्या सोडवण्यात आली आहे.\n\nधन्यवाद!\n- ॲडमिन टीम`;
+                            window.open(`https://wa.me/${finalMobile}?text=${encodeURIComponent(msg)}`, '_blank');
+                        } else if (waResult.isConfirmed && !safeMobile) {
+                            Swal.fire('अडचण', 'सदस्याचा मोबाईल नंबर उपलब्ध नाही.', 'error');
+                        }
+                        loadData();
+                    });
+                }
+            });
+        };
+
+        // तक्रार कायमची डिलीट करण्याचे फंक्शन
+        window.deleteComplaint = async function(id) { 
+            if(confirm("ही तक्रार यादीतून कायमची डिलीट करायची का?")) { 
+                await deleteDoc(doc(db, "complaints", id)); 
+                loadData(); 
+            } 
+        };
+
+        // ================= EXPORT & PRINT UTILITIES =================
         window.printTable = function(tableId, title) { let printWindow = window.open('', '', 'height=800,width=1000'); let tableHtml = document.getElementById(tableId).outerHTML; printWindow.document.write(`<html><head><title>${title}</title><style>body { font-family: sans-serif; padding: 20px; } h2 { text-align: center; color: #0B3D91; border-bottom: 2px solid #0B3D91; padding-bottom: 10px; margin-bottom: 20px;} table { width: 100%; border-collapse: collapse; } th, td { border: 1px solid #333; padding: 10px; text-align: left; font-size: 14px; } th { background-color: #f1f5f9; font-weight: bold; } .no-print { display: none !important; }</style></head><body><h2>${title}</h2>${tableHtml}<div style="text-align: right; margin-top: 20px; font-size: 12px;"><b>प्रिंट वेळ:</b> ${new Date().toLocaleString()}</div></body></html>`); printWindow.document.close(); printWindow.focus(); setTimeout(() => { printWindow.print(); printWindow.close(); }, 500); };
         
         window.exportToExcel = function(tableID, filename = '') { let clone = document.getElementById(tableID).cloneNode(true); clone.querySelectorAll('.no-print').forEach(el => el.remove()); XLSX.writeFile(XLSX.utils.table_to_book(clone, {sheet:"Sheet1"}), filename+".xlsx"); };
@@ -641,20 +619,21 @@
             Swal.fire({title: 'PDF तयार होत आहे...', html: 'कृपया थांबा...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
             let element = document.getElementById(tableId).cloneNode(true);
             element.querySelectorAll('.no-print').forEach(el => el.remove()); 
-            let wrapper = document.createElement('div');
-            wrapper.innerHTML = `<h2 style="text-align:center; color:#0B3D91; font-family:sans-serif; margin-bottom: 20px; margin-top:10px;">${filename}</h2>`;
+            element.style.width = "100%";
+            element.querySelectorAll('th, td').forEach(cell => { cell.style.fontSize = "11px"; cell.style.padding = "5px"; cell.style.border = "1px solid #ccc"; cell.style.wordBreak = "break-word"; });
+            let wrapper = document.createElement('div'); wrapper.style.padding = "10px";
+            wrapper.innerHTML = `<h2 style="text-align:center; color:#0B3D91; font-family:sans-serif; margin-bottom: 20px; padding-top: 10px;">${filename.replace(/_/g, ' ')}</h2>`;
             wrapper.appendChild(element);
-            let opt = { margin: 0.5, filename: filename + '.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' } };
+            let opt = { margin: [0.5, 0.2, 0.5, 0.2], filename: filename + '.pdf', image: { type: 'jpeg', quality: 1.0 }, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'in', format: 'a3', orientation: 'landscape' }, pagebreak: { mode: 'css', avoid: 'tr' } };
             html2pdf().set(opt).from(wrapper).save().then(() => { Swal.close(); });
         };
         
-        // ================= CHARTS =================
+        // ================= DASHBOARD CHARTS =================
         function renderCharts() {
             try {
                 let mCounts = {}; let dCounts = {}; 
                 let appMem = membersData.filter(m => m.status !== 'Pending');
                 appMem.forEach(m => { if(m.mandal && m.mandal !== "-") mCounts[m.mandal] = (mCounts[m.mandal]||0)+1; if(m.district && m.district !== "-") dCounts[m.district] = (dCounts[m.district]||0)+1; });
-                
                 const mCtx = document.getElementById('mandalChart').getContext('2d'); if(mChart) mChart.destroy(); mChart = new Chart(mCtx, { type: 'pie', data: { labels: Object.keys(mCounts), datasets: [{ data: Object.values(mCounts), backgroundColor: ['#0B3D91','#f39c12','#10b981','#ef4444','#3b82f6','#8b5cf6','#f59e0b','#d97706'] }] } });
                 const dCtx = document.getElementById('distChart').getContext('2d'); if(dChart) dChart.destroy(); let sortedDist = Object.entries(dCounts).sort((a,b)=>b[1]-a[1]).slice(0,10); dChart = new Chart(dCtx, { type: 'doughnut', data: { labels: sortedDist.map(x=>x[0]), datasets: [{ data: sortedDist.map(x=>x[1]), backgroundColor: ['#8b5cf6','#3b82f6','#ef4444','#10b981','#f59e0b','#0B3D91','#d97706','#059669','#1e293b','#b45309'] }] } });
             } catch(err) { console.log('Chart Error:', err); }
