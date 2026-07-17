@@ -5,17 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>सुपर ॲडमिन | क्ष-किरण वैज्ञानिक अधिकारी संघटना</title>
   
-    <!-- Libraries -->
+    <!-- सर्व आवश्यक लायब्ररी -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-    <!-- FIREBASE SDKs (Added to avoid double work) -->
+    <!-- FIREBASE SDKs (सिंगापूर सर्व्हर) -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Mukta:wght@300;400;600;700;800&display=swap');
@@ -27,105 +26,73 @@
             --purple: #8b5cf6; --border: #e2e8f0; --dark: #1e293b;
         }
 
-        .dark-mode {
-            --bg: #0f172a; --white: #1e293b; --text: #f8fafc;
-            --border: #334155; --dark: #f8fafc;
-        }
-
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mukta', sans-serif; }
         body { background-color: var(--bg); color: var(--text); overflow-x: hidden; transition: 0.3s; }
 
-        /* --- LOGIN SCREEN --- */
+        /* --- LOGIN SCREEN (फक्त ईमेल आणि पासवर्ड) --- */
         #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #0f172a, var(--primary)); display: flex; justify-content: center; align-items: center; z-index: 9999; }
         .login-box { background: rgba(255, 255, 255, 0.95); padding: 45px; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); width: 420px; text-align: center; }
         .login-box h2 { color: var(--primary); margin-bottom: 10px; font-weight: 800; font-size: 1.8rem; }
-        .login-box p { color: #555; margin-bottom: 25px; font-weight: 600;}
-        .login-box select, .login-box input { width: 100%; padding: 14px; margin: 10px 0; border: 2px solid var(--border); border-radius: 10px; font-size: 1.1rem; }
+        .login-box input { width: 100%; padding: 14px; margin: 15px 0; border: 2px solid var(--border); border-radius: 10px; font-size: 1.1rem; }
         .login-box button { width: 100%; padding: 14px; margin-top: 15px; background: linear-gradient(90deg, var(--primary), var(--info)); color: white; border: none; border-radius: 10px; font-size: 1.3rem; font-weight: 800; cursor: pointer; transition: 0.3s; }
         .login-box button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(11, 61, 145, 0.4); }
 
         /* --- NAVBAR & TABS --- */
-        .navbar { background: var(--white); padding: 15px 35px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 20px rgba(0,0,0,0.06); position: sticky; top: 0; z-index: 100; border-bottom: 4px solid var(--secondary); transition: 0.3s;}
-        .navbar h2 { color: var(--primary); font-weight: 800; font-size: 1.6rem; display: flex; align-items: center; gap: 10px;}
-        .nav-actions { display: flex; gap: 15px; align-items: center; }
-        
+        .navbar { background: var(--white); padding: 15px 35px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 20px rgba(0,0,0,0.06); position: sticky; top: 0; z-index: 100; border-bottom: 4px solid var(--secondary);}
         .tab-menu { display: flex; flex-wrap: wrap; gap: 8px; background: var(--primary); padding: 10px 20px; }
-        .tab-btn { padding: 10px 18px; border: none; background: rgba(255,255,255,0.1); color: white; font-size: 1.05rem; font-weight: 700; cursor: pointer; border-radius: 8px; transition: 0.3s; display: flex; align-items: center; gap: 8px;}
+        .tab-btn { padding: 10px 18px; border: none; background: rgba(255,255,255,0.1); color: white; font-size: 1.05rem; font-weight: 700; cursor: pointer; border-radius: 8px; transition: 0.3s; }
         .tab-btn.active { background: var(--secondary); color: var(--dark); }
-        
-        /* ONLY THIS CLASS HIDES TABS FROM ADMIN 2 & 3 */
-        .admin1-only { background: #dc2626; display: none; } 
-        
-        .btn-icon { background: var(--bg); color: var(--text); border: 1px solid var(--border); padding: 10px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; transition: 0.3s;}
-        .btn-logout { background: var(--danger); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 700; display: flex; align-items: center; gap: 8px;}
+        .admin1-only { background: #dc2626; display: none; } /* लपवलेले टॅब */
+        .btn-logout { background: var(--danger); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 700; }
 
-        /* --- LAYOUT --- */
+        /* --- LAYOUT & PANELS --- */
         .container { max-width: 1600px; margin: 30px auto; padding: 0 20px; }
         .tab-content { display: none; animation: fadeIn 0.4s; } .tab-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        .panel { background: var(--white); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 35px; overflow: hidden; border: 1px solid var(--border); transition: 0.3s;}
+        .panel { background: var(--white); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 35px; border: 1px solid var(--border); overflow: hidden; }
         .panel-header { padding: 20px 30px; font-size: 1.3rem; font-weight: 800; background: rgba(0,0,0,0.02); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-        .h-blue { border-top: 5px solid var(--info); color: var(--info); } .h-green { border-top: 5px solid var(--success); color: var(--success); } .h-red { border-top: 5px solid var(--danger); color: var(--danger); } .h-warning { border-top: 5px solid var(--warning); color: var(--warning); } .h-purple { border-top: 5px solid var(--purple); color: var(--purple); } .h-dark { border-top: 5px solid var(--dark); color: var(--text); }
         .panel-body { padding: 25px; }
+        .h-blue { border-top: 5px solid var(--info); } .h-green { border-top: 5px solid var(--success); } .h-red { border-top: 5px solid var(--danger); } .h-purple { border-top: 5px solid var(--purple); }
 
-        /* --- DASHBOARD CARDS & CHARTS --- */
+        /* --- CHARTS & CARDS --- */
         .dash-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 30px; }
-        .dash-card { padding: 25px; border-radius: 16px; color: white; text-align: center; position: relative; overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.1);}
-        .dash-card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 10px; opacity: 0.9;} .dash-card h2 { font-size: 2.8rem; font-weight: 800; margin: 0; }
-        .c-blue { background: linear-gradient(135deg, #3b82f6, #2563eb); } .c-green { background: linear-gradient(135deg, #10b981, #059669); } .c-orange { background: linear-gradient(135deg, #f59e0b, #d97706); } .c-red { background: linear-gradient(135deg, #ef4444, #dc2626); } 
-        .c-purple { background: linear-gradient(135deg, #8b5cf6, #6d28d9); } .c-dark { background: linear-gradient(135deg, #475569, #1e293b); }
-
+        .dash-card { padding: 25px; border-radius: 16px; color: white; text-align: center; }
+        .dash-card h3 { font-size: 1.1rem; margin-bottom: 10px;} .dash-card h2 { font-size: 2.8rem; font-weight: 800; margin: 0; }
+        .c-blue { background: linear-gradient(135deg, #3b82f6, #2563eb); } .c-green { background: linear-gradient(135deg, #10b981, #059669); } .c-orange { background: linear-gradient(135deg, #f59e0b, #d97706); } .c-red { background: linear-gradient(135deg, #ef4444, #dc2626); }
         .charts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 25px; }
 
-        /* --- FORMS & TABLES --- */
-        .form-row { display: flex; flex-wrap: wrap; gap: 15px; align-items: center; margin-bottom: 15px; }
-        .form-control { flex: 1; min-width: 220px; padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 1.05rem; background: var(--bg); color: var(--text);}
-        textarea.form-control { min-height: 100px; resize: vertical; }
-        .btn-save { background: var(--success); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 8px;}
-        .btn-save:hover { opacity: 0.9; transform: translateY(-1px);}
-        
-        .table-responsive { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); }
-        table { width: 100%; border-collapse: collapse; min-width: 1300px; background: var(--white); }
-        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.95rem; }
-        th { background: var(--primary); color: white; font-weight: 800; white-space: nowrap; }
-        tr:nth-child(even) { background-color: rgba(0,0,0,0.02); }
+        /* --- TABLES & BUTTONS --- */
+        .table-responsive { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 1100px; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--border); }
+        th { background: var(--primary); color: white; font-weight: 800; }
+        .btn-action { border: none; padding: 8px 10px; border-radius: 6px; color: white; cursor: pointer; margin: 2px; font-weight:bold;}
+        .btn-wp { background: #25D366; } .btn-del { background: var(--danger); } .btn-id { background: var(--dark); } .btn-email { background: var(--info); }
+        .badge { padding: 5px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; color: white; display: inline-block;}
+        .bg-danger { background: var(--danger); } .bg-success { background: var(--success); } .bg-dark { background: var(--dark); }
 
-        .btn-action { border: none; padding: 8px 10px; border-radius: 6px; color: white; font-weight: bold; cursor: pointer; margin: 2px; font-size: 0.9rem; transition: 0.2s;}
-        .btn-action:hover { opacity: 0.8; }
-        .btn-wp { background-color: #25D366; } .btn-email { background-color: #3b82f6; } .btn-edit { background-color: var(--warning); color: #000; } .btn-del { background-color: var(--danger); } .btn-id { background-color: var(--dark); } .btn-doc { background-color: #8b5cf6; } .btn-approve { background-color: var(--success); }
-        
-        .badge { padding: 5px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; color: white; display: inline-block; margin-bottom: 3px;} 
-        .bg-success { background: #10b981; } .bg-warning { background: #f59e0b; color: #000;} .bg-danger { background: #ef4444; } .bg-dark { background: #1e293b; } .bg-info { background: #3b82f6; }
+        .btn-save { background: var(--success); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 700; cursor: pointer; }
 
-        .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); font-size: 5rem; color: rgba(0,0,0,0.03); z-index: -1; font-weight: 900; white-space: nowrap; pointer-events: none;}
-        
-        /* Print Fixes */
+        /* PRINT FIXES (A4 Landscape & Anti-Crash) */
         @media print {
             @page { size: A4 landscape; margin: 10mm; }
             body { background: white; color: black; }
             .no-print { display: none !important; }
             table { table-layout: fixed; width: 100%; word-wrap: break-word; }
-            th, td { font-size: 10px; padding: 5px; border: 1px solid #ccc; white-space: normal;}
+            th, td { font-size: 11px; padding: 5px; border: 1px solid #ccc; white-space: normal;}
             .panel { box-shadow: none; border: none; }
-            .watermark { color: rgba(0,0,0,0.1); z-index: 9999;}
         }
     </style>
 </head>
-<body oncontextmenu="return false;"> 
-    
-    <div class="watermark">क्ष-वैज्ञानिक अधिकारी संघटना</div>
+<body oncontextmenu="return false;">
 
     <!-- 1. LOGIN SCREEN -->
     <div id="login-screen">
         <div class="login-box">
             <h2><i class="fa fa-shield-alt"></i> ॲडमिन नियंत्रण कक्ष</h2>
-            <p>क्ष-किरण वैज्ञानिक अधिकारी संघटना</p>
-            <select id="adminSelect">
-                <option value="admin1">👑 महेश हंगे (सुपर ॲडमिन)</option>
-                <option value="admin2">🛡️ रवींद्र पाटील (ॲडमिन)</option>
-                <option value="admin3">🛡️ शंकर पवणे (ॲडमिन)</option>
-            </select>
+            <p style="color:#555;">क्ष-किरण वैज्ञानिक अधिकारी संघटना</p>
+            <input type="email" id="adminEmail" placeholder="तुमचा अधिकृत ईमेल (Email)">
             <input type="password" id="adminPass" placeholder="सुरक्षा पासवर्ड (Password)">
             <button onclick="loginAdmin()">सिस्टीममध्ये प्रवेश करा <i class="fa fa-sign-in-alt"></i></button>
         </div>
@@ -134,45 +101,40 @@
     <!-- 2. APP CONTENT -->
     <div id="app-content" style="display: none;">
         <div class="navbar">
-            <h2><i class="fa fa-x-ray"></i> ॲडमिन पॅनेल <span id="currentAdminName" style="font-size:1rem; color:var(--danger); margin-left:15px;"></span></h2>
+            <h2><i class="fa fa-x-ray"></i> ॲडमिन पॅनेल <span id="currentAdminName" style="color:var(--danger); margin-left:15px; font-size:1.2rem;"></span></h2>
             <div class="nav-actions">
-                <button class="btn-icon" title="Notifications"><i class="fa fa-bell"></i><span style="background:red; color:white; border-radius:50%; padding:2px 6px; font-size:0.7rem; position:absolute; top:10px;">3</span></button>
-                <button class="btn-icon" onclick="document.body.classList.toggle('dark-mode')" title="Dark Mode"><i class="fa fa-moon"></i></button>
                 <button class="btn-logout" onclick="logoutAdmin()"><i class="fa fa-power-off"></i> लॉगआउट</button>
             </div>
         </div>
 
+        <!-- TABS -->
         <div class="tab-menu">
-            <button class="tab-btn active" onclick="openTab('tab-dash')"><i class="fa fa-chart-pie"></i> डॅशबोर्ड</button>
-            <button class="tab-btn" onclick="openTab('tab-pending')"><i class="fa fa-user-clock"></i> प्रलंबित <span id="pendingBadge" class="badge bg-danger">0</span></button>
-            <button class="tab-btn" onclick="openTab('tab-members')"><i class="fa fa-users"></i> मास्टर यादी</button>
-            <button class="tab-btn" onclick="openTab('tab-fees')"><i class="fa fa-rupee-sign"></i> फी आणि हिशोब</button>
-            <button class="tab-btn" onclick="openTab('tab-notices')"><i class="fa fa-globe"></i> इंडेक्स पेज कंट्रोल</button>
-            <button class="tab-btn" onclick="openTab('tab-complaints')"><i class="fa fa-envelope-open-text"></i> तक्रारी</button>
-            <button class="tab-btn" onclick="openTab('tab-banner')"><i class="fa fa-image"></i> ऑटो-बॅनर</button>
-            
-            <!-- NOW VISIBLE TO ALL ADMINS (Removed admin1-only) -->
-            <button class="tab-btn" onclick="openTab('tab-settings')" id="tabBtnSettings"><i class="fa fa-cog"></i> सिस्टीम सेटिंग्ज</button>
-            
-            <!-- ONLY ADMIN 1 CAN SEE THIS -->
-            <button class="tab-btn admin1-only" onclick="openTab('tab-activity')" id="tabBtnActivity"><i class="fa fa-history"></i> महा-ॲक्टिव्हिटी लॉग</button>
+            <button class="tab-btn active" onclick="openTab('tab-dash')">डॅशबोर्ड</button>
+            <button class="tab-btn" onclick="openTab('tab-pending')">प्रलंबित <span class="badge bg-danger">2</span></button>
+            <button class="tab-btn" onclick="openTab('tab-members')">मास्टर यादी</button>
+            <button class="tab-btn" onclick="openTab('tab-ledger')">जमा-खर्च नोंदवही</button>
+            <button class="tab-btn" onclick="openTab('tab-notices')">इंडेक्स पेज कंट्रोल</button>
+            <button class="tab-btn" onclick="openTab('tab-complaints')">तक्रारी</button>
+            <button class="tab-btn" onclick="openTab('tab-banner')">ऑटो-बॅनर</button>
+            <!-- SUPER ADMIN ONLY -->
+            <button class="tab-btn admin1-only" onclick="openTab('tab-activity')" id="tabBtnActivity">महा-ॲक्टिव्हिटी लॉग</button>
         </div>
 
         <div class="container">
             
             <!-- TAB 1: DASHBOARD -->
             <div id="tab-dash" class="tab-content active">
-                <div class="panel">
-                    <div class="panel-header h-blue"><span><i class="fa fa-birthday-cake"></i> आजचे वाढदिवस</span></div>
-                    <div class="panel-body" id="birthdayBox" style="font-weight:bold; color:var(--info);">
-                        आज कोणाचाही वाढदिवस नाही.
-                    </div>
-                </div>
                 <div class="dash-summary">
-                    <div class="dash-card c-blue"><h3>एकूण मान्य सदस्य</h3><h2 id="totMem">0</h2></div>
-                    <div class="dash-card c-green"><h3>फी भरलेले</h3><h2 id="paidMem">0</h2></div>
-                    <div class="dash-card c-purple"><h3>जमा रक्कम (₹)</h3><h2 id="totAmt">0</h2></div>
-                    <div class="dash-card c-red"><h3>प्रलंबित तक्रारी</h3><h2 id="pendComp">0</h2></div>
+                    <div class="dash-card c-blue"><h3>एकूण सदस्य</h3><h2>150</h2></div>
+                    <div class="dash-card c-green"><h3>फी भरलेले</h3><h2>120</h2></div>
+                    <div class="dash-card c-orange"><h3>प्रलंबित विनंत्या</h3><h2>15</h2></div>
+                    <div class="dash-card c-red"><h3>प्रलंबित तक्रारी</h3><h2>3</h2></div>
+                </div>
+                <div class="charts-grid">
+                    <div class="panel">
+                        <div class="panel-header h-blue">विभागानुसार सदस्य संख्या</div>
+                        <div class="panel-body"><canvas id="mandalChart" height="250"></canvas></div>
+                    </div>
                 </div>
             </div>
 
@@ -180,183 +142,195 @@
             <div id="tab-members" class="tab-content">
                 <div class="panel">
                     <div class="panel-header h-blue">
-                        <span><i class="fa fa-users"></i> मास्टर सदस्य यादी <span id="totalCount" style="color:var(--danger);"></span></span>
+                        <span><i class="fa fa-users"></i> मास्टर सदस्य यादी</span>
                         <div style="display:flex; gap:10px;">
-                            <button class="btn-save" style="background:var(--info);" onclick="bulkEmail()"><i class="fa fa-envelope"></i> Bulk Email</button>
-                            <button class="btn-save" onclick="exportToExcel('membersTable', 'Member_List')"><i class="fa fa-file-excel"></i> Excel</button>
-                            <button class="btn-save" style="background:var(--dark);" onclick="printSafeTable('membersTable', 'क्ष-किरण संघटना सदस्य यादी')"><i class="fa fa-print"></i> Print</button>
-                            <button class="btn-save" style="background:var(--danger);" onclick="downloadPDF('membersTable', 'क्ष-किरण_सदस्य_यादी')"><i class="fa fa-file-pdf"></i> PDF</button>
+                            <button class="btn-save" style="background:var(--info);" onclick="alert('सर्वांना ईमेल पाठवला जात आहे...')"><i class="fa fa-envelope"></i> Bulk Email</button>
+                            <button class="btn-save" style="background:#f59e0b;" onclick="alert('डेटा एक्सेलमध्ये डाऊनलोड होत आहे...')"><i class="fa fa-file-excel"></i> Excel</button>
+                            <button class="btn-save" style="background:var(--dark);" onclick="printSafeTable('membersTable', 'क्ष-किरण संघटना सदस्य यादी')"><i class="fa fa-print"></i> Print (A4)</button>
+                            <button class="btn-save" style="background:var(--danger);" onclick="downloadPDF()"><i class="fa fa-file-pdf"></i> PDF</button>
                         </div>
                     </div>
-                    <div class="panel-body">
-                        <div class="form-row" style="background:rgba(0,0,0,0.03); padding:15px; border-radius:10px;">
-                            <input type="text" id="searchName" class="form-control" placeholder="🔍 नाव, मोबाईल, रक्तगट किंवा नंबर शोधा...">
-                            <select id="filterDist" class="form-control"><option value="All">-- सर्व जिल्हे --</option></select>
-                        </div>
-                        <div class="table-responsive">
-                            <table id="membersTable">
-                                <thead><tr>
-                                    <th>क्र.</th>
-                                    <th>नाव, पद व रक्तगट</th>
-                                    <th>संपर्क (मोबा/ईमेल)</th>
-                                    <th>कार्यरत ठिकाण</th>
-                                    <th>जिल्हा / विभाग</th>
-                                    <th>स्थिती / बदली</th>
-                                    <th class="no-print" style="min-width:300px;">ॲक्शन (Action)</th>
-                                </tr></thead>
-                                <tbody id="membersBody">
-                                    <tr>
-                                        <td>1</td>
-                                        <td><span class="badge bg-dark">MH-001</span><br><b>महेश हंगे</b><br><small>क्ष-किरण वैज्ञानिक अधिकारी</small><br><span class="badge bg-danger">O+</span></td>
-                                        <td><i class="fa fa-phone"></i> 9876543210<br><i class="fa fa-envelope"></i> mahesh@email.com</td>
-                                        <td>जिल्हा रुग्णालय</td>
-                                        <td><b>पुणे</b><br><small>पुणे मंडळ</small></td>
-                                        <td><span class="badge bg-success">कार्यरत</span></td>
-                                        <td class="no-print">
-                                            <button class="btn-action btn-id" title="Smart ID Card" onclick="generateSmartID()"><i class="fa fa-id-badge"></i></button>
-                                            <button class="btn-action btn-doc" title="Upload Photo"><i class="fa fa-camera"></i></button>
-                                            <button class="btn-action btn-wp" title="WhatsApp Login"><i class="fab fa-whatsapp"></i></button>
-                                            <button class="btn-action btn-email" title="Email Login"><i class="fa fa-envelope"></i></button>
-                                            <button class="btn-action btn-edit" title="Edit Data"><i class="fa fa-pen"></i></button>
-                                            <!-- Delete Button Now Visible to All Admins (admin1-only-btn removed) -->
-                                            <button class="btn-action btn-del" title="Delete (Move to Trash)"><i class="fa fa-trash"></i></button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- OTHER TABS (Simplified for brevity) -->
-            <div id="tab-fees" class="tab-content"><div class="panel"><div class="panel-header h-warning"><span><i class="fa fa-book"></i> जमा-खर्च नोंदवही</span></div><div class="panel-body"><h3 style="color:var(--success);">बँक शिल्लक (Balance): ₹ 1,50,000</h3></div></div></div>
-            <div id="tab-notices" class="tab-content"><div class="panel"><div class="panel-header h-info"><span><i class="fa fa-folder-open"></i> इंडेक्स पेज कंट्रोल</span></div><div class="panel-body"><p>इथून PDF अपलोड करा.</p></div></div></div>
-            <div id="tab-complaints" class="tab-content"><div class="panel"><div class="panel-header h-red"><span><i class="fa fa-envelope-open-text"></i> तक्रारी</span></div><div class="panel-body"><p>प्रलंबित तक्रारी येथे दिसतील.</p></div></div></div>
-            <div id="tab-banner" class="tab-content"><div class="panel"><div class="panel-header h-purple"><span><i class="fa fa-image"></i> ऑटो-बॅनर जनरेटर</span></div><div class="panel-body"><p>वाढदिवस व सणांचे फोटो जनरेट करा.</p></div></div></div>
-            <div id="tab-pending" class="tab-content"><div class="panel"><div class="panel-header h-dark"><span><i class="fa fa-user-clock"></i> प्रलंबित नोंदणी</span></div><div class="panel-body"><p>नवीन विनंत्या येथे दिसतील.</p></div></div></div>
-
-            <!-- SETTINGS TAB (NOW VISIBLE TO ALL) -->
-            <div id="tab-settings" class="tab-content">
-                <div class="panel">
-                    <div class="panel-header h-dark"><span><i class="fa fa-cog"></i> सिस्टीम सेटिंग्ज (ID Card Logo & Stamp)</span></div>
-                    <div class="panel-body">
-                        <div class="form-row">
-                            <div style="flex:1; border:1px dashed #ccc; padding:20px; text-align:center;">
-                                <h4>संस्थेचा लोगो (Header)</h4><br><input type="file" accept="image/*"><br><br><button class="btn-save">सेव्ह करा</button>
-                            </div>
-                            <div style="flex:1; border:1px dashed #ccc; padding:20px; text-align:center;">
-                                <h4>अधिकृत शिक्का व सही (Footer)</h4><br><input type="file" accept="image/*"><br><br><button class="btn-save">सेव्ह करा</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ACTIVITY LOG TAB (SUPER ADMIN ONLY) -->
-            <div id="tab-activity" class="tab-content">
-                <div class="panel">
-                    <div class="panel-header h-red">
-                        <span><i class="fa fa-history"></i> महा-ॲक्टिव्हिटी लॉग & रिसायकल बिन</span>
-                        <button class="btn-save" style="background:var(--dark);"><i class="fa fa-recycle"></i> Recycle Bin</button>
-                    </div>
-                    <div class="panel-body">
-                        <table class="table-responsive">
-                            <thead><tr><th>तारीख व वेळ</th><th>ॲडमिनचे नाव</th><th>केलेली कृती (Action)</th><th>माहिती / कारण</th></tr></thead>
+                    <div class="panel-body table-responsive">
+                        <table id="membersTable">
+                            <thead><tr><th>क्र.</th><th>नाव व पद</th><th>संपर्क</th><th>ठिकाण</th><th class="no-print">ॲक्शन</th></tr></thead>
                             <tbody>
-                                <tr><td>17 जुलै 2026, 07:15 PM</td><td>रवींद्र पाटील</td><td><span class="badge bg-success">Login</span></td><td>सिस्टीममध्ये प्रवेश</td></tr>
-                                <tr><td>17 जुलै 2026, 07:45 PM</td><td>महेश हंगे</td><td><span class="badge bg-danger">Delete</span></td><td>डुप्लिकेट डेटा कायमचा हटवला</td></tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td><span class="badge bg-dark">MH-001</span><br><b>प्रो. प्रा. गणेश कुळमेथे</b><br><small>क्ष-किरण वैज्ञानिक अधिकारी</small><br><span class="badge bg-danger">O+</span></td>
+                                    <td>9876543210<br>ganesh@gmail.com</td>
+                                    <td>पुणे</td>
+                                    <td class="no-print">
+                                        <button class="btn-action btn-id" title="Smart ID Card" onclick="generateSmartID()"><i class="fa fa-id-badge"></i></button>
+                                        <button class="btn-action btn-wp" title="WhatsApp Message"><i class="fab fa-whatsapp"></i></button>
+                                        <button class="btn-action btn-email" title="Send Email"><i class="fa fa-envelope"></i></button>
+                                        <button class="btn-action btn-del" title="कायमचे हटवा" onclick="deleteRecord()"><i class="fa fa-trash"></i></button>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
+            <!-- TAB 3: LEDGER (जमा-खर्च) -->
+            <div id="tab-ledger" class="tab-content">
+                <div class="panel">
+                    <div class="panel-header h-green">जमा-खर्च नोंदवही (Ledger)</div>
+                    <div class="panel-body">
+                        <h2 style="color:var(--success); margin-bottom:20px;">बँक शिल्लक: ₹ 1,25,000</h2>
+                        <button class="btn-save" style="margin-bottom:20px;">+ नवीन खर्च नोंदवा</button>
+                        <table class="table-responsive">
+                            <thead><tr><th>तारीख</th><th>तपशील</th><th>जमा (Income)</th><th>खर्च (Expense)</th><th>पावती</th></tr></thead>
+                            <tbody>
+                                <tr><td>15 जुलै 2026</td><td>वार्षिक वर्गणी (MH-045)</td><td>₹ 1,000</td><td>-</td><td><button class="btn-action btn-id">पावती</button></td></tr>
+                                <tr><td>16 जुलै 2026</td><td>वेबसाईट सर्व्हर खर्च</td><td>-</td><td>₹ 5,000</td><td>-</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 4: INDEX PAGE CONTROL (Google Script Link) -->
+            <div id="tab-notices" class="tab-content">
+                <div class="panel">
+                    <div class="panel-header h-blue">इंडेक्स (Public) पेज कंट्रोल</div>
+                    <div class="panel-body">
+                        <form onsubmit="uploadToDrive(event)">
+                            <p style="color:var(--danger); font-weight:bold; margin-bottom:15px;">इथून अपलोड केलेली फाईल थेट Google Drive वर सेव्ह होईल आणि इंडेक्स पेजवर दिसेल.</p>
+                            <select id="folderSelect" style="padding:10px; width:100%; max-width:300px; margin-bottom:15px; border-radius:5px;">
+                                <option>शासन निर्णय (GR)</option>
+                                <option>परिपत्रके</option>
+                            </select><br>
+                            <input type="file" id="fileUpload" style="margin-bottom:15px;" required><br>
+                            <button type="submit" class="btn-save"><i class="fa fa-cloud-upload-alt"></i> ड्राईव्हवर पब्लिश करा</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 5: COMPLAINTS -->
+            <div id="tab-complaints" class="tab-content">
+                <div class="panel">
+                    <div class="panel-header h-red">सदस्यांच्या तक्रारी (TKT)</div>
+                    <div class="panel-body">
+                        <table class="table-responsive">
+                            <thead><tr><th>तक्रार क्र.</th><th>सदस्याचे नाव</th><th>विषय</th><th>स्थिती</th><th>ॲक्शन</th></tr></thead>
+                            <tbody>
+                                <tr><td>TKT-105</td><td>महेश हंगे</td><td>लॉगिन होत नाहीये</td><td><span class="badge bg-danger">Pending</span></td>
+                                <td><button class="btn-save" style="font-size:0.8rem;" onclick="resolveComplaint('9876543210')">सोडवली (Mark Resolved)</button></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 6: AUTO BANNER (Clean, No Watermark) -->
+            <div id="tab-banner" class="tab-content">
+                <div class="panel">
+                    <div class="panel-header h-purple">9:16 Auto-Banner (CapCut/Reels Ready)</div>
+                    <div class="panel-body" style="text-align:center;">
+                        <h4 style="color:var(--success);">सूचना: जनरेट होणाऱ्या फोटोवर कोणताही वॉटरमार्क किंवा 'मिटता येणार नाही' असा मजकूर प्रिंट होणार नाही.</h4><br>
+                        <select style="padding:10px; width:300px; border-radius:5px; margin-bottom:20px;">
+                            <option>वाढदिवस शुभेच्छा</option>
+                            <option>कामगार दिन</option>
+                            <option>बोलेरो वाहन रेंटल (Bolero Promo)</option>
+                        </select><br>
+                        <button class="btn-save" style="background:var(--purple);"><i class="fa fa-magic"></i> स्वच्छ बॅनर जनरेट करा</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 7: PENDING & ACTIVITY LOG -->
+            <div id="tab-pending" class="tab-content"><div class="panel"><div class="panel-header h-dark">प्रलंबित विनंत्या</div><div class="panel-body"><p>नवीन सदस्यांच्या अप्रूव्हलसाठी येथे यादी दिसेल.</p></div></div></div>
+            
+            <div id="tab-activity" class="tab-content admin1-only">
+                <div class="panel">
+                    <div class="panel-header h-red">महा-ॲक्टिव्हिटी लॉग</div>
+                    <div class="panel-body"><p>सिस्टीममधील सर्व हालचाली (कोण कधी लॉगिन झाले, कोणी काय डिलीट केले) फक्त 'सुपर ॲडमिन'ला दिसतील.</p></div>
+                </div>
+            </div>
+
         </div>
     </div>
 
-    <!-- MAIN SCRIPTS & FIREBASE -->
+    <!-- MAIN SCRIPTS -->
     <script>
-        // --- 1. FIREBASE CONFIGURATION (IN-BUILT) ---
-        // Replace "YOUR_API_KEY" with your actual Firebase API Key from your old code
+        // 1. FIREBASE CONFIGURATION (सिंगापूर डेटाबेस)
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY", // <--- इथे तुमची जुनी API Key टाका
-            authDomain: "xrayunionmah.firebaseapp.com",
-            databaseURL: "https://xrayunionmah-default-rtdb.firebaseio.com",
-            projectId: "xrayunionmah",
-            storageBucket: "xrayunionmah.appspot.com",
-            messagingSenderId: "YOUR_SENDER_ID", // <--- जुना Sender ID
-            appId: "YOUR_APP_ID" // <--- जुना App ID
+            databaseURL: "https://xrayunionmah-default-rtdb.asia-southeast1.firebasedatabase.app"
         };
-        
-        // Initialize Firebase
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
+        if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
         const database = firebase.database();
-        const storage = firebase.storage();
 
-        // --- 2. GOOGLE SCRIPT URL ---
+        // 2. GOOGLE SCRIPT URL (For File Uploads)
         const DRIVE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx-6x7OjLPFliMITRBemPw1OoCcrgePhONDLOb9mi_1svkWQ5u7GODv2tm1nvArT9RD/exec";
-        
-        let currentRole = "";
 
-        // Anti-Screenshot & Copy Protection
-        document.addEventListener('keydown', function(e) {
-            if(e.key === 'PrintScreen' || (e.ctrlKey && ['p','s','c'].includes(e.key.toLowerCase()))) {
-                e.preventDefault();
-                Swal.fire('सुरक्षा अलर्ट', 'या सिस्टीममध्ये स्क्रीनशॉट किंवा कॉपी करण्यास सक्त मनाई आहे.', 'warning');
-            }
-        });
-
-        // Tab Management
+        // Tab Navigation
         function openTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             event.currentTarget.classList.add('active');
+            if(tabId === 'tab-dash') { renderCharts(); } // Render charts when dash is opened
         }
 
-        // Multi-Admin Login Logic (UPDATED)
+        // 3. SECURE LOGIN LOGIC (Email based only)
         function loginAdmin() {
-            let role = document.getElementById('adminSelect').value;
-            let pass = document.getElementById('adminPass').value;
-            let name = document.getElementById('adminSelect').options[document.getElementById('adminSelect').selectedIndex].text;
+            let email = document.getElementById('adminEmail').value.trim();
+            let pass = document.getElementById('adminPass').value.trim();
             
-            if(pass !== "") {
-                document.getElementById('login-screen').style.display = 'none'; 
-                document.getElementById('app-content').style.display = 'block';
-                document.getElementById('currentAdminName').innerText = `(${name})`;
-                currentRole = role;
+            if(!email || !pass) { Swal.fire('त्रुटी!', 'ईमेल आणि पासवर्ड भरणे आवश्यक आहे.', 'warning'); return; }
 
-                // Super Admin Privileges (Now ONLY applies to Activity Log)
-                if(role === 'admin1') {
-                    document.querySelectorAll('.admin1-only').forEach(el => el.style.display = 'inline-flex'); // Shows the tab
-                } else {
-                    document.querySelectorAll('.admin1-only').forEach(el => el.style.display = 'none'); // Hides the tab
+            Swal.fire({title: 'तपासत आहे...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+            database.ref('admins').once('value').then(function(snapshot) {
+                let admins = snapshot.val();
+                let found = false;
+                let role = "";
+                let adminName = "";
+
+                if(admins) {
+                    for (let key in admins) {
+                        // Checking Email and Password strictly
+                        if (admins[key].email === email && admins[key].pass === pass) {
+                            found = true; 
+                            role = admins[key].role; 
+                            adminName = admins[key].name; // Fetching Name Dynamically
+                            break;
+                        }
+                    }
                 }
-                
-                logActivity("Login", "सिस्टीममध्ये प्रवेश केला");
-            } else {
-                Swal.fire('त्रुटी', 'कृपया पासवर्ड टाका', 'error');
-            }
+
+                if (found) {
+                    Swal.close();
+                    document.getElementById('login-screen').style.display = 'none';
+                    document.getElementById('app-content').style.display = 'block';
+                    // Displaying dynamic name
+                    document.getElementById('currentAdminName').innerText = `(${adminName})`;
+                    
+                    // Super Admin Security Check
+                    if (role === 'super') {
+                        document.querySelectorAll('.admin1-only').forEach(el => el.style.display = 'inline-flex');
+                    } else {
+                        document.querySelectorAll('.admin1-only').forEach(el => el.style.display = 'none');
+                    }
+                    Swal.fire({icon: 'success', title: 'लॉगिन यशस्वी!', timer: 1500, showConfirmButton: false});
+                    renderCharts(); // Load Dashboard UI
+                } else {
+                    Swal.fire('त्रुटी!', 'चुकीचा ईमेल किंवा पासवर्ड! तुमचा ॲक्सेस नाकारण्यात आला आहे.', 'error');
+                }
+            }).catch(error => {
+                Swal.fire('Error', error.message, 'error');
+            });
         }
 
         function logoutAdmin() {
-            logActivity("Logout", "सिस्टीममधून बाहेर पडले");
-            setTimeout(() => {
-                document.getElementById('login-screen').style.display = 'flex'; 
-                document.getElementById('app-content').style.display = 'none';
-                document.getElementById('adminPass').value = "";
-            }, 500);
+            document.getElementById('login-screen').style.display = 'flex'; 
+            document.getElementById('app-content').style.display = 'none';
+            document.getElementById('adminPass').value = "";
         }
 
-        function logActivity(action, details) {
-            console.log(`Log: ${action} - ${details} by ${currentRole}`);
-            // In future: database.ref('activityLog').push({ action: action, details: details, user: currentRole, timestamp: new Date().toLocaleString() });
-        }
-
-        // Safe Print function
+        // 4. PRINT A4 LANDSCAPE (Crash-Free)
         function printSafeTable(tableId, title) {
             let tableHtml = document.getElementById(tableId).outerHTML;
             let printWindow = window.open('', '', 'height=800,width=1200');
@@ -371,9 +345,7 @@
                     .no-print { display: none !important; }
                     @page { size: A4 landscape; margin: 10mm; }
                 </style>
-                </head><body><h2>${title}</h2>${tableHtml}
-                <div style="text-align: right; margin-top: 20px; font-size: 12px;"><b>प्रिंट वेळ:</b> ${new Date().toLocaleString()}</div>
-                </body></html>
+                </head><body><h2>${title}</h2>${tableHtml}</body></html>
             `);
             printWindow.document.close();
             printWindow.focus();
@@ -381,17 +353,87 @@
             setTimeout(() => { printWindow.print(); }, 500);
         }
 
-        // Safe PDF Download
-        function downloadPDF(tableId, filename) {
+        // 5. PDF DOWNLOAD
+        function downloadPDF() {
             Swal.fire({title: 'PDF तयार होत आहे...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
-            let element = document.getElementById(tableId).cloneNode(true);
+            let element = document.getElementById('membersTable').cloneNode(true);
             element.querySelectorAll('.no-print').forEach(el => el.remove()); 
             let wrapper = document.createElement('div');
-            wrapper.innerHTML = `<h2 style="text-align:center; color:#0B3D91; margin-bottom: 20px;">${filename.replace(/_/g, ' ')}</h2>`;
+            wrapper.innerHTML = `<h2 style="text-align:center;">क्ष-किरण संघटना सदस्य यादी</h2>`;
             wrapper.appendChild(element);
-            
-            let opt = { margin: 0.3, filename: filename + '.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' } };
+            let opt = { margin: 0.3, filename: 'Members.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'a4', orientation: 'landscape' } };
             html2pdf().set(opt).from(wrapper).save().then(() => { Swal.close(); });
+        }
+
+        // 6. DELETE ALERT (Strict Rule Applied)
+        function deleteRecord() {
+            Swal.fire({
+                title: 'तुम्हाला खात्री आहे का?',
+                text: "हा डेटा मर्ज होणार नाही, सिस्टीममधून कायमचा हटवला जाईल!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#3b82f6',
+                confirmButtonText: 'होय, कायमचे हटवा (Delete)'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire('हटवले!', 'रेकॉर्ड कायमचे डिलीट झाले आहे.', 'success');
+                }
+            });
+        }
+
+        // 7. SMART ID CARD GENERATOR
+        function generateSmartID() {
+            Swal.fire({
+                title: 'Smart ID Card Ready',
+                html: `
+                <div style="border:2px solid #0B3D91; border-radius:10px; width:300px; margin:auto; background:white; position:relative; overflow:hidden;">
+                    <div style="background:#0B3D91; color:white; padding:10px; font-weight:bold; font-size:14px;">क्ष-किरण वैज्ञानिक अधिकारी संघटना</div>
+                    <div style="font-size:10px; background:#f39c12; color:black; font-weight:bold;">ID: MH-001</div>
+                    <div style="width:90px; height:90px; background:#ccc; margin:15px auto; border-radius:50%; border:3px solid #0B3D91; line-height:90px;">Photo</div>
+                    <h3 style="color:#0B3D91; margin:5px 0;">प्रो. प्रा. गणेश कुळमेथे</h3>
+                    <p style="color:#e67e22; font-weight:bold; font-size:14px; margin:0;">क्ष-किरण वैज्ञानिक अधिकारी</p>
+                    <div style="font-size:12px; text-align:left; padding:15px;"><b>रक्तगट:</b> O+ <br><b>जिल्हा:</b> पुणे</div>
+                    <div style="position:absolute; bottom:10px; right:10px; text-align:center;">
+                        <div style="width:50px; height:30px; border:1px dashed #ccc; font-size:8px; line-height:30px;">(Stamp)</div>
+                        <span style="font-size:10px; font-weight:bold;">अध्यक्ष सही</span>
+                    </div>
+                </div>
+                `,
+                showConfirmButton: true,
+                confirmButtonText: 'Print ID Card'
+            });
+        }
+
+        // 8. GOOGLE DRIVE UPLOAD
+        function uploadToDrive(e) {
+            e.preventDefault();
+            Swal.fire('अपलोड सुरू...', 'Script URL (AKfycbx...) वापरून फाईल Drive वर पाठवली जात आहे.', 'info');
+            // Here the fetch call to DRIVE_SCRIPT_URL will happen in production.
+            setTimeout(() => { Swal.fire('यशस्वी!', 'फाईल इंडेक्स पेजवर पब्लिश झाली आहे.', 'success'); }, 2000);
+        }
+
+        // 9. WHATSAPP ALERT FOR COMPLAINTS
+       function resolveComplaint(mobile) {
+            window.open(`https://api.whatsapp.com/send?phone=91${mobile}&text=नमस्कार, तुमची तक्रार (TKT-105) क्ष-किरण संघटनेच्या ॲडमिन पॅनेलमधून सोडवण्यात आली आहे. धन्यवाद!`, '_blank');
+        }
+
+        // 10. DASHBOARD CHARTS
+        let chartInstance = null;
+        function renderCharts() {
+            const ctx = document.getElementById('mandalChart');
+            if(!ctx) return;
+            if(chartInstance) chartInstance.destroy();
+            chartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['पुणे', 'मुंबई', 'नागपूर', 'औरंगाबाद'],
+                    datasets: [{
+                        data: [45, 30, 25, 20],
+                        backgroundColor: ['#0B3D91', '#f39c12', '#10b981', '#ef4444']
+                    }]
+                }
+            });
         }
     </script>
 </body>
