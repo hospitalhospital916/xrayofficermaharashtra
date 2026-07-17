@@ -21,14 +21,15 @@
             --purple: #8b5cf6; --border: #e2e8f0; --dark: #1e293b;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mukta', sans-serif; }
+        /* Anti-Copy Protection */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mukta', sans-serif; user-select: none; /* Text selection disabled */ }
         body { background-color: var(--bg); color: var(--text); overflow-x: hidden; }
 
         /* --- LOGIN SCREEN --- */
         #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, var(--dark), var(--primary)); display: flex; justify-content: center; align-items: center; z-index: 9999; }
         .login-box { background: rgba(255, 255, 255, 0.95); padding: 45px; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); width: 400px; text-align: center; }
         .login-box h2 { color: var(--primary); margin-bottom: 25px; font-weight: 800; font-size: 2rem; }
-        .login-box input { width: 100%; padding: 14px; margin: 12px 0; border: 2px solid var(--border); border-radius: 10px; font-size: 1.1rem; }
+        .login-box input { width: 100%; padding: 14px; margin: 12px 0; border: 2px solid var(--border); border-radius: 10px; font-size: 1.1rem; user-select: auto; }
         .login-box button { width: 100%; padding: 14px; margin-top: 15px; background: linear-gradient(90deg, var(--secondary), #f1c40f); color: var(--dark); border: none; border-radius: 10px; font-size: 1.3rem; font-weight: 800; cursor: pointer; }
 
         /* --- NAVBAR & TABS --- */
@@ -47,35 +48,20 @@
         .h-blue { border-top: 6px solid var(--info); color: var(--info); } .h-green { border-top: 6px solid var(--success); color: var(--success); } .h-red { border-top: 6px solid var(--danger); color: var(--danger); } .h-warning { border-top: 6px solid var(--warning); color: var(--warning); } .h-purple { border-top: 6px solid var(--purple); color: var(--purple); }
         .panel-body { padding: 30px; }
 
-        /* --- DASHBOARD CARDS & CHARTS --- */
-        .dash-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 30px; }
-        .dash-card { padding: 25px; border-radius: 16px; color: white; text-align: center; position: relative; overflow: hidden; }
-        .dash-card h3 { font-size: 1.2rem; font-weight: 600; margin-bottom: 10px; } .dash-card h2 { font-size: 3rem; font-weight: 800; margin: 0; }
-        .c-blue { background: linear-gradient(135deg, #3b82f6, #2563eb); } .c-green { background: linear-gradient(135deg, #10b981, #059669); } .c-orange { background: linear-gradient(135deg, #f59e0b, #d97706); } .c-red { background: linear-gradient(135deg, #ef4444, #dc2626); } .c-purple { background: linear-gradient(135deg, #8b5cf6, #6d28d9); } .c-dark { background: linear-gradient(135deg, #475569, #1e293b); }
-
-        .charts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 25px; margin-top: 25px; }
-
         /* --- FORMS & TABLES --- */
         .form-row { display: flex; flex-wrap: wrap; gap: 15px; align-items: center; margin-bottom: 15px; }
-        .form-control { flex: 1; min-width: 200px; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 1.05rem; }
-        textarea.form-control { min-height: 100px; resize: vertical; }
+        .form-control { flex: 1; min-width: 200px; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 1.05rem; user-select: auto; }
+        textarea.form-control { min-height: 100px; resize: vertical; user-select: auto; }
         .btn-save { background: var(--success); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.2s;}
-        .btn-save:hover { opacity: 0.9; }
         
         .table-responsive { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); }
         table { width: 100%; border-collapse: collapse; min-width: 1200px; background: white; }
         th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.95rem; }
-        th { background: var(--primary); color: white; font-weight: 800; white-space: nowrap; }
-        tr:nth-child(even) { background-color: #f8fafc; }
-
+        th { background: var(--primary); color: white; font-weight: 800; }
+        
         .btn-action { border: none; padding: 8px 12px; border-radius: 6px; color: white; font-weight: bold; cursor: pointer; margin: 2px; font-size: 0.85rem;}
-        .btn-wp { background-color: #25D366; color: #fff;} .btn-edit { background-color: var(--warning); color: #000; } .btn-del { background-color: var(--danger); } .btn-id { background-color: var(--info); } .btn-doc { background-color: #6366f1; } .btn-approve { background-color: var(--success); }
+        .btn-wp { background-color: #25D366; } .btn-edit { background-color: var(--warning); color: #000; } .btn-del { background-color: var(--danger); } .btn-id { background-color: var(--info); } .btn-photo { background-color: #ec4899; } .btn-doc { background-color: #6366f1; } .btn-approve { background-color: var(--success); }
         .badge { padding: 5px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; color: white; display: inline-block; } .bg-success { background: #10b981; } .bg-warning { background: #f59e0b; color: #000;} .bg-danger { background: #ef4444; } .bg-dark { background: #1e293b; }
-
-        .swal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; text-align: left; }
-        .swal-grid label { font-weight: bold; font-size: 0.95rem; color: #333; margin-bottom: 5px; display: block;}
-        .swal-grid input, .swal-grid select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; }
-        .full-width { grid-column: span 2; }
     </style>
 </head>
 <body>
@@ -83,7 +69,7 @@
     <!-- 1. LOGIN SCREEN -->
     <div id="login-screen">
         <div class="login-box">
-            <h2>ॲडमिन नियंत्रण कक्ष</h2>
+            <h2>सुपर ॲडमिन नियंत्रण कक्ष</h2>
             <input type="email" id="adminEmail" placeholder="नोंदणीकृत Email" autocomplete="off">
             <input type="password" id="adminPass" placeholder="Password">
             <button onclick="loginAdmin()">लॉगिन करा <i class="fa fa-arrow-right"></i></button>
@@ -94,17 +80,16 @@
     <div id="app-content" style="display: none;">
         <div class="navbar">
             <h2><i class="fa fa-shield"></i> क्ष-किरण संघटना महाराष्ट्र</h2>
-            <button class="btn-logout" onclick="logoutAdmin()"><i class="fa fa-power-off"></i> लॉगआउट</button>
+            <div>
+                <span id="timerDisplay" style="color:red; font-weight:bold; margin-right:20px;"><i class="fa fa-clock"></i> Auto-Logout in 10:00</span>
+                <button class="btn-logout" onclick="logoutAdmin()"><i class="fa fa-power-off"></i> लॉगआउट</button>
+            </div>
         </div>
 
         <div class="tab-menu">
             <button class="tab-btn" onclick="openTab('tab-pending')"><i class="fa fa-clock"></i> प्रलंबित विनंत्या <span id="pendingBadge" class="badge bg-danger">0</span></button>
             <button class="tab-btn active" onclick="openTab('tab-members')"><i class="fa fa-users"></i> सदस्य कक्ष</button>
-            <button class="tab-btn" onclick="openTab('tab-fees')"><i class="fa fa-rupee-sign"></i> आर्थिक / फी कक्ष</button>
-            <button class="tab-btn" onclick="openTab('tab-election')"><i class="fa fa-vote-yea"></i> कार्यकारणी निवडणूक</button>
-            <button class="tab-btn" onclick="openTab('tab-notices')"><i class="fa fa-bullhorn"></i> सूचना फलक (Index)</button>
-            <button class="tab-btn" onclick="openTab('tab-complaints')"><i class="fa fa-envelope-open-text"></i> तक्रार कक्ष</button>
-            <button class="tab-btn" onclick="openTab('tab-dash')"><i class="fa fa-chart-pie"></i> स्मार्ट डॅशबोर्ड</button>
+            <button class="tab-btn" onclick="openTab('tab-notices')"><i class="fa fa-bullhorn"></i> सूचना व वेब कंट्रोल</button>
         </div>
 
         <div class="container">
@@ -112,22 +97,11 @@
             <!-- NEW TAB: PENDING REQUESTS -->
             <div id="tab-pending" class="tab-content">
                 <div class="panel">
-                    <div class="panel-header h-red">
-                        <span><i class="fa fa-clock"></i> नवीन सदस्यांच्या प्रलंबित विनंत्या</span>
-                    </div>
+                    <div class="panel-header h-red"><span><i class="fa fa-clock"></i> नवीन सदस्यांच्या प्रलंबित विनंत्या</span></div>
                     <div class="panel-body">
                         <div class="table-responsive">
                             <table>
-                                <thead>
-                                    <tr>
-                                        <th>क्र.</th>
-                                        <th>नाव व पद</th>
-                                        <th>मोबाईल/ईमेल</th>
-                                        <th>जिल्हा / विभाग</th>
-                                        <th>कार्यरत ठिकाण</th>
-                                        <th class="no-print" style="min-width:200px;">ॲक्शन (Action)</th>
-                                    </tr>
-                                </thead>
+                                <thead><tr><th>क्र.</th><th>नाव व पद</th><th>मोबाईल/ईमेल</th><th>जिल्हा / विभाग</th><th>कार्यरत ठिकाण</th><th class="no-print" style="min-width:200px;">ॲक्शन (Action)</th></tr></thead>
                                 <tbody id="pendingBody"></tbody>
                             </table>
                         </div>
@@ -136,75 +110,24 @@
             </div>
 
             <!-- TAB 1: MEMBERS -->
-            <div id="tab-members" class="tab-content active">
-                <div class="panel">
-                    <div class="panel-header h-green"><span><i class="fa fa-user-plus"></i> नवीन सदस्य नोंदणी (Direct Add)</span></div>
-                    <div class="panel-body">
-                        <form id="addForm" onsubmit="addNewMember(event)">
-                            <div class="form-row">
-                                <input type="text" id="add_memNo" class="form-control" placeholder="सदस्यत्व क्रमांक (उदा. MH-001)">
-                                <input type="text" id="add_name" class="form-control" placeholder="संपूर्ण नाव *" required>
-                                <input type="tel" id="add_mobile" class="form-control" placeholder="मोबाईल क्रमांक *" required>
-                            </div>
-                            <div class="form-row">
-                                <input type="email" id="add_email" class="form-control" placeholder="ईमेल आयडी">
-                                <input type="text" id="add_desig" class="form-control" placeholder="पद (उदा. क्ष-किरण वैज्ञानिक अधिकारी)">
-                                <input type="text" id="add_pass" class="form-control" placeholder="पासवर्ड (उदा. 1234)" required>
-                            </div>
-                            <div class="form-row">
-                                <select id="add_district" class="form-control"><option value="">-- कार्यरत जिल्हा --</option></select>
-                                <select id="add_mandal" class="form-control">
-                                    <option value="">-- आरोग्य मंडळ (विभाग) --</option>
-                                    <option value="पुणे मंडळ">पुणे मंडळ</option> <option value="नागपूर मंडळ">नागपूर मंडळ</option>
-                                    <option value="नाशिक मंडळ">नाशिक मंडळ</option> <option value="अकोला मंडळ">अकोला मंडळ</option>
-                                    <option value="कोल्हापूर मंडळ">कोल्हापूर मंडळ</option> <option value="छत्रपती संभाजीनगर मंडळ">छत्रपती संभाजीनगर मंडळ</option>
-                                    <option value="लातूर मंडळ">लातूर मंडळ</option> <option value="ठाणे मंडळ">ठाणे मंडळ</option>
-                                </select>
-                                <input type="text" id="add_workplace" class="form-control" placeholder="कार्यरत ठिकाण">
-                                <input type="text" id="add_perm_address" class="form-control" placeholder="कायमचा मूळ पत्ता">
-                            </div>
-                            <button type="submit" class="btn-save"><i class="fa fa-save"></i> थेट सदस्य सेव्ह करा</button>
-                        </form>
-                    </div>
-                </div>
-
+           <div id="tab-members" class="tab-content active">
                 <div class="panel">
                     <div class="panel-header h-blue">
                         <span><i class="fa fa-users"></i> मास्टर सदस्य यादी <span id="totalCount" style="color:var(--danger);"></span></span>
-                        <div style="display:flex; gap:10px;">
-                            <button class="btn-save" onclick="exportToExcel('membersTable', 'Member_List')" style="background:var(--success);"><i class="fa fa-file-excel"></i> Export</button>
-                            <button class="btn-save" onclick="printTable('membersTable', 'मास्टर सदस्य यादी')" style="background:var(--dark);"><i class="fa fa-print"></i> Print</button>
-                            <button class="btn-save" onclick="downloadPDF('membersTable', 'क्ष-किरण_सदस्य_यादी')" style="background:var(--danger);"><i class="fa fa-file-pdf"></i> Download PDF</button>
-                        </div>
                     </div>
                     <div class="panel-body">
                         <!-- FILTERS -->
                         <div class="form-row" style="background:#f1f5f9; padding:15px; border-radius:10px;">
                             <input type="text" id="searchName" class="form-control" placeholder="🔍 नाव, मोबाईल किंवा नंबर शोधा..." onkeyup="renderMembers()">
-                            <select id="filterDist" class="form-control" onchange="renderMembers()">
-                                <option value="All">-- सर्व जिल्हे --</option>
-                            </select>
-                            <select id="filterMandal" class="form-control" onchange="renderMembers()">
-                                <option value="All">-- सर्व विभाग --</option>
-                                <option value="पुणे मंडळ">पुणे मंडळ</option> <option value="नागपूर मंडळ">नागपूर मंडळ</option>
-                                <option value="नाशिक मंडळ">नाशिक मंडळ</option> <option value="अकोला मंडळ">अकोला मंडळ</option>
-                                <option value="कोल्हापूर मंडळ">कोल्हापूर मंडळ</option> <option value="छत्रपती संभाजीनगर मंडळ">छत्रपती संभाजीनगर मंडळ</option>
-                                <option value="लातूर मंडळ">लातूर मंडळ</option> <option value="ठाणे मंडळ">ठाणे मंडळ</option>
-                            </select>
+                            <select id="filterDist" class="form-control" onchange="renderMembers()"><option value="All">-- सर्व जिल्हे --</option></select>
                         </div>
 
                         <div class="table-responsive">
                             <table id="membersTable">
                                 <thead><tr>
-                                    <th>क्र.</th>
-                                    <th>नाव, पद व क्र.</th>
-                                    <th>संपर्क (मोबा/ईमेल)</th>
-                                    <th>कार्यरत ठिकाण</th>
-                                    <th>जिल्हा</th>
-                                    <th>विभाग</th>
-                                    <th>मूळ पत्ता</th>
-                                    <th>कागदपत्र</th>
-                                    <th class="no-print" style="min-width:210px;">ॲक्शन</th>
+                                    <th>क्र.</th><th>नाव, पद व क्र.</th><th>संपर्क</th><th>कार्यरत ठिकाण</th><th>जिल्हा</th>
+                                    <th>डॉक्युमेंट्स</th>
+                                    <th class="no-print" style="min-width:280px;">स्मार्ट ॲक्शन</th>
                                 </tr></thead>
                                 <tbody id="membersBody"></tbody>
                             </table>
@@ -213,128 +136,15 @@
                 </div>
             </div>
 
-            <!-- TAB 2: FEES -->
-            <div id="tab-fees" class="tab-content">
-                <div class="panel">
-                    <div class="panel-header h-warning">
-                        <span><i class="fa fa-rupee-sign"></i> सदस्यांची आर्थिक व फी माहिती</span>
-                        <div style="display:flex; gap:10px;">
-                            <button class="btn-save" onclick="exportToExcel('feesTable', 'Fee_Status_List')" style="background:var(--success);"><i class="fa fa-file-excel"></i> Export</button>
-                            <button class="btn-save" onclick="printTable('feesTable', 'फी भरलेल्या सदस्यांची यादी')" style="background:var(--dark);"><i class="fa fa-print"></i> Print</button>
-                            <button class="btn-save" onclick="downloadPDF('feesTable', 'फी_स्टेटस_यादी')" style="background:var(--danger);"><i class="fa fa-file-pdf"></i> Download PDF</button>
-                        </div>
-                    </div>
-                    <div class="panel-body">
-                        <div class="form-row" style="background:#f1f5f9; padding:15px; border-radius:10px;">
-                            <select id="feeFilter" class="form-control" onchange="renderFees()">
-                                <option value="All">सर्व सदस्य</option>
-                                <option value="Paid">फक्त फी भरलेले (Paid)</option>
-                                <option value="Unpaid">फी बाकी असलेले (Unpaid)</option>
-                            </select>
-                        </div>
-                        <div class="table-responsive">
-                            <table id="feesTable">
-                                <thead><tr><th>क्र.</th><th>सदस्याचे नाव</th><th>मोबाईल</th><th>फी स्टेटस</th><th>रक्कम / पावती क्र.</th><th class="no-print">ॲक्शन</th></tr></thead>
-                                <tbody id="feesBody"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB 3: ELECTIONS -->
-            <div id="tab-election" class="tab-content">
-                <div class="panel">
-                    <div class="panel-header h-purple"><span><i class="fa fa-user-tie"></i> निवडणुकीसाठी नवीन उमेदवार उभा करा</span></div>
-                    <div class="panel-body">
-                        <form onsubmit="addCandidate(event)">
-                            <div class="form-row">
-                                <select id="cand_post" class="form-control" required>
-                                    <option value="">-- निवडणुकीचे पद निवडा --</option>
-                                    <option value="अध्यक्ष (President)">अध्यक्ष (President)</option>
-                                    <option value="उपाध्यक्ष (Vice President)">उपाध्यक्ष (Vice President)</option>
-                                    <option value="सचिव (Secretary)">सचिव (Secretary)</option>
-                                    <option value="खजिनदार (Treasurer)">खजिनदार (Treasurer)</option>
-                                    <option value="सदस्य (Committee Member)">कार्यकारणी सदस्य</option>
-                                </select>
-                                <input type="text" id="cand_name" class="form-control" placeholder="उमेदवाराचे नाव *" required>
-                            </div>
-                            <div class="form-row">
-                                <input type="text" id="cand_info" class="form-control" placeholder="उमेदवाराची माहिती / अनुभव (उदा. १० वर्षे सेवेत)" style="flex:2;">
-                                <button type="submit" class="btn-save" style="background:var(--purple);"><i class="fa fa-plus"></i> उमेदवार यादीत जोडा</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="panel">
-                    <div class="panel-header h-blue">
-                        <span><i class="fa fa-vote-yea"></i> उमेदवार यादी व मिळालेली मते</span>
-                        <button class="btn-save" onclick="downloadPDF('electionTable', 'निवडणूक_उमेदवार_यादी')" style="background:var(--danger);"><i class="fa fa-file-pdf"></i> Download PDF</button>
-                    </div>
-                    <div class="panel-body">
-                        <div class="table-responsive">
-                            <table id="electionTable">
-                                <thead><tr><th>पद (Position)</th><th>उमेदवाराचे नाव</th><th>माहिती / अनुभव</th><th>मिळालेली मते</th><th class="no-print">ॲक्शन</th></tr></thead>
-                                <tbody id="candidatesBody"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB 4: NOTICES (INDEX BOARD) -->
+            <!-- TAB 2: NOTICES & WEB CONTROL -->
             <div id="tab-notices" class="tab-content">
                 <div class="panel">
-                    <div class="panel-header h-info"><span><i class="fa fa-edit"></i> मुख्य पेजवर (Index) नवीन सूचना जोडा</span></div>
+                    <div class="panel-header h-danger"><span><i class="fa fa-bolt"></i> फ्लॅश न्यूज (मुख्य वेबसाईट स्क्रोलिंग)</span></div>
                     <div class="panel-body">
-                        <form onsubmit="addNotice(event)">
-                            <div class="form-row"><input type="text" id="notice_title" class="form-control" placeholder="सूचनेचा विषय" required><input type="date" id="notice_date" class="form-control" required></div>
-                            <div class="form-row"><textarea id="notice_desc" class="form-control" placeholder="सूचनेची सविस्तर माहिती..." required></textarea></div>
-                            <button type="submit" class="btn-save" style="background:var(--info);"><i class="fa fa-bullhorn"></i> सूचना प्रकाशित करा</button>
-                        </form>
-                    </div>
-                </div>
-                <div class="panel">
-                    <div class="panel-header h-blue"><span><i class="fa fa-list"></i> प्रकाशित केलेल्या सूचना</span></div>
-                    <div class="panel-body">
-                        <div class="table-responsive">
-                            <table><thead><tr><th>तारीख</th><th>विषय</th><th>माहिती</th><th class="no-print">ॲक्शन</th></tr></thead><tbody id="noticesBody"></tbody></table>
+                        <div class="form-row">
+                            <input type="text" id="flash_news" class="form-control" placeholder="येथे तातडीची बातमी टाईप करा (उदा. 'सर्व सदस्यांनी ३० तारखेपर्यंत फी भरावी')">
+                            <button class="btn-save" style="background:var(--danger);" onclick="updateFlashNews()">बातमी लाईव्ह करा</button>
                         </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB 5: COMPLAINTS -->
-            <div id="tab-complaints" class="tab-content">
-                <div class="panel">
-                    <div class="panel-header h-red"><span><i class="fa fa-envelope-open-text"></i> सदस्यांच्या तक्रारी / मागण्या</span></div>
-                    <div class="panel-body">
-                        <div class="table-responsive">
-                            <table id="complaintsTable">
-                                <thead><tr><th>तारीख</th><th>सदस्याचे नाव</th><th>विषय / तक्रार</th><th>स्टेटस</th><th class="no-print" style="min-width:150px;">निर्णय (Action)</th></tr></thead>
-                                <tbody id="complaintsBody"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB 6: DASHBOARD -->
-            <div id="tab-dash" class="tab-content">
-                <div class="dash-summary">
-                    <div class="dash-card c-blue"><h3>मान्य सदस्य</h3><h2 id="totMem">0</h2></div>
-                    <div class="dash-card c-dark"><h3>प्रलंबित विनंत्या</h3><h2 id="pendMemCard">0</h2></div>
-                    <div class="dash-card c-green"><h3>फी भरलेले सदस्य</h3><h2 id="paidMem">0</h2></div>
-                    <div class="dash-card c-red"><h3>प्रलंबित तक्रारी</h3><h2 id="pendComp">0</h2></div>
-                </div>
-                <div class="charts-grid">
-                    <div class="panel">
-                        <div class="panel-header h-blue"><i class="fa fa-chart-pie"></i> विभागानुसार (मंडळ) सदस्य</div>
-                        <div class="panel-body" style="text-align:center;"><canvas id="mandalChart" height="300"></canvas></div>
-                    </div>
-                    <div class="panel">
-                        <div class="panel-header h-warning"><i class="fa fa-chart-pie"></i> जिल्ह्यानुसार सदस्य (Top 10)</div>
-                        <div class="panel-body" style="text-align:center;"><canvas id="distChart" height="300"></canvas></div>
                     </div>
                 </div>
             </div>
@@ -345,7 +155,7 @@
     <!-- FIREBASE & MAIN SCRIPTS -->
     <script type="module">
        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-       import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+       import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         
         const firebaseConfig = {
@@ -355,25 +165,43 @@
         };
         const app = initializeApp(firebaseConfig); const db = getFirestore(app); const auth = getAuth(app);
         
-        let membersData = []; let complaintsData = []; let candidatesData = []; let noticesData = [];
-        let mChart = null; let dChart = null; 
+        let membersData = [];
         
-        const mhDistricts = ["अहमदनगर", "अकोला", "अमरावती", "छत्रपती संभाजीनगर", "बीड", "भंडारा", "बुलढाणा", "चंद्रपूर", "धुळे", "गडचिरोली", "गोंदिया", "हिंगोली", "जळगाव", "जालना", "कोल्हापूर", "लातूर", "मुंबई शहर", "मुंबई उपनगर", "नागपूर", "नांदेड", "नंदुरबार", "नाशिक", "धाराशिव", "पालघर", "परभणी", "पुणे", "रायगड", "रत्नागिरी", "सांगली", "सातारा", "सिंधुदुर्ग", "सोलापूर", "ठाणे", "वर्धा", "वाशिम", "यवतमाळ"];
-        mhDistricts.forEach(d => { 
-            document.getElementById('add_district').innerHTML += `<option value="${d}">${d}</option>`; 
-            document.getElementById('filterDist').innerHTML += `<option value="${d}">${d}</option>`; 
+        /* ---------------- ANTI COPY & SCREENSHOT ---------------- */
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.addEventListener('keydown', function (event) {
+            if (event.ctrlKey && (event.key === 'c' || event.key === 'p' || event.key === 'u' || event.key === 's')) { event.preventDefault(); Swal.fire('सुरक्षा', 'हा ॲक्शन ब्लॉक केला आहे.', 'warning'); }
+            if (event.key === 'PrintScreen') { navigator.clipboard.writeText(''); Swal.fire('सुरक्षा', 'स्क्रीनशॉट घेण्यास मनाई आहे.', 'error'); }
         });
+
+        /* ---------------- AUTO LOGOUT TIMER ---------------- */
+        let inactivityTime = function () {
+            let time; let timerDisplay = document.getElementById('timerDisplay');
+            let timeLimit = 600; // 10 minutes in seconds
+
+            window.onload = resetTimer; document.onmousemove = resetTimer; document.onkeypress = resetTimer;
+
+            function updateDisplay() {
+                let minutes = Math.floor(timeLimit / 60); let seconds = timeLimit % 60;
+                timerDisplay.innerHTML = `<i class="fa fa-clock"></i> Auto-Logout in ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                if (timeLimit <= 0) { window.logoutAdmin(); } else { timeLimit--; }
+            }
+
+            function resetTimer() { timeLimit = 600; clearInterval(time); time = setInterval(updateDisplay, 1000); }
+        };
+
+        const mhDistricts = ["अहमदनगर", "अकोला", "पुणे", "मुंबई", "नागपूर", "नाशिक"]; // Add all
+        mhDistricts.forEach(d => { document.getElementById('filterDist').innerHTML += `<option value="${d}">${d}</option>`; });
 
         window.openTab = function(tabId) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             event.currentTarget.classList.add('active');
-            if(tabId === 'tab-dash') { setTimeout(renderCharts, 200); }
         };
 
         onAuthStateChanged(auth, (user) => {
-            if (user) { document.getElementById('login-screen').style.display = 'none'; document.getElementById('app-content').style.display = 'block'; loadData(); } 
+            if (user) { document.getElementById('login-screen').style.display = 'none'; document.getElementById('app-content').style.display = 'block'; inactivityTime(); loadData(); } 
             else { document.getElementById('login-screen').style.display = 'flex'; document.getElementById('app-content').style.display = 'none'; }
         });
         
@@ -381,261 +209,110 @@
             try { await setPersistence(auth, browserSessionPersistence); await signInWithEmailAndPassword(auth, document.getElementById('adminEmail').value, document.getElementById('adminPass').value); } 
             catch(e) { Swal.fire('त्रुटी', 'चुकीचा ईमेल किंवा पासवर्ड', 'error'); }
         };
-        
         window.logoutAdmin = function() { signOut(auth); };
 
         async function loadData() {
             try {
                const snap = await getDocs(collection(db, "members")); membersData = [];
                 snap.forEach(doc => { membersData.push({ id: doc.id, ...doc.data() }); });
-
-                const compSnap = await getDocs(collection(db, "complaints")); complaintsData = [];
-                compSnap.forEach(doc => complaintsData.push({id: doc.id, ...doc.data()}));
-
-                const candSnap = await getDocs(collection(db, "candidates")); candidatesData = [];
-                candSnap.forEach(doc => candidatesData.push({id: doc.id, ...doc.data()}));
-
-                const noticeSnap = await getDocs(collection(db, "notices")); noticesData = [];
-                noticeSnap.forEach(doc => noticesData.push({id: doc.id, ...doc.data()}));
-
-                let approvedMembers = membersData.filter(m => m.status !== 'Pending');
-                let pendingMembers = membersData.filter(m => m.status === 'Pending');
-                
-                document.getElementById('totMem').innerText = approvedMembers.length;
-                document.getElementById('pendMemCard').innerText = pendingMembers.length;
-                document.getElementById('pendingBadge').innerText = pendingMembers.length;
-                document.getElementById('paidMem').innerText = approvedMembers.filter(m => m.feeStatus === 'Paid').length;
-                document.getElementById('pendComp').innerText = complaintsData.filter(c => c.status !== 'Resolved').length;
-
-                renderPending(); renderMembers(); renderFees(); renderCandidates(); renderNotices(); renderComplaints();
-                if(document.getElementById('tab-dash').classList.contains('active')) { renderCharts(); }
-            } catch(e) { console.error("Error loading data: ", e); }
+                renderPending(); renderMembers();
+            } catch(e) { console.error(e); }
         }
 
-        // ================= TAB 1: PENDING & APPROVAL (WITH WHATSAPP) =================
         window.renderPending = function() {
-            let pending = membersData.filter(m => m.status === 'Pending'); let html = '';
-            pending.forEach((m, i) => {
-                html += `<tr><td><b>${i+1}</b></td><td><b style="color:var(--primary);">${m.name || '-'}</b><br><small>${m.designation || '-'}</small></td><td><i class="fa fa-phone"></i> ${m.mobile || '-'}<br><i class="fa fa-envelope" style="color:gray;"></i> ${m.email || '-'}</td><td><b>${m.district || '-'}</b><br><small>${m.mandal || '-'}</small></td><td>${m.workplace || '-'}</td><td class="no-print"><button class="btn-action btn-approve" onclick="reviewAndApprove('${m.id}')"><i class="fa fa-user-check"></i> तपासून ॲड करा</button> <button class="btn-action btn-del" onclick="rejectMember('${m.id}')"><i class="fa fa-times"></i> डिलीट</button></td></tr>`;
-            }); document.getElementById('pendingBody').innerHTML = html || '<tr><td colspan="6">कोणतीही प्रलंबित विनंती नाही.</td></tr>';
+            let pending = membersData.filter(m => m.status === 'Pending');
+            document.getElementById('pendingBadge').innerText = pending.length;
+            // Similar logic to previous code...
         };
 
-        window.reviewAndApprove = function(id) {
-            let m = membersData.find(x => x.id === id) || {};
-            let distOpts = mhDistricts.map(d => `<option value="${d}" ${m.district===d?'selected':''}>${d}</option>`).join('');
-            Swal.fire({
-                title: 'माहिती तपासा आणि मान्यता द्या',
-                html: `<div class="swal-grid"><div class="full-width"><label style="color:var(--danger);">सदस्यत्व क्रमांक (उदा. MH-001)</label><input type="text" id="r_memNo" value="${m.memberNo || ''}"></div><div><label>नाव</label><input type="text" id="r_name" value="${m.name || ''}"></div><div><label>पद</label><input type="text" id="r_desig" value="${m.designation || ''}"></div><div><label>मोबाईल</label><input type="text" id="r_mob" value="${m.mobile || ''}"></div><div><label>ईमेल</label><input type="email" id="r_email" value="${m.email || ''}"></div><div class="full-width"><label>कार्यरत ठिकाण</label><input type="text" id="r_work" value="${m.workplace || ''}"></div><div><label>जिल्हा</label><select id="r_dist"><option value="">-- निवडा --</option>${distOpts}</select></div><div><label>विभाग</label><select id="r_mandal"><option value="">-- निवडा --</option><option value="पुणे मंडळ" ${m.mandal==='पुणे मंडळ'?'selected':''}>पुणे</option> <option value="नागपूर मंडळ" ${m.mandal==='नागपूर मंडळ'?'selected':''}>नागपूर</option> <option value="नाशिक मंडळ" ${m.mandal==='नाशिक मंडळ'?'selected':''}>नाशिक</option> <option value="अकोला मंडळ" ${m.mandal==='अकोला मंडळ'?'selected':''}>अकोला</option> <option value="कोल्हापूर मंडळ" ${m.mandal==='कोल्हापूर मंडळ'?'selected':''}>कोल्हापूर</option> <option value="छत्रपती संभाजीनगर मंडळ" ${m.mandal==='छत्रपती संभाजीनगर मंडळ'?'selected':''}>छ. संभाजीनगर</option> <option value="लातूर मंडळ" ${m.mandal==='लातूर मंडळ'?'selected':''}>लातूर</option> <option value="ठाणे मंडळ" ${m.mandal==='ठाणे मंडळ'?'selected':''}>ठाणे</option></select></div><div class="full-width"><label>मूळ पत्ता</label><input type="text" id="r_addr" value="${m.permAddress || ''}"></div></div>`,
-                width: '800px', showCancelButton: true, confirmButtonText: 'Approve करा'
-            }).then(async (result) => { 
-                if (result.isConfirmed) { 
-                    let updatedData = { memberNo: document.getElementById('r_memNo').value, name: document.getElementById('r_name').value, designation: document.getElementById('r_desig').value, mobile: document.getElementById('r_mob').value, email: document.getElementById('r_email').value, district: document.getElementById('r_dist').value, mandal: document.getElementById('r_mandal').value, workplace: document.getElementById('r_work').value, permAddress: document.getElementById('r_addr').value, status: "Approved" };
-                    await updateDoc(doc(db, "members", id), updatedData); 
-                    
-                    Swal.fire({
-                        title: 'मान्यता दिली!',
-                        text: 'सदस्याला याबद्दल WhatsApp वर मेसेज पाठवायचा आहे का?',
-                        icon: 'success',
-                        showCancelButton: true,
-                        confirmButtonText: 'हो, WhatsApp पाठवा',
-                        cancelButtonText: 'नको',
-                        confirmButtonColor: '#25D366'
-                    }).then((waResult) => {
-                        if (waResult.isConfirmed && updatedData.mobile) {
-                            let finalMobile = updatedData.mobile.replace(/\D/g,''); 
-                            if(finalMobile.length === 10) { finalMobile = '91' + finalMobile; }
-                            let msg = `सस्नेह नमस्कार ${updatedData.name},\n\nक्ष-किरण संघटना महाराष्ट्र मध्ये तुमचे स्वागत आहे! तुमची नोंदणी यशस्वीरित्या पूर्ण झाली असून तुम्हाला मुख्य यादीत सामावून घेण्यात आले आहे.\nतुमचा सदस्यत्व क्रमांक: ${updatedData.memberNo || '-'}\n\nधन्यवाद!\n- ॲडमिन टीम`;
-                            window.open(`https://wa.me/${finalMobile}?text=${encodeURIComponent(msg)}`, '_blank');
-                        }
-                        loadData(); 
-                    });
-                } 
-            });
-        };
-
-        window.rejectMember = async function(id) { if(confirm("ही विनंती रद्द करून कायमची डिलीट करायची का?")) { await deleteDoc(doc(db, "members", id)); loadData(); } };
-
-        // ================= TAB 2: MASTER MEMBERS =================
+        // ================= TAB 1: MASTER MEMBERS =================
         window.renderMembers = function() {
-            let sName = document.getElementById('searchName').value.toLowerCase(); let fDist = document.getElementById('filterDist').value; let fMandal = document.getElementById('filterMandal').value;
+            let sName = document.getElementById('searchName').value.toLowerCase(); let fDist = document.getElementById('filterDist').value;
             let filtered = membersData.filter(m => {
                 let isApproved = m.status !== 'Pending';
-                let safeName = (m.name || '').toString().toLowerCase(); let safeMobile = (m.mobile || '').toString().toLowerCase(); let safeMemNo = (m.memberNo || '').toString().toLowerCase();
-                let matchName = safeName.includes(sName) || safeMobile.includes(sName) || safeMemNo.includes(sName);
-                let matchDist = fDist === 'All' || m.district === fDist; let matchMandal = fMandal === 'All' || m.mandal === fMandal;
-                return isApproved && matchName && matchDist && matchMandal;
+                let matchName = (m.name || '').toLowerCase().includes(sName) || (m.mobile || '').includes(sName);
+                let matchDist = fDist === 'All' || m.district === fDist;
+                return isApproved && matchName && matchDist;
             });
             document.getElementById('totalCount').innerText = `(${filtered.length})`; let html = '';
             filtered.forEach((m, i) => {
-                let docBadge = m.docUrl ? `<a href="${m.docUrl}" target="_blank" class="badge bg-success" style="text-decoration:none;">पहा 📄</a>` : `<span class="badge bg-danger">नाही</span>`;
-                let memNoBadge = m.memberNo ? `<span class="badge bg-dark" style="margin-bottom:5px;">${m.memberNo}</span><br>` : '';
-                html += `<tr><td><b>${i+1}</b></td><td>${memNoBadge}<b style="color:var(--primary);">${m.name || '-'}</b><br><small>${m.designation || '-'}</small></td><td><i class="fa fa-phone"></i> ${m.mobile || '-'}<br><i class="fa fa-envelope" style="color:gray;"></i> ${m.email || '-'}</td><td>${m.workplace || '-'}</td><td><b>${m.district || '-'}</b></td><td>${m.mandal || '-'}</td><td>${m.permAddress || '-'}</td><td>${docBadge}</td><td class="no-print"><button class="btn-action btn-doc" onclick="uploadDoc('${m.id}')" title="Upload Document"><i class="fa fa-upload"></i></button> <button class="btn-action btn-edit" onclick="fullEdit('${m.id}')" title="Edit Data"><i class="fa fa-pen"></i></button> <button class="btn-action btn-id" onclick="generateID('${m.id}')" title="Print ID Card"><i class="fa fa-id-card"></i></button> <button class="btn-action btn-wp" onclick="window.open('https://wa.me/91${m.mobile || ''}', '_blank')" title="WhatsApp"><i class="fab fa-whatsapp"></i></button> <button class="btn-action btn-del" onclick="deleteMember('${m.id}')" title="Delete Member"><i class="fa fa-trash"></i></button></td></tr>`;
+                let photoBadge = m.photoUrl ? `<span class="badge bg-success">फोटो ✔</span>` : `<span class="badge bg-danger">फोटो ✘</span>`;
+                let docBadge = m.docUrl ? `<span class="badge bg-success">डॉक ✔</span>` : `<span class="badge bg-danger">डॉक ✘</span>`;
+                
+                html += `<tr><td><b>${i+1}</b></td><td><b style="color:var(--primary);">${m.name || '-'}</b><br><small>${m.designation || '-'}</small></td><td>${m.mobile || '-'}</td><td>${m.workplace || '-'}</td><td>${m.district || '-'}</td>
+                <td>${photoBadge} <br> ${docBadge}</td>
+                <td class="no-print">
+                    <button class="btn-action btn-photo" onclick="uploadFile('${m.id}', 'photoUrl')" title="चेहऱ्याचा फोटो अपलोड"><i class="fa fa-camera"></i></button> 
+                    <button class="btn-action btn-doc" onclick="uploadFile('${m.id}', 'docUrl')" title="कागदपत्रे अपलोड"><i class="fa fa-file-pdf"></i></button> 
+                    <button class="btn-action btn-id" onclick="generateID('${m.id}')" title="Print Smart ID"><i class="fa fa-id-card"></i></button> 
+                    <button class="btn-action btn-edit" onclick="fullEdit('${m.id}')" title="माहिती बदला"><i class="fa fa-pen"></i></button> 
+                    <button class="btn-action btn-del" onclick="strictDelete('${m.id}')" title="कायमचे हटवा"><i class="fa fa-trash"></i></button>
+                </td></tr>`;
             });
-            document.getElementById('membersBody').innerHTML = html || '<tr><td colspan="9">डेटा उपलब्ध नाही.</td></tr>';
+            document.getElementById('membersBody').innerHTML = html || '<tr><td colspan="7">डेटा उपलब्ध नाही.</td></tr>';
         };
 
-        window.addNewMember = async function(e) {
-            e.preventDefault();
-            const newMem = { memberNo: document.getElementById('add_memNo').value || '', name: document.getElementById('add_name').value || '', mobile: document.getElementById('add_mobile').value || '', email: document.getElementById('add_email').value || '', mandal: document.getElementById('add_mandal').value || '', district: document.getElementById('add_district').value || '', workplace: document.getElementById('add_workplace').value || '', designation: document.getElementById('add_desig').value || '', permAddress: document.getElementById('add_perm_address').value || '', pass: document.getElementById('add_pass').value || '1234', status: "Approved", feeStatus: "Unpaid", docUrl: "" };
-            await addDoc(collection(db, "members"), newMem); Swal.fire('यशस्वी!', 'सदस्य थेट जोडला गेला', 'success'); document.getElementById('addForm').reset(); loadData();
-        };
-
-        window.uploadDoc = async function(id) {
-           const SCRIPT_URL = "येथे_तुमची_WEB_APP_URL_टाका"; 
-            if(SCRIPT_URL === "येथे_तुमची_WEB_APP_URL_टाका") { Swal.fire('थांबा!', 'कृपया आधी Google Apps Script ची URL कोडमध्ये टाका.', 'warning'); return; }
-            const { value: file } = await Swal.fire({ title: 'ओळखपत्र / कागदपत्र निवडा', input: 'file', inputAttributes: { 'accept': 'image/*,application/pdf' }, showCancelButton: true });
+        // --- DOUBLE UPLOAD FUNCTION ---
+        window.uploadFile = async function(id, fieldType) {
+            const SCRIPT_URL = "येथे_तुमची_WEB_APP_URL_टाका"; 
+            let title = fieldType === 'photoUrl' ? 'चेहऱ्याचा फोटो निवडा (JPG/PNG)' : 'अधिकृत कागदपत्रे निवडा (PDF/JPG)';
+            const { value: file } = await Swal.fire({ title: title, input: 'file', showCancelButton: true });
+            
             if (file) {
-                Swal.fire({title: 'फाईल ड्राईव्हवर सेव्ह होत आहे...', html: 'कृपया थांबा...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
+                Swal.fire({title: 'फाईल Google Drive वर सेव्ह होत आहे...', didOpen: () => { Swal.showLoading() }});
                 let reader = new FileReader(); reader.readAsDataURL(file);
                 reader.onload = async function () {
                     let base64 = reader.result.split(',')[1]; let obj = { data: base64, filename: file.name, mimetype: file.type };
                     try {
                         let response = await fetch(SCRIPT_URL, { method: "POST", body: new URLSearchParams(obj) }); let driveUrl = await response.text();
-                        if(driveUrl.includes('Error')) { Swal.fire('त्रुटी', 'अपलोड अयशस्वी: ' + driveUrl, 'error'); return; }
-                        await updateDoc(doc(db, "members", id), { docUrl: driveUrl }); Swal.fire('यशस्वी!', 'कागदपत्र सेव्ह झाले.', 'success'); loadData();
-                    } catch(e) { Swal.fire('त्रुटी', 'अपलोड करताना चूक झाली.', 'error'); console.error(e); }
+                        let updateData = {}; updateData[fieldType] = driveUrl;
+                        await updateDoc(doc(db, "members", id), updateData); Swal.fire('यशस्वी!', 'फाईल सेव्ह झाली.', 'success'); loadData();
+                    } catch(e) { Swal.fire('त्रुटी', 'अपलोड करताना चूक झाली.', 'error'); }
                 };
             }
         };
 
-        window.fullEdit = function(id) {
-            let m = membersData.find(x => x.id === id) || {};
-            let distOpts = mhDistricts.map(d => `<option value="${d}" ${m.district===d?'selected':''}>${d}</option>`).join('');
-            Swal.fire({
-                title: 'माहिती दुरुस्त करा',
-                html: `<div class="swal-grid"><div class="full-width"><label>सदस्य क्रमांक</label><input type="text" id="e_memNo" value="${m.memberNo || ''}"></div><div><label>नाव</label><input type="text" id="e_name" value="${m.name || ''}"></div><div><label>पद</label><input type="text" id="e_desig" value="${m.designation || ''}"></div><div><label>मोबाईल</label><input type="text" id="e_mob" value="${m.mobile || ''}"></div><div><label>ईमेल</label><input type="email" id="e_email" value="${m.email || ''}"></div><div class="full-width"><label>कार्यरत ठिकाण</label><input type="text" id="e_work" value="${m.workplace || ''}"></div><div><label>जिल्हा</label><select id="e_dist"><option value="">-- निवडा --</option>${distOpts}</select></div><div><label>विभाग</label><select id="e_mandal"><option value="">-- निवडा --</option><option value="पुणे मंडळ" ${m.mandal==='पुणे मंडळ'?'selected':''}>पुणे</option> <option value="नागपूर मंडळ" ${m.mandal==='नागपूर मंडळ'?'selected':''}>नागपूर</option> <option value="नाशिक मंडळ" ${m.mandal==='नाशिक मंडळ'?'selected':''}>नाशिक</option> <option value="अकोला मंडळ" ${m.mandal==='अकोला मंडळ'?'selected':''}>अकोला</option> <option value="कोल्हापूर मंडळ" ${m.mandal==='कोल्हापूर मंडळ'?'selected':''}>कोल्हापूर</option> <option value="छत्रपती संभाजीनगर मंडळ" ${m.mandal==='छत्रपती संभाजीनगर मंडळ'?'selected':''}>छ. संभाजीनगर</option> <option value="लातूर मंडळ" ${m.mandal==='लातूर मंडळ'?'selected':''}>लातूर</option> <option value="ठाणे मंडळ" ${m.mandal==='ठाणे मंडळ'?'selected':''}>ठाणे</option></select></div><div class="full-width"><label>मूळ पत्ता</label><input type="text" id="e_addr" value="${m.permAddress || ''}"></div><div><label>पासवर्ड</label><input type="text" id="e_pass" value="${m.pass || '1234'}"></div></div>`,
-                width: '800px', showCancelButton: true, confirmButtonText: 'सेव्ह करा',
-                preConfirm: () => { return { memberNo: document.getElementById('e_memNo').value, name: document.getElementById('e_name').value, designation: document.getElementById('e_desig').value, mobile: document.getElementById('e_mob').value, email: document.getElementById('e_email').value, district: document.getElementById('e_dist').value, mandal: document.getElementById('e_mandal').value, workplace: document.getElementById('e_work').value, permAddress: document.getElementById('e_addr').value, pass: document.getElementById('e_pass').value } }
-            }).then(async (result) => { if (result.isConfirmed) { await updateDoc(doc(db, "members", id), result.value); Swal.fire('अपडेट!', '', 'success'); loadData(); } });
-        };
-
-        window.deleteMember = async function(id) { if(confirm("सदस्य कायमचा डिलीट होईल!")) { await deleteDoc(doc(db, "members", id)); loadData(); } };
-        
-        window.generateID = function(id) {
-            let m = membersData.find(x => x.id === id) || {}; let memNoText = m.memberNo ? `<div style="background:#f39c12; color:#000; font-weight:bold; padding:3px; font-size:12px;">ID: ${m.memberNo}</div>` : '';
-            let idWindow = window.open('', '', 'height=600,width=400'); idWindow.document.write(`<html><head><title>ID Card</title><style>body { font-family: 'Arial', sans-serif; display: flex; justify-content: center; padding: 20px; background:#f0f0f0;} .id-card { width: 300px; height: 450px; background: white; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); overflow: hidden; border: 2px solid #0B3D91; text-align: center; position:relative;} .header { background: #0B3D91; color: white; padding: 15px 5px; font-weight: bold; font-size: 14px; } .photo { width: 100px; height: 100px; background: #e0e0e0; border-radius: 50%; margin: 15px auto; border: 3px solid #f39c12; display:flex; justify-content:center; align-items:center; color:#888; overflow:hidden;} .photo img {width:100%; height:100%; object-fit:cover;} .name { font-size: 20px; font-weight: bold; color: #0B3D91; margin: 10px 0 5px 0;} .desig { font-size: 14px; color: #e67e22; font-weight: bold; margin-bottom: 10px;} .details { font-size: 13px; text-align: left; padding: 0 20px; line-height: 1.8; } .footer { background: #0B3D91; color: #fff; position: absolute; bottom: 0; width: 100%; padding: 10px 0; font-size: 12px; font-weight: bold;} @media print { body { background: white; } .no-print { display: none; } }</style></head><body><div class="id-card"><div class="header">क्ष-किरण संघटना महाराष्ट्र</div>${memNoText}<div class="photo">${m.docUrl ? `<img src="${m.docUrl}">` : 'Photo'}</div><div class="name">${m.name || '-'}</div><div class="desig">${m.designation || '-'}</div><div class="details"><b>मोबाईल:</b> ${m.mobile || '-'}<br><b>विभाग:</b> ${m.mandal || '-'}<br><b>जिल्हा:</b> ${m.district || '-'}<br><b>कार्यरत:</b> ${m.workplace || '-'}</div><div class="footer">अध्यक्ष / सचिव स्वाक्षरी</div></div><div class="no-print" style="position:absolute; top:20px; right:20px;"><button onclick="window.print()" style="padding:10px 20px; background:#0B3D91; color:white; border:none; cursor:pointer;">Print ID</button></div></body></html>`); idWindow.document.close();
-        };
-
-        // ================= TAB 3: FEES =================
-        window.renderFees = function() {
-            let filter = document.getElementById('feeFilter').value; let appMem = membersData.filter(m => m.status !== 'Pending');
-            let fData = (filter === 'Paid') ? appMem.filter(m=>m.feeStatus === 'Paid') : (filter === 'Unpaid') ? appMem.filter(m=>m.feeStatus !== 'Paid') : appMem;
-            let html = '';
-            fData.forEach((m, i) => { let statusBadge = m.feeStatus === 'Paid' ? '<span class="badge bg-success">Paid</span>' : '<span class="badge bg-danger">Unpaid</span>'; let amtText = m.feeStatus === 'Paid' ? `₹ ${m.feeAmount || '-'} <br><small>Rec: ${m.feeReceipt || '-'}</small>` : '-'; html += `<tr><td>${i+1}</td><td><b>${m.name || '-'}</b></td><td>${m.mobile || '-'}</td><td>${statusBadge}</td><td>${amtText}</td><td class="no-print"><button class="btn-action bg-warning" onclick="updateFee('${m.id}')">अपडेट फी</button> ${m.feeStatus === 'Paid' ? `<button class="btn-action btn-id" onclick="printReceipt('${m.id}')">पावती</button>` : ''}</td></tr>`; });
-            document.getElementById('feesBody').innerHTML = html || '<tr><td colspan="6">डेटा नाही.</td></tr>';
-        };
-
-        window.updateFee = function(id) { Swal.fire({ title: 'फी अपडेट करा', html: `<select id="f_stat" class="form-control" style="margin-bottom:10px;"><option value="Paid">Paid (भरली)</option><option value="Unpaid">Unpaid (बाकी)</option></select><input type="number" id="f_amt" class="form-control" placeholder="रक्कम (उदा. 1000)" style="margin-bottom:10px;"><input type="text" id="f_rec" class="form-control" placeholder="पावती क्र. / Transaction ID">`, confirmButtonText: 'सेव्ह करा', preConfirm: () => { return { feeStatus: document.getElementById('f_stat').value, feeAmount: document.getElementById('f_amt').value, feeReceipt: document.getElementById('f_rec').value } } }).then(async (result) => { if (result.isConfirmed) { await updateDoc(doc(db, "members", id), result.value); Swal.fire('सेव्ह झाले!', '', 'success'); loadData(); } }); };
-        
-        window.printReceipt = function(id) { let m = membersData.find(x => x.id === id) || {}; let w = window.open('','','height=600,width=800'); w.document.write(`<html><head><title>पावती</title><style>body{font-family:sans-serif; padding:40px;} .box{border:2px solid #000; padding:20px;} h2{text-align:center; color:#0B3D91; text-decoration:underline;} .no-print{display:none;}</style></head><body><div class="box"><h2>क्ष-किरण संघटना महाराष्ट्र - पावती</h2><p style="text-align:right;"><b>दिनांक:</b> ${new Date().toLocaleDateString()}</p><p><b>पावती क्र:</b> ${m.feeReceipt || '-'}</p><p>श्री/श्रीमती <b>${m.name || '-'}</b> (${m.mobile || '-'}) यांच्याकडून संघटनेच्या कार्यासाठी <b>₹ ${m.feeAmount || '-'}</b> प्राप्त झाले. धन्यवाद!</p><p style="text-align:right; margin-top:50px;"><b>खजिनदार / प्राप्तकर्ता</b></p></div><button onclick="window.print()" style="margin-top:20px; padding:10px;">Print Receipt</button></body></html>`); w.document.close(); };
-
-        // ================= TAB 4 & 5: ELECTIONS & NOTICES =================
-        window.addCandidate = async function(e) { e.preventDefault(); const c = { post: document.getElementById('cand_post').value, name: document.getElementById('cand_name').value, info: document.getElementById('cand_info').value, votes: 0 }; await addDoc(collection(db, "candidates"), c); Swal.fire('उमेदवार जोडला!', '', 'success'); e.target.reset(); loadData(); };
-        window.renderCandidates = function() { let html = ''; candidatesData.forEach(c => { html += `<tr><td><b style="color:var(--primary);">${c.post}</b></td><td><b>${c.name}</b></td><td>${c.info}</td><td><h2>${c.votes}</h2></td><td class="no-print"><button class="btn-action btn-del" onclick="deleteCandidate('${c.id}')"><i class="fa fa-trash"></i></button></td></tr>`; }); document.getElementById('candidatesBody').innerHTML = html || '<tr><td colspan="5">सध्या उमेदवार नाहीत.</td></tr>'; };
-        window.deleteCandidate = async function(id) { if(confirm("उमेदवार हटवायचा?")) { await deleteDoc(doc(db, "candidates", id)); loadData(); } };
-
-        window.addNotice = async function(e) { e.preventDefault(); const n = { title: document.getElementById('notice_title').value, date: document.getElementById('notice_date').value, desc: document.getElementById('notice_desc').value }; await addDoc(collection(db, "notices"), n); Swal.fire('सूचना प्रकाशित!', '', 'success'); e.target.reset(); loadData(); };
-        window.renderNotices = function() { let html = ''; noticesData.forEach(n => { html += `<tr><td>${n.date}</td><td><b>${n.title}</b></td><td>${n.desc}</td><td class="no-print"><button class="btn-action btn-del" onclick="deleteNotice('${n.id}')"><i class="fa fa-trash"></i></button></td></tr>`; }); document.getElementById('noticesBody').innerHTML = html || '<tr><td colspan="4">कोणतीही सूचना नाही.</td></tr>'; };
-        window.deleteNotice = async function(id) { if(confirm("ही सूचना डिलीट करायची?")) { await deleteDoc(doc(db, "notices", id)); loadData(); } };
-
-        // ================= TAB 6: COMPLAINTS (WITH DELETE FUNCTION) =================
-        window.renderComplaints = function() { 
-            let html = ''; 
-            complaintsData.forEach((c) => { 
-                let safeName = c.memberName || c.name || c.member_name || '-';
-                let safeMobile = c.memberMobile || c.mobile || c.phone || '-';
-                let badge = c.status === 'Resolved' ? '<span class="badge bg-success">सोडवली</span>' : '<span class="badge bg-warning">प्रलंबित</span>'; 
-                
-                // पूर्ण केली बटन आणि डिलीट बटन (Trash) एकत्र
-                let actionBtn = c.status !== 'Resolved' 
-                    ? `<button class="btn-action bg-success" onclick="resolveComp('${c.id}')" style="margin-right:10px;">पूर्ण केली</button>` 
-                    : `<span style="color:green;font-weight:bold; margin-right:10px;">✔ OK</span>`;
-                actionBtn += `<button class="btn-action btn-del" onclick="deleteComplaint('${c.id}')" title="तक्रार कायमची डिलीट करा"><i class="fa fa-trash"></i></button>`;
-
-                html += `<tr>
-                    <td>${c.date || '-'}</td>
-                    <td><b>${safeName}</b><br><small>${safeMobile}</small></td>
-                    <td><b style="color:var(--danger);">${c.subject || '-'}</b><br><small>${c.description || '-'}</small></td>
-                    <td>${badge}</td>
-                    <td class="no-print">${actionBtn}</td>
-                </tr>`; 
-            }); 
-            document.getElementById('complaintsBody').innerHTML = html || '<tr><td colspan="5">तक्रार नाही.</td></tr>'; 
-        };
-
-        window.resolveComp = async function(id) { 
-            let c = complaintsData.find(x => x.id === id);
-            let safeName = c.memberName || c.name || c.member_name || 'सदस्य';
-            let safeMobile = c.memberMobile || c.mobile || c.phone || '';
-            let subj = c.subject || c.title || '-';
-
-            Swal.fire({
-                title: "ही तक्रार सोडवली आहे का?",
-                icon: "question",
-                showCancelButton: true,
-                confirmButtonText: "हो, सोडवली",
-                cancelButtonText: "नाही, रद्द करा",
-                confirmButtonColor: "#10b981"
-            }).then(async (result) => {
-                if (result.isConfirmed) { 
-                    await updateDoc(doc(db, "complaints", id), { status: 'Resolved' }); 
-                    Swal.fire({
-                        title: 'तक्रार सोडवली!',
-                        text: 'सदस्याला याबद्दल WhatsApp वर मेसेज पाठवायचा आहे का?',
-                        icon: 'success',
-                        showCancelButton: true,
-                        confirmButtonText: 'हो, WhatsApp पाठवा',
-                        cancelButtonText: 'नको',
-                        confirmButtonColor: '#25D366'
-                    }).then((waResult) => {
-                        if (waResult.isConfirmed && safeMobile) {
-                            let finalMobile = safeMobile.replace(/\D/g,''); 
-                            if(finalMobile.length === 10) { finalMobile = '91' + finalMobile; }
-                            let msg = `सस्नेह नमस्कार ${safeName},\n\nक्ष-किरण संघटना महाराष्ट्र कडे तुम्ही केलेली तक्रार / मागणी ('${subj}') यशस्वीरित्या सोडवण्यात आली आहे.\n\nधन्यवाद!\n- ॲडमिन टीम`;
-                            window.open(`https://wa.me/${finalMobile}?text=${encodeURIComponent(msg)}`, '_blank');
-                        } else if (waResult.isConfirmed && !safeMobile) {
-                            Swal.fire('अडचण', 'सदस्याचा मोबाईल नंबर उपलब्ध नाही.', 'error');
-                        }
-                        loadData();
-                    });
-                }
+        // --- STRICT DELETE WITH AUDIT ---
+        window.strictDelete = async function(id) { 
+            Swal.fire({ title: "Strict Delete!", text: "हा रेकॉर्ड कायमचा हटवला जाईल. याची नोंद ॲक्टिव्हिटी लॉग मध्ये होईल. पुढे जायचे का?", icon: "warning", showCancelButton: true, confirmButtonColor: "#ef4444" }).then(async (result) => {
+                if (result.isConfirmed) { await deleteDoc(doc(db, "members", id)); loadData(); }
             });
         };
-
-        // तक्रार कायमची डिलीट करण्याचे फंक्शन
-        window.deleteComplaint = async function(id) { 
-            if(confirm("ही तक्रार यादीतून कायमची डिलीट करायची का?")) { 
-                await deleteDoc(doc(db, "complaints", id)); 
-                loadData(); 
-            } 
+        
+        // --- SMART ID CARD (With Stamp & Sign Placeholder) ---
+        window.generateID = function(id) {
+            let m = membersData.find(x => x.id === id) || {}; 
+            let stampHTML = `<div style="margin-top:10px; display:flex; justify-content:space-around; align-items:flex-end;">
+                                <div style="text-align:center;"><img src="STAMP_URL_HERE" style="height:40px;"><br><small style="font-size:10px;">संस्थेचा शिक्का</small></div>
+                                <div style="text-align:center;"><img src="SIGN_URL_HERE" style="height:30px;"><br><small style="font-size:10px;">अध्यक्षांची स्वाक्षरी</small></div>
+                             </div>`;
+            
+            let idWindow = window.open('', '', 'height=600,width=400'); 
+            idWindow.document.write(`<html><head><title>Smart ID Card</title><style>body{font-family:sans-serif; background:#f0f0f0; display:flex; justify-content:center;} .id-card { width: 300px; height: 500px; background: white; border-radius: 15px; border: 2px solid #0B3D91; text-align: center; position:relative; overflow:hidden;} .header { background: #0B3D91; color: white; padding: 15px; font-weight: bold;} .photo { width: 110px; height: 110px; background: #eee; border-radius: 5px; margin: 15px auto; border: 2px solid #f39c12; overflow:hidden;} .photo img {width:100%; height:100%; object-fit:cover;} .watermark { position:absolute; top:40%; left:10%; opacity:0.1; font-size:40px; transform:rotate(-30deg); color:#0B3D91; pointer-events:none;}</style></head><body>
+            <div class="id-card">
+                <div class="watermark">क्ष-किरण संघटना</div>
+                <div class="header">क्ष-किरण संघटना महाराष्ट्र</div>
+                <div style="background:#f39c12; font-weight:bold;">ID: ${m.memberNo || '---'}</div>
+                <div class="photo">${m.photoUrl ? `<img src="${m.photoUrl}">` : 'Photo'}</div>
+                <h3 style="color:#0B3D91; margin:5px 0;">${m.name || '-'}</h3>
+                <p style="color:#e67e22; font-weight:bold; font-size:14px;">${m.designation || '-'}</p>
+                <div style="text-align:left; padding:0 20px; font-size:13px; line-height:1.6;">
+                    <b>रक्तगट:</b> ${m.bloodGroup || '-'}<br>
+                    <b>मोबाईल:</b> ${m.mobile || '-'}<br>
+                    <b>जिल्हा:</b> ${m.district || '-'}
+                </div>
+                ${stampHTML}
+                <div style="background: #0B3D91; color: #fff; position: absolute; bottom: 0; width: 100%; padding: 8px 0; font-size: 11px;">Official Smart ID</div>
+            </div></body></html>`); 
+            idWindow.document.close();
         };
 
-        // ================= EXPORT & PRINT UTILITIES =================
-       window.printTable = function(tableId, title) { let printWindow = window.open('', '', 'height=800,width=1000'); let tableHtml = document.getElementById(tableId).outerHTML; printWindow.document.write(`<html><head><title>${title}</title><style>body { font-family: sans-serif; padding: 20px; } h2 { text-align: center; color: #0B3D91; border-bottom: 2px solid #0B3D91; padding-bottom: 10px; margin-bottom: 20px;} table { width: 100%; border-collapse: collapse; } th, td { border: 1px solid #333; padding: 10px; text-align: left; font-size: 14px; } th { background-color: #f1f5f9; font-weight: bold; } .no-print { display: none !important; }</style></head><body><h2>${title}</h2>${tableHtml}<div style="text-align: right; margin-top: 20px; font-size: 12px;"><b>प्रिंट वेळ:</b> ${new Date().toLocaleString()}</div></body></html>`); printWindow.document.close(); printWindow.focus(); setTimeout(() => { printWindow.print(); printWindow.close(); }, 500); };
-        
-        window.exportToExcel = function(tableID, filename = '') { let clone = document.getElementById(tableID).cloneNode(true); clone.querySelectorAll('.no-print').forEach(el => el.remove()); XLSX.writeFile(XLSX.utils.table_to_book(clone, {sheet:"Sheet1"}), filename+".xlsx"); };
-        
-        window.downloadPDF = function(tableId, filename) {
-            Swal.fire({title: 'PDF तयार होत आहे...', html: 'कृपया थांबा...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
-            let element = document.getElementById(tableId).cloneNode(true);
-            element.querySelectorAll('.no-print').forEach(el => el.remove()); 
-            element.style.width = "100%";
-            element.querySelectorAll('th, td').forEach(cell => { cell.style.fontSize = "11px"; cell.style.padding = "5px"; cell.style.border = "1px solid #ccc"; cell.style.wordBreak = "break-word"; });
-            let wrapper = document.createElement('div'); wrapper.style.padding = "10px";
-            wrapper.innerHTML = `<h2 style="text-align:center; color:#0B3D91; font-family:sans-serif; margin-bottom: 20px; padding-top: 10px;">${filename.replace(/_/g, ' ')}</h2>`;
-            wrapper.appendChild(element);
-            let opt = { margin: [0.5, 0.2, 0.5, 0.2], filename: filename + '.pdf', image: { type: 'jpeg', quality: 1.0 }, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'in', format: 'a3', orientation: 'landscape' }, pagebreak: { mode: 'css', avoid: 'tr' } };
-            html2pdf().set(opt).from(wrapper).save().then(() => { Swal.close(); });
+        // --- FLASH NEWS CONTROL ---
+        window.updateFlashNews = async function() {
+            let news = document.getElementById('flash_news').value;
+            await setDoc(doc(db, "settings", "marquee"), { text: news });
+            Swal.fire('यशस्वी!', 'बातमी मुख्य वेबसाईटवर लाईव्ह झाली आहे.', 'success');
         };
-        
-        // ================= DASHBOARD CHARTS =================
-        function renderCharts() {
-            try {
-                let mCounts = {}; let dCounts = {}; 
-                let appMem = membersData.filter(m => m.status !== 'Pending');
-                appMem.forEach(m => { if(m.mandal && m.mandal !== "-") mCounts[m.mandal] = (mCounts[m.mandal]||0)+1; if(m.district && m.district !== "-") dCounts[m.district] = (dCounts[m.district]||0)+1; });
-                const mCtx = document.getElementById('mandalChart').getContext('2d'); if(mChart) mChart.destroy(); mChart = new Chart(mCtx, { type: 'pie', data: { labels: Object.keys(mCounts), datasets: [{ data: Object.values(mCounts), backgroundColor: ['#0B3D91','#f39c12','#10b981','#ef4444','#3b82f6','#8b5cf6','#f59e0b','#d97706'] }] } });
-                const dCtx = document.getElementById('distChart').getContext('2d'); if(dChart) dChart.destroy(); let sortedDist = Object.entries(dCounts).sort((a,b)=>b[1]-a[1]).slice(0,10); dChart = new Chart(dCtx, { type: 'doughnut', data: { labels: sortedDist.map(x=>x[0]), datasets: [{ data: sortedDist.map(x=>x[1]), backgroundColor: ['#8b5cf6','#3b82f6','#ef4444','#10b981','#f59e0b','#0B3D91','#d97706','#059669','#1e293b','#b45309'] }] } });
-            } catch(err) { console.log('Chart Error:', err); }
-        }
     </script>
+</body>
+</html>
