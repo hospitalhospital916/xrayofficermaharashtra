@@ -341,9 +341,17 @@
             else { document.getElementById('login-screen').style.display = 'flex'; document.getElementById('app-content').style.display = 'none'; }
         });
         window.loginAdmin = async function() {
-            try { await signInWithEmailAndPassword(auth, document.getElementById('adminEmail').value, document.getElementById('adminPass').value); } 
-            catch(e) { Swal.fire('त्रुटी', 'चुकीचा ईमेल किंवा पासवर्ड', 'error'); }
-        };
+    try {
+        // १. आधी Persistence सेट करा (ब्राउझर बंद केल्यावर लॉग आऊट होण्यासाठी)
+        await setPersistence(auth, browserSessionPersistence);
+        
+        // २. तुमची जुनी लॉगिनची ओळ (जशी होती तशीच)
+        await signInWithEmailAndPassword(auth, document.getElementById('adminEmail').value, document.getElementById('adminPass').value);
+        
+    } catch(e) { 
+        Swal.fire('त्रुटी', 'चुकीचा ईमेल किंवा पासवर्ड', 'error'); 
+    }
+};
         window.logoutAdmin = function() { signOut(auth); };
 
         // MASTER LOAD DATA
