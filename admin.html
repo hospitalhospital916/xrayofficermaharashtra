@@ -481,8 +481,8 @@
         };
 
         window.uploadDoc = async function(id) {
-            const SCRIPT_URL = "येथे_तुमची_WEB_APP_URL_टाका"; 
-            if(SCRIPT_URL === "येथे_तुमची_WEB_APP_URL_टाका") { Swal.fire('थांबा!', 'कृपया आधी Google Apps Script ची URL कोडमध्ये टाका.', 'warning'); return; }
+            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx-6x7OjLPFliMITRBemPw1OoCcrgePhONDLOb9mi_1svkWQ5u7GODv2tm1nvArT9RD/execा"; 
+            if(SCRIPT_URL === "https://script.google.com/macros/s/AKfycbx-6x7OjLPFliMITRBemPw1OoCcrgePhONDLOb9mi_1svkWQ5u7GODv2tm1nvArT9RD/exec") { Swal.fire('थांबा!', 'कृपया आधी Google Apps Script ची URL कोडमध्ये टाका.', 'warning'); return; }
             const { value: file } = await Swal.fire({ title: 'ओळखपत्र / कागदपत्र निवडा', input: 'file', inputAttributes: { 'accept': 'image/*,application/pdf' }, showCancelButton: true });
             if (file) {
                 Swal.fire({title: 'फाईल ड्राईव्हवर सेव्ह होत आहे...', html: 'कृपया थांबा...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
