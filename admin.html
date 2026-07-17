@@ -3,13 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>सुपर ॲडमिन | क्ष-किरण संघटना महाराष्ट्र</title>
+    <title>सुपर ॲडमिन | राज्यस्तरीय नियंत्रण कक्ष</title>
   
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Mukta:wght@300;400;600;700;800&display=swap');
@@ -18,50 +16,64 @@
             --bg: #f0f4f8; --white: #ffffff; --text: #2d3748;
             --primary: #0B3D91; --secondary: #f39c12; --success: #10b981; 
             --danger: #ef4444; --info: #3b82f6; --warning: #f59e0b; 
-            --purple: #8b5cf6; --border: #e2e8f0; --dark: #1e293b;
+            --dark: #1e293b; --verified: #e6ffed;
         }
 
-        /* Anti-Copy Protection */
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mukta', sans-serif; user-select: none; /* Text selection disabled */ }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mukta', sans-serif; user-select: none; }
         body { background-color: var(--bg); color: var(--text); overflow-x: hidden; }
 
         /* --- LOGIN SCREEN --- */
         #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, var(--dark), var(--primary)); display: flex; justify-content: center; align-items: center; z-index: 9999; }
         .login-box { background: rgba(255, 255, 255, 0.95); padding: 45px; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); width: 400px; text-align: center; }
         .login-box h2 { color: var(--primary); margin-bottom: 25px; font-weight: 800; font-size: 2rem; }
-        .login-box input { width: 100%; padding: 14px; margin: 12px 0; border: 2px solid var(--border); border-radius: 10px; font-size: 1.1rem; user-select: auto; }
+        .login-box input { width: 100%; padding: 14px; margin: 12px 0; border: 2px solid #ccc; border-radius: 10px; font-size: 1.1rem; user-select: auto; }
         .login-box button { width: 100%; padding: 14px; margin-top: 15px; background: linear-gradient(90deg, var(--secondary), #f1c40f); color: var(--dark); border: none; border-radius: 10px; font-size: 1.3rem; font-weight: 800; cursor: pointer; }
 
-        /* --- NAVBAR & TABS --- */
-        .navbar { background: var(--white); padding: 15px 35px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 20px rgba(0,0,0,0.06); position: sticky; top: 0; z-index: 100; border-bottom: 4px solid var(--secondary); }
+        /* --- NAVBAR --- */
+        .navbar { background: var(--white); padding: 15px 35px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border-bottom: 4px solid var(--secondary); }
         .navbar h2 { color: var(--primary); font-weight: 800; font-size: 1.8rem; }
-        .tab-menu { display: flex; flex-wrap: wrap; gap: 10px; background: var(--primary); padding: 15px 35px; }
+        .tab-menu { display: flex; gap: 10px; background: var(--primary); padding: 15px 35px; }
         .tab-btn { padding: 12px 22px; border: none; background: rgba(255,255,255,0.1); color: white; font-size: 1.1rem; font-weight: 700; cursor: pointer; border-radius: 8px; transition: 0.3s; }
         .tab-btn.active { background: var(--secondary); color: var(--dark); }
         .btn-logout { background: var(--danger); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 700; }
 
-        /* --- LAYOUT --- */
+        /* --- 8 MANDAL DASHBOARD GRID --- */
+        .mandal-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .mandal-card { background: white; padding: 15px; border-radius: 12px; text-align: center; border: 2px solid var(--primary); cursor: pointer; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .mandal-card:hover { transform: translateY(-5px); background: var(--primary); color: white; }
+        .mandal-card h3 { font-size: 1.1rem; margin-bottom: 5px; }
+        .mandal-card h2 { font-size: 1.8rem; font-weight: 800; color: var(--secondary); }
+        .mandal-card:hover h2 { color: white; }
+
+        /* --- LAYOUT & PANELS --- */
         .container { max-width: 1500px; margin: 30px auto; padding: 0 20px; }
         .tab-content { display: none; } .tab-content.active { display: block; }
-        .panel { background: var(--white); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 35px; overflow: hidden; border: 1px solid var(--border); }
-        .panel-header { padding: 20px 30px; font-size: 1.4rem; font-weight: 800; background: #f8fafc; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-        .h-blue { border-top: 6px solid var(--info); color: var(--info); } .h-green { border-top: 6px solid var(--success); color: var(--success); } .h-red { border-top: 6px solid var(--danger); color: var(--danger); } .h-warning { border-top: 6px solid var(--warning); color: var(--warning); } .h-purple { border-top: 6px solid var(--purple); color: var(--purple); }
+        .panel { background: var(--white); border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 35px; border: 1px solid #e2e8f0; }
+        .panel-header { padding: 20px 30px; font-size: 1.4rem; font-weight: 800; background: #f8fafc; border-bottom: 1px solid #e2e8f0; border-top: 6px solid var(--primary);}
         .panel-body { padding: 30px; }
 
         /* --- FORMS & TABLES --- */
-        .form-row { display: flex; flex-wrap: wrap; gap: 15px; align-items: center; margin-bottom: 15px; }
-        .form-control { flex: 1; min-width: 200px; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 1.05rem; user-select: auto; }
-        textarea.form-control { min-height: 100px; resize: vertical; user-select: auto; }
-        .btn-save { background: var(--success); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.2s;}
+        .form-row { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px; align-items: center;}
+        .form-control { flex: 1; min-width: 200px; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 1.05rem; user-select: auto;}
         
-        .table-responsive { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); }
+        .table-responsive { overflow-x: auto; border-radius: 12px; border: 1px solid #e2e8f0; }
         table { width: 100%; border-collapse: collapse; min-width: 1200px; background: white; }
-        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.95rem; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #e2e8f0; font-size: 1rem; vertical-align: middle; }
         th { background: var(--primary); color: white; font-weight: 800; }
         
-        .btn-action { border: none; padding: 8px 12px; border-radius: 6px; color: white; font-weight: bold; cursor: pointer; margin: 2px; font-size: 0.85rem;}
-        .btn-wp { background-color: #25D366; } .btn-edit { background-color: var(--warning); color: #000; } .btn-del { background-color: var(--danger); } .btn-id { background-color: var(--info); } .btn-photo { background-color: #ec4899; } .btn-doc { background-color: #6366f1; } .btn-approve { background-color: var(--success); }
-        .badge { padding: 5px 10px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; color: white; display: inline-block; } .bg-success { background: #10b981; } .bg-warning { background: #f59e0b; color: #000;} .bg-danger { background: #ef4444; } .bg-dark { background: #1e293b; }
+        /* Highlight Verified Members */
+        .verified-row { background-color: var(--verified); border-left: 5px solid var(--success) !important; }
+        .pending-row { background-color: #fff0f0; border-left: 5px solid var(--danger) !important; }
+
+        .btn-save { background: var(--success); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 700; cursor: pointer; }
+        .btn-hub { background: var(--dark); color: white; border: none; padding: 10px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1rem; width: 100%; box-shadow: 0 4px 6px rgba(0,0,0,0.1);}
+        .btn-hub:hover { background: var(--primary); }
+
+        /* Action Hub Grid in SweetAlert */
+        .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; }
+        .action-btn { padding: 15px; font-size: 1.1rem; font-weight: bold; border: none; border-radius: 10px; cursor: pointer; color: white; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s;}
+        .action-btn:hover { opacity: 0.8; transform: scale(0.98); }
+        .a-photo { background: #ec4899; } .a-doc { background: #8b5cf6; } .a-id { background: #f59e0b; color:#000; } .a-edit { background: #3b82f6; } .a-wp { background: #10b981; } .a-del { background: #ef4444; grid-column: span 2; }
     </style>
 </head>
 <body>
@@ -69,7 +81,7 @@
     <!-- 1. LOGIN SCREEN -->
     <div id="login-screen">
         <div class="login-box">
-            <h2>सुपर ॲडमिन नियंत्रण कक्ष</h2>
+            <h2>सुपर ॲडमिन कक्ष</h2>
             <input type="email" id="adminEmail" placeholder="नोंदणीकृत Email" autocomplete="off">
             <input type="password" id="adminPass" placeholder="Password">
             <button onclick="loginAdmin()">लॉगिन करा <i class="fa fa-arrow-right"></i></button>
@@ -79,55 +91,47 @@
     <!-- 2. APP CONTENT -->
     <div id="app-content" style="display: none;">
         <div class="navbar">
-            <h2><i class="fa fa-shield"></i> क्ष-किरण संघटना महाराष्ट्र</h2>
-            <div>
-                <span id="timerDisplay" style="color:red; font-weight:bold; margin-right:20px;"><i class="fa fa-clock"></i> Auto-Logout in 10:00</span>
-                <button class="btn-logout" onclick="logoutAdmin()"><i class="fa fa-power-off"></i> लॉगआउट</button>
-            </div>
+            <h2><i class="fa fa-shield-alt"></i> क्ष-किरण संघटना महाराष्ट्र</h2>
+            <button class="btn-logout" onclick="logoutAdmin()"><i class="fa fa-power-off"></i> लॉगआउट</button>
         </div>
 
         <div class="tab-menu">
-            <button class="tab-btn" onclick="openTab('tab-pending')"><i class="fa fa-clock"></i> प्रलंबित विनंत्या <span id="pendingBadge" class="badge bg-danger">0</span></button>
-            <button class="tab-btn active" onclick="openTab('tab-members')"><i class="fa fa-users"></i> सदस्य कक्ष</button>
-            <button class="tab-btn" onclick="openTab('tab-notices')"><i class="fa fa-bullhorn"></i> सूचना व वेब कंट्रोल</button>
+            <button class="tab-btn active" onclick="openTab('tab-members')"><i class="fa fa-users"></i> राज्यस्तरीय सदस्य कक्ष</button>
+            <button class="tab-btn" onclick="openTab('tab-add')"><i class="fa fa-user-plus"></i> नवीन सदस्य नोंदणी</button>
+            <button class="tab-btn" onclick="openTab('tab-web')"><i class="fa fa-globe"></i> वेब व इंडेक्स कंट्रोल</button>
         </div>
 
         <div class="container">
             
-            <!-- NEW TAB: PENDING REQUESTS -->
-            <div id="tab-pending" class="tab-content">
-                <div class="panel">
-                    <div class="panel-header h-red"><span><i class="fa fa-clock"></i> नवीन सदस्यांच्या प्रलंबित विनंत्या</span></div>
-                    <div class="panel-body">
-                        <div class="table-responsive">
-                            <table>
-                                <thead><tr><th>क्र.</th><th>नाव व पद</th><th>मोबाईल/ईमेल</th><th>जिल्हा / विभाग</th><th>कार्यरत ठिकाण</th><th class="no-print" style="min-width:200px;">ॲक्शन (Action)</th></tr></thead>
-                                <tbody id="pendingBody"></tbody>
-                            </table>
-                        </div>
-                    </div>
+            <!-- TAB 1: MASTER MEMBER LIST & DASHBOARD -->
+            <div id="tab-members" class="tab-content active">
+                <!-- 8 Mandal Smart Dashboard -->
+                <div class="mandal-grid">
+                    <div class="mandal-card" onclick="filterByMandal('All')"><h3>एकूण रेकॉर्ड्स</h3><h2 id="cnt-all">0</h2></div>
+                    <div class="mandal-card" onclick="filterByMandal('पुणे मंडळ')"><h3>पुणे मंडळ</h3><h2 id="cnt-pune">0</h2></div>
+                    <div class="mandal-card" onclick="filterByMandal('मुंबई मंडळ')"><h3>मुंबई मंडळ</h3><h2 id="cnt-mumbai">0</h2></div>
+                    <div class="mandal-card" onclick="filterByMandal('नागपूर मंडळ')"><h3>नागपूर मंडळ</h3><h2 id="cnt-nagpur">0</h2></div>
+                    <div class="mandal-card" onclick="filterByMandal('नाशिक मंडळ')"><h3>नाशिक मंडळ</h3><h2 id="cnt-nashik">0</h2></div>
+                    <div class="mandal-card" onclick="filterByMandal('कोल्हापूर मंडळ')"><h3>कोल्हापूर मंडळ</h3><h2 id="cnt-kop">0</h2></div>
+                    <div class="mandal-card" onclick="filterByMandal('छत्रपती संभाजीनगर मंडळ')"><h3>संभाजीनगर मंडळ</h3><h2 id="cnt-csn">0</h2></div>
+                    <div class="mandal-card" onclick="filterByMandal('लातूर मंडळ')"><h3>लातूर मंडळ</h3><h2 id="cnt-latur">0</h2></div>
+                    <div class="mandal-card" onclick="filterByMandal('अकोला मंडळ')"><h3>अकोला मंडळ</h3><h2 id="cnt-akola">0</h2></div>
                 </div>
-            </div>
 
-            <!-- TAB 1: MEMBERS -->
-           <div id="tab-members" class="tab-content active">
                 <div class="panel">
-                    <div class="panel-header h-blue">
-                        <span><i class="fa fa-users"></i> मास्टर सदस्य यादी <span id="totalCount" style="color:var(--danger);"></span></span>
+                    <div class="panel-header">
+                        <span><i class="fa fa-list"></i> राज्यस्तरीय मास्टर यादी <span id="currentMandalView" style="color:var(--danger); font-size:1rem;">(सर्व मंडळे)</span></span>
+                        <div style="display:flex; gap:10px;">
+                            <input type="text" id="searchName" class="form-control" placeholder="🔍 नाव, मोबाईल शोधा..." onkeyup="renderMembers()" style="width:300px; padding:8px;">
+                            <button class="btn-save" onclick="exportToExcel('membersTable', 'State_Member_List')"><i class="fa fa-file-excel"></i> Export</button>
+                        </div>
                     </div>
                     <div class="panel-body">
-                        <!-- FILTERS -->
-                        <div class="form-row" style="background:#f1f5f9; padding:15px; border-radius:10px;">
-                            <input type="text" id="searchName" class="form-control" placeholder="🔍 नाव, मोबाईल किंवा नंबर शोधा..." onkeyup="renderMembers()">
-                            <select id="filterDist" class="form-control" onchange="renderMembers()"><option value="All">-- सर्व जिल्हे --</option></select>
-                        </div>
-
                         <div class="table-responsive">
                             <table id="membersTable">
                                 <thead><tr>
-                                    <th>क्र.</th><th>नाव, पद व क्र.</th><th>संपर्क</th><th>कार्यरत ठिकाण</th><th>जिल्हा</th>
-                                    <th>डॉक्युमेंट्स</th>
-                                    <th class="no-print" style="min-width:280px;">स्मार्ट ॲक्शन</th>
+                                    <th>क्र.</th><th>फोटो</th><th>नाव, पद व मोबाईल</th><th>कार्यरत ठिकाण व जिल्हा</th><th>मंडळ</th><th>स्टेटस</th>
+                                    <th class="no-print" style="min-width:150px; text-align:center;">ॲक्शन</th>
                                 </tr></thead>
                                 <tbody id="membersBody"></tbody>
                             </table>
@@ -136,13 +140,51 @@
                 </div>
             </div>
 
-            <!-- TAB 2: NOTICES & WEB CONTROL -->
-            <div id="tab-notices" class="tab-content">
+         <!-- TAB 2: ADD NEW MEMBER -->
+            <div id="tab-add" class="tab-content">
                 <div class="panel">
-                    <div class="panel-header h-danger"><span><i class="fa fa-bolt"></i> फ्लॅश न्यूज (मुख्य वेबसाईट स्क्रोलिंग)</span></div>
+                    <div class="panel-header" style="border-top-color:var(--success);"><span><i class="fa fa-user-plus"></i> नवीन सदस्य नोंदणी (Extended Form)</span></div>
+                    <div class="panel-body">
+                        <form id="addForm" onsubmit="addNewMember(event)">
+                            <h4 style="margin-bottom:10px; color:var(--primary);"><i class="fa fa-info-circle"></i> वैयक्तिक व व्यावसायिक माहिती</h4>
+                            <div class="form-row">
+                                <input type="text" id="add_memNo" class="form-control" placeholder="सदस्यत्व क्र. (उदा. MH-001)">
+                                <input type="text" id="add_name" class="form-control" placeholder="संपूर्ण नाव *" required>
+                                <input type="tel" id="add_mobile" class="form-control" placeholder="मोबाईल क्रमांक *" required>
+                                <input type="text" id="add_bg" class="form-control" placeholder="रक्तगट (उदा. O+)">
+                            </div>
+                            <div class="form-row">
+                                <input type="text" id="add_desig" class="form-control" placeholder="पद (उदा. क्ष-किरण अधिकारी)" required>
+                                <input type="text" id="add_workplace" class="form-control" placeholder="कार्यरत ठिकाण" required>
+                                
+                                <!-- District mapped to Mandal -->
+                                <select id="add_district" class="form-control" onchange="autoSelectMandal()" required>
+                                    <option value="">-- कार्यरत जिल्हा निवडा --</option>
+                                    <option value="अहमदनगर">अहमदनगर</option><option value="अकोला">अकोला</option><option value="अमरावती">अमरावती</option><option value="छत्रपती संभाजीनगर">छत्रपती संभाजीनगर</option><option value="बीड">बीड</option><option value="भंडारा">भंडारा</option><option value="बुलढाणा">बुलढाणा</option><option value="चंद्रपूर">चंद्रपूर</option><option value="धुळे">धुळे</option><option value="गडचिरोली">गडचिरोली</option><option value="गोंदिया">गोंदिया</option><option value="हिंगोली">हिंगोली</option><option value="जळगाव">जळगाव</option><option value="जालना">जालना</option><option value="कोल्हापूर">कोल्हापूर</option><option value="लातूर">लातूर</option><option value="मुंबई शहर">मुंबई शहर</option><option value="मुंबई उपनगर">मुंबई उपनगर</option><option value="नागपूर">नागपूर</option><option value="नांदेड">नांदेड</option><option value="नंदुरबार">नंदुरबार</option><option value="नाशिक">नाशिक</option><option value="धाराशिव">धाराशिव</option><option value="पालघर">पालघर</option><option value="परभणी">परभणी</option><option value="पुणे">पुणे</option><option value="रायगड">रायगड</option><option value="रत्नागिरी">रत्नागिरी</option><option value="सांगली">सांगली</option><option value="सातारा">सातारा</option><option value="सिंधुदुर्ग">सिंधुदुर्ग</option><option value="सोलापूर">सोलापूर</option><option value="ठाणे">ठाणे</option><option value="वर्धा">वर्धा</option><option value="वाशिम">वाशिम</option><option value="यवतमाळ">यवतमाळ</option>
+                                </select>
+                                <input type="text" id="add_mandal" class="form-control" placeholder="आरोग्य मंडळ (आपोआप येईल)" readonly style="background:#f1f5f9; font-weight:bold; color:var(--primary);">
+                            </div>
+                            
+                            <hr style="margin:20px 0; border:0; border-top:1px solid #e2e8f0;">
+                            <h4 style="margin-bottom:10px; color:var(--danger);"><i class="fa fa-rupee-sign"></i> आर्थिक माहिती व लॉगिन</h4>
+                            <div class="form-row">
+                                <select id="add_fee" class="form-control"><option value="Unpaid">फी बाकी (Unpaid)</option><option value="Paid">फी भरली (Paid)</option></select>
+                                <input type="text" id="add_receipt" class="form-control" placeholder="पावती क्रमांक (असल्यास)">
+                                <input type="text" id="add_pass" class="form-control" placeholder="सदस्याचा पासवर्ड (उदा. 1234)" value="1234" required>
+                            </div>
+                            <button type="submit" class="btn-save" style="width:100%; font-size:1.2rem;"><i class="fa fa-save"></i> माहिती सेव्ह करा व मुख्य यादीत जोडा</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: WEB CONTROL -->
+            <div id="tab-web" class="tab-content">
+                <div class="panel">
+                    <div class="panel-header" style="border-top-color:var(--danger);"><span><i class="fa fa-bolt"></i> इंडेक्स पेज फ्लॅश न्यूज नियंत्रण</span></div>
                     <div class="panel-body">
                         <div class="form-row">
-                            <input type="text" id="flash_news" class="form-control" placeholder="येथे तातडीची बातमी टाईप करा (उदा. 'सर्व सदस्यांनी ३० तारखेपर्यंत फी भरावी')">
+                            <input type="text" id="flash_news" class="form-control" placeholder="मुख्य वेबसाईटवर फिरणारी तातडीची बातमी येथे टाईप करा...">
                             <button class="btn-save" style="background:var(--danger);" onclick="updateFlashNews()">बातमी लाईव्ह करा</button>
                         </div>
                     </div>
@@ -165,33 +207,24 @@
         };
         const app = initializeApp(firebaseConfig); const db = getFirestore(app); const auth = getAuth(app);
         
-        let membersData = [];
-        
-        /* ---------------- ANTI COPY & SCREENSHOT ---------------- */
-        document.addEventListener('contextmenu', event => event.preventDefault());
-        document.addEventListener('keydown', function (event) {
-            if (event.ctrlKey && (event.key === 'c' || event.key === 'p' || event.key === 'u' || event.key === 's')) { event.preventDefault(); Swal.fire('सुरक्षा', 'हा ॲक्शन ब्लॉक केला आहे.', 'warning'); }
-            if (event.key === 'PrintScreen') { navigator.clipboard.writeText(''); Swal.fire('सुरक्षा', 'स्क्रीनशॉट घेण्यास मनाई आहे.', 'error'); }
-        });
+        let membersData = []; let currentFilterMandal = 'All';
 
-        /* ---------------- AUTO LOGOUT TIMER ---------------- */
-        let inactivityTime = function () {
-            let time; let timerDisplay = document.getElementById('timerDisplay');
-            let timeLimit = 600; // 10 minutes in seconds
-
-            window.onload = resetTimer; document.onmousemove = resetTimer; document.onkeypress = resetTimer;
-
-            function updateDisplay() {
-                let minutes = Math.floor(timeLimit / 60); let seconds = timeLimit % 60;
-                timerDisplay.innerHTML = `<i class="fa fa-clock"></i> Auto-Logout in ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-                if (timeLimit <= 0) { window.logoutAdmin(); } else { timeLimit--; }
-            }
-
-            function resetTimer() { timeLimit = 600; clearInterval(time); time = setInterval(updateDisplay, 1000); }
+        /* --- DISTRICT TO MANDAL MAPPING --- */
+        const mandalMapping = {
+            "अहमदनगर": "पुणे मंडळ", "पुणे": "पुणे मंडळ", "सातारा": "पुणे मंडळ", "सोलापूर": "पुणे मंडळ",
+            "कोल्हापूर": "कोल्हापूर मंडळ", "सांगली": "कोल्हापूर मंडळ", "रत्नागिरी": "कोल्हापूर मंडळ", "सिंधुदुर्ग": "कोल्हापूर मंडळ",
+            "अकोला": "अकोला मंडळ", "अमरावती": "अकोला मंडळ", "बुलढाणा": "अकोला मंडळ", "वाशिम": "अकोला मंडळ", "यवतमाळ": "अकोला मंडळ",
+            "नाशिक": "नाशिक मंडळ", "धुळे": "नाशिक मंडळ", "जळगाव": "नाशिक मंडळ", "नंदुरबार": "नाशिक मंडळ",
+            "नागपूर": "नागपूर मंडळ", "भंडारा": "नागपूर मंडळ", "चंद्रपूर": "नागपूर मंडळ", "गडचिरोली": "नागपूर मंडळ", "गोंदिया": "नागपूर मंडळ", "वर्धा": "नागपूर मंडळ",
+            "छत्रपती संभाजीनगर": "छत्रपती संभाजीनगर मंडळ", "जालना": "छत्रपती संभाजीनगर मंडळ", "परभणी": "छत्रपती संभाजीनगर मंडळ", "हिंगोली": "छत्रपती संभाजीनगर मंडळ",
+            "लातूर": "लातूर मंडळ", "बीड": "लातूर मंडळ", "नांदेड": "लातूर मंडळ", "धाराशिव": "लातूर मंडळ",
+            "ठाणे": "ठाणे मंडळ", "मुंबई शहर": "मुंबई मंडळ", "मुंबई उपनगर": "मुंबई मंडळ", "पालघर": "ठाणे मंडळ", "रायगड": "ठाणे मंडळ"
         };
 
-        const mhDistricts = ["अहमदनगर", "अकोला", "पुणे", "मुंबई", "नागपूर", "नाशिक"]; // Add all
-        mhDistricts.forEach(d => { document.getElementById('filterDist').innerHTML += `<option value="${d}">${d}</option>`; });
+        window.autoSelectMandal = function() {
+            let dist = document.getElementById('add_district').value;
+            document.getElementById('add_mandal').value = mandalMapping[dist] || "";
+        };
 
         window.openTab = function(tabId) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
@@ -201,7 +234,7 @@
         };
 
         onAuthStateChanged(auth, (user) => {
-            if (user) { document.getElementById('login-screen').style.display = 'none'; document.getElementById('app-content').style.display = 'block'; inactivityTime(); loadData(); } 
+            if (user) { document.getElementById('login-screen').style.display = 'none'; document.getElementById('app-content').style.display = 'block'; loadData(); } 
             else { document.getElementById('login-screen').style.display = 'flex'; document.getElementById('app-content').style.display = 'none'; }
         });
         
@@ -214,132 +247,177 @@
         async function loadData() {
             try {
                const snap = await getDocs(collection(db, "members")); membersData = [];
-                snap.forEach(doc => { membersData.push({ id: doc.id, ...doc.data() }); });
-                renderPending(); renderMembers();
+               let counts = { 'All':0, 'पुणे मंडळ':0, 'मुंबई मंडळ':0, 'नागपूर मंडळ':0, 'नाशिक मंडळ':0, 'कोल्हापूर मंडळ':0, 'छत्रपती संभाजीनगर मंडळ':0, 'लातूर मंडळ':0, 'अकोला मंडळ':0 };
+               
+                snap.forEach(doc => { 
+                    let d = doc.data(); membersData.push({ id: doc.id, ...d }); 
+                    counts['All']++;
+                    if(d.mandal && counts[d.mandal] !== undefined) { counts[d.mandal]++; }
+                });
+                
+                // Update Dashboard Counts
+                document.getElementById('cnt-all').innerText = counts['All'];
+                document.getElementById('cnt-pune').innerText = counts['पुणे मंडळ'];
+                document.getElementById('cnt-mumbai').innerText = counts['मुंबई मंडळ'];
+                document.getElementById('cnt-nagpur').innerText = counts['नागपूर मंडळ'];
+                document.getElementById('cnt-nashik').innerText = counts['नाशिक मंडळ'];
+                document.getElementById('cnt-kop').innerText = counts['कोल्हापूर मंडळ'];
+                document.getElementById('cnt-csn').innerText = counts['छत्रपती संभाजीनगर मंडळ'];
+                document.getElementById('cnt-latur').innerText = counts['लातूर मंडळ'];
+                document.getElementById('cnt-akola').innerText = counts['अकोला मंडळ'];
+
+                renderMembers();
             } catch(e) { console.error(e); }
         }
 
-        window.renderPending = function() {
-            let pending = membersData.filter(m => m.status === 'Pending');
-            document.getElementById('pendingBadge').innerText = pending.length;
-            // Similar logic to previous code...
+        window.filterByMandal = function(mandalName) {
+            currentFilterMandal = mandalName;
+            document.getElementById('currentMandalView').innerText = `(${mandalName})`;
+            renderMembers();
         };
 
-                 =        // ================= TAB 1: MASTER MEMBERS =================
-        window.renderMembers = function() {
+        // ================= TAB 1: MASTER MEMBERS =================
+       window.renderMembers = function() {
             let sName = document.getElementById('searchName').value.toLowerCase(); 
-            let fDist = document.getElementById('filterDist').value;
             let filtered = membersData.filter(m => {
-                let isApproved = m.status !== 'Pending';
                 let matchName = (m.name || '').toLowerCase().includes(sName) || (m.mobile || '').includes(sName);
-                let matchDist = fDist === 'All' || m.district === fDist;
-                return isApproved && matchName && matchDist;
+                let matchMandal = currentFilterMandal === 'All' || m.mandal === currentFilterMandal;
+                return matchName && matchMandal;
             });
-            document.getElementById('totalCount').innerText = `(${filtered.length})`; let html = '';
             
+            let html = '';
             filtered.forEach((m, i) => {
-                // १. फोटो असल्यास छोटा गोल फोटो दाखवा, त्यावर क्लिक केल्यावर मोठा दिसेल
-                let photoBadge = m.photoUrl 
-                    ? `<img src="${m.photoUrl}" onclick="showImagePreview('${m.photoUrl}')" style="width:45px; height:45px; border-radius:50%; object-fit:cover; cursor:pointer; border:2px solid var(--success); box-shadow:0 2px 5px rgba(0,0,0,0.2);" title="फोटो मोठा करण्यासाठी क्लिक करा">` 
-                    : `<span class="badge bg-danger">फोटो नाही</span>`;
+                // Member Verification Logic (Highlighting)
+                let isVerified = (m.feeStatus === 'Paid');
+                let rowClass = isVerified ? 'verified-row' : 'pending-row';
+                let statusBadge = isVerified ? `<span class="badge bg-success"><i class="fa fa-check-circle"></i> मान्य सदस्य</span>` : `<span class="badge bg-danger"><i class="fa fa-exclamation-circle"></i> प्रलंबित / फी बाकी</span>`;
                 
-                // २. कागदपत्र असल्यास 'पहा' बटन दाखवा
-                let docBadge = m.docUrl 
-                    ? `<a href="${m.docUrl}" target="_blank" class="badge bg-info" style="text-decoration:none;"><i class="fa fa-eye"></i> डॉक पहा</a>` 
-                    : `<span class="badge bg-danger">डॉक नाही</span>`;
+                let photoHtml = m.photoUrl ? `<img src="${m.photoUrl}" style="width:50px; height:50px; border-radius:50%; object-fit:cover; border:2px solid ${isVerified?'#10b981':'#ef4444'};">` : `<div style="width:50px; height:50px; border-radius:50%; background:#ccc; display:flex; align-items:center; justify-content:center; font-size:20px; color:#fff;"><i class="fa fa-user"></i></div>`;
                 
-                html += `<tr>
+                html += `<tr class="${rowClass}">
                 <td><b>${i+1}</b></td>
-                <td><b style="color:var(--primary);">${m.name || '-'}</b><br><small>${m.designation || '-'}</small></td>
-                <td>${m.mobile || '-'}</td>
-                <td>${m.workplace || '-'}</td>
-                <td>${m.district || '-'}</td>
-                <td style="text-align:center; vertical-align:middle;">${photoBadge} <br><div style="margin-top:5px;">${docBadge}</div></td>
-                <td class="no-print">
-                    <button class="btn-action btn-photo" onclick="uploadFile('${m.id}', 'photoUrl')" title="चेहऱ्याचा फोटो अपलोड"><i class="fa fa-camera"></i></button> 
-                    <button class="btn-action btn-doc" onclick="uploadFile('${m.id}', 'docUrl')" title="कागदपत्रे अपलोड"><i class="fa fa-file-pdf"></i></button> 
-                    <button class="btn-action btn-id" onclick="generateID('${m.id}')" title="Print Smart ID"><i class="fa fa-id-card"></i></button> 
-                    <button class="btn-action btn-edit" onclick="fullEdit('${m.id}')" title="माहिती बदला"><i class="fa fa-pen"></i></button> 
-                    <button class="btn-action btn-del" onclick="strictDelete('${m.id}')" title="कायमचे हटवा"><i class="fa fa-trash"></i></button>
+                <td>${photoHtml}</td>
+                <td><b style="color:var(--primary); font-size:1.1rem;">${m.name || '-'}</b> <br> <span style="color:#666;">${m.designation || '-'} | <i class="fa fa-phone"></i> ${m.mobile || '-'}</span></td>
+                <td><b>${m.workplace || '-'}</b> <br><small>${m.district || '-'}</small></td>
+                <td><b>${m.mandal || '-'}</b></td>
+                <td>${statusBadge}</td>
+                <td class="no-print" style="text-align:center;">
+                    <button class="btn-hub" onclick="openControlPanel('${m.id}')"><i class="fa fa-cog fa-spin-hover"></i> कंट्रोल</button>
                 </td></tr>`;
             });
-            document.getElementById('membersBody').innerHTML = html || '<tr><td colspan="7">डेटा उपलब्ध नाही.</td></tr>';
+            document.getElementById('membersBody').innerHTML = html || '<tr><td colspan="7" style="text-align:center;">डेटा उपलब्ध नाही.</td></tr>';
         };
 
-        // --- मोठा फोटो पाहण्यासाठी नवीन फंक्शन (SweetAlert Preview) ---
-        window.showImagePreview = function(url) {
+        // --- MASTER ACTION HUB (CONTROL PANEL) ---
+        window.openControlPanel = function(id) {
+            let m = membersData.find(x => x.id === id);
             Swal.fire({
-                imageUrl: url,
-                imageAlt: 'सदस्याचा फोटो',
-                showConfirmButton: false,
-                showCloseButton: true,
-                background: '#fff',
-                backdrop: `rgba(0,0,0,0.8)`,
-                width: 'auto'
+                title: `<span style="color:var(--primary); font-weight:800;">⚙️ कंट्रोल पॅनेल</span><br><small style="font-size:1rem; color:#666;">${m.name}</small>`,
+                html: `
+                <div class="action-grid">
+                    <button class="action-btn a-photo" onclick="uploadFile('${id}', 'photoUrl')"><i class="fa fa-camera"></i> फोटो अपडेट</button>
+                    <button class="action-btn a-doc" onclick="uploadFile('${id}', 'docUrl')"><i class="fa fa-file-pdf"></i> कागदपत्रे</button>
+                    <button class="action-btn a-id" onclick="generateID('${id}')"><i class="fa fa-id-card"></i> स्मार्ट आयडी</button>
+                    <button class="action-btn a-wp" onclick="window.open('https://wa.me/91${m.mobile}?text=सस्नेह नमस्कार ${m.name},', '_blank')"><i class="fab fa-whatsapp"></i> WhatsApp</button>
+                    <button class="action-btn a-del" onclick="strictDelete('${id}')"><i class="fa fa-trash"></i> रेकॉर्ड कायमचा हटवा</button>
+                </div>`,
+                showConfirmButton: false, showCloseButton: true, width: '450px'
             });
         };
 
-
-        // --- DOUBLE UPLOAD FUNCTION ---
+        // --- FILE UPLOAD (Google Script link placeholder) ---
         window.uploadFile = async function(id, fieldType) {
             const SCRIPT_URL = "येथे_तुमची_WEB_APP_URL_टाका"; 
             let title = fieldType === 'photoUrl' ? 'चेहऱ्याचा फोटो निवडा (JPG/PNG)' : 'अधिकृत कागदपत्रे निवडा (PDF/JPG)';
             const { value: file } = await Swal.fire({ title: title, input: 'file', showCancelButton: true });
             
             if (file) {
-                Swal.fire({title: 'फाईल Google Drive वर सेव्ह होत आहे...', didOpen: () => { Swal.showLoading() }});
+                Swal.fire({title: 'Uploading...', didOpen: () => { Swal.showLoading() }});
                 let reader = new FileReader(); reader.readAsDataURL(file);
                 reader.onload = async function () {
                     let base64 = reader.result.split(',')[1]; let obj = { data: base64, filename: file.name, mimetype: file.type };
                     try {
                         let response = await fetch(SCRIPT_URL, { method: "POST", body: new URLSearchParams(obj) }); let driveUrl = await response.text();
                         let updateData = {}; updateData[fieldType] = driveUrl;
-                        await updateDoc(doc(db, "members", id), updateData); Swal.fire('यशस्वी!', 'फाईल सेव्ह झाली.', 'success'); loadData();
-                    } catch(e) { Swal.fire('त्रुटी', 'अपलोड करताना चूक झाली.', 'error'); }
+                        await updateDoc(doc(db, "members", id), updateData); Swal.fire('यशस्वी!', 'सेव्ह झाले.', 'success'); loadData();
+                    } catch(e) { Swal.fire('त्रुटी', 'अपलोड अयशस्वी.', 'error'); }
                 };
             }
         };
 
-        // --- STRICT DELETE WITH AUDIT ---
-        window.strictDelete = async function(id) { 
-            Swal.fire({ title: "Strict Delete!", text: "हा रेकॉर्ड कायमचा हटवला जाईल. याची नोंद ॲक्टिव्हिटी लॉग मध्ये होईल. पुढे जायचे का?", icon: "warning", showCancelButton: true, confirmButtonColor: "#ef4444" }).then(async (result) => {
-                if (result.isConfirmed) { await deleteDoc(doc(db, "members", id)); loadData(); }
-            });
-        };
-        
-        // --- SMART ID CARD (With Stamp & Sign Placeholder) ---
+        // --- SUPER SMART ID CARD GENERATOR ---
         window.generateID = function(id) {
             let m = membersData.find(x => x.id === id) || {}; 
-            let stampHTML = `<div style="margin-top:10px; display:flex; justify-content:space-around; align-items:flex-end;">
-                                <div style="text-align:center;"><img src="STAMP_URL_HERE" style="height:40px;"><br><small style="font-size:10px;">संस्थेचा शिक्का</small></div>
-                                <div style="text-align:center;"><img src="SIGN_URL_HERE" style="height:30px;"><br><small style="font-size:10px;">अध्यक्षांची स्वाक्षरी</small></div>
-                             </div>`;
-            
-            let idWindow = window.open('', '', 'height=600,width=400'); 
-            idWindow.document.write(`<html><head><title>Smart ID Card</title><style>body{font-family:sans-serif; background:#f0f0f0; display:flex; justify-content:center;} .id-card { width: 300px; height: 500px; background: white; border-radius: 15px; border: 2px solid #0B3D91; text-align: center; position:relative; overflow:hidden;} .header { background: #0B3D91; color: white; padding: 15px; font-weight: bold;} .photo { width: 110px; height: 110px; background: #eee; border-radius: 5px; margin: 15px auto; border: 2px solid #f39c12; overflow:hidden;} .photo img {width:100%; height:100%; object-fit:cover;} .watermark { position:absolute; top:40%; left:10%; opacity:0.1; font-size:40px; transform:rotate(-30deg); color:#0B3D91; pointer-events:none;}</style></head><body>
+            let printWin = window.open('', '', 'height=700,width=500'); 
+            printWin.document.write(`
+            <html><head><title>Smart ID - ${m.name}</title>
+            <style>
+                body { display:flex; justify-content:center; align-items:center; background:#ccc; font-family:'Arial', sans-serif; height:100vh; margin:0;}
+                .id-card { width: 320px; height: 500px; background: #fff; border-radius: 15px; border: 3px solid #0B3D91; box-shadow: 0 10px 20px rgba(0,0,0,0.3); text-align: center; position:relative; overflow:hidden;}
+                .header { background: #0B3D91; color: white; padding: 15px 5px; font-weight: bold; font-size:16px;}
+                .mem-no { background:#f39c12; color:#000; font-weight:bold; padding:4px; font-size:14px; letter-spacing:1px;}
+                .photo-box { width: 120px; height: 120px; margin: 15px auto; border: 3px solid #f39c12; border-radius: 10px; overflow:hidden; background:#eee;}
+                .photo-box img { width:100%; height:100%; object-fit:cover; }
+                .details { text-align:left; padding: 0 25px; font-size:14px; line-height:1.7; margin-top:10px;}
+                .signs { display:flex; justify-content:space-between; padding: 0 30px; margin-top:15px;}
+                .signs div { text-align:center; font-size:10px; font-weight:bold; border-top:1px solid #000; padding-top:5px; width:80px; margin-top:30px;}
+                .footer { background: #0B3D91; color: #fff; position: absolute; bottom: 0; width: 100%; padding: 8px 0; font-size: 11px; letter-spacing:2px;}
+                .watermark { position:absolute; top:35%; left:5%; opacity:0.06; font-size:45px; transform:rotate(-45deg); color:#000; pointer-events:none; font-weight:bold; line-height:1;}
+                .print-btn { position:absolute; top:20px; right:20px; padding:10px 20px; background:#10b981; color:white; border:none; border-radius:5px; cursor:pointer; font-weight:bold; font-size:16px;}
+                @media print { body{background:none;} .print-btn{display:none;} .id-card{box-shadow:none;} }
+            </style>
+            </head><body>
+            <button class="print-btn" onclick="window.print()">🖨️ Print ID</button>
             <div class="id-card">
-                <div class="watermark">क्ष-किरण संघटना</div>
+                <div class="watermark">क्ष-किरण<br>संघटना<br>महाराष्ट्र</div>
                 <div class="header">क्ष-किरण संघटना महाराष्ट्र</div>
-                <div style="background:#f39c12; font-weight:bold;">ID: ${m.memberNo || '---'}</div>
-                <div class="photo">${m.photoUrl ? `<img src="${m.photoUrl}">` : 'Photo'}</div>
-                <h3 style="color:#0B3D91; margin:5px 0;">${m.name || '-'}</h3>
-                <p style="color:#e67e22; font-weight:bold; font-size:14px;">${m.designation || '-'}</p>
-                <div style="text-align:left; padding:0 20px; font-size:13px; line-height:1.6;">
-                    <b>रक्तगट:</b> ${m.bloodGroup || '-'}<br>
-                    <b>मोबाईल:</b> ${m.mobile || '-'}<br>
-                    <b>जिल्हा:</b> ${m.district || '-'}
+                <div class="mem-no">ID NO: ${m.memberNo || 'MH-XX'}</div>
+                <div class="photo-box">${m.photoUrl ? `<img src="${m.photoUrl}">` : '<br><br>Photo'}</div>
+                <h2 style="color:#0B3D91; margin:5px 0 2px 0; font-size:20px;">${m.name || '-'}</h2>
+                <div style="color:#e67e22; font-weight:bold; font-size:14px; margin-bottom:10px;">${m.designation || '-'}</div>
+                <div class="details">
+                    <b>रक्तगट :</b> <span style="color:#ef4444; font-weight:bold;">${m.bloodGroup || '-'}</span><br>
+                    <b>मोबाईल :</b> ${m.mobile || '-'}<br>
+                    <b>जिल्हा :</b> ${m.district || '-'}<br>
+                    <b>मंडळ :</b> ${m.mandal || '-'}
                 </div>
-                ${stampHTML}
-                <div style="background: #0B3D91; color: #fff; position: absolute; bottom: 0; width: 100%; padding: 8px 0; font-size: 11px;">Official Smart ID</div>
+                <div class="signs">
+                    <div>सदस्याची स्वाक्षरी</div>
+                    <div>अध्यक्षांची स्वाक्षरी</div>
+                </div>
+                <div class="footer">WWW.XRAYUNIONMAH.COM</div>
             </div></body></html>`); 
-            idWindow.document.close();
+            printWin.document.close();
         };
 
-        // --- FLASH NEWS CONTROL ---
-        window.updateFlashNews = async function() {
-            let news = document.getElementById('flash_news').value;
-            await setDoc(doc(db, "settings", "marquee"), { text: news });
-            Swal.fire('यशस्वी!', 'बातमी मुख्य वेबसाईटवर लाईव्ह झाली आहे.', 'success');
+       // --- STRICT DELETE ---
+        window.strictDelete = async function(id) { 
+            Swal.fire({ title: "Delete Record?", text: "हा रेकॉर्ड कायमचा डिलीट होईल!", icon: "warning", showCancelButton: true, confirmButtonColor: "#ef4444" }).then(async (result) => {
+                if (result.isConfirmed) { await deleteDoc(doc(db, "members", id)); Swal.close(); loadData(); }
+            });
+        };
+
+        // --- ADD NEW MEMBER ---
+        window.addNewMember = async function(e) {
+            e.preventDefault();
+            const newMem = { 
+                memberNo: document.getElementById('add_memNo').value, name: document.getElementById('add_name').value, 
+                mobile: document.getElementById('add_mobile').value, bloodGroup: document.getElementById('add_bg').value,
+                designation: document.getElementById('add_desig').value, workplace: document.getElementById('add_workplace').value, 
+                district: document.getElementById('add_district').value, mandal: document.getElementById('add_mandal').value, 
+                feeStatus: document.getElementById('add_fee').value, feeReceipt: document.getElementById('add_receipt').value,
+                pass: document.getElementById('add_pass').value, status: "Approved", photoUrl: "", docUrl: "" 
+            };
+            await addDoc(collection(db, "members"), newMem); 
+            Swal.fire('यशस्वी!', 'नवीन सदस्य मुख्य यादीत जोडला गेला.', 'success'); 
+            document.getElementById('addForm').reset(); loadData();
+        };
+
+        // --- EXPORT ---
+        window.exportToExcel = function(tableID, filename) { 
+            let clone = document.getElementById(tableID).cloneNode(true); 
+            clone.querySelectorAll('.no-print').forEach(el => el.remove()); 
+            XLSX.writeFile(XLSX.utils.table_to_book(clone, {sheet:"Sheet1"}), filename+".xlsx"); 
         };
     </script>
 </body>
