@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>क्ष-किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य</title>
+    <title>क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना, महाराष्ट्र राज्य</title>
     
     <!-- Google Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@300;400;600;700;800&display=swap" rel="stylesheet">
@@ -16,32 +16,36 @@
             --dark: #1e293b;
             --bg-color: #f0f4f8;
             --white: #ffffff;
+            --gold: #FFD700;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mukta', sans-serif; }
-        body { background-color: var(--bg-color); color: #333; overflow-x: hidden; }
+        body { background-color: var(--bg-color); color: #333; overflow-x: hidden; line-height: 1.6; }
 
         /* --- HEADER & LOGO --- */
         header { background: var(--white); padding: 15px 20px; display: flex; align-items: center; justify-content: center; gap: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        .logo-img { height: 90px; width: auto; }
+        .logo-img { height: 90px; width: auto; max-width: 100px; }
         .header-text h1 { color: var(--primary); font-size: 1.8rem; font-weight: 800; text-align: center; line-height: 1.2; }
         .header-text p { color: var(--secondary); font-weight: 700; font-size: 1.1rem; text-align: center; margin-top: 5px;}
         .header-text small { color: #555; font-size: 0.95rem; font-weight: 600;}
 
         /* --- NAVIGATION BAR --- */
-        nav { background: var(--primary); padding: 12px 20px; display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
-        nav a { color: var(--white); text-decoration: none; font-size: 1.1rem; font-weight: 600; padding: 8px 15px; border-radius: 6px; transition: 0.3s; }
-        nav a:hover { background: rgba(255, 255, 255, 0.2); color: var(--secondary); }
+        nav { background: var(--primary); padding: 12px 20px; display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 10px rgba(0,0,0,0.15); align-items: center;}
+        nav a { color: var(--white); text-decoration: none; font-size: 1.05rem; font-weight: 600; padding: 8px 12px; border-radius: 6px; transition: 0.3s; }
+        nav a:hover { background: rgba(255, 255, 255, 0.2); color: var(--gold); }
         
         /* Special Buttons in Nav */
-        .btn-login { background: var(--secondary); color: var(--dark) !important; font-weight: 800; border-radius: 20px; }
+        .btn-register { background: var(--gold); color: var(--dark) !important; font-weight: 800; border-radius: 20px; border: 2px solid var(--gold); padding: 8px 15px;}
+        .btn-register:hover { background: var(--white); transform: scale(1.05); color: var(--primary) !important;}
+        .btn-login { background: var(--secondary); color: var(--dark) !important; font-weight: 800; border-radius: 20px; padding: 8px 15px;}
         .btn-login:hover { background: var(--white); transform: scale(1.05); }
-        .btn-admin { background: #ef4444; color: white !important; font-weight: 800; border-radius: 20px; border: 2px solid #ef4444; }
+        .btn-admin { background: #ef4444; color: white !important; font-weight: 800; border-radius: 20px; border: 2px solid #ef4444; padding: 8px 15px;}
         .btn-admin:hover { background: transparent; color: #ef4444 !important; background: white;}
 
         /* --- MARQUEE (SCROLLING NEWS) --- */
-        .ticker-wrap { background: var(--dark); color: var(--secondary); padding: 10px 20px; font-size: 1.2rem; font-weight: 700; display: flex; align-items: center; }
+        .ticker-wrap { background: var(--dark); color: var(--gold); padding: 10px 20px; font-size: 1.2rem; font-weight: 700; display: flex; align-items: center; border-bottom: 2px solid var(--gold); }
         .ticker-wrap span { background: #ef4444; color: white; padding: 2px 10px; border-radius: 4px; font-size: 1rem; margin-right: 15px; white-space: nowrap; }
+        #news-ticker { font-weight: bold; color: var(--gold); font-size: 1.1rem; }
 
         /* --- HERO BANNER --- */
         .hero { background: linear-gradient(rgba(11, 61, 145, 0.85), rgba(11, 61, 145, 0.85)), url('https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80') center/cover; padding: 80px 20px; text-align: center; color: white; }
@@ -49,6 +53,11 @@
         .hero p { font-size: 1.4rem; max-width: 800px; margin: 0 auto 30px auto; }
         .hero-btn { display: inline-block; padding: 12px 30px; background: var(--secondary); color: var(--dark); font-size: 1.2rem; font-weight: 800; text-decoration: none; border-radius: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); transition: 0.3s; }
         .hero-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.4); }
+
+        /* --- ABOUT SECTION --- */
+        .about-card { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border-left: 6px solid var(--primary); margin: 40px auto; max-width: 1100px; text-align: center; }
+        .about-card h2 { color: var(--primary); font-size: 2.2rem; margin-bottom: 15px; font-weight: 800; }
+        .about-card p { font-size: 1.2rem; color: #444; }
 
         /* --- OFFICE BEARERS (पदाधिकारी) SECTION --- */
         .section-title { text-align: center; font-size: 2.2rem; color: var(--primary); font-weight: 800; margin: 50px 0 10px 0; position: relative; }
@@ -66,7 +75,7 @@
 
         /* --- NOTICES & GR SECTION --- */
         .info-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; max-width: 1200px; margin: 50px auto; padding: 0 20px; }
-        .info-card { background: white; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); overflow: hidden; }
+        .info-card { background: white; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); overflow: hidden; border-top: 5px solid var(--primary); }
         .info-header { background: var(--primary); color: white; padding: 15px 20px; font-size: 1.3rem; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
         .info-body { padding: 20px; max-height: 400px; overflow-y: auto; }
         
@@ -77,23 +86,25 @@
         .notice-desc { font-size: 0.95rem; color: #555; line-height: 1.5; }
 
         /* --- FOOTER --- */
-        footer { background: var(--dark); color: white; text-align: center; padding: 30px 20px; margin-top: 50px; }
+        footer { background: #0B2240; color: white; text-align: center; padding: 30px 20px; margin-top: 50px; }
         .footer-address { font-size: 1rem; color: #cbd5e1; margin-bottom: 15px; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.6;}
         .social-icons { margin: 15px 0; }
         .social-icons a { color: white; font-size: 1.5rem; margin: 0 10px; transition: 0.3s; }
         .social-icons a:hover { color: var(--secondary); }
+        .admin-link { color: #aaa; font-size: 13px; text-decoration: underline; margin-top: 15px; display: inline-block; transition: 0.3s;}
+        .admin-link:hover { color: var(--white); }
 
         /* Responsive */
         @media (max-width: 768px) {
             .header-text h1 { font-size: 1.4rem; }
             .hero h2 { font-size: 1.8rem; }
             .info-container { grid-template-columns: 1fr; }
+            nav { flex-direction: column; gap: 10px; }
+            .team-card { width: 100%; }
         }
     </style>
 </head>
-<body>
-
-    <!-- Header -->
+<body><!-- Header -->
     <header>
         <img src="logo.png" alt="Logo" class="logo-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/4006/4006511.png'">
         <div class="header-text">
@@ -103,31 +114,41 @@
         </div>
     </header>
 
-    <!-- Navigation Bar -->
+    <!-- Navigation Bar (Combined from both files) -->
     <nav>
         <a href="index.html"><i class="fa fa-home"></i> मुख्यपृष्ठ</a>
+        <a href="#about"><i class="fa fa-info-circle"></i> संघटनाबद्दल</a>
         <a href="#committee"><i class="fa fa-users"></i> पदाधिकारी</a>
         <a href="#notices"><i class="fa fa-bell"></i> सूचना व GR</a>
         <a href="gallery.html"><i class="fa fa-image"></i> गॅलरी</a>
+        <a href="services.html"><i class="fa fa-tools"></i> सदस्यांसाठी सेवा</a>
         <a href="contact.html"><i class="fa fa-phone"></i> संपर्क</a>
         
-        <a href="member-login.html" class="btn-login"><i class="fa fa-user-circle"></i> सदस्य लॉगिन / नोंदणी</a>
-        <a href="admin.html" class="btn-admin"><i class="fa fa-shield-alt"></i> ॲडमिन लॉगिन</a>
+        <!-- Action Buttons including Google Form -->
+        <a href="https://forms.gle/XbdkWManQePhTerA9" target="_blank" class="btn-register"><i class="fa fa-edit"></i> ऑनलाईन सदस्य नोंदणी</a>
+        <a href="member-login.html" class="btn-login"><i class="fa fa-user-circle"></i> सदस्य लॉगिन</a>
+        <a href="admin.html" class="btn-admin"><i class="fa fa-shield-alt"></i> ॲडमिन</a>
     </nav>
 
-    <!-- Marquee -->
+    <!-- Marquee (Live Data from Firebase integrated) -->
     <div class="ticker-wrap">
         <span>नवीन</span>
-        <marquee behavior="scroll" direction="left" scrollamount="6">
-            राज्यातील सर्व क्ष-किरण वैज्ञानिक अधिकाऱ्यांनी आपली ऑनलाईन सदस्य नोंदणी लवकरात लवकर पूर्ण करावी. • संघटनेच्या नवीन ओळखपत्रांचे वाटप सुरु झाले आहे.
+        <marquee id="news-ticker" behavior="scroll" direction="left" scrollamount="6">
+            राज्यातील सर्व क्ष-किरण वैज्ञानिक अधिकाऱ्यांनी आपली ऑनलाईन सदस्य नोंदणी लवकरात लवकर पूर्ण करावी. • माहिती लोड होत आहे...
         </marquee>
-    </div>
-
-    <!-- Hero Banner -->
+    </div><!-- Hero Banner -->
     <section class="hero">
         <h2>न्याय, हक्क आणि प्रगतीसाठी एकजूट!</h2>
         <p>राज्यातील सर्व क्ष-किरण वैज्ञानिक अधिकाऱ्यांच्या प्रश्नांना वाचा फोडणारी आणि त्यांचे हक्क मिळवून देणारी अधिकृत संघटना.</p>
-        <a href="member-login.html" class="hero-btn">आजच सदस्य व्हा <i class="fa fa-arrow-right"></i></a>
+        <a href="https://forms.gle/XbdkWManQePhTerA9" target="_blank" class="hero-btn">आजच सदस्य व्हा <i class="fa fa-arrow-right"></i></a>
+    </section>
+
+    <!-- About Section (Preserved from File 1) -->
+    <section id="about" class="container">
+        <div class="about-card">
+            <h2><i class="fa fa-info-circle"></i> संघटनाबद्दल</h2>
+            <p>क्ष-किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य ही राज्यातील सर्व क्ष-किरण वैज्ञानिक अधिकाऱ्यांच्या न्याय-हक्कांसाठी समर्पित अधिकृत संघटना आहे.</p>
+        </div>
     </section>
 
     <!-- Office Bearers Section -->
@@ -211,10 +232,9 @@
                 <p class="team-contact"><i class="fa fa-phone-alt"></i> ९६२३७९०९१६</p>
             </div>
         </div>
-    </section>
-
-    <!-- Notices & GR Section -->
+    </section><!-- Notices & GR Section (Combines Sidebar from File 1 & Cards from File 2) -->
     <section id="notices" class="info-container">
+        <!-- Live Firebase Notices -->
         <div class="info-card">
             <div class="info-header">
                 <span><i class="fa fa-bullhorn"></i> ताज्या घडामोडी / सूचना</span>
@@ -225,6 +245,7 @@
             </div>
         </div>
 
+        <!-- Static GR Section -->
         <div class="info-card">
             <div class="info-header" style="background: var(--dark);">
                 <span><i class="fa fa-file-pdf"></i> महत्त्वाचे शासन निर्णय (GR)</span>
@@ -233,18 +254,18 @@
                 <div class="notice-item">
                     <p class="notice-date">०१ जानेवारी २०२६</p>
                     <h3 class="notice-title"> GR</h3>
-                    <a href="#" style="color: var(--primary); text-decoration: none; font-weight: bold;"><i class="fa fa-download"></i> PDF डाऊनलोड करा</a>
+                    <a href="gr.html" style="color: var(--primary); text-decoration: none; font-weight: bold;"><i class="fa fa-download"></i> PDF डाऊनलोड करा</a>
                 </div>
                 <div class="notice-item">
                     <p class="notice-date">१५ नोव्हेंबर २०२५</p>
                     <h3 class="notice-title"> परिपत्रक</h3>
-                    <a href="#" style="color: var(--primary); text-decoration: none; font-weight: bold;"><i class="fa fa-download"></i> PDF डाऊनलोड करा</a>
+                    <a href="gr.html" style="color: var(--primary); text-decoration: none; font-weight: bold;"><i class="fa fa-download"></i> PDF डाऊनलोड करा</a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
+    <!-- Footer (Merged both files) -->
     <footer>
         <div class="footer-address">
             <p><i class="fa fa-map-marker-alt"></i> <b>मुख्यालय:</b> क्ष-किरण विभाग, उपजिल्हा रुग्णालय फलटण, जिल्हा सातारा. ४१५५२३</p>
@@ -258,12 +279,13 @@
         </div>
         <p>© २०२६ क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना, महाराष्ट्र राज्य.</p>
         <p style="margin-top: 10px; font-size: 12px; color: gray;">सर्व हक्क सुरक्षित. | Developed by IT Cell, X-Ray Union</p>
+        <a href="admin.html" class="admin-link"><i class="fa fa-lock"></i> Admin Login</a>
     </footer>
 
-    <!-- Firebase Script to fetch live notices -->
+    <!-- Firebase Script (Merged File 1 Marquee & File 2 Live Notices using v10.12.5) -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, query, limit } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+        import { getFirestore, doc, collection, onSnapshot, query, limit } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk",
@@ -271,12 +293,24 @@
             projectId: "xrayunionmah",
             storageBucket: "xrayunionmah.firebasestorage.app",
             messagingSenderId: "763805226978",
-            appId: "1:763805226978:web:6bae81a0b6358b47d88bbb"
+            appId: "1:763805226978:web:6bae81a0b6358b47d88bbb",
+            measurementId: "G-EQS6WH6XLF"
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        // 1. Fetch Marquee Text (From File 1)
+        onSnapshot(doc(db, "settings", "marquee"), (snap) => {
+            const ticker = document.getElementById("news-ticker");
+            if (snap.exists() && snap.data().text) {
+                ticker.innerText = snap.data().text;
+            } else {
+                ticker.innerText = "राज्यातील सर्व क्ष-किरण वैज्ञानिक अधिकाऱ्यांनी आपली ऑनलाईन सदस्य नोंदणी लवकरात लवकर पूर्ण करावी.";
+            }
+        });
+
+        // 2. Fetch Live Notices (From File 2)
         const q = query(collection(db, "notices"), limit(5));
         
         onSnapshot(q, (snapshot) => {
