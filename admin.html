@@ -344,10 +344,90 @@
                 </div>
             </div>
 
-            <!-- TAB 7, 8, 9: Elections, Notices, Complaints (Kept structure, scripts handled below) -->
-            <div id="tab-election" class="tab-content"><div class="panel"><div class="panel-header h-success"><span>निवडणूक कक्ष (कार्यान्वित)</span></div><div class="panel-body">येथे जुने निवडणूक कोड कार्यरत आहेत.</div></div></div>
-            <div id="tab-notices" class="tab-content"><div class="panel"><div class="panel-header h-info"><span>सूचना फलक (कार्यान्वित)</span></div><div class="panel-body">येथे जुने सूचना फलक कोड कार्यरत आहेत.</div></div></div>
-            <div id="tab-complaints" class="tab-content"><div class="panel"><div class="panel-header h-red"><span>तक्रार कक्ष (कार्यान्वित)</span></div><div class="panel-body">येथे जुने तक्रार कोड कार्यरत आहेत.</div></div></div>
+            <!-- TAB 7: ELECTIONS (Restored Full Logic) -->
+            <div id="tab-election" class="tab-content">
+                <div class="panel">
+                    <div class="panel-header h-success"><span><i class="fa fa-power-off"></i> ऑनलाईन मतदान प्रणाली नियंत्रण</span></div>
+                    <div class="panel-body text-center">
+                        <h3 id="votingStatusText" style="margin-bottom:15px;">सध्या मतदान प्रणाली: तपासत आहे...</h3>
+                        <button id="btnToggleVoting" class="btn-save" style="background:var(--primary); font-size: 1.1rem; margin:0 auto;" onclick="toggleOnlineVoting()">
+                            <i class="fa fa-toggle-on"></i> मतदान प्रणाली सुरू / बंद करा
+                        </button>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header h-purple"><span><i class="fa fa-user-tie"></i> निवडणुकीसाठी नवीन उमेदवार उभा करा</span></div>
+                    <div class="panel-body">
+                        <form onsubmit="addCandidate(event)">
+                            <div class="form-row">
+                                <select id="cand_post" class="form-control" required>
+                                    <option value="">-- निवडणुकीचे पद निवडा --</option>
+                                    <option value="अध्यक्ष (President)">अध्यक्ष (President)</option>
+                                    <option value="उपाध्यक्ष (Vice President)">उपाध्यक्ष (Vice President)</option>
+                                    <option value="सचिव (Secretary)">सचिव (Secretary)</option>
+                                    <option value="खजिनदार (Treasurer)">खजिनदार (Treasurer)</option>
+                                    <option value="सदस्य (Committee Member)">कार्यकारणी सदस्य</option>
+                                </select>
+                                <input type="text" id="cand_name" class="form-control" placeholder="उमेदवाराचे नाव *" required>
+                            </div>
+                            <div class="form-row">
+                                <input type="text" id="cand_info" class="form-control" placeholder="उमेदवाराची माहिती / अनुभव (उदा. १० वर्षे सेवेत)" style="flex:2;">
+                                <button type="submit" class="btn-save" style="background:var(--purple);"><i class="fa fa-plus"></i> उमेदवार यादीत जोडा</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header h-blue"><span><i class="fa fa-vote-yea"></i> उमेदवार यादी व मिळालेली मते</span></div>
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table id="electionTable">
+                                <thead><tr><th>पद (Position)</th><th>उमेदवाराचे नाव</th><th>माहिती / अनुभव</th><th>मिळालेली मते</th><th class="no-print">ॲक्शन</th></tr></thead>
+                                <tbody id="candidatesBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 8: NOTICES (Restored Full Logic) -->
+            <div id="tab-notices" class="tab-content">
+                <div class="panel">
+                    <div class="panel-header h-info"><span><i class="fa fa-edit"></i> मुख्य पेजवर (Index) नवीन सूचना जोडा</span></div>
+                    <div class="panel-body">
+                        <form onsubmit="addNotice(event)">
+                            <div class="form-row"><input type="text" id="notice_title" class="form-control" placeholder="सूचनेचा विषय" required><input type="date" id="notice_date" class="form-control" required></div>
+                            <div class="form-row"><textarea id="notice_desc" class="form-control" placeholder="सूचनेची सविस्तर माहिती..." required></textarea></div>
+                            <button type="submit" class="btn-save" style="background:var(--info);"><i class="fa fa-bullhorn"></i> सूचना प्रकाशित करा</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="panel">
+                    <div class="panel-header h-blue"><span><i class="fa fa-list"></i> प्रकाशित केलेल्या सूचना</span></div>
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table><thead><tr><th>तारीख</th><th>विषय</th><th>माहिती</th><th class="no-print">ॲक्शन</th></tr></thead><tbody id="noticesBody"></tbody></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 9: COMPLAINTS (Restored Full Logic) -->
+            <div id="tab-complaints" class="tab-content">
+                <div class="panel">
+                    <div class="panel-header h-red"><span><i class="fa fa-envelope-open-text"></i> सदस्यांच्या तक्रारी / मागण्या</span></div>
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table id="complaintsTable">
+                                <thead><tr><th>तारीख</th><th>सदस्याचे नाव</th><th>विषय / तक्रार</th><th>स्टेटस</th><th class="no-print" style="min-width:150px;">निर्णय (Action)</th></tr></thead>
+                                <tbody id="complaintsBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
             
             <!-- TAB 10: SETTINGS -->
             <div id="tab-settings" class="tab-content">
@@ -380,6 +460,7 @@
         
         // Globals
         let membersData = []; let stateStaffData = []; let icardSettings = {}; 
+        let candidatesData = []; let noticesData = []; let complaintsData = []; let galleryData = [];
         let mChart = null; let dChart = null;
         const GAS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx-6x7OjLPFliMITRBemPw1OoCcrgePhONDLOb9mi_1svkWQ5u7GODv2tm1nvArT9RD/exec";
 
@@ -431,7 +512,26 @@
                 let sSnap = await getDocs(collection(db, "stateStaff")); stateStaffData = [];
                 sSnap.forEach(doc => stateStaffData.push({ id: doc.id, ...doc.data() }));
 
-                // Fetch I-Card Settings
+                // Fetch Others
+                let cSnap = await getDocs(collection(db, "candidates")); candidatesData = [];
+                cSnap.forEach(doc => candidatesData.push({id: doc.id, ...doc.data()}));
+                
+                let nSnap = await getDocs(collection(db, "notices")); noticesData = [];
+                nSnap.forEach(doc => noticesData.push({id: doc.id, ...doc.data()}));
+                
+                let compSnap = await getDocs(collection(db, "complaints")); complaintsData = [];
+                compSnap.forEach(doc => complaintsData.push({id: doc.id, ...doc.data()}));
+                
+                let gSnap = await getDocs(collection(db, "gallery")); galleryData = [];
+                gSnap.forEach(doc => galleryData.push({id: doc.id, ...doc.data()}));
+
+                // Fetch Settings & I-Card
+                let configDoc = await getDoc(doc(db, "settings", "config"));
+                if (configDoc.exists()) {
+                    let s = configDoc.data();
+                    document.getElementById('votingStatusText').innerHTML = "सध्या मतदान प्रणाली: " + (s.isVotingActive ? "<span style='color:green;'>चालू (Active)</span>" : "<span style='color:red;'>बंद (Inactive)</span>");
+                }
+                
                 let icDoc = await getDoc(doc(db, "settings", "icard"));
                 if (icDoc.exists()) {
                     icardSettings = icDoc.data();
@@ -447,8 +547,12 @@
                 document.getElementById('totMem').innerText = approvedMembers.length;
                 document.getElementById('pendMemCard').innerText = membersData.length - approvedMembers.length;
                 document.getElementById('paidMem').innerText = approvedMembers.filter(m => m.feeStatus === 'Paid').length;
+                document.getElementById('pendComp').innerText = complaintsData.filter(c => c.status !== 'Resolved').length;
 
-                window.renderPending(); window.renderMembers(); window.renderStateList(); window.renderFees(); window.loadActivities();
+                window.renderPending(); window.renderMembers(); window.renderStateList(); window.renderFees(); 
+                window.renderCandidates(); window.renderNotices(); window.renderComplaints(); window.renderGallery();
+                window.loadActivities();
+                
                 if(document.getElementById('tab-dash').classList.contains('active')) window.renderCharts();
                 Swal.close();
             } catch(e) { Swal.fire('Error', 'Failed to load data.', 'error'); console.error(e);}
@@ -478,6 +582,20 @@
                 options: { maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
             });
         };
+        
+        // ================= TAB 1: PENDING REQUESTS =================
+        window.renderPending = function() {
+            let pending = membersData.filter(m => m.status === 'Pending' && m.isMember !== false); let html = '';
+            pending.forEach((m, i) => {
+                html += `<tr><td><b>${i+1}</b></td><td><b style="color:var(--primary);">${m.name || '-'}</b><br><small>${m.designation || '-'}</small></td><td>${m.mobile || '-'}<br><small>${m.email || '-'}</small></td><td><b>${m.district || '-'}</b><br><small>${m.mandal || '-'}</small></td><td>${m.workplace || '-'}</td>
+                <td class="no-print"><button class="btn-action btn-approve" onclick="reviewAndApprove('${m.id}')"><i class="fa fa-user-check"></i> ॲड करा</button> <button class="btn-action btn-del" onclick="deleteDocFunction('members', '${m.id}')"><i class="fa fa-trash"></i></button></td></tr>`;
+            }); 
+            document.getElementById('pendingBody').innerHTML = html || '<tr><td colspan="6" class="text-center">कोणतीही प्रलंबित विनंती नाही.</td></tr>';
+        };
+
+        window.reviewAndApprove = async function(id) {
+            await updateDoc(doc(db, "members", id), { status: "Approved" }); window.logActivity("Approved Pending Member"); window.loadData();
+        };
 
         // ================= TAB 2: MEMBERS =================
         window.renderMembers = function() {
@@ -502,10 +620,10 @@
                 <td>रुजू: ${m.joinDate || '-'}<br>निवृत्ती: ${m.retireDate || '-'}</td>
                 <td>${m.aadhaar ? '<span class="badge bg-dark">ID Added</span>' : ''} ${m.docUrl ? `<a href="${m.docUrl}" target="_blank" class="badge bg-success">PDF</a>` : ''}</td>
                 <td class="no-print">
-                    <button class="btn-action bg-success" onclick="uploadAnyPhoto('${m.id}', 'members')"><i class="fa fa-camera"></i></button> 
-                    <button class="btn-action btn-doc" onclick="uploadAnyDoc('${m.id}', 'members')"><i class="fa fa-upload"></i></button> 
+                    <button class="btn-action bg-success" onclick="uploadAnyPhoto('${m.id}', 'members')" title="Upload Photo"><i class="fa fa-camera"></i></button> 
+                    <button class="btn-action btn-doc" onclick="uploadAnyDoc('${m.id}', 'members')" title="Upload PDF"><i class="fa fa-upload"></i></button> 
                     <button class="btn-action btn-id" onclick="generateID('${m.id}')" title="Print ID"><i class="fa fa-id-badge"></i></button> 
-                    <button class="btn-action btn-del" onclick="deleteDocFunction('members', '${m.id}')"><i class="fa fa-trash"></i></button>
+                    <button class="btn-action btn-del" onclick="deleteDocFunction('members', '${m.id}')" title="Delete"><i class="fa fa-trash"></i></button>
                 </td></tr>`;
             });
             document.getElementById('membersBody').innerHTML = html || '<tr><td colspan="8" class="text-center">डेटा उपलब्ध नाही.</td></tr>';
@@ -542,7 +660,7 @@
         };
 
         window.addStateStaff = function() {
-            Swal.fire({ title: 'राज्यस्तरीय कर्मचारी जोडा', html: `<input type="text" id="ss_name" class="form-control" placeholder="नाव"><input type="text" id="ss_desig" class="form-control" placeholder="पद" style="margin-top:10px;"><input type="date" id="ss_join" class="form-control" style="margin-top:10px;"><select id="ss_dist" class="form-control" style="margin-top:10px;"><option value="Pune">Pune</option><option value="Nagpur">Nagpur</option></select><input type="text" id="ss_aadhaar" class="form-control" placeholder="[Aadhaar Redacted]" style="margin-top:10px;">`, confirmButtonText: "जोडा", preConfirm: () => ({ name: document.getElementById('ss_name').value, designation: document.getElementById('ss_desig').value, joinDate: document.getElementById('ss_join').value, district: document.getElementById('ss_dist').value, aadhaar: document.getElementById('ss_aadhaar').value }) }).then(async (res) => { if(res.isConfirmed) { await addDoc(collection(db, "stateStaff"), res.value); window.logActivity("Added State Staff"); window.loadData(); } });
+            Swal.fire({ title: 'राज्यस्तरीय कर्मचारी जो জনগোষ্ঠীর', html: `<input type="text" id="ss_name" class="form-control" placeholder="नाव"><input type="text" id="ss_desig" class="form-control" placeholder="पद" style="margin-top:10px;"><input type="date" id="ss_join" class="form-control" style="margin-top:10px;"><select id="ss_dist" class="form-control" style="margin-top:10px;"><option value="Pune">Pune</option><option value="Nagpur">Nagpur</option></select><input type="text" id="ss_aadhaar" class="form-control" placeholder="[Aadhaar Redacted]" style="margin-top:10px;">`, confirmButtonText: "जोडा", preConfirm: () => ({ name: document.getElementById('ss_name').value, designation: document.getElementById('ss_desig').value, joinDate: document.getElementById('ss_join').value, district: document.getElementById('ss_dist').value, aadhaar: document.getElementById('ss_aadhaar').value }) }).then(async (res) => { if(res.isConfirmed) { await addDoc(collection(db, "stateStaff"), res.value); window.logActivity("Added State Staff"); window.loadData(); } });
         };
 
         window.importStateExcel = function(event) {
@@ -568,10 +686,68 @@
             }).then(async (result) => { if (result.isConfirmed) { await updateDoc(doc(db, coll, id), result.value); window.logActivity(`Edited details in ${coll}`); window.loadData(); } });
         };
 
+        window.uploadAnyDoc = async function(id, coll) {
+            const { value: file } = await Swal.fire({ title: 'PDF/Image निवडा (Max 300 KB)', input: 'file', inputAttributes: { 'accept': 'image/*,application/pdf' } });
+            if (file) {
+                if(file.size > 300 * 1024) return Swal.fire('Error', '300 KB पेक्षा लहान फाईल निवडा.', 'error');
+                Swal.fire({title: 'Uploading...', allowOutsideClick:false, didOpen:()=>Swal.showLoading()});
+                let reader = new FileReader(); reader.readAsDataURL(file);
+                reader.onload = async function() {
+                    try {
+                        let res = await fetch(GAS_SCRIPT_URL, { method: "POST", body: new URLSearchParams({ data: reader.result.split(',')[1], filename: file.name, mimetype: file.type }) });
+                        let url = await res.text();
+                        if(url.includes('Error')) throw new Error();
+                        await updateDoc(doc(db, coll, id), { docUrl: url }); Swal.fire('Success', 'Document Uploaded', 'success'); window.loadData();
+                    } catch(e) { Swal.fire('Error', 'Upload failed. Check Script URL.', 'error'); }
+                };
+            }
+        };
+
+        window.uploadAnyPhoto = async function(id, coll) {
+            const { value: file } = await Swal.fire({ title: 'प्रोफाइल फोटो निवडा', input: 'file', inputAttributes: { 'accept': 'image/*' } });
+            if (file) {
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    Swal.fire({
+                        title: 'फोटो क्रॉप करा', html: `<div><img id="cropImage" src="${e.target.result}" style="max-width:100%;"></div>`, width: '500px', showCancelButton: true,
+                        didOpen: () => { window.cropper = new Cropper(document.getElementById('cropImage'), { aspectRatio: 1, viewMode: 1 }); },
+                        preConfirm: () => { return window.cropper ? window.cropper.getCroppedCanvas({width: 300, height: 300}).toDataURL(file.type) : null; }
+                    }).then(async (res) => {
+                        if(res.isConfirmed && res.value) {
+                            Swal.fire({title: 'Uploading...', allowOutsideClick:false, didOpen:()=>Swal.showLoading()});
+                            try {
+                                let fRes = await fetch(GAS_SCRIPT_URL, { method: "POST", body: new URLSearchParams({ data: res.value.split(',')[1], filename: "PHOTO_"+file.name, mimetype: file.type }) });
+                                let url = await fRes.text();
+                                await updateDoc(doc(db, coll, id), { photoUrl: url }); Swal.fire('Success', 'Photo Uploaded', 'success'); window.loadData();
+                            } catch(err) { Swal.fire('Error', 'Upload Failed', 'error'); }
+                        }
+                    });
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+
         // ================= I-CARD GENERATION =================
         window.saveIcardSettings = async function() {
             let set = { showJoinDate: document.getElementById('ic_showJoin').checked, showBloodGroup: document.getElementById('ic_showBlood').checked, showAadhaar: document.getElementById('ic_showAadhaar').checked };
             await setDoc(doc(db, "settings", "icard"), set, {merge:true}); window.logActivity("I-Card Settings Updated");
+        };
+
+        window.uploadIcardAsset = async function(type) {
+            const { value: file } = await Swal.fire({ title: type === 'sign' ? 'सही अपलोड करा' : 'शिक्का अपलोड करा', input: 'file', inputAttributes: { 'accept': 'image/*' } });
+            if(file) {
+                Swal.fire({title: 'Uploading...', allowOutsideClick:false, didOpen:()=>Swal.showLoading()});
+                let reader = new FileReader(); reader.readAsDataURL(file);
+                reader.onload = async function() {
+                    try {
+                        let res = await fetch(GAS_SCRIPT_URL, { method: "POST", body: new URLSearchParams({ data: reader.result.split(',')[1], filename: type+"_"+file.name, mimetype: file.type }) });
+                        let url = await res.text();
+                        let updateData = type === 'sign' ? { signUrl: url } : { stampUrl: url };
+                        await setDoc(doc(db, "settings", "icard"), updateData, {merge:true}); 
+                        Swal.fire('Success', 'Uploaded successfully', 'success'); window.loadData();
+                    } catch(e) { Swal.fire('Error', 'Upload failed.', 'error'); }
+                }
+            }
         };
 
         window.generateID = function(id) {
@@ -608,6 +784,35 @@
             win.document.close();
         };
 
+        // ================= GALLERY UPLOADS =================
+        window.uploadGalleryItem = async function(type) {
+            const { value: file } = await Swal.fire({ title: type === 'image' ? 'फोटो निवडा' : 'PDF निवडा', input: 'file', inputAttributes: { 'accept': type === 'image' ? 'image/*' : 'application/pdf' } });
+            if(file) {
+                Swal.fire({title: 'Uploading...', allowOutsideClick:false, didOpen:()=>Swal.showLoading()});
+                let reader = new FileReader(); reader.readAsDataURL(file);
+                reader.onload = async function() {
+                    try {
+                        let res = await fetch(GAS_SCRIPT_URL, { method: "POST", body: new URLSearchParams({ data: reader.result.split(',')[1], filename: "GALLERY_"+file.name, mimetype: file.type }) });
+                        let url = await res.text();
+                        await addDoc(collection(db, "gallery"), { url: url, type: type, name: file.name, timestamp: Date.now() });
+                        Swal.fire('Success', 'Uploaded to Gallery', 'success'); window.loadData();
+                    } catch(e) { Swal.fire('Error', 'Upload failed.', 'error'); }
+                }
+            }
+        };
+
+        window.renderGallery = function() {
+            let html = '';
+            galleryData.forEach(g => {
+                if(g.type === 'image') {
+                    html += `<div style="border:1px solid #ccc; padding:10px; text-align:center; border-radius:8px;"><img src="${window.getDirectUrl(g.url)}" style="max-width:100%; height:120px; object-fit:cover;"><br><small style="word-wrap:break-word;">${g.name}</small><br><button class="btn-action btn-del" onclick="deleteDocFunction('gallery', '${g.id}')">Delete</button></div>`;
+                } else {
+                    html += `<div style="border:1px solid #ccc; padding:10px; text-align:center; border-radius:8px;"><i class="fa fa-file-pdf fa-4x" style="color:red; margin:20px 0;"></i><br><small style="word-wrap:break-word;">${g.name}</small><br><a href="${g.url}" target="_blank" class="btn-action bg-success">View</a> <button class="btn-action btn-del" onclick="deleteDocFunction('gallery', '${g.id}')">Delete</button></div>`;
+                }
+            });
+            document.getElementById('galleryGrid').innerHTML = html || '<i>No items in gallery.</i>';
+        };
+
         // ================= FEES & BULK EMAIL =================
         window.renderFees = function() {
             let filter = document.getElementById('feeFilter').value; let fData = membersData.filter(m => m.status !== 'Pending' && (filter === 'All' || (filter==='Paid' && m.feeStatus==='Paid') || (filter==='Unpaid' && m.feeStatus!=='Paid')));
@@ -616,6 +821,8 @@
             document.getElementById('feesBody').innerHTML = html || '<tr><td colspan="6">डेटा नाही.</td></tr>';
         };
         
+        window.updateFee = function(id) { Swal.fire({ title: 'फी अपडेट करा', html: `<select id="f_stat" class="form-control" style="margin-bottom:10px;"><option value="Paid">Paid</option><option value="Unpaid">Unpaid</option></select><input type="number" id="f_amt" class="form-control" placeholder="Amount (1000)" style="margin-bottom:10px;"><input type="text" id="f_rec" class="form-control" placeholder="Receipt No">`, confirmButtonText: 'सेव्ह करा', preConfirm: () => ({ feeStatus: document.getElementById('f_stat').value, feeAmount: document.getElementById('f_amt').value, feeReceipt: document.getElementById('f_rec').value }) }).then(async (res) => { if (res.isConfirmed) { await updateDoc(doc(db, "members", id), res.value); window.loadData(); } }); };
+
         window.sendBulkEmail = function() {
             let paidEmails = membersData.filter(m => m.feeStatus === 'Paid' && m.email).map(m => m.email).join(',');
             if(!paidEmails) return Swal.fire('info', 'कोणताही वैध ईमेल आयडी सापडला नाही.', 'info');
@@ -626,6 +833,17 @@
                 }
             });
         };
+
+        // ================= ELECTIONS, NOTICES, COMPLAINTS =================
+        window.toggleOnlineVoting = async function() { let ref = doc(db, "settings", "config"); let snap = await getDoc(ref); let status = snap.exists() ? snap.data().isVotingActive : false; await setDoc(ref, {isVotingActive: !status}, {merge:true}); Swal.fire('Success', 'Voting toggled', 'success'); window.loadData(); };
+        window.addCandidate = async function(e) { e.preventDefault(); await addDoc(collection(db, "candidates"), { post: document.getElementById('cand_post').value, name: document.getElementById('cand_name').value, info: document.getElementById('cand_info').value, votes: 0 }); Swal.fire('Success', 'Candidate Added', 'success'); e.target.reset(); window.loadData(); };
+        window.renderCandidates = function() { let html = ''; candidatesData.forEach(c => { html += `<tr><td><b style="color:var(--primary);">${c.post}</b></td><td><b>${c.name}</b></td><td>${c.info}</td><td><h2>${c.votes}</h2></td><td class="no-print"><button class="btn-action btn-del" onclick="deleteDocFunction('candidates', '${c.id}')"><i class="fa fa-trash"></i></button></td></tr>`; }); document.getElementById('candidatesBody').innerHTML = html || '<tr><td colspan="5">No candidates.</td></tr>'; };
+        
+        window.addNotice = async function(e) { e.preventDefault(); await addDoc(collection(db, "notices"), { title: document.getElementById('notice_title').value, date: document.getElementById('notice_date').value, desc: document.getElementById('notice_desc').value }); Swal.fire('Success', 'Notice Published', 'success'); e.target.reset(); window.loadData(); };
+        window.renderNotices = function() { let html = ''; noticesData.forEach(n => { html += `<tr><td>${n.date}</td><td><b>${n.title}</b></td><td>${n.desc}</td><td class="no-print"><button class="btn-action btn-del" onclick="deleteDocFunction('notices', '${n.id}')"><i class="fa fa-trash"></i></button></td></tr>`; }); document.getElementById('noticesBody').innerHTML = html || '<tr><td colspan="4">No notices.</td></tr>'; };
+
+        window.renderComplaints = function() { let html = ''; complaintsData.forEach(c => { html += `<tr><td>${c.date||'-'}</td><td><b>${c.name||'सदस्य'}</b></td><td><b style="color:var(--danger);">${c.subject||'-'}</b><br><small>${c.description||'-'}</small></td><td>${c.status==='Resolved'?'<span class="badge bg-success">Resolved</span>':'<span class="badge bg-warning">Pending</span>'}</td><td class="no-print"><button class="btn-action bg-success" onclick="resolveComp('${c.id}')">Mark Resolved</button> <button class="btn-action btn-del" onclick="deleteDocFunction('complaints', '${c.id}')"><i class="fa fa-trash"></i></button></td></tr>`; }); document.getElementById('complaintsBody').innerHTML = html || '<tr><td colspan="5">No complaints.</td></tr>'; };
+        window.resolveComp = async function(id) { if(confirm('तक्रार पूर्ण झाली आहे का?')) { await updateDoc(doc(db, "complaints", id), {status:'Resolved'}); window.loadData(); } };
 
         // ================= UTILITIES & LOGS =================
         window.getDirectUrl = function(url) { if (!url) return ''; let match = url.match(/\/d\/(.+?)\//); return match && match[1] ? `https://drive.google.com/uc?export=view&id=${match[1]}` : url; };
