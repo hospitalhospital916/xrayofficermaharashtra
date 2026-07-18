@@ -20,10 +20,11 @@
 </head>
 <body>
 
-    <h2>सार्वजनिक आरोग्य विभाग, महाराष्ट्र शासन</h2>
-    <p>८ आरोग्य मंडळे आणि त्यांचे अंतर्गत जिल्हे</p>
+    <!-- <h2>सार्वजनिक आरोग्य विभाग, महाराष्ट्र शासन</h2> -->
+    <!-- <p>८ आरोग्य मंडळे आणि त्यांचे अंतर्गत जिल्हे</p> -->
+    <!-- डॅशबोर्डमध्ये जागा वाचवण्यासाठी वरील टायटल लपवणे चांगले राहील. हवं असल्यास तुम्ही ते अन-कमेंट करू शकता -->
     
-    <div id="map"></div>
+    <div id="map" style="height: 100%; border:none; box-shadow:none;"></div>
 
     <script>
         // १. नकाशा सुरु करणे
@@ -45,6 +46,27 @@
             "Nagpur": "#d946ef"     
         };
 
+        // इंग्रजी नावांचे मराठीत रूपांतर करण्यासाठी डिक्शनरी
+        const enToMrDict = {
+            "Ahmadnagar": "अहमदनगर", "Ahmednagar": "अहमदनगर", "Ahilyanagar": "अहमदनगर",
+            "Akola": "अकोला", "Amravati": "अमरावती", "Aurangabad": "छत्रपती संभाजीनगर", 
+            "Chhatrapati Sambhajinagar": "छत्रपती संभाजीनगर", "Bid": "बीड", "Beed": "बीड", 
+            "Bhandara": "भंडारा", "Buldana": "बुलढाणा", "Buldhana": "बुलढाणा", "Chandrapur": "चंद्रपूर",
+            "Dhule": "धुळे", "Gadchiroli": "गडचिरोली", "Garhchiroli": "गडचिरोली", "Gondiya": "गोंदिया", 
+            "Gondia": "गोंदिया", "Hingoli": "हिंगोली", "Jalgaon": "जळगाव", "Jalna": "जालना", 
+            "Kolhapur": "कोल्हापूर", "Latur": "लातूर", "Mumbai": "मुंबई शहर", "Mumbai City": "मुंबई शहर",
+            "Mumbai Suburban": "मुंबई उपनगर", "Nagpur": "नागपूर", "Nanded": "नांदेड",
+            "Nandurbar": "नंदुरबार", "Nashik": "नाशिक", "Osmanabad": "धाराशिव", "Dharashiv": "धाराशिव",
+            "Palghar": "पालघर", "Parbhani": "परभणी", "Pune": "पुणे", "Raigad": "रायगड", 
+            "Raigarh": "रायगड", "Ratnagiri": "रत्नागिरी", "Sangli": "सांगली", "Satara": "सातारा", 
+            "Sindhudurg": "सिंधुदुर्ग", "Solapur": "सोलापूर", "Thane": "ठाणे", "Wardha": "वर्धा",
+            "Washim": "वाशिम", "Yavatmal": "यवतमाळ"
+        };
+
+        // डॅशबोर्डकडून येणारा डेटा साठवण्यासाठी
+        let districtMemberCounts = {};
+        var geojsonLayer; // ग्लोबल व्हेरिएबल
+
         // ३. जिल्ह्यांनुसार रंग मॅच करणे 
         function getStyle(feature) {
             let district = feature.properties.DISTRICT || feature.properties.NAME_2 || feature.properties.district || "";
@@ -62,22 +84,25 @@
             return { fillColor: color, weight: 1.5, opacity: 1, color: 'white', fillOpacity: 0.85 };
         }
 
-        // ४. सर्वात खात्रीशीर डेटाबेस (Datameet Census 2011) मधून माहिती घेणे
+        // ४. डेटाबेस (Datameet Census 2011) मधून माहिती घेणे
         fetch('https://raw.githubusercontent.com/datameet/maps/master/Districts/Census_2011/2011_Dist.geojson')
-            .then(response => {
-                if (!response.ok) throw new Error("Network response failed");
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
-                // संपूर्ण भारताच्या नकाशामधून फक्त 'महाराष्ट्र' वेगळा काढणे
                 var mhFeatures = data.features.filter(f => f.properties.ST_NM === "Maharashtra");
                 data.features = mhFeatures;
 
-                var geojsonLayer = L.geoJSON(data, {
+                geojsonLayer = L.geoJSON(data, {
                     style: getStyle,
                     onEachFeature: function (feature, layer) {
-                        let name = feature.properties.DISTRICT || feature.properties.NAME_2 || "अज्ञात";
-                        layer.bindPopup("<b style='font-size:15px; color:#1e293b;'>जिल्हा: " + name + "</b>");
+                        let enName = feature.properties.DISTRICT || feature.properties.NAME_2 || "अज्ञात";
+                        let mrName = enToMrDict[enName] || enName;
+                        let count = districtMemberCounts[mrName] || 0; // डॅशबोर्डची संख्या
+
+                        // सुरुवातीला पॉपअप सेट करणे
+                        layer.bindPopup("<b style='font-size:15px; color:#1e293b;'>जिल्हा: " + mrName + "</b><br><b style='color:#ef4444; font-size:14px;'>सदस्य संख्या: " + count + "</b>");
+                        
+                        // माऊस नेल्यावर दिसावे म्हणून Tooltip
+                        layer.bindTooltip("<b>" + mrName + "</b>: " + count + " सदस्य", { permanent: false, direction: "top" });
                         
                         layer.on({
                             mouseover: function(e) { e.target.setStyle({ weight: 3, color: '#0f172a', fillOpacity: 1 }); },
@@ -86,19 +111,34 @@
                     }
                 }).addTo(map);
 
-                // नकाशा आपोआप महाराष्ट्रावर झूम (Center) करणे
                 map.fitBounds(geojsonLayer.getBounds());
             })
-            .catch(err => {
-                alert("⚠️ तांत्रिक त्रुटी: जिल्ह्यांचा नकाशा लोड होऊ शकला नाही.\n\nकारण: तुम्ही ही फाईल थेट कॉम्प्युटरवर उघडल्यामुळे ब्राऊझरने सुरक्षेच्या कारणास्तव (CORS Error) डेटा ब्लॉक केला आहे. \n\nहा नकाशा पाहण्यासाठी कृपया ही फाईल तुमच्या वेब सर्व्हरवर, लाईव्ह वेबसाईटवर किंवा 'Live Server' मध्ये उघडून पहा.");
-                console.error("Map loading error: ", err);
-            });
+            .catch(err => console.error("Map loading error: ", err));
 
-        // ५. सूची (Legend)
+        // ५. डॅशबोर्डकडून आलेला डेटा घेणे आणि नकाशावर अपडेट करणे
+        window.addEventListener('message', function(event) {
+            if (event.data && event.data.type === 'UPDATE_MAP_DATA') {
+                districtMemberCounts = event.data.data;
+                
+                // जर मॅप आधीच लोड झाला असेल, तर सर्व जिल्ह्यांची संख्या अपडेट करा
+                if (geojsonLayer) {
+                    geojsonLayer.eachLayer(function(layer) {
+                        let enName = layer.feature.properties.DISTRICT || layer.feature.properties.NAME_2 || "";
+                        let mrName = enToMrDict[enName] || enName;
+                        let count = districtMemberCounts[mrName] || 0;
+                        
+                        layer.setPopupContent("<b style='font-size:15px; color:#1e293b;'>जिल्हा: " + mrName + "</b><br><b style='color:#ef4444; font-size:14px;'>सदस्य संख्या: " + count + "</b>");
+                        layer.setTooltipContent("<b>" + mrName + "</b>: " + count + " सदस्य");
+                    });
+                }
+            }
+        });
+
+        // ६. सूची (Legend)
         var legend = L.control({position: 'bottomright'});
         legend.onAdd = function (map) {
             var div = L.DomUtil.create('div', 'legend');
-            div.innerHTML += '<h4>आरोग्य मंडळे</h4>';
+            div.innerHTML += '<h4 style="margin-top:0;">आरोग्य मंडळे</h4>';
             div.innerHTML += '<i style="background:' + circleColors.Thane + '"></i> ठाणे<br>';
             div.innerHTML += '<i style="background:' + circleColors.Nashik + '"></i> नाशिक<br>';
             div.innerHTML += '<i style="background:' + circleColors.Pune + '"></i> पुणे<br>';
