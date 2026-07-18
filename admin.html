@@ -6,10 +6,15 @@
     <title>सुपर ॲडमिन | क्ष-किरण संघटना महाराष्ट्र</title>
   
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- NEW: Cropper.js for Image Cropping -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+    
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- NEW: Cropper.js script -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Mukta:wght@300;400;600;700;800&display=swap');
@@ -106,6 +111,9 @@
             <button class="tab-btn" onclick="openTab('tab-complaints')"><i class="fa fa-envelope-open-text"></i> तक्रार कक्ष</button>
             <button class="tab-btn" onclick="openTab('tab-dash')"><i class="fa fa-chart-pie"></i> स्मार्ट डॅशबोर्ड</button>
             <button class="tab-btn" onclick="openTab('tab-statelist')"><i class="fa fa-map-marked-alt"></i> राज्यस्तरीय यादी</button>
+            <!-- NEW TABS -->
+            <button class="tab-btn" onclick="openTab('tab-letterpad')"><i class="fa fa-file-alt"></i> लेटर पॅड</button>
+            <button class="tab-btn" onclick="openTab('tab-settings')"><i class="fa fa-cogs"></i> ॲडमिन सेटिंग</button>
         </div>
 
         <div class="container">
@@ -179,6 +187,9 @@
                     <div class="panel-header h-blue">
                         <span><i class="fa fa-users"></i> मास्टर सदस्य यादी <span id="totalCount" style="color:var(--danger);"></span></span>
                         <div style="display:flex; gap:10px;">
+                            <!-- NEW: Duplicate finder button -->
+                            <button class="btn-save" onclick="findDuplicates()" style="background:var(--warning); color:#000;"><i class="fa fa-copy"></i> ड्यूप्लिकेट मेंबर शोधा</button>
+                            
                             <button class="btn-save" onclick="exportToExcel('membersTable', 'Member_List')" style="background:var(--success);"><i class="fa fa-file-excel"></i> Export</button>
                             <button class="btn-save" onclick="printTable('membersTable', 'मास्टर सदस्य यादी')" style="background:var(--dark);"><i class="fa fa-print"></i> Print</button>
                             <button class="btn-save" onclick="downloadPDF('membersTable', 'क्ष-किरण_सदस्य_यादी')" style="background:var(--danger);"><i class="fa fa-file-pdf"></i> Download PDF</button>
@@ -211,7 +222,7 @@
                                     <th>विभाग</th>
                                     <th>मूळ पत्ता</th>
                                     <th>कागदपत्र</th>
-                                    <th class="no-print" style="min-width:240px;">ॲक्शन</th>
+                                    <th class="no-print" style="min-width:320px;">ॲक्शन (I-Card/Login/Etc)</th>
                                 </tr></thead>
                                 <tbody id="membersBody"></tbody>
                             </table>
@@ -251,6 +262,18 @@
 
             <!-- TAB 3: ELECTIONS -->
             <div id="tab-election" class="tab-content">
+                <!-- NEW: Online Voting Control Panel -->
+                <div class="panel">
+                    <div class="panel-header h-success"><span><i class="fa fa-power-off"></i> ऑनलाईन मतदान प्रणाली नियंत्रण</span></div>
+                    <div class="panel-body" style="text-align: center;">
+                        <h3 id="votingStatusText">सध्या मतदान प्रणाली: तपासत आहे...</h3>
+                        <br>
+                        <button id="btnToggleVoting" class="btn-save" style="background:var(--primary); font-size: 1.2rem;" onclick="toggleOnlineVoting()">
+                            मतदान प्रणाली सुरू / बंद करा
+                        </button>
+                    </div>
+                </div>
+
                 <div class="panel">
                     <div class="panel-header h-purple"><span><i class="fa fa-user-tie"></i> निवडणुकीसाठी नवीन उमेदवार उभा करा</span></div>
                     <div class="panel-body">
@@ -305,7 +328,7 @@
                     <div class="panel-header h-blue"><span><i class="fa fa-list"></i> प्रकाशित केलेल्या सूचना</span></div>
                     <div class="panel-body">
                         <div class="table-responsive">
-                            <table><thead><tr><th>तारीख</th><th>विषय</th><th>माहिती</th><th class="no-print">ॲक्शन</th></tr></thead><tbody id="noticesBody"></tbody></table>
+                            <table><thead><tr><th>तारीख</th><th>विषय</th><th>माहिती</th><th class="no-print">ॲक्शन (Edit / PDF)</th></tr></thead><tbody id="noticesBody"></tbody></table>
                         </div>
                     </div>
                 </div>
@@ -346,8 +369,16 @@
                 </div>
             </div>
 
-            <!-- NEW TAB 7: STATE LEVEL LIST -->
+            <!-- TAB 7: STATE LEVEL LIST -->
             <div id="tab-statelist" class="tab-content">
+                <!-- NEW: Option to add Non-Member Staff -->
+                <div class="panel">
+                    <div class="panel-header h-success"><span><i class="fa fa-plus-circle"></i> राज्यस्तरीय यादीत इतर कर्मचारी जोडा (जे सदस्य नाहीत)</span></div>
+                    <div class="panel-body">
+                        <button class="btn-save" onclick="addNonMemberStaff()"><i class="fa fa-user-plus"></i> इतर कर्मचारी जोडा</button>
+                    </div>
+                </div>
+
                 <div class="panel">
                     <div class="panel-header h-purple">
                         <span><i class="fa fa-map-marked-alt"></i> राज्यस्तरीय सदस्य यादी</span>
@@ -369,6 +400,11 @@
                                 <option value="कोल्हापूर मंडळ">कोल्हापूर मंडळ</option> <option value="छत्रपती संभाजीनगर मंडळ">छत्रपती संभाजीनगर मंडळ</option>
                                 <option value="लातूर मंडळ">लातूर मंडळ</option> <option value="ठाणे मंडळ">ठाणे मंडळ</option>
                             </select>
+                            <!-- NEW: Seniority filter -->
+                            <select id="stateFilterSeniority" class="form-control" onchange="renderStateList()">
+                                <option value="All">-- सर्व --</option>
+                                <option value="Seniority">सेवा ज्येष्ठतेनुसार (रुजू दिनांक)</option>
+                            </select>
                         </div>
                         <div class="table-responsive">
                             <table id="stateListTable">
@@ -389,6 +425,39 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- NEW TAB 8: LETTER PAD -->
+            <div id="tab-letterpad" class="tab-content">
+                <div class="panel">
+                    <div class="panel-header h-primary"><span><i class="fa fa-file-alt"></i> अधिकृत लेटर पॅड अपलोड आणि वापर</span></div>
+                    <div class="panel-body">
+                        <div id="letterpadDisplay" style="text-align: center; margin-bottom: 20px;">
+                            <!-- Will show uploaded letterpad image here -->
+                        </div>
+                        <div style="display:flex; gap:10px; justify-content:center;">
+                            <button class="btn-save" onclick="uploadLetterPad()" style="background:var(--info);"><i class="fa fa-upload"></i> लेटर पॅड इमेज अपलोड करा</button>
+                            <button class="btn-save" onclick="deleteLetterPad()" style="background:var(--danger);"><i class="fa fa-trash"></i> लेटर पॅड डिलीट करा</button>
+                            <button class="btn-save" onclick="generateLetter()" style="background:var(--success);"><i class="fa fa-pen"></i> पत्र तयार करा</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NEW TAB 9: ADMIN SETTINGS -->
+            <div id="tab-settings" class="tab-content">
+                <div class="panel">
+                    <div class="panel-header h-dark"><span><i class="fa fa-cogs"></i> ॲडमिन नियंत्रण आणि पासवर्ड सेटिंग</span></div>
+                    <div class="panel-body">
+                        <button class="btn-save" onclick="changeAdminPassword()" style="background:var(--warning); color:#000;"><i class="fa fa-key"></i> ॲडमिन पासवर्ड बदला</button>
+                        <hr style="margin:20px 0;">
+                        <h3>ॲडमिन ॲक्टिव्हिटी लॉग (Recent Activities)</h3>
+                        <div style="background:#f1f5f9; padding: 15px; border-radius:8px; max-height: 250px; overflow-y:auto; font-size:0.9rem;" id="activityLog">
+                            <!-- Activities will be populated here -->
+                            <i>सध्या कोणतीही ॲक्टिव्हिटी उपलब्ध नाही.</i>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
         </div>
     </div>
@@ -396,9 +465,9 @@
     <!-- FIREBASE & MAIN SCRIPTS -->
     <script type="module">
        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-       import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-       import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        
+       import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+       import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserSessionPersistence, updatePassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+       
         const firebaseConfig = {
             apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk", authDomain: "xrayunionmah.firebaseapp.com",
             projectId: "xrayunionmah", storageBucket: "xrayunionmah.firebasestorage.app",
@@ -430,11 +499,12 @@
         });
         
         window.loginAdmin = async function() {
-            try { await setPersistence(auth, browserSessionPersistence); await signInWithEmailAndPassword(auth, document.getElementById('adminEmail').value, document.getElementById('adminPass').value); } 
+            try { await setPersistence(auth, browserSessionPersistence); await signInWithEmailAndPassword(auth, document.getElementById('adminEmail').value, document.getElementById('adminPass').value); logActivity("Admin Logged In"); } 
             catch(e) { Swal.fire('त्रुटी', 'चुकीचा ईमेल किंवा पासवर्ड', 'error'); }
         };
         
         window.logoutAdmin = function() { 
+            logActivity("Admin Logged Out");
             sessionStorage.clear();
             localStorage.clear();
             signOut(auth); 
@@ -454,8 +524,22 @@
                 const noticeSnap = await getDocs(collection(db, "notices")); noticesData = [];
                 noticeSnap.forEach(doc => noticesData.push({id: doc.id, ...doc.data()}));
 
-                let approvedMembers = membersData.filter(m => m.status !== 'Pending');
-                let pendingMembers = membersData.filter(m => m.status === 'Pending');
+                // Load Settings (Voting & Letterpad)
+                const settingsDoc = await getDoc(doc(db, "settings", "config"));
+                if (settingsDoc.exists()) {
+                    const s = settingsDoc.data();
+                    let vStat = s.isVotingActive ? "<span style='color:green;'>चालू (Active)</span>" : "<span style='color:red;'>बंद (Inactive)</span>";
+                    document.getElementById('votingStatusText').innerHTML = "सध्या मतदान प्रणाली: " + vStat;
+                    
+                    if(s.letterpadUrl) {
+                        document.getElementById('letterpadDisplay').innerHTML = `<img src="${getDirectUrl(s.letterpadUrl)}" style="max-width:100%; height:auto; max-height:400px; border:2px solid #ccc;">`;
+                    } else {
+                        document.getElementById('letterpadDisplay').innerHTML = "<i>कोणतेही लेटर पॅड उपलब्ध नाही.</i>";
+                    }
+                }
+
+                let approvedMembers = membersData.filter(m => m.status !== 'Pending' && m.isMember !== false); // Exclude non-members
+                let pendingMembers = membersData.filter(m => m.status === 'Pending' && m.isMember !== false);
                 
                 document.getElementById('totMem').innerText = approvedMembers.length;
                 document.getElementById('pendMemCard').innerText = pendingMembers.length;
@@ -463,14 +547,14 @@
                 document.getElementById('paidMem').innerText = approvedMembers.filter(m => m.feeStatus === 'Paid').length;
                 document.getElementById('pendComp').innerText = complaintsData.filter(c => c.status !== 'Resolved').length;
 
-                renderPending(); renderMembers(); renderFees(); renderCandidates(); renderNotices(); renderComplaints(); renderStateList();
+                renderPending(); renderMembers(); renderFees(); renderCandidates(); renderNotices(); renderComplaints(); renderStateList(); loadActivities();
                 if(document.getElementById('tab-dash').classList.contains('active')) { renderCharts(); }
             } catch(e) { console.error("Error loading data: ", e); }
         }
 
         // ================= TAB 1: PENDING & APPROVAL (WITH WHATSAPP) =================
         window.renderPending = function() {
-            let pending = membersData.filter(m => m.status === 'Pending'); let html = '';
+            let pending = membersData.filter(m => m.status === 'Pending' && m.isMember !== false); let html = '';
             pending.forEach((m, i) => {
                 html += `<tr><td><b>${i+1}</b></td><td><b style="color:var(--primary);">${m.name || '-'}</b><br><small>${m.designation || '-'}</small></td><td><i class="fa fa-phone"></i> ${m.mobile || '-'}<br><i class="fa fa-envelope" style="color:gray;"></i> ${m.email || '-'}</td><td><b>${m.district || '-'}</b><br><small>${m.mandal || '-'}</small></td><td>${m.workplace || '-'}</td><td class="no-print"><button class="btn-action btn-approve" onclick="reviewAndApprove('${m.id}')"><i class="fa fa-user-check"></i> तपासून ॲड करा</button> <button class="btn-action btn-del" onclick="rejectMember('${m.id}')"><i class="fa fa-times"></i> डिलीट</button></td></tr>`;
             }); document.getElementById('pendingBody').innerHTML = html || '<tr><td colspan="6">कोणतीही प्रलंबित विनंती नाही.</td></tr>';
@@ -487,6 +571,7 @@
                 if (result.isConfirmed) { 
                     let updatedData = { memberNo: document.getElementById('r_memNo').value, name: document.getElementById('r_name').value, designation: document.getElementById('r_desig').value, mobile: document.getElementById('r_mob').value, email: document.getElementById('r_email').value, district: document.getElementById('r_dist').value, mandal: document.getElementById('r_mandal').value, workplace: document.getElementById('r_work').value, joinDate: document.getElementById('r_joinDate').value, retireDate: document.getElementById('r_retireDate').value, permAddress: document.getElementById('r_addr').value, status: "Approved" };
                     await updateDoc(doc(db, "members", id), updatedData); 
+                    logActivity(`Approved Member: ${updatedData.name}`);
                     
                     Swal.fire({
                         title: 'मान्यता दिली!',
@@ -509,7 +594,7 @@
             });
         };
 
-        window.rejectMember = async function(id) { if(confirm("ही विनंती रद्द करून कायमची डिलीट करायची का?")) { await deleteDoc(doc(db, "members", id)); loadData(); } };
+        window.rejectMember = async function(id) { if(confirm("ही विनंती रद्द करून कायमची डिलीट करायची का?")) { await deleteDoc(doc(db, "members", id)); logActivity("Deleted a pending member request."); loadData(); } };
 
         // NEW ADDITION: Function to convert Google Drive URL to Direct Image URL (for older photos)
         window.getDirectUrl = function(url) {
@@ -551,7 +636,7 @@
         window.renderMembers = function() {
             let sName = document.getElementById('searchName').value.toLowerCase(); let fDist = document.getElementById('filterDist').value; let fMandal = document.getElementById('filterMandal').value;
             let filtered = membersData.filter(m => {
-                let isApproved = m.status !== 'Pending';
+                let isApproved = m.status !== 'Pending' && m.isMember !== false; // Only main members
                 let safeName = (m.name || '').toString().toLowerCase(); let safeMobile = (m.mobile || '').toString().toLowerCase(); let safeMemNo = (m.memberNo || '').toString().toLowerCase();
                 let matchName = safeName.includes(sName) || safeMobile.includes(sName) || safeMemNo.includes(sName);
                 let matchDist = fDist === 'All' || m.district === fDist; let matchMandal = fMandal === 'All' || m.mandal === fMandal;
@@ -561,22 +646,44 @@
             filtered.forEach((m, i) => {
                 let docBadge = m.docUrl ? `<a href="${m.docUrl}" target="_blank" class="badge bg-success" style="text-decoration:none;">पहा 📄</a>` : `<span class="badge bg-danger">नाही</span>`;
                 let memNoBadge = m.memberNo ? `<span class="badge bg-dark" style="margin-bottom:5px;">${m.memberNo}</span><br>` : '';
-                html += `<tr><td><b>${i+1}</b></td><td>${memNoBadge}<span style="cursor:pointer; text-decoration:underline;" onclick="viewMemberDetails('${m.id}')"><b style="color:var(--primary);">${m.name || '-'}</b></span><br><small>${m.designation || '-'}</small></td><td><i class="fa fa-phone"></i> ${m.mobile || '-'}<br><i class="fa fa-envelope" style="color:gray;"></i> ${m.email || '-'}</td><td>${m.workplace || '-'}</td><td><b>${m.district || '-'}</b></td><td>${m.mandal || '-'}</td><td>${m.permAddress || '-'}</td><td>${docBadge}</td><td class="no-print"><button class="btn-action bg-success" onclick="uploadPhoto('${m.id}')" title="Upload Photo"><i class="fa fa-camera"></i></button> <button class="btn-action btn-doc" onclick="uploadDoc('${m.id}')" title="Upload Document"><i class="fa fa-upload"></i></button> <button class="btn-action btn-edit" onclick="fullEdit('${m.id}')" title="Edit Data"><i class="fa fa-pen"></i></button> <button class="btn-action btn-id" onclick="generateID('${m.id}')" title="Print ID Card"><i class="fa fa-id-card"></i></button> <button class="btn-action btn-wp" onclick="window.open('https://wa.me/91${m.mobile || ''}', '_blank')" title="WhatsApp"><i class="fab fa-whatsapp"></i></button> <button class="btn-action btn-del" onclick="deleteMember('${m.id}')" title="Delete Member"><i class="fa fa-trash"></i></button></td></tr>`;
+                
+                // NEW: icardApproved and loginDisabled styling
+                let icardColor = m.icardApproved ? "bg-success" : "btn-id";
+                let loginColor = m.loginDisabled ? "btn-del" : "btn-approve";
+
+                html += `<tr><td><b>${i+1}</b></td><td>${memNoBadge}<span style="cursor:pointer; text-decoration:underline;" onclick="viewMemberDetails('${m.id}')"><b style="color:var(--primary);">${m.name || '-'}</b></span><br><small>${m.designation || '-'}</small></td><td><i class="fa fa-phone"></i> ${m.mobile || '-'}<br><i class="fa fa-envelope" style="color:gray;"></i> ${m.email || '-'}</td><td>${m.workplace || '-'}</td><td><b>${m.district || '-'}</b></td><td>${m.mandal || '-'}</td><td>${m.permAddress || '-'}</td><td>${docBadge}</td>
+                <td class="no-print">
+                    <button class="btn-action bg-success" onclick="uploadPhoto('${m.id}')" title="Upload Photo (Crop Option)"><i class="fa fa-camera"></i></button> 
+                    <button class="btn-action btn-doc" onclick="uploadDoc('${m.id}')" title="Upload Document (Max 300KB)"><i class="fa fa-upload"></i></button> 
+                    <button class="btn-action btn-edit" onclick="fullEdit('${m.id}')" title="Edit Data"><i class="fa fa-pen"></i></button> 
+                    <button class="btn-action ${icardColor}" onclick="toggleICard('${m.id}')" title="Approve I-Card"><i class="fa fa-id-badge"></i></button> 
+                    <button class="btn-action btn-id" onclick="generateID('${m.id}')" title="Print ID Card"><i class="fa fa-print"></i></button> 
+                    <button class="btn-action btn-wp" onclick="window.open('https://wa.me/91${m.mobile || ''}', '_blank')" title="WhatsApp"><i class="fab fa-whatsapp"></i></button> 
+                    <button class="btn-action ${loginColor}" onclick="toggleLogin('${m.id}')" title="Enable/Disable Member Login"><i class="fa fa-power-off"></i></button>
+                    <button class="btn-action btn-del" onclick="deleteMember('${m.id}')" title="Delete Member"><i class="fa fa-trash"></i></button>
+                </td></tr>`;
             });
             document.getElementById('membersBody').innerHTML = html || '<tr><td colspan="9">डेटा उपलब्ध नाही.</td></tr>';
         };
 
         window.addNewMember = async function(e) {
             e.preventDefault();
-            const newMem = { memberNo: document.getElementById('add_memNo').value || '', name: document.getElementById('add_name').value || '', mobile: document.getElementById('add_mobile').value || '', email: document.getElementById('add_email').value || '', mandal: document.getElementById('add_mandal').value || '', district: document.getElementById('add_district').value || '', workplace: document.getElementById('add_workplace').value || '', designation: document.getElementById('add_desig').value || '', joinDate: document.getElementById('add_joinDate').value || '', retireDate: document.getElementById('add_retireDate').value || '', permAddress: document.getElementById('add_perm_address').value || '', pass: document.getElementById('add_pass').value || '1234', status: "Approved", feeStatus: "Unpaid", docUrl: "", photoUrl: "" };
-            await addDoc(collection(db, "members"), newMem); Swal.fire('यशस्वी!', 'सदस्य थेट जोडला गेला', 'success'); document.getElementById('addForm').reset(); loadData();
+            const newMem = { memberNo: document.getElementById('add_memNo').value || '', name: document.getElementById('add_name').value || '', mobile: document.getElementById('add_mobile').value || '', email: document.getElementById('add_email').value || '', mandal: document.getElementById('add_mandal').value || '', district: document.getElementById('add_district').value || '', workplace: document.getElementById('add_workplace').value || '', designation: document.getElementById('add_desig').value || '', joinDate: document.getElementById('add_joinDate').value || '', retireDate: document.getElementById('add_retireDate').value || '', permAddress: document.getElementById('add_perm_address').value || '', pass: document.getElementById('add_pass').value || '1234', status: "Approved", feeStatus: "Unpaid", docUrl: "", photoUrl: "", icardApproved: false, loginDisabled: false, isMember: true };
+            await addDoc(collection(db, "members"), newMem); 
+            logActivity(`Added New Member: ${newMem.name}`);
+            Swal.fire('यशस्वी!', 'सदस्य थेट जोडला गेला', 'success'); document.getElementById('addForm').reset(); loadData();
         };
 
+        // NEW: Max 300KB constraint added
         window.uploadDoc = async function(id) {
             const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx-6x7OjLPFliMITRBemPw1OoCcrgePhONDLOb9mi_1svkWQ5u7GODv2tm1nvArT9RD/exec"; 
             if(!SCRIPT_URL || SCRIPT_URL.includes("YOUR_SCRIPT_URL_HERE")) { Swal.fire('थांबा!', 'कृपया आधी Google Apps Script ची URL कोडमध्ये टाका.', 'warning'); return; }
-            const { value: file } = await Swal.fire({ title: 'कागदपत्र (PDF/Image) निवडा', input: 'file', inputAttributes: { 'accept': 'image/*,application/pdf' }, showCancelButton: true });
+            const { value: file } = await Swal.fire({ title: 'कागदपत्र (PDF/Image) निवडा (Max 300 KB)', input: 'file', inputAttributes: { 'accept': 'image/*,application/pdf' }, showCancelButton: true });
             if (file) {
+                if(file.size > 300 * 1024) {
+                    Swal.fire('मर्यादा ओलांडली', 'कृपया 300 KB पेक्षा लहान फाईल निवडा.', 'error');
+                    return;
+                }
                 Swal.fire({title: 'फाईल ड्राईव्हवर सेव्ह होत आहे...', html: 'कृपया थांबा...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
                 let reader = new FileReader(); reader.readAsDataURL(file);
                 reader.onload = async function () {
@@ -584,26 +691,51 @@
                     try {
                         let response = await fetch(SCRIPT_URL, { method: "POST", body: new URLSearchParams(obj) }); let driveUrl = await response.text();
                         if(driveUrl.includes('Error')) { Swal.fire('त्रुटी', 'अपलोड अयशस्वी: ' + driveUrl, 'error'); return; }
-                        await updateDoc(doc(db, "members", id), { docUrl: driveUrl }); Swal.fire('यशस्वी!', 'कागदपत्र सेव्ह झाले.', 'success'); loadData();
+                        await updateDoc(doc(db, "members", id), { docUrl: driveUrl }); 
+                        logActivity(`Uploaded document for member ID: ${id}`);
+                        Swal.fire('यशस्वी!', 'कागदपत्र सेव्ह झाले.', 'success'); loadData();
                     } catch(e) { Swal.fire('त्रुटी', 'अपलोड करताना चूक झाली.', 'error'); console.error(e); }
                 };
             }
         };
 
+        // NEW: Added Cropper JS functionality
         window.uploadPhoto = async function(id) {
             const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx-6x7OjLPFliMITRBemPw1OoCcrgePhONDLOb9mi_1svkWQ5u7GODv2tm1nvArT9RD/exec"; 
             const { value: file } = await Swal.fire({ title: 'प्रोफाइल फोटो निवडा', input: 'file', inputAttributes: { 'accept': 'image/*' }, showCancelButton: true });
             if (file) {
-                Swal.fire({title: 'फोटो अपलोड होत आहे...', html: 'कृपया थांबा...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
-                let reader = new FileReader(); reader.readAsDataURL(file);
-                reader.onload = async function () {
-                    let base64 = reader.result.split(',')[1]; let obj = { data: base64, filename: "PHOTO_" + file.name, mimetype: file.type };
-                    try {
-                        let response = await fetch(SCRIPT_URL, { method: "POST", body: new URLSearchParams(obj) }); let driveUrl = await response.text();
-                        if(driveUrl.includes('Error')) { Swal.fire('त्रुटी', 'अपलोड अयशस्वी: ' + driveUrl, 'error'); return; }
-                        await updateDoc(doc(db, "members", id), { photoUrl: driveUrl }); Swal.fire('यशस्वी!', 'फोटो सेव्ह झाला.', 'success'); loadData();
-                    } catch(e) { Swal.fire('त्रुटी', 'अपलोड करताना चूक झाली.', 'error'); console.error(e); }
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    Swal.fire({
+                        title: 'फोटो क्रॉप करा',
+                        html: `<div><img id="cropImage" src="${e.target.result}" style="max-width: 100%;"></div>`,
+                        width: '600px',
+                        showCancelButton: true,
+                        confirmButtonText: 'क्रॉप आणि अपलोड करा',
+                        didOpen: () => {
+                            const image = document.getElementById('cropImage');
+                            window.cropper = new Cropper(image, { aspectRatio: 1, viewMode: 1 });
+                        },
+                        preConfirm: () => {
+                            if(window.cropper) {
+                                return window.cropper.getCroppedCanvas({width: 300, height: 300}).toDataURL(file.type);
+                            }
+                        }
+                    }).then(async (result) => {
+                        if(result.isConfirmed && result.value) {
+                            Swal.fire({title: 'फोटो अपलोड होत आहे...', html: 'कृपया थांबा...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
+                            let base64 = result.value.split(',')[1]; let obj = { data: base64, filename: "PHOTO_" + file.name, mimetype: file.type };
+                            try {
+                                let response = await fetch(SCRIPT_URL, { method: "POST", body: new URLSearchParams(obj) }); let driveUrl = await response.text();
+                                if(driveUrl.includes('Error')) { Swal.fire('त्रुटी', 'अपलोड अयशस्वी: ' + driveUrl, 'error'); return; }
+                                await updateDoc(doc(db, "members", id), { photoUrl: driveUrl }); 
+                                logActivity(`Uploaded photo for member ID: ${id}`);
+                                Swal.fire('यशस्वी!', 'फोटो सेव्ह झाला.', 'success'); loadData();
+                            } catch(err) { Swal.fire('त्रुटी', 'अपलोड करताना चूक झाली.', 'error'); console.error(err); }
+                        }
+                    });
                 };
+                reader.readAsDataURL(file);
             }
         };
 
@@ -615,13 +747,71 @@
                 html: `<div class="swal-grid"><div class="full-width"><label>सदस्य क्रमांक</label><input type="text" id="e_memNo" value="${m.memberNo || ''}"></div><div><label>नाव</label><input type="text" id="e_name" value="${m.name || ''}"></div><div><label>पद</label><input type="text" id="e_desig" value="${m.designation || ''}"></div><div><label>मोबाईल</label><input type="text" id="e_mob" value="${m.mobile || ''}"></div><div><label>ईमेल</label><input type="email" id="e_email" value="${m.email || ''}"></div><div class="full-width"><label>कार्यरत ठिकाण</label><input type="text" id="e_work" value="${m.workplace || ''}"></div><div><label>जिल्हा</label><select id="e_dist"><option value="">-- निवडा --</option>${distOpts}</select></div><div><label>विभाग</label><select id="e_mandal"><option value="">-- निवडा --</option><option value="पुणे मंडळ" ${m.mandal==='पुणे मंडळ'?'selected':''}>पुणे</option> <option value="नागपूर मंडळ" ${m.mandal==='नागपूर मंडळ'?'selected':''}>नागपूर</option> <option value="नाशिक मंडळ" ${m.mandal==='नाशिक मंडळ'?'selected':''}>नाशिक</option> <option value="अकोला मंडळ" ${m.mandal==='अकोला मंडळ'?'selected':''}>अकोला</option> <option value="कोल्हापूर मंडळ" ${m.mandal==='कोल्हापूर मंडळ'?'selected':''}>कोल्हापूर</option> <option value="छत्रपती संभाजीनगर मंडळ" ${m.mandal==='छत्रपती संभाजीनगर मंडळ'?'selected':''}>छ. संभाजीनगर</option> <option value="लातूर मंडळ" ${m.mandal==='लातूर मंडळ'?'selected':''}>लातूर</option> <option value="ठाणे मंडळ" ${m.mandal==='ठाणे मंडळ'?'selected':''}>ठाणे</option></select></div><div><label>रुजू दिनांक</label><input type="date" id="e_joinDate" value="${m.joinDate || ''}"></div><div><label>सेवानिवृत्ती दिनांक</label><input type="date" id="e_retireDate" value="${m.retireDate || ''}"></div><div class="full-width"><label>मूळ पत्ता</label><input type="text" id="e_addr" value="${m.permAddress || ''}"></div><div><label>पासवर्ड</label><input type="text" id="e_pass" value="${m.pass || '1234'}"></div></div>`,
                 width: '800px', showCancelButton: true, confirmButtonText: 'सेव्ह करा',
                 preConfirm: () => { return { memberNo: document.getElementById('e_memNo').value, name: document.getElementById('e_name').value, designation: document.getElementById('e_desig').value, mobile: document.getElementById('e_mob').value, email: document.getElementById('e_email').value, district: document.getElementById('e_dist').value, mandal: document.getElementById('e_mandal').value, workplace: document.getElementById('e_work').value, joinDate: document.getElementById('e_joinDate').value, retireDate: document.getElementById('e_retireDate').value, permAddress: document.getElementById('e_addr').value, pass: document.getElementById('e_pass').value } }
-            }).then(async (result) => { if (result.isConfirmed) { await updateDoc(doc(db, "members", id), result.value); Swal.fire('अपडेट!', '', 'success'); loadData(); } });
+            }).then(async (result) => { if (result.isConfirmed) { await updateDoc(doc(db, "members", id), result.value); logActivity(`Edited details for ${result.value.name}`); Swal.fire('अपडेट!', '', 'success'); loadData(); } });
         };
 
-        window.deleteMember = async function(id) { if(confirm("सदस्य कायमचा डिलीट होईल!")) { await deleteDoc(doc(db, "members", id)); loadData(); } };
+        window.deleteMember = async function(id) { if(confirm("सदस्य कायमचा डिलीट होईल!")) { await deleteDoc(doc(db, "members", id)); logActivity("Deleted a member permanently."); loadData(); } };
         
+        // NEW: Toggle ICARD Approval
+        window.toggleICard = async function(id) {
+            let m = membersData.find(x => x.id === id);
+            let newStatus = !m.icardApproved;
+            await updateDoc(doc(db, "members", id), { icardApproved: newStatus });
+            logActivity(`${newStatus ? 'Approved' : 'Disapproved'} I-Card for ${m.name}`);
+            Swal.fire('यशस्वी!', 'I-Card स्टेटस बदलले.', 'success');
+            loadData();
+        };
+
+        // NEW: Toggle Login
+        window.toggleLogin = async function(id) {
+            let m = membersData.find(x => x.id === id);
+            let newStatus = !m.loginDisabled;
+            await updateDoc(doc(db, "members", id), { loginDisabled: newStatus });
+            logActivity(`${newStatus ? 'Disabled' : 'Enabled'} Login for ${m.name}`);
+            Swal.fire('यशस्वी!', newStatus ? 'लॉगिन डिसेबल केले.' : 'लॉगिन सुरू केले.', 'success');
+            loadData();
+        };
+
+        // NEW: Find Duplicates Function
+        window.findDuplicates = function() {
+            let dupHtml = '';
+            let mapMobile = {};
+            let mapName = {};
+            
+            membersData.forEach(m => {
+                if(m.mobile && m.mobile.trim() !== "") {
+                    mapMobile[m.mobile] = mapMobile[m.mobile] || [];
+                    mapMobile[m.mobile].push(m);
+                }
+                if(m.name && m.name.trim() !== "") {
+                    let n = m.name.trim().toLowerCase();
+                    mapName[n] = mapName[n] || [];
+                    mapName[n].push(m);
+                }
+            });
+
+            for(let key in mapMobile) {
+                if(mapMobile[key].length > 1) {
+                    dupHtml += `<b>Mobile Duplicates (${key}):</b><br>` + mapMobile[key].map(x=> `${x.name} (ID: ${x.memberNo || '-'})`).join(', ') + '<br><br>';
+                }
+            }
+            for(let key in mapName) {
+                if(mapName[key].length > 1) {
+                    dupHtml += `<b>Name Duplicates (${key}):</b><br>` + mapName[key].map(x=> `${x.name} (Mobile: ${x.mobile})`).join(', ') + '<br><br>';
+                }
+            }
+
+            if(dupHtml === '') { dupHtml = 'कोणतेही ड्यूप्लिकेट मेंबर सापडले नाहीत.'; }
+            Swal.fire({title: 'ड्यूप्लिकेट मेंबर यादी', html: `<div style="text-align:left; font-size:14px; max-height:400px; overflow-y:auto;">${dupHtml}</div>`, width: '600px'});
+        }
+
         window.generateID = function(id) {
-            let m = membersData.find(x => x.id === id) || {}; let memNoText = m.memberNo ? `<div style="background:#f39c12; color:#000; font-weight:bold; padding:3px; font-size:12px;">ID: ${m.memberNo}</div>` : '';
+            let m = membersData.find(x => x.id === id) || {}; 
+            if(!m.icardApproved) {
+                Swal.fire('Error', 'I-Card अजून Approve केलेले नाही.', 'error');
+                return;
+            }
+            let memNoText = m.memberNo ? `<div style="background:#f39c12; color:#000; font-weight:bold; padding:3px; font-size:12px;">ID: ${m.memberNo}</div>` : '';
             let directPhoto = getDirectUrl(m.photoUrl);
             let directDoc = getDirectUrl(m.docUrl);
             let idWindow = window.open('', '', 'height=600,width=400'); idWindow.document.write(`<html><head><title>ID Card</title><style>body { font-family: 'Arial', sans-serif; display: flex; justify-content: center; padding: 20px; background:#f0f0f0;} .id-card { width: 300px; height: 450px; background: white; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); overflow: hidden; border: 2px solid #0B3D91; text-align: center; position:relative;} .header { background: #0B3D91; color: white; padding: 15px 5px; font-weight: bold; font-size: 14px; } .photo { width: 100px; height: 100px; background: #e0e0e0; border-radius: 50%; margin: 15px auto; border: 3px solid #f39c12; display:flex; justify-content:center; align-items:center; color:#888; overflow:hidden;} .photo img {width:100%; height:100%; object-fit:cover;} .name { font-size: 20px; font-weight: bold; color: #0B3D91; margin: 10px 0 5px 0;} .desig { font-size: 14px; color: #e67e22; font-weight: bold; margin-bottom: 10px;} .details { font-size: 13px; text-align: left; padding: 0 20px; line-height: 1.8; } .footer { background: #0B3D91; color: #fff; position: absolute; bottom: 0; width: 100%; padding: 10px 0; font-size: 12px; font-weight: bold;} @media print { body { background: white; } .no-print { display: none; } }</style></head><body><div class="id-card"><div class="header">क्ष-किरण संघटना महाराष्ट्र</div>${memNoText}<div class="photo">${directPhoto ? `<img src="${directPhoto}">` : (directDoc ? `<img src="${directDoc}">` : 'Photo')}</div><div class="name">${m.name || '-'}</div><div class="desig">${m.designation || '-'}</div><div class="details"><b>मोबाईल:</b> ${m.mobile || '-'}<br><b>विभाग:</b> ${m.mandal || '-'}<br><b>जिल्हा:</b> ${m.district || '-'}<br><b>कार्यरत:</b> ${m.workplace || '-'}</div><div class="footer">अध्यक्ष / सचिव स्वाक्षरी</div></div><div class="no-print" style="position:absolute; top:20px; right:20px;"><button onclick="window.print()" style="padding:10px 20px; background:#0B3D91; color:white; border:none; cursor:pointer;">Print ID</button></div></body></html>`); idWindow.document.close();
@@ -629,14 +819,14 @@
 
         // ================= TAB 3: FEES =================
         window.renderFees = function() {
-            let filter = document.getElementById('feeFilter').value; let appMem = membersData.filter(m => m.status !== 'Pending');
+            let filter = document.getElementById('feeFilter').value; let appMem = membersData.filter(m => m.status !== 'Pending' && m.isMember !== false);
             let fData = (filter === 'Paid') ? appMem.filter(m=>m.feeStatus === 'Paid') : (filter === 'Unpaid') ? appMem.filter(m=>m.feeStatus !== 'Paid') : appMem;
             let html = '';
             fData.forEach((m, i) => { let statusBadge = m.feeStatus === 'Paid' ? '<span class="badge bg-success">Paid</span>' : '<span class="badge bg-danger">Unpaid</span>'; let amtText = m.feeStatus === 'Paid' ? `₹ ${m.feeAmount || '-'} <br><small>Rec: ${m.feeReceipt || '-'}</small>` : '-'; html += `<tr><td>${i+1}</td><td><b>${m.name || '-'}</b></td><td>${m.mobile || '-'}</td><td>${statusBadge}</td><td>${amtText}</td><td class="no-print"><button class="btn-action bg-warning" onclick="updateFee('${m.id}')">अपडेट फी</button> ${m.feeStatus === 'Paid' ? `<button class="btn-action btn-id" onclick="printReceipt('${m.id}')">पावती</button>` : ''}</td></tr>`; });
             document.getElementById('feesBody').innerHTML = html || '<tr><td colspan="6">डेटा नाही.</td></tr>';
         };
 
-        window.updateFee = function(id) { Swal.fire({ title: 'फी अपडेट करा', html: `<select id="f_stat" class="form-control" style="margin-bottom:10px;"><option value="Paid">Paid (भरली)</option><option value="Unpaid">Unpaid (बाकी)</option></select><input type="number" id="f_amt" class="form-control" placeholder="रक्कम (उदा. 1000)" style="margin-bottom:10px;"><input type="text" id="f_rec" class="form-control" placeholder="पावती क्र. / Transaction ID">`, confirmButtonText: 'सेव्ह करा', preConfirm: () => { return { feeStatus: document.getElementById('f_stat').value, feeAmount: document.getElementById('f_amt').value, feeReceipt: document.getElementById('f_rec').value } } }).then(async (result) => { if (result.isConfirmed) { await updateDoc(doc(db, "members", id), result.value); Swal.fire('सेव्ह झाले!', '', 'success'); loadData(); } }); };
+        window.updateFee = function(id) { Swal.fire({ title: 'फी अपडेट करा', html: `<select id="f_stat" class="form-control" style="margin-bottom:10px;"><option value="Paid">Paid (भरली)</option><option value="Unpaid">Unpaid (बाकी)</option></select><input type="number" id="f_amt" class="form-control" placeholder="रक्कम (उदा. 1000)" style="margin-bottom:10px;"><input type="text" id="f_rec" class="form-control" placeholder="पावती क्र. / Transaction ID">`, confirmButtonText: 'सेव्ह करा', preConfirm: () => { return { feeStatus: document.getElementById('f_stat').value, feeAmount: document.getElementById('f_amt').value, feeReceipt: document.getElementById('f_rec').value } } }).then(async (result) => { if (result.isConfirmed) { await updateDoc(doc(db, "members", id), result.value); logActivity("Updated Fee Status for member."); Swal.fire('सेव्ह झाले!', '', 'success'); loadData(); } }); };
         
         window.printReceipt = function(id) { let m = membersData.find(x => x.id === id) || {}; let w = window.open('','','height=600,width=800'); w.document.write(`<html><head><title>पावती</title><style>body{font-family:sans-serif; padding:40px;} .box{border:2px solid #000; padding:20px;} h2{text-align:center; color:#0B3D91; text-decoration:underline;} .no-print{display:none;}</style></head><body><div class="box"><h2>क्ष-किरण संघटना महाराष्ट्र - पावती</h2><p style="text-align:right;"><b>दिनांक:</b> ${new Date().toLocaleDateString()}</p><p><b>पावती क्र:</b> ${m.feeReceipt || '-'}</p><p>श्री/श्रीमती <b>${m.name || '-'}</b> (${m.mobile || '-'}) यांच्याकडून संघटनेच्या कार्यासाठी <b>₹ ${m.feeAmount || '-'}</b> प्राप्त झाले. धन्यवाद!</p><p style="text-align:right; margin-top:50px;"><b>खजिनदार / प्राप्तकर्ता</b></p></div><button onclick="window.print()" style="margin-top:20px; padding:10px;">Print Receipt</button></body></html>`); w.document.close(); };
 
@@ -644,10 +834,80 @@
         window.addCandidate = async function(e) { e.preventDefault(); const c = { post: document.getElementById('cand_post').value, name: document.getElementById('cand_name').value, info: document.getElementById('cand_info').value, votes: 0 }; await addDoc(collection(db, "candidates"), c); Swal.fire('उमेदवार जोडला!', '', 'success'); e.target.reset(); loadData(); };
         window.renderCandidates = function() { let html = ''; candidatesData.forEach(c => { html += `<tr><td><b style="color:var(--primary);">${c.post}</b></td><td><b>${c.name}</b></td><td>${c.info}</td><td><h2>${c.votes}</h2></td><td class="no-print"><button class="btn-action btn-del" onclick="deleteCandidate('${c.id}')"><i class="fa fa-trash"></i></button></td></tr>`; }); document.getElementById('candidatesBody').innerHTML = html || '<tr><td colspan="5">सध्या उमेदवार नाहीत.</td></tr>'; };
         window.deleteCandidate = async function(id) { if(confirm("उमेदवार हटवायचा?")) { await deleteDoc(doc(db, "candidates", id)); loadData(); } };
+        
+        // NEW: Toggle Online Voting
+        window.toggleOnlineVoting = async function() {
+            const settingsRef = doc(db, "settings", "config");
+            const docSnap = await getDoc(settingsRef);
+            let currentStatus = false;
+            if (docSnap.exists() && docSnap.data().isVotingActive !== undefined) {
+                currentStatus = docSnap.data().isVotingActive;
+            }
+            let newStatus = !currentStatus;
+            
+            Swal.fire({
+                title: newStatus ? "मतदान सुरू करा?" : "मतदान बंद करा?",
+                text: "हा बदल मेंबर ॲपमध्ये लगेच दिसेल.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "हो, नक्की",
+                cancelButtonText: "रद्द करा"
+            }).then(async (res) => {
+                if(res.isConfirmed) {
+                    await setDoc(settingsRef, { isVotingActive: newStatus }, { merge: true });
+                    logActivity(`Online Voting Status changed to ${newStatus}`);
+                    Swal.fire('अपडेट झाले!', '', 'success');
+                    loadData();
+                }
+            });
+        };
 
-        window.addNotice = async function(e) { e.preventDefault(); const n = { title: document.getElementById('notice_title').value, date: document.getElementById('notice_date').value, desc: document.getElementById('notice_desc').value }; await addDoc(collection(db, "notices"), n); Swal.fire('सूचना प्रकाशित!', '', 'success'); e.target.reset(); loadData(); };
-        window.renderNotices = function() { let html = ''; noticesData.forEach(n => { html += `<tr><td>${n.date}</td><td><b>${n.title}</b></td><td>${n.desc}</td><td class="no-print"><button class="btn-action btn-del" onclick="deleteNotice('${n.id}')"><i class="fa fa-trash"></i></button></td></tr>`; }); document.getElementById('noticesBody').innerHTML = html || '<tr><td colspan="4">कोणतीही सूचना नाही.</td></tr>'; };
+        window.addNotice = async function(e) { e.preventDefault(); const n = { title: document.getElementById('notice_title').value, date: document.getElementById('notice_date').value, desc: document.getElementById('notice_desc').value }; await addDoc(collection(db, "notices"), n); logActivity("Published a new notice."); Swal.fire('सूचना प्रकाशित!', '', 'success'); e.target.reset(); loadData(); };
+        window.renderNotices = function() { 
+            let html = ''; 
+            noticesData.forEach(n => { 
+                let pdfLink = n.pdfUrl ? `<br><a href="${n.pdfUrl}" target="_blank" style="color:red; font-size:12px;"><b>PDF पहा</b></a>` : '';
+                html += `<tr><td>${n.date}</td><td><b>${n.title}</b>${pdfLink}</td><td>${n.desc}</td><td class="no-print">
+                <button class="btn-action btn-doc" onclick="uploadNoticePdf('${n.id}')" title="Upload PDF"><i class="fa fa-file-pdf"></i></button>
+                <button class="btn-action btn-edit" onclick="editNotice('${n.id}')" title="Edit"><i class="fa fa-pen"></i></button>
+                <button class="btn-action btn-del" onclick="deleteNotice('${n.id}')" title="Delete"><i class="fa fa-trash"></i></button></td></tr>`; 
+            }); document.getElementById('noticesBody').innerHTML = html || '<tr><td colspan="4">कोणतीही सूचना नाही.</td></tr>'; 
+        };
         window.deleteNotice = async function(id) { if(confirm("ही सूचना डिलीट करायची?")) { await deleteDoc(doc(db, "notices", id)); loadData(); } };
+
+        // NEW: Edit Notice
+        window.editNotice = function(id) {
+            let n = noticesData.find(x => x.id === id);
+            Swal.fire({
+                title: 'सूचना एडिट करा',
+                html: `<input type="date" id="en_date" value="${n.date}" class="form-control" style="margin-bottom:10px;">
+                       <input type="text" id="en_title" value="${n.title}" class="form-control" style="margin-bottom:10px;">
+                       <textarea id="en_desc" class="form-control">${n.desc}</textarea>`,
+                showCancelButton: true, confirmButtonText: 'सेव्ह करा',
+                preConfirm: () => { return { date: document.getElementById('en_date').value, title: document.getElementById('en_title').value, desc: document.getElementById('en_desc').value } }
+            }).then(async (res) => {
+                if(res.isConfirmed) { await updateDoc(doc(db, "notices", id), res.value); Swal.fire('सेव्ह झाले!', '', 'success'); loadData(); }
+            });
+        };
+
+        // NEW: Upload Notice PDF
+        window.uploadNoticePdf = async function(id) {
+            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx-6x7OjLPFliMITRBemPw1OoCcrgePhONDLOb9mi_1svkWQ5u7GODv2tm1nvArT9RD/exec"; 
+            const { value: file } = await Swal.fire({ title: 'सूचनेसाठी PDF निवडा', input: 'file', inputAttributes: { 'accept': 'application/pdf' }, showCancelButton: true });
+            if(file) {
+                Swal.fire({title: 'PDF अपलोड होत आहे...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
+                let reader = new FileReader(); reader.readAsDataURL(file);
+                reader.onload = async function() {
+                    let base64 = reader.result.split(',')[1]; let obj = { data: base64, filename: file.name, mimetype: file.type };
+                    try {
+                        let response = await fetch(SCRIPT_URL, { method: "POST", body: new URLSearchParams(obj) }); let driveUrl = await response.text();
+                        if(driveUrl.includes('Error')) { Swal.fire('त्रुटी', 'अपलोड अयशस्वी', 'error'); return; }
+                        await updateDoc(doc(db, "notices", id), { pdfUrl: driveUrl }); 
+                        Swal.fire('यशस्वी', 'PDF जोडली.', 'success'); loadData();
+                    } catch(e) { Swal.fire('त्रुटी', 'चूक झाली', 'error'); }
+                }
+            }
+        };
 
         // ================= TAB 6: COMPLAINTS (WITH DELETE FUNCTION) =================
         window.renderComplaints = function() { 
@@ -678,6 +938,7 @@
             let c = complaintsData.find(x => x.id === id);
             let safeName = c.memberName || c.name || c.member_name || 'सदस्य';
             let safeMobile = c.memberMobile || c.mobile || c.phone || '';
+            let safeEmail = c.email || '';
             let subj = c.subject || c.title || '-';
 
             Swal.fire({
@@ -690,22 +951,28 @@
             }).then(async (result) => {
                 if (result.isConfirmed) { 
                     await updateDoc(doc(db, "complaints", id), { status: 'Resolved' }); 
+                    logActivity(`Resolved complaint for ${safeName}`);
                     Swal.fire({
                         title: 'तक्रार सोडवली!',
-                        text: 'सदस्याला याबद्दल WhatsApp वर मेसेज पाठवायचा आहे का?',
+                        text: 'सदस्याला याबद्दल मेसेज पाठवायचा आहे का?',
                         icon: 'success',
+                        showDenyButton: true,
                         showCancelButton: true,
-                        confirmButtonText: 'हो, WhatsApp पाठवा',
+                        confirmButtonText: 'WhatsApp पाठवा',
+                        denyButtonText: 'Email पाठवा',
                         cancelButtonText: 'नको',
-                        confirmButtonColor: '#25D366'
-                    }).then((waResult) => {
-                        if (waResult.isConfirmed && safeMobile) {
+                        confirmButtonColor: '#25D366',
+                        denyButtonColor: '#3b82f6'
+                    }).then((optResult) => {
+                        let msg = `सस्नेह नमस्कार ${safeName},\n\nक्ष-किरण संघटना महाराष्ट्र कडे तुम्ही केलेली तक्रार / मागणी ('${subj}') यशस्वीरित्या सोडवण्यात आली आहे.\n\nधन्यवाद!\n- ॲडमिन टीम`;
+                        if (optResult.isConfirmed && safeMobile) {
                             let finalMobile = safeMobile.replace(/\D/g,''); 
                             if(finalMobile.length === 10) { finalMobile = '91' + finalMobile; }
-                            let msg = `सस्नेह नमस्कार ${safeName},\n\nक्ष-किरण संघटना महाराष्ट्र कडे तुम्ही केलेली तक्रार / मागणी ('${subj}') यशस्वीरित्या सोडवण्यात आली ছুটি आहे.\n\nधन्यवाद!\n- ॲडमिन टीम`;
                             window.open(`https://wa.me/${finalMobile}?text=${encodeURIComponent(msg)}`, '_blank');
-                        } else if (waResult.isConfirmed && !safeMobile) {
-                            Swal.fire('अडचण', 'सदस्याचा मोबाईल नंबर उपलब्ध नाही.', 'error');
+                        } else if (optResult.isDenied && safeEmail) {
+                            window.open(`mailto:${safeEmail}?subject=Complaint Resolved&body=${encodeURIComponent(msg)}`, '_blank');
+                        } else if ((optResult.isConfirmed && !safeMobile) || (optResult.isDenied && !safeEmail)) {
+                            Swal.fire('अडचण', 'संपर्क माहिती उपलब्ध नाही.', 'error');
                         }
                         loadData();
                     });
@@ -720,10 +987,38 @@
             } 
         };
 
+        // NEW: Add non-member to state list
+        window.addNonMemberStaff = function() {
+            let distOpts = mhDistricts.map(d => `<option value="${d}">${d}</option>`).join('');
+            Swal.fire({
+                title: 'राज्यस्तरीय यादीत कर्मचारी जोडा',
+                html: `<input type="text" id="nm_name" class="form-control" placeholder="संपूर्ण नाव" style="margin-bottom:10px;">
+                <select id="nm_mandal" class="form-control" style="margin-bottom:10px;"><option value="">-- विभाग (मंडळ) --</option><option value="पुणे मंडळ">पुणे मंडळ</option> <option value="नागपूर मंडळ">नागपूर मंडळ</option> <option value="नाशिक मंडळ">नाशिक मंडळ</option> <option value="अकोला मंडळ">अकोला मंडळ</option> <option value="कोल्हापूर मंडळ">कोल्हापूर मंडळ</option> <option value="छत्रपती संभाजीनगर मंडळ">छत्रपती संभाजीनगर मंडळ</option> <option value="लातूर मंडळ">लातूर मंडळ</option> <option value="ठाणे मंडळ">ठाणे मंडळ</option></select>
+                <select id="nm_dist" class="form-control" style="margin-bottom:10px;"><option value="">-- जिल्हा --</option>${distOpts}</select>
+                <input type="text" id="nm_work" class="form-control" placeholder="कार्यरत ठिकाण" style="margin-bottom:10px;">
+                <label>रुजू दिनांक</label><input type="date" id="nm_join" class="form-control" style="margin-bottom:10px;">
+                <label>सेवानिवृत्ती दिनांक</label><input type="date" id="nm_ret" class="form-control" style="margin-bottom:10px;">`,
+                showCancelButton: true, confirmButtonText: "जोडा",
+                preConfirm: () => {
+                    return {
+                        name: document.getElementById('nm_name').value, mandal: document.getElementById('nm_mandal').value, district: document.getElementById('nm_dist').value, workplace: document.getElementById('nm_work').value, joinDate: document.getElementById('nm_join').value, retireDate: document.getElementById('nm_ret').value,
+                        isMember: false, status: "Approved"
+                    }
+                }
+            }).then(async (res) => {
+                if(res.isConfirmed) {
+                    await addDoc(collection(db, "members"), res.value);
+                    Swal.fire('यशस्वी', 'कर्मचारी जोडला', 'success'); loadData();
+                }
+            });
+        };
+
         window.renderStateList = function() {
             let fDist = document.getElementById('stateFilterDist').value; 
             let fMandal = document.getElementById('stateFilterMandal').value;
+            let fSort = document.getElementById('stateFilterSeniority').value;
 
+            // Notice we don't filter out `isMember === false` here, so everyone shows.
             let filtered = membersData.filter(m => {
                 let isApproved = m.status !== 'Pending';
                 let matchDist = fDist === 'All' || m.district === fDist; 
@@ -731,11 +1026,20 @@
                 return isApproved && matchDist && matchMandal;
             });
 
+            // NEW: Sort by join date for seniority
+            if (fSort === 'Seniority') {
+                filtered.sort((a, b) => {
+                    if(!a.joinDate) return 1; if(!b.joinDate) return -1;
+                    return new Date(a.joinDate) - new Date(b.joinDate);
+                });
+            }
+
             let html = '';
             filtered.forEach((m, i) => {
+                let memTag = m.isMember === false ? ' <span class="badge bg-warning">Non-Member</span>' : '';
                 html += `<tr>
                     <td>${i + 1}</td>
-                    <td><b style="color:var(--primary);">${m.name || '-'}</b></td>
+                    <td><b style="color:var(--primary);">${m.name || '-'}</b>${memTag}</td>
                     <td>${m.mandal || '-'}</td>
                     <td>${m.district || '-'}</td>
                     <td>${m.workplace || '-'}</td>
@@ -745,6 +1049,102 @@
             });
             document.getElementById('stateListBody').innerHTML = html || '<tr><td colspan="7">डेटा उपलब्ध नाही.</td></tr>';
         };
+
+        // NEW: LETTER PAD LOGIC
+        window.uploadLetterPad = async function() {
+            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx-6x7OjLPFliMITRBemPw1OoCcrgePhONDLOb9mi_1svkWQ5u7GODv2tm1nvArT9RD/exec"; 
+            const { value: file } = await Swal.fire({ title: 'लेटर पॅड इमेज निवडा', input: 'file', inputAttributes: { 'accept': 'image/*' }, showCancelButton: true });
+            if(file) {
+                Swal.fire({title: 'अपलोड होत आहे...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
+                let reader = new FileReader(); reader.readAsDataURL(file);
+                reader.onload = async function() {
+                    let base64 = reader.result.split(',')[1]; let obj = { data: base64, filename: "LETTERPAD_" + file.name, mimetype: file.type };
+                    try {
+                        let response = await fetch(SCRIPT_URL, { method: "POST", body: new URLSearchParams(obj) }); let driveUrl = await response.text();
+                        if(driveUrl.includes('Error')) throw new Error(driveUrl);
+                        await setDoc(doc(db, "settings", "config"), { letterpadUrl: driveUrl }, { merge: true });
+                        Swal.fire('यशस्वी', 'लेटर पॅड सेव्ह झाले', 'success'); loadData();
+                    } catch(e) { Swal.fire('त्रुटी', 'अपलोड अयशस्वी', 'error'); }
+                }
+            }
+        };
+
+        window.deleteLetterPad = async function() {
+            if(confirm('खरोखर लेटर पॅड डिलीट करायचे का?')) {
+                await setDoc(doc(db, "settings", "config"), { letterpadUrl: null }, { merge: true });
+                Swal.fire('डिलीट झाले', '', 'success'); loadData();
+            }
+        };
+
+        window.generateLetter = async function() {
+            const settingsDoc = await getDoc(doc(db, "settings", "config"));
+            if(!settingsDoc.exists() || !settingsDoc.data().letterpadUrl) {
+                Swal.fire('त्रुटी', 'आधी लेटर पॅड अपलोड करा.', 'warning'); return;
+            }
+            let bgUrl = getDirectUrl(settingsDoc.data().letterpadUrl);
+            let w = window.open('','','width=900,height=800');
+            w.document.write(`<html><head><title>नवीन पत्र</title><style>
+                body { margin:0; padding:0; background: #e2e8f0; display:flex; justify-content:center; padding-top:20px; font-family:sans-serif; }
+                .page { width: 800px; min-height: 1131px; background: url('${bgUrl}') top center no-repeat white; background-size: contain; padding: 250px 50px 100px 50px; box-sizing:border-box; box-shadow: 0 0 10px rgba(0,0,0,0.5);}
+                .content { width: 100%; min-height: 500px; border: 1px dashed #ccc; outline:none; font-size:16px; line-height:1.6; }
+                .content:focus { border: 1px dashed #000; }
+                @media print { body{background:white; padding:0;} .page{box-shadow:none;} .content{border:none!important;} .no-print{display:none;} }
+            </style></head><body>
+                <div class="page"><div class="content" contenteditable="true" placeholder="येथे पत्राचा मजकूर टाईप करा...">येथे पत्राचा मजकूर टाईप करा...</div></div>
+                <button class="no-print" onclick="window.print()" style="position:fixed; top:20px; right:20px; padding:15px; background:green; color:white; border:none; cursor:pointer;">Print Letter</button>
+            </body></html>`);
+            w.document.close();
+        };
+
+        // NEW: Admin Password Update
+        window.changeAdminPassword = async function() {
+            Swal.fire({
+                title: 'नवीन पासवर्ड टाका',
+                input: 'password',
+                showCancelButton: true,
+                confirmButtonText: 'अपडेट करा'
+            }).then(async (res) => {
+                if(res.isConfirmed && res.value) {
+                    try {
+                        let user = auth.currentUser;
+                        if(user) {
+                            await updatePassword(user, res.value);
+                            logActivity("Admin Password Changed");
+                            Swal.fire('यशस्वी', 'पासवर्ड बदलला.', 'success');
+                        } else {
+                            Swal.fire('त्रुटी', 'पुन्हा लॉगिन करून प्रयत्न करा.', 'error');
+                        }
+                    } catch(e) {
+                        Swal.fire('त्रुटी', e.message, 'error');
+                    }
+                }
+            });
+        };
+
+        // NEW: Activity Logger
+        async function logActivity(msg) {
+            try {
+                let d = new Date().toLocaleString();
+                await addDoc(collection(db, "adminLogs"), { time: d, action: msg, timestamp: Date.now() });
+            } catch(e) {}
+        }
+        async function loadActivities() {
+            try {
+                const logsSnap = await getDocs(collection(db, "adminLogs"));
+                let arr = [];
+                logsSnap.forEach(doc => arr.push(doc.data()));
+                arr.sort((a,b) => b.timestamp - a.timestamp); // latest first
+                
+                if(arr.length > 0) {
+                    let html = '<ul>';
+                    arr.slice(0, 50).forEach(x => {
+                        html += `<li style="margin-bottom:8px;"><b>${x.time}:</b> ${x.action}</li>`;
+                    });
+                    html += '</ul>';
+                    document.getElementById('activityLog').innerHTML = html;
+                }
+            } catch(e) {}
+        }
 
         // ================= EXPORT & PRINT UTILITIES =================
         window.printTable = function(tableId, title) { let printWindow = window.open('', '', 'height=800,width=1000'); let tableHtml = document.getElementById(tableId).outerHTML; printWindow.document.write(`<html><head><title>${title}</title><style>body { font-family: sans-serif; padding: 20px; } h2 { text-align: center; color: #0B3D91; border-bottom: 2px solid #0B3D91; padding-bottom: 10px; margin-bottom: 20px;} table { width: 100%; border-collapse: collapse; } th, td { border: 1px solid #333; padding: 10px; text-align: left; font-size: 14px; } th { background-color: #f1f5f9; font-weight: bold; } .no-print { display: none !important; }</style></head><body><h2>${title}</h2>${tableHtml}<div style="text-align: right; margin-top: 20px; font-size: 12px;"><b>प्रिंट वेळ:</b> ${new Date().toLocaleString()}</div></body></html>`); printWindow.document.close(); printWindow.focus(); setTimeout(() => { printWindow.print(); printWindow.close(); }, 500); };
@@ -767,7 +1167,7 @@
         function renderCharts() {
             try {
                 let mCounts = {}; let dCounts = {}; 
-                let appMem = membersData.filter(m => m.status !== 'Pending');
+                let appMem = membersData.filter(m => m.status !== 'Pending' && m.isMember !== false);
                 appMem.forEach(m => { if(m.mandal && m.mandal !== "-") mCounts[m.mandal] = (mCounts[m.mandal]||0)+1; if(m.district && m.district !== "-") dCounts[m.district] = (dCounts[m.district]||0)+1; });
                 const mCtx = document.getElementById('mandalChart').getContext('2d'); if(mChart) mChart.destroy(); mChart = new Chart(mCtx, { type: 'pie', data: { labels: Object.keys(mCounts), datasets: [{ data: Object.values(mCounts), backgroundColor: ['#0B3D91','#f39c12','#10b981','#ef4444','#3b82f6','#8b5cf6','#f59e0b','#d97706'] }] } });
                 const dCtx = document.getElementById('distChart').getContext('2d'); if(dChart) dChart.destroy(); let sortedDist = Object.entries(dCounts).sort((a,b)=>b[1]-a[1]).slice(0,10); dChart = new Chart(dCtx, { type: 'doughnut', data: { labels: sortedDist.map(x=>x[0]), datasets: [{ data: sortedDist.map(x=>x[1]), backgroundColor: ['#8b5cf6','#3b82f6','#ef4444','#10b981','#f59e0b','#0B3D91','#d97706','#059669','#1e293b','#b45309'] }] } });
