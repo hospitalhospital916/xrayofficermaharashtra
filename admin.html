@@ -105,7 +105,6 @@
             <button class="tab-btn" onclick="openTab('tab-notices')"><i class="fa fa-bullhorn"></i> सूचना फलक (Index)</button>
             <button class="tab-btn" onclick="openTab('tab-complaints')"><i class="fa fa-envelope-open-text"></i> तक्रार कक्ष</button>
             <button class="tab-btn" onclick="openTab('tab-dash')"><i class="fa fa-chart-pie"></i> स्मार्ट डॅशबोर्ड</button>
-            <!-- NEW TAB BUTTON FOR STATE LIST -->
             <button class="tab-btn" onclick="openTab('tab-statelist')"><i class="fa fa-map-marked-alt"></i> राज्यस्तरीय यादी</button>
         </div>
 
@@ -165,7 +164,6 @@
                                 <input type="text" id="add_workplace" class="form-control" placeholder="कार्यरत ठिकाण">
                                 <input type="text" id="add_perm_address" class="form-control" placeholder="कायमचा मूळ पत्ता">
                             </div>
-                            <!-- NEW ADDITIONS: Join and Retire Dates -->
                             <div class="form-row">
                                 <label style="font-weight:bold; min-width:150px;">रुजू दिनांक:</label>
                                 <input type="date" id="add_joinDate" class="form-control" placeholder="रुजू दिनांक">
@@ -213,7 +211,7 @@
                                     <th>विभाग</th>
                                     <th>मूळ पत्ता</th>
                                     <th>कागदपत्र</th>
-                                    <th class="no-print" style="min-width:240px;">ॲक्शन</th> <!-- Modified Width for new icon -->
+                                    <th class="no-print" style="min-width:240px;">ॲक्शन</th>
                                 </tr></thead>
                                 <tbody id="membersBody"></tbody>
                             </table>
@@ -348,7 +346,7 @@
                 </div>
             </div>
 
-            <!-- NEW TAB 7: STATE LEVEL LIST (राज्यस्तरीय यादी) -->
+            <!-- NEW TAB 7: STATE LEVEL LIST -->
             <div id="tab-statelist" class="tab-content">
                 <div class="panel">
                     <div class="panel-header h-purple">
@@ -360,7 +358,6 @@
                         </div>
                     </div>
                     <div class="panel-body">
-                        <!-- FILTERS FOR STATE LIST -->
                         <div class="form-row" style="background:#f1f5f9; padding:15px; border-radius:10px;">
                             <select id="stateFilterDist" class="form-control" onchange="renderStateList()">
                                 <option value="All">-- सर्व जिल्हे --</option>
@@ -373,7 +370,6 @@
                                 <option value="लातूर मंडळ">लातूर मंडळ</option> <option value="ठाणे मंडळ">ठाणे मंडळ</option>
                             </select>
                         </div>
-
                         <div class="table-responsive">
                             <table id="stateListTable">
                                 <thead>
@@ -417,7 +413,6 @@
         mhDistricts.forEach(d => { 
             document.getElementById('add_district').innerHTML += `<option value="${d}">${d}</option>`; 
             document.getElementById('filterDist').innerHTML += `<option value="${d}">${d}</option>`; 
-            // NEW ADDITION: State List District Filter
             document.getElementById('stateFilterDist').innerHTML += `<option value="${d}">${d}</option>`; 
         });
 
@@ -439,7 +434,6 @@
             catch(e) { Swal.fire('त्रुटी', 'चुकीचा ईमेल किंवा पासवर्ड', 'error'); }
         };
         
-        // MODIFICATION: Secure logout added session clearing
         window.logoutAdmin = function() { 
             sessionStorage.clear();
             localStorage.clear();
@@ -487,12 +481,10 @@
             let distOpts = mhDistricts.map(d => `<option value="${d}" ${m.district===d?'selected':''}>${d}</option>`).join('');
             Swal.fire({
                 title: 'माहिती तपासा आणि मान्यता द्या',
-                // MODIFICATION: Added Join Date and Retire Date inputs
                 html: `<div class="swal-grid"><div class="full-width"><label style="color:var(--danger);">सदस्यत्व क्रमांक (उदा. MH-001)</label><input type="text" id="r_memNo" value="${m.memberNo || ''}"></div><div><label>नाव</label><input type="text" id="r_name" value="${m.name || ''}"></div><div><label>पद</label><input type="text" id="r_desig" value="${m.designation || ''}"></div><div><label>मोबाईल</label><input type="text" id="r_mob" value="${m.mobile || ''}"></div><div><label>ईमेल</label><input type="email" id="r_email" value="${m.email || ''}"></div><div class="full-width"><label>कार्यरत ठिकाण</label><input type="text" id="r_work" value="${m.workplace || ''}"></div><div><label>जिल्हा</label><select id="r_dist"><option value="">-- निवडा --</option>${distOpts}</select></div><div><label>विभाग</label><select id="r_mandal"><option value="">-- निवडा --</option><option value="पुणे मंडळ" ${m.mandal==='पुणे मंडळ'?'selected':''}>पुणे</option> <option value="नागपूर मंडळ" ${m.mandal==='नागपूर मंडळ'?'selected':''}>नागपूर</option> <option value="नाशिक मंडळ" ${m.mandal==='नाशिक मंडळ'?'selected':''}>नाशिक</option> <option value="अकोला मंडळ" ${m.mandal==='अकोला मंडळ'?'selected':''}>अकोला</option> <option value="कोल्हापूर मंडळ" ${m.mandal==='कोल्हापूर मंडळ'?'selected':''}>कोल्हापूर</option> <option value="छत्रपती संभाजीनगर मंडळ" ${m.mandal==='छत्रपती संभाजीनगर मंडळ'?'selected':''}>छ. संभाजीनगर</option> <option value="लातूर मंडळ" ${m.mandal==='लातूर मंडळ'?'selected':''}>लातूर</option> <option value="ठाणे मंडळ" ${m.mandal==='ठाणे मंडळ'?'selected':''}>ठाणे</option></select></div><div><label>रुजू दिनांक</label><input type="date" id="r_joinDate" value="${m.joinDate || ''}"></div><div><label>सेवानिवृत्ती दिनांक</label><input type="date" id="r_retireDate" value="${m.retireDate || ''}"></div><div class="full-width"><label>मूळ पत्ता</label><input type="text" id="r_addr" value="${m.permAddress || ''}"></div></div>`,
                 width: '800px', showCancelButton: true, confirmButtonText: 'Approve करा'
             }).then(async (result) => { 
                 if (result.isConfirmed) { 
-                    // MODIFICATION: Saved Join Date and Retire Date data
                     let updatedData = { memberNo: document.getElementById('r_memNo').value, name: document.getElementById('r_name').value, designation: document.getElementById('r_desig').value, mobile: document.getElementById('r_mob').value, email: document.getElementById('r_email').value, district: document.getElementById('r_dist').value, mandal: document.getElementById('r_mandal').value, workplace: document.getElementById('r_work').value, joinDate: document.getElementById('r_joinDate').value, retireDate: document.getElementById('r_retireDate').value, permAddress: document.getElementById('r_addr').value, status: "Approved" };
                     await updateDoc(doc(db, "members", id), updatedData); 
                     
@@ -519,10 +511,22 @@
 
         window.rejectMember = async function(id) { if(confirm("ही विनंती रद्द करून कायमची डिलीट करायची का?")) { await deleteDoc(doc(db, "members", id)); loadData(); } };
 
-        // NEW ADDITION: Function to view member details and photo in Pop up
+        // NEW ADDITION: Function to convert Google Drive URL to Direct Image URL (for older photos)
+        window.getDirectUrl = function(url) {
+            if (!url) return '';
+            if (url.includes('drive.google.com/file/d/')) {
+                let match = url.match(/\/d\/(.+?)\//);
+                if (match && match[1]) {
+                    return `https://drive.google.com/uc?export=view&id=${match[1]}`;
+                }
+            }
+            return url;
+        };
+
         window.viewMemberDetails = function(id) {
             let m = membersData.find(x => x.id === id) || {};
-            let photoHtml = m.photoUrl ? `<img src="${m.photoUrl}" style="width:120px; height:120px; border-radius:50%; object-fit:cover; border:3px solid var(--primary); margin-bottom:15px;">` : `<div style="width:120px; height:120px; border-radius:50%; background:#ccc; margin:0 auto 15px auto; display:flex; align-items:center; justify-content:center; color:#fff;"><i class="fa fa-user fa-3x"></i></div>`;
+            let directPhoto = getDirectUrl(m.photoUrl);
+            let photoHtml = directPhoto ? `<img src="${directPhoto}" style="width:120px; height:120px; border-radius:50%; object-fit:cover; border:3px solid var(--primary); margin-bottom:15px;">` : `<div style="width:120px; height:120px; border-radius:50%; background:#ccc; margin:0 auto 15px auto; display:flex; align-items:center; justify-content:center; color:#fff;"><i class="fa fa-user fa-3x"></i></div>`;
             
             let htmlContent = `
                 ${photoHtml}
@@ -557,7 +561,6 @@
             filtered.forEach((m, i) => {
                 let docBadge = m.docUrl ? `<a href="${m.docUrl}" target="_blank" class="badge bg-success" style="text-decoration:none;">पहा 📄</a>` : `<span class="badge bg-danger">नाही</span>`;
                 let memNoBadge = m.memberNo ? `<span class="badge bg-dark" style="margin-bottom:5px;">${m.memberNo}</span><br>` : '';
-                // MODIFICATION: Added viewMemberDetails onclick span on the name, and added uploadPhoto button.
                 html += `<tr><td><b>${i+1}</b></td><td>${memNoBadge}<span style="cursor:pointer; text-decoration:underline;" onclick="viewMemberDetails('${m.id}')"><b style="color:var(--primary);">${m.name || '-'}</b></span><br><small>${m.designation || '-'}</small></td><td><i class="fa fa-phone"></i> ${m.mobile || '-'}<br><i class="fa fa-envelope" style="color:gray;"></i> ${m.email || '-'}</td><td>${m.workplace || '-'}</td><td><b>${m.district || '-'}</b></td><td>${m.mandal || '-'}</td><td>${m.permAddress || '-'}</td><td>${docBadge}</td><td class="no-print"><button class="btn-action bg-success" onclick="uploadPhoto('${m.id}')" title="Upload Photo"><i class="fa fa-camera"></i></button> <button class="btn-action btn-doc" onclick="uploadDoc('${m.id}')" title="Upload Document"><i class="fa fa-upload"></i></button> <button class="btn-action btn-edit" onclick="fullEdit('${m.id}')" title="Edit Data"><i class="fa fa-pen"></i></button> <button class="btn-action btn-id" onclick="generateID('${m.id}')" title="Print ID Card"><i class="fa fa-id-card"></i></button> <button class="btn-action btn-wp" onclick="window.open('https://wa.me/91${m.mobile || ''}', '_blank')" title="WhatsApp"><i class="fab fa-whatsapp"></i></button> <button class="btn-action btn-del" onclick="deleteMember('${m.id}')" title="Delete Member"><i class="fa fa-trash"></i></button></td></tr>`;
             });
             document.getElementById('membersBody').innerHTML = html || '<tr><td colspan="9">डेटा उपलब्ध नाही.</td></tr>';
@@ -565,14 +568,12 @@
 
         window.addNewMember = async function(e) {
             e.preventDefault();
-            // MODIFICATION: Saved Join Date and Retire Date data, and photoUrl empty
             const newMem = { memberNo: document.getElementById('add_memNo').value || '', name: document.getElementById('add_name').value || '', mobile: document.getElementById('add_mobile').value || '', email: document.getElementById('add_email').value || '', mandal: document.getElementById('add_mandal').value || '', district: document.getElementById('add_district').value || '', workplace: document.getElementById('add_workplace').value || '', designation: document.getElementById('add_desig').value || '', joinDate: document.getElementById('add_joinDate').value || '', retireDate: document.getElementById('add_retireDate').value || '', permAddress: document.getElementById('add_perm_address').value || '', pass: document.getElementById('add_pass').value || '1234', status: "Approved", feeStatus: "Unpaid", docUrl: "", photoUrl: "" };
             await addDoc(collection(db, "members"), newMem); Swal.fire('यशस्वी!', 'सदस्य थेट जोडला गेला', 'success'); document.getElementById('addForm').reset(); loadData();
         };
 
         window.uploadDoc = async function(id) {
-            // MODIFICATION: Fixed typo in SCRIPT_URL (removed trailing 'ा') and updated to provided URL
-            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyUbyWV_Cr9dg5EiP2QNXB3YO0qsRDPN1gt0jKz-6yyvCiz7NigDLu8OADcKtq3OiJU/exec"; 
+            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx-6x7OjLPFliMITRBemPw1OoCcrgePhONDLOb9mi_1svkWQ5u7GODv2tm1nvArT9RD/exec"; 
             if(!SCRIPT_URL || SCRIPT_URL.includes("YOUR_SCRIPT_URL_HERE")) { Swal.fire('थांबा!', 'कृपया आधी Google Apps Script ची URL कोडमध्ये टाका.', 'warning'); return; }
             const { value: file } = await Swal.fire({ title: 'कागदपत्र (PDF/Image) निवडा', input: 'file', inputAttributes: { 'accept': 'image/*,application/pdf' }, showCancelButton: true });
             if (file) {
@@ -589,9 +590,8 @@
             }
         };
 
-        // NEW ADDITION: Function to specifically upload Photo to `photoUrl` field
         window.uploadPhoto = async function(id) {
-            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyUbyWV_Cr9dg5EiP2QNXB3YO0qsRDPN1gt0jKz-6yyvCiz7NigDLu8OADcKtq3OiJU/exec"; 
+            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx-6x7OjLPFliMITRBemPw1OoCcrgePhONDLOb9mi_1svkWQ5u7GODv2tm1nvArT9RD/exec"; 
             const { value: file } = await Swal.fire({ title: 'प्रोफाइल फोटो निवडा', input: 'file', inputAttributes: { 'accept': 'image/*' }, showCancelButton: true });
             if (file) {
                 Swal.fire({title: 'फोटो अपलोड होत आहे...', html: 'कृपया थांबा...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
@@ -612,10 +612,8 @@
             let distOpts = mhDistricts.map(d => `<option value="${d}" ${m.district===d?'selected':''}>${d}</option>`).join('');
             Swal.fire({
                 title: 'माहिती दुरुस्त करा',
-                // MODIFICATION: Added Join Date and Retire Date inputs
                 html: `<div class="swal-grid"><div class="full-width"><label>सदस्य क्रमांक</label><input type="text" id="e_memNo" value="${m.memberNo || ''}"></div><div><label>नाव</label><input type="text" id="e_name" value="${m.name || ''}"></div><div><label>पद</label><input type="text" id="e_desig" value="${m.designation || ''}"></div><div><label>मोबाईल</label><input type="text" id="e_mob" value="${m.mobile || ''}"></div><div><label>ईमेल</label><input type="email" id="e_email" value="${m.email || ''}"></div><div class="full-width"><label>कार्यरत ठिकाण</label><input type="text" id="e_work" value="${m.workplace || ''}"></div><div><label>जिल्हा</label><select id="e_dist"><option value="">-- निवडा --</option>${distOpts}</select></div><div><label>विभाग</label><select id="e_mandal"><option value="">-- निवडा --</option><option value="पुणे मंडळ" ${m.mandal==='पुणे मंडळ'?'selected':''}>पुणे</option> <option value="नागपूर मंडळ" ${m.mandal==='नागपूर मंडळ'?'selected':''}>नागपूर</option> <option value="नाशिक मंडळ" ${m.mandal==='नाशिक मंडळ'?'selected':''}>नाशिक</option> <option value="अकोला मंडळ" ${m.mandal==='अकोला मंडळ'?'selected':''}>अकोला</option> <option value="कोल्हापूर मंडळ" ${m.mandal==='कोल्हापूर मंडळ'?'selected':''}>कोल्हापूर</option> <option value="छत्रपती संभाजीनगर मंडळ" ${m.mandal==='छत्रपती संभाजीनगर मंडळ'?'selected':''}>छ. संभाजीनगर</option> <option value="लातूर मंडळ" ${m.mandal==='लातूर मंडळ'?'selected':''}>लातूर</option> <option value="ठाणे मंडळ" ${m.mandal==='ठाणे मंडळ'?'selected':''}>ठाणे</option></select></div><div><label>रुजू दिनांक</label><input type="date" id="e_joinDate" value="${m.joinDate || ''}"></div><div><label>सेवानिवृत्ती दिनांक</label><input type="date" id="e_retireDate" value="${m.retireDate || ''}"></div><div class="full-width"><label>मूळ पत्ता</label><input type="text" id="e_addr" value="${m.permAddress || ''}"></div><div><label>पासवर्ड</label><input type="text" id="e_pass" value="${m.pass || '1234'}"></div></div>`,
                 width: '800px', showCancelButton: true, confirmButtonText: 'सेव्ह करा',
-                // MODIFICATION: Add fields to preConfirm return object
                 preConfirm: () => { return { memberNo: document.getElementById('e_memNo').value, name: document.getElementById('e_name').value, designation: document.getElementById('e_desig').value, mobile: document.getElementById('e_mob').value, email: document.getElementById('e_email').value, district: document.getElementById('e_dist').value, mandal: document.getElementById('e_mandal').value, workplace: document.getElementById('e_work').value, joinDate: document.getElementById('e_joinDate').value, retireDate: document.getElementById('e_retireDate').value, permAddress: document.getElementById('e_addr').value, pass: document.getElementById('e_pass').value } }
             }).then(async (result) => { if (result.isConfirmed) { await updateDoc(doc(db, "members", id), result.value); Swal.fire('अपडेट!', '', 'success'); loadData(); } });
         };
@@ -624,8 +622,9 @@
         
         window.generateID = function(id) {
             let m = membersData.find(x => x.id === id) || {}; let memNoText = m.memberNo ? `<div style="background:#f39c12; color:#000; font-weight:bold; padding:3px; font-size:12px;">ID: ${m.memberNo}</div>` : '';
-            // MODIFICATION: Replaced `m.docUrl` with `m.photoUrl` to ensure actual photo shows up instead of PDF/Document on ID Card
-            let idWindow = window.open('', '', 'height=600,width=400'); idWindow.document.write(`<html><head><title>ID Card</title><style>body { font-family: 'Arial', sans-serif; display: flex; justify-content: center; padding: 20px; background:#f0f0f0;} .id-card { width: 300px; height: 450px; background: white; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); overflow: hidden; border: 2px solid #0B3D91; text-align: center; position:relative;} .header { background: #0B3D91; color: white; padding: 15px 5px; font-weight: bold; font-size: 14px; } .photo { width: 100px; height: 100px; background: #e0e0e0; border-radius: 50%; margin: 15px auto; border: 3px solid #f39c12; display:flex; justify-content:center; align-items:center; color:#888; overflow:hidden;} .photo img {width:100%; height:100%; object-fit:cover;} .name { font-size: 20px; font-weight: bold; color: #0B3D91; margin: 10px 0 5px 0;} .desig { font-size: 14px; color: #e67e22; font-weight: bold; margin-bottom: 10px;} .details { font-size: 13px; text-align: left; padding: 0 20px; line-height: 1.8; } .footer { background: #0B3D91; color: #fff; position: absolute; bottom: 0; width: 100%; padding: 10px 0; font-size: 12px; font-weight: bold;} @media print { body { background: white; } .no-print { display: none; } }</style></head><body><div class="id-card"><div class="header">क्ष-किरण संघटना महाराष्ट्र</div>${memNoText}<div class="photo">${m.photoUrl ? `<img src="${m.photoUrl}">` : (m.docUrl ? `<img src="${m.docUrl}">` : 'Photo')}</div><div class="name">${m.name || '-'}</div><div class="desig">${m.designation || '-'}</div><div class="details"><b>मोबाईल:</b> ${m.mobile || '-'}<br><b>विभाग:</b> ${m.mandal || '-'}<br><b>जिल्हा:</b> ${m.district || '-'}<br><b>कार्यरत:</b> ${m.workplace || '-'}</div><div class="footer">अध्यक्ष / सचिव स्वाक्षरी</div></div><div class="no-print" style="position:absolute; top:20px; right:20px;"><button onclick="window.print()" style="padding:10px 20px; background:#0B3D91; color:white; border:none; cursor:pointer;">Print ID</button></div></body></html>`); idWindow.document.close();
+            let directPhoto = getDirectUrl(m.photoUrl);
+            let directDoc = getDirectUrl(m.docUrl);
+            let idWindow = window.open('', '', 'height=600,width=400'); idWindow.document.write(`<html><head><title>ID Card</title><style>body { font-family: 'Arial', sans-serif; display: flex; justify-content: center; padding: 20px; background:#f0f0f0;} .id-card { width: 300px; height: 450px; background: white; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); overflow: hidden; border: 2px solid #0B3D91; text-align: center; position:relative;} .header { background: #0B3D91; color: white; padding: 15px 5px; font-weight: bold; font-size: 14px; } .photo { width: 100px; height: 100px; background: #e0e0e0; border-radius: 50%; margin: 15px auto; border: 3px solid #f39c12; display:flex; justify-content:center; align-items:center; color:#888; overflow:hidden;} .photo img {width:100%; height:100%; object-fit:cover;} .name { font-size: 20px; font-weight: bold; color: #0B3D91; margin: 10px 0 5px 0;} .desig { font-size: 14px; color: #e67e22; font-weight: bold; margin-bottom: 10px;} .details { font-size: 13px; text-align: left; padding: 0 20px; line-height: 1.8; } .footer { background: #0B3D91; color: #fff; position: absolute; bottom: 0; width: 100%; padding: 10px 0; font-size: 12px; font-weight: bold;} @media print { body { background: white; } .no-print { display: none; } }</style></head><body><div class="id-card"><div class="header">क्ष-किरण संघटना महाराष्ट्र</div>${memNoText}<div class="photo">${directPhoto ? `<img src="${directPhoto}">` : (directDoc ? `<img src="${directDoc}">` : 'Photo')}</div><div class="name">${m.name || '-'}</div><div class="desig">${m.designation || '-'}</div><div class="details"><b>मोबाईल:</b> ${m.mobile || '-'}<br><b>विभाग:</b> ${m.mandal || '-'}<br><b>जिल्हा:</b> ${m.district || '-'}<br><b>कार्यरत:</b> ${m.workplace || '-'}</div><div class="footer">अध्यक्ष / सचिव स्वाक्षरी</div></div><div class="no-print" style="position:absolute; top:20px; right:20px;"><button onclick="window.print()" style="padding:10px 20px; background:#0B3D91; color:white; border:none; cursor:pointer;">Print ID</button></div></body></html>`); idWindow.document.close();
         };
 
         // ================= TAB 3: FEES =================
@@ -703,7 +702,7 @@
                         if (waResult.isConfirmed && safeMobile) {
                             let finalMobile = safeMobile.replace(/\D/g,''); 
                             if(finalMobile.length === 10) { finalMobile = '91' + finalMobile; }
-                            let msg = `सस्नेह नमस्कार ${safeName},\n\nक्ष-किरण संघटना महाराष्ट्र कडे तुम्ही केलेली तक्रार / मागणी ('${subj}') यशस्वीरित्या सोडवण्यात आली आहे.\n\nधन्यवाद!\n- ॲडमिन टीम`;
+                            let msg = `सस्नेह नमस्कार ${safeName},\n\nक्ष-किरण संघटना महाराष्ट्र कडे तुम्ही केलेली तक्रार / मागणी ('${subj}') यशस्वीरित्या सोडवण्यात आली ছুটি आहे.\n\nधन्यवाद!\n- ॲडमिन टीम`;
                             window.open(`https://wa.me/${finalMobile}?text=${encodeURIComponent(msg)}`, '_blank');
                         } else if (waResult.isConfirmed && !safeMobile) {
                             Swal.fire('अडचण', 'सदस्याचा मोबाईल नंबर उपलब्ध नाही.', 'error');
@@ -714,7 +713,6 @@
             });
         };
 
-        // तक्रार कायमची डिलीट करण्याचे फंक्शन
         window.deleteComplaint = async function(id) { 
             if(confirm("ही तक्रार यादीतून कायमची डिलीट करायची का?")) { 
                 await deleteDoc(doc(db, "complaints", id)); 
@@ -722,7 +720,6 @@
             } 
         };
 
-        // NEW ADDITION: Function to Render State Level List (राज्यस्तरीय यादी)
         window.renderStateList = function() {
             let fDist = document.getElementById('stateFilterDist').value; 
             let fMandal = document.getElementById('stateFilterMandal').value;
@@ -767,7 +764,6 @@
             html2pdf().set(opt).from(wrapper).save().then(() => { Swal.close(); });
         };
         
-        // ================= DASHBOARD CHARTS =================
         function renderCharts() {
             try {
                 let mCounts = {}; let dCounts = {}; 
@@ -780,5 +776,3 @@
     </script>
 </body>
 </html>
-
-```
