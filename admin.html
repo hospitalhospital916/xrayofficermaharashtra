@@ -572,7 +572,7 @@
 
         window.uploadDoc = async function(id) {
             // MODIFICATION: Fixed typo in SCRIPT_URL (removed trailing 'ा') and updated to provided URL
-            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx-6x7OjLPFliMITRBemPw1OoCcrgePhONDLOb9mi_1svkWQ5u7GODv2tm1nvArT9RD/exec"; 
+            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyUbyWV_Cr9dg5EiP2QNXB3YO0qsRDPN1gt0jKz-6yyvCiz7NigDLu8OADcKtq3OiJU/exec"; 
             if(!SCRIPT_URL || SCRIPT_URL.includes("YOUR_SCRIPT_URL_HERE")) { Swal.fire('थांबा!', 'कृपया आधी Google Apps Script ची URL कोडमध्ये टाका.', 'warning'); return; }
             const { value: file } = await Swal.fire({ title: 'कागदपत्र (PDF/Image) निवडा', input: 'file', inputAttributes: { 'accept': 'image/*,application/pdf' }, showCancelButton: true });
             if (file) {
@@ -591,7 +591,7 @@
 
         // NEW ADDITION: Function to specifically upload Photo to `photoUrl` field
         window.uploadPhoto = async function(id) {
-            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx-6x7OjLPFliMITRBemPw1OoCcrgePhONDLOb9mi_1svkWQ5u7GODv2tm1nvArT9RD/exec"; 
+            const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyUbyWV_Cr9dg5EiP2QNXB3YO0qsRDPN1gt0jKz-6yyvCiz7NigDLu8OADcKtq3OiJU/exec"; 
             const { value: file } = await Swal.fire({ title: 'प्रोफाइल फोटो निवडा', input: 'file', inputAttributes: { 'accept': 'image/*' }, showCancelButton: true });
             if (file) {
                 Swal.fire({title: 'फोटो अपलोड होत आहे...', html: 'कृपया थांबा...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
