@@ -12,6 +12,10 @@
     <!-- SweetAlert2 for Notifications -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <!-- Cropper.js for Image Cropping -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+
     <style>
         /* --- मूळ रंग आणि सेटिंग्ज --- */
         :root {
@@ -103,6 +107,20 @@
         <a href="index.html#notices"><i class="fa fa-bell"></i> सूचना व GR</a>
         <a href="contact.html"><i class="fa fa-phone"></i> संपर्क</a>
     </nav>
+
+    <!-- Cropper Modal (फोटो क्रॉप करण्यासाठी) -->
+    <div id="cropperModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9999; justify-content:center; align-items:center; padding: 20px;">
+        <div style="background:var(--white); padding:20px; border-radius:15px; width:100%; max-width:500px; text-align:center;">
+            <h3 style="margin-bottom:15px; color:var(--primary);">फोटो क्रॉप करा</h3>
+            <div style="width:100%; max-height:60vh; overflow:hidden; border:1px solid #ddd; background:#eee;">
+                <img id="imageToCrop" style="max-width:100%; display:block;">
+            </div>
+            <div style="margin-top:20px; display:flex; gap:10px; justify-content:center; flex-wrap: wrap;">
+                <button type="button" id="btnCrop" class="btn-submit" style="margin-top:0; padding:10px 20px; width:auto; font-size:1.1rem;"><i class="fa fa-crop"></i> क्रॉप आणि सेव्ह करा</button>
+                <button type="button" id="btnCancelCrop" class="btn-submit" style="margin-top:0; padding:10px 20px; width:auto; font-size:1.1rem; background:var(--danger);"><i class="fa fa-times"></i> रद्द करा</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Main Content: Registration Form -->
     <div class="registration-wrapper">
@@ -243,6 +261,7 @@
                 <!-- ४. कागदपत्रे अपलोड (Document Uploads) -->
                 <h3 class="form-section-title"><i class="fa fa-upload"></i> कागदपत्रे अपलोड (Upload Documents)</h3>
                 <p style="font-size: 0.9rem; color: #666; margin-bottom: 15px;">* कृपया स्पष्ट दिसणारा फोटो आणि आधार कार्ड अपलोड करा. (Format: JPG, PNG, PDF)</p>
+                <p style="font-size: 0.9rem; color: var(--danger); font-weight:bold; margin-bottom: 15px;">सूचना: फोटोची साईझ 200 KB आणि आधार/PDF ची साईझ 300 KB पेक्षा जास्त नसावी.</p>
                 
                 <div class="form-row">
                     <!-- Passport Photo Upload -->
@@ -298,6 +317,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, addDoc, serverTimestamp, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
         // Firebase Configuration (तुमचे मूळ Config)
         const firebaseConfig = {
@@ -312,25 +332,102 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        const storage = getStorage(app); // जुन्या कोडमधील सिक्युरिटीसाठी ठेवले आहे
 
-        // UI Interactions: File Name Display
+        // ----------------------------------------------------
+        // Cropper.js & File Validation Logic
+        // ----------------------------------------------------
+        let cropper;
+        let croppedPhotoFile = null;
+
         document.getElementById('reg_photo').addEventListener('change', function(e) {
             const fileNameDisplay = document.getElementById('photo_name');
             if (e.target.files.length > 0) {
-                fileNameDisplay.innerText = "निवडलेली फाईल: " + e.target.files[0].name;
-                fileNameDisplay.style.color = "var(--success)";
-                fileNameDisplay.style.fontWeight = "bold";
+                const file = e.target.files[0];
+                
+                // Show Cropper Modal
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    document.getElementById('imageToCrop').src = event.target.result;
+                    document.getElementById('cropperModal').style.display = 'flex';
+                    
+                    if (cropper) { cropper.destroy(); }
+                    cropper = new Cropper(document.getElementById('imageToCrop'), {
+                        aspectRatio: 3 / 4, // पासपोर्ट साईझ फोटो
+                        viewMode: 1,
+                        autoCropArea: 1,
+                    });
+                };
+                reader.readAsDataURL(file);
             } else {
                 fileNameDisplay.innerText = "कोणतीही फाईल निवडली नाही";
                 fileNameDisplay.style.color = "#555";
                 fileNameDisplay.style.fontWeight = "normal";
+                croppedPhotoFile = null;
             }
+        });
+
+        // Crop Button Click
+        document.getElementById('btnCrop').addEventListener('click', function() {
+            if (!cropper) return;
+            
+            // Get cropped canvas and convert to blob
+            cropper.getCroppedCanvas({
+                width: 600,
+                height: 800,
+                imageSmoothingEnabled: true,
+                imageSmoothingQuality: 'high',
+            }).toBlob((blob) => {
+                // Size Validation for Photo (Max 200 KB)
+                if (blob.size > 200 * 1024) {
+                    Swal.fire('साईझ जास्त आहे!', 'क्रॉप केलेला फोटो 200 KB पेक्षा जास्त आहे. कृपया लहान फोटो निवडा.', 'warning');
+                    return;
+                }
+                
+                // Store cropped blob as File object
+                croppedPhotoFile = new File([blob], "passport_photo.jpg", { type: "image/jpeg" });
+                
+                const fileNameDisplay = document.getElementById('photo_name');
+                fileNameDisplay.innerText = "क्रॉप केलेला फोटो तयार आहे (✓)";
+                fileNameDisplay.style.color = "var(--success)";
+                fileNameDisplay.style.fontWeight = "bold";
+
+                document.getElementById('cropperModal').style.display = 'none';
+                cropper.destroy();
+                cropper = null;
+            }, 'image/jpeg', 0.8); // 0.8 quality to keep size under 200KB
+        });
+
+        // Cancel Crop Button Click
+        document.getElementById('btnCancelCrop').addEventListener('click', function() {
+            document.getElementById('cropperModal').style.display = 'none';
+            if (cropper) cropper.destroy();
+            cropper = null;
+            document.getElementById('reg_photo').value = ""; 
+            croppedPhotoFile = null;
+            
+            const fileNameDisplay = document.getElementById('photo_name');
+            fileNameDisplay.innerText = "कोणतीही फाईल निवडली नाही";
+            fileNameDisplay.style.color = "#555";
+            fileNameDisplay.style.fontWeight = "normal";
         });
 
         document.getElementById('reg_aadhaar_doc').addEventListener('change', function(e) {
             const fileNameDisplay = document.getElementById('aadhaar_name');
             if (e.target.files.length > 0) {
-                fileNameDisplay.innerText = "निवडलेली फाईल: " + e.target.files[0].name;
+                const file = e.target.files[0];
+                const maxSize = 300 * 1024; // 300 KB Max for Aadhaar/PDF
+
+                if (file.size > maxSize) {
+                    Swal.fire('फाईल खूप मोठी आहे!', 'कृपया आधार कार्ड/PDF 300 KB पेक्षा कमी साईझची अपलोड करा.', 'warning');
+                    this.value = ""; // निवडलेली फाईल कॅन्सल करा
+                    fileNameDisplay.innerText = "कोणतीही फाईल निवडली नाही";
+                    fileNameDisplay.style.color = "#555";
+                    fileNameDisplay.style.fontWeight = "normal";
+                    return;
+                }
+
+                fileNameDisplay.innerText = "निवडलेली फाईल: " + file.name;
                 fileNameDisplay.style.color = "var(--success)";
                 fileNameDisplay.style.fontWeight = "bold";
             } else {
@@ -387,6 +484,20 @@
             reader.onerror = error => reject(error);
         });
 
+        // Function unused directly in submit but kept as per instructions
+        async function uploadDocumentToStorage(file, folderName) {
+            if (!file) return null;
+            const uniqueFileName = Date.now() + "_" + file.name.replace(/\s+/g, "_");
+            const fileRef = ref(storage, `${folderName}/${uniqueFileName}`);
+            try {
+                const uploadResult = await uploadBytes(fileRef, file);
+                return await getDownloadURL(uploadResult.ref);
+            } catch (error) {
+                console.error("Upload Error:", error);
+                throw new Error("फाईल अपलोड होण्यात अडचण येत आहे. कृपया इंटरनेट तपासा.");
+            }
+        }
+
         // Helper: Reset Form
         function resetRegistrationForm() {
             document.getElementById('registrationForm').reset();
@@ -396,6 +507,7 @@
             document.getElementById('aadhaar_name').innerText = "कोणतीही फाईल निवडली नाही";
             document.getElementById('aadhaar_name').style.color = "#555";
             document.getElementById('aadhaar_name').style.fontWeight = "normal";
+            croppedPhotoFile = null;
         }
 
         // Core: Form Submission Event
@@ -427,11 +539,21 @@
                 createdAt: serverTimestamp()
             };
 
-            const photoFile = document.getElementById('reg_photo').files[0];
+            const photoFile = croppedPhotoFile; // क्रॉप केलेला फोटो
             const aadhaarDocFile = document.getElementById('reg_aadhaar_doc').files[0];
 
             if (!photoFile || !aadhaarDocFile) {
-                Swal.fire('माहिती अपूर्ण', 'कृपया पासपोर्ट फोटो आणि आधार कार्ड अपलोड करा.', 'warning');
+                Swal.fire('माहिती अपूर्ण', 'कृपया पासपोर्ट फोटो (क्रॉप करून) आणि आधार कार्ड अपलोड करा.', 'warning');
+                return;
+            }
+
+            // Double Check Limits before Upload
+            if (photoFile.size > 200 * 1024) {
+                Swal.fire('फोटो खूप मोठा आहे', 'तुमच्या फोटोची साईझ 200 KB पेक्षा जास्त आहे.', 'error');
+                return;
+            }
+            if (aadhaarDocFile.size > 300 * 1024) {
+                Swal.fire('डॉक्युमेंट खूप मोठे आहे', 'तुमच्या आधार कार्ड/PDF ची साईझ 300 KB पेक्षा जास्त आहे.', 'error');
                 return;
             }
 
@@ -455,7 +577,7 @@
                 const aadhaarB64 = await getBase64(aadhaarDocFile);
 
                 // 2. Google Apps Script ला डेटा पाठवा (Drive अपलोडसाठी)
-                const appsScriptUrl = "https://script.google.com/macros/s/AKfycbz5t8-C8u-Fmpd7RRJgMVMpXdONnv7f0W3tdmtxR4LswemTbifH3Iv5Hk38lZFFQ0WzPw/exec"; // <-- इथे तुमची Web App URL टाका
+                const appsScriptUrl = "https://script.google.com/macros/s/AKfycbz5t8-C8u-Fmpd7RRJgMVMpXdONnv7f0W3tdmtxR4LswemTbifH3Iv5Hk38lZFFQ0WzPw/exec"; 
                 
                 const payload = {
                     mobile: formData.mobile,
