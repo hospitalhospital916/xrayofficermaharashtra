@@ -602,20 +602,27 @@
             }
         };
 
-        onAuthStateChanged(auth, (user) => {
-            if (user) { document.getElementById('login-screen').style.display = 'none'; document.getElementById('app-content').style.display = 'block'; loadData(); } 
-            else { document.getElementById('login-screen').style.display = 'flex'; document.getElementById('app-content').style.display = 'none'; }
-        });
-        
-        // NEW: Additional Auth Listener to keep Member Logged In without overriding Admin's listener
-        auth.onAuthStateChanged((user) => {
-            if(!user) {
+       onAuthStateChanged(auth, (user) => {
+            if (user) { 
+                // Admin Logged In
+                document.getElementById('login-screen').style.display = 'none'; 
+                document.getElementById('member-app-content').style.display = 'none';
+                document.getElementById('app-content').style.display = 'block'; 
+                loadData(); 
+            } else { 
+                // Check if Member is Logged In
                 let loggedMemberStr = sessionStorage.getItem("loggedMember");
                 if(loggedMemberStr) {
+                    // Member Logged In
                     document.getElementById('login-screen').style.display = 'none';
                     document.getElementById('app-content').style.display = 'none';
                     document.getElementById('member-app-content').style.display = 'block';
                     loadMemberData(JSON.parse(loggedMemberStr));
+                } else {
+                    // No one is Logged In (Show Login Screen)
+                    document.getElementById('app-content').style.display = 'none'; 
+                    document.getElementById('member-app-content').style.display = 'none';
+                    document.getElementById('login-screen').style.display = 'flex'; 
                 }
             }
         });
