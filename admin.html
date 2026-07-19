@@ -1239,10 +1239,11 @@
                     window.renderCharts(); 
                 }
                 
-                Swal.close();
+               Swal.close();
             } catch(e) { 
                 console.error("Master Sync Failure Logged:", e);
-                Swal.fire('डेटा सिंक्रोनाइझेशन त्रुटी', 'सर्व्हरवरून माहिती संकलित करताना तांत्रिक अडचण आली.', 'error');
+                // येथे आपण e.message टाकत आहोत जेणेकरून फायरबेसची खरी अडचण स्क्रीनवर दिसेल
+                Swal.fire('Real Error', e.message, 'error');
             }
         };
 
