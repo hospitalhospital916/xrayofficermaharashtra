@@ -298,8 +298,8 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, addDoc, serverTimestamp, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
+        // Firebase Configuration (तुमचे मूळ Config)
         const firebaseConfig = {
             apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk",
             authDomain: "xrayunionmah.firebaseapp.com",
@@ -312,7 +312,6 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        const storage = getStorage(app);
 
         // UI Interactions: File Name Display
         document.getElementById('reg_photo').addEventListener('change', function(e) {
@@ -380,19 +379,13 @@
             return null;
         }
 
-        // Feature: Upload Document to Storage
-        async function uploadDocumentToStorage(file, folderName) {
-            if (!file) return null;
-            const uniqueFileName = Date.now() + "_" + file.name.replace(/\s+/g, "_");
-            const fileRef = ref(storage, `${folderName}/${uniqueFileName}`);
-            try {
-                const uploadResult = await uploadBytes(fileRef, file);
-                return await getDownloadURL(uploadResult.ref);
-            } catch (error) {
-                console.error("Upload Error:", error);
-                throw new Error("फाईल अपलोड होण्यात अडचण येत आहे. कृपया इंटरनेट तपासा.");
-            }
-        }
+        // Helper: Convert File to Base64 for Google Apps Script
+        const getBase64 = (file) => new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result.split(',')[1]);
+            reader.onerror = error => reject(error);
+        });
 
         // Helper: Reset Form
         function resetRegistrationForm() {
@@ -428,7 +421,7 @@
                 joinDate: document.getElementById('reg_joinDate').value,
                 retireDate: document.getElementById('reg_retireDate').value,
                 address: document.getElementById('reg_address').value.trim(),
-                password: password, // TODO: Replace this with Firebase Authentication
+                password: password, 
                 status: 'Pending',
                 feeStatus: 'Unpaid',
                 createdAt: serverTimestamp()
@@ -451,23 +444,47 @@
 
             Swal.fire({
                 title: 'नोंदणी करत आहे...',
-                html: 'कृपया प्रतीक्षा करा, माहिती सुरक्षित सर्व्हरवर सेव्ह होत आहे.',
+                html: 'कृपया प्रतीक्षा करा, फाईल्स गुगल ड्राईव्ह वर आणि माहिती सुरक्षित सर्व्हरवर सेव्ह होत आहे.',
                 allowOutsideClick: false,
                 didOpen: () => { Swal.showLoading(); }
             });
 
             try {
-                // Upload Files
-                formData.photoUrl = await uploadDocumentToStorage(photoFile, 'members_photos');
-                formData.aadhaarUrl = await uploadDocumentToStorage(aadhaarDocFile, 'members_aadhaar');
+                // 1. फाईल्स Base64 मध्ये कन्व्हर्ट करा
+                const photoB64 = await getBase64(photoFile);
+                const aadhaarB64 = await getBase64(aadhaarDocFile);
 
-                // Save to Firestore Database
+                // 2. Google Apps Script ला डेटा पाठवा (Drive अपलोडसाठी)
+                const appsScriptUrl = "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE"; // <-- इथे तुमची Web App URL टाका
+                
+                const payload = {
+                    mobile: formData.mobile,
+                    photo: { base64: photoB64, name: photoFile.name, mimeType: photoFile.type },
+                    aadhaar: { base64: aadhaarB64, name: aadhaarDocFile.name, mimeType: aadhaarDocFile.type }
+                };
+
+                const response = await fetch(appsScriptUrl, {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if(!result.success) {
+                    throw new Error("Google Drive Upload Failed: " + result.error);
+                }
+
+                // 3. गुगल ड्राईव्ह च्या लिंक्स फॉर्म डेटामध्ये जोडणे
+                formData.photoUrl = result.photoUrl;
+                formData.aadhaarUrl = result.aadhaarUrl;
+
+                // 4. Save to Firestore Database
                 await addDoc(collection(db, "members"), formData);
 
                 Swal.close();
                 Swal.fire({
                     title: 'नोंदणी यशस्वी!',
-                    text: 'तुमची माहिती यशस्वीरित्या सबमिट झाली आहे. ॲडमिनच्या मंजुरीनंतर तुम्हाला कळवले जाईल.',
+                    text: 'तुमची माहिती आणि कागदपत्रे यशस्वीरित्या गुगल ड्राईव्ह आणि डेटाबेसमध्ये सेव्ह झाली आहेत. ॲडमिनच्या मंजुरीनंतर तुम्हाला कळवले जाईल.',
                     icon: 'success',
                     confirmButtonColor: 'var(--primary)',
                     confirmButtonText: 'ओके'
