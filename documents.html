@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <title>महत्त्वाचे दस्तऐवज - क्ष-किरण संघटना</title>
+    <!-- तुमचे जुने CSS लिंक्स इथे टाका (FontAwesome, etc.) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* PDF Page Specific Styles */
+        .pdf-container { max-width: 1200px; margin: 40px auto; padding: 20px; }
+        .search-box { display: flex; gap: 15px; margin-bottom: 30px; flex-wrap: wrap; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);}
+        .search-box input, .search-box select { padding: 12px; border: 1px solid #ccc; border-radius: 6px; flex: 1; min-width: 200px; }
+        
+        .pdf-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .pdf-card { background: #fff; border: 1px solid #eee; border-radius: 10px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: 0.3s; position: relative;}
+        .pdf-card:hover { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(0,0,0,0.1); border-color: #0B3D91;}
+        .pdf-icon { font-size: 40px; color: #ef4444; margin-bottom: 15px; }
+        .pdf-cat { background: #f39c12; color: #fff; padding: 3px 8px; border-radius: 12px; font-size: 12px; position: absolute; top: 15px; right: 15px;}
+        .pdf-title { font-size: 18px; font-weight: bold; color: #0B3D91; margin-bottom: 10px; }
+        .pdf-desc { font-size: 14px; color: #555; margin-bottom: 15px; }
+        .pdf-date { font-size: 12px; color: #888; margin-bottom: 15px; }
+        .pdf-actions { display: flex; gap: 10px; }
+        .btn-view { background: #0B3D91; color: white; padding: 8px 15px; text-decoration: none; border-radius: 5px; flex: 1; text-align: center; }
+        .btn-down { background: #10b981; color: white; padding: 8px 15px; text-decoration: none; border-radius: 5px; flex: 1; text-align: center; }
+        
+        /* Modal for PDF Viewer */
+        .pdf-modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9999; }
+        .pdf-modal-content { width: 90%; height: 90%; margin: 2% auto; background: #fff; position: relative; border-radius:8px;}
+        .close-modal { position: absolute; top: 10px; right: 20px; font-size: 30px; color: red; cursor: pointer; z-index: 10;}
+    </style>
+</head>
+<body style="background-color: #f0f4f8;">
+
+    <!-- येथे तुमचा जुना Header/Nav टाका -->
+
+    <div class="pdf-container">
+        <h2 style="text-align: center; color: #0B3D91; margin-bottom: 30px;">महत्त्वाचे दस्तऐवज (GR & Circulars)</h2>
+
+        <!-- Search & Filter -->
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="दस्तऐवज शोधा (नाव किंवा कीवर्ड)..." onkeyup="filterPDFs()">
+            <select id="catFilter" onchange="filterPDFs()">
+                <option value="All">सर्व श्रेणी (All Categories)</option>
+                <option value="शासन निर्णय (GR)">शासन निर्णय (GR)</option>
+                <option value="परिपत्रके">परिपत्रके</option>
+                <option value="सेवा विषयक">सेवा विषयक</option>
+                <option value="वेतन विषयक">वेतन विषयक</option>
+                <option value="बदली">बदली</option>
+                <option value="संघटनेचे दस्तऐवज">संघटनेचे दस्तऐवज</option>
+                <option value="इतर">इतर</option>
+            </select>
+        </div>
+
+        <!-- PDF Grid -->
+        <div class="pdf-grid" id="publicPdfGrid">
+            <!-- Loading -->
+            <p style="text-align:center; width:100%;">दस्तऐवज लोड होत आहेत...</p>
+        </div>
+    </div>
+
+    <!-- PDF Viewer Modal -->
+    <div id="pdfViewerModal" class="pdf-modal">
+        <div class="pdf-modal-content">
+            <span class="close-modal" onclick="closePdf()">&times;</span>
+            <iframe id="pdfIframe" src="" width="100%" height="100%" style="border:none; border-radius:8px;"></iframe>
+        </div>
+    </div>
+
+    <!-- Firebase Script -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, getDocs, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // तुमचे जुने Firebase Config येथे टाका
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        window.pdfList = [];
+
+        async function loadPublicPDFs() {
+            try {
+                // फक्त Published PDF आणणे
+                const q = query(collection(db, "pdf_documents"), where("status", "==", "Published"));
+                const snap = await getDocs(q);
+                window.pdfList = [];
+                snap.forEach(doc => { window.pdfList.push(doc.data()); });
+                
+                // तारखेनुसार सॉर्टिंग (नवीन आधी)
+                window.pdfList.sort((a,b) => b.timestamp - a.timestamp);
+                displayPDFs(window.pdfList);
+            } catch(e) {
+                document.getElementById('publicPdfGrid').innerHTML = "<p>डेटा लोड करताना अडचण आली.</p>";
+            }
+        }
+
+        window.displayPDFs = function(data) {
+            const grid = document.getElementById('publicPdfGrid');
+            if(data.length === 0) { grid.innerHTML = "<p style='text-align:center; width:100%;'>कोणतेही दस्तऐवज सापडले नाहीत.</p>"; return; }
+            
+            let html = '';
+            data.forEach(p => {
+                html += `
+                <div class="pdf-card">
+                    <div class="pdf-cat">${p.category}</div>
+                    <i class="fa fa-file-pdf pdf-icon"></i>
+                    <h3 class="pdf-title">${p.title}</h3>
+                    <div class="pdf-date"><i class="fa fa-calendar-alt"></i> ${p.date}</div>
+                    <p class="pdf-desc">${p.desc || ''}</p>
+                    <div class="pdf-actions">
+                        <button class="btn-view" onclick="openPdf('${p.pdfUrl}')"><i class="fa fa-eye"></i> View</button>
+                        <a href="${p.pdfUrl}" target="_blank" download class="btn-down"><i class="fa fa-download"></i> Download</a>
+                    </div>
+                </div>`;
+            });
+            grid.innerHTML = html;
+        };
+
+        window.filterPDFs = function() {
+            let search = document.getElementById('searchInput').value.toLowerCase();
+            let cat = document.getElementById('catFilter').value;
+            
+            let filtered = window.pdfList.filter(p => {
+                let matchSearch = p.title.toLowerCase().includes(search) || (p.keywords && p.keywords.toLowerCase().includes(search));
+                let matchCat = cat === "All" || p.category === cat;
+                return matchSearch && matchCat;
+            });
+            displayPDFs(filtered);
+        };
+
+        window.openPdf = function(url) {
+            document.getElementById('pdfIframe').src = url;
+            document.getElementById('pdfViewerModal').style.display = "block";
+        };
+        window.closePdf = function() {
+            document.getElementById('pdfViewerModal').style.display = "none";
+            document.getElementById('pdfIframe').src = "";
+        };
+
+        loadPublicPDFs();
+    </script>
+</body>
+</html>
