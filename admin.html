@@ -1701,7 +1701,192 @@
             let clone = document.getElementById('membersTable').cloneNode(true);
             clone.querySelectorAll('.no-print').forEach(el=>el.remove());
             XLSX.writeFile(XLSX.utils.table_to_book(clone, {sheet:"Sheet1"}), "सदस्य_यादी.xlsx");
-        };
+        };<script>
+// डेटा फिल्टरिंगसाठी ग्लोबल व्हेरिएबल (Global Cache)
+window.cachedFeeData = [];
+
+// १. मुख्य फंक्शन: फी चा डेटा टेबलमध्ये आणणे आणि फिल्टर करणे
+window.renderFees = function(data) {
+    try {
+        // जर डेटा फायरबेस कडून आला असेल, तर तो कॅशमध्ये सेव्ह करा
+        if (data) {
+            window.cachedFeeData = data;
+        }
+
+        const feesBody = document.getElementById('feesBody');
+        if (!feesBody) return; // टेबल नसेल तर थांबा
+
+        // फिल्टर्सच्या व्हॅल्यूज घेणे
+        const mandalFilter = document.getElementById('feesFilterMandal') ? document.getElementById('feesFilterMandal').value : 'All';
+        const distFilter = document.getElementById('feesFilterDist') ? document.getElementById('feesFilterDist').value : 'All';
+        const feeFilter = document.getElementById('feeFilter') ? document.getElementById('feeFilter').value : 'All';
+
+        feesBody.innerHTML = ""; // जुना डेटा क्लिअर करा
+
+        // डेटा फिल्टर करणे (विभाग, जिल्हा आणि फी स्टेटस नुसार)
+        let filteredData = window.cachedFeeData.filter(item => {
+            let matchMandal = (mandalFilter === 'All') || (item.mandal === mandalFilter || item.division === mandalFilter);
+            let matchDist = (distFilter === 'All') || (item.district === distFilter);
+            
+            let status = (item.feeStatus || 'Unpaid').toLowerCase();
+            let matchFee = false;
+            
+            if (feeFilter === 'All') {
+                matchFee = true;
+            } else if (feeFilter === 'Paid' && (status === 'paid' || status === 'मंजूर')) {
+                matchFee = true;
+            } else if (feeFilter === 'Unpaid' && (status !== 'paid' && status !== 'मंजूर')) {
+                matchFee = true;
+            }
+
+            return matchMandal && matchDist && matchFee;
+        });
+
+        // जर डेटा नसेल
+        if (filteredData.length === 0) {
+            feesBody.innerHTML = "<tr><td colspan='7' style='text-align:center; padding:15px;'>कोणताही डेटा आढळला नाही.</td></tr>";
+            return;
+        }
+
+        let srNo = 1;
+        filteredData.forEach(item => {
+            const name = item.fullName || 'माहिती नाही';
+            const location = `${item.mandal || item.division || '-'} <br> <small>${item.district || '-'}</small>`;
+            const contact = `${item.mobile || '-'} <br> <small>${item.email || '-'}</small>`;
+            const status = item.feeStatus || 'Unpaid';
+            const paymentInfo = `₹ ${item.feeAmount || '0'} <br> <small>पावती: ${item.receiptNo || 'N/A'}</small>`;
+            const memberId = item.memberId;
+            const email = item.email || '';
+
+            const statusColor = (status.toLowerCase() === 'paid' || status === 'मंजूर') ? 'green' : 'red';
+
+            const row = `
+                <tr>
+                    <td>${srNo++}</td>
+                    <td><strong>${name}</strong></td>
+                    <td>${location}</td>
+                    <td>${contact}</td>
+                    <td style="color: ${statusColor}; font-weight: bold;">${status}</td>
+                    <td>${paymentInfo}</td>
+                    <td class="no-print" style="text-align: center;">
+                        <button onclick="updateFeeStatus('${memberId}')" style="background:#28a745; color:white; border:none; padding:5px 10px; margin:2px; border-radius:4px; cursor:pointer;" title="फी भरल्याची नोंद करा">✅ Verify</button>
+                        <button onclick="sendEmailToMember('${email}', '${name}')" style="background:#17a2b8; color:white; border:none; padding:5px 10px; margin:2px; border-radius:4px; cursor:pointer;">📧 Email</button>
+                        <button onclick="deleteFeeRecord('${memberId}')" style="background:#dc3545; color:white; border:none; padding:5px 10px; margin:2px; border-radius:4px; cursor:pointer;" title="फी रेकॉर्ड डिलीट करा">🗑️ Clear</button>
+                    </td>
+                </tr>
+            `;
+            feesBody.innerHTML += row;
+        });
+    } catch (err) {
+        console.error("Fee Data Load Error: ", err);
+    }
+};
+
+// २. फी अपडेट / Verify करणे
+window.updateFeeStatus = async function(memberId) {
+    let amount = prompt("कृपया भरलेली रक्कम टाका (उदा. 500):", "500");
+    if (amount === null) return; 
+    
+    let receiptNo = prompt("पावती क्रमांक टाका (नसल्यास N/A लिहा):", "N/A");
+    if (receiptNo === null) return;
+
+    try {
+        await db.collection("members").doc(memberId).update({
+            feeStatus: "Paid",
+            feeAmount: amount,
+            receiptNo: receiptNo
+        });
+        alert("फी यशस्वीरित्या Verify झाली आहे!");
+        if(typeof window.loadData === 'function') window.loadData(); // डेटा रिफ्रेश
+    } catch (error) {
+        console.error("Error updating fee status:", error);
+        alert("अपडेट करताना तांत्रिक अडचण आली.");
+    }
+};
+
+// ३. फी रेकॉर्ड डिलीट (Clear) करणे
+window.deleteFeeRecord = async function(memberId) {
+    if(confirm("तुम्हाला खात्री आहे का? हा आर्थिक रेकॉर्ड डिलीट होईल.")) {
+        try {
+            await db.collection("members").doc(memberId).update({
+                feeStatus: "Unpaid",
+                feeAmount: "0",
+                receiptNo: "N/A"
+            });
+            alert("फी रेकॉर्ड क्लिअर केला आहे.");
+            if(typeof window.loadData === 'function') window.loadData(); // डेटा रिफ्रेश
+        } catch (error) {
+            console.error("Error clearing fee record:", error);
+        }
+    }
+};
+
+// ४. एका सदस्याला ईमेल पाठवणे
+window.sendEmailToMember = function(email, name) {
+    if(!email) {
+        alert("या सदस्याचा ईमेल आयडी उपलब्ध नाही.");
+        return;
+    }
+    const subject = encodeURIComponent("फी पावती - महाराष्ट्र क्ष-किरण अधिकारी संघटना");
+    const body = encodeURIComponent(`नमस्कार ${name},\n\nआपली फी यशस्वीरित्या प्राप्त झाली आहे.\n\nधन्यवाद,\nAdmin Team`);
+    window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+};
+
+// ५. सर्व 'Paid' सदस्यांना एकदम (Bulk) ईमेल पाठवणे (BCC मध्ये)
+window.sendBulkEmail = function() {
+    let paidMembers = window.cachedFeeData.filter(item => {
+        let status = (item.feeStatus || '').toLowerCase();
+        return (status === 'paid' || status === 'मंजूर') && item.email;
+    });
+    
+    if(paidMembers.length === 0) {
+        alert("ईमेल पाठवण्यासाठी एकही 'Paid' (फी भरलेला) सदस्य सापडला नाही किंवा त्यांचे ईमेल उपलब्ध नाहीत.");
+        return;
+    }
+
+    let emails = paidMembers.map(m => m.email).join(',');
+    let subject = encodeURIComponent("महत्त्वाची सूचना - महाराष्ट्र क्ष-किरण अधिकारी संघटना");
+    let body = encodeURIComponent("नमस्कार सर्वांना,\n\n");
+    
+    window.location.href = `mailto:?bcc=${emails}&subject=${subject}&body=${body}`;
+};
+
+// ६. Excel Export फीचर
+window.exportFeesToExcel = function() {
+    let table = document.getElementById("feesTable");
+    let html = table.outerHTML;
+    let url = 'data:application/vnd.ms-excel;charset=utf-8,' + encodeURIComponent(html);
+    
+    let downloadLink = document.createElement("a");
+    document.body.appendChild(downloadLink);
+    downloadLink.href = url;
+    downloadLink.download = 'Fee_Management_Report.xls';
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+};
+
+// ७. प्रिंट काढणे
+window.printFeesTable = function() {
+    let printContent = document.getElementById('feesTable').outerHTML;
+    let originalContent = document.body.innerHTML;
+    
+    document.body.innerHTML = `
+        <html><head><title>Fees Report</title>
+        <style>
+            table { width: 100%; border-collapse: collapse; }
+            th, td { border: 1px solid #000; padding: 8px; text-align: left; }
+            .no-print { display: none !important; }
+        </style>
+        </head><body>
+        <h2 style='text-align:center;'>आर्थिक नोंदणी व फी व्यवस्थापन अहवाल</h2>
+        ${printContent}
+        </body></html>
+    `;
+    window.print();
+    document.body.innerHTML = originalContent;
+    window.location.reload(); // पेज पूर्ववत करण्यासाठी
+};
+</script>
     </script>
 </body>
 </html>
