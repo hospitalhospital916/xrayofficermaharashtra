@@ -12,7 +12,6 @@
     <!-- SweetAlert2 for Notifications -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    
     <style>
         /* --- मूळ रंग आणि सेटिंग्ज --- */
         :root {
@@ -36,18 +35,13 @@
         .header-text p { color: var(--secondary); font-weight: 700; font-size: 1.1rem; text-align: center; margin-top: 5px; }
         .header-text small { color: #555; font-size: 0.95rem; font-weight: 600; }
 
-        /* --- NAVIGATION BAR (सुधारित) --- */
-        nav { background: var(--primary); padding: 12px 10px; display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
-        nav a { color: var(--white); text-decoration: none; font-size: 1.05rem; font-weight: 600; padding: 8px 12px; border-radius: 6px; transition: 0.3s; white-space: nowrap; }
+        /* --- NAVIGATION BAR --- */
+        nav { background: var(--primary); padding: 12px 20px; display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
+        nav a { color: var(--white); text-decoration: none; font-size: 1.1rem; font-weight: 600; padding: 8px 15px; border-radius: 6px; transition: 0.3s; }
         nav a:hover { background: rgba(255, 255, 255, 0.2); color: var(--secondary); }
 
-        /* --- BACK TO HOME BUTTON --- */
-        .back-btn-container { max-width: 900px; margin: 20px auto 0 auto; padding: 0 20px; text-align: left; }
-        .btn-back { background: var(--dark); color: var(--white); padding: 10px 20px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block; transition: 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .btn-back:hover { background: var(--secondary); color: #000; transform: translateY(-2px); }
-
         /* --- FORM CONTAINER & LAYOUT --- */
-        .registration-wrapper { max-width: 900px; margin: 20px auto 40px auto; padding: 0 20px; }
+        .registration-wrapper { max-width: 900px; margin: 40px auto; padding: 0 20px; }
         .form-card { background: var(--white); padding: 40px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border-top: 6px solid var(--secondary); }
         .form-header { text-align: center; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 2px dashed var(--border-color); }
         .form-header h2 { color: var(--primary); font-size: 2.2rem; font-weight: 800; margin-bottom: 5px; }
@@ -80,7 +74,6 @@
             .header-text h1 { font-size: 1.4rem; }
             .form-card { padding: 25px 15px; }
             .form-row { grid-template-columns: 1fr; }
-            header { flex-direction: column; text-align: center; }
         }
 
         /* --- FOOTER --- */
@@ -105,24 +98,11 @@
 
     <!-- Navigation Bar -->
     <nav>
-        <a href="index.html"><i class="fa fa-home"></i> मुख्य मेनू वर जा</a>
+        <a href="index.html"><i class="fa fa-home"></i> मुख्यपृष्ठ</a>
         <a href="index.html#committee"><i class="fa fa-users"></i> पदाधिकारी</a>
         <a href="index.html#notices"><i class="fa fa-bell"></i> सूचना व GR</a>
         <a href="contact.html"><i class="fa fa-phone"></i> संपर्क</a>
     </nav>
-
-    <!-- Back to Home Button -->
-    <div class="back-btn-container">
-        <a href="index.html" class="btn-back"><i class="fa fa-arrow-left"></i> मुख्य मेनू वर परत जा</a>
-    </div>
-
-    
-            </div>
-            <div style="margin-top:20px; display:flex; gap:10px; justify-content:center; flex-wrap: wrap;">
-                >
-            </div>
-        </div>
-    </div>
 
     <!-- Main Content: Registration Form -->
     <div class="registration-wrapper">
@@ -263,7 +243,6 @@
                 <!-- ४. कागदपत्रे अपलोड (Document Uploads) -->
                 <h3 class="form-section-title"><i class="fa fa-upload"></i> कागदपत्रे अपलोड (Upload Documents)</h3>
                 <p style="font-size: 0.9rem; color: #666; margin-bottom: 15px;">* कृपया स्पष्ट दिसणारा फोटो आणि आधार कार्ड अपलोड करा. (Format: JPG, PNG, PDF)</p>
-                <p style="font-size: 0.9rem; color: var(--danger); font-weight:bold; margin-bottom: 15px;">सूचना: फोटोची साईझ 200 KB आणि आधार/PDF ची साईझ 300 KB पेक्षा जास्त नसावी.</p>
                 
                 <div class="form-row">
                     <!-- Passport Photo Upload -->
@@ -319,9 +298,8 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, addDoc, serverTimestamp, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
-        // Firebase Configuration
+        // Firebase Configuration (तुमचे मूळ Config)
         const firebaseConfig = {
             apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk",
             authDomain: "xrayunionmah.firebaseapp.com",
@@ -334,102 +312,25 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        const storage = getStorage(app); 
 
-        // ----------------------------------------------------
-        // Cropper.js & File Validation Logic
-        // ----------------------------------------------------
-        let cropper;
-        let croppedPhotoFile = null;
-
+        // UI Interactions: File Name Display
         document.getElementById('reg_photo').addEventListener('change', function(e) {
             const fileNameDisplay = document.getElementById('photo_name');
             if (e.target.files.length > 0) {
-                const file = e.target.files[0];
-                
-                // Show Cropper Modal
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    document.getElementById('imageToCrop').src = event.target.result;
-                    document.getElementById('cropperModal').style.display = 'flex';
-                    
-                    if (cropper) { cropper.destroy(); }
-                    cropper = new Cropper(document.getElementById('imageToCrop'), {
-                        aspectRatio: 3 / 4, // पासपोर्ट साईझ फोटो
-                        viewMode: 1,
-                        autoCropArea: 1,
-                    });
-                };
-                reader.readAsDataURL(file);
+                fileNameDisplay.innerText = "निवडलेली फाईल: " + e.target.files[0].name;
+                fileNameDisplay.style.color = "var(--success)";
+                fileNameDisplay.style.fontWeight = "bold";
             } else {
                 fileNameDisplay.innerText = "कोणतीही फाईल निवडली नाही";
                 fileNameDisplay.style.color = "#555";
                 fileNameDisplay.style.fontWeight = "normal";
-                croppedPhotoFile = null;
             }
-        });
-
-        // Crop Button Click
-        document.getElementById('btnCrop').addEventListener('click', function() {
-            if (!cropper) return;
-            
-            // Get cropped canvas and convert to blob
-            cropper.getCroppedCanvas({
-                width: 600,
-                height: 800,
-                imageSmoothingEnabled: true,
-                imageSmoothingQuality: 'high',
-            }).toBlob((blob) => {
-                // Size Validation for Photo (Max 200 KB)
-                if (blob.size > 200 * 1024) {
-                    Swal.fire('साईझ जास्त आहे!', 'क्रॉप केलेला फोटो 200 KB पेक्षा जास्त आहे. कृपया लहान फोटो निवडा.', 'warning');
-                    return;
-                }
-                
-                // Store cropped blob as File object
-                croppedPhotoFile = new File([blob], "passport_photo.jpg", { type: "image/jpeg" });
-                
-                const fileNameDisplay = document.getElementById('photo_name');
-                fileNameDisplay.innerText = "क्रॉप केलेला फोटो तयार आहे (✓)";
-                fileNameDisplay.style.color = "var(--success)";
-                fileNameDisplay.style.fontWeight = "bold";
-
-                document.getElementById('cropperModal').style.display = 'none';
-                cropper.destroy();
-                cropper = null;
-            }, 'image/jpeg', 0.8); // 0.8 quality to keep size under 200KB
-        });
-
-        // Cancel Crop Button Click
-        document.getElementById('btnCancelCrop').addEventListener('click', function() {
-            document.getElementById('cropperModal').style.display = 'none';
-            if (cropper) cropper.destroy();
-            cropper = null;
-            document.getElementById('reg_photo').value = ""; 
-            croppedPhotoFile = null;
-            
-            const fileNameDisplay = document.getElementById('photo_name');
-            fileNameDisplay.innerText = "कोणतीही फाईल निवडली नाही";
-            fileNameDisplay.style.color = "#555";
-            fileNameDisplay.style.fontWeight = "normal";
         });
 
         document.getElementById('reg_aadhaar_doc').addEventListener('change', function(e) {
             const fileNameDisplay = document.getElementById('aadhaar_name');
             if (e.target.files.length > 0) {
-                const file = e.target.files[0];
-                const maxSize = 300 * 1024; // 300 KB Max for Aadhaar/PDF
-
-                if (file.size > maxSize) {
-                    Swal.fire('फाईल खूप मोठी आहे!', 'कृपया आधार कार्ड/PDF 300 KB पेक्षा कमी साईझची अपलोड करा.', 'warning');
-                    this.value = ""; // निवडलेली फाईल कॅन्सल करा
-                    fileNameDisplay.innerText = "कोणतीही फाईल निवडली नाही";
-                    fileNameDisplay.style.color = "#555";
-                    fileNameDisplay.style.fontWeight = "normal";
-                    return;
-                }
-
-                fileNameDisplay.innerText = "निवडलेली फाईल: " + file.name;
+                fileNameDisplay.innerText = "निवडलेली फाईल: " + e.target.files[0].name;
                 fileNameDisplay.style.color = "var(--success)";
                 fileNameDisplay.style.fontWeight = "bold";
             } else {
@@ -495,7 +396,6 @@
             document.getElementById('aadhaar_name').innerText = "कोणतीही फाईल निवडली नाही";
             document.getElementById('aadhaar_name').style.color = "#555";
             document.getElementById('aadhaar_name').style.fontWeight = "normal";
-            croppedPhotoFile = null;
         }
 
         // Core: Form Submission Event
@@ -527,21 +427,11 @@
                 createdAt: serverTimestamp()
             };
 
-            const photoFile = croppedPhotoFile; // क्रॉप केलेला फोटो
+            const photoFile = document.getElementById('reg_photo').files[0];
             const aadhaarDocFile = document.getElementById('reg_aadhaar_doc').files[0];
 
             if (!photoFile || !aadhaarDocFile) {
-                Swal.fire('माहिती अपूर्ण', 'कृपया पासपोर्ट फोटो (क्रॉप करून) आणि आधार कार्ड अपलोड करा.', 'warning');
-                return;
-            }
-
-            // Double Check Limits before Upload
-            if (photoFile.size > 200 * 1024) {
-                Swal.fire('फोटो खूप मोठा आहे', 'तुमच्या फोटोची साईझ 200 KB पेक्षा जास्त आहे.', 'error');
-                return;
-            }
-            if (aadhaarDocFile.size > 300 * 1024) {
-                Swal.fire('डॉक्युमेंट खूप मोठे आहे', 'तुमच्या आधार कार्ड/PDF ची साईझ 300 KB पेक्षा जास्त आहे.', 'error');
+                Swal.fire('माहिती अपूर्ण', 'कृपया पासपोर्ट फोटो आणि आधार कार्ड अपलोड करा.', 'warning');
                 return;
             }
 
@@ -565,7 +455,7 @@
                 const aadhaarB64 = await getBase64(aadhaarDocFile);
 
                 // 2. Google Apps Script ला डेटा पाठवा (Drive अपलोडसाठी)
-                const appsScriptUrl = "https://script.google.com/macros/s/AKfycbz5t8-C8u-Fmpd7RRJgMVMpXdONnv7f0W3tdmtxR4LswemTbifH3Iv5Hk38lZFFQ0WzPw/exec"; 
+                const appsScriptUrl = "https://script.google.com/macros/s/AKfycbz5t8-C8u-Fmpd7RRJgMVMpXdONnv7f0W3tdmtxR4LswemTbifH3Iv5Hk38lZFFQ0WzPw/exec"; // <-- इथे तुमची Web App URL टाका
                 
                 const payload = {
                     mobile: formData.mobile,
@@ -600,7 +490,6 @@
                     confirmButtonText: 'ओके'
                 }).then(() => {
                     resetRegistrationForm();
-                    window.location.href = "index.html";
                 });
 
             } catch (error) {
