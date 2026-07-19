@@ -68,7 +68,9 @@
             color: var(--white); border: none; border-radius: 12px; font-size: 1.2rem; font-weight: 700; 
             cursor: pointer; transition: var(--transition); display: flex; justify-content: center; align-items: center; gap: 10px;
         }
-        .login-box button:hover { transform: translateY(-2px); box-shadow: 0 10px 20px -5px rgba(11, 61, 145, 0.4); opacity: 0.95; }/* ================= NAVIGATION BANNER & MENUS ================= */
+        .login-box button:hover { transform: translateY(-2px); box-shadow: 0 10px 20px -5px rgba(11, 61, 145, 0.4); opacity: 0.95; }
+
+        /* ================= NAVIGATION BANNER & MENUS ================= */
         .navbar { background: var(--white); padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 999; border-bottom: 4px solid var(--secondary); }
         .navbar .brand-section { display: flex; align-items: center; gap: 15px; }
         .navbar h2 { color: var(--primary); font-weight: 800; font-size: 1.7rem; letter-spacing: -0.5px; }
@@ -173,7 +175,9 @@
         .letter-list-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 10px; }
     </style>
 </head>
-<body><!-- ================= 1. ADVANCED SECURITY LOGIN LAYER ================= -->
+<body>
+
+    <!-- ================= 1. ADVANCED SECURITY LOGIN LAYER ================= -->
     <div id="login-screen">
         <div class="login-box">
             <div class="logo-icon"><i class="fa fa-shield-halved"></i></div>
@@ -218,7 +222,9 @@
             <button class="tab-btn" onclick="openTab('tab-settings')"><i class="fa fa-cogs"></i> ॲडमिन सेटिंग</button>
         </div>
 
-        <div class="container"><!-- TAB 0: SMART DASHBOARD -->
+        <div class="container">
+            
+            <!-- TAB 0: SMART DASHBOARD -->
             <div id="tab-dash" class="tab-content active">
                 <div class="dash-summary">
                     <div class="dash-card c-blue">
@@ -279,7 +285,9 @@
                         </div>
                     </div>
                 </div>
-            </div><!-- TAB 2: MASTER MEMBERS ROOM -->
+            </div>
+
+            <!-- TAB 2: MASTER MEMBERS ROOM -->
             <div id="tab-members" class="tab-content">
                 <div class="panel h-green">
                     <div class="panel-header"><span><i class="fa fa-user-plus"></i> नवीन सदस्य थेट नोंदणी (Direct Add)</span></div>
@@ -357,7 +365,9 @@
                         </div>
                     </div>
                 </div>
-            </div><!-- TAB 3: STATE LEVEL STAFF REGISTRY -->
+            </div>
+
+            <!-- TAB 3: STATE LEVEL STAFF REGISTRY -->
             <div id="tab-statelist" class="tab-content">
                 <div class="panel h-success">
                     <div class="panel-header"><span><i class="fa fa-plus-circle"></i> राज्यस्तरीय यादीत इतर कर्मचारी जोडा (जे सदस्य नाहीत)</span></div>
@@ -446,7 +456,9 @@
                         </div>
                     </div>
                 </div>
-            </div><!-- TAB 5: FINANCIAL & FEES CONTROL ROOM -->
+            </div>
+
+            <!-- TAB 5: FINANCIAL & FEES CONTROL ROOM -->
             <div id="tab-fees" class="tab-content">
                 <div class="panel h-warning">
                     <div class="panel-header">
@@ -525,7 +537,9 @@
                         </div>
                     </div>
                 </div>
-            </div><!-- TAB 7: CENTRAL NOTICE BOARD -->
+            </div>
+
+            <!-- TAB 7: CENTRAL NOTICE BOARD -->
             <div id="tab-notices" class="tab-content">
                 <div class="panel h-info">
                     <div class="panel-header"><span><i class="fa fa-edit"></i> मुख्य पेजवर (Index) नवीन अधिकृत सूचना जोडा</span></div>
@@ -603,7 +617,9 @@
                         </div>
                     </div>
                 </div>
-            </div><!-- TAB: DOCUMENTS MANAGEMENT -->
+            </div>
+
+            <!-- TAB 11: DOCUMENTS MANAGEMENT -->
             <div id="tab-documents" class="tab-content">
                 <div class="panel">
                     <div class="panel-header h-primary"><span><i class="fa fa-file-pdf"></i> नवीन दस्तऐवज (PDF) जोडा</span></div>
@@ -693,7 +709,9 @@
                 </div>
             </div>
         </div>
-    </div><!-- START: MEMBER PHOTO MANAGEMENT MODAL -->
+    </div>
+
+    <!-- START: MEMBER PHOTO MANAGEMENT MODAL -->
     <div class="modal-overlay" id="photoUploadModal">
         <div class="modal-content" style="max-width: 500px;">
             <div class="modal-header">
@@ -752,653 +770,399 @@
                 </form>
             </div>
         </div>
-    </div>
-
-    <!-- ================= FIREBASE MODULE ENGINE & DATA SYNCHRONIZATION ================= -->
+    </div><!-- ================= FIREBASE MODULE ENGINE & DATA SYNCHRONIZATION ================= -->
     <script type="module">
-    // 1. Firebase Core Ecosystem Imports
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-    import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    
-    // 2. Production Firebase Cluster Configuration
-    const firebaseConfig = {
-        apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk", 
-        authDomain: "xrayunionmah.firebaseapp.com",
-        projectId: "xrayunionmah", 
-        storageBucket: "xrayunionmah.firebasestorage.app", 
-        messagingSenderId: "763805226978", 
-        appId: "1:763805226978:web:6bae81a0b6358b47d88bbb"
-    };
-    
-    // Initialize Core Engines
-    const app = initializeApp(firebaseConfig); 
-    const db = getFirestore(app); 
-    const auth = getAuth(app);
-
-    window.db = db;
-    window.auth = auth;
-    window.sendPasswordResetEmail = sendPasswordResetEmail;
-    
-    // Google Apps Script API URL
-    window.GAS_URL = "https://script.google.com/macros/s/AKfycbyitVcDRhpTklzqNz9F9f2pTkkHcsIpWUZn2pmfR7PcU-FVWjvLPQAsuiIUO-NcdBVqjw/exec"; 
-    
-    // 3. Centralized State Management Variables
-    let membersData = []; 
-    let stateStaffData = []; 
-    let complaintsData = []; 
-    let candidatesData = []; 
-    let noticesData = []; 
-    let icardSettings = { currentTheme: 'classic', showJoinDate: false, showRetireDate: false, showAadhaar: false, showWorkplace: false, signUrl: '', stampUrl: '' };
-    window.cachedFeeData = []; 
-    window.currentActiveMemberId = null; 
-    window.mChart = null; 
-    window.dChart = null;
-
-    // Global Utility Controls
-    window.closeModal = (id) => {
-        document.getElementById(id).style.display = 'none';
-    };
-
-    window.openTab = function(tabId) {
-        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         
-        const targetTab = document.getElementById(tabId);
-        if(targetTab) targetTab.classList.add('active');
-        if(event && event.currentTarget) event.currentTarget.classList.add('active');
+        const firebaseConfig = {
+            apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk", 
+            authDomain: "xrayunionmah.firebaseapp.com",
+            projectId: "xrayunionmah", 
+            storageBucket: "xrayunionmah.firebasestorage.app", 
+            messagingSenderId: "763805226978", 
+            appId: "1:763805226978:web:6bae81a0b6358b47d88bbb"
+        };
         
-        if(tabId === 'tab-dash') { setTimeout(window.renderCharts, 150); }
-        if(tabId === 'tab-letterpad') { window.loadRecentLetters(); }
-    };
+        const app = initializeApp(firebaseConfig); 
+        const db = getFirestore(app); 
+        const auth = getAuth(app);
 
-    const getFileBase64 = (file) => new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result.split(',')[1]);
-        reader.onerror = error => reject(error);
-    });
-    window.getFileBase64 = getFileBase64;// ================= DATA SYNCHRONIZATION & LOADING =================
-    window.loadData = async function() {
-        Swal.fire({ title: 'डेटा सिंक होत आहे...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() } });
-        try {
-            const [mSnap, sSnap, cSnap, eSnap, nSnap] = await Promise.all([
-                getDocs(collection(db, "members")), 
-                getDocs(collection(db, "stateStaff")),
-                getDocs(collection(db, "complaints")), 
-                getDocs(collection(db, "candidates")), 
-                getDocs(collection(db, "notices"))
-            ]);
-            
-            membersData = mSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            stateStaffData = sSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            complaintsData = cSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            candidatesData = eSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            noticesData = nSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            
-            const icDoc = await getDoc(doc(db, "settings", "icard"));
-            if (icDoc.exists()) {
-                icardSettings = { ...icardSettings, ...icDoc.data() };
-                if(document.getElementById('ic_showJoin')) document.getElementById('ic_showJoin').checked = icardSettings.showJoinDate ?? false;
-                if(document.getElementById('ic_showWorkplace')) document.getElementById('ic_showWorkplace').checked = icardSettings.showWorkplace ?? false;
-                if(document.getElementById('ic_showAadhaar')) document.getElementById('ic_showAadhaar').checked = icardSettings.showAadhaar ?? false;
-                if(document.getElementById('ic_showRetire')) document.getElementById('ic_showRetire').checked = icardSettings.showRetireDate ?? false;
-            }
-
-            window.cachedFeeData = membersData.filter(m => m.status !== 'Pending' && m.status !== 'Archived');
-            
-            window.renderPending(); 
-            window.renderMembers(); 
-            window.renderStateList();
-            window.renderFees(); 
-            window.renderNotices(); 
-            window.renderComplaints();
-            window.renderElection(); 
-            window.loadPDFDocuments(); 
-            window.renderCharts();
-            
-            Swal.close();
-        } catch(e) { 
-            Swal.fire('Sync Error', e.message, 'error'); 
-        }
-    };
-
-    window.renderCharts = function() {
-        if(!document.getElementById('mandalChart')) return;
-        let active = membersData.filter(m => m.status === 'Approved');
+        window.db = db;
+        window.auth = auth;
+        window.sendPasswordResetEmail = sendPasswordResetEmail;
+        window.GAS_URL = "https://script.google.com/macros/s/AKfycbyitVcDRhpTklzqNz9F9f2pTkkHcsIpWUZn2pmfR7PcU-FVWjvLPQAsuiIUO-NcdBVqjw/exec"; 
         
-        document.getElementById('totMem').innerText = active.length;
-        document.getElementById('paidMem').innerText = active.filter(m => m.feeStatus === 'Paid').length;
-        document.getElementById('pendComp').innerText = complaintsData.filter(c => c.status === 'Pending').length;
+        let membersData = []; let stateStaffData = []; let complaintsData = []; let candidatesData = []; let noticesData = []; 
+        let icardSettings = { currentTheme: 'classic', showJoinDate: false, showRetireDate: false, showAadhaar: false, showWorkplace: false, signUrl: '', stampUrl: '' };
+        window.cachedFeeData = []; window.currentActiveMemberId = null; window.mChart = null; window.dChart = null;
 
-        let mCounts = {}; 
-        let dCounts = {};
-        active.forEach(m => {
-            mCounts[m.mandal || 'इतर'] = (mCounts[m.mandal || 'इतर'] || 0) + 1;
-            dCounts[m.district || 'इतर'] = (dCounts[m.district || 'इतर'] || 0) + 1;
-        });
+        window.closeModal = (id) => document.getElementById(id).style.display = 'none';
         
-        if(window.mChart) window.mChart.destroy();
-        window.mChart = new Chart(document.getElementById('mandalChart'), { 
-            type: 'pie', 
-            data: { 
-                labels: Object.keys(mCounts), 
-                datasets: [{ data: Object.values(mCounts), backgroundColor: ['#0B3D91', '#f39c12', '#10b981', '#ef4444', '#8b5cf6', '#3b82f6', '#f59e0b', '#0f172a'] }] 
-            } 
-        });
-        
-        if(window.dChart) window.dChart.destroy();
-        window.dChart = new Chart(document.getElementById('districtChart'), { 
-            type: 'bar', 
-            data: { 
-                labels: Object.keys(dCounts), 
-                datasets: [{ label: 'सदस्य संख्या', data: Object.values(dCounts), backgroundColor: '#1e40af' }] 
-            } 
-        });
-    };// ================= PENDING REQUESTS =================
-    window.renderPending = function() {
-        let fMandal = document.getElementById('pendingFilterMandal').value;
-        let fDist = document.getElementById('pendingFilterDist').value;
-        let pending = membersData.filter(m => m.status === 'Pending');
-        
-        document.getElementById('pendingBadge').innerText = pending.length;
-        document.getElementById('pendMemCard').innerText = pending.length;
-        
-        let filtered = pending.filter(m => (fMandal === 'All' || m.mandal === fMandal) && (fDist === 'All' || m.district === fDist));
-        let html = '';
-        
-        filtered.forEach((m, i) => {
-            html += `<tr>
-                <td>${i+1}</td>
-                <td><b>${m.name}</b><br><small>${m.designation}</small></td>
-                <td>${m.mobile}<br><small>${m.email}</small></td>
-                <td><b>${m.district}</b><br><small>${m.mandal}</small></td>
-                <td>${m.workplace || '-'}</td>
-                <td style="text-align:center;">
-                    <button class="btn-action bg-success" onclick="window.approveMember('${m.id}')"><i class="fa fa-check"></i> Approve</button> 
-                    <button class="btn-action bg-danger" onclick="window.rejectMember('${m.id}')"><i class="fa fa-times"></i> Reject</button>
-                </td>
-            </tr>`;
-        });
-        document.getElementById('pendingBody').innerHTML = html || '<tr><td colspan="6" class="empty-state">कोणतीही प्रलंबित विनंती नाही.</td></tr>';
-    };
+        window.openTab = function(tabId) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            const targetTab = document.getElementById(tabId);
+            if(targetTab) targetTab.classList.add('active');
+            if(event && event.currentTarget) event.currentTarget.classList.add('active');
+            if(tabId === 'tab-dash') { setTimeout(window.renderCharts, 150); }
+            if(tabId === 'tab-letterpad') { window.loadRecentLetters(); }
+        };
 
-    window.approveMember = async function(id) {
-        if(confirm("या सदस्याला अप्रूव्ह करायचे आहे का?")) {
-            let memNo = prompt("सदस्यत्व क्रमांक टाका (उदा. MH-101):", "");
-            if(memNo === null) return;
-            await updateDoc(doc(db, "members", id), { status: "Approved", memberNo: memNo });
-            Swal.fire('यशस्वी', 'सदस्य अप्रूव्ह झाला.', 'success'); 
-            window.loadData();
-        }
-    };
-
-    window.rejectMember = async function(id) {
-        if(confirm("या सदस्याची विनंती नाकारून कायमची डिलीट करायची का?")) {
-            await deleteDoc(doc(db, "members", id));
-            Swal.fire('यशस्वी', 'विनंती डिलीट केली.', 'success'); 
-            window.loadData();
-        }
-    };
-
-    // ================= MASTER MEMBERS LIST & PROFILE =================
-    window.renderMembers = function() {
-        let sName = document.getElementById('searchName').value.toLowerCase(); 
-        let fDist = document.getElementById('filterDist').value; 
-        let fMandal = document.getElementById('filterMandal').value;
-        let fSort = document.getElementById('filterSort').value;
-        
-        let filtered = membersData.filter(m => {
-            let isApp = m.status !== 'Pending' && m.status !== 'Archived'; 
-            let match = (m.name||'').toLowerCase().includes(sName) || (m.mobile||'').includes(sName) || (m.memberNo||'').toLowerCase().includes(sName);
-            return isApp && match && (fDist === 'All' || m.district === fDist) && (fMandal === 'All' || m.mandal === fMandal);
-        });
-        
-        if(fSort === 'Seniority') { 
-            filtered.sort((a,b) => (new Date(a.joinDate||'2099-12-31') - new Date(b.joinDate||'2099-12-31'))); 
-        } else { 
-            filtered.sort((a,b) => (a.name || '').localeCompare(b.name || '')); 
-        }
-
-        document.getElementById('totalCount').innerText = `एकूण सक्रिय: ${filtered.length}`; 
-        let html = '';
-        
-        filtered.forEach((m, i) => {window.switchProfileTab = (tabId) => {
-        document.querySelectorAll('.p-tab').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.p-tab-content').forEach(c => c.classList.remove('active'));
-        event.currentTarget.classList.add('active'); 
-        document.getElementById(tabId).classList.add('active');
-    };
-
-    window.viewMemberProfile = function(id) {
-        window.currentActiveMemberId = id;
-        let m = membersData.find(x => x.id === id);
-        if(!m) return;
-        
-        let photoHtml = m.photoUrl ? `<img src="${m.photoUrl}" style="width:120px; height:120px; border-radius:10px; border:3px solid var(--primary); object-fit:cover;">` : `<div style="width:120px; height:120px; border-radius:10px; background:#e2e8f0; display:flex; align-items:center; justify-content:center;"><i class="fa fa-user fa-3x text-muted"></i></div>`;
-        
-        document.getElementById('profileDataContainer').innerHTML = `
-            <div class="full-width" style="text-align:center; margin-bottom: 20px;">${photoHtml}</div>
-            <div><label>सदस्य क्रमांक</label><b>${m.memberNo || 'N/A'}</b></div>
-            <div><label>संपूर्ण नाव</label><b>${m.name || 'N/A'}</b></div>
-            <div><label>पद (Designation)</label><b>${m.designation || 'N/A'}</b></div>
-            <div><label>मोबाईल</label><b>${m.mobile || 'N/A'}</b></div>
-            <div><label>ईमेल</label><b>${m.email || 'N/A'}</b></div>
-            <div><label>जिल्हा / विभाग</label><b>${m.district} / ${m.mandal}</b></div>
-            <div><label>आधार क्रमांक</label><b>${m.aadhaar || 'N/A'}</b></div>
-            <div><label>लॉगिन स्टेटस</label><b class="${m.loginDisabled ? 'text-danger' : 'text-success'}">${m.loginDisabled ? 'निष्क्रिय (बंद)' : 'सक्रिय (चालू)'}</b></div>
-        `;
-
-        document.getElementById('actionGridContainer').innerHTML = `
-            <button class="action-btn" onclick="window.fullEdit('${m.id}')"><i class="fa fa-edit text-warning"></i> 2. Edit Member Info</button>
-            <button class="action-btn" onclick="window.open('${m.photoUrl || '#'}', '_blank')"><i class="fa fa-image text-info"></i> 3. View Photo</button>
-            <button class="action-btn" onclick="window.openPhotoUploadModal()"><i class="fa fa-upload text-success"></i> 4. Upload/Change Photo</button>
-            <button class="action-btn danger" onclick="window.deleteMemberPhoto()"><i class="fa fa-trash"></i> 5. Delete Photo</button>
-            <button class="action-btn" onclick="window.switchProfileTab('p-documents')"><i class="fa fa-file-pdf text-purple"></i> 6. Manage Documents</button>
-            <button class="action-btn" onclick="window.switchProfileTab('p-idcard')"><i class="fa fa-id-card text-dark"></i> 7. ID Card System</button>
-            <button class="action-btn" onclick="window.updateLoginStatus(false)"><i class="fa fa-unlock text-success"></i> 8. Activate Login</button>
-            <button class="action-btn danger" onclick="window.updateLoginStatus(true)"><i class="fa fa-lock"></i> 9. Deactivate Login</button>
-            <button class="action-btn" onclick="window.resetMemberPass()"><i class="fa fa-key text-warning"></i> 10. Reset Password</button>
-            <button class="action-btn danger" onclick="window.archiveMember()"><i class="fa fa-archive"></i> 11. Archive Member</button>
-            <button class="action-btn danger" onclick="window.permanentDeleteMember()"><i class="fa fa-trash"></i> 12. Permanent Delete</button>
-        `;
-
-        window.loadMemberDocsGAS(m.id); 
-        window.loadMemberComplaintsForProfile(m.id); 
-        window.loadMemberFeesForProfile(m);
-        
-        document.getElementById('memberProfileModal').style.display = 'flex';
-    };
-
-    window.fullEdit = (id) => Swal.fire('माहिती', 'हे फिचर (Full Edit) लवकरच उपलब्ध होईल.', 'info');
-
-    // ================= PHOTOS & DOCUMENTS (GAS INTEGRATION) =================
-    window.openPhotoUploadModal = () => {
-        document.getElementById('photoMemId').value = window.currentActiveMemberId;
-        document.getElementById('photoPreview').src = "https://via.placeholder.com/150";
-        document.getElementById('memberPhotoFile').value = ""; 
-        document.getElementById('photoUploadModal').style.display = 'flex';
-    };
-
-    window.previewSelectedPhoto = (e) => {
-        let file = e.target.files[0];
-        if (file) {
-            if (file.size > 2 * 1024 * 1024) return Swal.fire('Error', 'File size limit is 2MB', 'error');
-            let reader = new FileReader();
-            reader.onload = (event) => document.getElementById('photoPreview').src = event.target.result;
+        const getFileBase64 = (file) => new Promise((resolve, reject) => {
+            const reader = new FileReader();
             reader.readAsDataURL(file);
-        }
-    };
-
-    window.processPhotoUpload = async () => {
-        let id = document.getElementById('photoMemId').value; 
-        let fileInput = document.getElementById('memberPhotoFile');
-        if(!fileInput.files.length) return Swal.fire('Warning', 'Photo select करा.', 'warning');
-        
-        let m = membersData.find(x => x.id === id); 
-        let btn = document.getElementById('btnUploadPhotoReal');
-        btn.disabled = true; 
-        btn.innerHTML = "<i class='fa fa-spinner fa-spin'></i> Uploading to Drive...";
-        
-        try {
-            let base64 = await window.getFileBase64(fileInput.files[0]);
-            let safeName = `Photo_${m.memberNo || id}_${Date.now()}`;
-            let res = await fetch(window.GAS_URL, { 
-                method: 'POST', 
-                body: JSON.stringify({ action: 'uploadMemberPhoto', fileName: safeName, base64Content: base64, oldFileId: m.photoFileId || null }) 
-            });
-            let result = await res.json();
-            if(!result.success) throw new Error(result.message);
-            
-            await updateDoc(doc(db, "members", id), { photoUrl: result.data.url, photoFileId: result.data.fileId });
-            Swal.fire('Success', 'Photo Uploaded to Google Drive.', 'success');
-            
-            window.closeModal('photoUploadModal'); 
-            window.loadData(); 
-            window.viewMemberProfile(id);
-        } catch(e) { 
-            Swal.fire('Error', e.message, 'error'); 
-        } finally { 
-            btn.disabled = false; 
-            btn.innerHTML = "<i class='fa fa-cloud-upload-alt'></i> फोटो Google Drive वर अपलोड करा"; 
-        }
-    };
-
-    window.deleteMemberPhoto = async () => {
-        let m = membersData.find(x => x.id === window.currentActiveMemberId);
-        if(!m.photoFileId) return Swal.fire('Info', 'कोणताही फोटो उपलब्ध नाही.', 'info');
-        
-        if(confirm("फोटो Drive मधून कायमचा डिलीट करायचा का?")) {
-            Swal.fire({title:'Deleting...', didOpen:()=>Swal.showLoading()});
-            await fetch(window.GAS_URL, { method:'POST', body: JSON.stringify({ action:'deleteFile', fileId: m.photoFileId }) });
-            await updateDoc(doc(db, "members", m.id), { photoUrl: null, photoFileId: null });
-            Swal.fire('Deleted', '', 'success'); 
-            window.loadData(); 
-            window.viewMemberProfile(m.id);
-        }
-    };window.openUploadDocForm = () => { 
-        document.getElementById('docUploadModal').style.display = 'flex'; 
-    };
-
-    window.processMemberDocUpload = async () => {
-        let id = window.currentActiveMemberId; 
-        let name = document.getElementById('m_doc_name').value; 
-        let type = document.getElementById('m_doc_type').value; 
-        let fileInput = document.getElementById('m_doc_file');
-        
-        if(!name || !fileInput.files.length) return Swal.fire('Warning', 'All fields required', 'warning');
-        
-        let btn = document.getElementById('btnUploadDocReal'); 
-        btn.disabled = true; 
-        btn.innerHTML = "Uploading to Google Drive...";
-        
-        try {
-            let base64 = await window.getFileBase64(fileInput.files[0]);
-            let res = await fetch(window.GAS_URL, { 
-                method: 'POST', 
-                body: JSON.stringify({ action: 'uploadMemberDocument', memberId: id, docName: name, docType: type, fileName: `Doc_${id}_${name}_${Date.now()}`, base64Content: base64 }) 
-            });
-            let result = await res.json();
-            
-            if(!result.success) throw new Error(result.message);
-            
-            Swal.fire('Success', 'Document Uploaded & Linked.', 'success'); 
-            window.closeModal('docUploadModal'); 
-            window.loadMemberDocsGAS(id);
-        } catch(e) { 
-            Swal.fire('Error', e.message, 'error'); 
-        } finally { 
-            btn.disabled = false; 
-            btn.innerHTML = "दस्तऐवज Google Drive वर अपलोड करा"; 
-        }
-    };
-
-    window.loadMemberDocsGAS = (id) => {
-        document.getElementById('memberDocsContainer').innerHTML = "<i>Fetching from Google Sheets...</i>";
-        fetch(window.GAS_URL, { method: 'POST', body: JSON.stringify({ action: 'getMemberDocuments', memberId: id }) })
-        .then(r => r.json()).then(res => {
-            if(res.success && res.data.length > 0) {
-                let html = ''; 
-                res.data.forEach(d => { 
-                    html += `<div class="doc-item">
-                        <div><i class="fa fa-file-pdf text-danger" style="font-size:1.5rem; margin-right:10px;"></i> <b>${d.docName}</b> (${d.docType})<br><small>${d.date}</small></div>
-                        <div>
-                            <button class="btn-action bg-success" onclick="window.open('${d.url}', '_blank')">View</button> 
-                            <button class="btn-action bg-danger" onclick="window.deleteDocGAS('${d.docId}', '${d.fileId}')">Delete</button>
-                        </div>
-                    </div>`; 
-                });
-                document.getElementById('memberDocsContainer').innerHTML = html;
-            } else { 
-                document.getElementById('memberDocsContainer').innerHTML = "<div class='empty-state'>कागदपत्रे नाहीत.</div>"; 
-            }
+            reader.onload = () => resolve(reader.result.split(',')[1]);
+            reader.onerror = error => reject(error);
         });
-    };
+        window.getFileBase64 = getFileBase64;
 
-    window.deleteDocGAS = (docId, fileId) => {
-        if(confirm("हा दस्तऐवज Drive मधून कायमचा डिलीट होईल. पुढे जायचे?")) {
-            document.getElementById('memberDocsContainer').innerHTML = "<i>Deleting...</i>";
-            fetch(window.GAS_URL, { method: 'POST', body: JSON.stringify({ action: 'deleteMemberDocument', docId: docId, fileId: fileId }) })
-            .then(() => window.loadMemberDocsGAS(window.currentActiveMemberId));
-        }
-    };
-
-    // ================= STATE STAFF, FEES & ADD MEMBERS =================
-    window.renderStateList = function() {
-        let fMandal = document.getElementById('stateFilterMandal').value; 
-        let fDist = document.getElementById('stateFilterDist').value; 
-        let fSort = document.getElementById('stateFilterSort').value;
+        window.exportMembersToExcel = () => { let ws = XLSX.utils.table_to_sheet(document.getElementById('membersTable')); let wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Members"); XLSX.writeFile(wb, "Members_List.xlsx"); };
+        window.printMembersTable = () => window.print();
+        window.downloadMembersPDF = () => html2pdf(document.getElementById('membersTable'));
+        window.exportStateToExcel = () => { let ws = XLSX.utils.table_to_sheet(document.getElementById('stateListTable')); let wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "StateStaff"); XLSX.writeFile(wb, "State_Staff_List.xlsx"); };
+        window.printStateTable = () => window.print();
+        window.exportFeesToExcel = () => { let ws = XLSX.utils.table_to_sheet(document.getElementById('feesTable')); let wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Fees"); XLSX.writeFile(wb, "Fees_List.xlsx"); };
+        window.printFeesTable = () => window.print();
+        window.findDuplicates = () => Swal.fire('माहिती', 'ही सुविधा लवकरच उपलब्ध होईल.', 'info');
+        window.sendBulkEmail = () => {
+            let emails = window.cachedFeeData.filter(m => m.feeStatus === 'Paid' && m.email).map(m => m.email);
+            if(emails.length === 0) return Swal.fire('Error', 'कोणताही ईमेल आढळला नाही.', 'error');
+            window.location.href = `mailto:?bcc=${emails.join(',')}&subject=Payment Receipt&body=Thank you for your payment.`;
+        };
+        window.importStateExcel = (e) => Swal.fire('माहिती', 'Excel Import सुविधा Backend मध्ये जोडली जात आहे.', 'info');
         
-        let filtered = stateStaffData.filter(s => (fMandal === 'All' || s.mandal === fMandal) && (fDist === 'All' || s.district === fDist));
-        
-        if(fSort === 'Seniority') { 
-            filtered.sort((a,b) => (new Date(a.joinDate||'2099-12-31') - new Date(b.joinDate||'2099-12-31'))); 
-        } else { 
-            filtered.sort((a,b) => (a.name || '').localeCompare(b.name || '')); 
-        }
-        
-        let html = ''; 
-        filtered.forEach((s, i) => { 
-            html += `<tr>
-                <td>${i+1}</td>
-                <td><b>${s.name}</b><br><small>${s.designation}</small></td>
-                <td>${s.mobile || '-'}</td>
-                <td>${s.mandal || '-'}</td>
-                <td>${s.district || '-'}</td>
-                <td>${s.workplace || '-'}</td>
-                <td>${s.joinDate || '-'}</td>
-                <td>${s.retireDate || '-'}</td>
-                <td>${s.aadhaar || '-'}</td>
-                <td><small>${s.permAddress || '-'}</small></td>
-                <td class="no-print" style="text-align:center;">
-                    <button class="btn-action bg-danger" onclick="window.deleteStateStaff('${s.id}')"><i class="fa fa-trash"></i></button>
-                </td>
-            </tr>`; 
-        });
-        document.getElementById('stateListBody').innerHTML = html || '<tr><td colspan="11" class="empty-state">डेटा नाही.</td></tr>';
-    };
-
-    window.deleteStateStaff = async function(id) { 
-        if(confirm("कायमचा डिलीट करायचा का?")) { 
-            await deleteDoc(doc(db, "stateStaff", id)); 
-            window.loadData(); 
-        } 
-    };window.renderFees = function() {
-        let fMandal = document.getElementById('feesFilterMandal').value; 
-        let fDist = document.getElementById('feesFilterDist').value; 
-        let fStat = document.getElementById('feeFilter').value;
-        
-        let filtered = window.cachedFeeData.filter(m => 
-            (fMandal === 'All' || m.mandal === fMandal) && 
-            (fDist === 'All' || m.district === fDist) && 
-            (fStat === 'All' || (m.feeStatus||'Unpaid') === fStat)
-        );
-        
-        let html = ''; 
-        filtered.forEach((m, i) => { 
-            let statBadge = (m.feeStatus === 'Paid') ? '<span class="badge bg-success">Paid</span>' : '<span class="badge bg-danger">Unpaid</span>'; 
-            html += `<tr>
-                <td>${i+1}</td>
-                <td><b>${m.name}</b></td>
-                <td>${m.mandal} / ${m.district}</td>
-                <td>${m.mobile}<br><small>${m.email||'-'}</small></td>
-                <td>${statBadge}</td>
-                <td>₹ ${m.feeAmount || '0'} / ${m.receiptNo || '-'}</td>
-                <td style="text-align:center;">
-                    <button class="btn-action bg-warning" onclick="window.updateFeeStatus('${m.id}')"><i class="fa fa-edit"></i> फी अपडेट करा</button>
-                </td>
-            </tr>`; 
-        });
-        document.getElementById('feesBody').innerHTML = html || '<tr><td colspan="7" class="empty-state">डेटा नाही.</td></tr>';
-    };
-
-    window.updateFeeStatus = async function(id) {
-        let m = membersData.find(x => x.id === id);
-        let { value: formValues } = await Swal.fire({ 
-            title: 'फी माहिती अपडेट करा', 
-            html: `<select id="swal-fstat" class="swal2-input">
-                    <option value="Paid" ${m.feeStatus==='Paid'?'selected':''}>Paid</option>
-                    <option value="Unpaid" ${m.feeStatus!=='Paid'?'selected':''}>Unpaid</option>
-                   </select>
-                   <input id="swal-famt" class="swal2-input" placeholder="रक्कम (उदा. 500)" value="${m.feeAmount||''}">
-                   <input id="swal-frec" class="swal2-input" placeholder="पावती क्रमांक" value="${m.receiptNo||''}">`, 
-            focusConfirm: false, 
-            preConfirm: () => { 
-                return { 
-                    feeStatus: document.getElementById('swal-fstat').value, 
-                    feeAmount: document.getElementById('swal-famt').value, 
-                    receiptNo: document.getElementById('swal-frec').value 
-                } 
-            } 
-        });
-        
-        if(formValues) { 
-            await updateDoc(doc(db, "members", id), formValues); 
-            Swal.fire('यशस्वी', 'फी स्टेटस अपडेट झाले.', 'success'); 
-            window.loadData(); 
-        }
-    };
-
-    window.addNewMember = async function(e) {
-        e.preventDefault();
-        try {
-            let newMem = { 
-                memberNo: document.getElementById('add_memNo').value, 
-                name: document.getElementById('add_name').value, 
-                mobile: document.getElementById('add_mobile').value, 
-                email: document.getElementById('add_email').value, 
-                designation: document.getElementById('add_desig').value, 
-                password: document.getElementById('add_pass').value, 
-                district: document.getElementById('add_district').value, 
-                mandal: document.getElementById('add_mandal').value, 
-                workplace: document.getElementById('add_workplace').value, 
-                joinDate: document.getElementById('add_joinDate').value, 
-                retireDate: document.getElementById('add_retireDate').value, 
-                aadhaar: document.getElementById('add_aadhaar').value, 
-                permAddress: document.getElementById('add_perm_address').value, 
-                status: 'Approved', 
-                loginDisabled: false, 
-                timestamp: Date.now() 
-            };
-            await addDoc(collection(db, "members"), newMem); 
-            Swal.fire('यशस्वी', 'नवीन सदस्य जोडला गेला.', 'success'); 
-            document.getElementById('addForm').reset(); 
-            window.loadData();
-        } catch(err) { 
-            Swal.fire('Error', err.message, 'error'); 
-        }
-    };
-
-    window.addStateStaffDirect = async function(e) {
-        e.preventDefault();
-        try {
-            let newStaff = { 
-                name: document.getElementById('ss_add_name').value, 
-                designation: document.getElementById('ss_add_desig').value, 
-                mobile: document.getElementById('ss_add_mobile').value, 
-                district: document.getElementById('stateFilterDistAdd').value, 
-                mandal: document.getElementById('stateFilterMandalAdd').value, 
-                workplace: document.getElementById('ss_add_workplace').value, 
-                joinDate: document.getElementById('ss_add_joinDate').value, 
-                retireDate: document.getElementById('ss_add_retireDate').value, 
-                aadhaar: document.getElementById('ss_add_aadhaar').value, 
-                permAddress: document.getElementById('ss_add_perm_address').value, 
-                timestamp: Date.now() 
-            };
-            await addDoc(collection(db, "stateStaff"), newStaff); 
-            Swal.fire('यशस्वी', 'कर्मचारी जोडला गेला.', 'success'); 
-            document.getElementById('stateStaffForm').reset(); 
-            window.loadData();
-        } catch(err) { 
-            Swal.fire('Error', err.message, 'error'); 
-        }
-    };// ================= OTHER ACTIONS, EXCEL, AND AUTH =================
-    window.updateLoginStatus = async (disableStatus) => { 
-        await updateDoc(doc(db, "members", window.currentActiveMemberId), { loginDisabled: disableStatus }); 
-        Swal.fire('Success', disableStatus ? 'लॉगिन बंद केले.' : 'लॉगिन सुरु केले.', 'success'); 
-        window.loadData(); 
-        window.viewMemberProfile(window.currentActiveMemberId); 
-    };
-    
-    window.resetMemberPass = async () => { 
-        let m = membersData.find(x => x.id === window.currentActiveMemberId); 
-        if(!m.email) return Swal.fire('Error', 'ईमेल नाही.', 'error'); 
-        await window.sendPasswordResetEmail(auth, m.email); 
-        Swal.fire('Success', 'Password reset email sent via Firebase.', 'success'); 
-    };
-    
-    window.archiveMember = async () => { 
-        if(confirm("सदस्य Archive करायचा का?")) { 
-            await updateDoc(doc(db, "members", window.currentActiveMemberId), { status: "Archived" }); 
-            window.closeModal('memberProfileModal'); 
-            window.loadData(); 
-        } 
-    };
-    
-    window.permanentDeleteMember = async () => { 
-        if(confirm("DANGER: सर्व डेटा उडेल. नक्की डिलीट करायचे?")) { 
-            let m = membersData.find(x => x.id === window.currentActiveMemberId); 
-            if(m.photoFileId) fetch(window.GAS_URL, { method:'POST', body: JSON.stringify({ action:'deleteFile', fileId: m.photoFileId }) }); 
-            await deleteDoc(doc(db, "members", m.id)); 
-            window.closeModal('memberProfileModal'); 
-            window.loadData(); 
-        } 
-    };
-
-    window.exportMembersToExcel = () => { let ws = XLSX.utils.table_to_sheet(document.getElementById('membersTable')); let wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Members"); XLSX.writeFile(wb, "Members_List.xlsx"); };
-    window.printMembersTable = () => window.print();
-    window.downloadMembersPDF = () => html2pdf(document.getElementById('membersTable'));
-    window.exportStateToExcel = () => { let ws = XLSX.utils.table_to_sheet(document.getElementById('stateListTable')); let wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "StateStaff"); XLSX.writeFile(wb, "State_Staff_List.xlsx"); };
-    window.printStateTable = () => window.print();
-    window.exportFeesToExcel = () => { let ws = XLSX.utils.table_to_sheet(document.getElementById('feesTable')); let wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Fees"); XLSX.writeFile(wb, "Fees_List.xlsx"); };
-    window.printFeesTable = () => window.print();
-    window.findDuplicates = () => Swal.fire('माहिती', 'ही सुविधा लवकरच उपलब्ध होईल.', 'info');
-    
-    window.sendBulkEmail = () => {
-        let emails = window.cachedFeeData.filter(m => m.feeStatus === 'Paid' && m.email).map(m => m.email);
-        if(emails.length === 0) return Swal.fire('Error', 'कोणताही ईमेल आढळला नाही.', 'error');
-        window.location.href = `mailto:?bcc=${emails.join(',')}&subject=Payment Receipt&body=Thank you for your payment.`;
-    };
-
-    // Firebase Auth Observer
-    onAuthStateChanged(auth, async (user) => {
-        const loginLayer = document.getElementById('login-screen'); 
-        const appLayer = document.getElementById('app-content');
-        if (user) { 
+        window.loadData = async function() {
+            Swal.fire({ title: 'डेटा सिंक होत आहे...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() } });
             try {
-                const adminDocRef = doc(db, "admins", user.uid); 
-                const adminSnap = await getDoc(adminDocRef);
-                if (adminSnap.exists() && adminSnap.data().isActive === true) { 
-                    loginLayer.style.display = 'none'; 
-                    appLayer.style.display = 'block'; 
-                    window.loadData(); 
-                } 
-                else throw new Error("प्रवेश नाकारला.");
-            } catch (error) { 
-                await signOut(auth); 
-            }
-        } else { 
-            loginLayer.style.display = 'flex'; 
-            appLayer.style.display = 'none'; 
-        }
-    });
+                let [mSnap, sSnap, cSnap, eSnap, nSnap] = await Promise.all([
+                    getDocs(collection(db, "members")), getDocs(collection(db, "stateStaff")),
+                    getDocs(collection(db, "complaints")), getDocs(collection(db, "candidates")), getDocs(collection(db, "notices"))
+                ]);
+                membersData = mSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                stateStaffData = sSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                complaintsData = cSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                candidatesData = eSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                noticesData = nSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                
+                const icDoc = await getDoc(doc(db, "settings", "icard"));
+                if (icDoc.exists()) {
+                    icardSettings = { ...icardSettings, ...icDoc.data() };
+                    if(document.getElementById('ic_showJoin')) document.getElementById('ic_showJoin').checked = icardSettings.showJoinDate ?? false;
+                    if(document.getElementById('ic_showWorkplace')) document.getElementById('ic_showWorkplace').checked = icardSettings.showWorkplace ?? false;
+                    if(document.getElementById('ic_showAadhaar')) document.getElementById('ic_showAadhaar').checked = icardSettings.showAadhaar ?? false;
+                    if(document.getElementById('ic_showRetire')) document.getElementById('ic_showRetire').checked = icardSettings.showRetireDate ?? false;
+                }
+                window.cachedFeeData = membersData.filter(m => m.status !== 'Pending' && m.status !== 'Archived');
+                window.renderPending(); window.renderMembers(); window.renderStateList();
+                window.renderFees(); window.renderNotices(); window.renderComplaints();
+                window.renderElection(); window.loadPDFDocuments(); window.renderCharts();
+                Swal.close();
+            } catch(e) { Swal.fire('Sync Error', e.message, 'error'); }
+        };
 
-    window.loginAdmin = async function() {
-        const email = document.getElementById('adminEmail').value.trim(); 
-        const pass = document.getElementById('adminPass').value;
-        try { 
-            Swal.fire({title: 'लॉगिन होत आहे...', didOpen: () => Swal.showLoading()}); 
-            await setPersistence(auth, browserLocalPersistence); 
-            await signInWithEmailAndPassword(auth, email, pass); 
-            Swal.close(); 
-        } catch(e) { 
-            Swal.fire('Error', 'चुकीचा ईमेल किंवा पासवर्ड.', 'error'); 
-        }
-    };
+        window.renderCharts = function() {
+            if(!document.getElementById('mandalChart')) return;
+            let active = membersData.filter(m => m.status === 'Approved');
+            document.getElementById('totMem').innerText = active.length;
+            document.getElementById('paidMem').innerText = active.filter(m => m.feeStatus === 'Paid').length;
+            document.getElementById('pendComp').innerText = complaintsData.filter(c => c.status === 'Pending').length;
 
-    window.logoutAdmin = async function() { 
-        await signOut(auth); 
-    };
-
-</script>
-            let memNoBadge = m.memberNo ? `<span class="badge bg-dark">${m.memberNo}</span><br>` : '';
-            let loginBadge = m.loginDisabled ? `<i class="fa fa-lock text-danger" title="Login Disabled"></i>` : `<i class="fa fa-unlock text-success" title="Login Active"></i>`;
+            let mCounts = {}; let dCounts = {};
+            active.forEach(m => {
+                mCounts[m.mandal || 'इतर'] = (mCounts[m.mandal || 'इतर'] || 0) + 1;
+                dCounts[m.district || 'इतर'] = (dCounts[m.district || 'इतर'] || 0) + 1;
+            });
             
-            html += `<tr>
-                <td><b>${i+1}</b></td>
-                <td>${memNoBadge}<b style="color:var(--primary); font-size:1.02rem;">${m.name || '-'}</b> ${loginBadge}<br><small class="text-muted">${m.designation || '-'}</small></td>
-                <td><i class="fa fa-phone text-muted"></i> ${m.mobile || '-'}<br><small class="text-muted"><i class="fa fa-envelope"></i> ${m.email || '-'}</small></td>
-                <td>${m.workplace || '-'}</td>
-                <td><b>${m.district || '-'}</b><br><small class="text-muted">${m.mandal || '-'}</small></td>
-                <td><small>रुजू: <b>${m.joinDate || '-'}</b></small></td>
-                <td><span class="text-primary font-weight-bold">${m.aadhaar || '-'}</span></td>
-                <td><small style="display:block; max-width:180px;">${m.permAddress || '-'}</small></td>
-                <td class="no-print" style="text-align: center; min-width: 180px;">
-                    <button class="btn-action bg-success" onclick="window.viewMemberProfile('${m.id}')" title="Photo & Docs"><i class="fa fa-folder-open"></i></button> 
-                    <button class="btn-action btn-wp" onclick="window.open('https://wa.me/91${m.mobile||''}', '_blank')"><i class="fab fa-whatsapp"></i></button> 
-                    <button class="btn-action btn-profile" onclick="window.viewMemberProfile('${m.id}')"><i class="fa fa-user-circle"></i> प्रोफाइल व ॲक्शन</button>
-                </td>
-            </tr>`;
+            if(window.mChart) window.mChart.destroy();
+            window.mChart = new Chart(document.getElementById('mandalChart'), { type: 'pie', data: { labels: Object.keys(mCounts), datasets: [{ data: Object.values(mCounts), backgroundColor: ['#0B3D91', '#f39c12', '#10b981', '#ef4444', '#8b5cf6', '#3b82f6', '#f59e0b', '#0f172a'] }] } });
+            
+            if(window.dChart) window.dChart.destroy();
+            window.dChart = new Chart(document.getElementById('districtChart'), { type: 'bar', data: { labels: Object.keys(dCounts), datasets: [{ label: 'सदस्य संख्या', data: Object.values(dCounts), backgroundColor: '#1e40af' }] } });
+        };
+
+        window.renderPending = function() {
+            let fMandal = document.getElementById('pendingFilterMandal').value;
+            let fDist = document.getElementById('pendingFilterDist').value;
+            let pending = membersData.filter(m => m.status === 'Pending');
+            
+            document.getElementById('pendingBadge').innerText = pending.length;
+            document.getElementById('pendMemCard').innerText = pending.length;
+            
+            let filtered = pending.filter(m => (fMandal === 'All' || m.mandal === fMandal) && (fDist === 'All' || m.district === fDist));
+            let html = '';
+            filtered.forEach((m, i) => {
+                html += `<tr><td>${i+1}</td><td><b>${m.name}</b><br><small>${m.designation}</small></td><td>${m.mobile}<br><small>${m.email}</small></td><td><b>${m.district}</b><br><small>${m.mandal}</small></td><td>${m.workplace || '-'}</td>
+                <td style="text-align:center;"><button class="btn-action bg-success" onclick="window.approveMember('${m.id}')"><i class="fa fa-check"></i> Approve</button> <button class="btn-action bg-danger" onclick="window.rejectMember('${m.id}')"><i class="fa fa-times"></i> Reject</button></td></tr>`;
+            });
+            document.getElementById('pendingBody').innerHTML = html || '<tr><td colspan="6" class="empty-state">कोणतीही प्रलंबित विनंती नाही.</td></tr>';
+        };
+
+        window.approveMember = async function(id) {
+            if(confirm("या सदस्याला अप्रूव्ह करायचे आहे का?")) {
+                let memNo = prompt("सदस्यत्व क्रमांक टाका (उदा. MH-101):", "");
+                if(memNo === null) return;
+                await updateDoc(doc(db, "members", id), { status: "Approved", memberNo: memNo });
+                Swal.fire('यशस्वी', 'सदस्य अप्रूव्ह झाला.', 'success'); window.loadData();
+            }
+        };
+
+        window.rejectMember = async function(id) {
+            if(confirm("या सदस्याची विनंती नाकारून कायमची डिलीट करायची का?")) {
+                await deleteDoc(doc(db, "members", id));
+                Swal.fire('यशस्वी', 'विनंती डिलीट केली.', 'success'); window.loadData();
+            }
+        };
+
+        window.renderMembers = function() {
+            let sName = document.getElementById('searchName').value.toLowerCase(); 
+            let fDist = document.getElementById('filterDist').value; 
+            let fMandal = document.getElementById('filterMandal').value;
+            let fSort = document.getElementById('filterSort').value;
+            
+            let filtered = membersData.filter(m => {
+                let isApp = m.status !== 'Pending' && m.status !== 'Archived'; 
+                let match = (m.name||'').toLowerCase().includes(sName) || (m.mobile||'').includes(sName) || (m.memberNo||'').toLowerCase().includes(sName);
+                return isApp && match && (fDist === 'All' || m.district === fDist) && (fMandal === 'All' || m.mandal === fMandal);
+            });
+            
+            if(fSort === 'Seniority') { filtered.sort((a,b) => (new Date(a.joinDate||'2099-12-31') - new Date(b.joinDate||'2099-12-31'))); } 
+            else { filtered.sort((a,b) => (a.name || '').localeCompare(b.name || '')); }
+
+            document.getElementById('totalCount').innerText = `एकूण सक्रिय: ${filtered.length}`; 
+            let html = '';
+            filtered.forEach((m, i) => {
+                let memNoBadge = m.memberNo ? `<span class="badge bg-dark">${m.memberNo}</span><br>` : '';
+                let loginBadge = m.loginDisabled ? `<i class="fa fa-lock text-danger" title="Login Disabled"></i>` : `<i class="fa fa-unlock text-success" title="Login Active"></i>`;
+                html += `<tr><td><b>${i+1}</b></td>
+                    <td>${memNoBadge}<b style="color:var(--primary); font-size:1.02rem;">${m.name || '-'}</b> ${loginBadge}<br><small class="text-muted">${m.designation || '-'}</small></td>
+                    <td><i class="fa fa-phone text-muted"></i> ${m.mobile || '-'}<br><small class="text-muted"><i class="fa fa-envelope"></i> ${m.email || '-'}</small></td>
+                    <td>${m.workplace || '-'}</td><td><b>${m.district || '-'}</b><br><small class="text-muted">${m.mandal || '-'}</small></td>
+                    <td><small>रुजू: <b>${m.joinDate || '-'}</b></small></td><td><span class="text-primary font-weight-bold">${m.aadhaar || '-'}</span></td>
+                    <td><small style="display:block; max-width:180px;">${m.permAddress || '-'}</small></td>
+                    <td class="no-print" style="text-align: center; min-width: 180px;">
+                        <button class="btn-action bg-success" onclick="window.viewMemberProfile('${m.id}')" title="Photo & Docs"><i class="fa fa-folder-open"></i></button> 
+                        <button class="btn-action btn-wp" onclick="window.open('https://wa.me/91${m.mobile||''}', '_blank')"><i class="fab fa-whatsapp"></i></button> 
+                        <button class="btn-action btn-profile" onclick="window.viewMemberProfile('${m.id}')"><i class="fa fa-user-circle"></i> प्रोफाइल व ॲक्शन</button>
+                    </td></tr>`;
+            });
+            document.getElementById('membersBody').innerHTML = html || '<tr><td colspan="9" class="empty-state">कोणताही डेटा आढळला नाही.</td></tr>';
+        };
+
+        window.switchProfileTab = (tabId) => {
+            document.querySelectorAll('.p-tab').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.p-tab-content').forEach(c => c.classList.remove('active'));
+            event.currentTarget.classList.add('active'); document.getElementById(tabId).classList.add('active');
+        };
+
+        window.viewMemberProfile = function(id) {
+            window.currentActiveMemberId = id;
+            let m = membersData.find(x => x.id === id);
+            if(!m) return;
+            
+            let photoHtml = m.photoUrl ? `<img src="${m.photoUrl}" style="width:120px; height:120px; border-radius:10px; border:3px solid var(--primary); object-fit:cover;">` : `<div style="width:120px; height:120px; border-radius:10px; background:#e2e8f0; display:flex; align-items:center; justify-content:center;"><i class="fa fa-user fa-3x text-muted"></i></div>`;
+            document.getElementById('profileDataContainer').innerHTML = `
+                <div class="full-width" style="text-align:center; margin-bottom: 20px;">${photoHtml}</div>
+                <div><label>सदस्य क्रमांक</label><b>${m.memberNo || 'N/A'}</b></div><div><label>संपूर्ण नाव</label><b>${m.name || 'N/A'}</b></div>
+                <div><label>पद (Designation)</label><b>${m.designation || 'N/A'}</b></div><div><label>मोबाईल</label><b>${m.mobile || 'N/A'}</b></div>
+                <div><label>ईमेल</label><b>${m.email || 'N/A'}</b></div><div><label>जिल्हा / विभाग</label><b>${m.district} / ${m.mandal}</b></div>
+                <div><label>आधार क्रमांक</label><b>${m.aadhaar || 'N/A'}</b></div>
+                <div><label>लॉगिन स्टेटस</label><b class="${m.loginDisabled ? 'text-danger' : 'text-success'}">${m.loginDisabled ? 'निष्क्रिय (बंद)' : 'सक्रिय (चालू)'}</b></div>`;
+
+            document.getElementById('actionGridContainer').innerHTML = `
+                <button class="action-btn" onclick="window.fullEdit('${m.id}')"><i class="fa fa-edit text-warning"></i> Edit Member Info</button>
+                <button class="action-btn" onclick="window.open('${m.photoUrl || '#'}', '_blank')"><i class="fa fa-image text-info"></i> View Photo</button>
+                <button class="action-btn" onclick="window.openPhotoUploadModal()"><i class="fa fa-upload text-success"></i> Upload/Change Photo</button>
+                <button class="action-btn danger" onclick="window.deleteMemberPhoto()"><i class="fa fa-trash"></i> Delete Photo</button>
+                <button class="action-btn" onclick="window.switchProfileTab('p-documents')"><i class="fa fa-file-pdf text-purple"></i> Manage Documents</button>
+                <button class="action-btn" onclick="window.switchProfileTab('p-idcard')"><i class="fa fa-id-card text-dark"></i> ID Card System</button>
+                <button class="action-btn" onclick="window.updateLoginStatus(false)"><i class="fa fa-unlock text-success"></i> Activate Login</button>
+                <button class="action-btn danger" onclick="window.updateLoginStatus(true)"><i class="fa fa-lock"></i> Deactivate Login</button>
+                <button class="action-btn" onclick="window.resetMemberPass()"><i class="fa fa-key text-warning"></i> Reset Password</button>
+                <button class="action-btn danger" onclick="window.archiveMember()"><i class="fa fa-archive"></i> Archive Member</button>
+                <button class="action-btn danger" onclick="window.permanentDeleteMember()"><i class="fa fa-trash"></i> Permanent Delete</button>`;
+
+            window.loadMemberDocsGAS(m.id); window.loadMemberComplaintsForProfile(m.id); window.loadMemberFeesForProfile(m);
+            document.getElementById('memberProfileModal').style.display = 'flex';
+        };
+
+        window.fullEdit = (id) => Swal.fire('माहिती', 'हे फिचर (Full Edit) लवकरच उपलब्ध होईल.', 'info');
+
+        window.openPhotoUploadModal = () => {
+            document.getElementById('photoMemId').value = window.currentActiveMemberId;
+            document.getElementById('photoPreview').src = "https://via.placeholder.com/150";
+            document.getElementById('memberPhotoFile').value = ""; document.getElementById('photoUploadModal').style.display = 'flex';
+        };
+        window.previewSelectedPhoto = (e) => {
+            let file = e.target.files[0];
+            if (file) {
+                if (file.size > 2 * 1024 * 1024) return Swal.fire('Error', 'File size limit is 2MB', 'error');
+                let reader = new FileReader();
+                reader.onload = (event) => document.getElementById('photoPreview').src = event.target.result;
+                reader.readAsDataURL(file);
+            }
+        };
+        window.processPhotoUpload = async () => {
+            let id = document.getElementById('photoMemId').value; let fileInput = document.getElementById('memberPhotoFile');
+            if(!fileInput.files.length) return Swal.fire('Warning', 'Photo select करा.', 'warning');
+            let m = membersData.find(x => x.id === id); let btn = document.getElementById('btnUploadPhotoReal');
+            btn.disabled = true; btn.innerHTML = "<i class='fa fa-spinner fa-spin'></i> Uploading to Drive...";
+            try {
+                let base64 = await window.getFileBase64(fileInput.files[0]);
+                let safeName = `Photo_${m.memberNo || id}_${Date.now()}`;
+                let res = await fetch(window.GAS_URL, { method: 'POST', body: JSON.stringify({ action: 'uploadMemberPhoto', fileName: safeName, base64Content: base64, oldFileId: m.photoFileId || null }) });
+                let result = await res.json();
+                if(!result.success) throw new Error(result.message);
+                await updateDoc(doc(db, "members", id), { photoUrl: result.data.url, photoFileId: result.data.fileId });
+                Swal.fire('Success', 'Photo Uploaded to Google Drive.', 'success');
+                window.closeModal('photoUploadModal'); window.loadData(); window.viewMemberProfile(id);
+            } catch(e) { Swal.fire('Error', e.message, 'error'); }
+            finally { btn.disabled = false; btn.innerHTML = "<i class='fa fa-cloud-upload-alt'></i> फोटो Google Drive वर अपलोड करा"; }
+        };
+        window.deleteMemberPhoto = async () => {
+            let m = membersData.find(x => x.id === window.currentActiveMemberId);
+            if(!m.photoFileId) return Swal.fire('Info', 'कोणताही फोटो उपलब्ध नाही.', 'info');
+            if(confirm("फोटो Drive मधून कायमचा डिलीट करायचा का?")) {
+                Swal.fire({title:'Deleting...', didOpen:()=>Swal.showLoading()});
+                await fetch(window.GAS_URL, { method:'POST', body: JSON.stringify({ action:'deleteFile', fileId: m.photoFileId }) });
+                await updateDoc(doc(db, "members", m.id), { photoUrl: null, photoFileId: null });
+                Swal.fire('Deleted', '', 'success'); window.loadData(); window.viewMemberProfile(m.id);
+            }
+        };
+
+        window.openUploadDocForm = () => { document.getElementById('docUploadModal').style.display = 'flex'; };
+        window.processMemberDocUpload = async () => {
+            let id = window.currentActiveMemberId; let name = document.getElementById('m_doc_name').value; let type = document.getElementById('m_doc_type').value; let fileInput = document.getElementById('m_doc_file');
+            if(!name || !fileInput.files.length) return Swal.fire('Warning', 'All fields required', 'warning');
+            let btn = document.getElementById('btnUploadDocReal'); btn.disabled = true; btn.innerHTML = "Uploading to Google Drive...";
+            try {
+                let base64 = await window.getFileBase64(fileInput.files[0]);
+                let res = await fetch(window.GAS_URL, { method: 'POST', body: JSON.stringify({ action: 'uploadMemberDocument', memberId: id, docName: name, docType: type, fileName: `Doc_${id}_${name}_${Date.now()}`, base64Content: base64 }) });
+                let result = await res.json();
+                if(!result.success) throw new Error(result.message);
+                Swal.fire('Success', 'Document Uploaded & Linked.', 'success'); window.closeModal('docUploadModal'); window.loadMemberDocsGAS(id);
+            } catch(e) { Swal.fire('Error', e.message, 'error'); }
+            finally { btn.disabled = false; btn.innerHTML = "दस्तऐवज Google Drive वर अपलोड करा"; }
+        };
+        window.loadMemberDocsGAS = (id) => {
+            document.getElementById('memberDocsContainer').innerHTML = "<i>Fetching from Google Sheets...</i>";
+            fetch(window.GAS_URL, { method: 'POST', body: JSON.stringify({ action: 'getMemberDocuments', memberId: id }) })
+            .then(r => r.json()).then(res => {
+                if(res.success && res.data.length > 0) {
+                    let html = ''; res.data.forEach(d => { html += `<div class="doc-item"><div><i class="fa fa-file-pdf text-danger" style="font-size:1.5rem; margin-right:10px;"></i> <b>${d.docName}</b> (${d.docType})<br><small>${d.date}</small></div><div><button class="btn-action bg-success" onclick="window.open('${d.url}', '_blank')">View</button> <button class="btn-action bg-danger" onclick="window.deleteDocGAS('${d.docId}', '${d.fileId}')">Delete</button></div></div>`; });
+                    document.getElementById('memberDocsContainer').innerHTML = html;
+                } else { document.getElementById('memberDocsContainer').innerHTML = "<div class='empty-state'>कागदपत्रे नाहीत.</div>"; }
+            });
+        };
+        window.deleteDocGAS = (docId, fileId) => {
+            if(confirm("हा दस्तऐवज Drive मधून कायमचा डिलीट होईल. पुढे जायचे?")) {
+                document.getElementById('memberDocsContainer').innerHTML = "<i>Deleting...</i>";
+                fetch(window.GAS_URL, { method: 'POST', body: JSON.stringify({ action: 'deleteMemberDocument', docId: docId, fileId: fileId }) }).then(() => window.loadMemberDocsGAS(window.currentActiveMemberId));
+            }
+        };
+
+        window.renderStateList = function() {
+            let fMandal = document.getElementById('stateFilterMandal').value; let fDist = document.getElementById('stateFilterDist').value; let fSort = document.getElementById('stateFilterSort').value;
+            let filtered = stateStaffData.filter(s => (fMandal === 'All' || s.mandal === fMandal) && (fDist === 'All' || s.district === fDist));
+            if(fSort === 'Seniority') { filtered.sort((a,b) => (new Date(a.joinDate||'2099-12-31') - new Date(b.joinDate||'2099-12-31'))); } else { filtered.sort((a,b) => (a.name || '').localeCompare(b.name || '')); }
+            let html = ''; filtered.forEach((s, i) => { html += `<tr><td>${i+1}</td><td><b>${s.name}</b><br><small>${s.designation}</small></td><td>${s.mobile || '-'}</td><td>${s.mandal || '-'}</td><td>${s.district || '-'}</td><td>${s.workplace || '-'}</td><td>${s.joinDate || '-'}</td><td>${s.retireDate || '-'}</td><td>${s.aadhaar || '-'}</td><td><small>${s.permAddress || '-'}</small></td><td class="no-print" style="text-align:center;"><button class="btn-action bg-danger" onclick="window.deleteStateStaff('${s.id}')"><i class="fa fa-trash"></i></button></td></tr>`; });
+            document.getElementById('stateListBody').innerHTML = html || '<tr><td colspan="11" class="empty-state">डेटा नाही.</td></tr>';
+        };
+        window.deleteStateStaff = async function(id) { if(confirm("कायमचा डिलीट करायचा का?")) { await deleteDoc(doc(db, "stateStaff", id)); window.loadData(); } };
+
+        window.renderFees = function() {
+            let fMandal = document.getElementById('feesFilterMandal').value; let fDist = document.getElementById('feesFilterDist').value; let fStat = document.getElementById('feeFilter').value;
+            let filtered = window.cachedFeeData.filter(m => (fMandal === 'All' || m.mandal === fMandal) && (fDist === 'All' || m.district === fDist) && (fStat === 'All' || (m.feeStatus||'Unpaid') === fStat));
+            let html = ''; filtered.forEach((m, i) => { let statBadge = (m.feeStatus === 'Paid') ? '<span class="badge bg-success">Paid</span>' : '<span class="badge bg-danger">Unpaid</span>'; html += `<tr><td>${i+1}</td><td><b>${m.name}</b></td><td>${m.mandal} / ${m.district}</td><td>${m.mobile}<br><small>${m.email||'-'}</small></td><td>${statBadge}</td><td>₹ ${m.feeAmount || '0'} / ${m.receiptNo || '-'}</td><td style="text-align:center;"><button class="btn-action bg-warning" onclick="window.updateFeeStatus('${m.id}')"><i class="fa fa-edit"></i> फी अपडेट करा</button></td></tr>`; });
+            document.getElementById('feesBody').innerHTML = html || '<tr><td colspan="7" class="empty-state">डेटा नाही.</td></tr>';
+        };
+        window.updateFeeStatus = async function(id) {
+            let m = membersData.find(x => x.id === id);
+            let { value: formValues } = await Swal.fire({ title: 'फी माहिती अपडेट करा', html: `<select id="swal-fstat" class="swal2-input"><option value="Paid" ${m.feeStatus==='Paid'?'selected':''}>Paid</option><option value="Unpaid" ${m.feeStatus!=='Paid'?'selected':''}>Unpaid</option></select><input id="swal-famt" class="swal2-input" placeholder="रक्कम (उदा. 500)" value="${m.feeAmount||''}"><input id="swal-frec" class="swal2-input" placeholder="पावती क्रमांक" value="${m.receiptNo||''}">`, focusConfirm: false, preConfirm: () => { return { feeStatus: document.getElementById('swal-fstat').value, feeAmount: document.getElementById('swal-famt').value, receiptNo: document.getElementById('swal-frec').value } } });
+            if(formValues) { await updateDoc(doc(db, "members", id), formValues); Swal.fire('यशस्वी', 'फी स्टेटस अपडेट झाले.', 'success'); window.loadData(); }
+        };
+
+        window.addNewMember = async function(e) {
+            e.preventDefault();
+            try {
+                let newMem = { memberNo: document.getElementById('add_memNo').value, name: document.getElementById('add_name').value, mobile: document.getElementById('add_mobile').value, email: document.getElementById('add_email').value, designation: document.getElementById('add_desig').value, password: document.getElementById('add_pass').value, district: document.getElementById('add_district').value, mandal: document.getElementById('add_mandal').value, workplace: document.getElementById('add_workplace').value, joinDate: document.getElementById('add_joinDate').value, retireDate: document.getElementById('add_retireDate').value, aadhaar: document.getElementById('add_aadhaar').value, permAddress: document.getElementById('add_perm_address').value, status: 'Approved', loginDisabled: false, timestamp: Date.now() };
+                await addDoc(collection(db, "members"), newMem); Swal.fire('यशस्वी', 'नवीन सदस्य जोडला गेला.', 'success'); document.getElementById('addForm').reset(); window.loadData();
+            } catch(err) { Swal.fire('Error', err.message, 'error'); }
+        };
+        window.addStateStaffDirect = async function(e) {
+            e.preventDefault();
+            try {
+                let newStaff = { name: document.getElementById('ss_add_name').value, designation: document.getElementById('ss_add_desig').value, mobile: document.getElementById('ss_add_mobile').value, district: document.getElementById('stateFilterDistAdd').value, mandal: document.getElementById('stateFilterMandalAdd').value, workplace: document.getElementById('ss_add_workplace').value, joinDate: document.getElementById('ss_add_joinDate').value, retireDate: document.getElementById('ss_add_retireDate').value, aadhaar: document.getElementById('ss_add_aadhaar').value, permAddress: document.getElementById('ss_add_perm_address').value, timestamp: Date.now() };
+                await addDoc(collection(db, "stateStaff"), newStaff); Swal.fire('यशस्वी', 'कर्मचारी जोडला गेला.', 'success'); document.getElementById('stateStaffForm').reset(); window.loadData();
+            } catch(err) { Swal.fire('Error', err.message, 'error'); }
+        };
+
+        window.addNotice = async (e) => { e.preventDefault(); let n = { title: document.getElementById('notice_title').value, date: document.getElementById('notice_date').value, desc: document.getElementById('notice_desc').value, timestamp: Date.now() }; await addDoc(collection(db, "notices"), n); document.getElementById('notice_title').value = ''; document.getElementById('notice_desc').value = ''; window.loadData(); };
+        window.renderNotices = () => { let html = ''; noticesData.forEach(n => html += `<tr><td>${n.date}</td><td><b>${n.title}</b></td><td>${n.desc}</td><td style="text-align:center;"><button class="btn-action bg-danger" onclick="window.deleteNotice('${n.id}')"><i class="fa fa-trash"></i></button></td></tr>`); document.getElementById('noticesBody').innerHTML = html; };
+        window.deleteNotice = async (id) => { await deleteDoc(doc(db, "notices", id)); window.loadData(); };
+
+        window.renderComplaints = () => { let html = ''; complaintsData.forEach(c => html += `<tr><td>${c.date||'-'}</td><td><b>${c.memberName||'Unknown'}</b></td><td><b>${c.subject}</b><br><small>${c.desc}</small></td><td>${c.status||'Pending'}</td><td style="text-align:center;"><button class="btn-action bg-success" onclick="window.resolveComplaint('${c.id}')">Resolve</button> <button class="btn-action bg-danger" onclick="window.deleteComplaint('${c.id}')"><i class="fa fa-trash"></i></button></td></tr>`); document.getElementById('complaintsBody').innerHTML = html; };
+        window.resolveComplaint = async (id) => { await updateDoc(doc(db, "complaints", id), {status:'Resolved'}); window.loadData(); };
+        window.deleteComplaint = async (id) => { await deleteDoc(doc(db, "complaints", id)); window.loadData(); };
+
+        window.toggleOnlineVoting = async () => { let docRef = doc(db, "settings", "election"); let docSnap = await getDoc(docRef); let isActive = docSnap.exists() ? docSnap.data().isActive : false; await setDoc(docRef, {isActive: !isActive}, {merge:true}); window.loadData(); };
+        window.addCandidate = async (e) => { e.preventDefault(); let c = { post: document.getElementById('cand_post').value, name: document.getElementById('cand_name').value, info: document.getElementById('cand_info').value, votes: 0 }; await addDoc(collection(db, "candidates"), c); e.target.reset(); window.loadData(); };
+        window.renderElection = async () => { let docRef = doc(db, "settings", "election"); let docSnap = await getDoc(docRef); let isActive = docSnap.exists() ? docSnap.data().isActive : false; document.getElementById('votingStatusText').innerText = isActive ? "सध्या मतदान प्रणाली: चालू आहे (LIVE)" : "सध्या मतदान प्रणाली: बंद आहे (CLOSED)"; document.getElementById('votingStatusText').style.color = isActive ? "green" : "red"; let html = ''; candidatesData.forEach(c => html += `<tr><td><b>${c.post}</b></td><td>${c.name}</td><td>${c.info}</td><td style="text-align:center; font-size:1.2rem;"><b>${c.votes||0}</b></td><td style="text-align:center;"><button class="btn-action bg-danger" onclick="window.deleteCandidate('${c.id}')"><i class="fa fa-trash"></i></button></td></tr>`); document.getElementById('candidatesBody').innerHTML = html; };
+        window.deleteCandidate = async (id) => { await deleteDoc(doc(db, "candidates", id)); window.loadData(); };
+
+        window.uploadDocument = async function(e) {
+            e.preventDefault(); const btn = document.getElementById('btnUploadPdf'); btn.disabled = true; btn.innerHTML = "<i class='fa fa-spinner fa-spin'></i> Uploading to Drive...";
+            try {
+                const file = document.getElementById('pdf_file').files[0]; if(file.size > 5 * 1024 * 1024) throw new Error("PDF ची साईझ 5MB पेक्षा जास्त नसावी.");
+                let base64Data = await window.getFileBase64(file); let safeFileName = Date.now() + "_" + file.name.replace(/[^a-zA-Z0-9.]/g, "_");
+                const response = await fetch(window.GAS_URL, { method: 'POST', body: JSON.stringify({ action: 'upload', filePath: safeFileName, base64Content: base64Data }) });
+                const result = await response.json(); if(!result.success) throw new Error(result.error || result.message);
+                const newDoc = { title: document.getElementById('pdf_title').value, category: document.getElementById('pdf_category').value, date: document.getElementById('pdf_date').value, keywords: document.getElementById('pdf_keywords').value, desc: document.getElementById('pdf_desc').value, githubPath: safeFileName, pdfUrl: result.url, status: "Published", timestamp: Date.now() };
+                await addDoc(collection(db, "pdf_documents"), newDoc); Swal.fire('यशस्वी', 'PDF यशस्वीरित्या Google Drive वर अपलोड झाला!', 'success'); document.getElementById('pdfUploadForm').reset(); window.loadData();
+            } catch (error) { Swal.fire('त्रुटी', error.message, 'error'); } finally { btn.disabled = false; btn.innerHTML = `<i class="fa fa-upload"></i> PDF अपलोड करा`; }
+        };
+        window.loadPDFDocuments = () => { getDocs(collection(db, "pdf_documents")).then(snap => { let html = ''; snap.forEach(d => { let p = d.data(); html += `<tr><td>${p.date}</td><td><b>${p.title}</b><br><small>${p.category}</small></td><td>${p.status}</td><td><a href="${p.pdfUrl}" target="_blank" class="btn-action bg-success">View</a></td><td><button class="btn-action bg-danger" onclick="window.deleteDocument('${d.id}')"><i class="fa fa-trash"></i></button></td></tr>`; }); document.getElementById('documentsBody').innerHTML = html; }); };
+        window.deleteDocument = async (id) => { await deleteDoc(doc(db, "pdf_documents", id)); window.loadData(); };
+
+        window.openDigitalLetterCreator = () => { document.getElementById('letterCreatorModal').style.display = 'flex'; };
+        window.saveDigitalLetter = async (e) => { e.preventDefault(); let btn = document.getElementById('btnGenLetter'); btn.disabled = true; btn.innerHTML = "Generating PDF..."; try { let payload = { action: 'createLetter', letterNo: document.getElementById('let_no').value, date: document.getElementById('let_date').value, to: document.getElementById('let_to').value, subject: document.getElementById('let_sub').value, reference: document.getElementById('let_ref').value, body: document.getElementById('let_body').value, headerUrl: icardSettings.letterpadUrl || "" }; let res = await fetch(window.GAS_URL, { method: 'POST', body: JSON.stringify(payload) }); let result = await res.json(); if(result.success) { Swal.fire('Success', 'PDF तयार झाली आहे आणि Google Drive मध्ये सेव्ह झाली आहे.', 'success'); window.closeModal('letterCreatorModal'); window.loadRecentLetters(); } else throw new Error(result.message); } catch(e) { Swal.fire('Error', e.message, 'error'); } finally { btn.disabled = false; btn.innerHTML = "पत्र सेव्ह करा व PDF तयार करा"; } };
+        window.loadRecentLetters = () => { document.getElementById('lettersList').innerHTML = "Fetching from Google Sheets..."; fetch(window.GAS_URL, { method: 'POST', body: JSON.stringify({ action: 'getLetters' }) }).then(r => r.json()).then(res => { if(res.success && res.data.length > 0) { let html = ''; res.data.forEach(d => { html += `<div class="letter-list-item"><div><b>${d.letterNo}</b> | ${d.date}<br><small>${d.subject}</small></div><div><button class="btn-action bg-success" onclick="window.open('${d.pdfUrl}', '_blank')"><i class="fa fa-print"></i> PDF</button></div></div>`; }); document.getElementById('lettersList').innerHTML = html; } else { document.getElementById('lettersList').innerHTML = "Letters not found."; } }); };
+        window.deleteLetterPad = () => Swal.fire('माहिती', 'Header डिलीट केले.', 'info'); window.uploadLetterPad = () => window.uploadIcardAsset('letterpad');
+
+        window.uploadIcardAsset = async function(type) { const { value: file } = await Swal.fire({ title: 'फोटो निवडा', input: 'file', inputAttributes: { 'accept': 'image/*' } }); if (file) { Swal.fire({title: 'Uploading...', didOpen: () => Swal.showLoading()}); let base64 = await window.getFileBase64(file); let res = await fetch(window.GAS_URL, { method: 'POST', body: JSON.stringify({ action: 'upload', filePath: `${type}_${Date.now()}.png`, base64Content: base64 }) }); let result = await res.json(); if(result.success) { icardSettings[`${type}Url`] = result.url; await setDoc(doc(db, "settings", "icard"), icardSettings, {merge:true}); Swal.fire('Uploaded!', '', 'success'); window.loadData(); } } };
+        window.saveIcardSettings = async function() { icardSettings.showJoinDate = document.getElementById('ic_showJoin').checked; icardSettings.showRetireDate = document.getElementById('ic_showRetire').checked; icardSettings.showAadhaar = document.getElementById('ic_showAadhaar').checked; icardSettings.showWorkplace = document.getElementById('ic_showWorkplace').checked; await setDoc(doc(db, "settings", "icard"), icardSettings, {merge:true}); Swal.fire({toast:true, position:'top-end', icon:'success', title:'Settings Saved', showConfirmButton:false, timer:1500}); };
+        window.selectMemberIdTheme = function(themeId) { document.querySelectorAll('.id-preview-card').forEach(el => el.classList.remove('selected')); event.currentTarget.classList.add('selected'); icardSettings.currentTheme = themeId; };
+        window.generateSelectedIdCard = function() { let m = membersData.find(x => x.id === window.currentActiveMemberId); if(!m) return; let photo = m.photoUrl || 'https://via.placeholder.com/100'; let theme = icardSettings.currentTheme || 'classic'; const styles = { classic: { border: '#0B3D91', header: '#0B3D91', bg: '#ffffff' }, modern: { border: '#2c3e50', header: '#2c3e50', bg: '#f8f9fa' }, dark: { border: '#0f172a', header: '#0f172a', bg: '#e2e8f0' }, official: { border: '#b91c1c', header: '#b91c1c', bg: '#fff5f5' }, minimal: { border: '#94a3b8', header: '#ffffff', bg: '#ffffff', textH: '#0f172a' }, gradient: { border: '#3b82f6', header: 'linear-gradient(90deg, #1e40af, #3b82f6)', bg: '#ffffff' } }; let s = styles[theme] || styles.classic; let extraHtml = ''; if(icardSettings.showWorkplace) extraHtml += `<tr><td><b>कार्यरत ठिकाण:</b></td><td>${m.workplace||'-'}</td></tr>`; if(icardSettings.showJoinDate) extraHtml += `<tr><td><b>रुजू दि:</b></td><td>${m.joinDate||'-'}</td></tr>`; if(icardSettings.showAadhaar) extraHtml += `<tr><td><b>आधार कार्ड:</b></td><td>${m.aadhaar||'-'}</td></tr>`; let win = window.open('','','width=400,height=600'); win.document.write(`<html><head><style>body{font-family:sans-serif;text-align:center;background:#e0e0e0;padding:20px;}.icard{border:4px solid ${s.border};border-radius:15px;width:340px;margin:0 auto;padding-bottom:15px;background:${s.bg};box-shadow:0 10px 20px rgba(0,0,0,0.2);overflow:hidden;}.header{background:${s.header};color:${s.textH||'#fff'};padding:15px;font-weight:bold;font-size:1.2rem;margin-bottom:15px;}.photo{width:110px;height:110px;border-radius:50%;object-fit:cover;border:3px solid ${s.border};margin:10px auto;}table{width:90%;margin:15px auto;text-align:left;font-size:0.9rem;}td{padding:4px;}@media print{.no-print{display:none;}}</style></head><body><div class="icard"><div class="header">क्ष-किरण संघटना महाराष्ट्र</div><img src="${photo}" class="photo"><h3>${m.name}</h3><p style="color:#666;font-weight:bold;">${m.designation}</p><hr style="width:80%;margin:10px auto;"><table><tr><td><b>मोबाईल:</b></td><td>${m.mobile}</td></tr><tr><td><b>जिल्हा:</b></td><td>${m.district}</td></tr>${extraHtml}</table></div><button class="no-print" onclick="window.print()" style="margin-top:20px;padding:10px 25px;background:#0B3D91;color:white;cursor:pointer;">Print Card</button></body></html>`); win.document.close(); };
+        window.loadMemberComplaintsForProfile = (id) => { let comps = complaintsData.filter(c => c.memberId === id); if(comps.length === 0) { document.getElementById('memberComplaintsContainer').innerHTML = "<div class='empty-state'>कोणतीही तक्रार नाही.</div>"; return; } let html = ''; comps.forEach(c => html += `<div class="doc-item"><div><b>${c.date}</b> | ${c.subject}</div><span class="badge bg-warning">${c.status}</span></div>`); document.getElementById('memberComplaintsContainer').innerHTML = html; };
+        window.loadMemberFeesForProfile = (m) => { document.getElementById('memberFeesContainer').innerHTML = `<div class="doc-item"><div><b>स्थिती:</b> <span class="badge ${m.feeStatus==='Paid'?'bg-success':'bg-danger'}">${m.feeStatus||'Unpaid'}</span><br><b>रक्कम:</b> ₹ ${m.feeAmount||'0'}<br><b>पावती क्र:</b> ${m.receiptNo||'-'}</div></div>`; };
+
+        window.updateLoginStatus = async (disableStatus) => { await updateDoc(doc(db, "members", window.currentActiveMemberId), { loginDisabled: disableStatus }); Swal.fire('Success', disableStatus ? 'लॉगिन बंद केले.' : 'लॉगिन सुरु केले.', 'success'); window.loadData(); window.viewMemberProfile(window.currentActiveMemberId); };
+        window.resetMemberPass = async () => { let m = membersData.find(x => x.id === window.currentActiveMemberId); if(!m.email) return Swal.fire('Error', 'ईमेल नाही.', 'error'); await window.sendPasswordResetEmail(auth, m.email); Swal.fire('Success', 'Password reset email sent via Firebase.', 'success'); };
+        window.archiveMember = async () => { if(confirm("सदस्य Archive करायचा का?")) { await updateDoc(doc(db, "members", window.currentActiveMemberId), { status: "Archived" }); window.closeModal('memberProfileModal'); window.loadData(); } };
+        window.permanentDeleteMember = async () => { if(confirm("DANGER: सर्व डेटा उडेल. नक्की डिलीट करायचे?")) { let m = membersData.find(x => x.id === window.currentActiveMemberId); if(m.photoFileId) fetch(window.GAS_URL, { method:'POST', body: JSON.stringify({ action:'deleteFile', fileId: m.photoFileId }) }); await deleteDoc(doc(db, "members", m.id)); window.closeModal('memberProfileModal'); window.loadData(); } };
+
+        window.changeAdminPassword = () => Swal.fire('माहिती', 'सुरक्षेच्या कारणास्तव, कृपया Firebase Console मधून पासवर्ड बदला.', 'info');
+        window.openMemberPasswordModal = () => Swal.fire('माहिती', 'सदस्य प्रोफाइल मधील "Reset Password" पर्याय वापरा.', 'info');
+
+        onAuthStateChanged(auth, async (user) => {
+            const loginLayer = document.getElementById('login-screen'); const appLayer = document.getElementById('app-content');
+            if (user) { 
+                try {
+                    const adminDocRef = doc(db, "admins", user.uid); const adminSnap = await getDoc(adminDocRef);
+                    if (adminSnap.exists() && adminSnap.data().isActive === true) { loginLayer.style.display = 'none'; appLayer.style.display = 'block'; window.loadData(); } 
+                    else throw new Error("प्रवेश नाकारला.");
+                } catch (error) { await signOut(auth); }
+            } else { loginLayer.style.display = 'flex'; appLayer.style.display = 'none'; }
         });
-        document.getElementById('membersBody').innerHTML = html || '<tr><td colspan="9" class="empty-state">कोणताही डेटा आढळला नाही.</td></tr>';
-    };
+
+        window.loginAdmin = async function() {
+            const email = document.getElementById('adminEmail').value.trim(); const pass = document.getElementById('adminPass').value;
+            try { Swal.fire({title: 'लॉगिन होत आहे...', didOpen: () => Swal.showLoading()}); await setPersistence(auth, browserLocalPersistence); await signInWithEmailAndPassword(auth, email, pass); Swal.close(); } catch(e) { Swal.fire('Error', 'चुकीचा ईमेल किंवा पासवर्ड.', 'error'); }
+        };
+        
+        window.logoutAdmin = async function() { await signOut(auth); };
+        
+    </script>
+</body>
+</html>
