@@ -1019,7 +1019,63 @@
                         </div>
                     </div>
                 </div>
+            </div><!-- TAB: DOCUMENTS MANAGEMENT -->
+<div id="tab-documents" class="tab-content">
+    <div class="panel">
+        <div class="panel-header h-primary">
+            <span><i class="fa fa-file-pdf"></i> नवीन दस्तऐवज (PDF) जोडा</span>
+        </div>
+        <div class="panel-body">
+            <form id="pdfUploadForm" onsubmit="uploadDocument(event)">
+                <div class="form-row">
+                    <input type="text" id="pdf_title" class="form-control" placeholder="दस्तऐवजाचे नाव (Title) *" required>
+                    <select id="pdf_category" class="form-control" required>
+                        <option value="">-- Category निवडा --</option>
+                        <option value="शासन निर्णय (GR)">शासन निर्णय (GR)</option>
+                        <option value="परिपत्रके">परिपत्रके</option>
+                        <option value="सेवा विषयक">सेवा विषयक</option>
+                        <option value="वेतन विषयक">वेतन विषयक</option>
+                        <option value="बदली">बदली</option>
+                        <option value="पदोन्नती">पदोन्नती</option>
+                        <option value="संघटनेचे दस्तऐवज">संघटनेचे दस्तऐवज</option>
+                        <option value="इतर">इतर</option>
+                    </select>
+                </div>
+                <div class="form-row">
+                    <input type="date" id="pdf_date" class="form-control" required>
+                    <input type="text" id="pdf_keywords" class="form-control" placeholder="Keywords (उदा. GR, Salary, 2026)">
+                </div>
+                <div class="form-row">
+                    <textarea id="pdf_desc" class="form-control" placeholder="दस्तऐवजाची थोडक्यात माहिती..."></textarea>
+                </div>
+                <div class="form-row">
+                    <input type="file" id="pdf_file" accept="application/pdf" class="form-control" required>
+                </div>
+                <button type="submit" class="btn-save" id="btnUploadPdf"><i class="fa fa-upload"></i> PDF अपलोड करा</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="panel">
+        <div class="panel-header h-blue"><span><i class="fa fa-list"></i> अपलोड केलेले दस्तऐवज</span></div>
+        <div class="panel-body">
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>तारीख</th>
+                            <th>Title & Category</th>
+                            <th>Status</th>
+                            <th>View</th>
+                            <th class="no-print">ॲक्शन (Edit/Delete)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="documentsBody"></tbody>
+                </table>
             </div>
+        </div>
+    </div>
+</div>
 
         </div> <!-- Close Container -->
     </div> <!-- Close App-Content --><!-- ================= FIREBASE MODULE ENGINE & DATA SYNCHRONIZATION ================= -->
