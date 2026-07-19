@@ -1118,7 +1118,132 @@
         let galleryData = [];
         let mChart = null; 
         let dChart = null;
+      
+        // PDF Base64 Converter
+const getPdfBase64 = (file) => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = error => reject(error);
+});
+
+// Google Apps Script URL (Part 1 मध्ये मिळालेली)
+const GITHUB_BACKEND_URL = "https://script.google.com/macros/s/AKfycbxZrS1fZI646ZgqtEeokKjE2rFDpjuRV5en6gjXFkmZqX-D-CCPuTTRt15ON_oA0FOKJA/exec"; 
+
+// 1. PDF Upload Function
+window.uploadDocument = async function(e) {
+    e.preventDefault();
+    const btn = document.getElementById('btnUploadPdf');
+    btn.disabled = true;
+    btn.innerHTML = "Uploading to GitHub... Please Wait";
+
+    try {
+        const file = document.getElementById('pdf_file').files[0];
+        if(file.size > 5 * 1024 * 1024) throw new Error("PDF ची साईझ 5MB पेक्षा जास्त नसावी.");
+
+        const title = document.getElementById('pdf_title').value;
+        const category = document.getElementById('pdf_category').value;
+        const date = document.getElementById('pdf_date').value;
+        const keywords = document.getElementById('pdf_keywords').value;
+        const desc = document.getElementById('pdf_desc').value;
+
+        // GitHub Folder Path ठरवणे
+        let folderName = category === "शासन निर्णय (GR)" ? "GR" : (category === "परिपत्रके" ? "Circular" : "Other");
+        let safeFileName = Date.now() + "_" + file.name.replace(/[^a-zA-Z0-9.]/g, "_");
+        let githubPath = `documents/${folderName}/${safeFileName}`;
+
+        let base64Data = await getPdfBase64(file);
+
+        // Apps Script द्वारे GitHub वर पाठवणे
+        const response = await fetch(GITHUB_BACKEND_URL, {
+            method: 'POST',
+            body: JSON.stringify({ action: 'upload', filePath: githubPath, base64Content: base64Data })
+        });
         
+        const result = await response.json();
+        if(!result.success) throw new Error(result.error);
+
+        // Firestore मध्ये Metadata Save करणे
+        // (तुमचे import getFirestore वगैरे आधीपासूनच आहेत असे गृहीत धरून)
+        const newDoc = {
+            title: title, category: category, date: date, keywords: keywords, desc: desc,
+            githubPath: githubPath, pdfUrl: result.url, status: "Published", timestamp: Date.now()
+        };
+        
+        // Firebase v9 syntax: import { collection, addDoc } ...
+        // (जर v8 असेल तर db.collection("pdf_documents").add(newDoc))
+        // तुमच्या सिस्टीमनुसार जुळवून घ्या (मी v9 वापरत आहे):
+        const { collection, addDoc } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
+        await addDoc(collection(db, "pdf_documents"), newDoc);
+
+        Swal.fire('यशस्वी', 'PDF यशस्वीरित्या अपलोड झाला!', 'success');
+        document.getElementById('pdfUploadForm').reset();
+        loadPDFDocuments(); // टेबल रिफ्रेश करा
+
+    } catch (error) {
+        Swal.fire('त्रुटी', error.message, 'error');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fa fa-upload"></i> PDF अपलोड करा`;
+    }
+};
+
+// 2. Load Documents to Table
+window.loadPDFDocuments = async function() {
+    const { collection, getDocs } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
+    const snap = await getDocs(collection(db, "pdf_documents"));
+    let html = '';
+    window.pdfDataCache = [];
+    
+    snap.forEach(doc => {
+        let d = { id: doc.id, ...doc.data() };
+        window.pdfDataCache.push(d);
+        html += `<tr>
+            <td>${d.date}</td>
+            <td><b>${d.title}</b><br><span class="badge bg-dark">${d.category}</span></td>
+            <td><span class="badge ${d.status === 'Published' ? 'bg-success' : 'bg-warning'}">${d.status}</span></td>
+            <td><a href="${d.pdfUrl}" target="_blank" style="color:var(--danger);"><i class="fa fa-file-pdf fa-2x"></i></a></td>
+            <td>
+                <button class="btn-action btn-edit" onclick="togglePublishPDF('${d.id}', '${d.status}')" title="Publish/Unpublish"><i class="fa fa-eye-slash"></i></button>
+                <button class="btn-action btn-del" onclick="deletePDF('${d.id}', '${d.githubPath}')" title="Delete"><i class="fa fa-trash"></i></button>
+            </td>
+        </tr>`;
+    });
+    document.getElementById('documentsBody').innerHTML = html || '<tr><td colspan="5">कोणतेही दस्तऐवज उपलब्ध नाहीत.</td></tr>';
+};
+
+// 3. Delete PDF (From GitHub and Firestore)
+window.deletePDF = async function(docId, githubPath) {
+    if(!confirm("हा PDF कायमचा डिलीट करायचा आहे का?")) return;
+    
+    Swal.fire({title: 'डिलीट करत आहे...', didOpen: () => { Swal.showLoading() }});
+    try {
+        // Delete from GitHub
+        await fetch(GITHUB_BACKEND_URL, {
+            method: 'POST',
+            body: JSON.stringify({ action: 'delete', filePath: githubPath })
+        });
+
+        // Delete from Firestore
+        const { doc, deleteDoc } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
+        await deleteDoc(doc(db, "pdf_documents", docId));
+
+        Swal.fire('डिलीट!', 'PDF हटवण्यात आला.', 'success');
+        loadPDFDocuments();
+    } catch(err) {
+        Swal.fire('त्रुटी', 'डिलीट करताना चूक झाली.', 'error');
+    }
+};
+
+window.togglePublishPDF = async function(id, currentStatus) {
+    let newStatus = currentStatus === 'Published' ? 'Unpublished' : 'Published';
+    const { doc, updateDoc } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
+    await updateDoc(doc(db, "pdf_documents", id), { status: newStatus });
+    loadPDFDocuments();
+};
+
+// Call loadPDFDocuments() when you call your main loadData() function
+// Add this line inside your loadData() function: renderPending(); renderMembers(); ... loadPDFDocuments();
         // Secure Microservice Endpoint for Binary Assets (Google Apps Script Web App)
         const GAS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx-6x7OjLPFliMITRBemPw1OoCcrgePhONDLOb9mi_1svkWQ5u7GODv2tm1nvArT9RD/exec";
 
