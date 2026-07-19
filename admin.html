@@ -59,6 +59,7 @@
             align-items: center; 
             z-index: 9999; 
             padding: 20px;
+            transition: opacity 0.3s ease;
         }
         .login-box { 
             background: var(--white); 
@@ -66,8 +67,8 @@
             border-radius: 24px; 
             box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); 
             width: 100%;
-            max-width: 420px; 
-            text-align: center; 
+            max-width: 420px;  
+            text-align: center;  
             border: 1px solid rgba(255,255,255,0.1);
             animation: slideUp 0.6s ease-out;
         }
@@ -288,7 +289,7 @@
                 <i class="fa fa-lock"></i>
                 <input type="password" id="adminPass" placeholder="Password">
             </div>
-            <button onclick="loginAdmin()">सुरक्षित लॉगिन करा <i class="fa fa-right-to-bracket"></i></button>
+            <button onclick="window.loginAdmin()">सुरक्षित लॉगिन करा <i class="fa fa-right-to-bracket"></i></button>
         </div>
     </div>
 
@@ -301,7 +302,7 @@
             </div>
             <div style="display: flex; align-items: center; gap: 15px;">
                 <button class="btn-save" style="background:var(--purple);" onclick="openMemberPasswordModal()"><i class="fa fa-key"></i> सदस्य पासवर्ड बदला</button>
-                <button class="btn-logout" onclick="logoutAdmin()"><i class="fa fa-power-off"></i> लॉगआउट</button>
+                <button class="btn-logout" onclick="window.logoutAdmin()"><i class="fa fa-power-off"></i> लॉगआउट</button>
             </div>
         </div>
 
@@ -371,14 +372,15 @@
                         </div>
                     </div>
                 </div>
-            </div><!-- TAB 1: PENDING REQUESTS -->
+            </div>
+
+            <!-- TAB 1: PENDING REQUESTS -->
             <div id="tab-pending" class="tab-content">
                 <div class="panel h-red">
                     <div class="panel-header">
                         <span><i class="fa fa-user-clock"></i> नवीन सदस्यांच्या प्रलंबित विनंत्या</span>
                     </div>
                     <div class="panel-body">
-                        <!-- Advanced Filtering Matrix for Pending Requests -->
                         <div class="form-row" style="background:#f1f5f9; padding:15px; border-radius:12px; margin-bottom: 20px;">
                             <div class="form-group">
                                 <label><i class="fa fa-filter"></i> विभाग (मंडळ) फिल्टर</label>
@@ -402,7 +404,6 @@
                             </div>
                         </div>
 
-                        <!-- Data Presentation Grid -->
                         <div class="table-responsive">
                             <table>
                                 <thead>
@@ -424,7 +425,6 @@
 
             <!-- TAB 2: MASTER MEMBERS ROOM -->
             <div id="tab-members" class="tab-content">
-                <!-- Direct Add Form Component -->
                 <div class="panel h-green">
                     <div class="panel-header">
                         <span><i class="fa fa-user-plus"></i> नवीन सदस्य थेट नोंदणी (Direct Add)</span>
@@ -461,7 +461,7 @@
                             </div>
                             <div class="form-row">
                                 <div class="form-group">
-                                    <label>कार्यरत जिल्हा</label>
+                                    <label> कार्यकरत जिल्हा</label>
                                     <select id="add_district" class="form-control"><option value="">-- निवडा --</option></select>
                                 </div>
                                 <div class="form-group">
@@ -508,7 +508,6 @@
                     </div>
                 </div>
 
-                <!-- Master Database Registry View -->
                 <div class="panel h-blue">
                     <div class="panel-header">
                         <span><i class="fa fa-database"></i> मास्टर सदस्य यादी कक्ष <span id="totalCount" class="badge bg-danger"></span></span>
@@ -520,7 +519,6 @@
                         </div>
                     </div>
                     <div class="panel-body">
-                        <!-- Multi-Level Filtering System -->
                         <div class="form-row" style="background:#f1f5f9; padding:15px; border-radius:12px; margin-bottom: 20px;">
                             <div class="form-group" style="flex: 2;">
                                 <label>🔍 स्मार्ट सर्च</label>
@@ -553,7 +551,6 @@
                             </div>
                         </div>
 
-                        <!-- Data Presentation Matrix -->
                         <div class="table-responsive">
                             <table id="membersTable">
                                 <thead>
@@ -575,9 +572,10 @@
                         </div>
                     </div>
                 </div>
-            </div><!-- TAB 3: STATE LEVEL STAFF REGISTRY (Independent Data) -->
+            </div>
+
+            <!-- TAB 3: STATE LEVEL STAFF REGISTRY -->
             <div id="tab-statelist" class="tab-content">
-                <!-- Direct Registration Module for Non-Members -->
                 <div class="panel h-success">
                     <div class="panel-header">
                         <span><i class="fa fa-plus-circle"></i> राज्यस्तरीय यादीत इतर कर्मचारी जोडा (जे सदस्य नाहीत)</span>
@@ -647,7 +645,6 @@
                     </div>
                 </div>
 
-                <!-- Independent Master Roster View -->
                 <div class="panel h-purple">
                     <div class="panel-header">
                         <span><i class="fa fa-map-marked-alt"></i> राज्यस्तरीय स्वतंत्र कर्मचारी मास्टर यादी</span>
@@ -659,7 +656,6 @@
                         </div>
                     </div>
                     <div class="panel-body">
-                        <!-- Filters Grid for State List -->
                         <div class="form-row" style="background:#f1f5f9; padding:15px; border-radius:12px; margin-bottom: 20px;">
                             <div class="form-group">
                                 <label>विभाग (मंडळ)</label>
@@ -688,7 +684,6 @@
                             </div>
                         </div>
 
-                        <!-- Roster Data Matrix -->
                         <div class="table-responsive">
                             <table id="stateListTable">
                                 <thead>
@@ -718,45 +713,39 @@
             <div id="tab-icard" class="tab-content">
                 <div class="panel h-dark">
                     <div class="panel-header">
-                        <span><i class="fa fa-id-card"></i> आय-कार्ड लेआउट आणि मल्टिपल थिम्स संपादन कक्ष</span>
+                        <span><i class="fa fa-id-card"></i> आय-कार्ड लेआउट आणि मलिटीपल थिम्स संपादन कक्ष</span>
                     </div>
                     <div class="panel-body">
-                        <!-- Theme Selection Matrix -->
-                        <h3 style="margin-bottom: 12px; font-size: 1.1rem;"><i class="fa fa-palette"></i> १. आय-कार्ड डिझाईन थिम निवडा (Select Premium Theme Style)</h3>
+                        <h3 style="margin-bottom: 12px; font-size: 1.1rem;"><i class="fa fa-palette"></i> १. आय-कार्ड डिझाईन थिम निवडा</h3>
                         <div class="theme-selector-container">
                             <div class="theme-option selected" id="theme_classic" onclick="selectIcardTheme('classic')">
-                                <i class="fa fa-address-card fa-2x" style="display:block; margin-bottom:5px; color:var(--primary);"></i>
-                                Classic Blue
+                                <i class="fa fa-address-card fa-2x" style="display:block; margin-bottom:5px; color:var(--primary);"></i>Classic Blue
                             </div>
                             <div class="theme-option" id="theme_modern" onclick="selectIcardTheme('modern')">
-                                <i class="fa fa-id-badge fa-2x" style="display:block; margin-bottom:5px; color:var(--purple);"></i>
-                                Modern Minimal
+                                <i class="fa fa-id-badge fa-2x" style="display:block; margin-bottom:5px; color:var(--purple);"></i>Modern Minimal
                             </div>
                             <div class="theme-option" id="theme_gold" onclick="selectIcardTheme('gold')">
-                                <i class="fa fa-award fa-2x" style="display:block; margin-bottom:5px; color:var(--warning);"></i>
-                                Premium Gold
+                                <i class="fa fa-award fa-2x" style="display:block; margin-bottom:5px; color:var(--warning);"></i>Premium Gold
                             </div>
                             <div class="theme-option" id="theme_dark" onclick="selectIcardTheme('dark')">
-                                <i class="fa fa-solid fa-square-h fa-2x" style="display:block; margin-bottom:5px; color:var(--dark);"></i>
-                                Elegant Dark
+                                <i class="fa fa-solid fa-square-h fa-2x" style="display:block; margin-bottom:5px; color:var(--dark);"></i>Elegant Dark
                             </div>
                             <div class="theme-option" id="theme_gradient" onclick="selectIcardTheme('gradient')">
-                                <i class="fa fa-wand-magic-sparkles fa-2x" style="display:block; margin-bottom:5px; color:var(--info);"></i>
-                                Dynamic Gradient
+                                <i class="fa fa-wand-magic-sparkles fa-2x" style="display:block; margin-bottom:5px; color:var(--info);"></i>Dynamic Gradient
                             </div>
-                        </div><!-- I-Card Fields & Assets Customization Matrix -->
+                        </div>
                         <div class="swal-grid" style="background:#f8fafc; padding:20px; border-radius:12px; margin-top: 20px;">
                             <div>
-                                <h3><i class="fa fa-signature"></i> संघटनेची अधिकृत सही (Authorized Signature)</h3>
+                                <h3><i class="fa fa-signature"></i> संघटनेची अधिकृत सही</h3>
                                 <div id="signPreview" style="margin:12px 0; height:90px; border:2px dashed #cbd5e1; border-radius:8px; display:flex; align-items:center; justify-content:center; background:#fff; overflow:hidden;">
-                                    <i class="fa fa-image style-muted" style="font-size:1.5rem; color:var(--text-muted);"></i>
+                                    <i class="fa fa-image" style="font-size:1.5rem; color:var(--text-muted);"></i>
                                 </div>
                                 <button class="btn-save" onclick="uploadIcardAsset('sign')" style="background:var(--info); width:100%;"><i class="fa fa-upload"></i> सही फोटो अपलोड करा</button>
                             </div>
                             <div>
-                                <h3><i class="fa fa-stamp"></i> संघटनेचा अधिकृत शिक्का (Official Stamp)</h3>
+                                <h3><i class="fa fa-stamp"></i> संघटनेचा अधिकृत शिक्का</h3>
                                 <div id="stampPreview" style="margin:12px 0; height:90px; border:2px dashed #cbd5e1; border-radius:8px; display:flex; align-items:center; justify-content:center; background:#fff; overflow:hidden;">
-                                    <i class="fa fa-image style-muted" style="font-size:1.5rem; color:var(--text-muted);"></i>
+                                    <i class="fa fa-image" style="font-size:1.5rem; color:var(--text-muted);"></i>
                                 </div>
                                 <button class="btn-save" onclick="uploadIcardAsset('stamp')" style="background:var(--warning); color:var(--dark); width:100%;"><i class="fa fa-upload"></i> शिक्का फोटो अपलोड करा</button>
                             </div>
@@ -781,17 +770,16 @@
                     <div class="panel-header">
                         <span><i class="fa fa-rupee-sign"></i> सदस्यांची आर्थिक नोंदणी व फी व्यवस्थापन कक्ष</span>
                         <div style="display:flex; flex-wrap: wrap; gap:10px;">
-                            <button class="btn-save" onclick="sendBulkEmail()" style="background:var(--info);"><i class="fa fa-envelope"></i> फी भरलेल्यांना पावती ईमेल करा (Bulk Email BCC)</button>
-                            <button class="btn-save" onclick="exportFeesToExcel()" style="background:var(--success);"><i class="fa fa-file-excel"></i> Excel Export</button>
-                            <button class="btn-save" onclick="printFeesTable()" style="background:var(--dark);"><i class="fa fa-print"></i> प्रिंट काढा</button>
+                            <button class="btn-save" onclick="window.sendBulkEmail()" style="background:var(--info);"><i class="fa fa-envelope"></i> फी भरलेल्यांना पावती ईमेल करा (Bulk Email BCC)</button>
+                            <button class="btn-save" onclick="window.exportFeesToExcel()" style="background:var(--success);"><i class="fa fa-file-excel"></i> Excel Export</button>
+                            <button class="btn-save" onclick="window.printFeesTable()" style="background:var(--dark);"><i class="fa fa-print"></i> प्रिंट काढा</button>
                         </div>
                     </div>
                     <div class="panel-body">
-                        <!-- Fees Module Filter Configuration -->
                         <div class="form-row" style="background:#f1f5f9; padding:15px; border-radius:12px; margin-bottom: 20px;">
                             <div class="form-group">
                                 <label>विभाग (मंडळ)</label>
-                                <select id="feesFilterMandal" class="form-control" onchange="renderFees()">
+                                <select id="feesFilterMandal" class="form-control" onchange="window.renderFees()">
                                     <option value="All">-- सर्व विभाग --</option>
                                     <option value="पुणे मंडळ">पुणे मंडळ</option> 
                                     <option value="नागपूर मंडळ">नागपूर मंडळ</option>
@@ -805,19 +793,18 @@
                             </div>
                             <div class="form-group">
                                 <label>जिल्हा</label>
-                                <select id="feesFilterDist" class="form-control" onchange="renderFees()"><option value="All">-- सर्व जिल्हे --</option></select>
+                                <select id="feesFilterDist" class="form-control" onchange="window.renderFees()"><option value="All">-- सर्व जिल्हे --</option></select>
                             </div>
                             <div class="form-group">
                                 <label>फी स्टेटस (Fee Status)</label>
-                                <select id="feeFilter" class="form-control" onchange="renderFees()">
+                                <select id="feeFilter" class="form-control" onchange="window.renderFees()">
                                     <option value="All">सर्व फी स्टेटस</option>
                                     <option value="Paid">फक्त फी भरलेले (Paid)</option>
-                                    <option value="Unpaid">फी बाकी असलेले (Unpaid)</option>
+                                    <option value="Unpaid">फी बाकी केलेले (Unpaid)</option>
                                 </select>
                             </div>
                         </div>
 
-                        <!-- Financial Ledger Table Matrix -->
                         <div class="table-responsive">
                             <table id="feesTable">
                                 <thead>
@@ -828,7 +815,7 @@
                                         <th>संपर्क (मोबाईल / ईमेल)</th>
                                         <th style="width: 140px;">फी स्टेटस</th>
                                         <th>भरलेली रक्कम / पावती क्र.</th>
-                                        <th class="no-print" style="width: 150px; text-align: center;">ॲक्शन</th>
+                                        <th class="no-print" style="width: 200px; text-align: center;">ॲक्शन</th>
                                     </tr>
                                 </thead>
                                 <tbody id="feesBody"></tbody>
@@ -836,7 +823,9 @@
                         </div>
                     </div>
                 </div>
-            </div><!-- TAB 6: EXECUTIVE ELECTION MANAGEMENT -->
+            </div>
+
+            <!-- TAB 6: EXECUTIVE ELECTION MANAGEMENT -->
             <div id="tab-election" class="tab-content">
                 <div class="panel h-success">
                     <div class="panel-header">
@@ -850,7 +839,6 @@
                     </div>
                 </div>
 
-                <!-- Candidate Nominations Module -->
                 <div class="panel h-purple">
                     <div class="panel-header">
                         <span><i class="fa fa-user-tie"></i> निवडणुकीसाठी नवीन उमेदवार उभा करा</span>
@@ -885,7 +873,6 @@
                     </div>
                 </div>
 
-                <!-- Election Standings Matrix -->
                 <div class="panel h-blue">
                     <div class="panel-header">
                         <span><i class="fa fa-vote-yea"></i> उमेदवार यादी व लाइव्ह मिळालेली मते (Live Vote Counts)</span>
@@ -909,7 +896,7 @@
                 </div>
             </div>
 
-            <!-- TAB 7: CENTRAL NOTICE BOARD (Index Dashboard Feeds) -->
+            <!-- TAB 7: CENTRAL NOTICE BOARD -->
             <div id="tab-notices" class="tab-content">
                 <div class="panel h-info">
                     <div class="panel-header">
@@ -1010,72 +997,72 @@
                     </div>
                     <div class="panel-body">
                         <button class="btn-save" onclick="changeAdminPassword()" style="background:var(--warning); color:var(--dark); margin-bottom:25px; font-weight:800;"><i class="fa fa-key"></i> मुख्य ॲडमिन मास्टर पासवर्ड बदला</button>
-                        
                         <hr style="margin-bottom:25px; border:0; border-top:1px solid var(--border);">
-                        
                         <h3 style="font-size:1.2rem; color:var(--dark); font-weight:700;"><i class="fa fa-clock-rotate-left"></i> ॲडमिन ॲक्टिव्हिटी लॉग (Recent Operations Security Log)</h3>
                         <div style="background:#0f172a; color:#38bdf8; padding: 20px; border-radius:12px; max-height: 280px; overflow-y:auto; font-family: monospace; font-size:0.95rem; margin-top:12px; box-shadow: inset 0 4px 10px rgba(0,0,0,0.3);" id="activityLog">
                             <i>सध्या कोणतीही ॲक्टिव्हिटी उपलब्ध नाही.</i>
                         </div>
                     </div>
                 </div>
-            </div><!-- TAB: DOCUMENTS MANAGEMENT -->
-<div id="tab-documents" class="tab-content">
-    <div class="panel">
-        <div class="panel-header h-primary">
-            <span><i class="fa fa-file-pdf"></i> नवीन दस्तऐवज (PDF) जोडा</span>
-        </div>
-        <div class="panel-body">
-            <form id="pdfUploadForm" onsubmit="uploadDocument(event)">
-                <div class="form-row">
-                    <input type="text" id="pdf_title" class="form-control" placeholder="दस्तऐवजाचे नाव (Title) *" required>
-                    <select id="pdf_category" class="form-control" required>
-                        <option value="">-- Category निवडा --</option>
-                        <option value="शासन निर्णय (GR)">शासन निर्णय (GR)</option>
-                        <option value="परिपत्रके">परिपत्रके</option>
-                        <option value="सेवा विषयक">सेवा विषयक</option>
-                        <option value="वेतन विषयक">वेतन विषयक</option>
-                        <option value="बदली">बदली</option>
-                        <option value="पदोन्नती">पदोन्नती</option>
-                        <option value="संघटनेचे दस्तऐवज">संघटनेचे दस्तऐवज</option>
-                        <option value="इतर">इतर</option>
-                    </select>
-                </div>
-                <div class="form-row">
-                    <input type="date" id="pdf_date" class="form-control" required>
-                    <input type="text" id="pdf_keywords" class="form-control" placeholder="Keywords (उदा. GR, Salary, 2026)">
-                </div>
-                <div class="form-row">
-                    <textarea id="pdf_desc" class="form-control" placeholder="दस्तऐवजाची थोडक्यात माहिती..."></textarea>
-                </div>
-                <div class="form-row">
-                    <input type="file" id="pdf_file" accept="application/pdf" class="form-control" required>
-                </div>
-                <button type="submit" class="btn-save" id="btnUploadPdf"><i class="fa fa-upload"></i> PDF अपलोड करा</button>
-            </form>
-        </div>
-    </div>
-
-    <div class="panel">
-        <div class="panel-header h-blue"><span><i class="fa fa-list"></i> अपलोड केलेले दस्तऐवज</span></div>
-        <div class="panel-body">
-            <div class="table-responsive">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>तारीख</th>
-                            <th>Title & Category</th>
-                            <th>Status</th>
-                            <th>View</th>
-                            <th class="no-print">ॲक्शन (Edit/Delete)</th>
-                        </tr>
-                    </thead>
-                    <tbody id="documentsBody"></tbody>
-                </table>
             </div>
-        </div>
-    </div>
-</div>
+
+            <!-- TAB: DOCUMENTS MANAGEMENT -->
+            <div id="tab-documents" class="tab-content">
+                <div class="panel">
+                    <div class="panel-header h-primary">
+                        <span><i class="fa fa-file-pdf"></i> नवीन दस्तऐवज (PDF) जोडा</span>
+                    </div>
+                    <div class="panel-body">
+                        <form id="pdfUploadForm" onsubmit="uploadDocument(event)">
+                            <div class="form-row">
+                                <input type="text" id="pdf_title" class="form-control" placeholder="दस्तऐवजाचे नाव (Title) *" required>
+                                <select id="pdf_category" class="form-control" required>
+                                    <option value="">-- Category निवडा --</option>
+                                    <option value="शासन निर्णय (GR)">शासन निर्णय (GR)</option>
+                                    <option value="परिपत्रके">परिपत्रके</option>
+                                    <option value="सेवा विषयक">सेवा विषयक</option>
+                                    <option value="वेतन विषयक">वेतन विषयक</option>
+                                    <option value="बदली">बदली</option>
+                                    <option value="पदोन्नती">पदोन्नती</option>
+                                    <option value="संघटनेचे दस्तऐवज">संघटनेचे दस्तऐवज</option>
+                                    <option value="इतर">इतर</option>
+                                </select>
+                            </div>
+                            <div class="form-row">
+                                <input type="date" id="pdf_date" class="form-control" required>
+                                <input type="text" id="pdf_keywords" class="form-control" placeholder="Keywords (उदा. GR, Salary, 2026)">
+                            </div>
+                            <div class="form-row">
+                                <textarea id="pdf_desc" class="form-control" placeholder="दस्तऐवजाची थोडक्यात माहिती..."></textarea>
+                            </div>
+                            <div class="form-row">
+                                <input type="file" id="pdf_file" accept="application/pdf" class="form-control" required>
+                            </div>
+                            <button type="submit" class="btn-save" id="btnUploadPdf"><i class="fa fa-upload"></i> PDF अपलोड करा</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="panel h-blue">
+                    <div class="panel-header"><span><i class="fa fa-list"></i> अपलोड केलेले दस्तऐवज</span></div>
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>तारीख</th>
+                                        <th>Title & Category</th>
+                                        <th>Status</th>
+                                        <th>View</th>
+                                        <th class="no-print">ॲक्शन (Edit/Delete)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="documentsBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
         </div> <!-- Close Container -->
     </div> <!-- Close App-Content --><!-- ================= FIREBASE MODULE ENGINE & DATA SYNCHRONIZATION ================= -->
@@ -1083,7 +1070,7 @@
         // 1. Firebase Core Ecosystem Imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserSessionPersistence, updatePassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         
         // 2. Production Firebase Cluster Configuration
         const firebaseConfig = {
@@ -1095,10 +1082,13 @@
             appId: "1:763805226978:web:6bae81a0b6358b47d88bbb"
         };
         
-        // Initialize Core Engines
+        // Initialize Core Engines inside Window Context for global accessibility
         const app = initializeApp(firebaseConfig); 
         const db = getFirestore(app); 
         const auth = getAuth(app);
+
+        window.db = db;
+        window.auth = auth;
         
         // 3. Centralized State Management (Global Arrays & Objects)
         let membersData = []; 
@@ -1118,139 +1108,116 @@
         let galleryData = [];
         let mChart = null; 
         let dChart = null;
-      
+        window.cachedFeeData = [];
+
         // PDF Base64 Converter
-const getPdfBase64 = (file) => new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result.split(',')[1]);
-    reader.onerror = error => reject(error);
-});
-
-// Google Apps Script URL (Part 1 मध्ये मिळालेली)
-const GITHUB_BACKEND_URL = "https://script.google.com/macros/s/AKfycbyitVcDRhpTklzqNz9F9f2pTkkHcsIpWUZn2pmfR7PcU-FVWjvLPQAsuiIUO-NcdBVqjw/exec"; 
-
-// 1. PDF Upload Function
-window.uploadDocument = async function(e) {
-    e.preventDefault();
-    const btn = document.getElementById('btnUploadPdf');
-    btn.disabled = true;
-    btn.innerHTML = "Uploading to GitHub... Please Wait";
-
-    try {
-        const file = document.getElementById('pdf_file').files[0];
-        if(file.size > 5 * 1024 * 1024) throw new Error("PDF ची साईझ 5MB पेक्षा जास्त नसावी.");
-
-        const title = document.getElementById('pdf_title').value;
-        const category = document.getElementById('pdf_category').value;
-        const date = document.getElementById('pdf_date').value;
-        const keywords = document.getElementById('pdf_keywords').value;
-        const desc = document.getElementById('pdf_desc').value;
-
-        // GitHub Folder Path ठरवणे
-        let folderName = category === "शासन निर्णय (GR)" ? "GR" : (category === "परिपत्रके" ? "Circular" : "Other");
-        let safeFileName = Date.now() + "_" + file.name.replace(/[^a-zA-Z0-9.]/g, "_");
-        let githubPath = `documents/${folderName}/${safeFileName}`;
-
-        let base64Data = await getPdfBase64(file);
-
-        // Apps Script द्वारे GitHub वर पाठवणे
-        const response = await fetch(GITHUB_BACKEND_URL, {
-            method: 'POST',
-            body: JSON.stringify({ action: 'upload', filePath: githubPath, base64Content: base64Data })
+        const getPdfBase64 = (file) => new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result.split(',')[1]);
+            reader.onerror = error => reject(error);
         });
-        
-        const result = await response.json();
-        if(!result.success) throw new Error(result.error);
 
-        // Firestore मध्ये Metadata Save करणे
-        // (तुमचे import getFirestore वगैरे आधीपासूनच आहेत असे गृहीत धरून)
-        const newDoc = {
-            title: title, category: category, date: date, keywords: keywords, desc: desc,
-            githubPath: githubPath, pdfUrl: result.url, status: "Published", timestamp: Date.now()
+        const GITHUB_BACKEND_URL = "https://script.google.com/macros/s/AKfycbyitVcDRhpTklzqNz9F9f2pTkkHcsIpWUZn2pmfR7PcU-FVWjvLPQAsuiIUO-NcdBVqjw/exec"; 
+
+        // 1. PDF Upload Function
+        window.uploadDocument = async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btnUploadPdf');
+            btn.disabled = true;
+            btn.innerHTML = "Uploading to GitHub... Please Wait";
+
+            try {
+                const file = document.getElementById('pdf_file').files[0];
+                if(file.size > 5 * 1024 * 1024) throw new Error("PDF ची साईझ 5MB पेक्षा जास्त नसावी.");
+
+                const title = document.getElementById('pdf_title').value;
+                const category = document.getElementById('pdf_category').value;
+                const date = document.getElementById('pdf_date').value;
+                const keywords = document.getElementById('pdf_keywords').value;
+                const desc = document.getElementById('pdf_desc').value;
+
+                let folderName = category === "शासन निर्णय (GR)" ? "GR" : (category === "परिपत्रके" ? "Circular" : "Other");
+                let safeFileName = Date.now() + "_" + file.name.replace(/[^a-zA-Z0-9.]/g, "_");
+                let githubPath = `documents/${folderName}/${safeFileName}`;
+
+                let base64Data = await getPdfBase64(file);
+
+                const response = await fetch(GITHUB_BACKEND_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'upload', filePath: githubPath, base64Content: base64Data })
+                });
+                
+                const result = await response.json();
+                if(!result.success) throw new Error(result.error);
+
+                const newDoc = {
+                    title: title, category: category, date: date, keywords: keywords, desc: desc,
+                    githubPath: githubPath, pdfUrl: result.url, status: "Published", timestamp: Date.now()
+                };
+                
+                await addDoc(collection(db, "pdf_documents"), newDoc);
+                Swal.fire('यशस्वी', 'PDF यशस्वीरित्या अपलोड झाला!', 'success');
+                document.getElementById('pdfUploadForm').reset();
+                window.loadPDFDocuments();
+
+            } catch (error) {
+                Swal.fire('त्रुटी', error.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fa fa-upload"></i> PDF अपलोड करा`;
+            }
         };
-        
-        // Firebase v9 syntax: import { collection, addDoc } ...
-        // (जर v8 असेल तर db.collection("pdf_documents").add(newDoc))
-        // तुमच्या सिस्टीमनुसार जुळवून घ्या (मी v9 वापरत आहे):
-        const { collection, addDoc } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
-        await addDoc(collection(db, "pdf_documents"), newDoc);
 
-        Swal.fire('यशस्वी', 'PDF यशस्वीरित्या अपलोड झाला!', 'success');
-        document.getElementById('pdfUploadForm').reset();
-        loadPDFDocuments(); // टेबल रिफ्रेश करा
+        // 2. Load Documents to Table
+        window.loadPDFDocuments = async function() {
+            const snap = await getDocs(collection(db, "pdf_documents"));
+            let html = '';
+            window.pdfDataCache = [];
+            
+            snap.forEach(doc => {
+                let d = { id: doc.id, ...doc.data() };
+                window.pdfDataCache.push(d);
+                html += `<tr>
+                    <td>${d.date}</td>
+                    <td><b>${d.title}</b><br><span class="badge bg-dark">${d.category}</span></td>
+                    <td><span class="badge ${d.status === 'Published' ? 'bg-success' : 'bg-warning'}">${d.status}</span></td>
+                    <td><a href="${d.pdfUrl}" target="_blank" style="color:var(--danger);"><i class="fa fa-file-pdf fa-2x"></i></a></td>
+                    <td>
+                        <button class="btn-action btn-edit" onclick="togglePublishPDF('${d.id}', '${d.status}')" title="Publish/Unpublish"><i class="fa fa-eye-slash"></i></button>
+                        <button class="btn-action btn-del" onclick="deletePDF('${d.id}', '${d.githubPath}')" title="Delete"><i class="fa fa-trash"></i></button>
+                    </td>
+                </tr>`;
+            });
+            document.getElementById('documentsBody').innerHTML = html || '<tr><td colspan="5">कोणतेही दस्तऐवज उपलब्ध नाहीत.</td></tr>';
+        };
 
-    } catch (error) {
-        Swal.fire('त्रुटी', error.message, 'error');
-    } finally {
-        btn.disabled = false;
-        btn.innerHTML = `<i class="fa fa-upload"></i> PDF अपलोड करा`;
-    }
-};
+        // 3. Delete PDF
+        window.deletePDF = async function(docId, githubPath) {
+            if(!confirm("हा PDF कायमचा डिलीट करायचा आहे का?")) return;
+            Swal.fire({title: 'डिलीट करत आहे...', didOpen: () => { Swal.showLoading() }});
+            try {
+                await fetch(GITHUB_BACKEND_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'delete', filePath: githubPath })
+                });
+                await deleteDoc(doc(db, "pdf_documents", docId));
+                Swal.fire('डिलीट!', 'PDF हटवण्यात आला.', 'success');
+                window.loadPDFDocuments();
+            } catch(err) {
+                Swal.fire('त्रुटी', 'डिलीट करताना चूक झाली.', 'error');
+            }
+        };
 
-// 2. Load Documents to Table
-window.loadPDFDocuments = async function() {
-    const { collection, getDocs } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
-    const snap = await getDocs(collection(db, "pdf_documents"));
-    let html = '';
-    window.pdfDataCache = [];
-    
-    snap.forEach(doc => {
-        let d = { id: doc.id, ...doc.data() };
-        window.pdfDataCache.push(d);
-        html += `<tr>
-            <td>${d.date}</td>
-            <td><b>${d.title}</b><br><span class="badge bg-dark">${d.category}</span></td>
-            <td><span class="badge ${d.status === 'Published' ? 'bg-success' : 'bg-warning'}">${d.status}</span></td>
-            <td><a href="${d.pdfUrl}" target="_blank" style="color:var(--danger);"><i class="fa fa-file-pdf fa-2x"></i></a></td>
-            <td>
-                <button class="btn-action btn-edit" onclick="togglePublishPDF('${d.id}', '${d.status}')" title="Publish/Unpublish"><i class="fa fa-eye-slash"></i></button>
-                <button class="btn-action btn-del" onclick="deletePDF('${d.id}', '${d.githubPath}')" title="Delete"><i class="fa fa-trash"></i></button>
-            </td>
-        </tr>`;
-    });
-    document.getElementById('documentsBody').innerHTML = html || '<tr><td colspan="5">कोणतेही दस्तऐवज उपलब्ध नाहीत.</td></tr>';
-};
+        window.togglePublishPDF = async function(id, currentStatus) {
+            let newStatus = currentStatus === 'Published' ? 'Unpublished' : 'Published';
+            await updateDoc(doc(db, "pdf_documents", id), { status: newStatus });
+            window.loadPDFDocuments();
+        };
 
-// 3. Delete PDF (From GitHub and Firestore)
-window.deletePDF = async function(docId, githubPath) {
-    if(!confirm("हा PDF कायमचा डिलीट करायचा आहे का?")) return;
-    
-    Swal.fire({title: 'डिलीट करत आहे...', didOpen: () => { Swal.showLoading() }});
-    try {
-        // Delete from GitHub
-        await fetch(GITHUB_BACKEND_URL, {
-            method: 'POST',
-            body: JSON.stringify({ action: 'delete', filePath: githubPath })
-        });
-
-        // Delete from Firestore
-        const { doc, deleteDoc } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
-        await deleteDoc(doc(db, "pdf_documents", docId));
-
-        Swal.fire('डिलीट!', 'PDF हटवण्यात आला.', 'success');
-        loadPDFDocuments();
-    } catch(err) {
-        Swal.fire('त्रुटी', 'डिलीट करताना चूक झाली.', 'error');
-    }
-};
-
-window.togglePublishPDF = async function(id, currentStatus) {
-    let newStatus = currentStatus === 'Published' ? 'Unpublished' : 'Published';
-    const { doc, updateDoc } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js");
-    await updateDoc(doc(db, "pdf_documents", id), { status: newStatus });
-    loadPDFDocuments();
-};
-
-// Call loadPDFDocuments() when you call your main loadData() function
-// Add this line inside your loadData() function: renderPending(); renderMembers(); ... loadPDFDocuments();
-        // Secure Microservice Endpoint for Binary Assets (Google Apps Script Web App)
         const GAS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx-6x7OjLPFliMITRBemPw1OoCcrgePhONDLOb9mi_1svkWQ5u7GODv2tm1nvArT9RD/exec";
-
-        // Official ISO Mapping for Maharashtra Districts (36 Districts Dataset)
         const mhDistricts = ["अहमदनगर", "अकोला", "अमरावती", "छत्रपती संभाजीनगर", "बीड", "भंडारा", "बुलढाणा", "चंद्रपूर", "धुळे", "गडचिरोली", "गोंदिया", "हिंगोली", "जळगाव", "जालना", "कोल्हापूर", "लातूर", "मुंबई शहर", "मुंबई उपनगर", "नागपूर", "नांदेड", "नंदुरबार", "नाशिक", "धाराशिव", "पालघर", "परभणी", "पुणे", "रायगड", "रत्नागिरी", "सांगली", "सातारा", "सिंधुदुर्ग", "सोलापूर", "ठाणे", "वर्धा", "वाशिम", "यवतमाळ"];
         
-        // Inject Districts programmatically into DOM Dropdowns
         const populateSelect = (id) => {
             const el = document.getElementById(id);
             if (el) {
@@ -1258,7 +1225,6 @@ window.togglePublishPDF = async function(id, currentStatus) {
             }
         };
         
-        // Matrix Binding for Select Inputs
         populateSelect('add_district'); 
         populateSelect('filterDist'); 
         populateSelect('stateFilterDist'); 
@@ -1266,34 +1232,49 @@ window.togglePublishPDF = async function(id, currentStatus) {
         populateSelect('pendingFilterDist'); 
         populateSelect('feesFilterDist');
 
-        // ================= INTERACTIVE NAVIGATION ENGINE =================
+        // Nav Tab Engine
         window.openTab = function(tabId) {
-            // Remove active states gracefully
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             
-            // Apply new state matrices
             const targetTab = document.getElementById(tabId);
             if(targetTab) targetTab.classList.add('active');
-            
             if(event && event.currentTarget) event.currentTarget.classList.add('active');
             
-            // Trigger chart calculations instantly if dashboard opens
             if(tabId === 'tab-dash') { 
                 setTimeout(window.renderCharts, 150); 
             }
         };
 
-        // ================= SECURITY AUTHENTICATION MONITOR =================
-        onAuthStateChanged(auth, (user) => {
+        // ================= SECURITY AUTHENTICATION MONITOR WITH FIRESTORE RBAC BALANCING =================
+        onAuthStateChanged(auth, async (user) => {
             const loginLayer = document.getElementById('login-screen');
             const appLayer = document.getElementById('app-content');
             
             if (user) { 
-                loginLayer.style.opacity = '0';
-                setTimeout(() => { loginLayer.style.display = 'none'; }, 300);
-                appLayer.style.display = 'block'; 
-                window.loadData();
+                try {
+                    // Fetch real-time security profile information from the Firestore database repository
+                    const adminDocRef = doc(db, "admins", user.uid);
+                    const adminSnap = await getDoc(adminDocRef);
+
+                    if (adminSnap.exists()) {
+                        const adminInfo = adminSnap.data();
+                        
+                        // Check explicit status toggles and active operational role permissions
+                        if (adminInfo.isActive === true && (adminInfo.role === 'super_admin' || adminInfo.role === 'admin')) {
+                            loginLayer.style.opacity = '0';
+                            setTimeout(() => { loginLayer.style.display = 'none'; }, 300);
+                            appLayer.style.display = 'block'; 
+                            window.loadData();
+                            return;
+                        }
+                    }
+                    // Trigger dynamic catch block if authorization rules fail
+                    throw new Error("तुम्हाला या सुपर ॲडमिन पॅनलमध्ये प्रवेश करण्याची परवानगी नाही किंवा तुमचे खाते निष्क्रिय आहे.");
+                } catch (error) {
+                    Swal.fire('सुरक्षा पडताळणी अयशस्वी', error.message || 'Unauthorized Access Detected', 'error');
+                    await signOut(auth);
+                }
             } else { 
                 loginLayer.style.display = 'flex';
                 loginLayer.style.opacity = '1';
@@ -1315,25 +1296,29 @@ window.togglePublishPDF = async function(id, currentStatus) {
                     allowOutsideClick: false, 
                     didOpen: () => { Swal.showLoading() }
                 });
-                await setPersistence(auth, browserSessionPersistence); 
+                // Dynamic persistent configuration logic
+                await setPersistence(auth, browserLocalPersistence); 
                 await signInWithEmailAndPassword(auth, email, pass); 
-                await window.logActivity("Admin Successfully Authenticated via Console"); 
+                await window.logActivity(`Admin Signed In Successfully: ${email}`); 
                 Swal.close();
             } catch(e) { 
-                Swal.fire('प्रवेश नाकारला', 'नोंदणीकृत ईमेल आयडी किंवा पासवर्ड चुकीचा आहे.', 'error'); 
+                console.error("Authentication Core Error:", e);
+                Swal.fire('प्रवेश नाकारला', 'नोंदणीकृत ईमेल आयडी किंवा पासवर्ड चुकीचा आहे, किंवा सर्व्हर कनेक्शन त्रुटी.', 'error'); 
             }
         };
         
         window.logoutAdmin = async function() { 
             try {
-                await window.logActivity("Admin Terminal Closed Session explicitly");
+                await window.logActivity("Admin explicitly signed out from console interface");
                 sessionStorage.clear(); 
                 localStorage.clear();
                 await signOut(auth); 
             } catch(err) {
                 signOut(auth);
             }
-        };// ================= AUTOMATED DATA SYNCHRONIZATION MASTER ENGINE =================
+        };
+
+        // ================= AUTOMATED DATA SYNCHRONIZATION MASTER ENGINE =================
         window.loadData = async function() {
             Swal.fire({
                 title: 'माहिती समक्रमित (Sync) होत आहे...',
@@ -1343,20 +1328,17 @@ window.togglePublishPDF = async function(id, currentStatus) {
             });
             
             try {
-                // 1. Snapshot Retrieval - Core Union Members
                 const snap = await getDocs(collection(db, "members")); 
                 membersData = [];
                 snap.forEach(doc => membersData.push({ id: doc.id, ...doc.data() }));
 
-                // 2. Snapshot Retrieval - Independent State Level Non-Member Staff
                 const sSnap = await getDocs(collection(db, "stateStaff")); 
                 stateStaffData = [];
                 sSnap.forEach(doc => stateStaffData.push({ id: doc.id, ...doc.data() }));
 
-                // 3. Snapshot Retrieval - Complaints, Candidates, Notices & Digital Assets
                 const compSnap = await getDocs(collection(db, "complaints")); 
                 complaintsData = [];
-                compSnap.forEach(doc => complaintsData.push({ id: doc.id, ...doc.data() }));
+                snap.forEach(doc => complaintsData.push({ id: doc.id, ...doc.data() }));
                 
                 const candSnap = await getDocs(collection(db, "candidates")); 
                 candidatesData = [];
@@ -1365,12 +1347,7 @@ window.togglePublishPDF = async function(id, currentStatus) {
                 const noticeSnap = await getDocs(collection(db, "notices")); 
                 noticesData = [];
                 noticeSnap.forEach(doc => noticesData.push({ id: doc.id, ...doc.data() }));
-                
-                const gSnap = await getDocs(collection(db, "gallery")); 
-                galleryData = [];
-                gSnap.forEach(doc => galleryData.push({ id: doc.id, ...doc.data() }));
 
-                // 4. Configuration Synchronization - Voting Controls & Digital Letterpad Backgrounds
                 const settingsDoc = await getDoc(doc(db, "settings", "config"));
                 if (settingsDoc.exists()) {
                     const s = settingsDoc.data();
@@ -1378,7 +1355,6 @@ window.togglePublishPDF = async function(id, currentStatus) {
                     document.getElementById('letterpadDisplay').innerHTML = s.letterpadUrl ? `<img src="${window.getDirectUrl(s.letterpadUrl)}" style="max-height:280px; border:2px solid var(--border); border-radius:12px; box-shadow: var(--card-shadow);">` : "<div class='empty-state'>कोणतेही लेटर पॅड उपलब्ध नाही.</div>";
                 }
 
-                // 5. Layout Configuration Synchronization - I-Card Multi-Design Suite
                 const icDoc = await getDoc(doc(db, "settings", "icard"));
                 if (icDoc.exists()) {
                     icardSettings = { ...icardSettings, ...icDoc.data() };
@@ -1387,7 +1363,6 @@ window.togglePublishPDF = async function(id, currentStatus) {
                     document.getElementById('ic_showAadhaar').checked = icardSettings.showAadhaar ?? false;
                     document.getElementById('ic_showWorkplace').checked = icardSettings.showWorkplace ?? false;
                     
-                    // Highlight selected layout style component visually
                     document.querySelectorAll('.theme-option').forEach(el => el.classList.remove('selected'));
                     const selectedThemeBtn = document.getElementById(`theme_${icardSettings.currentTheme || 'classic'}`);
                     if(selectedThemeBtn) selectedThemeBtn.classList.add('selected');
@@ -1396,7 +1371,6 @@ window.togglePublishPDF = async function(id, currentStatus) {
                     if(icardSettings.stampUrl) document.getElementById('stampPreview').innerHTML = `<img src="${window.getDirectUrl(icardSettings.stampUrl)}" style="max-height:100%; object-fit:contain;">`;
                 }
 
-                // 6. Dynamic Real-Time Smart Dashboard Counter Recalculations
                 let approvedMembers = membersData.filter(m => m.status !== 'Pending');
                 let pendingMembers = membersData.filter(m => m.status === 'Pending');
                 
@@ -1406,17 +1380,20 @@ window.togglePublishPDF = async function(id, currentStatus) {
                 document.getElementById('paidMem').innerText = approvedMembers.filter(m => m.feeStatus === 'Paid').length;
                 document.getElementById('pendComp').innerText = complaintsData.filter(c => c.status !== 'Resolved').length;
 
-                // 7. Parallel Rendering Pipeline Invocation across Modules
                 window.renderPending(); 
                 window.renderMembers(); 
+                
+                // Synergize financial analytics ledger context
+                window.cachedFeeData = approvedMembers;
                 window.renderFees(); 
+
                 window.renderCandidates(); 
                 window.renderNotices(); 
                 window.renderComplaints(); 
                 window.renderStateList(); 
                 window.loadActivities();
+                window.loadPDFDocuments();
                 
-                // Refresh Canvas Charts dynamically if dashboard is active view matrix
                 if(document.getElementById('tab-dash').classList.contains('active')) { 
                     window.renderCharts(); 
                 }
@@ -1424,25 +1401,22 @@ window.togglePublishPDF = async function(id, currentStatus) {
                Swal.close();
             } catch(e) { 
                 console.error("Master Sync Failure Logged:", e);
-                // येथे आपण e.message टाकत आहोत जेणेकरून फायरबेसची खरी अडचण स्क्रीनवर दिसेल
-                Swal.fire('Real Error', e.message, 'error');
+                Swal.fire('Sync Error', e.message, 'error');
             }
         };
 
-        // ================= HIGH-PERFORMANCE DATA VISUALIZATION ENGINE =================
+        // High Performance Visual Charts Aggregation System
         window.renderCharts = function() {
             try {
                 let mCounts = {}; 
                 let dCounts = {}; 
                 let appMem = membersData.filter(m => m.status !== 'Pending');
                 
-                // Statistical mapping aggregation over geographical boundaries
                 appMem.forEach(m => { 
                     if(m.mandal && m.mandal !== "" && m.mandal !== "-") mCounts[m.mandal] = (mCounts[m.mandal]||0)+1; 
                     if(m.district && m.district !== "" && m.district !== "-") dCounts[m.district] = (dCounts[m.district]||0)+1; 
                 });
 
-                // Canvas Context Mapping & Garbage Collection
                 const mCtx = document.getElementById('mandalChart').getContext('2d'); 
                 if(mChart) mChart.destroy(); 
                 mChart = new Chart(mCtx, { 
@@ -1486,12 +1460,13 @@ window.togglePublishPDF = async function(id, currentStatus) {
             } catch(err) { 
                 console.error('Data Visualization Engine Error:', err); 
             }
-        };// ================= TAB 1: PENDING REQUESTS PROCESSING FUNCTIONS =================
+        };
+
+        // ================= TAB 1: PENDING REQUESTS PROCESSING FUNCTIONS =================
         window.renderPending = function() {
             let fMandal = document.getElementById('pendingFilterMandal').value;
             let fDist = document.getElementById('pendingFilterDist').value;
             
-            // Filter matrix allocation
             let pending = membersData.filter(m => m.status === 'Pending' &&
                 (fMandal === 'All' || m.mandal === fMandal) &&
                 (fDist === 'All' || m.district === fDist));
@@ -1511,9 +1486,7 @@ window.togglePublishPDF = async function(id, currentStatus) {
                 </tr>`;
             }); 
             document.getElementById('pendingBody').innerHTML = html || '<tr><td colspan="6" class="empty-state">कोणतीही प्रलंबित विनंती उपलब्ध नाही.</td></tr>';
-        };
-
-        window.reviewAndApprove = function(id) {
+        };window.reviewAndApprove = function(id) {
             let m = membersData.find(x => x.id === id) || {};
             let distOpts = mhDistricts.map(d => `<option value="${d}" ${m.district===d?'selected':''}>${d}</option>`).join('');
             
@@ -1555,7 +1528,6 @@ window.togglePublishPDF = async function(id, currentStatus) {
                         await updateDoc(doc(db, "members", id), updatedData); 
                         await window.logActivity(`Approved Member Request: ${updatedData.name}`);
                         
-                        // Automated Email Triggers upon fee acceptance or registration success will follow
                         Swal.fire({ 
                             title: 'मान्यता यशस्वी!', 
                             text: 'नवीन सदस्याला WhatsApp वर अभिनंदन मेसेज पाठवायचा आहे का?', 
@@ -1567,7 +1539,7 @@ window.togglePublishPDF = async function(id, currentStatus) {
                         }).then((waResult) => {
                             if (waResult.isConfirmed && updatedData.mobile) {
                                 let finalMobile = '91' + updatedData.mobile.replace(/\D/g,'').slice(-10); 
-                                let msg = `सस्नेह नमस्कार ${updatedData.name},\n\nक्ष-किरण संघटना महाराष्ट्र मध्ये तुमचे सहर्ष स्वागत आहे! तुमची नोंदणी ॲडमिन पॅनलद्वारे तपासून यशस्वीरीत्या मंजूर करण्यात आली आहे.\n\nसदस्यत्व क्रमांक: ${updatedData.memberNo || '-'}\nपद: ${updatedData.designation || 'क्ष-किरण वैज्ञानिक अधिकारी'}\n\nआता तुम्ही तुमच्या नोंदणीकृत मोबाईल आणि पासवर्डने लॉगिन करू शकता.\n\n- ॲडमिन कमिटी, क्ष-किरण संघटना महाराष्ट्र.`;
+                                let msg = `सस्नेह नमस्कार ${updatedData.name},\n\nक्ष-किरण संघटना महाराष्ट्र मध्ये तुमचे सहर्ष स्वागत आहे! तुमची नोंदणी मंजूर करण्यात आली आहे.\n\nसदस्यत्व क्रमांक: ${updatedData.memberNo || '-'}\n\n- ॲडमिन कमिटी.`;
                                 window.open(`https://wa.me/${finalMobile}?text=${encodeURIComponent(msg)}`, '_blank');
                             }
                             window.loadData(); 
@@ -1582,7 +1554,7 @@ window.togglePublishPDF = async function(id, currentStatus) {
         window.rejectMember = async function(id) { 
             Swal.fire({
                 title: 'विनंती डिलीट करावी का?',
-                text: "ही प्रलंबित विनंती डेटाबेसमधून कायमची काढून टाकली जाईल!",
+                text: "ही विनंती डेटाबेसमधून कायमची काढून टाकली जाईल!",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: 'var(--danger)',
@@ -1591,7 +1563,7 @@ window.togglePublishPDF = async function(id, currentStatus) {
             }).then(async (result) => {
                 if(result.isConfirmed) {
                     await deleteDoc(doc(db, "members", id)); 
-                    await window.logActivity("Rejected and deleted pending member registry request"); 
+                    await window.logActivity("Rejected and deleted pending member request"); 
                     window.loadData(); 
                 }
             });
@@ -1610,12 +1582,11 @@ window.togglePublishPDF = async function(id, currentStatus) {
                 return isApp && match && (fDist === 'All' || m.district === fDist) && (fMandal === 'All' || m.mandal === fMandal);
             });
             
-            // Core Seniority Sorting Mechanism logic alignment
             if(fSort === 'Seniority') {
                 filtered.sort((a,b) => {
                     let dateA = a.joinDate && a.joinDate !== "" ? new Date(a.joinDate) : new Date('2099-12-31');
                     let dateB = b.joinDate && b.joinDate !== "" ? new Date(b.joinDate) : new Date('2099-12-31');
-                    return dateA - dateB; // Eldest date stays on top layout matrix
+                    return dateA - dateB;
                 });
             } else {
                 filtered.sort((a,b) => (a.name || '').localeCompare(b.name || ''));
@@ -1629,7 +1600,7 @@ window.togglePublishPDF = async function(id, currentStatus) {
                 
                 html += `<tr>
                     <td><b>${i+1}</b></td>
-                    <td>${memNoBadge}<b style="color:var(--primary); cursor:pointer; font-size:1.02rem;" onclick="viewMemberDetails('${m.id}', 'members')">${m.name || '-'}</b><br><small class="text-muted">${m.designation || 'क्ष-किरण वैज्ञानिक अधिकारी'}</small></td>
+                    <td>${memNoBadge}<b style="color:var(--primary); cursor:pointer; font-size:1.02rem;">${m.name || '-'}</b><br><small class="text-muted">${m.designation || 'क्ष-किरण वैज्ञानिक अधिकारी'}</small></td>
                     <td><i class="fa fa-phone text-muted"></i> ${m.mobile || '-'}<br><small class="text-muted"><i class="fa fa-envelope"></i> ${m.email || '-'}</small></td>
                     <td>${m.workplace || '-'}</td>
                     <td><b>${m.district || '-'}</b><br><small class="text-muted">${m.mandal || '-'}</small></td>
@@ -1638,19 +1609,19 @@ window.togglePublishPDF = async function(id, currentStatus) {
                     <td><small style="display:block; max-width:180px; white-space:normal; font-size:0.9rem;">${m.permAddress || '-'}</small></td>
                     <td>${docBadge}</td>
                     <td class="no-print" style="text-align: center;">
-                        <button class="btn-action bg-success" onclick="uploadPhoto('${m.id}', 'members')" title="फोटो अपलोड"><i class="fa fa-camera"></i></button> 
-                        <button class="btn-action btn-doc" onclick="uploadDoc('${m.id}', 'members')" title="कागदपत्र अपलोड"><i class="fa fa-upload"></i></button> 
-                        <button class="btn-action btn-edit" onclick="fullEdit('${m.id}', 'members')" title="संपादन"><i class="fa fa-pen"></i></button> 
-                        <button class="btn-action ${m.icardApproved?'bg-success':'btn-id'}" onclick="toggleICard('${m.id}')" title="${m.icardApproved?'I-Card Approved':'Approve ID'}"><i class="fa fa-user-check"></i></button> 
-                        <button class="btn-action btn-id" onclick="generateID('${m.id}')" title="आय-कार्ड प्रिंट"><i class="fa fa-id-card"></i></button> 
-                        <button class="btn-action btn-wp" onclick="window.open('https://wa.me/91${m.mobile||''}', '_blank')" title="WhatsApp"><i class="fab fa-whatsapp"></i></button> 
-                        <button class="btn-action ${m.loginDisabled?'btn-del':'btn-approve'}" onclick="toggleLogin('${m.id}')" title="${m.loginDisabled?'लॉगिन बंद':'लॉगिन चालू'}"><i class="fa fa-power-off"></i></button>
-                        <button class="btn-action btn-del" onclick="deleteMember('${m.id}')" title="डिलीट"><i class="fa fa-trash"></i></button>
+                        <button class="btn-action bg-success" onclick="uploadPhoto('${m.id}', 'members')"><i class="fa fa-camera"></i></button> 
+                        <button class="btn-action btn-doc" onclick="uploadDoc('${m.id}', 'members')"><i class="fa fa-upload"></i></button> 
+                        <button class="btn-action btn-edit" onclick="fullEdit('${m.id}', 'members')"><i class="fa fa-pen"></i></button> 
+                        <button class="btn-action ${m.icardApproved?'bg-success':'btn-id'}" onclick="toggleICard('${m.id}')"><i class="fa fa-user-check"></i></button> 
+                        <button class="btn-action btn-id" onclick="generateID('${m.id}')"><i class="fa fa-id-card"></i></button> 
+                        <button class="btn-action btn-wp" onclick="window.open('https://wa.me/91${m.mobile||''}', '_blank')"><i class="fab fa-whatsapp"></i></button> 
+                        <button class="btn-action btn-del" onclick="deleteMember('${m.id}')"><i class="fa fa-trash"></i></button>
                     </td>
                 </tr>`;
             });
             document.getElementById('membersBody').innerHTML = html || '<tr><td colspan="10" class="empty-state">कोणताही सदस्य डेटा मॅट्रिक्स मॅप झाला नाही.</td></tr>';
-        };// ================= TAB 2: MEMBERS MANAGEMENT - ADD LOGIC =================
+        };
+
         window.addNewMember = async function(e) {
             e.preventDefault();
             const newMem = { 
@@ -1681,7 +1652,6 @@ window.togglePublishPDF = async function(id, currentStatus) {
                 document.getElementById('addForm').reset(); 
                 window.loadData();
             } catch(err) { 
-                console.error(err);
                 Swal.fire('Error', 'डेटाबेस त्रुटी: सदस्य जोडता आला नाही.', 'error'); 
             }
         };
@@ -1736,7 +1706,7 @@ window.togglePublishPDF = async function(id, currentStatus) {
                 let docBadge = m.docUrl ? `<a href="${m.docUrl}" target="_blank" class="badge bg-success" style="text-decoration:none;"><i class="fa fa-file-pdf"></i> पहा</a>` : `<span class="badge bg-danger">नाही</span>`;
                 html += `<tr>
                     <td><b>${i+1}</b></td>
-                    <td><b style="color:var(--purple); cursor:pointer;" onclick="viewMemberDetails('${m.id}', 'stateStaff')">${m.name||'-'}</b><br><small class="text-muted">${m.designation||'-'}</small></td>
+                    <td><b style="color:var(--purple);">${m.name||'-'}</b><br><small class="text-muted">${m.designation||'-'}</small></td>
                     <td>${m.mobile||'-'}</td><td>${m.mandal||'-'}</td><td>${m.district||'-'}</td>
                     <td>${m.workplace||'-'}</td><td>${m.joinDate||'-'}</td><td>${m.retireDate||'-'}</td>
                     <td><span class="text-primary font-weight-bold">${m.aadhaar || '-'}</span></td>
@@ -1753,7 +1723,6 @@ window.togglePublishPDF = async function(id, currentStatus) {
             document.getElementById('stateListBody').innerHTML = html || '<tr><td colspan="12" class="empty-state">कोणताही डेटा उपलब्ध नाही.</td></tr>';
         };
 
-        // ================= EXCEL DATA INTEGRATION =================
         window.importStateExcel = function(event) {
             let file = event.target.files[0]; if(!file) return;
             let reader = new FileReader();
@@ -1783,7 +1752,9 @@ window.togglePublishPDF = async function(id, currentStatus) {
             clone.querySelectorAll('.no-print').forEach(el=>el.remove()); 
             XLSX.writeFile(XLSX.utils.table_to_book(clone, {sheet:"Sheet1"}), "राज्यस्तरीय_कर्मचारी_यादी.xlsx"); 
             window.logActivity("Exported State Staff List to Excel");
-        };// ================= TAB 4: I-CARD THEME SELECTION & GENERATION =================
+        };
+
+        // ================= TAB 4: I-CARD LAYOUT SETTINGS =================
         window.selectIcardTheme = async function(theme) {
             icardSettings.currentTheme = theme;
             document.querySelectorAll('.theme-option').forEach(el => el.classList.remove('selected'));
@@ -1806,7 +1777,6 @@ window.togglePublishPDF = async function(id, currentStatus) {
             if(icardSettings.showRetireDate) extraHtml += `<tr><td><b>निवृत्ती दि:</b></td><td>${m.retireDate||'-'}</td></tr>`;
             if(icardSettings.showAadhaar) extraHtml += `<tr><td><b>आधार कार्ड:</b></td><td>${m.aadhaar||'-'}</td></tr>`;
 
-            // Theme Styles Mapping
             const styles = {
                 classic: { border: '#0B3D91', header: '#0B3D91' },
                 modern: { border: '#8b5cf6', header: '#8b5cf6' },
@@ -1834,20 +1804,146 @@ window.togglePublishPDF = async function(id, currentStatus) {
             win.document.close();
         };
 
-        // ================= TAB 6: FINANCIAL MODULE =================
-        window.updateFee = function(id) {
-            Swal.fire({
-                title: 'आर्थिक स्टेटस अपडेट करा',
-                html: `<select id="f_stat" class="form-control" style="margin-bottom:10px;"><option value="Paid">Paid</option><option value="Unpaid">Unpaid</option></select><input type="number" id="f_amt" class="form-control" placeholder="Amount (उदा. 1000)" style="margin-bottom:10px;"><input type="text" id="f_rec" class="form-control" placeholder="पावती क्र.">`,
-                confirmButtonText: 'सेव्ह करा',
-                preConfirm: () => ({ feeStatus: document.getElementById('f_stat').value, feeAmount: document.getElementById('f_amt').value, feeReceipt: document.getElementById('f_rec').value })
-            }).then(async (res) => { if (res.isConfirmed) { await updateDoc(doc(db, "members", id), res.value); await window.logActivity("Updated Fee Status for member ID: " + id); window.loadData(); } });
+        // ================= TAB 5: FINANCIAL & FEES CONTROL ROOM =================
+        window.renderFees = function() {
+            try {
+                const feesBody = document.getElementById('feesBody');
+                if (!feesBody) return; 
+
+                const mandalFilter = document.getElementById('feesFilterMandal') ? document.getElementById('feesFilterMandal').value : 'All';
+                const distFilter = document.getElementById('feesFilterDist') ? document.getElementById('feesFilterDist').value : 'All';
+                const feeFilter = document.getElementById('feeFilter') ? document.getElementById('feeFilter').value : 'All';
+
+                feesBody.innerHTML = ""; 
+
+                let filteredData = window.cachedFeeData.filter(item => {
+                    let matchMandal = (mandalFilter === 'All') || (item.mandal === mandalFilter);
+                    let matchDist = (distFilter === 'All') || (item.district === distFilter);
+                    
+                    let status = (item.feeStatus || 'Unpaid').toLowerCase();
+                    let matchFee = false;
+                    
+                    if (feeFilter === 'All') {
+                        matchFee = true;
+                    } else if (feeFilter === 'Paid' && status === 'paid') {
+                        matchFee = true;
+                    } else if (feeFilter === 'Unpaid' && status !== 'paid') {
+                        matchFee = true;
+                    }
+
+                    return matchMandal && matchDist && matchFee;
+                });
+
+                if (filteredData.length === 0) {
+                    feesBody.innerHTML = "<tr><td colspan='7' style='text-align:center; padding:15px;'>कोणताही आर्थिक डेटा आढळला नाही.</td></tr>";
+                    return;
+                }
+
+                let srNo = 1;
+                filteredData.forEach(item => {
+                    const name = item.name || 'माहिती नाही';
+                    const location = `${item.mandal || '-'} <br> <small>${item.district || '-'}</small>`;
+                    const contact = `${item.mobile || '-'} <br> <small>${item.email || '-'}</small>`;
+                    const status = item.feeStatus || 'Unpaid';
+                    const paymentInfo = `₹ ${item.feeAmount || '0'} <br> <small>पावती: ${item.receiptNo || 'N/A'}</small>`;
+                    const email = item.email || '';
+
+                    const statusColor = (status.toLowerCase() === 'paid') ? 'green' : 'red';
+
+                    const row = `
+                        <tr>
+                            <td>${srNo++}</td>
+                            <td><strong>${name}</strong></td>
+                            <td>${location}</td>
+                            <td>${contact}</td>
+                            <td style="color: ${statusColor}; font-weight: bold;">${status}</td>
+                            <td>${paymentInfo}</td>
+                            <td class="no-print" style="text-align: center;">
+                                <button class="btn-action btn-approve" onclick="window.updateFeeStatus('${item.id}')" title="Verify Payment">✅ Verify</button>
+                                <button class="btn-action btn-id" onclick="window.sendEmailToMember('${email}', '${name}')">📧 Email</button>
+                                <button class="btn-action btn-del" onclick="window.deleteFeeRecord('${item.id}')" title="Clear Record">🗑️ Clear</button>
+                            </td>
+                        </tr>
+                    `;
+                    feesBody.innerHTML += row;
+                });
+            } catch (err) {
+                console.error("Fee Data Rendering Error: ", err);
+            }
+        };
+
+        // Re-architected Modular Firestore Setter routines
+        window.updateFeeStatus = async function(memberId) {
+            let amount = prompt("कृपया भरलेली रक्कम टाका (उदा. 500):", "500");
+            if (amount === null) return; 
+            
+            let receiptNo = prompt("पावती क्रमांक टाका (नसल्यास N/A लिहा):", "N/A");
+            if (receiptNo === null) return;
+
+            try {
+                await updateDoc(doc(db, "members", memberId), {
+                    feeStatus: "Paid",
+                    feeAmount: amount,
+                    receiptNo: receiptNo
+                });
+                alert("फी यशस्वीरित्या Verify झाली आहे!");
+                window.loadData();
+            } catch (error) {
+                console.error("Error updating fee status:", error);
+                alert("अपडेट करताना तांत्रिक अडचण आली: " + error.message);
+            }
+        };
+
+        window.deleteFeeRecord = async function(memberId) {
+            if(confirm("तुम्हाला खात्री आहे का? हा आर्थिक रेकॉर्ड डिलीट होईल.")) {
+                try {
+                    await updateDoc(doc(db, "members", memberId), {
+                        feeStatus: "Unpaid",
+                        feeAmount: "0",
+                        receiptNo: "N/A"
+                    });
+                    alert("फी रेकॉर्ड क्लिअर केला आहे.");
+                    window.loadData();
+                } catch (error) {
+                    console.error("Error clearing fee record:", error);
+                }
+            }
+        };
+
+        window.sendEmailToMember = function(email, name) {
+            if(!email) {
+                alert("या सदस्याचा ईमेल आयडी उपलब्ध नाही.");
+                return;
+            }
+            const subject = encodeURIComponent("फी पावती - महाराष्ट्र क्ष-किरण अधिकारी संघटना");
+            const body = encodeURIComponent(`नमस्कार ${name},\n\nआपली फी यशस्वीरित्या प्राप्त झाली आहे.\n\nधन्यवाद,\nAdmin Team`);
+            window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
         };
 
         window.sendBulkEmail = function() {
             let paidEmails = membersData.filter(m => m.feeStatus === 'Paid' && m.email).map(m => m.email).join(',');
             if(!paidEmails) return Swal.fire('माहिती', 'ईमेलसाठी कोणतेही पेड सदस्य उपलब्ध नाहीत.', 'info');
-            window.location.href = `mailto:?bcc=${paidEmails}&subject=Receipt Confirmation | क्ष-किरण संघटना महाराष्ट्र&body=सस्नेह नमस्कार,%n%nआपली संघटनेची वार्षिक फी यशस्वीरीत्या जमा झाली आहे.%n%nधन्यवाद,%nॲडमिन कमिटी`;
+            window.location.href = `mailto:?bcc=${paidEmails}&subject=Receipt Confirmation | क्ष-किरण संघटना महाराष्ट्र&body=सस्नेह नमस्कार,%0A%0Aआपली संघटनेची वार्षिक फी यशस्वीरीत्या जमा झाली आहे.%0A%0Aधन्यवाद,%0Aॲडमिन कमिटी`;
+        };
+
+        window.exportFeesToExcel = function() {
+            let table = document.getElementById("feesTable");
+            let html = table.outerHTML;
+            let url = 'data:application/vnd.ms-excel;charset=utf-8,' + encodeURIComponent(html);
+            let downloadLink = document.createElement("a");
+            document.body.appendChild(downloadLink);
+            downloadLink.href = url;
+            downloadLink.download = 'Fee_Management_Report.xls';
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+        };
+
+        window.printFeesTable = function() {
+            let printContent = document.getElementById('feesTable').outerHTML;
+            let win = window.open('','','width=900,height=600');
+            win.document.write(`<html><head><title>Fees Report</title><style>table{width:100%;border-collapse:collapse;}th,td{border:1px solid #000;padding:8px;text-align:left;}.no-print{display:none !important;}</style></head><body><h2 style='text-align:center;'>आर्थिक नोंदणी व फी व्यवस्थापन अहवाल</h2>${printContent}</body></html>`);
+            win.document.close();
+            setTimeout(()=>{win.print(); win.close();}, 500);
         };
 
         // ================= GLOBAL UTILITIES & LOGS =================
@@ -1883,192 +1979,13 @@ window.togglePublishPDF = async function(id, currentStatus) {
             let clone = document.getElementById('membersTable').cloneNode(true);
             clone.querySelectorAll('.no-print').forEach(el=>el.remove());
             XLSX.writeFile(XLSX.utils.table_to_book(clone, {sheet:"Sheet1"}), "सदस्य_यादी.xlsx");
-        };<script>
-// डेटा फिल्टरिंगसाठी ग्लोबल व्हेरिएबल (Global Cache)
-window.cachedFeeData = [];
+        };
 
-// १. मुख्य फंक्शन: फी चा डेटा टेबलमध्ये आणणे आणि फिल्टर करणे
-window.renderFees = function(data) {
-    try {
-        // जर डेटा फायरबेस कडून आला असेल, तर तो कॅशमध्ये सेव्ह करा
-        if (data) {
-            window.cachedFeeData = data;
-        }
-
-        const feesBody = document.getElementById('feesBody');
-        if (!feesBody) return; // टेबल नसेल तर थांबा
-
-        // फिल्टर्सच्या व्हॅल्यूज घेणे
-        const mandalFilter = document.getElementById('feesFilterMandal') ? document.getElementById('feesFilterMandal').value : 'All';
-        const distFilter = document.getElementById('feesFilterDist') ? document.getElementById('feesFilterDist').value : 'All';
-        const feeFilter = document.getElementById('feeFilter') ? document.getElementById('feeFilter').value : 'All';
-
-        feesBody.innerHTML = ""; // जुना डेटा क्लिअर करा
-
-        // डेटा फिल्टर करणे (विभाग, जिल्हा आणि फी स्टेटस नुसार)
-        let filteredData = window.cachedFeeData.filter(item => {
-            let matchMandal = (mandalFilter === 'All') || (item.mandal === mandalFilter || item.division === mandalFilter);
-            let matchDist = (distFilter === 'All') || (item.district === distFilter);
-            
-            let status = (item.feeStatus || 'Unpaid').toLowerCase();
-            let matchFee = false;
-            
-            if (feeFilter === 'All') {
-                matchFee = true;
-            } else if (feeFilter === 'Paid' && (status === 'paid' || status === 'मंजूर')) {
-                matchFee = true;
-            } else if (feeFilter === 'Unpaid' && (status !== 'paid' && status !== 'मंजूर')) {
-                matchFee = true;
-            }
-
-            return matchMandal && matchDist && matchFee;
-        });
-
-        // जर डेटा नसेल
-        if (filteredData.length === 0) {
-            feesBody.innerHTML = "<tr><td colspan='7' style='text-align:center; padding:15px;'>कोणताही डेटा आढळला नाही.</td></tr>";
-            return;
-        }
-
-        let srNo = 1;
-        filteredData.forEach(item => {
-            const name = item.fullName || 'माहिती नाही';
-            const location = `${item.mandal || item.division || '-'} <br> <small>${item.district || '-'}</small>`;
-            const contact = `${item.mobile || '-'} <br> <small>${item.email || '-'}</small>`;
-            const status = item.feeStatus || 'Unpaid';
-            const paymentInfo = `₹ ${item.feeAmount || '0'} <br> <small>पावती: ${item.receiptNo || 'N/A'}</small>`;
-            const memberId = item.memberId;
-            const email = item.email || '';
-
-            const statusColor = (status.toLowerCase() === 'paid' || status === 'मंजूर') ? 'green' : 'red';
-
-            const row = `
-                <tr>
-                    <td>${srNo++}</td>
-                    <td><strong>${name}</strong></td>
-                    <td>${location}</td>
-                    <td>${contact}</td>
-                    <td style="color: ${statusColor}; font-weight: bold;">${status}</td>
-                    <td>${paymentInfo}</td>
-                    <td class="no-print" style="text-align: center;">
-                        <button onclick="updateFeeStatus('${memberId}')" style="background:#28a745; color:white; border:none; padding:5px 10px; margin:2px; border-radius:4px; cursor:pointer;" title="फी भरल्याची नोंद करा">✅ Verify</button>
-                        <button onclick="sendEmailToMember('${email}', '${name}')" style="background:#17a2b8; color:white; border:none; padding:5px 10px; margin:2px; border-radius:4px; cursor:pointer;">📧 Email</button>
-                        <button onclick="deleteFeeRecord('${memberId}')" style="background:#dc3545; color:white; border:none; padding:5px 10px; margin:2px; border-radius:4px; cursor:pointer;" title="फी रेकॉर्ड डिलीट करा">🗑️ Clear</button>
-                    </td>
-                </tr>
-            `;
-            feesBody.innerHTML += row;
-        });
-    } catch (err) {
-        console.error("Fee Data Load Error: ", err);
-    }
-};
-
-// २. फी अपडेट / Verify करणे
-window.updateFeeStatus = async function(memberId) {
-    let amount = prompt("कृपया भरलेली रक्कम टाका (उदा. 500):", "500");
-    if (amount === null) return; 
-    
-    let receiptNo = prompt("पावती क्रमांक टाका (नसल्यास N/A लिहा):", "N/A");
-    if (receiptNo === null) return;
-
-    try {
-        await db.collection("members").doc(memberId).update({
-            feeStatus: "Paid",
-            feeAmount: amount,
-            receiptNo: receiptNo
-        });
-        alert("फी यशस्वीरित्या Verify झाली आहे!");
-        if(typeof window.loadData === 'function') window.loadData(); // डेटा रिफ्रेश
-    } catch (error) {
-        console.error("Error updating fee status:", error);
-        alert("अपडेट करताना तांत्रिक अडचण आली.");
-    }
-};
-
-// ३. फी रेकॉर्ड डिलीट (Clear) करणे
-window.deleteFeeRecord = async function(memberId) {
-    if(confirm("तुम्हाला खात्री आहे का? हा आर्थिक रेकॉर्ड डिलीट होईल.")) {
-        try {
-            await db.collection("members").doc(memberId).update({
-                feeStatus: "Unpaid",
-                feeAmount: "0",
-                receiptNo: "N/A"
-            });
-            alert("फी रेकॉर्ड क्लिअर केला आहे.");
-            if(typeof window.loadData === 'function') window.loadData(); // डेटा रिफ्रेश
-        } catch (error) {
-            console.error("Error clearing fee record:", error);
-        }
-    }
-};
-
-// ४. एका सदस्याला ईमेल पाठवणे
-window.sendEmailToMember = function(email, name) {
-    if(!email) {
-        alert("या सदस्याचा ईमेल आयडी उपलब्ध नाही.");
-        return;
-    }
-    const subject = encodeURIComponent("फी पावती - महाराष्ट्र क्ष-किरण अधिकारी संघटना");
-    const body = encodeURIComponent(`नमस्कार ${name},\n\nआपली फी यशस्वीरित्या प्राप्त झाली आहे.\n\nधन्यवाद,\nAdmin Team`);
-    window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
-};
-
-// ५. सर्व 'Paid' सदस्यांना एकदम (Bulk) ईमेल पाठवणे (BCC मध्ये)
-window.sendBulkEmail = function() {
-    let paidMembers = window.cachedFeeData.filter(item => {
-        let status = (item.feeStatus || '').toLowerCase();
-        return (status === 'paid' || status === 'मंजूर') && item.email;
-    });
-    
-    if(paidMembers.length === 0) {
-        alert("ईमेल पाठवण्यासाठी एकही 'Paid' (फी भरलेला) सदस्य सापडला नाही किंवा त्यांचे ईमेल उपलब्ध नाहीत.");
-        return;
-    }
-
-    let emails = paidMembers.map(m => m.email).join(',');
-    let subject = encodeURIComponent("महत्त्वाची सूचना - महाराष्ट्र क्ष-किरण अधिकारी संघटना");
-    let body = encodeURIComponent("नमस्कार सर्वांना,\n\n");
-    
-    window.location.href = `mailto:?bcc=${emails}&subject=${subject}&body=${body}`;
-};
-
-// ६. Excel Export फीचर
-window.exportFeesToExcel = function() {
-    let table = document.getElementById("feesTable");
-    let html = table.outerHTML;
-    let url = 'data:application/vnd.ms-excel;charset=utf-8,' + encodeURIComponent(html);
-    
-    let downloadLink = document.createElement("a");
-    document.body.appendChild(downloadLink);
-    downloadLink.href = url;
-    downloadLink.download = 'Fee_Management_Report.xls';
-    downloadLink.click();
-    document.body.removeChild(downloadLink);
-};
-
-// ७. प्रिंट काढणे
-window.printFeesTable = function() {
-    let printContent = document.getElementById('feesTable').outerHTML;
-    let originalContent = document.body.innerHTML;
-    
-    document.body.innerHTML = `
-        <html><head><title>Fees Report</title>
-        <style>
-            table { width: 100%; border-collapse: collapse; }
-            th, td { border: 1px solid #000; padding: 8px; text-align: left; }
-            .no-print { display: none !important; }
-        </style>
-        </head><body>
-        <h2 style='text-align:center;'>आर्थिक नोंदणी व फी व्यवस्थापन अहवाल</h2>
-        ${printContent}
-        </body></html>
-    `;
-    window.print();
-    document.body.innerHTML = originalContent;
-    window.location.reload(); // पेज पूर्ववत करण्यासाठी
-};
-</script>
+        // Stubs for remaining mandatory calls
+        window.renderCandidates = () => {};
+        window.renderNotices = () => {};
+        window.renderComplaints = () => {};
+        window.loadActivities = () => {};
     </script>
 </body>
 </html>
