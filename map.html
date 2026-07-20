@@ -29,127 +29,109 @@
         }).addTo(map);
 
         // २. आरोग्य मंडळांचे रंग 
-        var circleColors = {
-            "Thane": "#3b82f6",     
-            "Nashik": "#10b981",    
-            "Pune": "#ef4444",      
-            "Kolhapur": "#f59e0b",  
-            "CSN": "#8b5cf6",       
-            "Latur": "#ec4899",     
-            "Akola": "#0ea5e9",     
-            "Nagpur": "#d946ef"     
+        var mandalColors = {
+            "ठाणे मंडळ": "#3b82f6",     
+            "नाशिक मंडळ": "#10b981",    
+            "पुणे मंडळ": "#ef4444",      
+            "कोल्हापूर मंडळ": "#f59e0b",  
+            "छत्रपती संभाजीनगर मंडळ": "#8b5cf6",       
+            "लातूर मंडळ": "#ec4899",     
+            "अकोला मंडळ": "#0ea5e9",     
+            "नागपूर मंडळ": "#d946ef"     
         };
 
-        // डॅशबोर्डकडून येणारा डेटा साठवण्यासाठी
+        // ३. ३६ जिल्ह्यांचे अचूक GPS Coordinates आणि त्यांचे मंडळ
+        const districtsData = [
+            {name: "पुणे", lat: 18.5204, lng: 73.8567, mandal: "पुणे मंडळ"},
+            {name: "सातारा", lat: 17.6805, lng: 74.0183, mandal: "पुणे मंडळ"},
+            {name: "सोलापूर", lat: 17.6599, lng: 75.9064, mandal: "पुणे मंडळ"},
+            {name: "ठाणे", lat: 19.2183, lng: 72.9781, mandal: "ठाणे मंडळ"},
+            {name: "पालघर", lat: 19.6967, lng: 72.7654, mandal: "ठाणे मंडळ"},
+            {name: "रायगड", lat: 18.5158, lng: 73.1822, mandal: "ठाणे मंडळ"},
+            {name: "मुंबई शहर", lat: 18.9750, lng: 72.8258, mandal: "ठाणे मंडळ"},
+            {name: "मुंबई उपनगर", lat: 19.1136, lng: 72.8697, mandal: "ठाणे मंडळ"},
+            {name: "नाशिक", lat: 19.9975, lng: 73.7898, mandal: "नाशिक मंडळ"},
+            {name: "अहमदनगर", lat: 19.0952, lng: 74.7496, mandal: "नाशिक मंडळ"},
+            {name: "धुळे", lat: 20.9042, lng: 74.7749, mandal: "नाशिक मंडळ"},
+            {name: "जळगाव", lat: 21.0077, lng: 75.5626, mandal: "नाशिक मंडळ"},
+            {name: "नंदुरबार", lat: 21.3743, lng: 74.2468, mandal: "नाशिक मंडळ"},
+            {name: "कोल्हापूर", lat: 16.7050, lng: 74.2433, mandal: "कोल्हापूर मंडळ"},
+            {name: "सांगली", lat: 16.8524, lng: 74.5815, mandal: "कोल्हापूर मंडळ"},
+            {name: "रत्नागिरी", lat: 16.9902, lng: 73.3120, mandal: "कोल्हापूर मंडळ"},
+            {name: "सिंधुदुर्ग", lat: 16.1497, lng: 73.6933, mandal: "कोल्हापूर मंडळ"},
+            {name: "छत्रपती संभाजीनगर", lat: 19.8762, lng: 75.3433, mandal: "छत्रपती संभाजीनगर मंडळ"},
+            {name: "जालना", lat: 19.8410, lng: 75.8860, mandal: "छत्रपती संभाजीनगर मंडळ"},
+            {name: "परभणी", lat: 19.2620, lng: 76.7767, mandal: "छत्रपती संभाजीनगर मंडळ"},
+            {name: "हिंगोली", lat: 19.7172, lng: 77.1486, mandal: "छत्रपती संभाजीनगर मंडळ"},
+            {name: "लातूर", lat: 18.4088, lng: 76.5604, mandal: "लातूर मंडळ"},
+            {name: "धाराशिव", lat: 18.1760, lng: 76.0378, mandal: "लातूर मंडळ"},
+            {name: "बीड", lat: 18.9890, lng: 75.7591, mandal: "लातूर मंडळ"},
+            {name: "नांदेड", lat: 19.1383, lng: 77.3210, mandal: "लातूर मंडळ"},
+            {name: "अकोला", lat: 20.7002, lng: 77.0083, mandal: "अकोला मंडळ"},
+            {name: "अमरावती", lat: 20.9320, lng: 77.7523, mandal: "अकोला मंडळ"},
+            {name: "बुलढाणा", lat: 20.5310, lng: 76.1856, mandal: "अकोला मंडळ"},
+            {name: "वाशिम", lat: 20.1118, lng: 77.1367, mandal: "अकोला मंडळ"},
+            {name: "यवतमाळ", lat: 20.3888, lng: 78.1204, mandal: "अकोला मंडळ"},
+            {name: "नागपूर", lat: 21.1458, lng: 79.0882, mandal: "नागपूर मंडळ"},
+            {name: "वर्धा", lat: 20.7453, lng: 78.6022, mandal: "नागपूर मंडळ"},
+            {name: "भंडारा", lat: 21.1667, lng: 79.6500, mandal: "नागपूर मंडळ"},
+            {name: "गोंदिया", lat: 21.4593, lng: 80.1989, mandal: "नागपूर मंडळ"},
+            {name: "चंद्रपूर", lat: 19.9615, lng: 79.2961, mandal: "नागपूर मंडळ"},
+            {name: "गडचिरोली", lat: 20.1827, lng: 79.9961, mandal: "नागपूर मंडळ"}
+        ];
+
         let districtMemberCounts = {};
-        var geojsonLayer;
+        let markersLayer = L.layerGroup().addTo(map);
 
-        // ३. महाराष्ट्रातील सर्व ३६ जिल्ह्यांचे अचूक GeoJSON Coordinates (Self-contained)
-        const mhGeoJSON = {
-            "type": "FeatureCollection",
-            "features": [
-                {"type":"Feature","properties":{"district":"पुणे"},"geometry":{"type":"Polygon","coordinates":[[[73.8,19.2],[74.5,19.2],[75.1,18.7],[74.8,18.0],[73.8,17.9],[73.4,18.5],[73.8,19.2]]]}},
-                {"type":"Feature","properties":{"district":"सातारा"},"geometry":{"type":"Polygon","coordinates":[[[73.6,18.1],[74.4,18.1],[74.7,17.5],[74.1,17.1],[73.6,17.4],[73.6,18.1]]]}},
-                {"type":"Feature","properties":{"district":"सोलापूर"},"geometry":{"type":"Polygon","coordinates":[[[74.8,18.3],[75.6,18.4],[76.2,17.8],[75.7,17.2],[74.5,17.5],[74.8,18.3]]]}},
-                {"type":"Feature","properties":{"district":"ठाणे"},"geometry":{"type":"Polygon","coordinates":[[[72.8,19.5],[73.3,19.7],[73.7,19.2],[73.2,19.0],[72.8,19.5]]]}},
-                {"type":"Feature","properties":{"district":"पालघर"},"geometry":{"type":"Polygon","coordinates":[[[72.6,19.6],[72.6,20.2],[73.2,20.1],[73.3,19.6],[72.6,19.6]]]}},
-                {"type":"Feature","properties":{"district":"रायगड"},"geometry":{"type":"Polygon","coordinates":[[[72.8,18.9],[73.5,18.8],[73.4,17.9],[72.8,18.0],[72.8,18.9]]]}},
-                {"type":"Feature","properties":{"district":"मुंबई शहर"},"geometry":{"type":"Polygon","coordinates":[[[72.8,18.9],[72.9,18.9],[72.9,19.0],[72.8,19.0],[72.8,18.9]]]}},
-                {"type":"Feature","properties":{"district":"मुंबई उपनगर"},"geometry":{"type":"Polygon","coordinates":[[[72.8,19.0],[72.9,19.0],[72.9,19.3],[72.7,19.3],[72.8,19.0]]]}},
-                {"type":"Feature","properties":{"district":"नाशिक"},"geometry":{"type":"Polygon","coordinates":[[[73.3,19.7],[73.5,20.8],[74.5,20.8],[74.8,20.0],[73.3,19.7]]]}},
-                {"type":"Feature","properties":{"district":"अहमदनगर"},"geometry":{"type":"Polygon","coordinates":[[[73.9,19.2],[74.3,19.9],[75.4,19.5],[74.6,18.4],[73.9,19.2]]]}},
-                {"type":"Feature","properties":{"district":"धुळे"},"geometry":{"type":"Polygon","coordinates":[[[73.8,20.8],[75.0,21.4],[74.9,20.8],[73.8,20.8]]]}},
-                {"type":"Feature","properties":{"district":"जळगाव"},"geometry":{"type":"Polygon","coordinates":[[[74.9,20.7],[76.4,21.2],[76.0,20.3],[74.9,20.7]]]}},
-                {"type":"Feature","properties":{"district":"नंदुरबार"},"geometry":{"type":"Polygon","coordinates":[[[73.6,21.3],[74.5,21.8],[74.2,21.2],[73.6,21.3]]]}},
-                {"type":"Feature","properties":{"district":"कोल्हापूर"},"geometry":{"type":"Polygon","coordinates":[[[73.7,16.1],[74.6,16.9],[74.4,16.0],[73.7,16.1]]]}},
-                {"type":"Feature","properties":{"district":"सांगली"},"geometry":{"type":"Polygon","coordinates":[[[74.0,16.8],[75.4,17.2],[75.0,16.7],[74.0,16.8]]]}},
-                {"type":"Feature","properties":{"district":"रत्नागिरी"},"geometry":{"type":"Polygon","coordinates":[[[73.1,16.5],[73.7,17.8],[73.6,16.6],[73.1,16.5]]]}},
-                {"type":"Feature","properties":{"district":"सिंधुदुर्ग"},"geometry":{"type":"Polygon","coordinates":[[[73.3,15.6],[74.0,16.3],[74.2,15.7],[73.3,15.6]]]}},
-                {"type":"Feature","properties":{"district":"छत्रपती संभाजीनगर"},"geometry":{"type":"Polygon","coordinates":[[[74.9,19.5],[75.9,20.5],[76.0,19.4],[74.9,19.5]]]}},
-                {"type":"Feature","properties":{"district":"जालना"},"geometry":{"type":"Polygon","coordinates":[[[75.6,19.5],[76.4,20.2],[76.2,19.3],[75.6,19.5]]]}},
-                {"type":"Feature","properties":{"district":"परभणी"},"geometry":{"type":"Polygon","coordinates":[[[76.2,18.9],[77.2,19.5],[77.0,18.9],[76.2,18.9]]]}},
-                {"type":"Feature","properties":{"district":"हिंगोली"},"geometry":{"type":"Polygon","coordinates":[[[76.7,19.4],[77.5,19.8],[77.2,19.3],[76.7,19.4]]]}},
-                {"type":"Feature","properties":{"district":"लातूर"},"geometry":{"type":"Polygon","coordinates":[[[76.1,17.9],[77.1,18.5],[76.9,17.7],[76.1,17.9]]]}},
-                {"type":"Feature","properties":{"district":"बीड"},"geometry":{"type":"Polygon","coordinates":[[[74.9,18.5],[76.5,19.1],[76.3,18.4],[74.9,18.5]]]}},
-                {"type":"Feature","properties":{"district":"नांदेड"},"geometry":{"type":"Polygon","coordinates":[[[77.0,18.3],[78.2,19.2],[77.8,18.1],[77.0,18.3]]]}},
-                {"type":"Feature","properties":{"district":"धाराशिव"},"geometry":{"type":"Polygon","coordinates":[[[75.3,17.6],[76.7,18.3],[76.5,17.6],[75.3,17.6]]]}},
-                {"type":"Feature","properties":{"district":"अकोला"},"geometry":{"type":"Polygon","coordinates":[[[76.7,20.3],[77.3,21.2],[77.3,20.3],[76.7,20.3]]]}},
-                {"type":"Feature","properties":{"district":"अमरावती"},"geometry":{"type":"Polygon","coordinates":[[[76.6,21.2],[78.3,21.5],[78.1,20.5],[76.6,21.2]]]}},
-                {"type":"Feature","properties":{"district":"बुलढाणा"},"geometry":{"type":"Polygon","coordinates":[[[75.9,19.8],[76.8,21.1],[76.7,19.9],[75.9,19.8]]]}},
-                {"type":"Feature","properties":{"district":"वाशिम"},"geometry":{"type":"Polygon","coordinates":[[[76.7,19.9],[77.7,20.4],[77.6,19.7],[76.7,19.9]]]}},
-                {"type":"Feature","properties":{"district":"यवतमाळ"},"geometry":{"type":"Polygon","coordinates":[[[77.3,19.5],[79.1,20.2],[78.9,19.4],[77.3,19.5]]]}},
-                {"type":"Feature","properties":{"district":"नागपूर"},"geometry":{"type":"Polygon","coordinates":[[[78.4,21.0],[79.6,21.6],[79.5,20.6],[78.4,21.0]]]}},
-                {"type":"Feature","properties":{"district":"वर्धा"},"geometry":{"type":"Polygon","coordinates":[[[78.1,20.4],[79.0,20.8],[78.8,20.0],[78.1,20.4]]]}},
-                {"type":"Feature","properties":{"district":"भंडारा"},"geometry":{"type":"Polygon","coordinates":[[[79.5,21.0],[80.1,21.5],[80.0,20.9],[79.5,21.0]]]}},
-                {"type":"Feature","properties":{"district":"गोंदिया"},"geometry":{"type":"Polygon","coordinates":[[[80.0,21.0],[80.7,21.4],[80.5,20.7],[80.0,21.0]]]}},
-                {"type":"Feature","properties":{"district":"चंद्रपूर"},"geometry":{"type":"Polygon","coordinates":[[[78.8,19.5],[79.9,20.6],[80.0,19.6],[78.8,19.5]]]}},
-                {"type":"Feature","properties":{"district":"गडचिरोली"},"geometry":{"type":"Polygon","coordinates":[[[79.9,18.7],[80.9,20.5],[80.5,18.8],[79.9,18.7]]]}}
-            ]
-        };
+        // ४. नकाशावर जिल्ह्यांचे मार्कर (वर्तुळे) दाखवणे
+        function renderMapMarkers() {
+            markersLayer.clearLayers();
 
-        // ४. जिल्ह्यांनुसार रंग जुळवणे (मंडळनिहाय)
-        function getStyle(feature) {
-            let district = feature.properties.district || "";
-            let color = "#cbd5e1"; 
+            districtsData.forEach(d => {
+                let count = districtMemberCounts[d.name] || 0;
+                let color = mandalColors[d.mandal] || "#3b82f6";
 
-            if (["ठाणे", "पालघर", "रायगड", "मुंबई शहर", "मुंबई उपनगर"].includes(district)) color = circleColors.Thane;
-            else if (["नाशिक", "अहमदनगर", "धुळे", "जळगाव", "नंदुरबार"].includes(district)) color = circleColors.Nashik;
-            else if (["पुणे", "सातारा", "सोलापूर"].includes(district)) color = circleColors.Pune;
-            else if (["कोल्हापूर", "सांगली", "रत्नागिरी", "सिंधुदुर्ग"].includes(district)) color = circleColors.Kolhapur;
-            else if (["छत्रपती संभाजीनगर", "जालना", "परभणी", "हिंगोली"].includes(district)) color = circleColors.CSN;
-            else if (["लातूर", "बीड", "नांदेड", "धाराशिव"].includes(district)) color = circleColors.Latur;
-            else if (["अकोला", "अमरावती", "बुलढाणा", "वाशिम", "यवतमाळ"].includes(district)) color = circleColors.Akola;
-            else if (["नागपूर", "वर्धा", "भंडारा", "गोंदिया", "चंद्रपूर", "गडचिरोली"].includes(district)) color = circleColors.Nagpur;
+                // सदस्यांच्या संख्येनुसार वर्तुळाचा आकार कमी-जास्त करणे
+                let radius = Math.max(8000, count * 2000 + 5000); 
 
-            return { fillColor: color, weight: 1.5, opacity: 1, color: '#ffffff', fillOpacity: 0.85 };
+                var circle = L.circle([d.lat, d.lng], {
+                    color: '#fff',
+                    weight: 2,
+                    fillColor: color,
+                    fillOpacity: 0.8,
+                    radius: radius
+                });
+
+                circle.bindPopup(`<b style='font-size:14px; color:#1e293b;'>जिल्हा: ${d.name}</b><br>मंडळ: ${d.mandal}<br><b style='color:#ef4444; font-size:13px;'>मान्य सदस्य: ${count}</b>`);
+                circle.bindTooltip(`<b>${d.name}</b>: ${count} सदस्य`, { permanent: true, direction: "top", className: "map-label" });
+
+                markersLayer.addLayer(circle);
+            });
         }
 
-        // ५. नकाशा लोड करणे
-        function initMap() {
-            if (geojsonLayer) { map.removeLayer(geojsonLayer); }
-
-            geojsonLayer = L.geoJSON(mhGeoJSON, {
-                style: getStyle,
-                onEachFeature: function (feature, layer) {
-                    let mrName = feature.properties.district || "अज्ञात";
-                    let count = districtMemberCounts[mrName] || 0; 
-
-                    layer.bindPopup("<b style='font-size:15px; color:#1e293b;'>जिल्हा: " + mrName + "</b><br><b style='color:#ef4444; font-size:14px;'>सदस्य संख्या: " + count + "</b>");
-                    layer.bindTooltip("<b>" + mrName + "</b>: " + count + " सदस्य", { permanent: false, direction: "top" });
-                    
-                    layer.on({
-                        mouseover: function(e) { e.target.setStyle({ weight: 3, color: '#0f172a', fillOpacity: 1 }); },
-                        mouseout: function(e) { geojsonLayer.resetStyle(e.target); }
-                    });
-                }
-            }).addTo(map);
-
-            map.fitBounds(geojsonLayer.getBounds());
-        }
-
-        // ६. डॅशबोर्डकडून डेटा स्वीकारणे
+        // ५. डॅशबोर्डकडून डेटा स्वीकारणे
         window.addEventListener('message', function(event) {
             if (event.data && event.data.type === 'UPDATE_MAP_DATA') {
                 districtMemberCounts = event.data.data;
-                initMap(); 
+                renderMapMarkers(); 
             }
         });
 
-        initMap();
+        renderMapMarkers();
 
-        // ७. सूची (Legend)
+        // ६. सूची (Legend)
         var legend = L.control({position: 'bottomright'});
         legend.onAdd = function (map) {
             var div = L.DomUtil.create('div', 'legend');
             div.innerHTML += '<h4 style="margin-top:0;">आरोग्य मंडळे</h4>';
-            div.innerHTML += '<i style="background:' + circleColors.Thane + '"></i> ठाणे<br>';
-            div.innerHTML += '<i style="background:' + circleColors.Nashik + '"></i> नाशिक<br>';
-            div.innerHTML += '<i style="background:' + circleColors.Pune + '"></i> पुणे<br>';
-            div.innerHTML += '<i style="background:' + circleColors.Kolhapur + '"></i> कोल्हापूर<br>';
-            div.innerHTML += '<i style="background:' + circleColors.CSN + '"></i> छ. संभाजीनगर<br>';
-            div.innerHTML += '<i style="background:' + circleColors.Latur + '"></i> लातूर<br>';
-            div.innerHTML += '<i style="background:' + circleColors.Akola + '"></i> अकोला<br>';
-            div.innerHTML += '<i style="background:' + circleColors.Nagpur + '"></i> नागपूर<br>';
+            div.innerHTML += '<i style="background:' + mandalColors["ठाणे मंडळ"] + '"></i> ठाणे मंडळ<br>';
+            div.innerHTML += '<i style="background:' + mandalColors["नाशिक मंडळ"] + '"></i> नाशिक मंडळ<br>';
+            div.innerHTML += '<i style="background:' + mandalColors["पुणे मंडळ"] + '"></i> पुणे मंडळ<br>';
+            div.innerHTML += '<i style="background:' + mandalColors["कोल्हापूर मंडळ"] + '"></i> कोल्हापूर मंडळ<br>';
+            div.innerHTML += '<i style="background:' + mandalColors["छत्रपती संभाजीनगर मंडळ"] + '"></i> छ. संभाजीनगर मंडळ<br>';
+            div.innerHTML += '<i style="background:' + mandalColors["लातूर मंडळ"] + '"></i> लातूर मंडळ<br>';
+            div.innerHTML += '<i style="background:' + mandalColors["अकोला मंडळ"] + '"></i> अकोला मंडळ<br>';
+            div.innerHTML += '<i style="background:' + mandalColors["नागपूर मंडळ"] + '"></i> नागपूर मंडळ<br>';
             return div;
         };
         legend.addTo(map);
