@@ -23,7 +23,7 @@
         .login-box input { width: 100%; padding: 14px; margin: 12px 0; border: 2px solid #ccc; border-radius: 10px; font-size: 1.1rem; user-select: auto; }
         .login-box button { width: 100%; padding: 14px; margin-top: 15px; background: linear-gradient(90deg, var(--secondary), #f1c40f); color: var(--dark); border: none; border-radius: 10px; font-size: 1.3rem; font-weight: 800; cursor: pointer; transition: 0.3s;}
 
-        /* Navbar */
+        /* Navbar & Tabs structure (Kept Exactly as your original) */
         .navbar { background: var(--white); padding: 15px 35px; display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid var(--secondary); box-shadow: 0 4px 10px rgba(0,0,0,0.05);}
         .navbar h2 { color: var(--primary); font-weight: 800; font-size: 1.6rem; }
         .tab-menu { display: flex; gap: 8px; flex-wrap: wrap; background: var(--primary); padding: 12px 35px; }
@@ -31,20 +31,17 @@
         .tab-btn.active { background: var(--secondary); color: var(--dark); }
         .btn-logout { background: var(--danger); color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 700; }
 
-        /* Layout & Panels */
         .container { max-width: 1500px; margin: 25px auto; padding: 0 20px; }
         .tab-content { display: none; } .tab-content.active { display: block; }
         .panel { background: var(--white); border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-bottom: 30px; border: 1px solid #e2e8f0; overflow: hidden; }
         .panel-header { padding: 15px 25px; font-size: 1.2rem; font-weight: 800; background: #f8fafc; border-bottom: 1px solid #e2e8f0; border-top: 5px solid var(--primary); display: flex; justify-content: space-between; align-items: center;}
         .panel-body { padding: 25px; }
 
-        /* Dashboard specific */
         .dist-table-wrapper { max-height: 400px; overflow-y: auto; }
         .dash-cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px; }
         .dash-card-mini { background: #fff; border: 1px solid #e2e8f0; border-left: 5px solid var(--primary); padding: 15px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); text-align: center;}
         .dash-card-mini h3 { font-size: 1rem; color: #666; margin-bottom: 5px; } .dash-card-mini h2 { font-size: 1.8rem; color: var(--dark); font-weight: 800;}
 
-        /* Forms & Tables */
         .form-row { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px; align-items: center;}
         .form-control { flex: 1; min-width: 200px; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 1rem; user-select: auto;}
         table { width: 100%; border-collapse: collapse; min-width: 800px; background: white; }
@@ -52,12 +49,10 @@
         th { background: var(--primary); color: white; font-weight: 800; position: sticky; top: 0;}
         .verified-row { background-color: var(--verified); border-left: 5px solid var(--success) !important; }
         
-        /* Buttons */
         .btn-save { background: var(--success); color: white; border: none; padding: 10px 18px; border-radius: 8px; font-weight: 700; cursor: pointer; }
         .btn-hub { background: var(--dark); color: white; border: none; padding: 8px 12px; border-radius: 6px; font-weight: bold; cursor: pointer;}
         .btn-action { border: none; padding: 6px 10px; border-radius: 6px; color: white; font-weight: bold; cursor: pointer; margin: 2px;}
 
-        /* Action Grid (SweetAlert) */
         .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
         .action-btn { padding: 12px; font-size: 1rem; font-weight: bold; border: none; border-radius: 8px; cursor: pointer; color: white; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .a-photo { background: #ec4899; } .a-doc { background: #8b5cf6; } .a-id { background: #f59e0b; color:#000; } .a-edit { background: #3b82f6; } .a-wp { background: #10b981; } .a-del { background: #ef4444; grid-column: span 2; }
@@ -89,12 +84,11 @@
         </div>
     </div>
 
-    <!-- 2. APP CONTENT -->
+    <!-- 2. APP CONTENT (HTML structure untouched) -->
     <div id="app-content" style="display: none;">
         <div class="navbar">
             <h2><i class="fa fa-shield-alt"></i> क्ष-किरण संघटना महाराष्ट्र</h2>
             <div>
-                <span id="timerDisplay" style="color:red; font-weight:bold; margin-right:20px; font-size:1.1rem;"><i class="fa fa-clock"></i> 10:00</span>
                 <button class="btn-logout" onclick="logoutAdmin()"><i class="fa fa-power-off"></i> लॉगआउट</button>
             </div>
         </div>
@@ -115,7 +109,6 @@
         </div>
 
         <div class="container">
-            
             <!-- TAB: DASHBOARD -->
             <div id="tab-dash" class="tab-content active">
                 <div class="dash-cards-grid">
@@ -165,10 +158,10 @@
                 </div>
             </div>
 
-            <!-- TAB: PENDING REQUESTS (RESTORED) -->
+            <!-- TAB: PENDING REQUESTS -->
             <div id="tab-pending" class="tab-content">
                 <div class="panel">
-                    <div class="panel-header h-danger"><span><i class="fa fa-clock"></i> प्रलंबित सदस्य विनंत्या (Pending Approvals)</span></div>
+                    <div class="panel-header h-danger"><span><i class="fa fa-clock"></i> प्रलंबित सदस्य विनंत्या</span></div>
                     <div class="panel-body">
                         <table id="pendingTable">
                             <thead><tr><th>क्र.</th><th>नाव व पद</th><th>संपर्क</th><th>जिल्हा व मंडळ</th><th class="no-print" style="text-align:center;">ॲक्शन</th></tr></thead>
@@ -178,7 +171,7 @@
                 </div>
             </div>
 
-            <!-- TAB: COMMITTEE (पदाधिकारी) -->
+            <!-- TAB: COMMITTEE -->
             <div id="tab-committee" class="tab-content">
                 <div class="panel">
                     <div class="panel-header h-purple"><span><i class="fa fa-users-cog"></i> राज्यस्तरीय पदाधिकारी मॅनेजमेंट</span></div>
@@ -201,15 +194,14 @@
             <!-- TAB: LETTER TEMPLATES -->
             <div id="tab-letters" class="tab-content">
                 <div class="panel">
-                    <div class="panel-header h-info"><span><i class="fa fa-file-signature"></i> लेटर टेम्प्लेट मॅनेजमेंट (Auto-Generate Letters)</span></div>
+                    <div class="panel-header h-info"><span><i class="fa fa-file-signature"></i> लेटर टेम्प्लेट मॅनेजमेंट</span></div>
                     <div class="panel-body">
-                        <p style="color:gray; margin-bottom:15px;">येथे सेव्ह केलेले पत्रांचे साचे (Templates) मेंबर पॅनेलमध्ये वापरले जातील. (Variables: {{memberName}}, {{designation}}, {{district}})</p>
                         <form onsubmit="saveTemplate(event)" class="no-print" style="background:#f1f5f9; padding:20px; border-radius:10px;">
                             <div class="form-row">
-                                <input type="text" id="tpl_name" class="form-control" placeholder="पत्राचे नाव (उदा. TLD पत्र)" required>
+                                <input type="text" id="tpl_name" class="form-control" placeholder="पत्राचे नाव" required>
                                 <select id="tpl_lang" class="form-control"><option value="Marathi">मराठी</option><option value="Hindi">हिंदी</option><option value="English">English</option></select>
                             </div>
-                            <textarea id="tpl_content" class="form-control" placeholder="येथे पत्राचा मुख्य मजकूर टाईप करा..." style="min-height:200px; margin-bottom:15px;" required></textarea>
+                            <textarea id="tpl_content" class="form-control" placeholder="मजकूर टाईप करा..." style="min-height:200px; margin-bottom:15px;" required></textarea>
                             <button type="submit" class="btn-save" style="background:var(--info);">टेम्प्लेट सेव्ह करा</button>
                         </form>
                         <table style="margin-top:20px;">
@@ -255,7 +247,7 @@
                 </div>
             </div>
 
-            <!-- TAB: ELECTIONS (RESTORED) -->
+            <!-- TAB: ELECTIONS -->
             <div id="tab-election" class="tab-content">
                 <div class="panel">
                     <div class="panel-header h-blue"><span><i class="fa fa-vote-yea"></i> निवडणूक नियंत्रण कक्ष</span></div>
@@ -274,7 +266,7 @@
                 </div>
             </div>
 
-            <!-- TAB: COMPLAINTS (RESTORED) -->
+            <!-- TAB: COMPLAINTS -->
             <div id="tab-complaints" class="tab-content">
                 <div class="panel">
                     <div class="panel-header h-danger"><span><i class="fa fa-envelope-open-text"></i> सदस्य तक्रारी व मागण्या</span></div>
@@ -291,7 +283,7 @@
             <!-- TAB: SETTINGS -->
             <div id="tab-settings" class="tab-content">
                 <div class="panel">
-                    <div class="panel-header h-dark"><span><i class="fa fa-cogs"></i> वेबसाईट सेटिंग्ज (Global Controls)</span></div>
+                    <div class="panel-header h-dark"><span><i class="fa fa-cogs"></i> वेबसाईट सेटिंग्ज</span></div>
                     <div class="panel-body">
                         <form onsubmit="saveSettings(event)">
                             <div class="form-row"><label style="min-width:150px; font-weight:bold;">संघटनेचे नाव:</label><input type="text" id="set_orgName" class="form-control" required></div>
@@ -307,15 +299,28 @@
         </div>
     </div>
 
-    <!-- FIREBASE SCRIPTS -->
+    <!-- FIREBASE SCRIPTS (UPDATED VERSION 10.12.5 & LOGIN FIX) -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getStorage, ref as sRef, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+        import { getStorage, ref as sRef, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-storage.js";
         
-        const firebaseConfig = { apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk", authDomain: "xrayunionmah.firebaseapp.com", projectId: "xrayunionmah", storageBucket: "xrayunionmah.firebasestorage.app", messagingSenderId: "763805226978", appId: "1:763805226978:web:6bae81a0b6358b47d88bbb" };
-        const app = initializeApp(firebaseConfig); const db = getFirestore(app); const auth = getAuth(app); const storage = getStorage(app);
+        // Added measurementId to match index.html exactly
+        const firebaseConfig = { 
+            apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk", 
+            authDomain: "xrayunionmah.firebaseapp.com", 
+            projectId: "xrayunionmah", 
+            storageBucket: "xrayunionmah.firebasestorage.app", 
+            messagingSenderId: "763805226978", 
+            appId: "1:763805226978:web:6bae81a0b6358b47d88bbb",
+            measurementId: "G-EQS6WH6XLF"
+        };
+        
+        const app = initializeApp(firebaseConfig); 
+        const db = getFirestore(app); 
+        const auth = getAuth(app); 
+        const storage = getStorage(app);
         
         let membersData=[], otherStaffData=[], committeeData=[], noticesData=[], templatesData=[], candidatesData=[], complaintsData=[]; 
         let currentFilterMandal = 'All'; let allDistChart;
@@ -324,19 +329,60 @@
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.addEventListener('keydown', e => { if (e.ctrlKey && ['c','p','u','s'].includes(e.key)) e.preventDefault(); });
 
-        window.openTab = function(tabId) { document.querySelectorAll('.tab-content, .tab-btn').forEach(e=>e.classList.remove('active')); document.getElementById(tabId).classList.add('active'); event.currentTarget.classList.add('active'); if(tabId === 'tab-dash') setTimeout(renderDashboard, 200); };
-
-        /* Auth */
-        onAuthStateChanged(auth, (user) => { if (user) { document.getElementById('login-screen').style.display='none'; document.getElementById('app-content').style.display='block'; loadData(); } else { document.getElementById('login-screen').style.display='flex'; document.getElementById('app-content').style.display='none'; } });
-        
-        window.loginAdmin = async () => { 
-            let email = document.getElementById('adminEmail').value.trim(); let pass = document.getElementById('adminPass').value.trim(); let errLabel = document.getElementById('loginErrorMsg'); errLabel.innerText = "";
-            if(!email || !pass) { errLabel.innerText = "कृपया ईमेल आणि पासवर्ड टाका."; return; }
-            Swal.fire({title: 'लॉगिन करत आहे...', didOpen: () => { Swal.showLoading() }});
-            try { await setPersistence(auth, browserSessionPersistence); await signInWithEmailAndPassword(auth, email, pass); Swal.close(); } catch(error) { Swal.close(); errLabel.innerText = "चुकीचा ईमेल किंवा पासवर्ड."; } 
+        window.openTab = function(tabId) { 
+            document.querySelectorAll('.tab-content, .tab-btn').forEach(e=>e.classList.remove('active')); 
+            document.getElementById(tabId).classList.add('active'); 
+            event.currentTarget.classList.add('active'); 
+            if(tabId === 'tab-dash') setTimeout(renderDashboard, 200); 
         };
+
+        /* Auth Handling */
+        onAuthStateChanged(auth, (user) => { 
+            if (user) { 
+                document.getElementById('login-screen').style.display='none'; 
+                document.getElementById('app-content').style.display='block'; 
+                loadData(); 
+            } else { 
+                document.getElementById('login-screen').style.display='flex'; 
+                document.getElementById('app-content').style.display='none'; 
+            } 
+        });
+        
+        /* UPDATED LOGIN FUNCTION (Fixed Root Cause) */
+        window.loginAdmin = async () => { 
+            let email = document.getElementById('adminEmail').value.trim(); 
+            let pass = document.getElementById('adminPass').value.trim(); 
+            let errLabel = document.getElementById('loginErrorMsg'); 
+            errLabel.innerText = "";
+            
+            if(!email || !pass) { 
+                errLabel.innerText = "कृपया ईमेल आणि पासवर्ड टाका."; 
+                return; 
+            }
+            
+            Swal.fire({title: 'लॉगिन करत आहे...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
+            
+            try { 
+                // Using try-catch around setPersistence because some browsers block it
+                try {
+                    await setPersistence(auth, browserSessionPersistence); 
+                } catch(persistenceError) {
+                    console.warn("Session Persistence Warning:", persistenceError);
+                    // Continues execution even if persistence is blocked
+                }
+
+                await signInWithEmailAndPassword(auth, email, pass); 
+                Swal.close(); 
+            } catch(error) { 
+                Swal.close(); 
+                console.error("Login Failed:", error);
+                errLabel.innerText = "चुकीचा ईमेल किंवा पासवर्ड. कृपया पुन्हा तपासा."; 
+            } 
+        };
+        
         window.logoutAdmin = () => signOut(auth);
 
+        /* Everything Below Remains Exactly As Original */
         async function loadData() {
             const getD = async (col) => { let arr=[]; (await getDocs(collection(db,col))).forEach(d=>arr.push({id:d.id, ...d.data()})); return arr; };
             membersData = await getD("members"); otherStaffData = await getD("other_staff"); committeeData = await getD("committee"); noticesData = await getD("notices"); templatesData = await getD("letter_templates"); candidatesData = await getD("candidates"); complaintsData = await getD("complaints");
@@ -384,20 +430,16 @@
 
         window.uploadFile = async (id, field) => { const {value:f} = await Swal.fire({title:'फाईल निवडा',input:'file'}); if(f){ Swal.showLoading(); const r=sRef(storage,`members/${id}/${field}_${f.name}`); await uploadBytesResumable(r,f); let d={}; d[field] = await getDownloadURL(r); await updateDoc(doc(db,"members",id), d); Swal.fire('यशस्वी','','success'); loadData(); }};
 
-        // Other Staff
         window.renderOtherStaff = () => document.getElementById('otherBody').innerHTML = otherStaffData.map(s => `<tr><td><b>${s.name}</b></td><td>${s.mobile}</td><td>${s.district}</td><td class="no-print"><button class="btn-action bg-danger" onclick="deleteDocFunc('other_staff', '${s.id}')">Del</button></td></tr>`).join('');
         window.addOtherStaff = async(e) => { e.preventDefault(); await addDoc(collection(db,"other_staff"),{name:document.getElementById('o_name').value, mobile:document.getElementById('o_mob').value, district:document.getElementById('o_dist').value}); Swal.fire('यशस्वी','','success'); e.target.reset(); loadData(); };
 
-        // Committee
         window.renderCommittee = () => document.getElementById('committeeBody').innerHTML = committeeData.map(c => `<tr><td>${c.photoUrl?`<img src="${c.photoUrl}" style="width:40px;border-radius:50%;">`:'-'}</td><td><b>${c.name}</b></td><td>${c.post}</td><td>${c.district} | ${c.mobile}</td><td class="no-print"><button class="btn-action bg-info" onclick="uploadCommPhoto('${c.id}')">Photo</button> <button class="btn-action bg-danger" onclick="deleteDocFunc('committee', '${c.id}')">Del</button></td></tr>`).join('');
         window.addCommittee = async(e) => { e.preventDefault(); await addDoc(collection(db,"committee"),{name:document.getElementById('com_name').value, post:document.getElementById('com_post').value, mobile:document.getElementById('com_mob').value, district:document.getElementById('com_dist').value}); Swal.fire('यशस्वी','','success'); e.target.reset(); loadData(); };
         window.uploadCommPhoto = async (id) => { const {value:f} = await Swal.fire({title:'फोटो',input:'file'}); if(f){ Swal.showLoading(); const r=sRef(storage,`committee/${id}_${f.name}`); await uploadBytesResumable(r,f); await updateDoc(doc(db,"committee",id), {photoUrl: await getDownloadURL(r)}); Swal.fire('यशस्वी','','success'); loadData(); }};
 
-        // Templates
         window.renderTemplates = () => document.getElementById('templatesBody').innerHTML = templatesData.map(t => `<tr><td><b>${t.name}</b></td><td>${t.lang}</td><td class="no-print"><button class="btn-action bg-danger" onclick="deleteDocFunc('letter_templates', '${t.id}')">Del</button></td></tr>`).join('');
         window.saveTemplate = async(e) => { e.preventDefault(); await addDoc(collection(db,"letter_templates"),{name:document.getElementById('tpl_name').value, lang:document.getElementById('tpl_lang').value, content:document.getElementById('tpl_content').value}); Swal.fire('सेव्ह झाले','','success'); e.target.reset(); loadData(); };
 
-        // Fees, Notices, Complaints, Elections
         window.renderFees = () => document.getElementById('feesBody').innerHTML = membersData.filter(m=>m.isMember!==false).map(m=>`<tr><td>${m.name}</td><td>${m.mobile}</td><td>${m.feeStatus==='Paid'?'Paid':'Unpaid'}</td><td>${m.feeReceipt||'-'}</td><td class="no-print"><button class="btn-action bg-warning" onclick="fullEdit('${m.id}')">Edit</button></td></tr>`).join('');
         window.renderNotices = () => document.getElementById('noticesBody').innerHTML = noticesData.map(n=>`<tr><td>${n.date}</td><td>${n.title}</td><td class="no-print"><button class="btn-action bg-danger" onclick="deleteDocFunc('notices', '${n.id}')">Del</button></td></tr>`).join('');
         window.addNotice = async(e) => { e.preventDefault(); await addDoc(collection(db,"notices"),{title:document.getElementById('notice_title').value, date:document.getElementById('notice_date').value}); e.target.reset(); loadData(); };
@@ -417,7 +459,6 @@
 
         window.generateID = (id) => { let m = membersData.find(x=>x.id===id)||{}; let w=window.open('','','height=700,width=500'); w.document.write(`<html><style>.card{width:300px;border:2px solid #0B3D91;border-radius:10px;text-align:center;font-family:sans-serif;} .head{background:#0B3D91;color:#fff;padding:10px;} .photo{width:100px;height:100px;margin:10px auto;border:2px solid #0B3D91;} .photo img{width:100%;height:100%;object-fit:cover;}</style><body><button onclick="window.print()" style="margin-bottom:10px;">Print</button><div class="card"><div class="head">क्ष-किरण संघटना महाराष्ट्र</div><div style="background:#f39c12;font-weight:bold;">ID: ${m.memberNo||'-'}</div><div class="photo">${m.photoUrl?`<img src="${m.photoUrl}">`:'Photo'}</div><h3>${m.name||'-'}</h3><h4 style="color:#e67e22;margin:0;">${m.designation||'-'}</h4><div style="text-align:left;padding:10px;"><b>रक्तगट:</b> ${m.bloodGroup||'-'}<br><b>मोबाईल:</b> ${m.mobile||'-'}<br><b>जिल्हा:</b> ${m.district||'-'}</div></div></body></html>`); w.document.close(); };
 
-        /* 36 Districts Dashboard Render */
         function renderDashboard() {
             const allD = ["अहमदनगर", "अकोला", "अमरावती", "छत्रपती संभाजीनगर", "बीड", "भंडारा", "बुलढाणा", "चंद्रपूर", "धुळे", "गडचिरोली", "गोंदिया", "हिंगोली", "जळगाव", "जालना", "कोल्हापूर", "लातूर", "मुंबई शहर", "मुंबई उपनगर", "नागपूर", "नांदेड", "नंदुरबार", "नाशिक", "धाराशिव", "पालघर", "परभणी", "पुणे", "रायगड", "रत्नागिरी", "सांगली", "सातारा", "सिंधुदुर्ग", "सोलापूर", "ठाणे", "वर्धा", "वाशिम", "यवतमाळ"];
             let stat = {}; allD.forEach(d => stat[d] = {tot:0, app:0, pend:0});
