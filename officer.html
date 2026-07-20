@@ -3,332 +3,180 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>संघटनेचे पदाधिकारी - क्ष किरण वैज्ञानिक अधिकारी संघटना</title>
+    <title>पदाधिकारी | क्ष-किरण संघटना, महाराष्ट्र</title>
     
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Noto+Sans+Devanagari:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Font Awesome 6 Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        body {
-            font-family: 'Poppins', 'Noto Sans Devanagari', sans-serif;
-            background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+        :root {
+            --primary: #0B3D91;
+            --secondary: #FFD700;
+            --dark: #1e293b;
+            --bg-color: #f4f7f6;
+            --white: #ffffff;
         }
-        .brand-title {
-            font-family: 'Noto Sans Devanagari', sans-serif;
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mukta', sans-serif; }
+        body { background-color: var(--bg-color); color: #333; overflow-x: hidden; line-height: 1.6; }
+
+        /* HEADER & NAV (Same as Index for consistency) */
+        header { text-align: center; padding: 25px 15px; background: var(--white); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .logo-img { max-width: 90px; height: auto; margin-bottom: 10px; }
+        header h1 { font-size: 1.6rem; color: var(--primary); font-weight: 800; line-height: 1.3; }
+        nav { background: var(--primary); padding: 15px 5px; display: flex; flex-direction: column; gap: 12px; }
+        .nav-line { display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; }
+        nav a { color: var(--white); text-decoration: none; font-size: 0.95rem; font-weight: 700; white-space: nowrap; transition: 0.3s;}
+        nav a:hover { color: var(--secondary); }
+        .nav-highlight { color: var(--secondary) !important; font-size: 1rem; }
+
+        @media (min-width: 992px) {
+            nav { flex-direction: row; justify-content: center; align-items: center; gap: 20px; padding: 15px; }
+            .nav-line { gap: 25px; }
+            nav a { font-size: 1.05rem; }
+            header h1 { font-size: 2rem; }
         }
-        .header-gradient {
-            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0284c7 100%);
-        }
-        .officer-card {
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .officer-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 20px 25px -5px rgba(2, 132, 199, 0.1), 0 10px 10px -5px rgba(2, 132, 199, 0.04);
-        }
+
+        /* --- COMMITTEE SECTION --- */
+        .page-title { text-align: center; color: var(--primary); margin: 30px 0 10px 0; font-size: 1.8rem; font-weight: 800; }
+        .page-subtitle { text-align: center; color: #555; margin-bottom: 30px; font-weight: 600; }
+
+        .committee-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; width: 95%; max-width: 1200px; margin: 0 auto 40px auto; }
+        
+        .officer-card { background: white; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); text-align: center; padding: 25px 15px; border-top: 5px solid var(--primary); transition: transform 0.3s ease; }
+        .officer-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.12); }
+        
+        .officer-img { width: 130px; height: 130px; border-radius: 50%; object-fit: cover; border: 4px solid #f0f4f8; margin: 0 auto 15px auto; display: block; background: #e2e8f0; }
+        
+        .officer-post { font-size: 1.1rem; color: #d97706; font-weight: 800; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .officer-name { font-size: 1.3rem; color: var(--primary); font-weight: 800; margin-bottom: 8px; line-height: 1.2;}
+        .officer-details { font-size: 1rem; color: var(--dark); font-weight: 600; }
+        .officer-contact { margin-top: 10px; font-size: 0.95rem; color: #555; }
+        .officer-contact i { color: var(--primary); }
+
+        footer { background: #0B2240; color: white; text-align: center; padding: 25px 15px; margin-top: 30px; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between">
+<body>
 
-    <!-- १. नेव्हिगेशन बार -->
-    <nav class="bg-[#0f172a]/95 backdrop-blur-md text-white shadow-lg sticky top-0 z-50 border-b border-slate-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex items-center mx-auto md:mx-0">
-                    <span class="text-lg sm:text-xl font-bold tracking-wider brand-title flex items-center gap-2">
-                        <i class="fa-solid fa-wave-square text-cyan-400 animate-pulse"></i> क्ष किरण वैज्ञानिक अधिकारी संघटना
-                    </span>
-                </div>
-                <div class="hidden md:flex space-x-6 text-sm font-medium">
-                    <a href="index.html" class="hover:text-cyan-400 transition-colors"><i class="fa-solid fa-house mr-1"></i> मुख्यपृष्ठ</a>
-                    <a href="#" class="hover:text-cyan-400 transition-colors"><i class="fa-solid fa-id-card mr-1"></i> पदाधिकारी</a>
-                    <a href="#" class="hover:text-cyan-400 transition-colors"><i class="fa-solid fa-phone mr-1"></i> संपर्क</a>
-                </div>
-            </div>
+    <header>
+        <img src="logo.png" alt="Logo" class="logo-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/4006/4006511.png'">
+        <h1>क्ष किरण वैज्ञानिक अधिकारी (गट-क)<br>कर्मचारी संघटना, महाराष्ट्र राज्य</h1>
+    </header>
+
+    <nav>
+        <div class="nav-line">
+            <a href="index.html">🏠 मुख्यपृष्ठ</a>
+            <a href="index.html#about">ℹ️ संघटनाबद्दल</a>
+            <a href="gr.html">📄 GR / परिपत्रके</a>
+            <a href="gallery.html">🖼️ गॅलरी</a>
+        </div>
+        <div class="nav-line">
+            <a href="officer.html" class="nav-highlight">👥 पदाधिकारी</a>
+            <a href="index.html#contact">📞 संपर्क</a>
+            <a href="services.html">🛠️ सदस्यांसाठी सेवा</a>
+        </div>
+        <div class="nav-line">
+            <a href="registration.html">📢 सदस्य नोंदणी</a>
+            <a href="member-login.html">👤 सदस्य लॉगिन</a>
+        </div>
+        <div class="nav-line">
+            <a href="admin.html">🛡️ ॲडमिन</a>
         </div>
     </nav>
 
-    <!-- २. मुख्य शीर्षक विभाग -->
-    <header class="header-gradient text-white py-16 px-4 text-center relative overflow-hidden shadow-inner">
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-cyan-500/10 via-transparent to-transparent"></div>
-        <div class="relative z-10 max-w-4xl mx-auto">
-            <span class="bg-cyan-500/15 text-cyan-300 text-xs sm:text-sm font-medium uppercase tracking-widest px-4 py-1.5 rounded-full border border-cyan-500/30 backdrop-blur-sm">
-                (गट-क) कर्मचारी संघटना, महाराष्ट्र राज्य
-            </span>
-            <h1 class="text-3xl sm:text-5xl font-extrabold mt-5 brand-title tracking-wide drop-shadow-md">
-                राज्य कार्यकारिणी पदाधिकारी
-            </h1>
+    <h2 class="page-title">राज्यस्तरीय पदाधिकारी</h2>
+    <p class="page-subtitle">सार्वजनिक आरोग्य विभाग, महाराष्ट्र शासन अंतर्गत</p>
+
+    <!-- Committee Members Grid -->
+    <div class="committee-grid">
+        
+        <!-- 1. अध्यक्ष -->
+        <div class="officer-card">
+            <img src="default_avatar.png" alt="अध्यक्ष" class="officer-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
+            <div class="officer-post">अध्यक्ष</div>
+            <div class="officer-name">श्री रविंद्र मल्हारी पाटील</div>
+            <div class="officer-details">सातारा</div>
+            <div class="officer-contact"><i class="fa fa-phone-alt"></i> ९७६३१९२४४९</div>
         </div>
-    </header>
 
-    <!-- ३. मुख्य कन्टेंट एरिया -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 flex-grow w-full">
-
-        <!-- सदस्यांचे कार्ड्स ग्रिड लेआउट (एकूण ८ पदाधिकारी) -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            
-            <!-- १. अध्यक्ष -->
-            <div class="officer-card bg-white rounded-3xl border border-slate-200/80 p-6 flex flex-col justify-between text-center group hover:border-amber-400/60">
-                <div>
-                    <div class="flex justify-center mb-4">
-                        <span class="bg-amber-50 text-amber-700 text-xs font-bold px-3 py-1 rounded-full border border-amber-200/60 flex items-center gap-1.5 shadow-sm">
-                            <i class="fa-solid fa-crown text-amber-500"></i> अध्यक्ष
-                        </span>
-                    </div>
-                    <div class="w-24 h-24 bg-gradient-to-tr from-amber-500 to-amber-300 rounded-full mx-auto flex items-center justify-center p-1 shadow-md ring-4 ring-amber-100 group-hover:ring-amber-200 transition-all">
-                        <div class="w-full h-full bg-white rounded-full flex items-center justify-center">
-                            <i class="fa-solid fa-user-tie text-slate-700 text-4xl"></i>
-                        </div>
-                    </div>
-                    <h3 class="text-lg font-bold text-slate-800 mt-5 group-hover:text-amber-700 transition-colors">श्री. रविंद्र मल्हारी पाटील</h3>
-                    <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider mt-1">अध्यक्ष, महाराष्ट्र राज्य</p>
-                    
-                    <p class="text-sm font-bold text-emerald-600 mt-3 flex items-center justify-center gap-1.5 bg-emerald-50/50 py-1 rounded-lg">
-                        <i class="fa-solid fa-phone text-xs"></i> +९१ ९७६३१ ९२४४९
-                    </p>
-
-                    <p class="text-sm text-slate-600 mt-3 px-2 py-1.5 bg-slate-50 rounded-xl inline-flex items-center justify-center gap-1.5 w-full">
-                        <i class="fa-solid fa-location-dot text-slate-400 text-xs"></i>
-                        <span class="truncate">उपजिल्हा रुग्णालय, फलटण जि.सातारा</span>
-                    </p>
-                </div>
-                <div class="mt-6 flex gap-2.5">
-                    <a href="tel:+919763192449" class="flex-1 bg-slate-50 hover:bg-emerald-600 hover:text-white border border-slate-200/80 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 text-slate-700 shadow-sm"><i class="fa-solid fa-phone text-emerald-500 group-hover:text-white"></i> कॉल</a>
-                    <a href="https://wa.me/919763192449" target="_blank" class="flex-1 bg-slate-50 hover:bg-green-600 hover:text-white border border-slate-200/80 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 text-slate-700 shadow-sm"><i class="fa-brands fa-whatsapp text-green-500"></i> व्हॉट्सॲप</a>
-                </div>
-            </div>
-
-            <!-- २. उपाध्यक्ष १ -->
-            <div class="officer-card bg-white rounded-3xl border border-slate-200/80 p-6 flex flex-col justify-between text-center group hover:border-blue-500/60">
-                <div>
-                    <div class="flex justify-center mb-4">
-                        <span class="bg-blue-50 text-blue-700 text-xs font-bold px-3 py-1 rounded-full border border-blue-200/60 flex items-center gap-1.5 shadow-sm">
-                            <i class="fa-solid fa-user-shield text-blue-500"></i> उपाध्यक्ष
-                        </span>
-                    </div>
-                    <div class="w-24 h-24 bg-gradient-to-tr from-blue-600 to-cyan-400 rounded-full mx-auto flex items-center justify-center p-1 shadow-md ring-4 ring-blue-100 group-hover:ring-blue-200 transition-all">
-                        <div class="w-full h-full bg-white rounded-full flex items-center justify-center">
-                            <i class="fa-solid fa-user text-slate-600 text-4xl"></i>
-                        </div>
-                    </div>
-                    <h3 class="text-lg font-bold text-slate-800 mt-5 group-hover:text-blue-700 transition-colors">श्री. कोमल विठ्ठलराव चुनरकर</h3>
-                    <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider mt-1">उपाध्यक्ष</p>
-                    
-                    <p class="text-sm font-bold text-emerald-600 mt-3 flex items-center justify-center gap-1.5 bg-emerald-50/50 py-1 rounded-lg">
-                        <i class="fa-solid fa-phone text-xs"></i> +९१ ८२७५७ ५००२०
-                    </p>
-
-                    <p class="text-sm text-slate-600 mt-3 px-2 py-1.5 bg-slate-50 rounded-xl inline-flex items-center justify-center gap-1.5 w-full">
-                        <i class="fa-solid fa-location-dot text-slate-400 text-xs"></i>
-                        <span class="truncate">जिल्हा स्त्री रुग्णालय, गडचिरोली</span>
-                    </p>
-                </div>
-                <div class="mt-6 flex gap-2.5">
-                    <a href="tel:+918275750020" class="flex-1 bg-slate-50 hover:bg-emerald-600 hover:text-white border border-slate-200/80 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 text-slate-700 shadow-sm"><i class="fa-solid fa-phone text-emerald-500"></i> कॉल</a>
-                    <a href="https://wa.me/918275750020" target="_blank" class="flex-1 bg-slate-50 hover:bg-green-600 hover:text-white border border-slate-200/80 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 text-slate-700 shadow-sm"><i class="fa-brands fa-whatsapp text-green-500"></i> व्हॉट्सॲप</a>
-                </div>
-            </div>
-
-            <!-- ३. उपाध्यक्ष २ -->
-            <div class="officer-card bg-white rounded-3xl border border-slate-200/80 p-6 flex flex-col justify-between text-center group hover:border-blue-500/60">
-                <div>
-                    <div class="flex justify-center mb-4">
-                        <span class="bg-blue-50 text-blue-700 text-xs font-bold px-3 py-1 rounded-full border border-blue-200/60 flex items-center gap-1.5 shadow-sm">
-                            <i class="fa-solid fa-user-shield text-blue-500"></i> उपाध्यक्ष
-                        </span>
-                    </div>
-                    <div class="w-24 h-24 bg-gradient-to-tr from-blue-600 to-cyan-400 rounded-full mx-auto flex items-center justify-center p-1 shadow-md ring-4 ring-blue-100 group-hover:ring-blue-200 transition-all">
-                        <div class="w-full h-full bg-white rounded-full flex items-center justify-center">
-                            <i class="fa-solid fa-user text-slate-600 text-4xl"></i>
-                        </div>
-                    </div>
-                    <h3 class="text-lg font-bold text-slate-800 mt-5 group-hover:text-blue-700 transition-colors">श्री. संतोषकुमार हसनराव देशमुख</h3>
-                    <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider mt-1">उपाध्यक्ष</p>
-                    
-                    <p class="text-sm font-bold text-emerald-600 mt-3 flex items-center justify-center gap-1.5 bg-emerald-50/50 py-1 rounded-lg">
-                        <i class="fa-solid fa-phone text-xs"></i> +९१ ९४२३४ २६८५६
-                    </p>
-
-                    <p class="text-sm text-slate-600 mt-3 px-2 py-1.5 bg-slate-50 rounded-xl inline-flex items-center justify-center gap-1.5 w-full">
-                        <i class="fa-solid fa-location-dot text-slate-400 text-xs"></i>
-                        <span class="truncate">ग्रामीण रुग्णालय, सिंदखेडराजा</span>
-                    </p>
-                </div>
-                <div class="mt-6 flex gap-2.5">
-                    <a href="tel:+919423426856" class="flex-1 bg-slate-50 hover:bg-emerald-600 hover:text-white border border-slate-200/80 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 text-slate-700 shadow-sm"><i class="fa-solid fa-phone text-emerald-500"></i> कॉल</a>
-                    <a href="https://wa.me/919423426856" target="_blank" class="flex-1 bg-slate-50 hover:bg-green-600 hover:text-white border border-slate-200/80 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 text-slate-700 shadow-sm"><i class="fa-brands fa-whatsapp text-green-500"></i> व्हॉट्सॲप</a>
-                </div>
-            </div>
-
-            <!-- ४. कोषाध्यक्ष -->
-            <div class="officer-card bg-white rounded-3xl border border-slate-200/80 p-6 flex flex-col justify-between text-center group hover:border-emerald-500/60">
-                <div>
-                    <div class="flex justify-center mb-4">
-                        <span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-3 py-1 rounded-full border border-emerald-200/60 flex items-center gap-1.5 shadow-sm">
-                            <i class="fa-solid fa-wallet text-emerald-500"></i> कोषाध्यक्ष
-                        </span>
-                    </div>
-                    <div class="w-24 h-24 bg-gradient-to-tr from-emerald-600 to-teal-400 rounded-full mx-auto flex items-center justify-center p-1 shadow-md ring-4 ring-emerald-100 group-hover:ring-emerald-200 transition-all">
-                        <div class="w-full h-full bg-white rounded-full flex items-center justify-center">
-                            <i class="fa-solid fa-user text-slate-600 text-4xl"></i>
-                        </div>
-                    </div>
-                    <h3 class="text-lg font-bold text-slate-800 mt-5 group-hover:text-emerald-700 transition-colors">श्री. विशाल गणेश कायंदे</h3>
-                    <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider mt-1">कोषाध्यक्ष</p>
-                    
-                    <p class="text-sm font-bold text-emerald-600 mt-3 flex items-center justify-center gap-1.5 bg-emerald-50/50 py-1 rounded-lg">
-                        <i class="fa-solid fa-phone text-xs"></i> +९१ ९५०३८ ८६४४१
-                    </p>
-
-                    <p class="text-sm text-slate-600 mt-3 px-2 py-1.5 bg-slate-50 rounded-xl inline-flex items-center justify-center gap-1.5 w-full">
-                        <i class="fa-solid fa-location-dot text-slate-400 text-xs"></i>
-                        <span class="truncate">ग्रामीण रुग्णालय, चामोर्शी, जि.गडचिरोली</span>
-                    </p>
-                </div>
-                <div class="mt-6 flex gap-2.5">
-                    <a href="tel:+919503886441" class="flex-1 bg-slate-50 hover:bg-emerald-600 hover:text-white border border-slate-200/80 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 text-slate-700 shadow-sm"><i class="fa-solid fa-phone text-emerald-500"></i> कॉल</a>
-                    <a href="https://wa.me/919503886441" target="_blank" class="flex-1 bg-slate-50 hover:bg-green-600 hover:text-white border border-slate-200/80 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 text-slate-700 shadow-sm"><i class="fa-brands fa-whatsapp text-green-500"></i> व्हॉट्सॲप</a>
-                </div>
-            </div>
-
-            <!-- ५. सह-कोषाध्यक्ष -->
-            <div class="officer-card bg-white rounded-3xl border border-slate-200/80 p-6 flex flex-col justify-between text-center group hover:border-teal-500/60">
-                <div>
-                    <div class="flex justify-center mb-4">
-                        <span class="bg-teal-50 text-teal-700 text-xs font-bold px-3 py-1 rounded-full border border-teal-200/60 flex items-center gap-1.5 shadow-sm">
-                            <i class="fa-solid fa-coins text-teal-500"></i> सह-कोषाध्यक्ष
-                        </span>
-                    </div>
-                    <div class="w-24 h-24 bg-gradient-to-tr from-teal-600 to-emerald-400 rounded-full mx-auto flex items-center justify-center p-1 shadow-md ring-4 ring-teal-100 group-hover:ring-teal-200 transition-all">
-                        <div class="w-full h-full bg-white rounded-full flex items-center justify-center">
-                            <i class="fa-solid fa-user text-slate-600 text-4xl"></i>
-                        </div>
-                    </div>
-                    <h3 class="text-lg font-bold text-slate-800 mt-5 group-hover:text-teal-700 transition-colors">श्री. संतोष सुभाषराव गिरी</h3>
-                    <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider mt-1">सह-कोषाध्यक्ष</p>
-                    
-                    <p class="text-sm font-bold text-emerald-600 mt-3 flex items-center justify-center gap-1.5 bg-emerald-50/50 py-1 rounded-lg">
-                        <i class="fa-solid fa-phone text-xs"></i> +९१ ९४०३६ ८८८६३
-                    </p>
-
-                    <p class="text-sm text-slate-600 mt-3 px-2 py-1.5 bg-slate-50 rounded-xl inline-flex items-center justify-center gap-1.5 w-full">
-                        <i class="fa-solid fa-location-dot text-slate-400 text-xs"></i>
-                        <span class="truncate">ग्रामीण रुग्णालय, देवगांव रंगारी जि.छ.संभाजीनगर</span>
-                    </p>
-                </div>
-                <div class="mt-6 flex gap-2.5">
-                    <a href="tel:+919403688863" class="flex-1 bg-slate-50 hover:bg-emerald-600 hover:text-white border border-slate-200/80 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 text-slate-700 shadow-sm"><i class="fa-solid fa-phone text-emerald-500"></i> कॉल</a>
-                    <a href="https://wa.me/919403688863" target="_blank" class="flex-1 bg-slate-50 hover:bg-green-600 hover:text-white border border-slate-200/80 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 text-slate-700 shadow-sm"><i class="fa-brands fa-whatsapp text-green-500"></i> व्हॉट्सॲप</a>
-                </div>
-            </div>
-
-            <!-- ६. प्रमुख कार्यवाह -->
-            <div class="officer-card bg-white rounded-3xl border border-slate-200/80 p-6 flex flex-col justify-between text-center group hover:border-violet-500/60">
-                <div>
-                    <div class="flex justify-center mb-4">
-                        <span class="bg-violet-50 text-violet-700 text-xs font-bold px-3 py-1 rounded-full border border-violet-200/60 flex items-center gap-1.5 shadow-sm">
-                            <i class="fa-solid fa-file-signature text-violet-500"></i> प्रमुख कार्यवाह
-                        </span>
-                    </div>
-                    <div class="w-24 h-24 bg-gradient-to-tr from-violet-600 to-fuchsia-400 rounded-full mx-auto flex items-center justify-center p-1 shadow-md ring-4 ring-violet-100 group-hover:ring-violet-200 transition-all">
-                        <div class="w-full h-full bg-white rounded-full flex items-center justify-center">
-                            <i class="fa-solid fa-user text-slate-600 text-4xl"></i>
-                        </div>
-                    </div>
-                    <h3 class="text-lg font-bold text-slate-800 mt-5 group-hover:text-violet-700 transition-colors">श्री. शंकर संतोष पाव्हणे</h3>
-                    <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider mt-1">सरचिटणीस</p>
-                    
-                    <p class="text-sm font-bold text-emerald-600 mt-3 flex items-center justify-center gap-1.5 bg-emerald-50/50 py-1 rounded-lg">
-                        <i class="fa-solid fa-phone text-xs"></i> +९१ ९७६९४ ४१२७१
-                    </p>
-
-                    <p class="text-sm text-slate-600 mt-3 px-2 py-1.5 bg-slate-50 rounded-xl inline-flex items-center justify-center gap-1.5 w-full">
-                        <i class="fa-solid fa-location-dot text-slate-400 text-xs"></i>
-                        <span class="truncate">जिल्हा सामान्य रुग्णालय, गडचिरोली</span>
-                    </p>
-              </div>
-                <div class="mt-6 flex gap-2.5">
-                    <a href="tel:+919769441271" class="flex-1 bg-slate-50 hover:bg-emerald-600 hover:text-white border border-slate-200/80 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 text-slate-700 shadow-sm"><i class="fa-solid fa-phone text-emerald-500"></i> कॉल</a>
-                    <a href="https://wa.me/919769441271" target="_blank" class="flex-1 bg-slate-50 hover:bg-green-600 hover:text-white border border-slate-200/80 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 text-slate-700 shadow-sm"><i class="fa-brands fa-whatsapp text-green-500"></i> व्हॉट्सॲप</a>
-                </div>
-            </div>
-
-            <!-- ७. कार्यवाह -->
-            <div class="officer-card bg-white rounded-3xl border border-slate-200/80 p-6 flex flex-col justify-between text-center group hover:border-cyan-500/60">
-                <div>
-                    <div class="flex justify-center mb-4">
-                        <span class="bg-cyan-50 text-cyan-700 text-xs font-bold px-3 py-1 rounded-full border border-cyan-200/60 flex items-center gap-1.5 shadow-sm">
-                            <i class="fa-solid fa-file-pen text-cyan-500"></i> कार्यवाह
-                        </span>
-                    </div>
-                    <div class="w-24 h-24 bg-gradient-to-tr from-cyan-600 to-blue-400 rounded-full mx-auto flex items-center justify-center p-1 shadow-md ring-4 ring-cyan-100 group-hover:ring-cyan-200 transition-all">
-                        <div class="w-full h-full bg-white rounded-full flex items-center justify-center">
-                            <i class="fa-solid fa-user text-slate-600 text-4xl"></i>
-                        </div>
-                    </div>
-                    <h3 class="text-lg font-bold text-slate-800 mt-5 group-hover:text-cyan-700 transition-colors">श्री. संजय विठ्ठल गिराम</h3>
-                    <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider mt-1">सह-सरचिटणीस</p>
-                    
-                    <p class="text-sm font-bold text-emerald-600 mt-3 flex items-center justify-center gap-1.5 bg-emerald-50/50 py-1 rounded-lg">
-                        <i class="fa-solid fa-phone text-xs"></i> +९१ XXXXX XXXXX
-                    </p>
-
-                    <p class="text-sm text-slate-600 mt-3 px-2 py-1.5 bg-slate-50 rounded-xl inline-flex items-center justify-center gap-1.5 w-full">
-                        <i class="fa-solid fa-location-dot text-slate-400 text-xs"></i>
-                        <span class="truncate">जिल्हा क्षयरोग केंद्र लातूर</span>
-                    </p>
-                </div>
-                <div class="mt-6 flex gap-2.5">
-                    <a href="tel:#" class="flex-1 bg-slate-50 hover:bg-emerald-600 hover:text-white border border-slate-200/80 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 text-slate-700 shadow-sm"><i class="fa-solid fa-phone text-emerald-500"></i> कॉल</a>
-                    <a href="https://wa.me/#" target="_blank" class="flex-1 bg-slate-50 hover:bg-green-600 hover:text-white border border-slate-200/80 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 text-slate-700 shadow-sm"><i class="fa-brands fa-whatsapp text-green-500"></i> व्हॉट्सॲप</a>
-                </div>
-            </div>
-
-            <!-- ८. प्रसिद्धी प्रमुख (नवीन जोडलेले) -->
-            <div class="officer-card bg-white rounded-3xl border border-slate-200/80 p-6 flex flex-col justify-between text-center group hover:border-rose-500/60">
-                <div>
-                    <div class="flex justify-center mb-4">
-                        <span class="bg-rose-50 text-rose-700 text-xs font-bold px-3 py-1 rounded-full border border-rose-200/60 flex items-center gap-1.5 shadow-sm">
-                            <i class="fa-solid fa-bullhorn text-rose-500"></i> प्रसिद्धी प्रमुख
-                        </span>
-                    </div>
-                    <div class="w-24 h-24 bg-gradient-to-tr from-rose-600 to-pink-400 rounded-full mx-auto flex items-center justify-center p-1 shadow-md ring-4 ring-rose-100 group-hover:ring-rose-200 transition-all">
-                        <div class="w-full h-full bg-white rounded-full flex items-center justify-center">
-                            <i class="fa-solid fa-user text-slate-600 text-4xl"></i>
-                        </div>
-                    </div>
-                    <h3 class="text-lg font-bold text-slate-800 mt-5 group-hover:text-rose-700 transition-colors">श्री. किरण रविंद्रराव वरघणे</h3>
-                    <p class="text-xs text-slate-400 font-semibold uppercase tracking-wider mt-1">प्रसिद्धी प्रमुख</p>
-                    
-                    <p class="text-sm font-bold text-emerald-600 mt-3 flex items-center justify-center gap-1.5 bg-emerald-50/50 py-1 rounded-lg">
-                        <i class="fa-solid fa-phone text-xs"></i> +९१ XXXXX XXXXX
-                    </p>
-
-                    <p class="text-sm text-slate-600 mt-3 px-2 py-1.5 bg-slate-50 rounded-xl inline-flex items-center justify-center gap-1.5 w-full">
-                        <i class="fa-solid fa-location-dot text-slate-400 text-xs"></i>
-                        <span class="truncate">ग्रामीण रुग्णालय, सुरगाना जि.नाशिक</span>
-                    </p>
-                </div>
-                <div class="mt-6 flex gap-2.5">
-                    <a href="tel:#" class="flex-1 bg-slate-50 hover:bg-emerald-600 hover:text-white border border-slate-200/80 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 text-slate-700 shadow-sm"><i class="fa-solid fa-phone text-emerald-500"></i> कॉल</a>
-                    <a href="https://wa.me/#" target="_blank" class="flex-1 bg-slate-50 hover:bg-green-600 hover:text-white border border-slate-200/80 py-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 text-slate-700 shadow-sm"><i class="fa-brands fa-whatsapp text-green-500"></i> व्हॉट्सॲप</a>
-                </div>
-            </div>
-
+        <!-- 2. उपाध्यक्ष (१) -->
+        <div class="officer-card">
+            <img src="default_avatar.png" alt="उपाध्यक्ष" class="officer-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
+            <div class="officer-post">उपाध्यक्ष</div>
+            <div class="officer-name">श्री कोमल विठ्ठलराव चुनारकर</div>
+            <div class="officer-details">गडचिरोली</div>
+            <div class="officer-contact"><i class="fa fa-phone-alt"></i> ८२७५७५००२०</div>
         </div>
-    </main>
 
-    <!-- ४. फुटर -->
-    <footer class="bg-[#0f172a] text-slate-400 py-6 border-t border-slate-800 text-center text-sm font-light">
-        <p class="brand-title">© २०२६ क्ष किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य.सर्व हक्क सुरक्षित.</p>
+        <!-- 3. उपाध्यक्ष (२) -->
+        <div class="officer-card">
+            <img src="default_avatar.png" alt="उपाध्यक्ष" class="officer-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
+            <div class="officer-post">उपाध्यक्ष</div>
+            <div class="officer-name">श्री संतोषकुमार हसनराव देशमुख</div>
+            <div class="officer-details">सिंदखेडराजा</div>
+            <div class="officer-contact"><i class="fa fa-phone-alt"></i> ९४२३४२६८५६</div>
+        </div>
+
+        <!-- 4. कोषाध्यक्ष -->
+        <div class="officer-card">
+            <img src="default_avatar.png" alt="कोषाध्यक्ष" class="officer-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
+            <div class="officer-post">कोषाध्यक्ष</div>
+            <div class="officer-name">श्री संतोष सुभाषराव गिरी</div>
+            <div class="officer-details">छ.संभाजी नगर</div>
+            <div class="officer-contact"><i class="fa fa-phone-alt"></i> ९४०३६८८८६३</div>
+        </div>
+
+        <!-- 5. सहकोषाध्यक्ष (Match: kaynde_sir) -->
+        <div class="officer-card">
+            <img src="kaynde_sir.jpg" alt="सहकोषाध्यक्ष" class="officer-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
+            <div class="officer-post">सहकोषाध्यक्ष</div>
+            <div class="officer-name">श्री विशाल गणेश कायंदे</div>
+            <div class="officer-details">गडचिरोली</div>
+            <div class="officer-contact"><i class="fa fa-phone-alt"></i> ९५०३८८६४४१</div>
+        </div>
+
+        <!-- 6. प्रमुख कार्यवाह -->
+        <div class="officer-card">
+            <img src="default_avatar.png" alt="प्रमुख कार्यवाह" class="officer-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
+            <div class="officer-post">प्रमुख कार्यवाह</div>
+            <div class="officer-name">श्री किरण रवींद्रराव वरगणे</div>
+            <div class="officer-details">नाशिक</div>
+            <div class="officer-contact"><i class="fa fa-phone-alt"></i> ९५९५७४२८८९</div>
+        </div>
+
+        <!-- 7. कार्यवाह -->
+        <div class="officer-card">
+            <img src="default_avatar.png" alt="कार्यवाह" class="officer-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
+            <div class="officer-post">कार्यवाह</div>
+            <div class="officer-name">श्री संजय विठ्ठल गिराम</div>
+            <div class="officer-details">लातूर</div>
+            <div class="officer-contact"><i class="fa fa-phone-alt"></i> ९०२१०४८५८६</div>
+        </div>
+
+        <!-- 8. आयटी विभाग १ -->
+        <div class="officer-card">
+            <img src="default_avatar.png" alt="समन्वयक" class="officer-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
+            <div class="officer-post">डेटाबेस व गुगल फॉर्म समन्वयक</div>
+            <div class="officer-name">श्री शंकर संतोष पव्हणे</div>
+            <div class="officer-details">बुलडाणा</div>
+            <div class="officer-contact"><i class="fa fa-phone-alt"></i> ९७६६७५५८९५</div>
+        </div>
+
+        <!-- 9. आयटी विभाग २ (Match: hange_sir) -->
+        <div class="officer-card">
+            <img src="hange_sir.jpg" alt="वेबसाईट निर्मिती" class="officer-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
+            <div class="officer-post">वेबसाईट निर्मिती व व्यवस्थापन</div>
+            <div class="officer-name">श्री महेश शिवदास हंगे</div>
+            <div class="officer-details">गडचिरोली</div>
+            <div class="officer-contact"><i class="fa fa-phone-alt"></i> ९६२३७९०९१६</div>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>© २०२६ क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना, महाराष्ट्र राज्य.</p>
+        <p style="margin-top: 5px; font-size: 12px; color: #ccc;">सर्व हक्क सुरक्षित.</p>
     </footer>
 
 </body>
