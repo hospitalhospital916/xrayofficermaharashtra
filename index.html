@@ -34,14 +34,14 @@
         .header-text p { color: var(--secondary); font-weight: 700; font-size: 1.1rem; margin-top: 2px;}
         .header-text small { color: #555; font-size: 0.95rem; font-weight: 600;}
         
-        .header-register-btn { background: var(--primary); color: var(--white); padding: 10px 25px; border-radius: 30px; font-size: 1.1rem; font-weight: 700; text-decoration: none; box-shadow: 0 5px 15px rgba(11, 61, 145, 0.3); transition: 0.3s; border: 2px solid var(--primary); display: inline-flex; align-items: center; gap: 8px;}
+        .header-register-btn { background: var(--primary); color: var(--white); padding: 10px 25px; border-radius: 30px; font-size: 1.1rem; font-weight: 700; text-decoration: none; box-shadow: 0 5px 15px rgba(11, 61, 145, 0.3); transition: 0.3s; border: 2px solid var(--primary); display: inline-flex; align-items: center; justify-content: center; gap: 8px;}
         .header-register-btn:hover { background: var(--white); color: var(--primary); transform: translateY(-2px); }
 
         /* --- NAVIGATION BAR --- */
         nav { background: var(--primary); padding: 12px 20px; display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 10px rgba(0,0,0,0.15); align-items: center;}
         nav a { color: var(--white); text-decoration: none; font-size: 1.05rem; font-weight: 600; padding: 8px 12px; border-radius: 6px; transition: 0.3s; }
         nav a:hover { background: rgba(255, 255, 255, 0.2); color: var(--gold); }
-        nav a i { margin-right: 5px; width: 20px; text-align: center; }
+        nav a i { margin-right: 8px; width: 20px; text-align: center; }
         
         .btn-login { background: var(--secondary); color: var(--dark) !important; font-weight: 800; border-radius: 20px; padding: 8px 15px;}
         .btn-admin { background: #ef4444; color: white !important; font-weight: 800; border-radius: 20px; padding: 8px 15px;}
@@ -64,20 +64,6 @@
         
         .content-card h2 { color: var(--primary); font-size: 2rem; margin-bottom: 15px; font-weight: 800; }
         .content-card p { font-size: 1.15rem; color: #444; }
-
-        /* --- OFFICE BEARERS SECTION --- */
-        .section-title { text-align: center; font-size: 2.1rem; color: var(--primary); font-weight: 800; margin: 50px 0 10px 0; position: relative; }
-        .section-title::after { content: ''; width: 60px; height: 4px; background: var(--secondary); display: block; margin: 10px auto; border-radius: 2px; }
-        .sub-title { text-align: center; font-size: 1.4rem; color: var(--dark); font-weight: 700; margin-bottom: 30px; }
-        
-        .team-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 25px; max-width: 1200px; margin: 0 auto 40px auto; justify-items: center; }
-        .team-card { background: white; padding: 25px 20px; border-radius: 15px; text-align: center; width: 100%; max-width: 320px; box-shadow: 0 8px 25px rgba(0,0,0,0.06); border-bottom: 5px solid var(--primary); transition: 0.3s; }
-        .team-card:hover { transform: translateY(-5px); box-shadow: 0 12px 30px rgba(0,0,0,0.12); border-bottom-color: var(--secondary); }
-        .team-photo { width: 110px; height: 110px; border-radius: 50%; object-fit: cover; border: 4px solid var(--bg-color); box-shadow: 0 5px 15px rgba(0,0,0,0.1); margin-bottom: 15px; }
-        .team-name { font-size: 1.25rem; color: var(--primary); font-weight: 800; margin-bottom: 5px; }
-        .team-post { font-size: 1.1rem; color: #ef4444; font-weight: 700; margin-bottom: 5px; }
-        .team-location { font-size: 0.95rem; color: #666; font-weight: 600; margin-bottom: 10px; background: #f1f5f9; display: inline-block; padding: 3px 12px; border-radius: 15px;}
-        .team-contact { font-size: 1rem; color: #333; font-weight: 600;}
 
         /* --- SEARCH & NOTICES SECTION --- */
         .search-container { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.06); margin: 40px auto 30px auto; text-align: center; border-top: 5px solid var(--secondary); max-width: 1200px;}
@@ -107,36 +93,37 @@
 
 
         /* ==========================================
-           📱 STRICT MOBILE RESPONSIVE DESIGN
+           📱 STRICT MOBILE RESPONSIVE DESIGN (Like Old Website)
            ========================================== */
         @media (max-width: 768px) {
             
-            /* 1. Header (Stacked vertically like Old Website) */
-            header { flex-direction: column; text-align: center; padding: 20px 15px; justify-content: center; }
-            .header-left { flex-direction: column; gap: 12px; margin-bottom: 15px; width: 100%;}
-            .logo-img { height: 85px; }
-            .header-text h1 { font-size: 1.5rem; }
-            .header-text p { font-size: 1.1rem; }
-            .header-text small { display: block; margin-top: 5px; }
-            .header-register-btn { width: 100%; max-width: 300px; justify-content: center; margin: 0 auto; }
+            /* 1. Header (Stacked vertically like Old Website Screenshot) */
+            header { flex-direction: column; text-align: center; padding: 25px 15px; justify-content: center; }
+            .header-left { flex-direction: column; gap: 15px; margin-bottom: 20px; width: 100%;}
+            .logo-img { height: 95px; }
+            .header-text h1 { font-size: 1.6rem; }
+            .header-text p { font-size: 1.15rem; }
+            .header-text small { display: block; margin-top: 5px; font-size: 0.95rem; }
             
-            /* 2. Navigation Menu (Vertical List like Old Website) */
-            nav { flex-direction: column; padding: 15px; gap: 10px; border-bottom: 3px solid var(--secondary); }
-            nav a { width: 100%; text-align: left; padding: 12px 15px; font-size: 1.1rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); }
+            /* Centered bold register button like old screenshot */
+            .header-register-btn { width: 100%; max-width: 280px; justify-content: center; margin: 0 auto; padding: 12px 20px;}
+            
+            /* 2. Navigation Menu (Vertical Stacked List like Old Website) */
+            nav { flex-direction: column; padding: 0; gap: 0; }
+            nav a { width: 100%; text-align: center; padding: 15px; font-size: 1.15rem; border-radius: 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+            nav a:last-child { border-bottom: none; }
             nav a:hover { background: rgba(255,255,255,0.15); }
             
-            /* Special Buttons in Menu */
-            .btn-login, .btn-admin { text-align: center; padding: 12px; margin-top: 5px; border: none; }
+            /* Special Buttons in Mobile Menu */
+            .btn-login, .btn-admin { text-align: center; border-radius: 0; }
 
             /* 3. Hero & Titles */
             .hero { padding: 40px 15px; }
             .hero h2 { font-size: 1.7rem; }
             .hero p { font-size: 1.05rem; }
-            .section-title { font-size: 1.8rem; }
             
-            /* 4. Cards & Tables */
+            /* 4. Cards */
             .content-card { padding: 25px 15px; margin: 30px auto; }
-            .team-card { max-width: 100%; margin-bottom: 0px; }
             .cards-grid { grid-template-columns: 1fr; padding: 0 15px;}
             
             /* 5. Search Box (Responsive Fix) */
@@ -165,11 +152,11 @@
         </div>
     </header>
 
-    <!-- Navigation Bar -->
+    <!-- Navigation Bar (Mobile vertical layout like old UI) -->
     <nav>
         <a href="index.html"><i class="fa fa-home"></i> मुख्यपृष्ठ</a>
         <a href="#about"><i class="fa fa-info-circle"></i> संघटनाबद्दल</a>
-        <a href="#committee"><i class="fa fa-users"></i> पदाधिकारी</a>
+        <a href="officer.html"><i class="fa fa-users"></i> पदाधिकारी</a> <!-- Linked to separate page -->
         <a href="#notices"><i class="fa fa-bell"></i> सूचना व GR</a>
         <a href="gallery.html"><i class="fa fa-image"></i> गॅलरी</a>
         <a href="services.html"><i class="fa fa-tools"></i> सदस्यांसाठी सेवा</a>
@@ -198,89 +185,6 @@
         <div class="content-card about-card">
             <h2><i class="fa fa-info-circle"></i> संघटनाबद्दल</h2>
             <p>क्ष-किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य ही राज्यातील सर्व क्ष-किरण वैज्ञानिक अधिकाऱ्यांच्या न्याय-हक्कांसाठी समर्पित अधिकृत संघटना आहे.</p>
-        </div>
-    </section>
-
-    <!-- Office Bearers Section -->
-    <section id="committee" class="container">
-        <h2 class="section-title">आमची राज्यस्तरीय कार्यकारणी</h2>
-        <p class="sub-title">पदाधिकारी</p>
-        
-        <div class="team-container">
-            <div class="team-card">
-                <img src="patil_sir.jpg" alt="अध्यक्ष" class="team-photo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
-                <h3 class="team-name">श्री रविंद्र मल्हारी पाटील</h3>
-                <p class="team-post">अध्यक्ष</p>
-                <p class="team-location"><i class="fa fa-map-marker-alt"></i> सातारा</p>
-                <p class="team-contact"><i class="fa fa-phone-alt"></i> ९७६३१९२४४९</p>
-            </div>
-
-            <div class="team-card">
-                <img src="chunarkar_sir.jpg" alt="उपाध्यक्ष" class="team-photo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
-                <h3 class="team-name">श्री कोमल विठ्ठलराव चुनारकर</h3>
-                <p class="team-post">उपाध्यक्ष</p>
-                <p class="team-location"><i class="fa fa-map-marker-alt"></i> गडचिरोली</p>
-                <p class="team-contact"><i class="fa fa-phone-alt"></i> ८२७५७५००२०</p>
-            </div>
-
-            <div class="team-card">
-                <img src="deshmukh_sir.jpg" alt="उपाध्यक्ष" class="team-photo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
-                <h3 class="team-name">श्री संतोषकुमार हसनराव देशमुख</h3>
-                <p class="team-post">उपाध्यक्ष</p>
-                <p class="team-location"><i class="fa fa-map-marker-alt"></i> सिंदखेडराजा</p>
-                <p class="team-contact"><i class="fa fa-phone-alt"></i> ९४२३४२६८५६</p>
-            </div>
-            
-            <div class="team-card">
-                <img src="giri_sir.jpg" alt="कोषाध्यक्ष" class="team-photo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
-                <h3 class="team-name">श्री संतोष सुभाषराव गिरी</h3>
-                <p class="team-post">कोषाध्यक्ष</p>
-                <p class="team-location"><i class="fa fa-map-marker-alt"></i> छ. संभाजी नगर</p>
-                <p class="team-contact"><i class="fa fa-phone-alt"></i> ९४०३६८८८६३</p>
-            </div>
-
-            <div class="team-card">
-                <img src="kayande_sir.jpg" alt="सहकोषाध्यक्ष" class="team-photo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
-                <h3 class="team-name">श्री विशाल गणेश कायंदे</h3>
-                <p class="team-post">सहकोषाध्यक्ष</p>
-                <p class="team-location"><i class="fa fa-map-marker-alt"></i> गडचिरोली</p>
-                <p class="team-contact"><i class="fa fa-phone-alt"></i> ९५०३८८६४४१</p>
-            </div>
-
-            <div class="team-card">
-                <img src="varagane_sir.jpg" alt="प्रमुख कार्यवाह" class="team-photo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
-                <h3 class="team-name">श्री किरण रवींद्रराव वरगणे</h3>
-                <p class="team-post">प्रमुख कार्यवाह</p>
-                <p class="team-location"><i class="fa fa-map-marker-alt"></i> नाशिक</p>
-                <p class="team-contact"><i class="fa fa-phone-alt"></i> ९५९५७४२८८९</p>
-            </div>
-
-            <div class="team-card">
-                <img src="giram_sir.jpg" alt="कार्यवाह" class="team-photo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
-                <h3 class="team-name">श्री संजय विठ्ठल गिराम</h3>
-                <p class="team-post">कार्यवाह</p>
-                <p class="team-location"><i class="fa fa-map-marker-alt"></i> लातूर</p>
-                <p class="team-contact"><i class="fa fa-phone-alt"></i> ९०२१०४८५८६</p>
-            </div>
-        </div>
-
-        <p class="sub-title" style="margin-top: 20px;">माहिती तंत्रज्ञान विभाग</p>
-        <div class="team-container" style="max-width: 700px;">
-            <div class="team-card" style="border-bottom: 5px solid #10b981;">
-                <img src="pavhane_sir.jpg" alt="समन्वयक" class="team-photo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
-                <h3 class="team-name">श्री शंकर संतोष पव्हाणे</h3>
-                <p class="team-post" style="color: #10b981;">डेटाबेस व गुगल फॉर्म समन्वयक</p>
-                <p class="team-location"><i class="fa fa-map-marker-alt"></i> बुलढाणा</p>
-                <p class="team-contact"><i class="fa fa-phone-alt"></i> ९७६६७५५८९५</p>
-            </div>
-
-            <div class="team-card" style="border-bottom: 5px solid #10b981;">
-                <img src="hange_sir.jpg" alt="वेबसाईट निर्मिती" class="team-photo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
-                <h3 class="team-name">श्री महेश शिवदास हंगे</h3>
-                <p class="team-post" style="color: #10b981;">वेबसाईट निर्मिती व व्यवस्थापन</p>
-                <p class="team-location"><i class="fa fa-map-marker-alt"></i> गडचिरोली</p>
-                <p class="team-contact"><i class="fa fa-phone-alt"></i> ९६२३७९०९१६</p>
-            </div>
         </div>
     </section>
 
@@ -333,7 +237,7 @@
     <section id="contact" class="container">
         <div class="content-card contact-card">
             <h2><i class="fa fa-address-book"></i> संपर्क कार्यालय</h2>
-            <p class="sub-title" style="margin-bottom: 5px;">क्ष-किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य</p>
+            <p style="font-size: 1.25rem; font-weight: bold; color: var(--dark); margin-bottom: 5px;">क्ष-किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य</p>
             
             <div style="margin-top: 25px; font-size: 1.15rem; color: #444; line-height: 1.8;">
                 <p><b>अध्यक्ष:</b> श्री रविंद्र मल्हारी पाटील</p>
