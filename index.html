@@ -21,32 +21,39 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mukta', sans-serif; }
         body { background-color: var(--bg-color); color: #333; overflow-x: hidden; line-height: 1.6; }
 
-        /* --- HEADER (Exactly like Screenshot) --- */
+        /* --- HEADER --- */
         header { text-align: center; padding: 25px 15px; background: var(--white); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .logo-img { max-width: 90px; height: auto; margin-bottom: 10px; }
         header h1 { font-size: 1.6rem; color: var(--primary); font-weight: 800; line-height: 1.3; }
 
-        /* --- NAVIGATION BAR (4-3-2-1 Structure & NO STICKY) --- */
+        /* --- NAVIGATION BAR --- */
         nav { background: var(--primary); padding: 15px 5px; display: flex; flex-direction: column; gap: 12px; }
         .nav-line { display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; }
         nav a { color: var(--white); text-decoration: none; font-size: 0.95rem; font-weight: 700; white-space: nowrap; transition: 0.3s;}
         nav a:hover { color: var(--secondary); }
         .nav-highlight { color: var(--secondary) !important; font-size: 1rem; }
 
-        /* --- MARQUEE (SCROLLING NEWS) --- */
-        .ticker-wrap { background: var(--primary); border: 2px solid var(--secondary); margin: 15px auto; max-width: 1000px; padding: 10px; border-radius: 5px; width: 95%; display: flex; align-items: center;}
+        /* --- MARQUEE --- */
+        .ticker-wrap { background: var(--primary); border: 2px solid var(--secondary); margin: 15px auto; max-width: 1200px; padding: 10px; border-radius: 5px; width: 95%; display: flex; align-items: center;}
         #news-ticker { font-weight: bold; color: var(--secondary); font-size: 1.05rem; }
 
-        /* --- SEARCH BOX (Compact) --- */
-        .search-container { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin: 0 auto 20px auto; width: 95%; max-width: 1000px; border-top: 4px solid var(--secondary); display: flex; gap: 10px;}
+        /* --- SEARCH BOX --- */
+        .search-container { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin: 0 auto 20px auto; width: 95%; max-width: 1200px; border-top: 4px solid var(--secondary); display: flex; gap: 10px;}
         .search-input { flex: 1; padding: 10px 15px; font-size: 1rem; border: 2px solid var(--primary); border-radius: 6px; outline: none; }
         .search-btn { padding: 10px 20px; background: var(--primary); color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
 
-        /* --- TWO CARDS GRID (Side-by-Side like screenshot) --- */
-        .two-cards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 95%; max-width: 1000px; margin: 0 auto 20px auto; }
-        .card { background: white; padding: 20px 15px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); border-left: 5px solid var(--primary); }
-        .card h3 { color: var(--dark); font-size: 1.2rem; margin-bottom: 10px; line-height: 1.3;}
-        .card p, .card div { font-size: 0.95rem; color: #555; }
+        /* --- TWO CARDS GRID --- */
+        .two-cards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 95%; max-width: 1200px; margin: 0 auto 20px auto; }
+        
+        /* About Card (Removed horizontal strip styling) */
+        .card-about { background: white; padding: 20px 15px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
+        .card-about h3 { color: var(--dark); font-size: 1.2rem; margin-bottom: 10px; line-height: 1.3; }
+        .card-about p { font-size: 0.95rem; color: #555; }
+
+        /* Notices Card */
+        .card-notice { background: white; padding: 20px 15px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); border-left: 5px solid var(--primary); }
+        .card-notice h3 { color: var(--dark); font-size: 1.2rem; margin-bottom: 10px; line-height: 1.3;}
+        .card-notice p, .card-notice div { font-size: 0.95rem; color: #555; }
         
         .notice-item { border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 10px; }
         .notice-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
@@ -55,7 +62,7 @@
         .notice-desc { font-size: 0.9rem; color: #555; }
 
         /* --- GR CARDS (Full Width) --- */
-        .full-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); width: 95%; max-width: 1000px; margin: 0 auto 20px auto; border-top: 5px solid var(--primary); }
+        .full-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); width: 95%; max-width: 1200px; margin: 0 auto 20px auto; border-top: 5px solid var(--primary); }
         .full-card h3 { color: var(--primary); margin-bottom: 15px; font-size: 1.3rem;}
 
         /* --- CONTACT CARD --- */
@@ -66,7 +73,20 @@
         footer { background: #0B2240; color: white; text-align: center; padding: 25px 15px; margin-top: 30px; }
         .admin-link { color: #aaa; font-size: 13px; text-decoration: underline; margin-top: 15px; display: inline-block;}
 
-        /* Mobile Adjustments for extreme small screens */
+        /* --- DESKTOP VIEW IMPROVEMENTS --- */
+        @media (min-width: 992px) {
+            nav { flex-direction: row; justify-content: center; align-items: center; gap: 20px; padding: 15px; }
+            .nav-line { gap: 25px; }
+            nav a { font-size: 1.05rem; }
+            header h1 { font-size: 2rem; }
+            body { font-size: 1.05rem; }
+            .card-about p, .card-notice p { font-size: 1rem; }
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            .two-cards-grid { grid-template-columns: 1fr; }
+        }
         @media (max-width: 400px) {
             .nav-line { gap: 10px; }
             nav a { font-size: 0.85rem; }
@@ -77,61 +97,52 @@
 </head>
 <body>
 
-    <!-- Header (Logo & Title) -->
     <header>
         <img src="logo.png" alt="Logo" class="logo-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/4006/4006511.png'">
         <h1>क्ष किरण वैज्ञानिक अधिकारी (गट-क)<br>कर्मचारी संघटना, महाराष्ट्र राज्य</h1>
     </header>
 
-    <!-- Navigation Bar (4-3-2-1 Pattern) -->
     <nav>
-        <!-- ओळ १: ४ आयटम्स -->
         <div class="nav-line">
             <a href="index.html">🏠 मुख्यपृष्ठ</a>
             <a href="#about">ℹ️ संघटनाबद्दल</a>
             <a href="gr.html">📄 GR / परिपत्रके</a>
             <a href="gallery.html">🖼️ गॅलरी</a>
         </div>
-        <!-- ओळ २: ३ आयटम्स -->
         <div class="nav-line">
             <a href="officer.html">👥 पदाधिकारी</a>
             <a href="#contact">📞 संपर्क</a>
             <a href="services.html">🛠️ सदस्यांसाठी सेवा</a>
         </div>
-        <!-- ओळ ३: २ आयटम्स -->
         <div class="nav-line">
             <a href="registration.html" class="nav-highlight">📢 सदस्य नोंदणी</a>
             <a href="member-login.html">👤 सदस्य लॉगिन</a>
         </div>
-        <!-- ओळ ४: १ आयटम -->
         <div class="nav-line">
             <a href="admin.html">🛡️ ॲडमिन</a>
         </div>
     </nav>
 
-    <!-- Marquee (Live Data) -->
     <div class="ticker-wrap">
         <marquee id="news-ticker" behavior="scroll" direction="left" scrollamount="6">
             राज्यातील सर्व क्ष-किरण वैज्ञानिक अधिकाऱ्यांनी आपली ऑनलाईन सदस्य नोंदणी लवकरात लवकर पूर्ण करावी. • माहिती लोड होत आहे...
         </marquee>
     </div>
 
-    <!-- Search Box -->
     <form action="#" method="GET" class="search-container">
         <input type="text" placeholder="येथे शोधा (उदा. GR)..." class="search-input" required>
         <button type="submit" class="search-btn"><i class="fa fa-search"></i> शोधा</button>
     </form>
 
-    <!-- Side-by-Side Cards (About & Notices) -->
     <div class="two-cards-grid">
-        <!-- Card 1: About -->
-        <div id="about" class="card">
+        <!-- About Section (Clean Layout) -->
+        <div id="about" class="card-about">
             <h3>संघटनाबद्दल</h3>
             <p>क्ष-किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य ही राज्यातील सर्व क्ष-किरण वैज्ञानिक अधिकाऱ्यांच्या न्याय-हक्कांसाठी समर्पित संघटना आहे.</p>
         </div>
 
-        <!-- Card 2: Live Notices -->
-        <div id="notices" class="card">
+        <!-- Live Notices -->
+        <div id="notices" class="card-notice">
             <h3>🔔 ताज्या घडामोडी</h3>
             <div id="notices-box">
                 <p style="color: gray; font-size: 0.9rem;">माहिती लोड होत आहे...</p>
@@ -139,7 +150,6 @@
         </div>
     </div>
 
-    <!-- Static GR Section -->
     <div class="full-card">
         <h3><i class="fa fa-file-pdf"></i> महत्त्वाचे शासन निर्णय (GR)</h3>
         <div class="notice-item">
@@ -149,7 +159,6 @@
         </div>
     </div>
 
-    <!-- Contact Section -->
     <div id="contact" class="full-card contact-card">
         <h2><i class="fa fa-address-book"></i> संपर्क कार्यालय</h2>
         <p style="font-weight: bold; color: var(--dark); margin-bottom: 15px;">क्ष-किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य</p>
@@ -158,14 +167,13 @@
         <p style="margin-top: 8px;"><i class="fa fa-envelope"></i> <a href="mailto:xsounion@gmail.com" style="color: var(--primary); text-decoration: none; font-weight: bold;">xsounion@gmail.com</a></p>
     </div>
 
-    <!-- Footer -->
     <footer>
         <p>© २०२६ क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना, महाराष्ट्र राज्य.</p>
         <p style="margin-top: 5px; font-size: 12px; color: #ccc;">सर्व हक्क सुरक्षित.</p>
         <a href="admin.html" class="admin-link">Admin Login</a>
     </footer>
 
-    <!-- Firebase Script (Safe and Untouched) -->
+    <!-- Firebase Script Untouched Structure -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
         import { getFirestore, doc, collection, onSnapshot, query, limit } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
@@ -183,7 +191,6 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Fetch Marquee Text
         onSnapshot(doc(db, "settings", "marquee"), (snap) => {
             const ticker = document.getElementById("news-ticker");
             if (snap.exists() && snap.data().text) {
@@ -193,8 +200,7 @@
             }
         });
 
-        // Fetch Live Notices
-        const q = query(collection(db, "notices"), limit(3)); // Limited to 3 to keep box small
+        const q = query(collection(db, "notices"), limit(3)); 
         
         onSnapshot(q, (snapshot) => {
             let html = '';
