@@ -218,13 +218,49 @@
                 
                 document.getElementById('memTotalCount').innerText = count;
 
+                // 1. पहिला चार्ट: Pie Chart (गोल आलेख)
                 if(Object.keys(mCounts).length > 0) {
-                    new Chart(document.getElementById('memberMandalChart'), { type: 'pie', data: { labels: Object.keys(mCounts), datasets: [{ data: Object.values(mCounts), backgroundColor: ['#0B3D91','#f39c12','#10b981','#ef4444','#3b82f6','#8b5cf6','#f59e0b','#d97706'], borderWidth: 1 }] }, options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } } });
+                    new Chart(document.getElementById('memberMandalChart'), { 
+                        type: 'pie', 
+                        data: { 
+                            labels: Object.keys(mCounts), 
+                            datasets: [{ 
+                                data: Object.values(mCounts), 
+                                backgroundColor: ['#0B3D91','#f39c12','#10b981','#ef4444','#3b82f6','#8b5cf6','#f59e0b','#d97706'], 
+                                borderWidth: 2, 
+                                borderColor: '#ffffff' 
+                            }] 
+                        }, 
+                        options: { 
+                            maintainAspectRatio: false, 
+                            plugins: { legend: { position: 'bottom' } } 
+                        } 
+                    });
                 }
                 
+                // 2. दुसरा चार्ट: आकर्षक Bar Chart (Rounded Corners सह स्तंभ आलेख)
                 if(Object.keys(dCounts).length > 0) {
                     let sortedDist = Object.entries(dCounts).sort((a,b)=>b[1]-a[1]).slice(0,10); 
-                    new Chart(document.getElementById('memberDistChart'), { type: 'doughnut', data: { labels: sortedDist.map(x=>x[0]), datasets: [{ data: sortedDist.map(x=>x[1]), backgroundColor: ['#8b5cf6','#3b82f6','#ef4444','#10b981','#f59e0b','#0B3D91','#d97706','#059669','#1e293b','#b45309'], borderWidth: 1 }] }, options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } } });
+                    new Chart(document.getElementById('memberDistChart'), { 
+                        type: 'bar', 
+                        data: { 
+                            labels: sortedDist.map(x=>x[0]), 
+                            datasets: [{ 
+                                label: 'एकूण सदस्य',
+                                data: sortedDist.map(x=>x[1]), 
+                                backgroundColor: ['#8b5cf6','#3b82f6','#ef4444','#10b981','#f59e0b','#0B3D91','#d97706','#059669','#1e293b','#b45309'], 
+                                borderRadius: 8, // स्तंभांना गोलाकार कडा
+                                borderSkipped: false
+                            }] 
+                        }, 
+                        options: { 
+                            maintainAspectRatio: false, 
+                            plugins: { legend: { display: false } }, // वरील label लपवण्यासाठी
+                            scales: {
+                                y: { beginAtZero: true, ticks: { stepSize: 1 } }
+                            }
+                        } 
+                    });
                 }
             } catch(e) {
                 console.error("Members/Charts Error:", e);
