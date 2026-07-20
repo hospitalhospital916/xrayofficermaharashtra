@@ -22,106 +22,128 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mukta', sans-serif; }
         body { background-color: var(--bg-color); color: #333; overflow-x: hidden; line-height: 1.6; }
 
+        /* ==========================================
+           🖥️ DESKTOP & DEFAULT STYLES 
+           ========================================== */
+           
         /* --- HEADER & LOGO --- */
-        header { background: var(--white); padding: 15px 30px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        header { background: var(--white); padding: 15px 30px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         .header-left { display: flex; align-items: center; gap: 20px; }
         .logo-img { height: 90px; width: auto; max-width: 100px; }
         .header-text h1 { color: var(--primary); font-size: 1.8rem; font-weight: 800; line-height: 1.2; }
-        .header-text p { color: var(--secondary); font-weight: 700; font-size: 1.1rem; margin-top: 5px;}
+        .header-text p { color: var(--secondary); font-weight: 700; font-size: 1.1rem; margin-top: 2px;}
         .header-text small { color: #555; font-size: 0.95rem; font-weight: 600;}
         
-        .header-register-btn { background: var(--primary); color: var(--white); padding: 12px 25px; border-radius: 30px; font-size: 1.1rem; font-weight: 700; text-decoration: none; box-shadow: 0 5px 15px rgba(11, 61, 145, 0.3); transition: 0.3s; border: 2px solid var(--primary); display: inline-flex; align-items: center; gap: 8px;}
-        .header-register-btn:hover { background: var(--white); color: var(--primary); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(11, 61, 145, 0.4); }
+        .header-register-btn { background: var(--primary); color: var(--white); padding: 10px 25px; border-radius: 30px; font-size: 1.1rem; font-weight: 700; text-decoration: none; box-shadow: 0 5px 15px rgba(11, 61, 145, 0.3); transition: 0.3s; border: 2px solid var(--primary); display: inline-flex; align-items: center; gap: 8px;}
+        .header-register-btn:hover { background: var(--white); color: var(--primary); transform: translateY(-2px); }
 
         /* --- NAVIGATION BAR --- */
         nav { background: var(--primary); padding: 12px 20px; display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 10px rgba(0,0,0,0.15); align-items: center;}
         nav a { color: var(--white); text-decoration: none; font-size: 1.05rem; font-weight: 600; padding: 8px 12px; border-radius: 6px; transition: 0.3s; }
         nav a:hover { background: rgba(255, 255, 255, 0.2); color: var(--gold); }
+        nav a i { margin-right: 5px; width: 20px; text-align: center; }
         
         .btn-login { background: var(--secondary); color: var(--dark) !important; font-weight: 800; border-radius: 20px; padding: 8px 15px;}
-        .btn-login:hover { background: var(--white); transform: scale(1.05); }
-        .btn-admin { background: #ef4444; color: white !important; font-weight: 800; border-radius: 20px; border: 2px solid #ef4444; padding: 8px 15px;}
-        .btn-admin:hover { background: transparent; color: #ef4444 !important; background: white;}
+        .btn-admin { background: #ef4444; color: white !important; font-weight: 800; border-radius: 20px; padding: 8px 15px;}
 
         /* --- MARQUEE (SCROLLING NEWS) --- */
-        .ticker-wrap { background: var(--dark); color: var(--gold); padding: 10px 20px; font-size: 1.2rem; font-weight: 700; display: flex; align-items: center; border-bottom: 2px solid var(--gold); }
-        .ticker-wrap span { background: #ef4444; color: white; padding: 2px 10px; border-radius: 4px; font-size: 1rem; margin-right: 15px; white-space: nowrap; }
+        .ticker-wrap { background: var(--dark); color: var(--gold); padding: 10px 20px; font-size: 1.15rem; font-weight: 700; display: flex; align-items: center; border-bottom: 2px solid var(--gold); }
+        .ticker-wrap span { background: #ef4444; color: white; padding: 2px 10px; border-radius: 4px; font-size: 0.95rem; margin-right: 15px; white-space: nowrap; }
         #news-ticker { font-weight: bold; color: var(--gold); font-size: 1.1rem; }
 
         /* --- HERO BANNER --- */
-        .hero { background: linear-gradient(rgba(11, 61, 145, 0.85), rgba(11, 61, 145, 0.85)), url('https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80') center/cover; padding: 80px 20px; text-align: center; color: white; }
-        .hero h2 { font-size: 2.5rem; font-weight: 800; margin-bottom: 15px; text-shadow: 2px 2px 5px rgba(0,0,0,0.5); }
-        .hero p { font-size: 1.4rem; max-width: 800px; margin: 0 auto 30px auto; }
+        .hero { background: linear-gradient(rgba(11, 61, 145, 0.85), rgba(11, 61, 145, 0.85)), url('https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80') center/cover; padding: 70px 20px; text-align: center; color: white; }
+        .hero h2 { font-size: 2.3rem; font-weight: 800; margin-bottom: 15px; text-shadow: 2px 2px 5px rgba(0,0,0,0.5); }
+        .hero p { font-size: 1.3rem; max-width: 800px; margin: 0 auto; line-height: 1.6;}
 
-        /* --- ABOUT SECTION --- */
-        .about-card { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border-left: 6px solid var(--primary); margin: 40px auto; max-width: 1100px; text-align: center; }
-        .about-card h2 { color: var(--primary); font-size: 2.2rem; margin-bottom: 15px; font-weight: 800; }
-        .about-card p { font-size: 1.2rem; color: #444; }
+        /* --- SECTIONS COMMON (About, Contact) --- */
+        .container { padding: 0 20px; max-width: 1200px; margin: auto; }
+        .content-card { background: white; padding: 35px; border-radius: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.06); margin: 40px auto; text-align: center; }
+        .content-card.about-card { border-left: 6px solid var(--primary); max-width: 1100px; }
+        .content-card.contact-card { border-top: 6px solid var(--primary); max-width: 800px; }
+        
+        .content-card h2 { color: var(--primary); font-size: 2rem; margin-bottom: 15px; font-weight: 800; }
+        .content-card p { font-size: 1.15rem; color: #444; }
 
         /* --- OFFICE BEARERS SECTION --- */
-        .section-title { text-align: center; font-size: 2.2rem; color: var(--primary); font-weight: 800; margin: 50px 0 10px 0; position: relative; }
-        .section-title::after { content: ''; width: 80px; height: 4px; background: var(--secondary); display: block; margin: 10px auto; border-radius: 2px; }
-        .sub-title { text-align: center; font-size: 1.5rem; color: var(--dark); font-weight: 700; margin-bottom: 30px; }
+        .section-title { text-align: center; font-size: 2.1rem; color: var(--primary); font-weight: 800; margin: 50px 0 10px 0; position: relative; }
+        .section-title::after { content: ''; width: 60px; height: 4px; background: var(--secondary); display: block; margin: 10px auto; border-radius: 2px; }
+        .sub-title { text-align: center; font-size: 1.4rem; color: var(--dark); font-weight: 700; margin-bottom: 30px; }
         
-        .team-container { display: flex; justify-content: center; flex-wrap: wrap; gap: 30px; max-width: 1200px; margin: 0 auto 40px auto; padding: 0 20px; }
-        .team-card { background: white; padding: 30px 20px; border-radius: 15px; text-align: center; width: 280px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border-bottom: 5px solid var(--primary); transition: 0.3s; }
-        .team-card:hover { transform: translateY(-10px); box-shadow: 0 15px 40px rgba(0,0,0,0.15); border-bottom: 5px solid var(--secondary); }
-        .team-photo { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid var(--bg-color); box-shadow: 0 5px 15px rgba(0,0,0,0.1); margin-bottom: 15px; }
-        .team-name { font-size: 1.3rem; color: var(--primary); font-weight: 800; margin-bottom: 5px; }
+        .team-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 25px; max-width: 1200px; margin: 0 auto 40px auto; justify-items: center; }
+        .team-card { background: white; padding: 25px 20px; border-radius: 15px; text-align: center; width: 100%; max-width: 320px; box-shadow: 0 8px 25px rgba(0,0,0,0.06); border-bottom: 5px solid var(--primary); transition: 0.3s; }
+        .team-card:hover { transform: translateY(-5px); box-shadow: 0 12px 30px rgba(0,0,0,0.12); border-bottom-color: var(--secondary); }
+        .team-photo { width: 110px; height: 110px; border-radius: 50%; object-fit: cover; border: 4px solid var(--bg-color); box-shadow: 0 5px 15px rgba(0,0,0,0.1); margin-bottom: 15px; }
+        .team-name { font-size: 1.25rem; color: var(--primary); font-weight: 800; margin-bottom: 5px; }
         .team-post { font-size: 1.1rem; color: #ef4444; font-weight: 700; margin-bottom: 5px; }
-        .team-location { font-size: 0.95rem; color: #666; font-weight: 600; margin-bottom: 10px; background: #f1f5f9; display: inline-block; padding: 2px 10px; border-radius: 15px;}
+        .team-location { font-size: 0.95rem; color: #666; font-weight: 600; margin-bottom: 10px; background: #f1f5f9; display: inline-block; padding: 3px 12px; border-radius: 15px;}
         .team-contact { font-size: 1rem; color: #333; font-weight: 600;}
 
-        /* --- NOTICES, GR & SEARCH SECTION --- */
-        .info-container { max-width: 1200px; margin: 50px auto; padding: 0 20px; }
-        
-        /* Search Box Design */
-        .search-container { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.08); margin-bottom: 30px; text-align: center; border-top: 5px solid var(--secondary); }
-        .search-container h3 { color: var(--dark); margin-bottom: 15px; font-size: 1.4rem; }
-        .search-box-wrapper { display: flex; justify-content: center; max-width: 700px; margin: 0 auto; }
-        .search-input { width: 100%; padding: 15px 20px; font-size: 1.1rem; border: 2px solid var(--primary); border-radius: 30px 0 0 30px; outline: none; font-family: 'Mukta', sans-serif; }
-        .search-btn { padding: 15px 30px; font-size: 1.1rem; background: var(--primary); color: white; border: 2px solid var(--primary); border-radius: 0 30px 30px 0; cursor: pointer; transition: 0.3s; font-weight: bold; }
-        .search-btn:hover { background: var(--dark); border-color: var(--dark); }
+        /* --- SEARCH & NOTICES SECTION --- */
+        .search-container { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.06); margin: 40px auto 30px auto; text-align: center; border-top: 5px solid var(--secondary); max-width: 1200px;}
+        .search-container h3 { color: var(--dark); margin-bottom: 15px; font-size: 1.3rem; }
+        .search-box-wrapper { display: flex; justify-content: center; max-width: 700px; margin: 0 auto; box-shadow: 0 3px 10px rgba(0,0,0,0.05); border-radius: 30px; overflow: hidden; border: 2px solid var(--primary); }
+        .search-input { flex: 1; padding: 12px 20px; font-size: 1.1rem; border: none; outline: none; font-family: 'Mukta', sans-serif; width: 100%;}
+        .search-btn { padding: 12px 25px; font-size: 1.1rem; background: var(--primary); color: white; border: none; cursor: pointer; transition: 0.3s; font-weight: bold; }
+        .search-btn:hover { background: var(--dark); }
 
-        .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; }
+        .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; max-width: 1200px; margin: 0 auto 40px auto; padding: 0 20px;}
         .info-card { background: white; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); overflow: hidden; border-top: 5px solid var(--primary); }
-        .info-header { background: var(--primary); color: white; padding: 15px 20px; font-size: 1.3rem; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
-        .info-body { padding: 20px; max-height: 400px; overflow-y: auto; }
+        .info-header { background: var(--primary); color: white; padding: 15px 20px; font-size: 1.25rem; font-weight: 700; display: flex; justify-content: space-between; align-items: center; }
+        .info-body { padding: 20px; max-height: 350px; overflow-y: auto; }
         
         .notice-item { border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 15px; }
         .notice-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-        .notice-date { font-size: 0.85rem; color: #888; font-weight: bold; }
+        .notice-date { font-size: 0.9rem; color: #888; font-weight: bold; }
         .notice-title { font-size: 1.1rem; color: var(--dark); font-weight: 700; margin: 5px 0; }
-        .notice-desc { font-size: 0.95rem; color: #555; line-height: 1.5; }
-
-        /* --- CONTACT SECTION --- */
-        .contact-section { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border-top: 6px solid var(--primary); margin: 40px auto; max-width: 900px; text-align: center; }
-        .contact-section h2 { color: var(--primary); font-size: 2.2rem; margin-bottom: 10px; font-weight: 800; }
-        .contact-details { margin-top: 25px; font-size: 1.25rem; color: #444; line-height: 1.8; }
-        .contact-details i { color: var(--secondary); font-size: 1.5rem; margin-right: 10px; vertical-align: middle; }
-        .contact-email { color: var(--primary); font-weight: bold; text-decoration: none; padding-bottom: 2px; border-bottom: 2px dashed var(--primary); transition: 0.3s; }
-        .contact-email:hover { color: var(--secondary); border-color: var(--secondary); }
+        .notice-desc { font-size: 1rem; color: #555; line-height: 1.5; }
 
         /* --- FOOTER --- */
         footer { background: #0B2240; color: white; text-align: center; padding: 30px 20px; margin-top: 50px; }
-        .footer-address { font-size: 1rem; color: #cbd5e1; margin-bottom: 15px; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.6;}
-        .social-icons { margin: 15px 0; }
+        .footer-address { font-size: 1rem; color: #cbd5e1; margin-bottom: 15px; line-height: 1.6;}
         .social-icons a { color: white; font-size: 1.5rem; margin: 0 10px; transition: 0.3s; }
         .social-icons a:hover { color: var(--secondary); }
-        .admin-link { color: #aaa; font-size: 13px; text-decoration: underline; margin-top: 15px; display: inline-block; transition: 0.3s;}
-        .admin-link:hover { color: var(--white); }
+        .admin-link { color: #aaa; font-size: 13px; text-decoration: underline; margin-top: 15px; display: inline-block;}
 
-        /* Responsive Design */
+
+        /* ==========================================
+           📱 STRICT MOBILE RESPONSIVE DESIGN
+           ========================================== */
         @media (max-width: 768px) {
-            header { flex-direction: column; text-align: center; gap: 15px; padding: 15px; }
-            .header-left { flex-direction: column; text-align: center; gap: 10px; }
-            .header-text h1 { font-size: 1.4rem; }
-            .hero h2 { font-size: 1.8rem; }
-            .cards-grid { grid-template-columns: 1fr; }
-            nav { flex-direction: column; gap: 10px; }
-            .team-card { width: 100%; }
-            .search-input { width: 70%; font-size: 1rem; }
-            .search-btn { font-size: 1rem; padding: 12px 20px; }
+            
+            /* 1. Header (Stacked vertically like Old Website) */
+            header { flex-direction: column; text-align: center; padding: 20px 15px; justify-content: center; }
+            .header-left { flex-direction: column; gap: 12px; margin-bottom: 15px; width: 100%;}
+            .logo-img { height: 85px; }
+            .header-text h1 { font-size: 1.5rem; }
+            .header-text p { font-size: 1.1rem; }
+            .header-text small { display: block; margin-top: 5px; }
+            .header-register-btn { width: 100%; max-width: 300px; justify-content: center; margin: 0 auto; }
+            
+            /* 2. Navigation Menu (Vertical List like Old Website) */
+            nav { flex-direction: column; padding: 15px; gap: 10px; border-bottom: 3px solid var(--secondary); }
+            nav a { width: 100%; text-align: left; padding: 12px 15px; font-size: 1.1rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); }
+            nav a:hover { background: rgba(255,255,255,0.15); }
+            
+            /* Special Buttons in Menu */
+            .btn-login, .btn-admin { text-align: center; padding: 12px; margin-top: 5px; border: none; }
+
+            /* 3. Hero & Titles */
+            .hero { padding: 40px 15px; }
+            .hero h2 { font-size: 1.7rem; }
+            .hero p { font-size: 1.05rem; }
+            .section-title { font-size: 1.8rem; }
+            
+            /* 4. Cards & Tables */
+            .content-card { padding: 25px 15px; margin: 30px auto; }
+            .team-card { max-width: 100%; margin-bottom: 0px; }
+            .cards-grid { grid-template-columns: 1fr; padding: 0 15px;}
+            
+            /* 5. Search Box (Responsive Fix) */
+            .search-container { margin: 30px 15px; padding: 20px 15px; }
+            .search-box-wrapper { flex-direction: column; border: none; background: transparent; box-shadow: none; gap: 10px;}
+            .search-input { border: 2px solid var(--primary); border-radius: 8px; padding: 12px; }
+            .search-btn { border-radius: 8px; padding: 12px; width: 100%; }
         }
     </style>
 </head>
@@ -138,7 +160,7 @@
             </div>
         </div>
         <div class="header-right">
-            <!-- Member Registration Button linked to registration page -->
+            <!-- Registration Button -->
             <a href="registration.html" class="header-register-btn"><i class="fa fa-user-plus"></i> सदस्य नोंदणी</a>
         </div>
     </header>
@@ -172,19 +194,19 @@
     </section>
 
     <!-- About Section -->
-    <section id="about" class="container" style="padding: 0 20px;">
-        <div class="about-card">
+    <section id="about" class="container">
+        <div class="content-card about-card">
             <h2><i class="fa fa-info-circle"></i> संघटनाबद्दल</h2>
             <p>क्ष-किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य ही राज्यातील सर्व क्ष-किरण वैज्ञानिक अधिकाऱ्यांच्या न्याय-हक्कांसाठी समर्पित अधिकृत संघटना आहे.</p>
         </div>
     </section>
 
     <!-- Office Bearers Section -->
-    <section id="committee">
+    <section id="committee" class="container">
         <h2 class="section-title">आमची राज्यस्तरीय कार्यकारणी</h2>
         <p class="sub-title">पदाधिकारी</p>
+        
         <div class="team-container">
-            
             <div class="team-card">
                 <img src="patil_sir.jpg" alt="अध्यक्ष" class="team-photo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
                 <h3 class="team-name">श्री रविंद्र मल्हारी पाटील</h3>
@@ -243,7 +265,7 @@
         </div>
 
         <p class="sub-title" style="margin-top: 20px;">माहिती तंत्रज्ञान विभाग</p>
-        <div class="team-container" style="max-width: 800px;">
+        <div class="team-container" style="max-width: 700px;">
             <div class="team-card" style="border-bottom: 5px solid #10b981;">
                 <img src="pavhane_sir.jpg" alt="समन्वयक" class="team-photo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
                 <h3 class="team-name">श्री शंकर संतोष पव्हाणे</h3>
@@ -263,10 +285,10 @@
     </section>
 
     <!-- Notices, GR & Search Section -->
-    <section id="notices" class="info-container">
+    <section id="notices">
         
-        <!-- Document Search Bar -->
-        <div class="search-container">
+        <!-- Search Bar -->
+        <div class="search-container container">
             <h3><i class="fa fa-search"></i> महत्त्वाचे जीआर, दस्तऐवज शोधा</h3>
             <form action="#" method="GET" class="search-box-wrapper">
                 <input type="text" placeholder="येथे शोधा (उदा. परिपत्रक, GR)..." class="search-input" required>
@@ -279,7 +301,7 @@
             <div class="info-card">
                 <div class="info-header">
                     <span><i class="fa fa-bullhorn"></i> ताज्या घडामोडी / सूचना</span>
-                    <span style="font-size: 0.9rem; background: rgba(0,0,0,0.2); padding: 2px 8px; border-radius: 10px;">Live</span>
+                    <span style="font-size: 0.85rem; background: rgba(0,0,0,0.2); padding: 2px 8px; border-radius: 10px;">Live</span>
                 </div>
                 <div class="info-body" id="notices-box">
                     <p style="text-align: center; color: gray;">माहिती लोड होत आहे...</p>
@@ -308,22 +330,22 @@
     </section>
 
     <!-- Professional Contact Section -->
-    <section id="contact" style="padding: 0 20px;">
-        <div class="contact-section">
+    <section id="contact" class="container">
+        <div class="content-card contact-card">
             <h2><i class="fa fa-address-book"></i> संपर्क कार्यालय</h2>
             <p class="sub-title" style="margin-bottom: 5px;">क्ष-किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य</p>
             
-            <div class="contact-details">
+            <div style="margin-top: 25px; font-size: 1.15rem; color: #444; line-height: 1.8;">
                 <p><b>अध्यक्ष:</b> श्री रविंद्र मल्हारी पाटील</p>
-                <p style="margin-top: 15px;">
-                    <i class="fa fa-map-marker-alt"></i>
+                <p style="margin-top: 10px;">
+                    <i class="fa fa-map-marker-alt" style="color: var(--secondary);"></i>
                     <b>पत्ता:</b> क्ष-किरण विभाग, उपजिल्हा रुग्णालय फलटण, जिल्हा सातारा. पिन - ४१५५२३
                 </p>
-                <p style="margin-top: 15px;">
+                <p style="margin-top: 10px;">
                     <i class="fa fa-envelope" style="color: #ef4444;"></i>
                     <b>ई-मेल:</b> 
                     <!-- Clickable Mailto Link -->
-                    <a href="mailto:xsounion@gmail.com" class="contact-email">xsounion@gmail.com</a>
+                    <a href="mailto:xsounion@gmail.com" style="color: var(--primary); font-weight: bold; text-decoration: none; border-bottom: 1.5px dashed var(--primary);">xsounion@gmail.com</a>
                 </p>
             </div>
         </div>
@@ -333,20 +355,20 @@
     <footer>
         <div class="footer-address">
             <p><i class="fa fa-map-marker-alt"></i> <b>मुख्यालय:</b> क्ष-किरण विभाग, उपजिल्हा रुग्णालय फलटण, जिल्हा सातारा. ४१५५२३</p>
-            <p><i class="fa fa-envelope"></i> <b>ईमेल:</b> <a href="mailto:xsounion@gmail.com" style="color: white; text-decoration: none;">xsounion@gmail.com</a></p>
+            <p style="margin-top: 5px;"><i class="fa fa-envelope"></i> <b>ईमेल:</b> <a href="mailto:xsounion@gmail.com" style="color: white; text-decoration: none;">xsounion@gmail.com</a></p>
         </div>
-        <div class="social-icons">
+        <div class="social-icons" style="margin: 20px 0;">
             <a href="#"><i class="fab fa-facebook"></i></a>
             <a href="#"><i class="fab fa-whatsapp"></i></a>
             <a href="#"><i class="fab fa-telegram"></i></a>
             <a href="#"><i class="fab fa-youtube"></i></a>
         </div>
         <p>© २०२६ क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना, महाराष्ट्र राज्य.</p>
-        <p style="margin-top: 10px; font-size: 12px; color: gray;">सर्व हक्क सुरक्षित. | Developed by IT Cell, X-Ray Union</p>
+        <p style="margin-top: 8px; font-size: 12px; color: gray;">सर्व हक्क सुरक्षित. | Developed by IT Cell, X-Ray Union</p>
         <a href="admin.html" class="admin-link"><i class="fa fa-lock"></i> Admin Login</a>
     </footer>
 
-    <!-- Firebase Script (Live Notices & Marquee) -->
+    <!-- Firebase Script (Safe and Untouched) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
         import { getFirestore, doc, collection, onSnapshot, query, limit } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
@@ -398,5 +420,3 @@
     </script>
 </body>
 </html>
-
-```
