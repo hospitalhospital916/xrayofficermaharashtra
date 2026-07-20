@@ -104,7 +104,8 @@
         }
     </style>
 </head>
-<body><!-- Header -->
+<body>
+    <!-- Header -->
     <header>
         <img src="logo.png" alt="Logo" class="logo-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/4006/4006511.png'">
         <div class="header-text">
@@ -114,7 +115,7 @@
         </div>
     </header>
 
-    <!-- Navigation Bar (Combined from both files) -->
+    <!-- Navigation Bar -->
     <nav>
         <a href="index.html"><i class="fa fa-home"></i> मुख्यपृष्ठ</a>
         <a href="#about"><i class="fa fa-info-circle"></i> संघटनाबद्दल</a>
@@ -124,26 +125,28 @@
         <a href="services.html"><i class="fa fa-tools"></i> सदस्यांसाठी सेवा</a>
         <a href="contact.html"><i class="fa fa-phone"></i> संपर्क</a>
         
-        <!-- Action Buttons including Google Form -->
-        <a href="registration.html" class="तुमचे-विद्यमान-css-classes">सदस्य नोंदणी / Member Registration</a>
+        <a href="registration.html" class="btn-register">सदस्य नोंदणी / Member Registration</a>
+        <!-- LINK UPDATED: POINTS DIRECTLY TO MEMBER LOGIN -->
         <a href="member-login.html" class="btn-login"><i class="fa fa-user-circle"></i> सदस्य लॉगिन</a>
-        <a href="admin.html" class="btn-admin"><i class="fa fa-shield-alt"></i> ॲडमिन</a>
+        <a href="admin-login.html" class="btn-admin"><i class="fa fa-shield-alt"></i> ॲडमिन</a>
     </nav>
 
-    <!-- Marquee (Live Data from Firebase integrated) -->
+    <!-- Marquee -->
     <div class="ticker-wrap">
         <span>नवीन</span>
         <marquee id="news-ticker" behavior="scroll" direction="left" scrollamount="6">
             राज्यातील सर्व क्ष-किरण वैज्ञानिक अधिकाऱ्यांनी आपली ऑनलाईन सदस्य नोंदणी लवकरात लवकर पूर्ण करावी. • माहिती लोड होत आहे...
         </marquee>
-    </div><!-- Hero Banner -->
+    </div>
+
+    <!-- Hero Banner -->
     <section class="hero">
         <h2>न्याय, हक्क आणि प्रगतीसाठी एकजूट!</h2>
         <p>राज्यातील सर्व क्ष-किरण वैज्ञानिक अधिकाऱ्यांच्या प्रश्नांना वाचा फोडणारी आणि त्यांचे हक्क मिळवून देणारी अधिकृत संघटना.</p>
         <a href="https://forms.gle/XbdkWManQePhTerA9" target="_blank" class="hero-btn">आजच सदस्य व्हा <i class="fa fa-arrow-right"></i></a>
     </section>
 
-    <!-- About Section (Preserved from File 1) -->
+    <!-- About Section -->
     <section id="about" class="container">
         <div class="about-card">
             <h2><i class="fa fa-info-circle"></i> संघटनाबद्दल</h2>
@@ -232,7 +235,9 @@
                 <p class="team-contact"><i class="fa fa-phone-alt"></i> ९६२३७९०९१६</p>
             </div>
         </div>
-    </section><!-- Notices & GR Section (Combines Sidebar from File 1 & Cards from File 2) -->
+    </section>
+
+    <!-- Notices & GR Section -->
     <section id="notices" class="info-container">
         <!-- Live Firebase Notices -->
         <div class="info-card">
@@ -265,7 +270,7 @@
         </div>
     </section>
 
-    <!-- Footer (Merged both files) -->
+    <!-- Footer -->
     <footer>
         <div class="footer-address">
             <p><i class="fa fa-map-marker-alt"></i> <b>मुख्यालय:</b> क्ष-किरण विभाग, उपजिल्हा रुग्णालय फलटण, जिल्हा सातारा. ४१५५२३</p>
@@ -279,10 +284,10 @@
         </div>
         <p>© २०२६ क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना, महाराष्ट्र राज्य.</p>
         <p style="margin-top: 10px; font-size: 12px; color: gray;">सर्व हक्क सुरक्षित. | Developed by IT Cell, X-Ray Union</p>
-        <a href="admin.html" class="admin-link"><i class="fa fa-lock"></i> Admin Login</a>
+        <a href="admin-login.html" class="admin-link"><i class="fa fa-lock"></i> Admin Login</a>
     </footer>
 
-    <!-- Firebase Script (Merged File 1 Marquee & File 2 Live Notices using v10.12.5) -->
+    <!-- Firebase Script -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
         import { getFirestore, doc, collection, onSnapshot, query, limit } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
@@ -300,7 +305,7 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // 1. Fetch Marquee Text (From File 1)
+        // 1. Fetch Marquee Text
         onSnapshot(doc(db, "settings", "marquee"), (snap) => {
             const ticker = document.getElementById("news-ticker");
             if (snap.exists() && snap.data().text) {
@@ -310,7 +315,7 @@
             }
         });
 
-        // 2. Fetch Live Notices (From File 2)
+        // 2. Fetch Live Notices
         const q = query(collection(db, "notices"), limit(5));
         
         onSnapshot(q, (snapshot) => {
