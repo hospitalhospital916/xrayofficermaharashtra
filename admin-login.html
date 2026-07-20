@@ -552,7 +552,54 @@
         window.exportToExcel = function(tableID, filename = '') { let clone = document.getElementById(tableID).cloneNode(true); clone.querySelectorAll('.no-print').forEach(el => el.remove()); XLSX.writeFile(XLSX.utils.table_to_book(clone, {sheet:"Sheet1"}), filename+".xlsx"); };
         window.downloadPDF = function(tableId, filename) { Swal.fire({title: 'PDF तयार होत आहे...', html: 'कृपया थांबा...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }}); let element = document.getElementById(tableId).cloneNode(true); element.querySelectorAll('.no-print').forEach(el => el.remove()); element.style.width = "100%"; element.querySelectorAll('th, td').forEach(cell => { cell.style.fontSize = "11px"; cell.style.padding = "5px"; cell.style.border = "1px solid #ccc"; cell.style.wordBreak = "break-word"; }); let wrapper = document.createElement('div'); wrapper.style.padding = "10px"; wrapper.innerHTML = `<h2 style="text-align:center; color:#0B3D91; font-family:sans-serif; margin-bottom: 20px; padding-top: 10px;">${filename.replace(/_/g, ' ')}</h2>`; wrapper.appendChild(element); let opt = { margin: [0.5, 0.2, 0.5, 0.2], filename: filename + '.pdf', image: { type: 'jpeg', quality: 1.0 }, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'in', format: 'a3', orientation: 'landscape' }, pagebreak: { mode: 'css', avoid: 'tr' } }; html2pdf().set(opt).from(wrapper).save().then(() => { Swal.close(); }); };
         
-        function renderCharts() { try { let mCounts = {}; let dCounts = {}; let appMem = membersData.filter(m => m.status !== 'Pending' && m.isMember !== false); appMem.forEach(m => { if(m.mandal && m.mandal !== "-") mCounts[m.mandal] = (mCounts[m.mandal]||0)+1; if(m.district && m.district !== "-") dCounts[m.district] = (dCounts[m.district]||0)+1; }); const mCtx = document.getElementById('mandalChart').getContext('2d'); if(mChart) mChart.destroy(); mChart = new Chart(mCtx, { type: 'pie', data: { labels: Object.keys(mCounts), datasets: [{ data: Object.values(mCounts), backgroundColor: ['#0B3D91','#f39c12','#10b981','#ef4444','#3b82f6','#8b5cf6','#f59e0b','#d97706'] }] } }); const dCtx = document.getElementById('distChart').getContext('2d'); if(dChart) dChart.destroy(); let sortedDist = Object.entries(dCounts).sort((a,b)=>b[1]-a[1]).slice(0,10); dChart = new Chart(dCtx, { type: 'doughnut', data: { labels: sortedDist.map(x=>x[0]), datasets: [{ data: sortedDist.map(x=>x[1]), backgroundColor: ['#8b5cf6','#3b82f6','#ef4444','#10b981','#f59e0b','#0B3D91','#d97706','#059669','#1e293b','#b45309'] }] } }); } catch(err) { console.log('Chart Error:', err); } }
-    </script>
-</body>
-</html>
+        function renderCharts() { 
+            try { 
+                let mCounts = {}; let dCounts = {}; 
+                let appMem = membersData.filter(m => m.status !== 'Pending' && m.isMember !== false); 
+                appMem.forEach(m => { 
+                    if(m.mandal && m.mandal !== "-") mCounts[m.mandal] = (mCounts[m.mandal]||0)+1; 
+                    if(m.district && m.district !== "-") dCounts[m.district] = (dCounts[m.district]||0)+1; 
+                }); 
+
+                // 1. पहिला चार्ट: Pie Chart (गोल आलेख)
+                const mCtx = document.getElementById('mandalChart').getContext('2d'); 
+                if(mChart) mChart.destroy(); 
+                mChart = new Chart(mCtx, { 
+                    type: 'pie', 
+                    data: { 
+                        labels: Object.keys(mCounts), 
+                        datasets: [{ 
+                            data: Object.values(mCounts), 
+                            backgroundColor: ['#0B3D91','#f39c12','#10b981','#ef4444','#3b82f6','#8b5cf6','#f59e0b','#d97706'],
+                            borderWidth: 2, borderColor: '#ffffff'
+                        }] 
+                    },
+                    options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+                }); 
+
+                // 2. दुसरा चार्ट: आकर्षक Bar Chart (Rounded Corners सह)
+                const dCtx = document.getElementById('distChart').getContext('2d'); 
+                if(dChart) dChart.destroy(); 
+                let sortedDist = Object.entries(dCounts).sort((a,b)=>b[1]-a[1]).slice(0,10); 
+                dChart = new Chart(dCtx, { 
+                    type: 'bar', 
+                    data: { 
+                        labels: sortedDist.map(x=>x[0]), 
+                        datasets: [{ 
+                            label: 'एकूण सदस्य',
+                            data: sortedDist.map(x=>x[1]), 
+                            backgroundColor: ['#8b5cf6','#3b82f6','#ef4444','#10b981','#f59e0b','#0B3D91','#d97706','#059669','#1e293b','#b45309'],
+                            borderRadius: 8, // गोलाकार कडा
+                            borderSkipped: false
+                        }] 
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } }, // नाव लपवण्यासाठी
+                        scales: {
+                            y: { beginAtZero: true, ticks: { stepSize: 1 } }
+                        }
+                    }
+                }); 
+            } catch(err) { console.log('Chart Error:', err); } 
+        }
