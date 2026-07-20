@@ -51,6 +51,9 @@
         .badge { padding: 5px 10px; border-radius: 20px; font-weight: bold; color: white; }
         .bg-success { background: var(--success); } .bg-danger { background: var(--danger); } .bg-dark { background: var(--dark); }
 
+        /* Graph height fix */
+        .chart-container { position: relative; height: 350px; width: 100%; display: flex; justify-content: center; }
+
         @media (max-width: 768px) {
             .navbar { flex-direction: column; gap: 15px; text-align: center; }
             .nav-actions { width: 100%; justify-content: center; }
@@ -59,7 +62,7 @@
 </head>
 <body>
 
-    <!-- SECURITY CHECK SCRIPT FIRST -->
+    <!-- SECURITY CHECK SCRIPT -->
     <script>
         const sessionData = localStorage.getItem("memberSession");
         if (!sessionData) {
@@ -102,11 +105,15 @@
             <div class="charts-grid">
                 <div class="panel">
                     <div class="panel-header h-blue"><i class="fa fa-chart-pie"></i> विभागानुसार सदस्य</div>
-                    <div class="panel-body"><canvas id="memberMandalChart"></canvas></div>
+                    <div class="panel-body chart-container">
+                        <canvas id="memberMandalChart"></canvas>
+                    </div>
                 </div>
                 <div class="panel">
                     <div class="panel-header h-warning"><i class="fa fa-chart-pie"></i> जिल्हानुसार सदस्य (Top 10)</div>
-                    <div class="panel-body"><canvas id="memberDistChart"></canvas></div>
+                    <div class="panel-body chart-container">
+                        <canvas id="memberDistChart"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
@@ -173,14 +180,15 @@
 
         // Execution Logic
         let currMem = JSON.parse(localStorage.getItem("memberSession") || "{}");
-        window.currentLoggedMemberData = currMem; // Global needed for I-Card function
+        window.currentLoggedMemberData = currMem; 
 
         document.getElementById('memWelcomeName').innerText = currMem.name || '-';
         document.getElementById('memFeeStatus').innerHTML = currMem.feeStatus === 'Paid' ? '<span class="badge bg-success" style="font-size:1.2rem;">Paid</span>' : '<span class="badge bg-danger" style="font-size:1.2rem;">Unpaid</span>';
 
         async function initDashboard() {
+            
+            // 1. Fetch Notices Safely
             try {
-                // Fetch notices
                 const noticeSnap = await getDocs(collection(db, "notices")); 
                 let nHtml = '';
                 noticeSnap.forEach(doc => {
@@ -189,10 +197,16 @@
                     nHtml += `<tr><td>${n.date}</td><td><b style="color:var(--primary);">${n.title}</b>${pdfLink}</td><td>${n.desc}</td></tr>`;
                 });
                 document.getElementById('memberNoticesBody').innerHTML = nHtml || '<tr><td colspan="3">नवीन सूचना उपलब्ध नाही.</td></tr>';
+            } catch(e) {
+                console.error("Notices Error:", e);
+                document.getElementById('memberNoticesBody').innerHTML = '<tr><td colspan="3" style="color:red;">सूचना लोड करताना समस्या आली. (Firebase Rules तपासा)</td></tr>';
+            }
 
-                // Fetch Members for Analytics
+            // 2. Fetch Members & Render Charts Safely
+            try {
                 const snap = await getDocs(collection(db, "members")); 
                 let mCounts = {}; let dCounts = {}; let count = 0;
+                
                 snap.forEach(doc => {
                     let m = doc.data();
                     if(m.status !== 'Pending' && m.isMember !== false) {
@@ -201,18 +215,24 @@
                         if(m.district && m.district !== "-") dCounts[m.district] = (dCounts[m.district]||0)+1; 
                     }
                 });
+                
                 document.getElementById('memTotalCount').innerText = count;
 
-                // Render Charts
                 if(Object.keys(mCounts).length > 0) {
-                    new Chart(document.getElementById('memberMandalChart'), { type: 'pie', data: { labels: Object.keys(mCounts), datasets: [{ data: Object.values(mCounts), backgroundColor: ['#0B3D91','#f39c12','#10b981','#ef4444','#3b82f6','#8b5cf6','#f59e0b','#d97706'] }] } });
+                    new Chart(document.getElementById('memberMandalChart'), { type: 'pie', data: { labels: Object.keys(mCounts), datasets: [{ data: Object.values(mCounts), backgroundColor: ['#0B3D91','#f39c12','#10b981','#ef4444','#3b82f6','#8b5cf6','#f59e0b','#d97706'], borderWidth: 1 }] }, options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } } });
                 }
+                
                 if(Object.keys(dCounts).length > 0) {
                     let sortedDist = Object.entries(dCounts).sort((a,b)=>b[1]-a[1]).slice(0,10); 
-                    new Chart(document.getElementById('memberDistChart'), { type: 'doughnut', data: { labels: sortedDist.map(x=>x[0]), datasets: [{ data: sortedDist.map(x=>x[1]), backgroundColor: ['#8b5cf6','#3b82f6','#ef4444','#10b981','#f59e0b','#0B3D91','#d97706','#059669','#1e293b','#b45309'] }] } });
+                    new Chart(document.getElementById('memberDistChart'), { type: 'doughnut', data: { labels: sortedDist.map(x=>x[0]), datasets: [{ data: sortedDist.map(x=>x[1]), backgroundColor: ['#8b5cf6','#3b82f6','#ef4444','#10b981','#f59e0b','#0B3D91','#d97706','#059669','#1e293b','#b45309'], borderWidth: 1 }] }, options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } } });
                 }
+            } catch(e) {
+                console.error("Members/Charts Error:", e);
+                document.getElementById('memTotalCount').innerText = "Error";
+            }
 
-                // Render Profile UI
+            // 3. Render Profile (Loads safely from LocalStorage)
+            try {
                 let directPhoto = window.getDirectUrl(currMem.photoUrl);
                 let photoHtml = directPhoto ? `<img src="${directPhoto}" style="width:120px; height:120px; border-radius:50%; object-fit:cover; border:4px solid var(--success); margin-bottom:15px;">` : `<div style="width:120px; height:120px; border-radius:50%; background:#cbd5e1; margin:0 auto 15px auto; display:flex; align-items:center; justify-content:center; color:#fff;"><i class="fa fa-user fa-3x"></i></div>`;
                 
@@ -234,8 +254,9 @@
                     </div>
                     ${icardBtnHtml}
                 `;
-
-            } catch(e) { console.error("Error loading dashboard data", e); }
+            } catch(e) {
+                console.error("Profile Rendering Error:", e);
+            }
         }
 
         window.generateMemberSideID = function() {
