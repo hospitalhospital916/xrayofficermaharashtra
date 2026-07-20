@@ -99,7 +99,7 @@
         </div>
     </div>
 
-    <!-- Full Edit/Add Modal -->
+    <!-- Full Edit/Add Modal (Updated with Photo Upload) -->
     <div id="editModalOverlay" class="custom-modal-overlay">
         <div class="custom-modal">
             <div class="custom-modal-header">
@@ -110,6 +110,16 @@
                 <form id="fullEditForm" onsubmit="saveFullEdit(event)">
                     <input type="hidden" id="edit_id">
                     <input type="hidden" id="edit_type">
+                    
+                    <!-- NEW CLOUDINARY PHOTO / PDF UPLOAD SECTION -->
+                    <div class="form-row">
+                        <div style="flex:1;">
+                            <label style="color:var(--danger); font-weight:bold;"><i class="fa fa-cloud-upload-alt"></i> प्रोफाईल फोटो किंवा PDF अपलोड करा (Max 5MB)</label>
+                            <input type="file" id="edit_photo" accept="image/*,.pdf" class="form-control" style="border: 2px dashed var(--primary); padding: 10px; background: #f8fafc;">
+                            <input type="hidden" id="existing_photo_url">
+                        </div>
+                    </div>
+
                     <div class="form-row">
                         <div><label>पूर्ण नाव</label><input type="text" id="edit_name" class="form-control" required></div>
                         <div><label>पद</label><input type="text" id="edit_post" class="form-control" required></div>
@@ -406,6 +416,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, setDoc, getDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+        // Keeping Storage imports just in case you ever need them in future, though we use Cloudinary now
         import { getStorage, ref as sRef, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-storage.js";
         
         // --- DO NOT CHANGE EXISTING CONFIG ---
@@ -473,7 +484,7 @@
             membersData.forEach(m => { 
                 if(m.isMember !== false) { total++; if(m.status === 'Approved') apprv++; else pend++; if(m.feeStatus === 'Paid') paid++; }
             });
-            document.getElementById('cnt-all').innerText = total; document.getElementById('cnt-approved').innerText = apprv; document.getElementById('cnt-pending').innerText = pend; document.getElementById('pendingBadge').innerText = pend; document.getElementById('cnt-paid').innerText = paid; document.getElementById('cnt-staff').innerText = otherStaffData.length;
+            document.getElementById('cnt-all').innerText = total; document.getElementById('cnt-approved').innerText = apprv; document.getElementById('cnt-pending').innerText = pend; document.getElementById('cnt-paid').innerText = paid; document.getElementById('cnt-staff').innerText = otherStaffData.length;
             renderMembers(); renderOtherStaff(); renderDashboard(); renderCommittee(); renderTemplates(); renderFees(); renderNotices(); renderElections();
         }
 
@@ -481,6 +492,7 @@
 
         window.openAddNew = (colName) => {
             document.getElementById('fullEditForm').reset(); document.getElementById('edit_id').value = ""; document.getElementById('edit_type').value = colName;
+            document.getElementById('existing_photo_url').value = ""; // जुना फोटो नसावा
             document.getElementById('editModalTitle').innerText = colName === 'members' ? "नवीन सदस्य जोडा" : "नवीन कर्मचारी जोडा";
             document.getElementById('feeStatusDiv').style.display = colName === 'members' ? 'flex' : 'none';
             document.getElementById('editModalOverlay').style.display = 'flex';
@@ -489,25 +501,114 @@
         window.openFullEditModal = (id, colName) => {
             let m = (colName === 'members' ? membersData : otherStaffData).find(x => x.id === id); if(!m) return;
             document.getElementById('edit_id').value = id; document.getElementById('edit_type').value = colName; document.getElementById('editModalTitle').innerText = "माहिती अपडेट करा";
+            
+            // --- NEW: Handle Photo Selection ---
+            document.getElementById('existing_photo_url').value = m.photoUrl || '';
+            document.getElementById('edit_photo').value = ''; 
+            // -----------------------------------
+
             document.getElementById('edit_name').value = m.name||''; document.getElementById('edit_post').value = m.designation||m.post||''; document.getElementById('edit_mobile').value = m.mobile||''; document.getElementById('edit_email').value = m.email||''; document.getElementById('edit_aadhaar').value = m.aadhaar||''; document.getElementById('edit_sevarth').value = m.sevarthId||''; document.getElementById('edit_workplace').value = m.workplace||''; document.getElementById('edit_joinDate').value = m.joinDate||''; document.getElementById('edit_retireDate').value = m.retireDate||''; document.getElementById('edit_address').value = m.address||''; document.getElementById('edit_mandal').value = m.mandal||''; populateDistricts('edit_mandal', 'edit_district'); document.getElementById('edit_district').value = m.district||'';
             if(colName === 'members') { document.getElementById('feeStatusDiv').style.display = 'flex'; document.getElementById('edit_fee').value = m.feeStatus||'Unpaid'; document.getElementById('edit_status').value = m.status||'Approved'; } else { document.getElementById('feeStatusDiv').style.display = 'none'; }
             document.getElementById('editModalOverlay').style.display = 'flex';
         }
 
+        // ============================================================
+        // CLOUDINARY UPLOAD LOGIC 
+        // ============================================================
         window.saveFullEdit = async (e) => {
-            e.preventDefault(); Swal.showLoading();
-            let id = document.getElementById('edit_id').value; let col = document.getElementById('edit_type').value;
-            let p = { name: document.getElementById('edit_name').value, mobile: document.getElementById('edit_mobile').value, email: document.getElementById('edit_email').value, aadhaar: document.getElementById('edit_aadhaar').value, sevarthId: document.getElementById('edit_sevarth').value, workplace: document.getElementById('edit_workplace').value, mandal: document.getElementById('edit_mandal').value, district: document.getElementById('edit_district').value, joinDate: document.getElementById('edit_joinDate').value, retireDate: document.getElementById('edit_retireDate').value, address: document.getElementById('edit_address').value };
-            if(col === 'members') { p.designation = document.getElementById('edit_post').value; p.feeStatus = document.getElementById('edit_fee').value; p.status = document.getElementById('edit_status').value; if(!id){p.isMember=true; p.pass="1234";} } else { p.post = document.getElementById('edit_post').value; }
-            try { if(id) await updateDoc(doc(db, col, id), p); else await addDoc(collection(db, col), p); closeModal('editModalOverlay'); Swal.fire('यशस्वी', 'माहिती सेव्ह झाली', 'success'); loadData(); } catch (err) { Swal.fire('Error', err.message, 'error'); }
+            e.preventDefault(); 
+            Swal.fire({title: 'माहिती सेव्ह होत आहे...', allowOutsideClick: false, didOpen: () => Swal.showLoading()});
+            
+            let id = document.getElementById('edit_id').value; 
+            let col = document.getElementById('edit_type').value;
+
+            // --- Cloudinary Configuration (इथे तुमचे डिटेल्स टाका) ---
+            const cloudName = "तुमचा_CLOUD_NAME_इथे_टाका"; 
+            const uploadPreset = "ml_default"; 
+            const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`;
+            // ---------------------------------------------------------
+
+            let fileInput = document.getElementById('edit_photo');
+            let file = fileInput.files[0];
+            let finalPhotoUrl = document.getElementById('existing_photo_url').value || '';
+
+            try {
+                // १. फाईल अपलोड करणे (जर निवडली असेल तर)
+                if(file) {
+                    Swal.fire({title: 'फोटो/फाईल Cloudinary वर अपलोड होत आहे...', allowOutsideClick: false, didOpen: () => Swal.showLoading()});
+                    
+                    const formData = new FormData();
+                    formData.append("file", file);
+                    formData.append("upload_preset", uploadPreset);
+
+                    const res = await fetch(CLOUDINARY_URL, {
+                        method: "POST",
+                        body: formData
+                    });
+                    const data = await res.json();
+                    
+                    if(data.secure_url) {
+                        finalPhotoUrl = data.secure_url;
+                    } else {
+                        throw new Error("फाईल अपलोड अयशस्वी झाली. कृपया Cloudinary सेटिंग्स तपासा.");
+                    }
+                    Swal.fire({title: 'डेटाबेस अपडेट होत आहे...', allowOutsideClick: false, didOpen: () => Swal.showLoading()});
+                }
+
+                // २. उरलेला डेटा सेव्ह करणे
+                let p = { 
+                    name: document.getElementById('edit_name').value, 
+                    mobile: document.getElementById('edit_mobile').value, 
+                    email: document.getElementById('edit_email').value, 
+                    aadhaar: document.getElementById('edit_aadhaar').value, 
+                    sevarthId: document.getElementById('edit_sevarth').value, 
+                    workplace: document.getElementById('edit_workplace').value, 
+                    mandal: document.getElementById('edit_mandal').value, 
+                    district: document.getElementById('edit_district').value, 
+                    joinDate: document.getElementById('edit_joinDate').value, 
+                    retireDate: document.getElementById('edit_retireDate').value, 
+                    address: document.getElementById('edit_address').value,
+                    photoUrl: finalPhotoUrl // <--- Cloudinary URL
+                };
+                
+                if(col === 'members') { 
+                    p.designation = document.getElementById('edit_post').value; 
+                    p.feeStatus = document.getElementById('edit_fee').value; 
+                    p.status = document.getElementById('edit_status').value; 
+                    if(!id){ p.isMember=true; p.pass="1234"; } 
+                } else { 
+                    p.post = document.getElementById('edit_post').value; 
+                }
+                
+                // ३. Firestore वर अपडेट / ॲड करणे
+                if(id) await updateDoc(doc(db, col, id), p); else await addDoc(collection(db, col), p); 
+                
+                closeModal('editModalOverlay'); 
+                Swal.fire('यशस्वी', 'माहिती व प्रोफाईल फोटो यशस्वीरीत्या सेव्ह झाला!', 'success'); 
+                
+                // फॉर्म रिसेट करणे
+                document.getElementById('edit_photo').value = "";
+                document.getElementById('existing_photo_url').value = "";
+                
+                loadData(); 
+            } catch (err) { 
+                Swal.fire('Error', err.message, 'error'); 
+                console.error(err);
+            }
         }
+        // ============================================================
 
         // View Full Profile Modal
         window.viewProfile = (id) => {
             let m = membersData.find(x => x.id === id); if(!m) return;
             let defImg = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
+            
+            // If uploaded file is PDF, show a document icon instead of a broken image
+            let displayImg = m.photoUrl ? (m.photoUrl.endsWith('.pdf') ? 'https://cdn-icons-png.flaticon.com/512/337/337946.png' : m.photoUrl) : defImg;
+            
             let html = `
-                <img src="${m.photoUrl||defImg}" class="prof-big-img" onerror="this.src='${defImg}'">
+                <img src="${displayImg}" class="prof-big-img" onerror="this.src='${defImg}'" ${m.photoUrl && m.photoUrl.endsWith('.pdf') ? `onclick="window.open('${m.photoUrl}', '_blank')"` : ''} style="${m.photoUrl && m.photoUrl.endsWith('.pdf') ? 'cursor:pointer;' : ''}">
+                ${m.photoUrl && m.photoUrl.endsWith('.pdf') ? '<p style="text-align:center; color:red; font-size:0.8rem; margin-top:-10px; font-weight:bold;">PDF पाहण्यासाठी आयकॉनवर क्लिक करा</p>' : ''}
                 <h2 style="text-align:center; color:var(--primary); margin-bottom:5px;">${m.name||'-'}</h2>
                 <h4 style="text-align:center; color:#f59e0b; margin-top:0; margin-bottom:20px;">${m.designation||'-'}</h4>
                 <div style="text-align:center; margin-bottom:20px;">
@@ -528,7 +629,9 @@
                 </div>`;
             document.getElementById('viewProfileBody').innerHTML = html;
             document.getElementById('viewModalOverlay').style.display = 'flex';
-        }// --- MEMBER LIST & FILTERS ---
+        }
+        
+        // --- MEMBER LIST & FILTERS ---
         window.renderMembers = function() {
             let s = document.getElementById('searchName').value.toLowerCase(); 
             let fStatus = document.getElementById('filterStatus').value;
@@ -555,14 +658,18 @@
             else fil.sort((a,b) => (a.name||'').localeCompare(b.name||''));
 
             let defImg = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
+            let pdfImg = "https://cdn-icons-png.flaticon.com/512/337/337946.png";
 
             document.getElementById('membersBody').innerHTML = fil.map((m,i) => {
                 let statusBadge = m.status === 'Approved' ? '<span class="badge bg-success">Approved</span>' : (m.status === 'Pending' ? '<span class="badge bg-warning">Pending</span>' : '<span class="badge bg-danger">Rejected</span>');
                 let rowClass = m.status === 'Pending' ? 'pending-row' : (m.feeStatus === 'Paid' ? 'verified-row' : '');
+                
+                let tblImg = m.photoUrl ? (m.photoUrl.endsWith('.pdf') ? pdfImg : m.photoUrl) : defImg;
+
                 return `
                 <tr class="${rowClass}">
                     <td><input type="checkbox" class="mem-chk" value="${m.id}" data-mob="${m.mobile||''}" data-email="${m.email||''}"></td>
-                    <td><img src="${m.photoUrl||defImg}" class="mem-thumb" onerror="this.src='${defImg}'" onclick="viewProfile('${m.id}')" title="प्रोफाईल पहा"></td>
+                    <td><img src="${tblImg}" class="mem-thumb" onerror="this.src='${defImg}'" onclick="viewProfile('${m.id}')" title="प्रोफाईल पहा"></td>
                     <td><b>${m.name||'-'}</b><br><small>${m.designation||'-'}</small></td>
                     <td><i class="fa fa-phone"></i> ${m.mobile||'-'}<br><small><i class="fa fa-envelope"></i> ${m.email||'-'}</small></td>
                     <td><b>${m.district||'-'}</b><br><small>${m.mandal||'-'}</small></td>
@@ -624,6 +731,8 @@
         window.printMembers = () => {
             let ids = getSelectedIDs(); let list = ids.length > 0 ? membersData.filter(m => ids.includes(m.id)) : membersData.filter(m => m.isMember!==false && m.status === 'Approved');
             let defImg = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
+            let pdfImg = "https://cdn-icons-png.flaticon.com/512/337/337946.png";
+
             let html = `<html><head><title>सदस्य यादी</title><style>
                 @page { size: A4 portrait; margin: 15mm; }
                 body { font-family: sans-serif; font-size: 11pt; }
@@ -635,7 +744,8 @@
             </style></head><body><h2>अधिकृत मान्य सदस्य यादी</h2><table>
             <thead><tr><th>अ.क्र.</th><th>फोटो</th><th>नाव</th><th>पद</th><th>मोबाईल</th><th>जिल्हा</th><th>मंडळ</th></tr></thead><tbody>`;
             list.forEach((m, i) => {
-                html += `<tr><td style="text-align:center;">${i+1}</td><td><img src="${m.photoUrl||defImg}" class="p-img"></td><td><b>${m.name||'-'}</b></td><td>${m.designation||'-'}</td><td>${m.mobile||'-'}</td><td>${m.district||'-'}</td><td>${m.mandal||'-'}</td></tr>`;
+                let prntImg = m.photoUrl ? (m.photoUrl.endsWith('.pdf') ? pdfImg : m.photoUrl) : defImg;
+                html += `<tr><td style="text-align:center;">${i+1}</td><td><img src="${prntImg}" class="p-img"></td><td><b>${m.name||'-'}</b></td><td>${m.designation||'-'}</td><td>${m.mobile||'-'}</td><td>${m.district||'-'}</td><td>${m.mandal||'-'}</td></tr>`;
             });
             html += `</tbody></table></body></html>`;
             let w = window.open('','','width=900,height=600'); w.document.write(html); w.document.close();
@@ -713,14 +823,18 @@
 
             let tHtml = ''; let mapData = {};
             allD.forEach(d => { let s = stat[d]; mapData[d] = s.app; tHtml += `<tr><td><b>${d}</b></td><td>${s.tot}</td><td style="color:green;">${s.app}</td><td style="color:red;">${s.pend}</td></tr>`; });
-            document.getElementById('distTableBody').innerHTML = tHtml;
+            // Note: Since distTableBody is in another context/file or omitted here, making sure it doesn't break if not found.
+            let dtb = document.getElementById('distTableBody'); if(dtb) dtb.innerHTML = tHtml;
 
             let iframe = document.getElementById('mapFrame');
             if (iframe && iframe.contentWindow) iframe.contentWindow.postMessage({ type: 'UPDATE_MAP_DATA', data: mapData }, '*');
 
             let pLabels = Object.keys(mandalStat); let pData = Object.values(mandalStat); let bgColors = ['#f59e0b','#3b82f6','#10b981','#ef4444','#8b5cf6','#ec4899','#f97316','#0ea5e9'];
             if(pieChart) pieChart.destroy();
-            pieChart = new Chart(document.getElementById('mandalPieChart'), { type: 'pie', data: { labels: pLabels, datasets: [{ data: pData, backgroundColor: bgColors }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels:{font:{size:11}} } } } });
+            let pCtx = document.getElementById('mandalPieChart');
+            if(pCtx) {
+                pieChart = new Chart(pCtx, { type: 'pie', data: { labels: pLabels, datasets: [{ data: pData, backgroundColor: bgColors }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right', labels:{font:{size:11}} } } } });
+            }
         }
 
         // --- OTHER TABS (Keep existing logic) ---
