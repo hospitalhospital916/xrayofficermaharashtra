@@ -44,11 +44,8 @@
         const app = initializeApp(firebaseConfig); 
         const db = getFirestore(app);
 
-        // Security check: If already logged in, skip login screen
         window.onload = function() {
-            if(localStorage.getItem("memberSession")) {
-                window.location.replace("member-dashboard.html");
-            }
+            if(localStorage.getItem("memberSession")) { window.location.replace("member-dashboard.html"); }
         };
 
         window.loginMember = async function() {
@@ -58,46 +55,27 @@
             
             Swal.fire({title: 'लॉगिन तपासत आहे...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
             try {
-                // Querying ONLY by mobile to avoid Firebase Composite Index requirement
                 const q = query(collection(db, "members"), where("mobile", "==", mobile));
                 const querySnapshot = await getDocs(q);
                 
                 if(querySnapshot.empty) {
                     Swal.fire('त्रुटी', 'या मोबाईल क्रमांकाची नोंदणी आढळली नाही.', 'error');
                 } else {
-                    let memData = null;
-                    let memId = null;
-                    
-                    // Verify password manually 
+                    let memData = null; let memId = null;
                     querySnapshot.forEach((doc) => { 
                         let data = doc.data();
-                        if(data.pass === pass || data.password === pass) {
-                            memData = data; 
-                            memId = doc.id; 
-                        }
+                        if(data.pass === pass || data.password === pass) { memData = data; memId = doc.id; }
                     });
                     
-                    if(!memData) {
-                        Swal.fire('त्रुटी', 'चुकीचा पासवर्ड.', 'error');
-                        return;
-                    }
-                    if(memData.loginDisabled) {
-                        Swal.fire('अवरोधित', 'तुमचे लॉगिन ॲडमिनद्वारे बंद करण्यात आले आहे. कृपया संपर्क साधा.', 'error'); return;
-                    }
-                    if(memData.status === 'Pending') {
-                        Swal.fire('प्रलंबित', 'तुमची नोंदणी अद्याप ॲडमिन कडून मंजूर झालेली नाही.', 'warning'); return;
-                    }
+                    if(!memData) { Swal.fire('त्रुटी', 'चुकीचा पासवर्ड.', 'error'); return; }
+                    if(memData.loginDisabled) { Swal.fire('अवरोधित', 'तुमचे लॉगिन ॲडमिनद्वारे बंद करण्यात आले आहे.', 'error'); return; }
+                    if(memData.status === 'Pending') { Swal.fire('प्रलंबित', 'तुमची नोंदणी अद्याप मंजूर झालेली नाही.', 'warning'); return; }
                     
                     memData.id = memId;
-                    // Using localStorage to keep session active even if tab is closed
                     localStorage.setItem("memberSession", JSON.stringify(memData));
-                    Swal.close();
-                    window.location.replace("member-dashboard.html");
+                    Swal.close(); window.location.replace("member-dashboard.html");
                 }
-            } catch(e) {
-                Swal.fire('त्रुटी', 'लॉगिन करताना समस्या आली. कृपया इंटरनेट तपासा.', 'error');
-                console.error(e);
-            }
+            } catch(e) { Swal.fire('त्रुटी', 'लॉगिन करताना समस्या आली.', 'error'); console.error(e); }
         };
     </script>
 </body>
