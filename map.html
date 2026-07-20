@@ -21,14 +21,16 @@
     <div id="map"></div>
 
     <script>
-        // १. नकाशा सुरु करणे (Center set to Maharashtra)
-        var map = L.map('map').setView([19.7515, 75.7139], 6);
+        // १. नकाशा महाराष्ट्र केंद्रबिंदूवर सेट करणे
+        var map = L.map('map', { zoomControl: true }).setView([19.7515, 75.7139], 7);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap'
         }).addTo(map);
 
-        // २. आरोग्य मंडळांचे रंग 
+        // Iframe मध्ये लोड झाल्यावर साईज अचूक करण्यासाठी
+        setTimeout(function() { map.invalidateSize(); }, 300);
+
         var mandalColors = {
             "ठाणे मंडळ": "#3b82f6",     
             "नाशिक मंडळ": "#10b981",    
@@ -40,7 +42,6 @@
             "नागपूर मंडळ": "#d946ef"     
         };
 
-        // ३. ३६ जिल्ह्यांचे अचूक GPS Coordinates आणि त्यांचे मंडळ
         const districtsData = [
             {name: "पुणे", lat: 18.5204, lng: 73.8567, mandal: "पुणे मंडळ"},
             {name: "सातारा", lat: 17.6805, lng: 74.0183, mandal: "पुणे मंडळ"},
@@ -83,33 +84,24 @@
         let districtMemberCounts = {};
         let markersLayer = L.layerGroup().addTo(map);
 
-        // ४. नकाशावर जिल्ह्यांचे मार्कर (वर्तुळे) दाखवणे
         function renderMapMarkers() {
             markersLayer.clearLayers();
-
             districtsData.forEach(d => {
                 let count = districtMemberCounts[d.name] || 0;
                 let color = mandalColors[d.mandal] || "#3b82f6";
-
-                // सदस्यांच्या संख्येनुसार वर्तुळाचा आकार कमी-जास्त करणे
-                let radius = Math.max(8000, count * 2000 + 5000); 
+                let radius = Math.max(12000, count * 3000 + 10000); 
 
                 var circle = L.circle([d.lat, d.lng], {
-                    color: '#fff',
-                    weight: 2,
-                    fillColor: color,
-                    fillOpacity: 0.8,
-                    radius: radius
+                    color: '#fff', weight: 2, fillColor: color, fillOpacity: 0.85, radius: radius
                 });
 
                 circle.bindPopup(`<b style='font-size:14px; color:#1e293b;'>जिल्हा: ${d.name}</b><br>मंडळ: ${d.mandal}<br><b style='color:#ef4444; font-size:13px;'>मान्य सदस्य: ${count}</b>`);
-                circle.bindTooltip(`<b>${d.name}</b>: ${count} सदस्य`, { permanent: true, direction: "top", className: "map-label" });
+                circle.bindTooltip(`<b>${d.name}</b>: ${count}`, { permanent: true, direction: "center", className: "map-label" });
 
                 markersLayer.addLayer(circle);
             });
         }
 
-        // ५. डॅशबोर्डकडून डेटा स्वीकारणे
         window.addEventListener('message', function(event) {
             if (event.data && event.data.type === 'UPDATE_MAP_DATA') {
                 districtMemberCounts = event.data.data;
@@ -118,23 +110,6 @@
         });
 
         renderMapMarkers();
-
-        // ६. सूची (Legend)
-        var legend = L.control({position: 'bottomright'});
-        legend.onAdd = function (map) {
-            var div = L.DomUtil.create('div', 'legend');
-            div.innerHTML += '<h4 style="margin-top:0;">आरोग्य मंडळे</h4>';
-            div.innerHTML += '<i style="background:' + mandalColors["ठाणे मंडळ"] + '"></i> ठाणे मंडळ<br>';
-            div.innerHTML += '<i style="background:' + mandalColors["नाशिक मंडळ"] + '"></i> नाशिक मंडळ<br>';
-            div.innerHTML += '<i style="background:' + mandalColors["पुणे मंडळ"] + '"></i> पुणे मंडळ<br>';
-            div.innerHTML += '<i style="background:' + mandalColors["कोल्हापूर मंडळ"] + '"></i> कोल्हापूर मंडळ<br>';
-            div.innerHTML += '<i style="background:' + mandalColors["छत्रपती संभाजीनगर मंडळ"] + '"></i> छ. संभाजीनगर मंडळ<br>';
-            div.innerHTML += '<i style="background:' + mandalColors["लातूर मंडळ"] + '"></i> लातूर मंडळ<br>';
-            div.innerHTML += '<i style="background:' + mandalColors["अकोला मंडळ"] + '"></i> अकोला मंडळ<br>';
-            div.innerHTML += '<i style="background:' + mandalColors["नागपूर मंडळ"] + '"></i> नागपूर मंडळ<br>';
-            return div;
-        };
-        legend.addTo(map);
     </script>
 </body>
 </html>
