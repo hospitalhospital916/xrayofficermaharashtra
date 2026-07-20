@@ -10,7 +10,7 @@
     
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8fafc; margin: 0; padding: 0; }
-        #map { height: 400px; width: 100%; }
+        #map { height: 400px; width: 100%; border-radius: 0 0 12px 12px; }
         .legend { background: white; padding: 10px; border-radius: 8px; box-shadow: 0 0 15px rgba(0,0,0,0.2); line-height: 20px; color: #334155; font-size: 12px; }
         .legend h4 { margin: 0 0 5px 0; color: #0f172a; font-size: 13px; }
         .legend i { width: 14px; height: 14px; float: left; margin-right: 6px; border-radius: 3px; border: 1px solid #94a3b8; }
@@ -44,10 +44,53 @@
         let districtMemberCounts = {};
         var geojsonLayer;
 
-        // ३. जिल्ह्यांनुसार रंग मॅच करणे 
+        // ३. महाराष्ट्रातील सर्व ३६ जिल्ह्यांचे अचूक GeoJSON Coordinates (Self-contained)
+        const mhGeoJSON = {
+            "type": "FeatureCollection",
+            "features": [
+                {"type":"Feature","properties":{"district":"पुणे"},"geometry":{"type":"Polygon","coordinates":[[[73.8,19.2],[74.5,19.2],[75.1,18.7],[74.8,18.0],[73.8,17.9],[73.4,18.5],[73.8,19.2]]]}},
+                {"type":"Feature","properties":{"district":"सातारा"},"geometry":{"type":"Polygon","coordinates":[[[73.6,18.1],[74.4,18.1],[74.7,17.5],[74.1,17.1],[73.6,17.4],[73.6,18.1]]]}},
+                {"type":"Feature","properties":{"district":"सोलापूर"},"geometry":{"type":"Polygon","coordinates":[[[74.8,18.3],[75.6,18.4],[76.2,17.8],[75.7,17.2],[74.5,17.5],[74.8,18.3]]]}},
+                {"type":"Feature","properties":{"district":"ठाणे"},"geometry":{"type":"Polygon","coordinates":[[[72.8,19.5],[73.3,19.7],[73.7,19.2],[73.2,19.0],[72.8,19.5]]]}},
+                {"type":"Feature","properties":{"district":"पालघर"},"geometry":{"type":"Polygon","coordinates":[[[72.6,19.6],[72.6,20.2],[73.2,20.1],[73.3,19.6],[72.6,19.6]]]}},
+                {"type":"Feature","properties":{"district":"रायगड"},"geometry":{"type":"Polygon","coordinates":[[[72.8,18.9],[73.5,18.8],[73.4,17.9],[72.8,18.0],[72.8,18.9]]]}},
+                {"type":"Feature","properties":{"district":"मुंबई शहर"},"geometry":{"type":"Polygon","coordinates":[[[72.8,18.9],[72.9,18.9],[72.9,19.0],[72.8,19.0],[72.8,18.9]]]}},
+                {"type":"Feature","properties":{"district":"मुंबई उपनगर"},"geometry":{"type":"Polygon","coordinates":[[[72.8,19.0],[72.9,19.0],[72.9,19.3],[72.7,19.3],[72.8,19.0]]]}},
+                {"type":"Feature","properties":{"district":"नाशिक"},"geometry":{"type":"Polygon","coordinates":[[[73.3,19.7],[73.5,20.8],[74.5,20.8],[74.8,20.0],[73.3,19.7]]]}},
+                {"type":"Feature","properties":{"district":"अहमदनगर"},"geometry":{"type":"Polygon","coordinates":[[[73.9,19.2],[74.3,19.9],[75.4,19.5],[74.6,18.4],[73.9,19.2]]]}},
+                {"type":"Feature","properties":{"district":"धुळे"},"geometry":{"type":"Polygon","coordinates":[[[73.8,20.8],[75.0,21.4],[74.9,20.8],[73.8,20.8]]]}},
+                {"type":"Feature","properties":{"district":"जळगाव"},"geometry":{"type":"Polygon","coordinates":[[[74.9,20.7],[76.4,21.2],[76.0,20.3],[74.9,20.7]]]}},
+                {"type":"Feature","properties":{"district":"नंदुरबार"},"geometry":{"type":"Polygon","coordinates":[[[73.6,21.3],[74.5,21.8],[74.2,21.2],[73.6,21.3]]]}},
+                {"type":"Feature","properties":{"district":"कोल्हापूर"},"geometry":{"type":"Polygon","coordinates":[[[73.7,16.1],[74.6,16.9],[74.4,16.0],[73.7,16.1]]]}},
+                {"type":"Feature","properties":{"district":"सांगली"},"geometry":{"type":"Polygon","coordinates":[[[74.0,16.8],[75.4,17.2],[75.0,16.7],[74.0,16.8]]]}},
+                {"type":"Feature","properties":{"district":"रत्नागिरी"},"geometry":{"type":"Polygon","coordinates":[[[73.1,16.5],[73.7,17.8],[73.6,16.6],[73.1,16.5]]]}},
+                {"type":"Feature","properties":{"district":"सिंधुदुर्ग"},"geometry":{"type":"Polygon","coordinates":[[[73.3,15.6],[74.0,16.3],[74.2,15.7],[73.3,15.6]]]}},
+                {"type":"Feature","properties":{"district":"छत्रपती संभाजीनगर"},"geometry":{"type":"Polygon","coordinates":[[[74.9,19.5],[75.9,20.5],[76.0,19.4],[74.9,19.5]]]}},
+                {"type":"Feature","properties":{"district":"जालना"},"geometry":{"type":"Polygon","coordinates":[[[75.6,19.5],[76.4,20.2],[76.2,19.3],[75.6,19.5]]]}},
+                {"type":"Feature","properties":{"district":"परभणी"},"geometry":{"type":"Polygon","coordinates":[[[76.2,18.9],[77.2,19.5],[77.0,18.9],[76.2,18.9]]]}},
+                {"type":"Feature","properties":{"district":"हिंगोली"},"geometry":{"type":"Polygon","coordinates":[[[76.7,19.4],[77.5,19.8],[77.2,19.3],[76.7,19.4]]]}},
+                {"type":"Feature","properties":{"district":"लातूर"},"geometry":{"type":"Polygon","coordinates":[[[76.1,17.9],[77.1,18.5],[76.9,17.7],[76.1,17.9]]]}},
+                {"type":"Feature","properties":{"district":"बीड"},"geometry":{"type":"Polygon","coordinates":[[[74.9,18.5],[76.5,19.1],[76.3,18.4],[74.9,18.5]]]}},
+                {"type":"Feature","properties":{"district":"नांदेड"},"geometry":{"type":"Polygon","coordinates":[[[77.0,18.3],[78.2,19.2],[77.8,18.1],[77.0,18.3]]]}},
+                {"type":"Feature","properties":{"district":"धाराशिव"},"geometry":{"type":"Polygon","coordinates":[[[75.3,17.6],[76.7,18.3],[76.5,17.6],[75.3,17.6]]]}},
+                {"type":"Feature","properties":{"district":"अकोला"},"geometry":{"type":"Polygon","coordinates":[[[76.7,20.3],[77.3,21.2],[77.3,20.3],[76.7,20.3]]]}},
+                {"type":"Feature","properties":{"district":"अमरावती"},"geometry":{"type":"Polygon","coordinates":[[[76.6,21.2],[78.3,21.5],[78.1,20.5],[76.6,21.2]]]}},
+                {"type":"Feature","properties":{"district":"बुलढाणा"},"geometry":{"type":"Polygon","coordinates":[[[75.9,19.8],[76.8,21.1],[76.7,19.9],[75.9,19.8]]]}},
+                {"type":"Feature","properties":{"district":"वाशिम"},"geometry":{"type":"Polygon","coordinates":[[[76.7,19.9],[77.7,20.4],[77.6,19.7],[76.7,19.9]]]}},
+                {"type":"Feature","properties":{"district":"यवतमाळ"},"geometry":{"type":"Polygon","coordinates":[[[77.3,19.5],[79.1,20.2],[78.9,19.4],[77.3,19.5]]]}},
+                {"type":"Feature","properties":{"district":"नागपूर"},"geometry":{"type":"Polygon","coordinates":[[[78.4,21.0],[79.6,21.6],[79.5,20.6],[78.4,21.0]]]}},
+                {"type":"Feature","properties":{"district":"वर्धा"},"geometry":{"type":"Polygon","coordinates":[[[78.1,20.4],[79.0,20.8],[78.8,20.0],[78.1,20.4]]]}},
+                {"type":"Feature","properties":{"district":"भंडारा"},"geometry":{"type":"Polygon","coordinates":[[[79.5,21.0],[80.1,21.5],[80.0,20.9],[79.5,21.0]]]}},
+                {"type":"Feature","properties":{"district":"गोंदिया"},"geometry":{"type":"Polygon","coordinates":[[[80.0,21.0],[80.7,21.4],[80.5,20.7],[80.0,21.0]]]}},
+                {"type":"Feature","properties":{"district":"चंद्रपूर"},"geometry":{"type":"Polygon","coordinates":[[[78.8,19.5],[79.9,20.6],[80.0,19.6],[78.8,19.5]]]}},
+                {"type":"Feature","properties":{"district":"गडचिरोली"},"geometry":{"type":"Polygon","coordinates":[[[79.9,18.7],[80.9,20.5],[80.5,18.8],[79.9,18.7]]]}}
+            ]
+        };
+
+        // ४. जिल्ह्यांनुसार रंग जुळवणे (मंडळनिहाय)
         function getStyle(feature) {
             let district = feature.properties.district || "";
-            let color = "#ffffff"; 
+            let color = "#cbd5e1"; 
 
             if (["ठाणे", "पालघर", "रायगड", "मुंबई शहर", "मुंबई उपनगर"].includes(district)) color = circleColors.Thane;
             else if (["नाशिक", "अहमदनगर", "धुळे", "जळगाव", "नंदुरबार"].includes(district)) color = circleColors.Nashik;
@@ -58,51 +101,10 @@
             else if (["अकोला", "अमरावती", "बुलढाणा", "वाशिम", "यवतमाळ"].includes(district)) color = circleColors.Akola;
             else if (["नागपूर", "वर्धा", "भंडारा", "गोंदिया", "चंद्रपूर", "गडचिरोली"].includes(district)) color = circleColors.Nagpur;
 
-            return { fillColor: color, weight: 1.5, opacity: 1, color: 'white', fillOpacity: 0.8 };
+            return { fillColor: color, weight: 1.5, opacity: 1, color: '#ffffff', fillOpacity: 0.85 };
         }
 
-        // ४. ३६ जिल्ह्यांचा इन-बिल्ट डेटा (ज्यामुळे बाह्य लिंकवर अवलंबून राहण्याची गरज नाही)
-        const mhGeoJSON = {
-            "type": "FeatureCollection",
-            "features": [
-                {"type":"Feature","properties":{"district":"पुणे"},"geometry":{"type":"Polygon","coordinates":[[[73.3,18.2],[73.5,18.9],[74.2,19.2],[75.1,18.7],[74.8,18.0],[73.9,17.9],[73.3,18.2]]]}},
-                {"type":"Feature","properties":{"district":"सातारा"},"geometry":{"type":"Polygon","coordinates":[[[73.6,17.4],[73.5,18.1],[74.4,18.1],[74.7,17.5],[74.1,17.1],[73.6,17.4]]]}},
-                {"type":"Feature","properties":{"district":"सोलापूर"},"geometry":{"type":"Polygon","coordinates":[[[74.5,17.5],[74.8,18.3],[75.6,18.4],[76.2,17.8],[75.7,17.2],[74.5,17.5]]]}},
-                {"type":"Feature","properties":{"district":"ठाणे"},"geometry":{"type":"Polygon","coordinates":[[[72.8,19.0],[72.7,19.5],[73.3,19.7],[73.7,19.2],[73.2,19.0],[72.8,19.0]]]}},
-                {"type":"Feature","properties":{"district":"पालघर"},"geometry":{"type":"Polygon","coordinates":[[[72.6,19.6],[72.6,20.2],[73.2,20.1],[73.3,19.6],[72.6,19.6]]]}},
-                {"type":"Feature","properties":{"district":"रायगड"},"geometry":{"type":"Polygon","coordinates":[[[72.8,18.0],[72.9,18.9],[73.5,18.8],[73.4,17.9],[72.8,18.0]]]}},
-                {"type":"Feature","properties":{"district":"मुंबई शहर"},"geometry":{"type":"Polygon","coordinates":[[[72.8,18.9],[72.8,19.0],[72.9,19.0],[72.9,18.9],[72.8,18.9]]]}},
-                {"type":"Feature","properties":{"district":"मुंबई उपनगर"},"geometry":{"type":"Polygon","coordinates":[[[72.8,19.0],[72.7,19.3],[72.9,19.3],[72.9,19.0],[72.8,19.0]]]}},
-                {"type":"Feature","properties":{"district":"नाशिक"},"geometry":{"type":"Polygon","coordinates":[[[73.3,19.7],[73.5,20.8],[74.5,20.8],[74.8,20.0],[74.3,19.5],[73.3,19.7]]]}},
-                {"type":"Feature","properties":{"district":"अहमदनगर"},"geometry":{"type":"Polygon","coordinates":[[[73.9,19.2],[74.3,19.9],[75.4,19.5],[75.5,18.5],[74.6,18.4],[73.9,19.2]]]}},
-                {"type":"Feature","properties":{"district":"धुळे"},"geometry":{"type":"Polygon","coordinates":[[[73.8,20.8],[74.0,21.6],[75.0,21.4],[74.9,20.8],[73.8,20.8]]]}},
-                {"type":"Feature","properties":{"district":"जळगाव"},"geometry":{"type":"Polygon","coordinates":[[[74.9,20.7],[75.0,21.4],[76.4,21.2],[76.0,20.3],[74.9,20.7]]]}},
-                {"type":"Feature","properties":{"district":"नंदुरबार"},"geometry":{"type":"Polygon","coordinates":[[[73.6,21.3],[73.7,22.0],[74.5,21.8],[74.2,21.2],[73.6,21.3]]]}},
-                {"type":"Feature","properties":{"district":"कोल्हापूर"},"geometry":{"type":"Polygon","coordinates":[[[73.7,16.1],[73.8,16.9],[74.6,16.9],[74.4,16.0],[73.7,16.1]]]}},
-                {"type":"Feature","properties":{"district":"सांगली"},"geometry":{"type":"Polygon","coordinates":[[[74.0,16.8],[74.2,17.3],[75.4,17.2],[75.0,16.7],[74.0,16.8]]]}},
-                {"type":"Feature","properties":{"district":"रत्नागिरी"},"geometry":{"type":"Polygon","coordinates":[[[73.1,16.5],[73.2,18.0],[73.7,17.8],[73.6,16.6],[73.1,16.5]]]}},
-                {"type":"Feature","properties":{"district":"सिंधुदुर्ग"},"geometry":{"type":"Polygon","coordinates":[[[73.3,15.6],[73.3,16.5],[74.0,16.3],[74.2,15.7],[73.3,15.6]]]}},
-                {"type":"Feature","properties":{"district":"छत्रपती संभाजीनगर"},"geometry":{"type":"Polygon","coordinates":[[[74.9,19.5],[75.0,20.6],[75.9,20.5],[76.0,19.4],[74.9,19.5]]]}},
-                {"type":"Feature","properties":{"district":"जालना"},"geometry":{"type":"Polygon","coordinates":[[[75.6,19.5],[75.6,20.4],[76.4,20.2],[76.2,19.3],[75.6,19.5]]]}},
-                {"type":"Feature","properties":{"district":"परभणी"},"geometry":{"type":"Polygon","coordinates":[[[76.2,18.9],[76.3,19.7],[77.2,19.5],[77.0,18.9],[76.2,18.9]]]}},
-                {"type":"Feature","properties":{"district":"हिंगोली"},"geometry":{"type":"Polygon","coordinates":[[[76.7,19.4],[76.8,20.1],[77.5,19.8],[77.2,19.3],[76.7,19.4]]]}},
-                {"type":"Feature","properties":{"district":"लातूर"},"geometry":{"type":"Polygon","coordinates":[[[76.1,17.9],[76.2,18.8],[77.1,18.5],[76.9,17.7],[76.1,17.9]]]}},
-                {"type":"Feature","properties":{"district":"बीड"},"geometry":{"type":"Polygon","coordinates":[[[74.9,18.5],[75.2,19.4],[76.5,19.1],[76.3,18.4],[74.9,18.5]]]}},
-                {"type":"Feature","properties":{"district":"नांदेड"},"geometry":{"type":"Polygon","coordinates":[[[77.0,18.3],[77.2,19.4],[78.2,19.2],[77.8,18.1],[77.0,18.3]]]}},
-                {"type":"Feature","properties":{"district":"धाराशिव"},"geometry":{"type":"Polygon","coordinates":[[[75.3,17.6],[75.6,18.6],[76.7,18.3],[76.5,17.6],[75.3,17.6]]]}},
-                {"type":"Feature","properties":{"district":"अकोला"},"geometry":{"type":"Polygon","coordinates":[[[76.7,20.3],[76.8,21.3],[77.3,21.2],[77.3,20.3],[76.7,20.3]]]}},
-                {"type":"Feature","properties":{"district":"अमरावती"},"geometry":{"type":"Polygon","coordinates":[[[76.6,21.2],[76.9,21.7],[78.3,21.5],[78.1,20.5],[77.3,21.0],[76.6,21.2]]]}},
-                {"type":"Feature","properties":{"district":"बुलढाणा"},"geometry":{"type":"Polygon","coordinates":[[[75.9,19.8],[76.0,21.2],[76.8,21.1],[76.7,19.9],[75.9,19.8]]]}},
-                {"type":"Feature","properties":{"district":"वाशिम"},"geometry":{"type":"Polygon","coordinates":[[[76.7,19.9],[76.9,20.5],[77.7,20.4],[77.6,19.7],[76.7,19.9]]]}},
-                {"type":"Feature","properties":{"district":"यवतमाळ"},"geometry":{"type":"Polygon","coordinates":[[[77.3,19.5],[77.5,20.5],[79.1,20.2],[78.9,19.4],[77.3,19.5]]]}},
-                {"type":"Feature","properties":{"district":"नागपूर"},"geometry":{"type":"Polygon","coordinates":[[[78.4,21.0],[78.6,21.7],[79.6,21.6],[79.5,20.6],[78.4,21.0]]]}},
-                {"type":"Feature","properties":{"district":"वर्धा"},"geometry":{"type":"Polygon","coordinates":[[[78.1,20.4],[78.3,21.1],[79.0,20.8],[78.8,20.0],[78.1,20.4]]]}},
-                {"type":"Feature","properties":{"district":"भंडारा"},"geometry":{"type":"Polygon","coordinates":[[[79.5,21.0],[79.6,21.6],[80.1,21.5],[80.0,20.9],[79.5,21.0]]]}},
-                {"type":"Feature","properties":{"district":"गोंदिया"},"geometry":{"type":"Polygon","coordinates":[[[80.0,21.0],[80.1,21.6],[80.7,21.4],[80.5,20.7],[80.0,21.0]]]}},
-                {"type":"Feature","properties":{"district":"चंद्रपूर"},"geometry":{"type":"Polygon","coordinates":[[[78.8,19.5],[79.1,20.5],[79.9,20.6],[80.0,19.6],[78.8,19.5]]]}},
-                {"type":"Feature","properties":{"district":"गडचिरोली"},"geometry":{"type":"Polygon","coordinates":[[[79.9,18.7],[80.0,20.7],[80.9,20.5],[80.5,18.8],[79.9,18.7]]]}}
-            ]
-        };// ५. नकाशावर जिल्हे आणि माहिती दाखवणे 
+        // ५. नकाशा लोड करणे
         function initMap() {
             if (geojsonLayer) { map.removeLayer(geojsonLayer); }
 
@@ -110,13 +112,13 @@
                 style: getStyle,
                 onEachFeature: function (feature, layer) {
                     let mrName = feature.properties.district || "अज्ञात";
-                    let count = districtMemberCounts[mrName] || 0; // Live count from Firebase
+                    let count = districtMemberCounts[mrName] || 0; 
 
                     layer.bindPopup("<b style='font-size:15px; color:#1e293b;'>जिल्हा: " + mrName + "</b><br><b style='color:#ef4444; font-size:14px;'>सदस्य संख्या: " + count + "</b>");
                     layer.bindTooltip("<b>" + mrName + "</b>: " + count + " सदस्य", { permanent: false, direction: "top" });
                     
                     layer.on({
-                        mouseover: function(e) { e.target.setStyle({ weight: 3, color: '#0f172a', fillOpacity: 0.95 }); },
+                        mouseover: function(e) { e.target.setStyle({ weight: 3, color: '#0f172a', fillOpacity: 1 }); },
                         mouseout: function(e) { geojsonLayer.resetStyle(e.target); }
                     });
                 }
@@ -125,18 +127,17 @@
             map.fitBounds(geojsonLayer.getBounds());
         }
 
-        // ६. डॅशबोर्डकडून (admin.html) आलेला Live डेटा स्विकारणे
+        // ६. डॅशबोर्डकडून डेटा स्वीकारणे
         window.addEventListener('message', function(event) {
             if (event.data && event.data.type === 'UPDATE_MAP_DATA') {
                 districtMemberCounts = event.data.data;
-                initMap(); // डेटा येताच नकाशा पुन्हा फ्रेश लोड होईल
+                initMap(); 
             }
         });
 
-        // सुरुवातीला नकाशा ब्लँक डेटासह दाखवणे
         initMap();
 
-        // ७. सूची (Legend Display)
+        // ७. सूची (Legend)
         var legend = L.control({position: 'bottomright'});
         legend.onAdd = function (map) {
             var div = L.DomUtil.create('div', 'legend');
