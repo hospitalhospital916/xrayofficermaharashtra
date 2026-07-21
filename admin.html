@@ -57,11 +57,11 @@
         .dist-badge { display: inline-flex; justify-content: space-between; align-items: center; width: 100%; background: rgba(0,0,0,0.25); font-size: 0.7rem; padding: 2px 4px; margin: 2px 0; border-radius: 4px; font-weight: 600;}
         .dist-badge .dist-count { background: #fff; color: #000; padding: 1px 4px; border-radius: 10px; font-weight: 800; font-size: 0.65rem;}
 
-        /* Forms & Tables */
+        /* Forms & Tables - Adjusted Widths */
         .form-row { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px; align-items: flex-end;}
         .form-control { flex: 1; min-width: 180px; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; user-select: auto; outline:none;}
         .form-control:focus { border-color: var(--primary); box-shadow: 0 0 5px rgba(11,61,145,0.2); }
-        table { width: 100%; border-collapse: collapse; min-width: 1000px; background: white; }
+        table { width: 100%; border-collapse: collapse; min-width: 1000px; background: white; table-layout: auto;}
         th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid #e2e8f0; vertical-align: middle; }
         th { background: var(--primary); color: white; font-weight: 800; position: sticky; top: 0; z-index: 2; font-size: 0.85rem; white-space: nowrap;}
         td { font-size: 0.9rem; }
@@ -137,7 +137,6 @@
                     <input type="hidden" id="edit_id">
                     <input type="hidden" id="edit_type">
                     
-                    <!-- REQ 4: File Size Limit set to 400 KB -->
                     <div class="form-row">
                         <div style="flex:1;">
                             <label style="color:var(--primary); font-weight:bold;"><i class="fa fa-camera"></i> प्रोफाईल फोटो (Max 400 KB)</label>
@@ -184,7 +183,7 @@
         </div>
     </div>
 
-    <!-- REQ 6: Profile Modal Window -->
+    <!-- Profile Pop-up Modal -->
     <div id="profileModalOverlay" class="custom-modal-overlay">
         <div class="custom-modal" style="max-width: 600px;">
             <div class="custom-modal-header">
@@ -224,6 +223,7 @@
             <h2><i class="fa fa-shield-alt"></i> क्ष-किरण संघटना महाराष्ट्र</h2>
             <div style="display:flex; align-items:center; gap:15px;">
                 <span id="login_user_role" style="font-weight:bold; color:var(--success);"></span>
+                <span id="login_user_region" style="font-size:0.85rem; color:var(--danger); font-weight:bold;"></span>
                 <button class="btn-logout" onclick="logoutAdmin()"><i class="fa fa-power-off"></i> लॉगआउट</button>
             </div>
         </div>
@@ -233,7 +233,7 @@
             <button class="tab-btn" onclick="openTab('tab-members')"><i class="fa fa-user-check"></i> सदस्य नियंत्रण</button>
             <button class="tab-btn" onclick="openTab('tab-other')"><i class="fa fa-users"></i> राज्यातील कर्मचारी</button>
             <button class="tab-btn" onclick="openTab('tab-design')"><i class="fa fa-id-card"></i> I-Card व लेटरपॅड</button>
-            <button class="tab-btn" onclick="openTab('tab-committee')"><i class="fa fa-users-cog"></i> पदाधिकारी</button>
+            <button class="tab-btn" onclick="openTab('tab-committee')"><i class="fa fa-users-cog"></i> पदाधिकारी व गॅलरी</button>
             <button class="tab-btn" onclick="openTab('tab-notices')"><i class="fa fa-bullhorn"></i> नोटीस बोर्ड</button>
             <button class="tab-btn" onclick="openTab('tab-fees')"><i class="fa fa-rupee-sign"></i> शुल्क विभाग</button>
             <button class="tab-btn" id="btn-settings" onclick="openTab('tab-settings')" style="display:none;"><i class="fa fa-cogs"></i> सेटिंग्ज</button>
@@ -251,7 +251,7 @@
 
                 <div class="map-pie-grid">
                     <div class="panel" style="margin-bottom:0;">
-                        <div class="panel-header h-primary"><span><i class="fa fa-map-marked-alt"></i> आरोग्य विभागाची ८ मंडळे व जिल्हे</span></div>
+                        <div class="panel-header h-primary"><span><i class="fa fa-map-marked-alt"></i> आरोग्य विभागाची मंडळे व जिल्हे</span></div>
                         <div class="panel-body" style="padding:0; background: #f8fafc; border-radius: 0 0 12px 12px;">
                             <div id="mandalMapGrid" class="mandal-map-grid"></div>
                         </div>
@@ -289,7 +289,6 @@
                         <div class="form-row no-print">
                             <select id="filterMandal" class="form-control" onchange="populateDistricts('filterMandal', 'filterDistrict'); renderMembers();"><option value="All">सर्व मंडळे</option></select>
                             <select id="filterDistrict" class="form-control" onchange="renderMembers()"><option value="All">सर्व जिल्हे</option></select>
-                            <!-- REQ 5: Seniority Filter for Members too -->
                             <select id="filterSeniority" class="form-control" onchange="renderMembers()">
                                 <option value="All">क्रमवारी: डिफॉल्ट</option>
                                 <option value="Senior">सेवाज्येष्ठतेनुसार (Join Date)</option>
@@ -308,7 +307,6 @@
                                     <th style="width:30px;"><input type="checkbox" id="selectAllMem" onchange="toggleSelectAll(this)"></th>
                                     <th>नाव व पद</th> 
                                     <th>संपर्क</th>
-                                    <!-- REQ 6: Column Order Arrangement -->
                                     <th>कार्यरत ठिकाण</th>
                                     <th>जिल्हा</th> 
                                     <th>मंडळ</th> 
@@ -323,7 +321,7 @@
                 </div>
             </div>
 
-            <!-- TAB: STATE EMPLOYEES (REQ 5 Updates) -->
+            <!-- TAB: STATE EMPLOYEES -->
             <div id="tab-other" class="tab-content">
                 <div class="panel">
                     <div class="panel-header">
@@ -355,7 +353,7 @@
                 </div>
             </div>
 
-            <!-- TAB: NOTICES & CONTROL BOARD (REQ 7 Updates) -->
+            <!-- TAB: NOTICES & CONTROL BOARD -->
             <div id="tab-notices" class="tab-content">
                 <div class="panel">
                     <div class="panel-header">
@@ -367,7 +365,6 @@
                         </div>
                         
                         <div class="folder-grid" id="noticeFolders">
-                            <!-- REQ 7: 2 Folders with Rename option for Super Admin -->
                             <div class="folder-card">
                                 <button class="edit-folder-btn" onclick="renameFolder('folder1')"><i class="fa fa-pen"></i></button>
                                 <i class="fa fa-folder"></i>
@@ -395,10 +392,10 @@
                 </div>
             </div>
 
-            <!-- TAB: OFFICE BEARERS (Committee - REQ 4 Updates) -->
+            <!-- TAB: OFFICE BEARERS & GALLERY (FIXED: Added Gallery) -->
             <div id="tab-committee" class="tab-content">
                 <div class="panel">
-                    <div class="panel-header h-purple"><span><i class="fa fa-users-cog"></i> पदाधिकारी (Office Bearers)</span></div>
+                    <div class="panel-header h-purple"><span><i class="fa fa-users-cog"></i> पदाधिकारी व गॅलरी (Office Bearers & Gallery)</span></div>
                     <div class="panel-body">
                         <div style="background:#f8fafc; padding:15px; border-radius:8px; border:1px solid #cbd5e1; margin-bottom:20px;">
                             <h4 style="margin-bottom:10px; color:var(--primary);">नवीन पदाधिकारी जोडा / अपडेट करा</h4>
@@ -424,6 +421,19 @@
                             </div>
                         </div>
                         <div class="ob-grid" id="committeeGrid"></div>
+                        
+                        <!-- GALLERY SECTION (NEW) -->
+                        <hr style="margin:25px 0;">
+                        <h4 style="margin-bottom:10px; color:var(--info);"><i class="fa fa-images"></i> गॅलरी फोटो अपलोड (Max 400KB)</h4>
+                        <p style="font-size:0.85rem; color:gray; margin-bottom:10px;">येथून अपलोड केलेले फोटो युझर्सना मुख्य वेबसाईटच्या गॅलरी पेजवर दिसतील.</p>
+                        <div class="form-row" style="background:#fffbeb; padding:15px; border-radius:8px;">
+                            <input type="file" id="gallery_photo" accept="image/*" class="form-control" onchange="checkFileSize(this, 400)">
+                            <input type="text" id="gallery_title" class="form-control" placeholder="फोटोचे टायटल / माहिती (उदा. मीटिंग २०२६)">
+                            <button class="btn-action bg-success" onclick="uploadGalleryPhoto()"><i class="fa fa-upload"></i> गॅलरीत ॲड करा</button>
+                        </div>
+                        <div class="folder-grid" id="galleryGrid" style="margin-top:20px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+                            <!-- Gallery Images display here -->
+                        </div>
                     </div>
                 </div>
             </div>
@@ -492,7 +502,7 @@
                 </div>
             </div>
             
-            <!-- TAB: SETTINGS (REQ 2 & REQ 3 Updates) -->
+            <!-- TAB: SETTINGS -->
             <div id="tab-settings" class="tab-content">
                 <div class="panel">
                     <div class="panel-header"><span><i class="fa fa-cogs"></i> सुपर ॲडमिन सेटिंग्ज व परवानग्या</span></div>
@@ -516,12 +526,17 @@
                                     <label><input type="checkbox" value="notices"> नोटीस बोर्ड</label>
                                 </div>
                                 <div style="margin-top:10px;">
-                                    <label>डेटा ॲक्सेस: </label>
+                                    <label>डेटा ॲक्सेस (मंडळ फिल्टर): </label>
                                     <select id="sub_admin_access" class="form-control" style="width:auto; display:inline-block;">
-                                        <option value="All">संपूर्ण महाराष्ट्र</option>
+                                        <option value="All">संपूर्ण महाराष्ट्र (All)</option>
                                         <option value="पुणे मंडळ">फक्त पुणे मंडळ</option>
+                                        <option value="नागपूर मंडळ">फक्त नागपूर मंडळ</option>
                                         <option value="नाशिक मंडळ">फक्त नाशिक मंडळ</option>
-                                        <!-- Other mandals... -->
+                                        <option value="अकोला मंडळ">फक्त अकोला मंडळ</option>
+                                        <option value="कोल्हापूर मंडळ">फक्त कोल्हापूर मंडळ</option>
+                                        <option value="छत्रपती संभाजीनगर मंडळ">फक्त छ. संभाजीनगर मंडळ</option>
+                                        <option value="लातूर मंडळ">फक्त लातूर मंडळ</option>
+                                        <option value="ठाणे मंडळ">फक्त ठाणे मंडळ</option>
                                     </select>
                                 </div>
                             </div>
@@ -530,7 +545,7 @@
                             <h5>सध्याचे सब-ॲडमिन (सर्च करा)</h5>
                             <input type="text" id="searchSubAdmin" class="form-control" placeholder="सर्च..." style="margin-bottom:10px; max-width:300px;" onkeyup="filterSubAdmins()">
                             <table style="font-size:0.85rem;">
-                                <thead><tr><th>नाव</th><th>लॉगिन आयडी</th><th>पासवर्ड</th><th>ॲक्सेस</th><th>Action</th></tr></thead>
+                                <thead><tr><th>नाव</th><th>लॉगिन आयडी</th><th>पासवर्ड</th><th>ॲक्सेस (मंडळ)</th><th>Action</th></tr></thead>
                                 <tbody id="subAdminListBody"></tbody>
                             </table>
                         </div>
@@ -571,7 +586,7 @@
     <!-- FIREBASE & JS LOGIC -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
         
         const firebaseConfig = { apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk", authDomain: "xrayunionmah.firebaseapp.com", projectId: "xrayunionmah" };
@@ -580,7 +595,7 @@
         
         const SUPER_ADMIN_EMAIL = "hangemahesh498@gmail.com";
         let isSuperAdmin = false;
-        let currentUserRole = null;
+        let subAdminAccessRegion = "All"; // FIXED: Variable to hold Sub-Admin's allocated Mandal
         let subAdminsList = [];
 
         // 8 Mandals & Districts Data
@@ -612,7 +627,7 @@
             mandalData[m].forEach(d => { html += `<option value="${d}">${d}</option>`; }); dSelect.innerHTML = html;
         }
 
-        // REQ 4: Max Size Validation logic
+        // Max Size Validation logic
         window.checkFileSize = (input, maxKB) => {
             if (input.files && input.files.length > 0) {
                 let fileSize = input.files[0].size / 1024;
@@ -623,7 +638,7 @@
             }
         }
 
-        let membersData=[], otherStaffData=[], committeeData=[];
+        let membersData=[], otherStaffData=[], committeeData=[], galleryData=[];
         
         window.openTab = function(tabId) { 
             document.querySelectorAll('.tab-content, .tab-btn').forEach(e=>e.classList.remove('active')); 
@@ -635,10 +650,30 @@
         onAuthStateChanged(auth, async (user) => { 
             if (user) { 
                 isSuperAdmin = (user.email === SUPER_ADMIN_EMAIL);
+                
+                // FIXED: Fetch Sub-Admin's Region Access Logic
+                if(!isSuperAdmin) {
+                    const q = query(collection(db, "admin_users"), where("email", "==", user.email));
+                    const snap = await getDocs(q);
+                    if(!snap.empty) { subAdminAccessRegion = snap.docs[0].data().access || "All"; }
+                } else {
+                    subAdminAccessRegion = "All"; // Super Admin sees all
+                }
+
                 document.getElementById('login-screen').style.display='none'; 
                 document.getElementById('app-content').style.display='block'; 
                 document.getElementById('login_user_role').innerText = isSuperAdmin ? "Super Admin" : "Sub Admin";
-                if(isSuperAdmin) document.getElementById('btn-settings').style.display = 'inline-block';
+                document.getElementById('login_user_region').innerText = subAdminAccessRegion !== "All" ? `(${subAdminAccessRegion})` : "";
+                
+                if(isSuperAdmin) { 
+                    document.getElementById('btn-settings').style.display = 'inline-block';
+                    // Disable Mandal filter dropdown for sub-admins if they have restricted access
+                } else if(subAdminAccessRegion !== "All") {
+                    document.getElementById('filterMandal').value = subAdminAccessRegion;
+                    document.getElementById('filterMandal').disabled = true;
+                    populateDistricts('filterMandal', 'filterDistrict');
+                }
+
                 populateMandals(); await loadData(); 
                 logActivity("User Logged In");
             } 
@@ -652,27 +687,25 @@
         };
         window.logoutAdmin = () => signOut(auth);
 
-        // REQ 3: Activity Log Logic (7 days retention)
+        // Activity Log Logic (7 days retention)
         async function logActivity(actionMsg) {
-            if(!isSuperAdmin) return; // Only log super admin for now or general system
+            let userEmail = auth.currentUser ? auth.currentUser.email : "Unknown";
             let now = new Date().getTime();
-            await addDoc(collection(db, "activity_logs"), { text: actionMsg, timestamp: now, dateString: new Date().toLocaleString('mr-IN') });
+            await addDoc(collection(db, "activity_logs"), { text: `${userEmail} - ${actionMsg}`, timestamp: now, dateString: new Date().toLocaleString('mr-IN') });
         }
         
         async function cleanOldLogs() {
             if(!isSuperAdmin) return;
             let sevenDaysAgo = new Date().getTime() - (7 * 24 * 60 * 60 * 1000);
             const logs = await getDocs(collection(db, "activity_logs"));
-            logs.forEach(async (d) => {
-                if(d.data().timestamp < sevenDaysAgo) { await deleteDoc(doc(db, "activity_logs", d.id)); }
-            });
+            logs.forEach(async (d) => { if(d.data().timestamp < sevenDaysAgo) { await deleteDoc(doc(db, "activity_logs", d.id)); } });
             renderActivityLog(logs);
         }
 
         function renderActivityLog(logsSnapshot) {
             let logsArr = [];
             logsSnapshot.forEach(d => logsArr.push(d.data()));
-            logsArr.sort((a,b) => b.timestamp - a.timestamp); // Newest first
+            logsArr.sort((a,b) => b.timestamp - a.timestamp);
             document.getElementById('activityLogBox').innerHTML = logsArr.map(l => `<div style="border-bottom:1px solid #ccc; padding:5px 0;">[${l.dateString}] - <b>${l.text}</b></div>`).join('');
         }
 
@@ -680,11 +713,19 @@
             const getD = async (col) => { let arr=[]; (await getDocs(collection(db,col))).forEach(d=>arr.push({id:d.id, ...d.data()})); return arr; };
             membersData = await getD("members"); otherStaffData = await getD("other_staff"); committeeData = await getD("committee");
             
+            // FIXED: Load Gallery Data
+            loadGallery();
+
             if(isSuperAdmin) { subAdminsList = await getD("admin_users"); cleanOldLogs(); renderSubAdmins(); }
 
             let total=0, apprv=0, pend=0, paid=0;
+            // FIXED: Dashboard Counter Stats filtering for Sub-Admins
             membersData.forEach(m => { 
-                if(m.isMember !== false) { total++; if(m.status === 'Approved') apprv++; else pend++; if(m.feeStatus === 'Paid') paid++; }
+                if(m.isMember !== false) { 
+                    if(subAdminAccessRegion === "All" || m.mandal === subAdminAccessRegion) {
+                        total++; if(m.status === 'Approved') apprv++; else pend++; if(m.feeStatus === 'Paid') paid++; 
+                    }
+                }
             });
             document.getElementById('cnt-all').innerText = total; document.getElementById('cnt-approved').innerText = apprv; document.getElementById('cnt-pending').innerText = pend; document.getElementById('cnt-paid').innerText = paid;
             
@@ -738,7 +779,6 @@
             } catch (err) { Swal.fire('Error', err.message, 'error'); }
         }
 
-        // REQ 6: Profile Modal View
         window.viewProfileModal = (id) => {
             let m = membersData.find(x => x.id === id); if(!m) return;
             document.getElementById('prof_img').src = m.photoUrl || "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
@@ -752,7 +792,6 @@
             document.getElementById('prof_aadhaar').innerText = m.aadhaar || '-';
             document.getElementById('prof_status').innerHTML = m.status === 'Approved' ? '<span class="badge bg-success">Approved</span>' : '<span class="badge bg-warning">Pending</span>';
             
-            // Communication Buttons
             document.getElementById('prof_wa').onclick = () => window.open(`https://wa.me/91${m.mobile}`, '_blank');
             document.getElementById('prof_call').onclick = () => window.location.href = `tel:${m.mobile}`;
             document.getElementById('prof_mail').onclick = () => window.location.href = `mailto:${m.email}`;
@@ -763,22 +802,27 @@
             document.getElementById('profileModalOverlay').style.display = 'flex';
         }
 
-        // --- DASHBOARD RENDER (COMPACT MAP) ---
+        // --- DASHBOARD RENDER (FIXED: Sub-Admin Region Filter) ---
         let pieChart;
         window.renderDashboard = function() {
             let mandalStat = {}; let distStat = {};
-            Object.keys(mandalData).forEach(m => { mandalStat[m] = 0; mandalData[m].forEach(d => distStat[d] = 0); });
+            // Setup stats structure based on access
+            let allowedMandals = subAdminAccessRegion === "All" ? Object.keys(mandalData) : [subAdminAccessRegion];
+            
+            allowedMandals.forEach(m => { mandalStat[m] = 0; mandalData[m].forEach(d => distStat[d] = 0); });
             membersData.forEach(m => {
                 if(m.isMember!==false && m.status === 'Approved') {
-                    if(m.mandal && mandalStat[m.mandal] !== undefined) mandalStat[m.mandal]++;
-                    if(m.district && distStat[m.district] !== undefined) distStat[m.district]++;
+                    if(subAdminAccessRegion === "All" || m.mandal === subAdminAccessRegion) {
+                        if(m.mandal && mandalStat[m.mandal] !== undefined) mandalStat[m.mandal]++;
+                        if(m.district && distStat[m.district] !== undefined) distStat[m.district]++;
+                    }
                 }
             });
 
             const colors = {"पुणे मंडळ":"#f59e0b", "नागपूर मंडळ":"#3b82f6", "नाशिक मंडळ":"#10b981", "अकोला मंडळ":"#ef4444", "कोल्हापूर मंडळ":"#8b5cf6", "छत्रपती संभाजीनगर मंडळ":"#ec4899", "लातूर मंडळ":"#f97316", "ठाणे मंडळ":"#0ea5e9"};
             
             let mapHtml = '';
-            Object.keys(mandalData).forEach(m => {
+            allowedMandals.forEach(m => {
                 let distHtml = mandalData[m].map(d => `<span class="dist-badge">${d} <span class="dist-count">${distStat[d]||0}</span></span>`).join('');
                 mapHtml += `<div class="mandal-card" style="background:${colors[m]};"><h3>${m}</h3><h2>${mandalStat[m]||0}</h2><div>${distHtml}</div></div>`;
             });
@@ -791,13 +835,20 @@
             }
         }
 
-        // --- MEMBERS TABLE RENDER ---
+        // --- MEMBERS TABLE RENDER (FIXED: Sub-Admin Data Hide) ---
         window.renderMembers = function() {
-            let s = document.getElementById('searchName').value.toLowerCase(); let fStatus = document.getElementById('filterStatus').value; let fMandal = document.getElementById('filterMandal').value; let fDist = document.getElementById('filterDistrict').value;
+            let s = document.getElementById('searchName').value.toLowerCase(); 
+            let fStatus = document.getElementById('filterStatus').value; 
+            let fMandal = document.getElementById('filterMandal').value; 
+            let fDist = document.getElementById('filterDistrict').value;
             let fSen = document.getElementById('filterSeniority').value;
             
             let fil = membersData.filter(m => {
                 if (m.isMember === false) return false;
+                
+                // SUB-ADMIN STRICT FILTER: DO NOT show other mandals
+                if (subAdminAccessRegion !== "All" && m.mandal !== subAdminAccessRegion) return false;
+                
                 if (fStatus !== 'All' && m.status !== fStatus) return false;
                 if (fMandal !== 'All' && m.mandal !== fMandal) return false;
                 if (fDist !== 'All' && m.district !== fDist) return false;
@@ -813,7 +864,6 @@
             let defImg = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
             document.getElementById('tableTotalCount').innerText = `एकूण दर्शविलेले सदस्य: ${fil.length}`;
             
-            // REQ 6 & 8: Columns rearranged, communication buttons added
             document.getElementById('membersBody').innerHTML = fil.map((m,i) => {
                 let statusBadge = m.status === 'Approved' ? '<span class="badge bg-success">Approved</span>' : (m.status === 'Pending' ? '<span class="badge bg-warning">Pending</span>' : '<span class="badge bg-danger">Rejected</span>');
                 let tblImg = m.photoUrl || defImg;
@@ -842,24 +892,23 @@
 
         window.toggleSelectAll = (el) => { document.querySelectorAll('.mem-chk').forEach(cb => cb.checked = el.checked); };
         
-        // REQ 8: Bulk WhatsApp
         window.bulkWhatsApp = () => {
             let nums = [];
             document.querySelectorAll('.mem-chk:checked').forEach(cb => { if(cb.value && cb.value.length >= 10) nums.push(cb.value); });
             if(nums.length === 0) return alert("कृपया मेसेज पाठवण्यासाठी किमान एक सदस्य निवडा.");
             let text = encodeURIComponent("नमस्कार, क्ष-किरण संघटना महाराष्ट्र कडून संदेश: ");
-            // Open a generic wa.me link for the first one as bulk API via web is restricted. Better to suggest broadcast list or API integration.
             alert(`${nums.length} सदस्यांचे नंबर निवडले आहेत. (Desktop WhatsApp App आवश्यक)`);
             window.open(`whatsapp://send?phone=91${nums[0]}&text=${text}`, '_blank');
         }
 
-        // --- EMPLOYEE SECTION (REQ 5) ---
+        // --- EMPLOYEE SECTION ---
         window.renderOtherStaff = () => {
             let s = document.getElementById('empSearch').value.toLowerCase();
             let mFil = document.getElementById('empMandal').value;
             let sen = document.getElementById('empSeniority').value;
             
             let fil = otherStaffData.filter(e => {
+                if (subAdminAccessRegion !== "All" && e.mandal !== subAdminAccessRegion) return false;
                 if (mFil !== 'All' && e.mandal !== mFil) return false;
                 if (s && !((e.name||'').toLowerCase().includes(s))) return false; return true;
             });
@@ -869,25 +918,20 @@
             document.getElementById('otherBody').innerHTML = fil.map((s, i) => `<tr><td>${i+1}</td><td><b>${s.name}</b><br><small>${s.post||'-'}</small></td><td>${s.mobile||'-'}</td><td>${s.workplace||'-'}</td><td>${s.district||'-'}</td><td>${s.mandal||'-'}</td><td>${s.joinDate||'-'}</td><td class="no-print"><button class="btn-action bg-primary" onclick="openFullEditModal('${s.id}','other_staff')"><i class="fa fa-pen"></i></button></td></tr>`).join('');
         }
 
-        // EXCEL IMPORT/EXPORT
         window.exportToExcel = () => {
             let ws = XLSX.utils.table_to_sheet(document.getElementById('employeeTable'));
-            let wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "Employees");
+            let wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Employees");
             XLSX.writeFile(wb, "State_Employees_List.xlsx");
             logActivity("Exported Employees to Excel");
         }
         window.importExcelData = async (e) => {
-            let file = e.target.files[0];
-            if(!file) return;
+            let file = e.target.files[0]; if(!file) return;
             Swal.fire({title: 'इम्पोर्ट करत आहे...', didOpen: () => Swal.showLoading()});
             let reader = new FileReader();
             reader.onload = async function(evt) {
-                let data = evt.target.result;
-                let workbook = XLSX.read(data, {type: 'binary'});
+                let data = evt.target.result; let workbook = XLSX.read(data, {type: 'binary'});
                 let json = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
                 for(let row of json) {
-                    // Mapping logic based on Excel headers (Assuming standard names for demo)
                     let p = { name: row['नाव']||'', post: row['पद']||'', mobile: row['मोबाईल']||'', district: row['जिल्हा']||'', mandal: row['मंडळ']||'' };
                     if(p.name) await addDoc(collection(db, "other_staff"), p);
                 }
@@ -896,16 +940,14 @@
             };
             reader.readAsBinaryString(file);
         }
-        
         window.downloadEmployeePDF = () => {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
+            const { jsPDF } = window.jspdf; const doc = new jsPDF();
             doc.text("State Employees List - Maharashtra", 14, 15);
             doc.autoTable({ html: '#employeeTable', startY: 20, theme: 'grid' });
             doc.save("Employees_List.pdf");
         }
 
-        // --- OFFICE BEARERS (COMMITTEE - REQ 4) ---
+        // --- OFFICE BEARERS ---
         window.filterOBMembers = () => {
             let txt = document.getElementById('ob_search').value.toLowerCase();
             let resBox = document.getElementById('ob_search_results');
@@ -931,7 +973,7 @@
             let finalPhoto = tempSelectedOB.photoUrl;
             
             let pFile = document.getElementById('ob_photo_upload').files[0];
-            if(pFile) finalPhoto = await uploadToCloudinary(pFile); // Upload new if selected
+            if(pFile) finalPhoto = await uploadToCloudinary(pFile); 
 
             let obData = { ...tempSelectedOB, post: desig, photoUrl: finalPhoto };
             await addDoc(collection(db, "committee"), obData);
@@ -952,10 +994,42 @@
             `).join('');
         };
 
-        // --- SUB ADMIN SETTINGS (REQ 2) ---
-        window.selectAllPermissions = () => {
-            document.querySelectorAll('#permission_boxes input[type="checkbox"]').forEach(cb => cb.checked = true);
+        // --- GALLERY SECTION (FIXED: Added functionality) ---
+        window.uploadGalleryPhoto = async () => {
+            let file = document.getElementById('gallery_photo').files[0];
+            let title = document.getElementById('gallery_title').value;
+            if(!file) return alert("कृपया फोटो निवडा.");
+            Swal.fire({title: 'फोटो अपलोड होत आहे...', didOpen: () => Swal.showLoading()});
+            try {
+                let url = await uploadToCloudinary(file);
+                await addDoc(collection(db, "gallery"), { url, title, date: new Date().toLocaleDateString('mr-IN') });
+                logActivity(`Uploaded Gallery Photo: ${title}`);
+                Swal.fire('यशस्वी', 'फोटो गॅलरीत ॲड झाला!', 'success');
+                document.getElementById('gallery_photo').value = ''; document.getElementById('gallery_title').value = '';
+                loadGallery();
+            } catch(e) { Swal.fire('Error', e.message, 'error'); }
         }
+        
+        async function loadGallery() {
+            let snap = await getDocs(collection(db, "gallery"));
+            galleryData = []; snap.forEach(d => galleryData.push({id: d.id, ...d.data()}));
+            document.getElementById('galleryGrid').innerHTML = galleryData.map(g => `
+                <div class="folder-card" style="padding:10px;">
+                    <img src="${g.url}" style="width:100%; height:120px; object-fit:cover; border-radius:5px;">
+                    <p style="font-size:0.85rem; margin-top:8px; font-weight:bold;">${g.title||'No Title'}</p>
+                    <button class="btn-action bg-danger" onclick="deleteGalleryPhoto('${g.id}')" style="width:100%; margin-top:5px;"><i class="fa fa-trash"></i> Delete</button>
+                </div>
+            `).join('');
+        }
+        
+        window.deleteGalleryPhoto = async (id) => {
+            if(confirm("हा फोटो कायमचा डिलीट करायचा आहे का?")) {
+                await deleteDoc(doc(db, "gallery", id)); logActivity("Deleted Gallery Photo"); loadGallery();
+            }
+        }
+
+        // --- SUB ADMIN SETTINGS ---
+        window.selectAllPermissions = () => { document.querySelectorAll('#permission_boxes input[type="checkbox"]').forEach(cb => cb.checked = true); }
         
         window.addSubAdmin = async () => {
             if(!isSuperAdmin) return alert("Only Super Admin can do this.");
@@ -963,14 +1037,12 @@
             let email = document.getElementById('sub_admin_email').value;
             let pass = document.getElementById('sub_admin_pass').value;
             let access = document.getElementById('sub_admin_access').value;
-            let perms = [];
-            document.querySelectorAll('#permission_boxes input:checked').forEach(cb => perms.push(cb.value));
+            let perms = []; document.querySelectorAll('#permission_boxes input:checked').forEach(cb => perms.push(cb.value));
 
             if(!name || !email || !pass) return alert("सर्व माहिती भरा.");
             await addDoc(collection(db, "admin_users"), { name, email, pass, access, permissions: perms });
-            logActivity(`Added Sub Admin: ${name}`);
-            Swal.fire('यशस्वी', 'सब-ॲडमिन जोडला गेला. (नोंद: Firebase Auth मध्ये User मॅन्युअली Create करणे आवश्यक आहे)', 'success');
-            loadData();
+            logActivity(`Added Sub Admin: ${name} (${access})`);
+            Swal.fire('यशस्वी', 'सब-ॲडमिन जोडला गेला.', 'success'); loadData();
         }
 
         window.renderSubAdmins = () => {
@@ -980,7 +1052,7 @@
         }
         window.filterSubAdmins = () => renderSubAdmins();
 
-        // --- NOTICE BOARD (REQ 7: Folders) ---
+        // --- NOTICE BOARD ---
         window.renameFolder = (folderId) => {
             if(!isSuperAdmin) return alert("फक्त मुख्य ॲडमिनला नाव बदलण्याचा अधिकार आहे.");
             let newName = prompt("फोल्डरचे नवीन नाव टाईप करा:");
@@ -1001,10 +1073,9 @@
         window.openReceiptModal = (id, name) => {
             document.getElementById('rect_mem_id').value = id; document.getElementById('rect_name').innerText = name; document.getElementById('rect_amount').value = ""; document.getElementById('receiptModal').style.display = 'flex';
         }
-        window.printReceipt = () => window.print(); // simplified for space
+        window.printReceipt = () => window.print(); 
         window.bulkEmailBCC = () => {
-            let emails = [];
-            document.querySelectorAll('.fee-chk:checked').forEach(cb => { if(cb.value) emails.push(cb.value); });
+            let emails = []; document.querySelectorAll('.fee-chk:checked').forEach(cb => { if(cb.value) emails.push(cb.value); });
             if(emails.length === 0) return alert("कृपया ईमेल पाठवण्यासाठी किमान एक सदस्य निवडा.");
             window.location.href = `mailto:?bcc=${emails.join(',')}&subject=क्ष-किरण संघटना महाराष्ट्र - महत्वाचे`;
         }
