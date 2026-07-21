@@ -146,7 +146,7 @@
                 </div>
             </div>
 
-            <!-- 3. DIGITAL ID CARD (FIXED PHOTO) -->
+            <!-- 3. DIGITAL ID CARD -->
             <div id="tab-icard" class="tab-content">
                 <div class="panel">
                     <div class="panel-header h-info">माझे ओळखपत्र (Digital ID Card)</div>
@@ -186,7 +186,7 @@
                 </div>
             </div>
 
-            <!-- 5. MY DOCUMENTS (Upload System) -->
+            <!-- 5. MY DOCUMENTS -->
             <div id="tab-mydocs" class="tab-content">
                 <div class="panel">
                     <div class="panel-header h-primary">माझे कागदपत्रे (My Documents)</div>
@@ -252,35 +252,49 @@
     </div>
 
     <!-- FIREBASE & JS LOGIC -->
+    <!-- बदल: Firebase Auth चे आयात काढून टाकले आणि फक्त Firestore ठेवले -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, updateDoc, doc, query, where } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
-        import { getAuth, signOut, onAuthStateChanged, updatePassword } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
        
         const firebaseConfig = { apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk", authDomain: "xrayunionmah.firebaseapp.com", projectId: "xrayunionmah" };
         const app = initializeApp(firebaseConfig); 
-        const db = getFirestore(app); const auth = getAuth(app);
+        const db = getFirestore(app);
 
         let currentMember = null; let memberDocId = null;
 
+        // Session Check Logic (Firebase Auth ऐवजी Local Storage चा वापर)
+        window.onload = function() {
+            let sessionData = localStorage.getItem("memberSession");
+            if(sessionData) {
+                currentMember = JSON.parse(sessionData);
+                memberDocId = currentMember.id;
+                document.getElementById('top-mem-name').innerText = currentMember.name || 'सदस्य';
+                logActivity("Logged In");
+                loadAllDashboardData();
+            } else {
+                // सेशन नसेल तर लॉगिन पेजवर पाठवा
+                window.location.replace("member-login.html"); // फाईलचे नाव अचूक द्या
+            }
+        };
+
         window.toggleSidebar = () => document.getElementById('sidebar').classList.toggle('open');
         window.openTab = function(tabId) { document.querySelectorAll('.tab-content, .nav-item').forEach(e=>e.classList.remove('active')); document.getElementById(tabId).classList.add('active'); event.currentTarget.classList.add('active'); if(window.innerWidth <= 900) toggleSidebar(); };
-        window.logoutMember = () => { logActivity("Logged Out"); signOut(auth).then(()=> window.location.replace("member-login.html")); };
+        
+        // Logout Logic
+        window.logoutMember = async () => { 
+            await logActivity("Logged Out"); 
+            localStorage.removeItem("memberSession");
+            window.location.replace("member-login.html"); // फाईलचे नाव अचूक द्या
+        };
 
         const uploadToCloudinary = async (file) => { const formData = new FormData(); formData.append("file", file); formData.append("upload_preset", "ml_default"); const res = await fetch(`https://api.cloudinary.com/v1_1/jjavsdh5/auto/upload`, { method: "POST", body: formData }); const data = await res.json(); if(data.secure_url) return data.secure_url; throw new Error("Upload Failed."); };
-        async function logActivity(action) { if(!currentMember) return; await addDoc(collection(db, "member_activity"), { memberEmail: currentMember.email, action: action, date: new Date().toLocaleString('mr-IN'), timestamp: Date.now() }); }
-
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                const q = query(collection(db, "members"), where("email", "==", user.email));
-                const snap = await getDocs(q);
-                if(!snap.empty) {
-                    memberDocId = snap.docs[0].id; currentMember = snap.docs[0].data();
-                    document.getElementById('top-mem-name').innerText = currentMember.name;
-                    logActivity("Logged In"); loadAllDashboardData();
-                } else { alert("Profile Not Found."); logoutMember(); }
-            } else { window.location.replace("member-login.html"); }
-        });
+        
+        async function logActivity(action) { 
+            if(!currentMember) return; 
+            let mobileOrEmail = currentMember.email || currentMember.mobile || "Unknown";
+            await addDoc(collection(db, "member_activity"), { memberEmail: mobileOrEmail, action: action, date: new Date().toLocaleString('mr-IN'), timestamp: Date.now() }); 
+        }
 
         async function loadAllDashboardData() { populateProfile(); generateIDCardPreview(); loadFeeStatus(); loadMyDocuments(); loadAdminDocuments(); loadSupportTickets(); loadActivityLog(); }
 
@@ -346,9 +360,31 @@
         window.submitSupportTicket = async () => { let sub = document.getElementById('sup_sub').value; let msg = document.getElementById('sup_msg').value; if(!msg) return alert("प्रश्न लिहा."); await addDoc(collection(db, "support_tickets"), { memberId: memberDocId, memberName: currentMember.name, subject: sub, message: msg, status: 'Open', date: new Date().toLocaleString('mr-IN'), timestamp: Date.now() }); logActivity(`Raised Ticket: ${sub}`); document.getElementById('sup_msg').value = ''; Swal.fire('यशस्वी', 'तिकीट पाठवले.', 'success'); loadSupportTickets(); }
         async function loadSupportTickets() { const snap = await getDocs(query(collection(db, "support_tickets"), where("memberId", "==", memberDocId))); let html = ''; snap.forEach(d => { let t = d.data(); html += `<tr><td>${t.date}</td><td><b>${t.subject}</b><br><small>${t.message}</small></td><td><span class="badge ${t.status==='Closed'?'bg-success':'bg-warning'}">${t.status}</span></td><td>${t.admin_reply || 'Pending'}</td></tr>`; }); document.getElementById('ticketsBody').innerHTML = html || '<tr><td colspan="4">No tickets.</td></tr>'; }
 
-        // ACTIVITY & PASSWORD
-        async function loadActivityLog() { const snap = await getDocs(query(collection(db, "member_activity"), where("memberEmail", "==", currentMember.email))); let arr = []; snap.forEach(d=>arr.push(d.data())); arr.sort((a,b)=> b.timestamp - a.timestamp); document.getElementById('activityBody').innerHTML = arr.map(a => `<div style="padding:8px 0; border-bottom:1px dashed #ccc;"><b>[${a.date}]</b> - ${a.action}</div>`).join(''); }
-        window.updateMemberPassword = async () => { let newP = document.getElementById('new_pass').value; if(newP.length < 6) return alert("पासवर्ड किमान ६ अक्षरांचा असावा."); try { await updatePassword(auth.currentUser, newP); logActivity("Password Changed"); Swal.fire('यशस्वी', 'पासवर्ड बदलला आहे.', 'success'); document.getElementById('new_pass').value = ''; } catch(e) { Swal.fire('Error', e.message, 'error'); } }
+        // ACTIVITY & PASSWORD (बदल: Password Update थेट Firestore मध्ये)
+        async function loadActivityLog() { 
+            let mobileOrEmail = currentMember.email || currentMember.mobile;
+            const snap = await getDocs(query(collection(db, "member_activity"), where("memberEmail", "==", mobileOrEmail))); 
+            let arr = []; snap.forEach(d=>arr.push(d.data())); arr.sort((a,b)=> b.timestamp - a.timestamp); 
+            document.getElementById('activityBody').innerHTML = arr.map(a => `<div style="padding:8px 0; border-bottom:1px dashed #ccc;"><b>[${a.date}]</b> - ${a.action}</div>`).join(''); 
+        }
+        
+        window.updateMemberPassword = async () => { 
+            let newP = document.getElementById('new_pass').value; 
+            if(newP.length < 6) return alert("पासवर्ड किमान ६ अक्षरांचा असावा."); 
+            try { 
+                // Firestore मध्ये थेट पासवर्ड अपडेट करा
+                await updateDoc(doc(db, "members", memberDocId), { pass: newP, password: newP });
+                
+                // लोकल सेशनमध्ये पण अपडेट करा जेणेकरून परत लॉगिन करताना अडचण येणार नाही
+                currentMember.pass = newP;
+                currentMember.password = newP;
+                localStorage.setItem("memberSession", JSON.stringify(currentMember));
+
+                logActivity("Password Changed"); 
+                Swal.fire('यशस्वी', 'पासवर्ड बदलला आहे.', 'success'); 
+                document.getElementById('new_pass').value = ''; 
+            } catch(e) { Swal.fire('Error', e.message, 'error'); } 
+        }
     </script>
 </body>
 </html>
