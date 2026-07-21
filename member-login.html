@@ -33,82 +33,87 @@
     </div>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+        import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
         
         const firebaseConfig = {
-            apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk", authDomain: "xrayunionmah.firebaseapp.com",
-            projectId: "xrayunionmah", storageBucket: "xrayunionmah.firebasestorage.app",
-            messagingSenderId: "763805226978", appId: "1:763805226978:web:6bae81a0b6358b47d88bbb"
+            apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk", 
+            authDomain: "xrayunionmah.firebaseapp.com",
+            projectId: "xrayunionmah", 
+            storageBucket: "xrayunionmah.firebasestorage.app",
+            messagingSenderId: "763805226978", 
+            appId: "1:763805226978:web:6bae81a0b6358b47d88bbb"
         };
         const app = initializeApp(firebaseConfig); 
         const db = getFirestore(app);
+        const auth = getAuth(app);
 
-        // जर युझर आधीच लॉगिन असेल तर डॅशबोर्डवर पाठवा
-        window.onload = function() {
-            if(localStorage.getItem("memberSession")) { 
-                window.location.replace("member-dashboard.html"); 
+        // युझर आधीच लॉगिन असेल तर डॅशबोर्डवर पाठवा (Browser Back Button Protection)
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                window.location.replace("member-dashboard.html");
             }
-        };
+        });
 
         window.loginMember = async function() {
             let mobile = document.getElementById('memberMobile').value.trim();
             let pass = document.getElementById('memberPass').value.trim();
             
             if(!mobile || !pass) { 
-                Swal.fire('त्रुटी', 'मोबाईल क्रमांक आणि पासवर्ड टाका', 'warning'); 
+                Swal.fire('त्रुटी', 'कृपया तुमचा नोंदणीकृत मोबाईल क्रमांक आणि पासवर्ड टाका.', 'warning'); 
                 return; 
             }
             
-            Swal.fire({title: 'लॉगिन तपासत आहे...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
+            Swal.fire({title: 'तुमची माहिती तपासत आहे...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
             
             try {
-                // डेटाबेसमध्ये मोबाईल नंबर शोधा
+                // प्रथम डेटाबेसमध्ये मोबाईल नंबर शोधा
                 const q = query(collection(db, "members"), where("mobile", "==", mobile));
                 const querySnapshot = await getDocs(q);
                 
                 if(querySnapshot.empty) {
-                    Swal.fire('त्रुटी', 'या मोबाईल क्रमांकाची नोंदणी आढळली नाही.', 'error');
+                    Swal.fire('त्रुटी', 'या मोबाईल क्रमांकाची नोंदणी आढळली नाही. कृपया नोंदणीकृत मोबाईल क्रमांक वापरा.', 'error');
                     return;
                 } 
                 
-                let memData = null; 
-                let memId = null;
+                let memData = null;
                 
-                // पासवर्ड तपासा
+                // डेटाबेसमधून ईमेल मिळवा
                 querySnapshot.forEach((doc) => { 
-                    let data = doc.data();
-                    if(data.pass === pass || data.password === pass) { 
-                        memData = data; 
-                        memId = doc.id; 
-                    }
+                    memData = doc.data(); 
                 });
                 
-                if(!memData) { 
-                    Swal.fire('त्रुटी', 'चुकीचा पासवर्ड.', 'error'); 
-                    return; 
+                if(!memData || !memData.email) {
+                    Swal.fire('त्रुटी', 'सदस्याची तांत्रिक माहिती अपूर्ण आहे. कृपया ॲडमिनशी संपर्क साधा.', 'error'); 
+                    return;
                 }
-                
+
                 // सिक्युरिटी चेक (ब्लॉक किंवा प्रलंबित आहे का ते तपासा)
                 if(memData.loginDisabled) { 
-                    Swal.fire('अवरोधित', 'तुमचे लॉगिन ॲडमिनद्वारे बंद करण्यात आले आहे.', 'error'); 
+                    Swal.fire('अवरोधित', 'तुमचे खाते ॲडमिनद्वारे बंद करण्यात आले आहे.', 'error'); 
                     return; 
                 }
                 if(memData.status === 'Pending') { 
-                    Swal.fire('प्रलंबित', 'तुमची नोंदणी अद्याप मंजूर झालेली नाही.', 'warning'); 
+                    Swal.fire('प्रलंबित', 'तुमची नोंदणी अद्याप ॲडमिनकडून मंजूर झालेली नाही.', 'warning'); 
                     return; 
                 }
                 
-                // लॉगिन यशस्वी झाल्यावर डेटा लोकल स्टोरेजमध्ये सेव्ह करा
-                memData.id = memId;
-                localStorage.setItem("memberSession", JSON.stringify(memData));
+                // मोबाईल नंबरला जोडलेल्या ईमेल आणि पासवर्डने सुरक्षित Firebase Authentication लॉगिन
+                await signInWithEmailAndPassword(auth, memData.email, pass);
                 
                 Swal.close(); 
-                window.location.replace("member-dashboard.html");
+                // लॉगिन यशस्वी, onAuthStateChanged आपोआप डॅशबोर्डवर redirect करेल
                 
-            } catch(e) { 
-                Swal.fire('त्रुटी', 'लॉगिन करताना समस्या आली.', 'error'); 
-                console.error(e); 
+            } catch(error) { 
+                console.error(error);
+                let errorMsg = 'लॉगिन करताना तांत्रिक अडचण आली. कृपया पुन्हा प्रयत्न करा.';
+                if (error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password') {
+                    errorMsg = 'तुम्ही टाकलेला पासवर्ड चुकीचा आहे.';
+                } else if (error.code === 'auth/too-many-requests') {
+                    errorMsg = 'खूप वेळा चुकीचा प्रयत्न केला आहे. कृपया थोड्या वेळाने प्रयत्न करा.';
+                }
+                Swal.fire('त्रुटी', errorMsg, 'error'); 
             }
         };
     </script>
