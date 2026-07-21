@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="mr">
 <head>
@@ -355,7 +354,7 @@
                 </div>
             </div>
 
-            <!-- TAB: NOTICES & CONTROL BOARD (Notice Board Feature Enhanced) -->
+            <!-- TAB: NOTICES & CONTROL BOARD -->
             <div id="tab-notices" class="tab-content">
                 <div class="panel">
                     <div class="panel-header">
@@ -380,19 +379,15 @@
                         </div>
                         
                         <hr style="margin:20px 0;">
-                        <h4 style="color:var(--primary);"><i class="fa fa-upload"></i> PDF फाईल व नोटीस अपलोड करा (Max 400 KB)</h4>
-                        <div class="form-row" style="margin-top:10px; background:#f1f5f9; padding:15px; border-radius:8px;">
+                        <h4>PDF फाईल अपलोड (Max 400 KB)</h4>
+                        <div class="form-row" style="margin-top:10px;">
                             <input type="file" id="notice_file" accept=".pdf" class="form-control" onchange="checkFileSize(this, 400)">
-                            <input type="text" id="notice_name" placeholder="पीडीएफ/नोटीसचे नाव (Title)" class="form-control">
-                            
-                            <!-- Notice Board Dropdown Enhanced -->
+                            <input type="text" id="notice_name" placeholder="पीडीएफचे नाव (Rename)" class="form-control">
                             <select class="form-control" id="notice_target_folder">
                                 <option value="folder1">फोल्डर १ (शासकीय)</option>
                                 <option value="folder2">फोल्डर २ (महत्त्वाचे)</option>
-                                <option value="Notice Board" style="font-weight:bold; color:var(--secondary);">सूचना फलक (Notice Board - फक्त सदस्यांसाठी)</option>
                             </select>
-                            
-                            <button class="btn-action bg-success" onclick="uploadNoticePDF()"><i class="fa fa-upload"></i> सबमिट करा (Upload)</button>
+                            <button class="btn-action bg-success" onclick="uploadNoticePDF()"><i class="fa fa-upload"></i> अपलोड</button>
                         </div>
                     </div>
                 </div>
@@ -1281,49 +1276,11 @@
             logActivity("Updated General Admin Settings");
         }
 
-        // --- NOTICE BOARD (ENHANCED FOR MEMBER DASHBOARD VISIBILITY) ---
+        // --- NOTICE BOARD ---
         window.renameFolder = (folderId) => {
             if(!isSuperAdmin) return alert("फक्त मुख्य ॲडमिनला नाव बदलण्याचा अधिकार आहे.");
             let newName = prompt("फोल्डरचे नवीन नाव टाईप करा:");
             if(newName) document.getElementById(folderId+'_name').innerText = newName;
-        }
-
-        window.uploadNoticePDF = async () => {
-            let fileInput = document.getElementById('notice_file');
-            let file = fileInput.files[0];
-            let name = document.getElementById('notice_name').value.trim();
-            let folder = document.getElementById('notice_target_folder').value;
-
-            if (!file) return alert("कृपया अपलोड करण्यासाठी PDF फाईल निवडा.");
-            if (!name) return alert("कृपया फाईलचे किंवा नोटीसचे नाव (Title) टाका.");
-
-            Swal.fire({title: 'फाईल अपलोड होत आहे...', allowOutsideClick: false, didOpen: () => Swal.showLoading()});
-            
-            try {
-                // Upload using existing Cloudinary integration
-                let url = await uploadToCloudinary(file);
-                
-                // If it's a Notice Board, flag it so only logged-in members can see it on their dashboard
-                let accessLevel = (folder === 'Notice Board') ? 'MEMBERS ONLY' : 'ALL';
-                
-                // Save URL in Firebase
-                await addDoc(collection(db, "member_documents"), { 
-                    title: name, 
-                    category: folder, 
-                    url: url, 
-                    date: new Date().toLocaleDateString('mr-IN'),
-                    access: accessLevel
-                });
-                
-                logActivity(`Uploaded Notice: ${name} in ${folder}`);
-                Swal.fire('यशस्वी', 'फाईल यशस्वीरित्या अपलोड झाली!', 'success');
-                
-                // Reset fields
-                fileInput.value = "";
-                document.getElementById('notice_name').value = "";
-            } catch (err) {
-                Swal.fire('Error', err.message, 'error');
-            }
         }
 
         // --- FEES & RECEIPTS ---
