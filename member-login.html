@@ -35,7 +35,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-       
+        
         const firebaseConfig = {
             apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk", authDomain: "xrayunionmah.firebaseapp.com",
             projectId: "xrayunionmah", storageBucket: "xrayunionmah.firebasestorage.app",
@@ -44,38 +44,72 @@
         const app = initializeApp(firebaseConfig); 
         const db = getFirestore(app);
 
+        // जर युझर आधीच लॉगिन असेल तर डॅशबोर्डवर पाठवा
         window.onload = function() {
-            if(localStorage.getItem("memberSession")) { window.location.replace("member-dashboard.html"); }
+            if(localStorage.getItem("memberSession")) { 
+                window.location.replace("member-dashboard.html"); 
+            }
         };
 
         window.loginMember = async function() {
             let mobile = document.getElementById('memberMobile').value.trim();
             let pass = document.getElementById('memberPass').value.trim();
-            if(!mobile || !pass) { Swal.fire('त्रुटी', 'मोबाईल क्रमांक आणि पासवर्ड टाका', 'warning'); return; }
+            
+            if(!mobile || !pass) { 
+                Swal.fire('त्रुटी', 'मोबाईल क्रमांक आणि पासवर्ड टाका', 'warning'); 
+                return; 
+            }
             
             Swal.fire({title: 'लॉगिन तपासत आहे...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() }});
+            
             try {
+                // डेटाबेसमध्ये मोबाईल नंबर शोधा
                 const q = query(collection(db, "members"), where("mobile", "==", mobile));
                 const querySnapshot = await getDocs(q);
                 
                 if(querySnapshot.empty) {
                     Swal.fire('त्रुटी', 'या मोबाईल क्रमांकाची नोंदणी आढळली नाही.', 'error');
-                } else {
-                    let memData = null; let memId = null;
-                    querySnapshot.forEach((doc) => { 
-                        let data = doc.data();
-                        if(data.pass === pass || data.password === pass) { memData = data; memId = doc.id; }
-                    });
-                    
-                    if(!memData) { Swal.fire('त्रुटी', 'चुकीचा पासवर्ड.', 'error'); return; }
-                    if(memData.loginDisabled) { Swal.fire('अवरोधित', 'तुमचे लॉगिन ॲडमिनद्वारे बंद करण्यात आले आहे.', 'error'); return; }
-                    if(memData.status === 'Pending') { Swal.fire('प्रलंबित', 'तुमची नोंदणी अद्याप मंजूर झालेली नाही.', 'warning'); return; }
-                    
-                    memData.id = memId;
-                    localStorage.setItem("memberSession", JSON.stringify(memData));
-                    Swal.close(); window.location.replace("member-dashboard.html");
+                    return;
+                } 
+                
+                let memData = null; 
+                let memId = null;
+                
+                // पासवर्ड तपासा
+                querySnapshot.forEach((doc) => { 
+                    let data = doc.data();
+                    if(data.pass === pass || data.password === pass) { 
+                        memData = data; 
+                        memId = doc.id; 
+                    }
+                });
+                
+                if(!memData) { 
+                    Swal.fire('त्रुटी', 'चुकीचा पासवर्ड.', 'error'); 
+                    return; 
                 }
-            } catch(e) { Swal.fire('त्रुटी', 'लॉगिन करताना समस्या आली.', 'error'); console.error(e); }
+                
+                // सिक्युरिटी चेक (ब्लॉक किंवा प्रलंबित आहे का ते तपासा)
+                if(memData.loginDisabled) { 
+                    Swal.fire('अवरोधित', 'तुमचे लॉगिन ॲडमिनद्वारे बंद करण्यात आले आहे.', 'error'); 
+                    return; 
+                }
+                if(memData.status === 'Pending') { 
+                    Swal.fire('प्रलंबित', 'तुमची नोंदणी अद्याप मंजूर झालेली नाही.', 'warning'); 
+                    return; 
+                }
+                
+                // लॉगिन यशस्वी झाल्यावर डेटा लोकल स्टोरेजमध्ये सेव्ह करा
+                memData.id = memId;
+                localStorage.setItem("memberSession", JSON.stringify(memData));
+                
+                Swal.close(); 
+                window.location.replace("member-dashboard.html");
+                
+            } catch(e) { 
+                Swal.fire('त्रुटी', 'लॉगिन करताना समस्या आली.', 'error'); 
+                console.error(e); 
+            }
         };
     </script>
 </body>
