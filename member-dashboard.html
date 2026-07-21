@@ -92,7 +92,7 @@
 </head>
 <body>
 
-    <!-- Loading Screen (Flickering Fix: Blocks loop entirely) -->
+    <!-- Loading Screen (Flickering Fix) -->
     <div id="loader-overlay">
         <div class="spinner" id="loader-spinner"></div>
         <div id="loader-message" style="margin-top:15px; text-align:center;">
@@ -283,19 +283,21 @@
     <!-- FIREBASE & JS LOGIC -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, updateDoc, doc, query, where } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+        // 'onSnapshot' ॲडमिन ब्लॉक रियलटाइम चेकसाठी पुन्हा ॲड केले आहे
+        import { getFirestore, collection, addDoc, getDocs, updateDoc, doc, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
         import { getAuth, signOut, onAuthStateChanged, updatePassword } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
        
         const firebaseConfig = { apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk", authDomain: "xrayunionmah.firebaseapp.com", projectId: "xrayunionmah" };
         const app = initializeApp(firebaseConfig); 
-        const db = getFirestore(app); const auth = getAuth(app);
+        const db = getFirestore(app); 
+        const auth = getAuth(app);
 
-        let currentMember = null; let memberDocId = null;
+        let currentMember = null; 
+        let memberDocId = null;
 
         window.toggleSidebar = () => document.getElementById('sidebar').classList.toggle('open');
         window.openTab = function(tabId) { document.querySelectorAll('.tab-content, .nav-item').forEach(e=>e.classList.remove('active')); document.getElementById(tabId).classList.add('active'); event.currentTarget.classList.add('active'); if(window.innerWidth <= 900) toggleSidebar(); };
         
-        // Loop फिक्स: लॉगआउट झाल्यावर ऑटोमॅटिक रीडायरेक्ट करण्याऐवजी पेज रीलोड होईल, जेणेकरून लॉगआउट मेसेज दिसेल.
         window.logoutMember = () => { 
             logActivity("Logged Out"); 
             signOut(auth).then(() => {
@@ -306,7 +308,7 @@
         const uploadToCloudinary = async (file) => { const formData = new FormData(); formData.append("file", file); formData.append("upload_preset", "ml_default"); const res = await fetch(`https://api.cloudinary.com/v1_1/jjavsdh5/auto/upload`, { method: "POST", body: formData }); const data = await res.json(); if(data.secure_url) return data.secure_url; throw new Error("Upload Failed."); };
         async function logActivity(action) { if(!currentMember) return; await addDoc(collection(db, "member_activity"), { memberEmail: currentMember.email, action: action, date: new Date().toLocaleString('mr-IN'), timestamp: Date.now() }); }
 
-        // FLICKERING & INFINITE LOOP FIX: No automatic window.location.replace is used here.
+        // Firebase Auth State Listener
         onAuthStateChanged(auth, async (user) => {
             let loader = document.getElementById('loader-overlay');
             let spinner = document.getElementById('loader-spinner');
@@ -317,16 +319,39 @@
                     const q = query(collection(db, "members"), where("email", "==", user.email));
                     const snap = await getDocs(q);
                     if(!snap.empty) {
-                        memberDocId = snap.docs[0].id; currentMember = snap.docs[0].data();
+                        memberDocId = snap.docs[0].id; 
+                        let initialData = snap.docs[0].data();
+                        
+                        // रिअल-टाइम सिक्युरिटी चेक: ॲडमिनने ब्लॉक केल्यास त्वरित लॉगआउट करा (Re-integrated from your code)
+                        onSnapshot(doc(db, "members", memberDocId), (docSnap) => {
+                            if (docSnap.exists()) {
+                                let latestData = docSnap.data();
+                                if (latestData.loginDisabled) {
+                                    signOut(auth).then(() => {
+                                        Swal.fire({
+                                            title: 'खाते अवरोधित!',
+                                            text: 'तुमचे लॉगिन ॲडमिनद्वारे बंद करण्यात आले आहे.',
+                                            icon: 'error',
+                                            confirmButtonText: 'ओके'
+                                        }).then(() => {
+                                            window.location.replace("member-login.html");
+                                        });
+                                    });
+                                } else {
+                                    currentMember = {...latestData, id: memberDocId};
+                                }
+                            }
+                        });
+
+                        currentMember = initialData;
                         document.getElementById('top-mem-name').innerText = currentMember.name;
                         
-                        // Show Dashboard and hide loader
                         loader.style.display = 'none';
                         document.getElementById('main-content').style.visibility = 'visible';
 
-                        logActivity("Logged In"); loadAllDashboardData();
+                        logActivity("Logged In"); 
+                        loadAllDashboardData();
                     } else { 
-                        // ERROR: Logged in but profile deleted or email mismatch
                         spinner.style.display = 'none';
                         loaderMsg.innerHTML = `
                             <div style="background:white; padding:30px; border-radius:10px; box-shadow:0 0 15px rgba(0,0,0,0.1); max-width: 450px; text-align:center;">
@@ -341,7 +366,6 @@
                     loaderMsg.innerHTML = `<h3 style="color:red;">सिस्टीम एरर: ${error.message}</h3>`;
                 }
             } else { 
-                // NOT LOGGED IN - Show manual login button instead of auto-redirect
                 spinner.style.display = 'none';
                 loaderMsg.innerHTML = `
                     <div style="background:white; padding:30px; border-radius:10px; box-shadow:0 0 15px rgba(0,0,0,0.1); max-width: 450px; text-align:center;">
@@ -374,7 +398,7 @@
             document.getElementById('id_work').innerText = currentMember.workplace || '-'; document.getElementById('id_dist').innerText = `${currentMember.district||'-'} (${currentMember.mandal||'-'})`;
             document.getElementById('id_addr').innerText = currentMember.address || '-'; document.getElementById('id_mob').innerText = currentMember.mobile || '-';
             document.getElementById('id_sevarth').innerText = currentMember.sevarthId || '-'; document.getElementById('id_join').innerText = currentMember.joinDate || '-';
-            document.getElementById('id_qr_code').innerHTML = ""; // clear old QR
+            document.getElementById('id_qr_code').innerHTML = ""; 
             new QRCode(document.getElementById("id_qr_code"), { text: `Name: ${currentMember.name}, ID: ${memberDocId}`, width: 60, height: 60 });
         }
 
@@ -402,23 +426,21 @@
         }
         window.requestReupload = async (docName, statField) => { let reason = prompt("कारण लिहा:"); if(!reason) return; await addDoc(collection(db, "member_requests"), { memberId: memberDocId, memberName: currentMember.name, type: "Re-upload", docName: docName, status: "Pending", date: new Date().toLocaleString('mr-IN') }); Swal.fire('विनंती पाठवली', 'ॲडमिन मंजुरीची वाट पहा.', 'info'); }
 
-        // ADMIN DOCS (Notice, TLD, Proposal, Forms)
+        // ADMIN DOCS
         async function loadAdminDocuments() {
             const snap = await getDocs(collection(db, "member_documents"));
             let grHtml='', tldHtml='', propHtml='', formsHtml='', noticeHtml='', tldCnt=0;
             snap.forEach(d => {
                 let data = d.data(); if(data.access === 'ADMIN ONLY') return;
                 
-                // For Notice Board
                 if(data.category === 'Notice Board') {
                     noticeHtml += `<div class="notice-card">
                         <div><h4><i class="fa fa-bell" style="color:#d97706; margin-right:8px;"></i>${data.title}</h4><small>दिनांक: ${data.date}</small></div>
                         <button class="btn-action bg-info" style="padding:6px 12px; font-size:0.9rem;" onclick="window.open('${data.url}', '_blank'); logActivity('Viewed Notice: ${data.title}');"><i class="fa fa-eye"></i> पाहा / डाउनलोड</button>
                     </div>`;
-                    return; // Skip adding notice to other folders
+                    return;
                 }
 
-                // For normal folders
                 let card = `<div class="folder-card" onclick="window.open('${data.url}', '_blank'); logActivity('Downloaded ${data.title}');"><i class="fa fa-file-pdf"></i><h4>${data.title}</h4><small>${data.date}</small></div>`;
                 if(data.category === 'TLD Letter') { tldHtml += card; tldCnt++; } 
                 else if(data.category === 'Proposal') { propHtml += card; tldCnt++; } 
@@ -440,7 +462,19 @@
 
         // ACTIVITY & PASSWORD
         async function loadActivityLog() { const snap = await getDocs(query(collection(db, "member_activity"), where("memberEmail", "==", currentMember.email))); let arr = []; snap.forEach(d=>arr.push(d.data())); arr.sort((a,b)=> b.timestamp - a.timestamp); document.getElementById('activityBody').innerHTML = arr.map(a => `<div style="padding:8px 0; border-bottom:1px dashed #ccc;"><b>[${a.date}]</b> - ${a.action}</div>`).join(''); }
-        window.updateMemberPassword = async () => { let newP = document.getElementById('new_pass').value; if(newP.length < 6) return alert("पासवर्ड किमान ६ अक्षरांचा असावा."); try { await updatePassword(auth.currentUser, newP); logActivity("Password Changed"); Swal.fire('यशस्वी', 'पासवर्ड बदलला आहे.', 'success'); document.getElementById('new_pass').value = ''; } catch(e) { Swal.fire('Error', e.message, 'error'); } }
+        
+        window.updateMemberPassword = async () => { 
+            let newP = document.getElementById('new_pass').value; 
+            if(newP.length < 6) return alert("पासवर्ड किमान ६ अक्षरांचा असावा."); 
+            try { 
+                await updatePassword(auth.currentUser, newP); 
+                logActivity("Password Changed"); 
+                Swal.fire('यशस्वी', 'पासवर्ड बदलला आहे.', 'success'); 
+                document.getElementById('new_pass').value = ''; 
+            } catch(e) { 
+                Swal.fire('Error', e.message, 'error'); 
+            } 
+        }
     </script>
 </body>
 </html>
