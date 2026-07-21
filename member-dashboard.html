@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- Chart.js for Pie Chart -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Mukta:wght@300;400;600;700;800&display=swap');
@@ -52,6 +54,18 @@
         .dash-card h2 { font-size: 2rem; font-weight: 800; }
         .bg-g1 { background: linear-gradient(135deg, #0B3D91, #1e3a8a); } .bg-g2 { background: linear-gradient(135deg, #10b981, #059669); } .bg-g3 { background: linear-gradient(135deg, #f59e0b, #d97706); } .bg-g4 { background: linear-gradient(135deg, #ef4444, #b91c1c); }
 
+        /* Map and Pie Grid Layout (From Admin) */
+        .map-pie-grid { display: grid; grid-template-columns: 2.5fr 1fr; gap: 20px; margin-bottom: 20px; }
+        @media(max-width: 900px) { .map-pie-grid { grid-template-columns: 1fr; } }
+        
+        .mandal-map-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; padding: 10px; }
+        .mandal-card { border-radius: 6px; color: white; padding: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.15); transition: transform 0.2s; text-align: center;}
+        .mandal-card:hover { transform: translateY(-3px); }
+        .mandal-card h3 { border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 3px; margin-bottom: 5px; font-weight: 700; font-size: 0.85rem;}
+        .mandal-card h2 { font-size: 1.1rem; margin-bottom: 5px; font-weight: 800; }
+        .dist-badge { display: inline-flex; justify-content: space-between; align-items: center; width: 100%; background: rgba(0,0,0,0.25); font-size: 0.7rem; padding: 2px 4px; margin: 2px 0; border-radius: 4px; font-weight: 600;}
+        .dist-badge .dist-count { background: #fff; color: #000; padding: 1px 4px; border-radius: 10px; font-weight: 800; font-size: 0.65rem;}
+
         /* Forms & Tables */
         .form-row { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px; }
         .form-control { flex: 1; min-width: 200px; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 1rem; outline: none;}
@@ -78,9 +92,10 @@
         .folder-card i { font-size: 3rem; color: var(--warning); margin-bottom: 10px; }
 
         /* Notice Board Specific */
-        .notice-card { background: #fff7ed; border-left: 5px solid var(--warning); padding: 15px; margin-bottom: 10px; border-radius: 5px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .notice-card h4 { margin-bottom: 5px; color: var(--dark); }
-        .notice-card small { color: #64748b; }
+        .notice-card { background: #fff7ed; border-left: 5px solid var(--warning); padding: 15px; margin-bottom: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: 0.3s; }
+        .notice-card:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,0,0,0.1); }
+        .notice-card h4 { margin-bottom: 5px; color: var(--dark); font-size: 1.1rem; }
+        .notice-card small { color: #64748b; font-weight: 600; }
 
         @media (max-width: 900px) {
             .sidebar { transform: translateX(-100%); }
@@ -139,12 +154,29 @@
         <div class="container">
             <!-- 1. DASHBOARD -->
             <div id="tab-dash" class="tab-content active">
-                <h2 style="margin-bottom:15px; color:var(--dark);">डॅशबोर्ड सारांश</h2>
+                <h2 style="margin-bottom:15px; color:var(--dark);">माझे डॅशबोर्ड सारांश</h2>
                 <div class="dash-grid">
                     <div class="dash-card bg-g1"><h3>माझी कागदपत्रे</h3><h2 id="cnt-mydocs">0</h2></div>
                     <div class="dash-card bg-g2"><h3>मंजूर कागदपत्रे</h3><h2 id="cnt-app-docs">0</h2></div>
                     <div class="dash-card bg-g3"><h3>TLD / प्रस्ताव</h3><h2 id="cnt-tld">0</h2></div>
                     <div class="dash-card bg-g4"><h3>फी स्टेटस</h3><h2 id="cnt-fee" style="font-size:1.5rem; margin-top:5px;">-</h2></div>
+                </div>
+
+                <!-- ADDED: MAP & PIE GRID FROM ADMIN -->
+                <h2 style="margin-top:10px; margin-bottom:15px; color:var(--dark);">राज्यस्तरीय सदस्य स्थिती</h2>
+                <div class="map-pie-grid">
+                    <div class="panel" style="margin-bottom:0;">
+                        <div class="panel-header h-primary"><span><i class="fa fa-map-marked-alt"></i> आरोग्य विभागाची मंडळे व जिल्हे (सदस्य संख्या)</span></div>
+                        <div class="panel-body" style="padding:0; background: #f8fafc; border-radius: 0 0 12px 12px;">
+                            <div id="mandalMapGrid" class="mandal-map-grid"></div>
+                        </div>
+                    </div>
+                    <div class="panel" style="margin-bottom:0;">
+                        <div class="panel-header h-warning"><span><i class="fa fa-chart-pie"></i> मंडळनिहाय मान्य सदस्य</span></div>
+                        <div class="panel-body" style="height:350px; display:flex; justify-content:center;">
+                            <canvas id="mandalPieChart"></canvas>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -152,8 +184,14 @@
             <div id="tab-notice" class="tab-content">
                 <div class="panel">
                     <div class="panel-header" style="background:#f59e0b; color:#000;">सूचना फलक (Notice Board)</div>
-                    <div class="panel-body" id="grid_notices">
-                        <p>सध्या कोणतीही नवीन सूचना नाही.</p>
+                    <div class="panel-body">
+                        <div style="background:#fffbeb; padding:15px; border-radius:8px; margin-bottom:20px; border-left:5px solid var(--warning);">
+                            <h4 style="color:#b45309;"><i class="fa fa-info-circle"></i> महत्त्वाच्या सूचना</h4>
+                            <p style="font-size:0.95rem; color:#475569; margin-top:5px;">येथे ॲडमिनद्वारे प्रकाशित केलेल्या सर्व नवीन नोटिसा आणि परिपत्रके पाहता येतील.</p>
+                        </div>
+                        <div id="grid_notices">
+                            <p>सध्या कोणतीही नवीन सूचना नाही.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -288,7 +326,7 @@
         </div>
     </div>
 
-    <!-- FIREBASE & JS LOGIC (LOCAL AUTHENTICATION) -->
+    <!-- FIREBASE & JS LOGIC (LOCAL AUTHENTICATION & CHARTS) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, updateDoc, doc, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
@@ -303,13 +341,31 @@
 
         let currentMember = null; 
         let memberDocId = null;
+        let dashboardPieChart = null; // Chart variable
+
+        // Mandal mapping for stats (Same as Admin)
+        const mandalData = {
+            "पुणे मंडळ": ["पुणे", "सातारा", "सोलापूर"],
+            "नागपूर मंडळ": ["नागपूर", "भंडारा", "वर्धा", "गोंदिया", "चंद्रपूर", "गडचिरोली"],
+            "नाशिक मंडळ": ["नाशिक", "अहमदनगर", "धुळे", "जळगाव", "नंदुरबार"],
+            "अकोला मंडळ": ["अकोला", "अमरावती", "बुलढाणा", "यवतमाळ", "वाशिम"],
+            "कोल्हापूर मंडळ": ["कोल्हापूर", "सांगली", "रत्नागिरी", "सिंधुदुर्ग"],
+            "छत्रपती संभाजीनगर मंडळ": ["छत्रपती संभाजीनगर", "जालना", "परभणी", "हिंगोली"],
+            "लातूर मंडळ": ["लातूर", "धाराशिव", "बीड", "नांदेड"],
+            "ठाणे मंडळ": ["ठाणे", "पालघर", "रायगड", "मुंबई शहर", "मुंबई उपनगर"]
+        };
 
         window.toggleSidebar = () => document.getElementById('sidebar').classList.toggle('open');
-        window.openTab = function(tabId) { document.querySelectorAll('.tab-content, .nav-item').forEach(e=>e.classList.remove('active')); document.getElementById(tabId).classList.add('active'); event.currentTarget.classList.add('active'); if(window.innerWidth <= 900) toggleSidebar(); };
+        window.openTab = function(tabId) { 
+            document.querySelectorAll('.tab-content, .nav-item').forEach(e=>e.classList.remove('active')); 
+            document.getElementById(tabId).classList.add('active'); 
+            event.currentTarget.classList.add('active'); 
+            if(window.innerWidth <= 900) toggleSidebar(); 
+        };
         
         window.logoutMember = () => { 
             logActivity("लॉगआउट केले"); 
-            localStorage.removeItem("memberSession"); // Session Clear
+            localStorage.removeItem("memberSession"); 
             window.location.replace("member-login.html"); 
         };
 
@@ -382,7 +438,60 @@
             }
         };
 
-        async function loadAllDashboardData() { populateProfile(); generateIDCardPreview(); loadFeeStatus(); loadMyDocuments(); loadAdminDocuments(); loadSupportTickets(); loadActivityLog(); }
+        async function loadAllDashboardData() { 
+            populateProfile(); 
+            generateIDCardPreview(); 
+            loadFeeStatus(); 
+            loadMyDocuments(); 
+            loadAdminDocuments(); 
+            loadSupportTickets(); 
+            loadActivityLog(); 
+            loadStatewideStats(); // New function for map & pie chart
+        }
+
+        // NEW: Load Statewide Stats (Similar to Admin)
+        async function loadStatewideStats() {
+            try {
+                const snap = await getDocs(collection(db, "members"));
+                let mandalStat = {}; let distStat = {};
+                
+                Object.keys(mandalData).forEach(m => { mandalStat[m] = 0; mandalData[m].forEach(d => distStat[d] = 0); });
+                
+                snap.forEach(d => {
+                    let m = d.data();
+                    if(m.isMember !== false && m.status === 'Approved') {
+                        if(m.mandal && mandalStat[m.mandal] !== undefined) mandalStat[m.mandal]++;
+                        if(m.district && distStat[m.district] !== undefined) distStat[m.district]++;
+                    }
+                });
+
+                const colors = {"पुणे मंडळ":"#f59e0b", "नागपूर मंडळ":"#3b82f6", "नाशिक मंडळ":"#10b981", "अकोला मंडळ":"#ef4444", "कोल्हापूर मंडळ":"#8b5cf6", "छत्रपती संभाजीनगर मंडळ":"#ec4899", "लातूर मंडळ":"#f97316", "ठाणे मंडळ":"#0ea5e9"};
+                
+                // Render Mandal Cards
+                let mapHtml = '';
+                Object.keys(mandalData).forEach(m => {
+                    let distHtml = mandalData[m].map(d => `<span class="dist-badge">${d} <span class="dist-count">${distStat[d]||0}</span></span>`).join('');
+                    mapHtml += `<div class="mandal-card" style="background:${colors[m]};"><h3>${m}</h3><h2>${mandalStat[m]||0}</h2><div>${distHtml}</div></div>`;
+                });
+                document.getElementById('mandalMapGrid').innerHTML = mapHtml;
+
+                // Render Pie Chart
+                let pCtx = document.getElementById('mandalPieChart');
+                if(pCtx) { 
+                    if(dashboardPieChart) dashboardPieChart.destroy();
+                    dashboardPieChart = new Chart(pCtx, { 
+                        type: 'pie', 
+                        data: { 
+                            labels: Object.keys(mandalStat), 
+                            datasets: [{ data: Object.values(mandalStat), backgroundColor: Object.keys(mandalStat).map(m=>colors[m]) }] 
+                        }, 
+                        options: { responsive: true, maintainAspectRatio: false } 
+                    }); 
+                }
+            } catch (err) {
+                console.error("Error loading statewide stats:", err);
+            }
+        }
 
         // PROFILE & REQUEST
         function populateProfile() {
@@ -436,18 +545,25 @@
             if(reason) { await addDoc(collection(db, "member_requests"), { memberId: memberDocId, memberName: currentMember.name, type: "Re-upload", docName: docName, reason: reason, status: "Pending", date: new Date().toLocaleString('mr-IN') }); Swal.fire('विनंती पाठवली', 'ॲडमिन मंजुरीची वाट पहा.', 'info'); }
         }
 
-        // ADMIN DOCS (Including Notice Board)
+        // ADMIN DOCS (Including Notice Board Enhanced)
         async function loadAdminDocuments() {
             const snap = await getDocs(collection(db, "member_documents"));
             let grHtml='', tldHtml='', propHtml='', formsHtml='', noticeHtml='', tldCnt=0;
+            
             snap.forEach(d => {
-                let data = d.data(); if(data.access === 'ADMIN ONLY') return;
+                let data = d.data(); 
+                if(data.access === 'ADMIN ONLY') return;
                 
-                // नोटीस बोर्डसाठीचा कोड जो गळता कामा नये
+                // नोटीस बोर्डसाठीचा कोड जो गळता कामा नये आणि आकर्षक बनवला आहे
                 if(data.category === 'Notice Board') {
                     noticeHtml += `<div class="notice-card">
-                        <div><h4><i class="fa fa-bell" style="color:#d97706; margin-right:8px;"></i>${data.title}</h4><small>दिनांक: ${data.date}</small></div>
-                        <button class="btn-action bg-info" style="padding:6px 12px; font-size:0.9rem;" onclick="window.open('${data.url}', '_blank'); logActivity('सूचना वाचली: ${data.title}');"><i class="fa fa-eye"></i> पाहा / डाउनलोड</button>
+                        <div>
+                            <h4><i class="fa fa-bell" style="color:#d97706; margin-right:8px;"></i>${data.title}</h4>
+                            <small>दिनांक: ${data.date}</small>
+                        </div>
+                        <button class="btn-action bg-info" style="padding:8px 15px; font-size:0.9rem;" onclick="window.open('${data.url}', '_blank'); logActivity('सूचना वाचली: ${data.title}');">
+                            <i class="fa fa-eye"></i> पाहा / डाउनलोड
+                        </button>
                     </div>`;
                     return;
                 }
@@ -459,7 +575,7 @@
                 else { grHtml += card; }
             });
             
-            document.getElementById('grid_notices').innerHTML = noticeHtml || '<p>सध्या कोणतीही नवीन सूचना नाही.</p>';
+            document.getElementById('grid_notices').innerHTML = noticeHtml || '<p style="padding:10px; color:gray;">सध्या कोणतीही नवीन सूचना उपलब्ध नाही.</p>';
             document.getElementById('grid_memberdocs').innerHTML = grHtml || '<p>उपलब्ध नाहीत.</p>'; 
             document.getElementById('grid_tld').innerHTML = tldHtml || '<p>उपलब्ध नाहीत.</p>'; 
             document.getElementById('grid_proposals').innerHTML = propHtml || '<p>उपलब्ध नाहीत.</p>'; 
