@@ -15,7 +15,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mukta', sans-serif; }
         body { background-color: var(--bg); color: var(--text); overflow-x: hidden; display: flex; }
 
-        /* Loader Overlay for Flickering Fix */
+        /* Loader Overlay for Flickering Fix & Locked Screen */
         #loader-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f4f7f6; z-index: 9999; display: flex; justify-content: center; align-items: center; flex-direction: column; }
         .spinner { width: 50px; height: 50px; border: 5px solid #ccc; border-top: 5px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -100,7 +100,7 @@
 </head>
 <body>
 
-    <!-- Loading Screen -->
+    <!-- Loading / Locked Screen -->
     <div id="loader-overlay">
         <div class="spinner" id="loader-spinner"></div>
         <div id="loader-message" style="margin-top:15px; text-align:center;">
@@ -148,7 +148,7 @@
                 </div>
             </div>
 
-            <!-- 2. NOTICE BOARD -->
+            <!-- 2. NOTICE BOARD (Admin Notice) -->
             <div id="tab-notice" class="tab-content">
                 <div class="panel">
                     <div class="panel-header" style="background:#f59e0b; color:#000;">सूचना फलक (Notice Board)</div>
@@ -291,7 +291,6 @@
     <!-- FIREBASE & JS LOGIC (LOCAL AUTHENTICATION) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-        // Local Authentication साठी फक्त Firestore पुरेसे आहे
         import { getFirestore, collection, addDoc, getDocs, updateDoc, doc, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
        
         const firebaseConfig = { 
@@ -322,7 +321,7 @@
         }
 
         // ---------------------------------------------------------
-        // Local Session Authentication (Local Auth)
+        // Local Session Authentication with custom "Locked Out" Screen
         // ---------------------------------------------------------
         window.onload = function() {
             let loader = document.getElementById('loader-overlay');
@@ -332,13 +331,26 @@
             const sessionData = localStorage.getItem("memberSession");
             
             if (!sessionData) {
-                // जर Session नसेल तर त्वरित Login वर पाठवा
-                window.location.replace("member-login.html");
+                // युझरने फोटोमध्ये दिलेल्या डिझाईनप्रमाणे 'लॉक स्क्रीन'
+                spinner.style.display = 'none'; 
+                loaderMsg.innerHTML = `
+                    <div style="background:white; padding:40px; border-radius:12px; box-shadow:0 10px 30px rgba(0,0,0,0.1); max-width: 450px; text-align:center; margin: 0 auto;">
+                        <h2 style="color:var(--primary); margin-bottom:15px; font-size:1.8rem; font-weight: 800;">
+                            <i class="fa fa-lock"></i> डॅशबोर्ड लॉक आहे
+                        </h2>
+                        <p style="margin-bottom:25px; font-size:1.1rem; color:#475569; line-height:1.6;">
+                            तुम्ही सिस्टीममधून लॉगआउट झाला आहात किंवा लॉगिन केलेले नाही. कृपया पुढे जाण्यासाठी लॉगिन करा.
+                        </p>
+                        <a href="member-login.html" style="display:inline-block; padding:12px 30px; background:var(--success); color:white; text-decoration:none; border-radius:8px; font-weight:bold; font-size:1.1rem; transition:0.3s; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);">
+                            <i class="fa fa-sign-in-alt"></i> लॉगिन पेजवर जा
+                        </a>
+                    </div>
+                `;
             } else {
                 currentMember = JSON.parse(sessionData);
                 memberDocId = currentMember.id;
                 
-                // रिअल-टाइम सिक्युरिटी चेक (ॲडमिनने ब्लॉक केल्यास त्वरित बाहेर काढण्यासाठी)
+                // रिअल-टाइम सिक्युरिटी चेक
                 onSnapshot(doc(db, "members", memberDocId), (docSnap) => {
                     if (docSnap.exists()) {
                         let latestData = docSnap.data();
@@ -353,7 +365,6 @@
                                 window.location.replace("member-login.html");
                             });
                         } else {
-                            // जर सर्व ठीक असेल, तर लोकल स्टोरेजमधील माहिती अपडेट करा
                             currentMember = {...latestData, id: memberDocId};
                             delete currentMember.pass;
                             delete currentMember.password;
@@ -425,13 +436,14 @@
             if(reason) { await addDoc(collection(db, "member_requests"), { memberId: memberDocId, memberName: currentMember.name, type: "Re-upload", docName: docName, reason: reason, status: "Pending", date: new Date().toLocaleString('mr-IN') }); Swal.fire('विनंती पाठवली', 'ॲडमिन मंजुरीची वाट पहा.', 'info'); }
         }
 
-        // ADMIN DOCS
+        // ADMIN DOCS (Including Notice Board)
         async function loadAdminDocuments() {
             const snap = await getDocs(collection(db, "member_documents"));
             let grHtml='', tldHtml='', propHtml='', formsHtml='', noticeHtml='', tldCnt=0;
             snap.forEach(d => {
                 let data = d.data(); if(data.access === 'ADMIN ONLY') return;
                 
+                // नोटीस बोर्डसाठीचा कोड जो गळता कामा नये
                 if(data.category === 'Notice Board') {
                     noticeHtml += `<div class="notice-card">
                         <div><h4><i class="fa fa-bell" style="color:#d97706; margin-right:8px;"></i>${data.title}</h4><small>दिनांक: ${data.date}</small></div>
@@ -459,7 +471,7 @@
         window.submitSupportTicket = async () => { let sub = document.getElementById('sup_sub').value; let msg = document.getElementById('sup_msg').value; if(!msg) return Swal.fire('त्रुटी', 'कृपया तुमची तक्रार लिहा.', 'warning'); await addDoc(collection(db, "support_tickets"), { memberId: memberDocId, memberName: currentMember.name, subject: sub, message: msg, status: 'Open', date: new Date().toLocaleString('mr-IN'), timestamp: Date.now() }); logActivity(`तक्रार नोंदवली: ${sub}`); document.getElementById('sup_msg').value = ''; Swal.fire('यशस्वी', 'तक्रार पाठवली आहे.', 'success'); loadSupportTickets(); }
         async function loadSupportTickets() { const snap = await getDocs(query(collection(db, "support_tickets"), where("memberId", "==", memberDocId))); let html = ''; snap.forEach(d => { let t = d.data(); let stat = t.status==='Closed'?'बंद':'सुरू'; html += `<tr><td>${t.date}</td><td><b>${t.subject}</b><br><small>${t.message}</small></td><td><span class="badge ${t.status==='Closed'?'bg-success':'bg-warning'}">${stat}</span></td><td>${t.admin_reply || 'प्रलंबित (Pending)'}</td></tr>`; }); document.getElementById('ticketsBody').innerHTML = html || '<tr><td colspan="4">कोणतीही तक्रार नाही.</td></tr>'; }
 
-        // ACTIVITY LOG (Re-added & functional based on Mobile)
+        // ACTIVITY LOG
         async function loadActivityLog() { 
             const snap = await getDocs(query(collection(db, "member_activity"), where("memberMobile", "==", currentMember.mobile))); 
             let arr = []; 
@@ -468,16 +480,12 @@
             document.getElementById('activityBody').innerHTML = arr.map(a => `<div style="padding:8px 0; border-bottom:1px dashed #ccc;"><b>[${a.date}]</b> - ${a.action}</div>`).join('') || '<p>कोणतीही ॲक्टिव्हिटी नाही.</p>'; 
         }
         
-        // PASSWORD UPDATE (Now updates Firestore document directly via Local Auth mechanism)
+        // PASSWORD UPDATE
         window.updateMemberPassword = async () => { 
             let newP = document.getElementById('new_pass').value; 
             if(newP.length < 6) return Swal.fire('त्रुटी', 'पासवर्ड किमान ६ अक्षरांचा असावा.', 'warning'); 
             try { 
-                // Firestore मधील पास आणि पासवर्ड फील्ड अपडेट करणे
-                await updateDoc(doc(db, "members", memberDocId), { 
-                    pass: newP, 
-                    password: newP 
-                }); 
+                await updateDoc(doc(db, "members", memberDocId), { pass: newP, password: newP }); 
                 logActivity("पासवर्ड बदलला"); 
                 Swal.fire('यशस्वी', 'तुमचा पासवर्ड यशस्वीरित्या बदलला आहे.', 'success'); 
                 document.getElementById('new_pass').value = ''; 
