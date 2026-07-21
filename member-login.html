@@ -33,19 +33,19 @@
     </div>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+        import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
        
         const firebaseConfig = {
             apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk", authDomain: "xrayunionmah.firebaseapp.com",
-            projectId: "xrayunionmah", storageBucket: "xrayunionmah.firebasestorage.app",
-            messagingSenderId: "763805226978", appId: "1:763805226978:web:6bae81a0b6358b47d88bbb"
+            projectId: "xrayunionmah", storageBucket: "xrayunionmah.firebasestorage.app"
         };
         const app = initializeApp(firebaseConfig); 
         const db = getFirestore(app);
 
+        // Check if already logged in based on session
         window.onload = function() {
-            if(localStorage.getItem("memberSession")) { window.location.replace("member-dashboard.html"); }
+            if(localStorage.getItem("memberSession")) { window.location.replace("member_dashboard.html"); } // फाईलचे नाव अचूक द्या
         };
 
         window.loginMember = async function() {
@@ -73,7 +73,8 @@
                     
                     memData.id = memId;
                     localStorage.setItem("memberSession", JSON.stringify(memData));
-                    Swal.close(); window.location.replace("member-dashboard.html");
+                    Swal.close(); 
+                    window.location.replace("member_dashboard.html"); // फाईलचे नाव अचूक द्या
                 }
             } catch(e) { Swal.fire('त्रुटी', 'लॉगिन करताना समस्या आली.', 'error'); console.error(e); }
         };
