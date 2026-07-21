@@ -97,7 +97,10 @@
         .ob-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 20px;}
 
         .preview-container { border: 2px dashed #cbd5e1; padding: 20px; background: #f8fafc; display: flex; justify-content: center; align-items: center; flex-direction: column; min-height: 300px; }
-        .id-card-preview { width: 220px; height: 340px; background: white; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; padding: 15px 10px; text-align: center; }
+        
+        /* Updated ID Card CSS for detailed view */
+        .id-card-preview { width: 300px; min-height: 450px; background: white; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; padding: 15px; text-align: center; }
+        
         .letterpad-preview { width: 100%; max-width: 800px; background: white; border: 1px solid #ccc; box-shadow: 0 5px 15px rgba(0,0,0,0.1); min-height: 500px; position: relative; padding: 20px; }
         
         .folder-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; }
@@ -392,7 +395,7 @@
                 </div>
             </div>
 
-            <!-- TAB: OFFICE BEARERS & GALLERY (FIXED: Added Gallery) -->
+            <!-- TAB: OFFICE BEARERS & GALLERY (UPDATED: Added Datalist for Manual Text Input) -->
             <div id="tab-committee" class="tab-content">
                 <div class="panel">
                     <div class="panel-header h-purple"><span><i class="fa fa-users-cog"></i> पदाधिकारी व गॅलरी (Office Bearers & Gallery)</span></div>
@@ -405,13 +408,15 @@
                                     <div id="ob_search_results" class="ob-search-results"></div>
                                 </div>
                                 <div>
-                                    <select id="ob_designation" class="form-control">
-                                        <option value="अध्यक्ष">अध्यक्ष</option>
-                                        <option value="उपाध्यक्ष">उपाध्यक्ष</option>
-                                        <option value="कोषाध्यक्ष">कोषाध्यक्ष</option>
-                                        <option value="प्रमुख कार्यवाह">प्रमुख कार्यवाह</option>
-                                        <option value="माहिती तंत्रज्ञान विभाग">माहिती तंत्रज्ञान विभाग</option>
-                                    </select>
+                                    <!-- Changed to Datalist for Manual Input -->
+                                    <input list="ob_designations_list" id="ob_designation" class="form-control" placeholder="पद निवडा किंवा टाईप करा">
+                                    <datalist id="ob_designations_list">
+                                        <option value="अध्यक्ष"></option>
+                                        <option value="उपाध्यक्ष"></option>
+                                        <option value="कोषाध्यक्ष"></option>
+                                        <option value="प्रमुख कार्यवाह"></option>
+                                        <option value="माहिती तंत्रज्ञान विभाग"></option>
+                                    </datalist>
                                 </div>
                                 <div style="flex:1;">
                                     <label style="font-size:0.8rem;">फोटो (Max 400KB)</label>
@@ -422,7 +427,7 @@
                         </div>
                         <div class="ob-grid" id="committeeGrid"></div>
                         
-                        <!-- GALLERY SECTION (NEW) -->
+                        <!-- GALLERY SECTION -->
                         <hr style="margin:25px 0;">
                         <h4 style="margin-bottom:10px; color:var(--info);"><i class="fa fa-images"></i> गॅलरी फोटो अपलोड (Max 400KB)</h4>
                         <p style="font-size:0.85rem; color:gray; margin-bottom:10px;">येथून अपलोड केलेले फोटो युझर्सना मुख्य वेबसाईटच्या गॅलरी पेजवर दिसतील.</p>
@@ -438,37 +443,23 @@
                 </div>
             </div>
 
-            <!-- TAB: I-CARD & LETTER DESIGN (Kept original logic) -->
+            <!-- TAB: I-CARD & LETTER DESIGN (UPDATED: Added New Fields) -->
             <div id="tab-design" class="tab-content">
                 <div class="map-pie-grid" style="grid-template-columns: 1fr 1fr;">
                     <!-- ID Card Generator -->
                     <div class="panel">
-                        <div class="panel-header h-primary"><span><i class="fa fa-id-badge"></i> ओळखपत्र (ID Card) डिझाईन</span></div>
+                        <div class="panel-header h-primary"><span><i class="fa fa-id-badge"></i> ओळखपत्र (ID Card) डिझाईन व प्रिव्ह्यू</span></div>
                         <div class="panel-body">
-                            <div class="form-row">
-                                <div style="flex:1;">
-                                    <label>डिझाईन निवडा:</label>
-                                    <select id="icard_theme" class="form-control" onchange="updateICardPreview()">
-                                        <option value="modern">Modern Blue (Default)</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div style="margin: 15px 0;">
-                                <label style="font-weight:bold;">आय-कार्डवर काय दाखवायचे?</label>
-                                <div style="display:flex; gap:15px; margin-top:5px; flex-wrap:wrap;">
-                                    <label><input type="checkbox" id="sh_dob" checked onchange="updateICardPreview()"> जन्मतारीख</label>
-                                    <label><input type="checkbox" id="sh_bg" checked onchange="updateICardPreview()"> रक्तगट</label>
-                                    <label><input type="checkbox" id="sh_mob" checked onchange="updateICardPreview()"> मोबाईल</label>
-                                </div>
-                            </div>
-                            
-                            <hr style="margin:20px 0;">
+                            <p style="color:gray; font-size:0.85rem; margin-bottom:15px;">आय कार्डवर सदस्यांची संपूर्ण माहिती दर्शवली जाईल. खाली नमुना दिला आहे.</p>
                             <div class="preview-container">
                                 <div id="live_id_preview" class="id-card-preview">
-                                    <div style="background:var(--primary); color:white; width:100%; padding:5px; font-size:0.8rem; font-weight:bold; border-radius:5px 5px 0 0;">क्ष-किरण संघटना महाराष्ट्र</div>
-                                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="photo" style="margin-top:15px;">
-                                    <h4 style="margin:5px 0; color:var(--dark);">श्री. नमुना सदस्य</h4>
-                                    <div style="font-size:0.75rem; text-align:left; width:100%; line-height:1.4;" id="id_details_preview"></div>
+                                    <div style="background:var(--primary); color:white; width:100%; padding:8px; font-size:0.9rem; font-weight:bold; border-radius:5px 5px 0 0;">क्ष-किरण संघटना महाराष्ट्र</div>
+                                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="photo" style="margin-top:15px; width:70px; height:70px; border-radius:5px; border:2px solid var(--primary);">
+                                    <h4 style="margin:8px 0 2px 0; color:var(--dark);">श्री. नमुना सदस्य</h4>
+                                    <p style="font-size:0.8rem; font-weight:bold; color:gray; margin-bottom:10px;">क्ष-किरण तंत्रज्ञ</p>
+                                    <div style="font-size:0.75rem; text-align:left; width:100%; line-height:1.5; border-top:1px dashed #ccc; padding-top:10px;" id="id_details_preview">
+                                        <!-- Javascript generates this part -->
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -502,7 +493,7 @@
                 </div>
             </div>
             
-            <!-- TAB: SETTINGS -->
+            <!-- TAB: SETTINGS (UPDATED: Added Send via WA/Email Buttons) -->
             <div id="tab-settings" class="tab-content">
                 <div class="panel">
                     <div class="panel-header"><span><i class="fa fa-cogs"></i> सुपर ॲडमिन सेटिंग्ज व परवानग्या</span></div>
@@ -545,7 +536,7 @@
                             <h5>सध्याचे सब-ॲडमिन (सर्च करा)</h5>
                             <input type="text" id="searchSubAdmin" class="form-control" placeholder="सर्च..." style="margin-bottom:10px; max-width:300px;" onkeyup="filterSubAdmins()">
                             <table style="font-size:0.85rem;">
-                                <thead><tr><th>नाव</th><th>लॉगिन आयडी</th><th>पासवर्ड</th><th>ॲक्सेस (मंडळ)</th><th>Action</th></tr></thead>
+                                <thead><tr><th>नाव</th><th>लॉगिन आयडी</th><th>पासवर्ड</th><th>ॲक्सेस (मंडळ)</th><th>Action (Share Login)</th></tr></thead>
                                 <tbody id="subAdminListBody"></tbody>
                             </table>
                         </div>
@@ -564,21 +555,65 @@
         </div>
     </div>
 
-    <!-- Receipt Modal (Hidden) -->
+    <!-- Receipt Modal (UPDATED: Professional Layout) -->
     <div id="receiptModal" class="custom-modal-overlay">
-        <div class="custom-modal" style="max-width:500px;">
+        <div class="custom-modal" style="max-width:700px;">
             <div class="custom-modal-header h-warning">
-                <h3>पावती (Receipt)</h3>
+                <h3>पावती (Receipt) तयार करा</h3>
                 <button onclick="closeModal('receiptModal')" style="background:transparent; border:none; color:white; font-size:1.5rem; cursor:pointer;">&times;</button>
             </div>
-            <div class="custom-modal-body" style="text-align:center;">
-                <input type="hidden" id="rect_mem_id">
-                <h4 id="rect_name" style="color:var(--primary); margin-bottom:15px;"></h4>
-                <div style="margin-bottom:15px;">
-                    <label style="display:block; text-align:left; font-weight:bold; margin-bottom:5px;">मिळालेली रक्कम (₹):</label>
-                    <input type="number" id="rect_amount" class="form-control" placeholder="उदा. 500">
-                </div>
-                <button class="btn-action bg-success" style="width:100%; padding:10px; font-size:1.1rem;" onclick="printReceipt()"><i class="fa fa-print"></i> प्रिंट करा</button>
+            <div class="custom-modal-body">
+                <form id="receiptForm">
+                    <input type="hidden" id="rect_mem_id">
+                    <input type="hidden" id="rect_mem_mob">
+                    <input type="hidden" id="rect_mem_email">
+                    
+                    <div class="form-row">
+                        <div style="flex:1;"><label>पावती क्र.</label><input type="text" id="rect_no" class="form-control" required></div>
+                        <div style="flex:1;"><label>दिनांक</label><input type="date" id="rect_date" class="form-control" required></div>
+                    </div>
+                    <div class="form-row">
+                        <div style="flex:2;"><label>श्री./श्रीमती.</label><input type="text" id="rect_name" class="form-control" readonly></div>
+                        <div style="flex:1;"><label>पद / हुद्दा</label><input type="text" id="rect_post" class="form-control" readonly></div>
+                    </div>
+                    <div class="form-row">
+                        <div style="flex:1;"><label>जिल्हा</label><input type="text" id="rect_dist" class="form-control"></div>
+                        <div style="flex:1;"><label>तालुका</label><input type="text" id="rect_taluka" class="form-control"></div>
+                    </div>
+                    
+                    <label style="font-weight:bold; margin-top:10px; display:block;">रक्कम प्राप्तीचा प्रकार / Purpose:</label>
+                    <div style="display:flex; gap:15px; flex-wrap:wrap; margin-bottom:15px;">
+                        <label><input type="radio" name="rect_purpose" value="सभासद शुल्क" checked> सभासद शुल्क</label>
+                        <label><input type="radio" name="rect_purpose" value="वार्षिक सभासद वर्गणी"> वार्षिक सभासद वर्गणी</label>
+                        <label><input type="radio" name="rect_purpose" value="आजीव सभासद शुल्क"> आजीव सभासद शुल्क</label>
+                        <label><input type="radio" name="rect_purpose" value="देणगी"> देणगी</label>
+                        <label><input type="radio" name="rect_purpose" value="इतर"> इतर <input type="text" id="rect_purpose_other" style="border:none; border-bottom:1px solid #000; outline:none; width:100px;"></label>
+                    </div>
+
+                    <div class="form-row">
+                        <div style="flex:1;"><label>रक्कम (अंकी) ₹</label><input type="number" id="rect_amt_num" class="form-control" required></div>
+                        <div style="flex:2;"><label>रक्कम (अक्षरी) रुपये</label><input type="text" id="rect_amt_words" class="form-control" required></div>
+                    </div>
+
+                    <div class="form-row">
+                        <div style="flex:1;">
+                            <label>भरणा पद्धत:</label>
+                            <select id="rect_pay_mode" class="form-control">
+                                <option value="रोख">रोख</option>
+                                <option value="UPI">UPI</option>
+                                <option value="बँक ट्रान्सफर">बँक ट्रान्सफर</option>
+                                <option value="धनादेश">धनादेश</option>
+                            </select>
+                        </div>
+                        <div style="flex:1;"><label>व्यवहार क्र. / UTR / Cheque No.</label><input type="text" id="rect_utr" class="form-control" placeholder="असल्यास भरा"></div>
+                    </div>
+                    
+                    <div style="display:flex; gap:10px; margin-top:20px;">
+                        <button type="button" class="btn-action bg-primary" style="flex:1; padding:12px; font-size:1.1rem;" onclick="printReceipt()"><i class="fa fa-print"></i> प्रिंट / PDF काढा</button>
+                        <button type="button" class="btn-action bg-wa" style="flex:1; padding:12px; font-size:1.1rem;" onclick="shareReceiptWA()"><i class="fa fa-whatsapp"></i> WhatsApp वर पाठवा</button>
+                        <button type="button" class="btn-action bg-mail" style="flex:1; padding:12px; font-size:1.1rem;" onclick="shareReceiptEmail()"><i class="fa fa-envelope"></i> Email वर पाठवा</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -595,10 +630,9 @@
         
         const SUPER_ADMIN_EMAIL = "hangemahesh498@gmail.com";
         let isSuperAdmin = false;
-        let subAdminAccessRegion = "All"; // FIXED: Variable to hold Sub-Admin's allocated Mandal
+        let subAdminAccessRegion = "All"; 
         let subAdminsList = [];
 
-        // 8 Mandals & Districts Data
         const mandalData = {
             "पुणे मंडळ": ["पुणे", "सातारा", "सोलापूर"],
             "नागपूर मंडळ": ["नागपूर", "भंडारा", "वर्धा", "गोंदिया", "चंद्रपूर", "गडचिरोली"],
@@ -627,7 +661,6 @@
             mandalData[m].forEach(d => { html += `<option value="${d}">${d}</option>`; }); dSelect.innerHTML = html;
         }
 
-        // Max Size Validation logic
         window.checkFileSize = (input, maxKB) => {
             if (input.files && input.files.length > 0) {
                 let fileSize = input.files[0].size / 1024;
@@ -645,19 +678,20 @@
             document.getElementById(tabId).classList.add('active'); 
             event.currentTarget.classList.add('active'); 
             if(tabId === 'tab-dash') setTimeout(renderDashboard, 200); 
+            // Call preview update when opening design tab
+            if(tabId === 'tab-design') updateICardPreview();
         };
 
         onAuthStateChanged(auth, async (user) => { 
             if (user) { 
                 isSuperAdmin = (user.email === SUPER_ADMIN_EMAIL);
                 
-                // FIXED: Fetch Sub-Admin's Region Access Logic
                 if(!isSuperAdmin) {
                     const q = query(collection(db, "admin_users"), where("email", "==", user.email));
                     const snap = await getDocs(q);
                     if(!snap.empty) { subAdminAccessRegion = snap.docs[0].data().access || "All"; }
                 } else {
-                    subAdminAccessRegion = "All"; // Super Admin sees all
+                    subAdminAccessRegion = "All"; 
                 }
 
                 document.getElementById('login-screen').style.display='none'; 
@@ -665,17 +699,21 @@
                 document.getElementById('login_user_role').innerText = isSuperAdmin ? "Super Admin" : "Sub Admin";
                 document.getElementById('login_user_region').innerText = subAdminAccessRegion !== "All" ? `(${subAdminAccessRegion})` : "";
                 
+                // RBAC Logic: Hide Settings for Sub Admin, show everything else.
                 if(isSuperAdmin) { 
                     document.getElementById('btn-settings').style.display = 'inline-block';
-                    // Disable Mandal filter dropdown for sub-admins if they have restricted access
-                } else if(subAdminAccessRegion !== "All") {
-                    document.getElementById('filterMandal').value = subAdminAccessRegion;
-                    document.getElementById('filterMandal').disabled = true;
-                    populateDistricts('filterMandal', 'filterDistrict');
+                } else {
+                    document.getElementById('btn-settings').style.display = 'none';
+                    if(subAdminAccessRegion !== "All") {
+                        document.getElementById('filterMandal').value = subAdminAccessRegion;
+                        document.getElementById('filterMandal').disabled = true;
+                        populateDistricts('filterMandal', 'filterDistrict');
+                    }
                 }
 
                 populateMandals(); await loadData(); 
                 logActivity("User Logged In");
+                updateICardPreview(); // Init preview
             } 
             else { document.getElementById('login-screen').style.display='flex'; document.getElementById('app-content').style.display='none'; } 
         });
@@ -687,7 +725,6 @@
         };
         window.logoutAdmin = () => signOut(auth);
 
-        // Activity Log Logic (7 days retention)
         async function logActivity(actionMsg) {
             let userEmail = auth.currentUser ? auth.currentUser.email : "Unknown";
             let now = new Date().getTime();
@@ -713,13 +750,11 @@
             const getD = async (col) => { let arr=[]; (await getDocs(collection(db,col))).forEach(d=>arr.push({id:d.id, ...d.data()})); return arr; };
             membersData = await getD("members"); otherStaffData = await getD("other_staff"); committeeData = await getD("committee");
             
-            // FIXED: Load Gallery Data
             loadGallery();
 
             if(isSuperAdmin) { subAdminsList = await getD("admin_users"); cleanOldLogs(); renderSubAdmins(); }
 
             let total=0, apprv=0, pend=0, paid=0;
-            // FIXED: Dashboard Counter Stats filtering for Sub-Admins
             membersData.forEach(m => { 
                 if(m.isMember !== false) { 
                     if(subAdminAccessRegion === "All" || m.mandal === subAdminAccessRegion) {
@@ -734,7 +769,6 @@
 
         window.closeModal = (id) => document.getElementById(id).style.display = 'none';
 
-        // --- CLOUDINARY UPLOAD ---
         const uploadToCloudinary = async (file) => {
             const cloudName = "jjavsdh5"; const uploadPreset = "ml_default"; 
             const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`;
@@ -802,11 +836,9 @@
             document.getElementById('profileModalOverlay').style.display = 'flex';
         }
 
-        // --- DASHBOARD RENDER (FIXED: Sub-Admin Region Filter) ---
         let pieChart;
         window.renderDashboard = function() {
             let mandalStat = {}; let distStat = {};
-            // Setup stats structure based on access
             let allowedMandals = subAdminAccessRegion === "All" ? Object.keys(mandalData) : [subAdminAccessRegion];
             
             allowedMandals.forEach(m => { mandalStat[m] = 0; mandalData[m].forEach(d => distStat[d] = 0); });
@@ -835,7 +867,6 @@
             }
         }
 
-        // --- MEMBERS TABLE RENDER (FIXED: Sub-Admin Data Hide) ---
         window.renderMembers = function() {
             let s = document.getElementById('searchName').value.toLowerCase(); 
             let fStatus = document.getElementById('filterStatus').value; 
@@ -845,10 +876,7 @@
             
             let fil = membersData.filter(m => {
                 if (m.isMember === false) return false;
-                
-                // SUB-ADMIN STRICT FILTER: DO NOT show other mandals
                 if (subAdminAccessRegion !== "All" && m.mandal !== subAdminAccessRegion) return false;
-                
                 if (fStatus !== 'All' && m.status !== fStatus) return false;
                 if (fMandal !== 'All' && m.mandal !== fMandal) return false;
                 if (fDist !== 'All' && m.district !== fDist) return false;
@@ -883,8 +911,9 @@
                     <td><small>${m.joinDate||'-'}</small></td>
                     <td>${statusBadge}</td>
                     <td class="no-print" style="white-space:nowrap;">
-                        <button class="btn-action bg-wa" onclick="window.open('https://wa.me/91${m.mobile}', '_blank')"><i class="fa fa-whatsapp"></i></button>
-                        <button class="btn-action bg-primary" onclick="openFullEditModal('${m.id}','members')"><i class="fa fa-pen"></i></button>
+                        <button class="btn-action bg-wa" onclick="window.open('https://wa.me/91${m.mobile}', '_blank')" title="WhatsApp"><i class="fa fa-whatsapp"></i></button>
+                        <button class="btn-action bg-mail" onclick="window.location.href='mailto:${m.email}'" title="Email"><i class="fa fa-envelope"></i></button>
+                        <button class="btn-action bg-primary" onclick="openFullEditModal('${m.id}','members')" title="Edit"><i class="fa fa-pen"></i></button>
                     </td>
                 </tr>`;
             }).join('') || '<tr><td colspan="10" style="text-align:center;">डेटा नाही</td></tr>';
@@ -947,6 +976,24 @@
             doc.save("Employees_List.pdf");
         }
 
+        // --- ID CARD PREVIEW (UPDATED: Added New Fields) ---
+        window.updateICardPreview = () => {
+            let html = "";
+            
+            // Rendering exact fields as requested
+            html += `<b>कार्यरत ठिकाण:</b> उपजिल्हा रुग्णालय, कराड<br>`;
+            html += `<b>जिल्हा:</b> सातारा &nbsp; <b>मंडळ:</b> पुणे<br>`;
+            html += `<b>पत्ता:</b> मु.पो. कराड, ता. कराड, जि. सातारा 415110<br>`;
+            html += `<b>ई-मेल:</b> member@example.com<br>`;
+            html += `<b>मोबाईल:</b> +91 9876543210<br>`;
+            html += `<b>आधार क्र.:</b> XXXX-XXXX-XXXX<br>`;
+            html += `<b>सेवार्थ आयडी:</b> SEV1234567<br>`;
+            html += `<b>रुजू दिनांक:</b> 01/01/2010<br>`;
+            html += `<b>सेवानिवृत्ती दिनांक:</b> 31/12/2040<br>`;
+
+            document.getElementById('id_details_preview').innerHTML = html;
+        }
+
         // --- OFFICE BEARERS ---
         window.filterOBMembers = () => {
             let txt = document.getElementById('ob_search').value.toLowerCase();
@@ -969,16 +1016,18 @@
         window.addOfficeBearer = async () => {
             if(!tempSelectedOB) return alert("कृपया सर्च करून सदस्य निवडा.");
             Swal.fire({title: 'अपडेट करत आहे...', didOpen: () => Swal.showLoading()});
-            let desig = document.getElementById('ob_designation').value;
-            let finalPhoto = tempSelectedOB.photoUrl;
+            let desig = document.getElementById('ob_designation').value; // Now captures manual text too
+            if(!desig) return alert("कृपया पद निवडा किंवा टाईप करा.");
             
+            let finalPhoto = tempSelectedOB.photoUrl;
             let pFile = document.getElementById('ob_photo_upload').files[0];
             if(pFile) finalPhoto = await uploadToCloudinary(pFile); 
 
             let obData = { ...tempSelectedOB, post: desig, photoUrl: finalPhoto };
             await addDoc(collection(db, "committee"), obData);
-            logActivity(`Added Office Bearer: ${obData.name}`);
+            logActivity(`Added Office Bearer: ${obData.name} - ${desig}`);
             tempSelectedOB = null; document.getElementById('ob_search').value = ""; document.getElementById('ob_photo_upload').value="";
+            document.getElementById('ob_designation').value = "";
             Swal.close(); loadData();
         }
 
@@ -994,7 +1043,7 @@
             `).join('');
         };
 
-        // --- GALLERY SECTION (FIXED: Added functionality) ---
+        // --- GALLERY SECTION ---
         window.uploadGalleryPhoto = async () => {
             let file = document.getElementById('gallery_photo').files[0];
             let title = document.getElementById('gallery_title').value;
@@ -1028,7 +1077,7 @@
             }
         }
 
-        // --- SUB ADMIN SETTINGS ---
+        // --- SUB ADMIN SETTINGS & SEND LOGIN INFO ---
         window.selectAllPermissions = () => { document.querySelectorAll('#permission_boxes input[type="checkbox"]').forEach(cb => cb.checked = true); }
         
         window.addSubAdmin = async () => {
@@ -1048,9 +1097,28 @@
         window.renderSubAdmins = () => {
             let s = document.getElementById('searchSubAdmin').value.toLowerCase();
             let fil = subAdminsList.filter(a => (a.name||'').toLowerCase().includes(s));
-            document.getElementById('subAdminListBody').innerHTML = fil.map(a => `<tr><td>${a.name}</td><td>${a.email}</td><td>${a.pass}</td><td>${a.access}</td><td><button class="btn-action bg-danger"><i class="fa fa-trash"></i></button></td></tr>`).join('');
+            document.getElementById('subAdminListBody').innerHTML = fil.map(a => `
+                <tr>
+                    <td>${a.name}</td><td>${a.email}</td><td>${a.pass}</td><td>${a.access}</td>
+                    <td style="white-space:nowrap;">
+                        <button class="btn-action bg-wa" onclick="sendLoginWA('${a.name}', '${a.email}', '${a.pass}')" title="Send via WhatsApp"><i class="fa fa-whatsapp"></i></button>
+                        <button class="btn-action bg-mail" onclick="sendLoginEmail('${a.name}', '${a.email}', '${a.pass}')" title="Send via Email"><i class="fa fa-envelope"></i></button>
+                        <button class="btn-action bg-danger" title="Delete"><i class="fa fa-trash"></i></button>
+                    </td>
+                </tr>`).join('');
         }
         window.filterSubAdmins = () => renderSubAdmins();
+
+        // UPDATED: Sending Login Details (Automatic Message Format)
+        window.sendLoginWA = (name, id, pass) => {
+            let text = `नमस्कार ${name},\n\nक्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटनेमध्ये आपले स्वागत आहे! तुम्हाला सिस्टीमवर ॲड करण्यात आले असून तुमचे लॉगिन डिटेल्स खालीलप्रमाणे आहेत:\n\n*युझरनेम (लॉगिन आयडी):* ${id}\n*पासवर्ड:* ${pass}\n\nधन्यवाद!`;
+            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+        }
+        window.sendLoginEmail = (name, id, pass) => {
+            let subject = "तुमचे लॉगिन डिटेल्स - क्ष-किरण संघटना महाराष्ट्र";
+            let text = `नमस्कार ${name},\n\nक्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटनेमध्ये आपले स्वागत आहे! तुम्हाला सिस्टीमवर ॲड करण्यात आले असून तुमचे लॉगिन डिटेल्स खालीलप्रमाणे आहेत:\n\nयुझरनेम (लॉगिन आयडी): ${id}\nपासवर्ड: ${pass}\n\nधन्यवाद!`;
+            window.location.href = `mailto:${id}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(text)}`;
+        }
 
         // --- NOTICE BOARD ---
         window.renameFolder = (folderId) => {
@@ -1059,7 +1127,7 @@
             if(newName) document.getElementById(folderId+'_name').innerText = newName;
         }
 
-        // --- FEES & RECEIPTS ---
+        // --- FEES & RECEIPTS (UPDATED: Receipt Generator and Print Layout) ---
         window.renderFees = () => {
             document.getElementById('feesBody').innerHTML = membersData.filter(m=>m.isMember!==false && m.status==='Approved').map(m=>`
                 <tr>
@@ -1067,13 +1135,135 @@
                     <td><b>${m.name||'-'}</b></td>
                     <td>${m.mobile||'-'} <br><small>${m.email||''}</small></td>
                     <td><span class="badge ${m.feeStatus==='Paid'?'bg-success':'bg-danger'}">${m.feeStatus}</span></td>
-                    <td class="no-print"><button class="btn-action bg-warning" onclick="openReceiptModal('${m.id}', '${m.name}')"><i class="fa fa-file-invoice"></i> पावती</button></td>
+                    <td class="no-print"><button class="btn-action bg-warning" onclick="openReceiptModal('${m.id}', '${m.name}', '${m.designation||'-'}', '${m.district||'-'}', '${m.mobile||'-'}', '${m.email||'-'}')"><i class="fa fa-file-invoice"></i> पावती</button></td>
                 </tr>`).join('');
         };
-        window.openReceiptModal = (id, name) => {
-            document.getElementById('rect_mem_id').value = id; document.getElementById('rect_name').innerText = name; document.getElementById('rect_amount').value = ""; document.getElementById('receiptModal').style.display = 'flex';
+        
+        window.openReceiptModal = (id, name, post, dist, mob, email) => {
+            document.getElementById('receiptForm').reset();
+            document.getElementById('rect_mem_id').value = id; 
+            document.getElementById('rect_mem_mob').value = mob;
+            document.getElementById('rect_mem_email').value = email;
+            document.getElementById('rect_name').value = name; 
+            document.getElementById('rect_post').value = post; 
+            document.getElementById('rect_dist').value = dist;
+            document.getElementById('receiptModal').style.display = 'flex';
         }
-        window.printReceipt = () => window.print(); 
+        
+        window.getReceiptText = () => {
+            let no = document.getElementById('rect_no').value || "____";
+            let date = document.getElementById('rect_date').value || "__/__/____";
+            let name = document.getElementById('rect_name').value || "________________";
+            let post = document.getElementById('rect_post').value || "________________";
+            let dist = document.getElementById('rect_dist').value || "________";
+            let tal = document.getElementById('rect_taluka').value || "________";
+            let amt = document.getElementById('rect_amt_num').value || "________";
+            let amtW = document.getElementById('rect_amt_words').value || "________";
+            let mode = document.getElementById('rect_pay_mode').value;
+            let utr = document.getElementById('rect_utr').value || "___________";
+            
+            let purposeObj = document.querySelector('input[name="rect_purpose"]:checked');
+            let purpose = purposeObj ? purposeObj.value : "_____";
+            if(purpose === "इतर") purpose = document.getElementById('rect_purpose_other').value || "इतर";
+
+            return `क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना, महाराष्ट्र राज्य\n(X-Ray Scientific Officers (Group-C) Employees Association, Maharashtra State)\n\nनोंदणी क्र.: ________\nमुख्य कार्यालय : ______________\n\nपावती / RECEIPT\nपावती क्र.: ${no}\nदिनांक: ${date}\n\nश्री./श्रीमती.: ${name}\nपद: ${post}\nजिल्हा: ${dist} तालुका: ${tal}\n\nरक्कम प्राप्तीचा प्रकार: ${purpose}\nरक्कम (अंकी): ₹ ${amt}\nरक्कम (अक्षरी): रुपये ${amtW}\n\nभरणा पद्धत: ${mode}\nव्यवहार क्र./UTR: ${utr}\n\nटीप: सदर रक्कम संघटनेच्या अधिकृत खात्यात जमा करण्यात येईल.\nधन्यवाद!`;
+        }
+
+        window.shareReceiptWA = () => {
+            let mob = document.getElementById('rect_mem_mob').value;
+            let text = window.getReceiptText();
+            window.open(`https://wa.me/91${mob}?text=${encodeURIComponent(text)}`, '_blank');
+        }
+
+        window.shareReceiptEmail = () => {
+            let email = document.getElementById('rect_mem_email').value;
+            let subject = "फी जमा पावती - क्ष-किरण संघटना महाराष्ट्र";
+            let text = window.getReceiptText();
+            window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(text)}`;
+        }
+
+        window.printReceipt = () => {
+            let no = document.getElementById('rect_no').value || "____";
+            let date = document.getElementById('rect_date').value || "__/__/____";
+            let name = document.getElementById('rect_name').value || "________________";
+            let post = document.getElementById('rect_post').value || "________________";
+            let dist = document.getElementById('rect_dist').value || "________";
+            let tal = document.getElementById('rect_taluka').value || "________";
+            let amt = document.getElementById('rect_amt_num').value || "________";
+            let amtW = document.getElementById('rect_amt_words').value || "________";
+            let mode = document.getElementById('rect_pay_mode').value;
+            let utr = document.getElementById('rect_utr').value || "___________";
+            
+            let purposeObj = document.querySelector('input[name="rect_purpose"]:checked');
+            let purpose = purposeObj ? purposeObj.value : "_____";
+            if(purpose === "इतर") purpose = document.getElementById('rect_purpose_other').value || "इतर";
+
+            let printWin = window.open('', '_blank');
+            printWin.document.write(`
+            <html>
+            <head><title>Print Receipt</title></head>
+            <body style="font-family: Arial, sans-serif; padding: 20px;">
+                <div style="border: 2px solid #000; padding: 30px; max-width: 800px; margin: 0 auto; position: relative;">
+                    <h2 style="text-align:center; color:#0B3D91; margin-bottom:5px;">क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना, महाराष्ट्र राज्य</h2>
+                    <h4 style="text-align:center; margin-top:0;">(X-Ray Scientific Officers (Group-C) Employees Association, Maharashtra State)</h4>
+                    
+                    <div style="display:flex; justify-content:space-between; margin-top:20px;">
+                        <div><b>नोंदणी क्र.:</b> ________</div>
+                        <div><b>मुख्य कार्यालय :</b> ______________</div>
+                    </div>
+                    <div style="text-align:center; margin:10px 0;"><b>मोबाईल :</b> _______  <b>ई-मेल :</b> _______</div>
+                    
+                    <hr style="border-top: 2px solid #000; margin: 20px 0;">
+                    
+                    <h3 style="text-align:center; margin:10px 0; text-decoration:underline;">पावती / RECEIPT</h3>
+                    
+                    <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
+                        <div><b>पावती क्र.:</b> ${no}</div>
+                        <div><b>दिनांक:</b> ${date}</div>
+                    </div>
+                    
+                    <p style="font-size:1.1rem; line-height:1.8;">
+                        <b>श्री./श्रीमती. :</b> ${name}<br>
+                        <b>पद / हुद्दा :</b> ${post}<br>
+                        <b>जिल्हा :</b> ${dist} &nbsp;&nbsp;&nbsp; <b>तालुका :</b> ${tal}<br>
+                        यांचेकडून खालील कारणासाठी रक्कम प्राप्त झाली.
+                    </p>
+                    
+                    <p style="font-size:1.1rem;"><b>रक्कम प्राप्तीचा प्रकार / Purpose:</b> ${purpose}</p>
+                    
+                    <p style="font-size:1.1rem; line-height:1.8;">
+                        <b>रक्कम (अंकी):</b> ₹ ${amt}<br>
+                        <b>रक्कम (अक्षरी):</b> रुपये ${amtW}
+                    </p>
+                    <hr style="border-top: 1px dashed #000; margin: 20px 0;">
+                    <p style="font-size:1.1rem;">
+                        <b>भरणा पद्धत:</b> ${mode} &nbsp;&nbsp;&nbsp; <b>व्यवहार क्र. / UTR / Cheque No.:</b> ${utr}
+                    </p>
+                    
+                    <p style="font-size:0.9rem; color:gray; text-align:center; margin-top:30px;">टीप: सदर रक्कम संघटनेच्या अधिकृत खात्यात जमा करण्यात येईल.</p>
+                    
+                    <div style="display:flex; justify-content:space-between; margin-top:80px;">
+                        <div style="text-align:center;">
+                            <hr style="width:150px; border-top:1px solid #000;">
+                            <b>प्राप्तकर्त्याची स्वाक्षरी</b><br>
+                            नाव: _________________
+                        </div>
+                        <div style="text-align:center;">
+                            <hr style="width:150px; border-top:1px solid #000;">
+                            <b>अधिकृत स्वाक्षरी व शिक्का</b><br>
+                            नाव / पद: _________________
+                        </div>
+                    </div>
+                </div>
+                <script>
+                    setTimeout(() => { window.print(); window.close(); }, 500);
+                <\/script>
+            </body>
+            </html>
+            `);
+            printWin.document.close();
+        }
+
         window.bulkEmailBCC = () => {
             let emails = []; document.querySelectorAll('.fee-chk:checked').forEach(cb => { if(cb.value) emails.push(cb.value); });
             if(emails.length === 0) return alert("कृपया ईमेल पाठवण्यासाठी किमान एक सदस्य निवडा.");
