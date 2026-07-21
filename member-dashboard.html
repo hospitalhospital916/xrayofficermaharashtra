@@ -89,10 +89,18 @@
             .menu-toggle { display: block; }
         }
     </style>
+
+    <!-- Prevent Browser Back Button after Logout -->
+    <script>
+        window.history.pushState(null, "", window.location.href);
+        window.onpopstate = function () {
+            window.history.pushState(null, "", window.location.href);
+        };
+    </script>
 </head>
 <body>
 
-    <!-- Loading Screen (Flickering Fix) -->
+    <!-- Loading Screen -->
     <div id="loader-overlay">
         <div class="spinner" id="loader-spinner"></div>
         <div id="loader-message" style="margin-top:15px; text-align:center;">
@@ -109,7 +117,7 @@
             <li class="nav-item" onclick="openTab('tab-profile')"><i class="fa fa-user-edit"></i> माझी माहिती</li>
             <li class="nav-item" onclick="openTab('tab-icard')"><i class="fa fa-id-badge"></i> माझे ओळखपत्र</li>
             <li class="nav-item" onclick="openTab('tab-fees')"><i class="fa fa-rupee-sign"></i> सदस्यत्व शुल्क</li>
-            <li class="nav-item" onclick="openTab('tab-mydocs')"><i class="fa fa-upload"></i> माझे कागदपत्रे</li>
+            <li class="nav-item" onclick="openTab('tab-mydocs')"><i class="fa fa-upload"></i> माझी कागदपत्रे</li>
             <li class="nav-item" onclick="openTab('tab-memberdocs')"><i class="fa fa-folder-open"></i> सदस्यांसाठी कागदपत्रे</li>
             <li class="nav-item" onclick="openTab('tab-tld')"><i class="fa fa-envelope-open-text"></i> TLD पत्र सेवा</li>
             <li class="nav-item" onclick="openTab('tab-proposals')"><i class="fa fa-file-contract"></i> प्रस्ताव</li>
@@ -133,7 +141,7 @@
             <div id="tab-dash" class="tab-content active">
                 <h2 style="margin-bottom:15px; color:var(--dark);">डॅशबोर्ड सारांश</h2>
                 <div class="dash-grid">
-                    <div class="dash-card bg-g1"><h3>माझे कागदपत्रे</h3><h2 id="cnt-mydocs">0</h2></div>
+                    <div class="dash-card bg-g1"><h3>माझी कागदपत्रे</h3><h2 id="cnt-mydocs">0</h2></div>
                     <div class="dash-card bg-g2"><h3>मंजूर कागदपत्रे</h3><h2 id="cnt-app-docs">0</h2></div>
                     <div class="dash-card bg-g3"><h3>TLD / प्रस्ताव</h3><h2 id="cnt-tld">0</h2></div>
                     <div class="dash-card bg-g4"><h3>फी स्टेटस</h3><h2 id="cnt-fee" style="font-size:1.5rem; margin-top:5px;">-</h2></div>
@@ -218,7 +226,7 @@
             <!-- 6. MY DOCUMENTS (Upload System) -->
             <div id="tab-mydocs" class="tab-content">
                 <div class="panel">
-                    <div class="panel-header h-primary">माझे कागदपत्रे (My Documents)</div>
+                    <div class="panel-header h-primary">माझी कागदपत्रे (My Documents)</div>
                     <div class="panel-body">
                         <table style="width:100%;">
                             <thead><tr><th>कागदपत्राचे नाव</th><th>स्थिती (Status)</th><th>ॲडमिन शेरा</th><th>कृती (Action)</th></tr></thead>
@@ -271,7 +279,7 @@
                 <div class="panel">
                     <div class="panel-header h-primary">पासवर्ड बदला</div>
                     <div class="panel-body" style="max-width:400px;">
-                        <input type="password" id="new_pass" class="form-control" placeholder="नवीन पासवर्ड" style="margin-bottom:15px;">
+                        <input type="password" id="new_pass" class="form-control" placeholder="नवीन पासवर्ड टाका" style="margin-bottom:15px;">
                         <button class="btn-action bg-success" onclick="updateMemberPassword()"><i class="fa fa-save"></i> सेव्ह करा</button>
                     </div>
                 </div>
@@ -280,17 +288,19 @@
         </div>
     </div>
 
-    <!-- FIREBASE & JS LOGIC -->
+    <!-- FIREBASE & JS LOGIC (LOCAL AUTHENTICATION) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-        // 'onSnapshot' ॲडमिन ब्लॉक रियलटाइम चेकसाठी पुन्हा ॲड केले आहे
+        // Local Authentication साठी फक्त Firestore पुरेसे आहे
         import { getFirestore, collection, addDoc, getDocs, updateDoc, doc, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
-        import { getAuth, signOut, onAuthStateChanged, updatePassword } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
        
-        const firebaseConfig = { apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk", authDomain: "xrayunionmah.firebaseapp.com", projectId: "xrayunionmah" };
+        const firebaseConfig = { 
+            apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk", 
+            authDomain: "xrayunionmah.firebaseapp.com", 
+            projectId: "xrayunionmah" 
+        };
         const app = initializeApp(firebaseConfig); 
         const db = getFirestore(app); 
-        const auth = getAuth(app);
 
         let currentMember = null; 
         let memberDocId = null;
@@ -299,83 +309,67 @@
         window.openTab = function(tabId) { document.querySelectorAll('.tab-content, .nav-item').forEach(e=>e.classList.remove('active')); document.getElementById(tabId).classList.add('active'); event.currentTarget.classList.add('active'); if(window.innerWidth <= 900) toggleSidebar(); };
         
         window.logoutMember = () => { 
-            logActivity("Logged Out"); 
-            signOut(auth).then(() => {
-                window.location.reload(); 
-            }); 
+            logActivity("लॉगआउट केले"); 
+            localStorage.removeItem("memberSession"); // Session Clear
+            window.location.replace("member-login.html"); 
         };
 
-        const uploadToCloudinary = async (file) => { const formData = new FormData(); formData.append("file", file); formData.append("upload_preset", "ml_default"); const res = await fetch(`https://api.cloudinary.com/v1_1/jjavsdh5/auto/upload`, { method: "POST", body: formData }); const data = await res.json(); if(data.secure_url) return data.secure_url; throw new Error("Upload Failed."); };
-        async function logActivity(action) { if(!currentMember) return; await addDoc(collection(db, "member_activity"), { memberEmail: currentMember.email, action: action, date: new Date().toLocaleString('mr-IN'), timestamp: Date.now() }); }
+        const uploadToCloudinary = async (file) => { const formData = new FormData(); formData.append("file", file); formData.append("upload_preset", "ml_default"); const res = await fetch(`https://api.cloudinary.com/v1_1/jjavsdh5/auto/upload`, { method: "POST", body: formData }); const data = await res.json(); if(data.secure_url) return data.secure_url; throw new Error("अपलोड अयशस्वी."); };
+        
+        async function logActivity(action) { 
+            if(!currentMember) return; 
+            await addDoc(collection(db, "member_activity"), { memberMobile: currentMember.mobile, action: action, date: new Date().toLocaleString('mr-IN'), timestamp: Date.now() }); 
+        }
 
-        // Firebase Auth State Listener
-        onAuthStateChanged(auth, async (user) => {
+        // ---------------------------------------------------------
+        // Local Session Authentication (Local Auth)
+        // ---------------------------------------------------------
+        window.onload = function() {
             let loader = document.getElementById('loader-overlay');
             let spinner = document.getElementById('loader-spinner');
             let loaderMsg = document.getElementById('loader-message');
-
-            if (user) {
-                try {
-                    const q = query(collection(db, "members"), where("email", "==", user.email));
-                    const snap = await getDocs(q);
-                    if(!snap.empty) {
-                        memberDocId = snap.docs[0].id; 
-                        let initialData = snap.docs[0].data();
-                        
-                        // रिअल-टाइम सिक्युरिटी चेक: ॲडमिनने ब्लॉक केल्यास त्वरित लॉगआउट करा (Re-integrated from your code)
-                        onSnapshot(doc(db, "members", memberDocId), (docSnap) => {
-                            if (docSnap.exists()) {
-                                let latestData = docSnap.data();
-                                if (latestData.loginDisabled) {
-                                    signOut(auth).then(() => {
-                                        Swal.fire({
-                                            title: 'खाते अवरोधित!',
-                                            text: 'तुमचे लॉगिन ॲडमिनद्वारे बंद करण्यात आले आहे.',
-                                            icon: 'error',
-                                            confirmButtonText: 'ओके'
-                                        }).then(() => {
-                                            window.location.replace("member-login.html");
-                                        });
-                                    });
-                                } else {
-                                    currentMember = {...latestData, id: memberDocId};
-                                }
-                            }
-                        });
-
-                        currentMember = initialData;
-                        document.getElementById('top-mem-name').innerText = currentMember.name;
-                        
-                        loader.style.display = 'none';
-                        document.getElementById('main-content').style.visibility = 'visible';
-
-                        logActivity("Logged In"); 
-                        loadAllDashboardData();
-                    } else { 
-                        spinner.style.display = 'none';
-                        loaderMsg.innerHTML = `
-                            <div style="background:white; padding:30px; border-radius:10px; box-shadow:0 0 15px rgba(0,0,0,0.1); max-width: 450px; text-align:center;">
-                                <h2 style="color:red; margin-bottom:10px;"><i class="fa fa-exclamation-triangle"></i> प्रोफाईल सापडली नाही!</h2>
-                                <p style="margin-bottom:20px; font-size:1.1rem; color:#333;">तुमचा ईमेल <b>(${user.email})</b> सदस्यांच्या यादीत सापडला नाही.<br>कृपया ॲडमिनशी संपर्क साधा.</p>
-                                <button onclick="logoutMember()" style="padding:10px 20px; background:red; color:white; border:none; border-radius:5px; font-weight:bold; cursor:pointer;">लॉगआउट करा</button>
-                            </div>
-                        `;
+            
+            const sessionData = localStorage.getItem("memberSession");
+            
+            if (!sessionData) {
+                // जर Session नसेल तर त्वरित Login वर पाठवा
+                window.location.replace("member-login.html");
+            } else {
+                currentMember = JSON.parse(sessionData);
+                memberDocId = currentMember.id;
+                
+                // रिअल-टाइम सिक्युरिटी चेक (ॲडमिनने ब्लॉक केल्यास त्वरित बाहेर काढण्यासाठी)
+                onSnapshot(doc(db, "members", memberDocId), (docSnap) => {
+                    if (docSnap.exists()) {
+                        let latestData = docSnap.data();
+                        if (latestData.loginDisabled) {
+                            localStorage.removeItem("memberSession");
+                            Swal.fire({
+                                title: 'खाते अवरोधित!',
+                                text: 'तुमचे लॉगिन ॲडमिनद्वारे बंद करण्यात आले आहे.',
+                                icon: 'error',
+                                confirmButtonText: 'ओके'
+                            }).then(() => {
+                                window.location.replace("member-login.html");
+                            });
+                        } else {
+                            // जर सर्व ठीक असेल, तर लोकल स्टोरेजमधील माहिती अपडेट करा
+                            currentMember = {...latestData, id: memberDocId};
+                            delete currentMember.pass;
+                            delete currentMember.password;
+                            localStorage.setItem("memberSession", JSON.stringify(currentMember));
+                        }
                     }
-                } catch(error) {
-                    spinner.style.display = 'none';
-                    loaderMsg.innerHTML = `<h3 style="color:red;">सिस्टीम एरर: ${error.message}</h3>`;
-                }
-            } else { 
-                spinner.style.display = 'none';
-                loaderMsg.innerHTML = `
-                    <div style="background:white; padding:30px; border-radius:10px; box-shadow:0 0 15px rgba(0,0,0,0.1); max-width: 450px; text-align:center;">
-                        <h2 style="color:var(--primary); margin-bottom:10px;"><i class="fa fa-lock"></i> डॅशबोर्ड लॉक आहे</h2>
-                        <p style="margin-bottom:20px; font-size:1.1rem; color:#333;">तुम्ही सिस्टीममधून लॉगआउट झाला आहात किंवा लॉगिन केलेले नाही. कृपया पुढे जाण्यासाठी लॉगिन करा.</p>
-                        <a href="member-login.html" style="display:inline-block; padding:10px 25px; background:var(--success); color:white; text-decoration:none; border-radius:5px; font-weight:bold; font-size:1.1rem;"><i class="fa fa-sign-in-alt"></i> लॉगिन पेजवर जा</a>
-                    </div>
-                `;
+                });
+
+                document.getElementById('top-mem-name').innerText = currentMember.name;
+                loader.style.display = 'none';
+                document.getElementById('main-content').style.visibility = 'visible';
+
+                logActivity("लॉगिन केले"); 
+                loadAllDashboardData();
             }
-        });
+        };
 
         async function loadAllDashboardData() { populateProfile(); generateIDCardPreview(); loadFeeStatus(); loadMyDocuments(); loadAdminDocuments(); loadSupportTickets(); loadActivityLog(); }
 
@@ -388,7 +382,7 @@
         window.requestProfileUpdate = async () => {
             let reqData = { mobile: document.getElementById('prof_mob').value, email: document.getElementById('prof_email').value, designation: document.getElementById('prof_post').value, workplace: document.getElementById('prof_work').value };
             await addDoc(collection(db, "member_requests"), { memberId: memberDocId, memberName: currentMember.name, type: "Profile Change", requestedData: reqData, status: "Pending", date: new Date().toLocaleString('mr-IN') });
-            logActivity("Requested Profile Update"); Swal.fire('यशस्वी', 'विनंती ॲडमिनकडे पाठवली आहे.', 'success');
+            logActivity("प्रोफाईल अपडेट विनंती पाठवली"); Swal.fire('यशस्वी', 'विनंती ॲडमिनकडे पाठवली आहे.', 'success');
         };
 
         // I-CARD PREVIEW
@@ -403,18 +397,19 @@
         }
 
         // FEE & DOCS
-        function loadFeeStatus() { let stat = currentMember.feeStatus || 'Unpaid'; document.getElementById('fee_status_badge').innerText = stat; document.getElementById('fee_status_badge').className = stat === 'Paid' ? 'badge bg-success' : 'badge bg-danger'; document.getElementById('cnt-fee').innerText = stat; }
+        function loadFeeStatus() { let stat = currentMember.feeStatus || 'Unpaid'; let marathiStat = stat === 'Paid' ? 'भरले आहे' : 'बाकी आहे'; document.getElementById('fee_status_badge').innerText = marathiStat; document.getElementById('fee_status_badge').className = stat === 'Paid' ? 'badge bg-success' : 'badge bg-danger'; document.getElementById('cnt-fee').innerText = marathiStat; }
         
         function loadMyDocuments() {
-            const docTypes = [{ id: 'profile_photo', name: 'Profile Photo', field: 'photoUrl', statField: 'photoStatus' }, { id: 'doc1', name: 'Document Folder 1', field: 'docUrl', statField: 'doc1Status' }];
+            const docTypes = [{ id: 'profile_photo', name: 'प्रोफाईल फोटो', field: 'photoUrl', statField: 'photoStatus' }, { id: 'doc1', name: 'कागदपत्र फोल्डर १', field: 'docUrl', statField: 'doc1Status' }];
             let html = ''; let upCount = 0; let appCount = 0;
             docTypes.forEach(dt => {
                 let existingUrl = currentMember[dt.field]; let status = currentMember[dt.statField] || (existingUrl ? 'Pending' : 'Not Uploaded');
+                let displayStatus = status === 'Approved' ? 'मंजूर' : (status === 'Pending' ? 'प्रलंबित' : (status === 'Rejected' ? 'नाकारले' : (status === 'Re-upload Permitted' ? 'पुन्हा अपलोड करा' : 'अपलोड केलेले नाही')));
                 if(existingUrl) upCount++; if(status === 'Approved') appCount++;
                 let actionHtml = '';
                 if(status === 'Not Uploaded' || status === 'Re-upload Permitted') { actionHtml = `<input type="file" id="up_${dt.id}" onchange="uploadMemberDoc('${dt.id}', '${dt.field}', '${dt.statField}')" style="font-size:0.8rem;">`; } 
-                else if (status === 'Rejected' || status === 'Approved') { actionHtml = `<button class="btn-action bg-danger" onclick="requestReupload('${dt.name}', '${dt.statField}')" style="padding:5px 10px; font-size:0.8rem;">पुन्हा अपलोड विनंती (Re-upload)</button>`; } 
-                html += `<tr><td><b>${dt.name}</b></td><td><span class="badge ${status==='Approved'?'bg-success':'bg-warning'}">${status}</span></td><td>-</td><td>${actionHtml}</td></tr>`;
+                else if (status === 'Rejected' || status === 'Approved') { actionHtml = `<button class="btn-action bg-danger" onclick="requestReupload('${dt.name}', '${dt.statField}')" style="padding:5px 10px; font-size:0.8rem;">पुन्हा अपलोड विनंती</button>`; } 
+                html += `<tr><td><b>${dt.name}</b></td><td><span class="badge ${status==='Approved'?'bg-success':'bg-warning'}">${displayStatus}</span></td><td>-</td><td>${actionHtml}</td></tr>`;
             });
             document.getElementById('myDocsTableBody').innerHTML = html; document.getElementById('cnt-mydocs').innerText = upCount; document.getElementById('cnt-app-docs').innerText = appCount;
         }
@@ -422,9 +417,13 @@
         window.uploadMemberDoc = async (inputId, dbField, statField) => {
             let file = document.getElementById(`up_${inputId}`).files[0]; if(!file) return;
             Swal.fire({title: 'अपलोड होत आहे...', didOpen: () => Swal.showLoading()});
-            try { let url = await uploadToCloudinary(file); let updateData = {}; updateData[dbField] = url; updateData[statField] = 'Pending'; await updateDoc(doc(db, "members", memberDocId), updateData); currentMember[dbField] = url; currentMember[statField] = 'Pending'; logActivity(`Uploaded ${dbField}`); Swal.fire('यशस्वी', 'डॉक्युमेंट अपलोड झाले!', 'success'); loadMyDocuments(); } catch(e) { Swal.fire('Error', e.message, 'error'); }
+            try { let url = await uploadToCloudinary(file); let updateData = {}; updateData[dbField] = url; updateData[statField] = 'Pending'; await updateDoc(doc(db, "members", memberDocId), updateData); currentMember[dbField] = url; currentMember[statField] = 'Pending'; logActivity(`कागदपत्र अपलोड केले: ${dbField}`); Swal.fire('यशस्वी', 'कागदपत्र अपलोड झाले!', 'success'); loadMyDocuments(); } catch(e) { Swal.fire('त्रुटी', e.message, 'error'); }
         }
-        window.requestReupload = async (docName, statField) => { let reason = prompt("कारण लिहा:"); if(!reason) return; await addDoc(collection(db, "member_requests"), { memberId: memberDocId, memberName: currentMember.name, type: "Re-upload", docName: docName, status: "Pending", date: new Date().toLocaleString('mr-IN') }); Swal.fire('विनंती पाठवली', 'ॲडमिन मंजुरीची वाट पहा.', 'info'); }
+        
+        window.requestReupload = async (docName, statField) => { 
+            const { value: reason } = await Swal.fire({ title: 'कारण लिहा:', input: 'text', inputPlaceholder: 'येथे कारण लिहा...', showCancelButton: true, confirmButtonText: 'पाठवा' });
+            if(reason) { await addDoc(collection(db, "member_requests"), { memberId: memberDocId, memberName: currentMember.name, type: "Re-upload", docName: docName, reason: reason, status: "Pending", date: new Date().toLocaleString('mr-IN') }); Swal.fire('विनंती पाठवली', 'ॲडमिन मंजुरीची वाट पहा.', 'info'); }
+        }
 
         // ADMIN DOCS
         async function loadAdminDocuments() {
@@ -436,12 +435,12 @@
                 if(data.category === 'Notice Board') {
                     noticeHtml += `<div class="notice-card">
                         <div><h4><i class="fa fa-bell" style="color:#d97706; margin-right:8px;"></i>${data.title}</h4><small>दिनांक: ${data.date}</small></div>
-                        <button class="btn-action bg-info" style="padding:6px 12px; font-size:0.9rem;" onclick="window.open('${data.url}', '_blank'); logActivity('Viewed Notice: ${data.title}');"><i class="fa fa-eye"></i> पाहा / डाउनलोड</button>
+                        <button class="btn-action bg-info" style="padding:6px 12px; font-size:0.9rem;" onclick="window.open('${data.url}', '_blank'); logActivity('सूचना वाचली: ${data.title}');"><i class="fa fa-eye"></i> पाहा / डाउनलोड</button>
                     </div>`;
                     return;
                 }
 
-                let card = `<div class="folder-card" onclick="window.open('${data.url}', '_blank'); logActivity('Downloaded ${data.title}');"><i class="fa fa-file-pdf"></i><h4>${data.title}</h4><small>${data.date}</small></div>`;
+                let card = `<div class="folder-card" onclick="window.open('${data.url}', '_blank'); logActivity('फाईल डाउनलोड केली: ${data.title}');"><i class="fa fa-file-pdf"></i><h4>${data.title}</h4><small>${data.date}</small></div>`;
                 if(data.category === 'TLD Letter') { tldHtml += card; tldCnt++; } 
                 else if(data.category === 'Proposal') { propHtml += card; tldCnt++; } 
                 else if(data.category === 'Regular Form') { formsHtml += card; } 
@@ -457,22 +456,33 @@
         }
 
         // HELP & SUPPORT
-        window.submitSupportTicket = async () => { let sub = document.getElementById('sup_sub').value; let msg = document.getElementById('sup_msg').value; if(!msg) return alert("कृपया तुमचा प्रश्न किंवा तक्रार लिहा."); await addDoc(collection(db, "support_tickets"), { memberId: memberDocId, memberName: currentMember.name, subject: sub, message: msg, status: 'Open', date: new Date().toLocaleString('mr-IN'), timestamp: Date.now() }); logActivity(`Raised Ticket: ${sub}`); document.getElementById('sup_msg').value = ''; Swal.fire('यशस्वी', 'तुमची तक्रार / प्रश्न पाठवला गेला आहे.', 'success'); loadSupportTickets(); }
-        async function loadSupportTickets() { const snap = await getDocs(query(collection(db, "support_tickets"), where("memberId", "==", memberDocId))); let html = ''; snap.forEach(d => { let t = d.data(); html += `<tr><td>${t.date}</td><td><b>${t.subject}</b><br><small>${t.message}</small></td><td><span class="badge ${t.status==='Closed'?'bg-success':'bg-warning'}">${t.status}</span></td><td>${t.admin_reply || 'प्रलंबित (Pending)'}</td></tr>`; }); document.getElementById('ticketsBody').innerHTML = html || '<tr><td colspan="4">कोणतीही तक्रार नाही.</td></tr>'; }
+        window.submitSupportTicket = async () => { let sub = document.getElementById('sup_sub').value; let msg = document.getElementById('sup_msg').value; if(!msg) return Swal.fire('त्रुटी', 'कृपया तुमची तक्रार लिहा.', 'warning'); await addDoc(collection(db, "support_tickets"), { memberId: memberDocId, memberName: currentMember.name, subject: sub, message: msg, status: 'Open', date: new Date().toLocaleString('mr-IN'), timestamp: Date.now() }); logActivity(`तक्रार नोंदवली: ${sub}`); document.getElementById('sup_msg').value = ''; Swal.fire('यशस्वी', 'तक्रार पाठवली आहे.', 'success'); loadSupportTickets(); }
+        async function loadSupportTickets() { const snap = await getDocs(query(collection(db, "support_tickets"), where("memberId", "==", memberDocId))); let html = ''; snap.forEach(d => { let t = d.data(); let stat = t.status==='Closed'?'बंद':'सुरू'; html += `<tr><td>${t.date}</td><td><b>${t.subject}</b><br><small>${t.message}</small></td><td><span class="badge ${t.status==='Closed'?'bg-success':'bg-warning'}">${stat}</span></td><td>${t.admin_reply || 'प्रलंबित (Pending)'}</td></tr>`; }); document.getElementById('ticketsBody').innerHTML = html || '<tr><td colspan="4">कोणतीही तक्रार नाही.</td></tr>'; }
 
-        // ACTIVITY & PASSWORD
-        async function loadActivityLog() { const snap = await getDocs(query(collection(db, "member_activity"), where("memberEmail", "==", currentMember.email))); let arr = []; snap.forEach(d=>arr.push(d.data())); arr.sort((a,b)=> b.timestamp - a.timestamp); document.getElementById('activityBody').innerHTML = arr.map(a => `<div style="padding:8px 0; border-bottom:1px dashed #ccc;"><b>[${a.date}]</b> - ${a.action}</div>`).join(''); }
+        // ACTIVITY LOG (Re-added & functional based on Mobile)
+        async function loadActivityLog() { 
+            const snap = await getDocs(query(collection(db, "member_activity"), where("memberMobile", "==", currentMember.mobile))); 
+            let arr = []; 
+            snap.forEach(d=>arr.push(d.data())); 
+            arr.sort((a,b)=> b.timestamp - a.timestamp); 
+            document.getElementById('activityBody').innerHTML = arr.map(a => `<div style="padding:8px 0; border-bottom:1px dashed #ccc;"><b>[${a.date}]</b> - ${a.action}</div>`).join('') || '<p>कोणतीही ॲक्टिव्हिटी नाही.</p>'; 
+        }
         
+        // PASSWORD UPDATE (Now updates Firestore document directly via Local Auth mechanism)
         window.updateMemberPassword = async () => { 
             let newP = document.getElementById('new_pass').value; 
-            if(newP.length < 6) return alert("पासवर्ड किमान ६ अक्षरांचा असावा."); 
+            if(newP.length < 6) return Swal.fire('त्रुटी', 'पासवर्ड किमान ६ अक्षरांचा असावा.', 'warning'); 
             try { 
-                await updatePassword(auth.currentUser, newP); 
-                logActivity("Password Changed"); 
-                Swal.fire('यशस्वी', 'पासवर्ड बदलला आहे.', 'success'); 
+                // Firestore मधील पास आणि पासवर्ड फील्ड अपडेट करणे
+                await updateDoc(doc(db, "members", memberDocId), { 
+                    pass: newP, 
+                    password: newP 
+                }); 
+                logActivity("पासवर्ड बदलला"); 
+                Swal.fire('यशस्वी', 'तुमचा पासवर्ड यशस्वीरित्या बदलला आहे.', 'success'); 
                 document.getElementById('new_pass').value = ''; 
             } catch(e) { 
-                Swal.fire('Error', e.message, 'error'); 
+                Swal.fire('त्रुटी', 'पासवर्ड बदलताना अडचण आली: ' + e.message, 'error'); 
             } 
         }
     </script>
