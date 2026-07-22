@@ -119,7 +119,7 @@
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            padding: 35mm 20mm 25mm 20mm; /* Top, Right, Bottom, Left margins based on typical letterhead */
+            padding: 35mm 20mm 25mm 20mm;
             font-family: 'Mukta', Arial, sans-serif;
             color: #000;
             box-sizing: border-box;
@@ -137,12 +137,11 @@
             .container { margin: 0; padding: 0; max-width: none; width: 100%;}
             .panel { border: none; box-shadow: none; margin: 0;}
             
-            /* Specific for letter printing */
             #printLetterArea { display: block !important; width: 100%; height: auto;}
             .a4-print-container { 
                 box-shadow: none; 
                 margin: 0; 
-                padding: 35mm 20mm 25mm 20mm !important; /* Force margins on print */
+                padding: 35mm 20mm 25mm 20mm !important;
                 width: 210mm; height: 297mm; 
                 page-break-after: always;
                 -webkit-print-color-adjust: exact;
@@ -159,7 +158,7 @@
             <input type="password" id="adminPass" placeholder="Password">
             <button type="button" onclick="loginAdmin()">लॉगिन करा <i class="fa fa-arrow-right"></i></button>
             
-            <!-- नवीन फॉरगॉट पासवर्ड ऑप्शन -->
+            <!-- फॉरगॉट पासवर्ड ऑप्शन -->
             <p style="margin-top: 15px; cursor: pointer; color: var(--primary); font-weight: bold; text-decoration: underline;" onclick="forgotPassword()">
                 <i class="fa fa-key"></i> पासवर्ड विसरलात? (Forgot Password)
             </p>
@@ -224,7 +223,6 @@
                             <input type="hidden" id="existing_other_url">
                         </div>
                     </div>
-                    </div>
 
                     <div class="form-row">
                         <div><label>पूर्ण नाव</label><input type="text" id="edit_name" class="form-control" required></div>
@@ -285,9 +283,7 @@
     </div>
 
     <!-- Letter Pad Preview Modal for PDF/Print -->
-    <div id="printLetterArea" style="display:none;" class="no-print">
-        <!-- Rendered A4 letter goes here -->
-    </div>
+    <div id="printLetterArea" style="display:none;" class="no-print"></div>
 
     <!-- APP CONTENT START -->
     <div id="app-content" style="display: none;">
@@ -465,13 +461,12 @@
                 </div>
             </div>
 
-            <!-- TAB: OFFICE BEARERS & GALLERY (UPDATED) -->
+            <!-- TAB: OFFICE BEARERS & GALLERY -->
             <div id="tab-committee" class="tab-content">
                 <div class="panel">
                     <div class="panel-header h-purple"><span><i class="fa fa-users-cog"></i> पदाधिकारी व गॅलरी (Office Bearers & Gallery)</span></div>
                     <div class="panel-body">
                         
-                        <!-- ADD OFFICE BEARER -->
                         <div style="background:#f8fafc; padding:15px; border-radius:8px; border:1px solid #cbd5e1; margin-bottom:20px;">
                             <h4 style="margin-bottom:10px; color:var(--primary);">नवीन पदाधिकारी जोडा</h4>
                             <div class="form-row" style="align-items:flex-start;">
@@ -503,7 +498,6 @@
                             </div>
                         </div>
 
-                        <!-- LIST OFFICE BEARERS -->
                         <h4 style="border-bottom: 2px solid var(--primary); padding-bottom:5px;">राज्यस्तरीय पदाधिकारी</h4>
                         <div class="ob-grid" id="committeeGridState"></div>
                         
@@ -513,7 +507,6 @@
                         <h4 style="border-bottom: 2px solid var(--secondary); padding-bottom:5px; margin-top:20px;">जिल्ह्याचे पदाधिकारी</h4>
                         <div class="ob-grid" id="committeeGridDist"></div>
                         
-                        <!-- GALLERY SECTION (UPDATED) -->
                         <hr style="margin:25px 0;">
                         <h4 style="margin-bottom:10px; color:var(--info);"><i class="fa fa-images"></i> गॅलरी फोटो अपलोड</h4>
                         <div class="form-row" style="background:#fffbeb; padding:15px; border-radius:8px;">
@@ -521,17 +514,13 @@
                             <input type="text" id="gallery_title" class="form-control" placeholder="फोटोचे टायटल / माहिती">
                             <button class="btn-action bg-success" onclick="uploadGalleryPhoto()"><i class="fa fa-upload"></i> गॅलरीत ॲड करा</button>
                         </div>
-                        <div class="folder-grid" id="galleryGrid" style="margin-top:20px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
-                            <!-- Gallery Images -->
-                        </div>
+                        <div class="folder-grid" id="galleryGrid" style="margin-top:20px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));"></div>
                     </div>
                 </div>
             </div>
 
-            <!-- TAB: I-CARD & LETTER DESIGN (MASSIVELY UPDATED) -->
+            <!-- TAB: I-CARD & LETTER DESIGN -->
             <div id="tab-design" class="tab-content">
-                
-                <!-- I-Card Section -->
                 <div class="panel">
                     <div class="panel-header h-primary"><span><i class="fa fa-id-badge"></i> ओळखपत्र (ID Card) डिझाईन</span></div>
                     <div class="panel-body">
@@ -562,15 +551,12 @@
                     </div>
                 </div>
 
-                <!-- Letterpad Management Section -->
                 <div class="panel">
                     <div class="panel-header h-info"><span><i class="fa fa-file-alt"></i> Letter Pad Management (लेटरपॅड व्यवस्थापन)</span></div>
                     <div class="panel-body">
-                        
-                        <!-- Template Upload -->
                         <div style="background:#f1f5f9; padding:15px; border-radius:8px; margin-bottom:20px;">
                             <h4 style="color:var(--primary); margin-bottom:10px;">१. लेटरपॅड डिझाईन अपलोड (Template Upload)</h4>
-                            <p style="font-size:0.85rem; color:gray; margin-bottom:10px;">येथे तुमच्या संघटनेच्या मूळ लेटरपॅडचा <b>JPG किंवा PNG</b> फोटो अपलोड करा. हा फोटो पत्राच्या Background मध्ये दिसेल.</p>
+                            <p style="font-size:0.85rem; color:gray; margin-bottom:10px;">येथे तुमच्या संघटनेच्या मूळ लेटरपॅडचा <b>JPG किंवा PNG</b> फोटो अपलोड करा.</p>
                             <div class="form-row">
                                 <input type="file" id="lp_template_upload" accept="image/jpeg, image/png" class="form-control" onchange="checkFileSize(this, 1000)">
                                 <button class="btn-action bg-primary" onclick="uploadLetterTemplate()"><i class="fa fa-upload"></i> टेंप्लेट अपलोड करा</button>
@@ -578,7 +564,6 @@
                             <div id="current_lp_template_info" style="font-size:0.85rem; color:var(--success); font-weight:bold; margin-top:5px;"></div>
                         </div>
 
-                        <!-- Create Letter -->
                         <div style="background:#fffbeb; padding:15px; border-radius:8px; margin-bottom:20px; border-left:4px solid var(--warning);">
                             <h4 style="color:#b45309; margin-bottom:10px;">२. नवीन पत्र तयार करा</h4>
                             <div class="form-row">
@@ -612,7 +597,6 @@
                             </div>
                         </div>
 
-                        <!-- Saved Letters List -->
                         <h4>३. तयार केलेली पत्रे (Saved Letters)</h4>
                         <table style="font-size:0.9rem;">
                             <thead>
@@ -650,13 +634,11 @@
                 </div>
             </div>
             
-            <!-- TAB: SETTINGS (UPDATED FOR PERMISSIONS AND LOGS) -->
+            <!-- TAB: SETTINGS -->
             <div id="tab-settings" class="tab-content">
                 <div class="panel">
                     <div class="panel-header"><span><i class="fa fa-cogs"></i> सुपर ॲडमिन सेटिंग्ज व परवानग्या</span></div>
                     <div class="panel-body">
-                        
-                        <!-- Original Settings -->
                         <div class="form-row" style="background:#f8fafc; padding:15px; border-radius:8px; margin-bottom:20px; border-left:4px solid var(--info);">
                             <div style="flex:1;">
                                 <h4 style="color:var(--primary); margin-bottom:10px;">सदस्य अपलोड अधिकार</h4>
@@ -674,7 +656,6 @@
                             </div>
                         </div>
 
-                        <!-- Sub Admin Management (UPDATED PERMISSIONS) -->
                         <div style="background:#f8fafc; padding:15px; border-radius:8px; margin-bottom:20px; border-left:4px solid var(--primary);">
                             <h4 style="color:var(--primary); margin-bottom:10px;"><i class="fa fa-user-shield"></i> सब-ॲडमिन मॅनेजमेंट</h4>
                             <div class="form-row">
@@ -720,12 +701,9 @@
                             </table>
                         </div>
 
-                        <!-- Activity Log (UPDATED: Max 7 Days Auto Cleanup) -->
                         <div style="background:#fffbeb; padding:15px; border-radius:8px; border-left:4px solid var(--warning);">
                             <h4 style="color:#b45309; margin-bottom:10px;"><i class="fa fa-history"></i> ॲक्टिव्हिटी लॉग (मागील ७ दिवस)</h4>
-                            <div style="max-height:300px; overflow-y:auto; font-size:0.85rem;" id="activityLogBox">
-                                <!-- Logs will appear here -->
-                            </div>
+                            <div style="max-height:300px; overflow-y:auto; font-size:0.85rem;" id="activityLogBox"></div>
                         </div>
 
                     </div>
@@ -734,9 +712,8 @@
         </div>
     </div>
 
-    <!-- Receipt Modal (Remains Unchanged) -->
+    <!-- Receipt Modal -->
     <div id="receiptModal" class="custom-modal-overlay">
-        <!-- Kept exactly as original -->
         <div class="custom-modal" style="max-width:700px;">
             <div class="custom-modal-header h-warning">
                 <h3>पावती (Receipt) तयार करा</h3>
@@ -858,7 +835,8 @@
             if(tabId === 'tab-dash') setTimeout(renderDashboard, 200); 
             if(tabId === 'tab-design') { updateICardPreview(); renderLetters(); }
         };
-onAuthStateChanged(auth, async (user) => { 
+
+        onAuthStateChanged(auth, async (user) => { 
             if (user) { 
                 isSuperAdmin = (user.email === SUPER_ADMIN_EMAIL);
                 
@@ -887,7 +865,6 @@ onAuthStateChanged(auth, async (user) => {
                     subAdminPermissions = ['dashboard', 'members', 'employees', 'icard', 'committee', 'notices', 'fees'];
                 }
 
-                // Enforce Permissions (Hide unauthorized tabs)
                 document.querySelectorAll('.tab-btn').forEach(btn => {
                     let perm = btn.getAttribute('data-perm');
                     if(perm && !subAdminPermissions.includes(perm)) {
@@ -895,7 +872,6 @@ onAuthStateChanged(auth, async (user) => {
                     }
                 });
                 
-                // Switch to first available tab (तुम्ही शोधलेली चूक इथे दुरुस्त केली आहे)
                 let firstAvail = Array.from(document.querySelectorAll('.tab-btn')).find(btn => btn.style.display !== 'none');
                 if(firstAvail) firstAvail.click();
 
@@ -932,7 +908,6 @@ onAuthStateChanged(auth, async (user) => {
         };
         window.logoutAdmin = () => signOut(auth);
 
-        // --- ACTIVITY LOGS (UPDATED) ---
         async function logActivity(actionMsg, userType = "Unknown") {
             let userEmail = auth.currentUser ? auth.currentUser.email : "System";
             let now = new Date().getTime();
@@ -975,7 +950,6 @@ onAuthStateChanged(auth, async (user) => {
             
             loadGallery();
             
-            // Get LP Template if any
             let lpSnap = await getDocs(query(collection(db, "settings"), where("type", "==", "letter_template")));
             if(!lpSnap.empty) { window.lpTemplateUrl = lpSnap.docs[0].data().url; document.getElementById('current_lp_template_info').innerText = "✅ टेंप्लेट अपलोड केलेले आहे."; }
 
@@ -1005,20 +979,33 @@ onAuthStateChanged(auth, async (user) => {
             if(data.secure_url) return data.secure_url; throw new Error("अपलोड अयशस्वी.");
         };
 
-        
+        window.removeExistingFile = (boxType, hiddenInputId, fileInputId) => {
+            if(confirm("तुम्हाला खरोखर ही फाईल डिलीट करून नवीन फाईल अपलोड करायची आहे का? (लक्षात ठेवा: माहिती सेव्ह केल्यावरच जुनी फाईल कायमची निघून जाईल)")) {
+                document.getElementById(hiddenInputId).value = ""; 
+                document.getElementById(fileInputId).value = ""; 
+                document.getElementById(`existing_box_${boxType}`).style.display = "none";
+                document.getElementById(`upload_box_${boxType}`).style.display = "block";
+            }
+        }
 
-        window.saveFullEdit = async (e) => {
-            e.preventDefault(); 
-            Swal.fire({title: 'सेव्ह होत आहे...', allowOutsideClick: false, didOpen: () => Swal.showLoading()});
-            let id = document.getElementById('edit_id').value; let col = document.getElementById('edit_type').value;
-         window.openAddNew = (colName) => { 
+        const toggleFileUI = (boxType, urlValue) => {
+            if(urlValue && urlValue.trim() !== "") {
+                document.getElementById(`upload_box_${boxType}`).style.display = "none";
+                document.getElementById(`existing_box_${boxType}`).style.display = "flex";
+                document.getElementById(`link_${boxType}`).href = urlValue;
+            } else {
+                document.getElementById(`upload_box_${boxType}`).style.display = "block";
+                document.getElementById(`existing_box_${boxType}`).style.display = "none";
+            }
+        }
+
+        window.openAddNew = (colName) => { 
             document.getElementById('fullEditForm').reset(); 
             document.getElementById('edit_id').value = ""; 
             document.getElementById('edit_type').value = colName;
             
             ['existing_photo_url', 'existing_doc_url', 'existing_other_url'].forEach(id => document.getElementById(id).value = "");
             
-            // नवीन फॉर्म उघडताना नेहमी अपलोड बॉक्सेस दिसले पाहिजेत
             toggleFileUI('photo', '');
             toggleFileUI('doc', '');
             toggleFileUI('other', '');
@@ -1038,7 +1025,6 @@ onAuthStateChanged(auth, async (user) => {
             document.getElementById('existing_doc_url').value = m.docUrl || ''; 
             document.getElementById('existing_other_url').value = m.otherUrl || '';
             
-            // डेटा उघडताना जर फाईल असेल तर ती लपवा व डिलीट बटण दाखवा
             toggleFileUI('photo', m.photoUrl);
             toggleFileUI('doc', m.docUrl);
             toggleFileUI('other', m.otherUrl);
@@ -1065,7 +1051,17 @@ onAuthStateChanged(auth, async (user) => {
             }
             
             document.getElementById('editModalOverlay').style.display = 'flex';
-        }   let finalPhotoUrl = document.getElementById('existing_photo_url').value; let finalDocUrl = document.getElementById('existing_doc_url').value; let finalOtherUrl = document.getElementById('existing_other_url').value;
+        }
+
+        window.saveFullEdit = async (e) => {
+            e.preventDefault(); 
+            Swal.fire({title: 'सेव्ह होत आहे...', allowOutsideClick: false, didOpen: () => Swal.showLoading()});
+            let id = document.getElementById('edit_id').value; 
+            let col = document.getElementById('edit_type').value;
+            let finalPhotoUrl = document.getElementById('existing_photo_url').value; 
+            let finalDocUrl = document.getElementById('existing_doc_url').value; 
+            let finalOtherUrl = document.getElementById('existing_other_url').value;
+
             try {
                 let photoFile = document.getElementById('edit_photo').files[0]; if(photoFile) finalPhotoUrl = await uploadToCloudinary(photoFile);
                 let docFile = document.getElementById('edit_document').files[0]; if(docFile) finalDocUrl = await uploadToCloudinary(docFile);
@@ -1130,10 +1126,9 @@ onAuthStateChanged(auth, async (user) => {
             document.getElementById('mandalMapGrid').innerHTML = mapHtml;
         }
 
-        // --- FILTER FIX (UPDATED BUG FIX #9) ---
         window.handleMandalFilterChange = () => {
             populateDistricts('filterMandal', 'filterDistrict');
-            document.getElementById('filterDistrict').value = "All"; // Force reset district dropdown to All
+            document.getElementById('filterDistrict').value = "All";
             renderMembers();
         }
 
@@ -1149,7 +1144,6 @@ onAuthStateChanged(auth, async (user) => {
                 if (subAdminAccessRegion !== "All" && m.mandal !== subAdminAccessRegion) return false;
                 if (fStatus !== 'All' && m.status !== fStatus) return false;
                 
-                // Fixed filter logic
                 if (fMandal !== 'All' && m.mandal !== fMandal) return false;
                 if (fDist !== 'All' && fDist !== '' && m.district !== fDist) return false;
                 
@@ -1219,7 +1213,6 @@ onAuthStateChanged(auth, async (user) => {
             document.getElementById('otherBody').innerHTML = fil.map((s, i) => `<tr><td>${i+1}</td><td><b>${s.name}</b><br><small>${s.post||'-'}</small></td><td>${s.mobile||'-'}</td><td>${s.workplace||'-'}</td><td>${s.district||'-'}</td><td>${s.mandal||'-'}</td><td>${s.joinDate||'-'}</td><td class="no-print"><button class="btn-action bg-primary" onclick="openFullEditModal('${s.id}','other_staff')"><i class="fa fa-pen"></i></button></td></tr>`).join('');
         }
 
-        // --- OFFICE BEARERS (UPDATED WITH LEVELS & REORDER) ---
         window.filterOBMembers = () => {
             let txt = document.getElementById('ob_search').value.toLowerCase();
             let resBox = document.getElementById('ob_search_results');
@@ -1245,7 +1238,7 @@ onAuthStateChanged(auth, async (user) => {
             if(!desig) return alert("कृपया पद निवडा किंवा टाईप करा.");
             
             Swal.fire({title: 'अपडेट करत आहे...', didOpen: () => Swal.showLoading()});
-            let obData = { ...tempSelectedOB, post: desig, level: level, order: Date.now() }; // Assign default order
+            let obData = { ...tempSelectedOB, post: desig, level: level, order: Date.now() };
             delete obData.id; 
             await addDoc(collection(db, "committee"), obData);
             
@@ -1284,8 +1277,6 @@ onAuthStateChanged(auth, async (user) => {
                 
                 if(doc1 && doc2) {
                     Swal.fire({title: 'क्रम बदलत आहे...', didOpen: () => Swal.showLoading()});
-                    
-                    // जर जुन्या डेटाला order नसेल, तर तात्पुरता order सेट करा
                     let order1 = doc1.order || Date.now();
                     let order2 = doc2.order || (Date.now() + 1000);
                     
@@ -1293,27 +1284,21 @@ onAuthStateChanged(auth, async (user) => {
                     await updateDoc(doc(db, "committee", id2), { order: order1 });
                     
                     Swal.close();
-                    loadData(); // लिस्ट रिफ्रेश होईल
+                    loadData();
                 }
             } catch(error) {
                 Swal.fire('Error', 'क्रम बदलताना त्रुटी आली: ' + error.message, 'error');
             }
         }
 
-       // --- सुधारित पदाधिकारी डिलीट करणे (Delete OB) ---
         window.deleteOB = async (id) => {
             if(confirm("या पदाधिकाऱ्याला यादीतून काढायचे आहे का? (सदस्य डेटाबेसमधून डिलीट होणार नाही)")) {
                 try {
                     Swal.fire({title: 'डिलीट करत आहे...', didOpen: () => Swal.showLoading()});
-                    
-                    // १. डेटाबेसमधून डिलीट करा
                     await deleteDoc(doc(db, "committee", id)); 
                     await logActivity("Deleted Office Bearer", isSuperAdmin ? "Super Admin" : "Sub Admin"); 
-                    
-                    // २. मुख्य बदल: संपूर्ण डेटाबेस लोड न करता फक्त स्क्रीनवरील यादी अपडेट करा
                     committeeData = committeeData.filter(c => c.id !== id);
                     window.renderCommittee();
-                    
                     Swal.fire('यशस्वी', 'पदाधिकारी यादीतून काढला!', 'success');
                 } catch(error) {
                     Swal.fire('Error', 'डिलीट करताना त्रुटी आली: ' + error.message, 'error');
@@ -1321,7 +1306,6 @@ onAuthStateChanged(auth, async (user) => {
             }
         }
 
-        // --- GALLERY SECTION (UPDATED View & Delete) ---
         window.uploadGalleryPhoto = async () => {
             let file = document.getElementById('gallery_photo').files[0];
             let title = document.getElementById('gallery_title').value;
@@ -1366,14 +1350,12 @@ onAuthStateChanged(auth, async (user) => {
             }
         }
 
-        // --- LETTER PAD MANAGEMENT (NEW MAJOR FEATURE) ---
         window.uploadLetterTemplate = async () => {
             let file = document.getElementById('lp_template_upload').files[0];
             if(!file) return alert("कृपया इमेज फाईल (JPG/PNG) निवडा.");
             Swal.fire({title: 'टेंप्लेट अपलोड होत आहे...', didOpen: () => Swal.showLoading()});
             try {
                 let url = await uploadToCloudinary(file);
-                // Save settings in DB
                 let snap = await getDocs(query(collection(db, "settings"), where("type", "==", "letter_template")));
                 if(snap.empty) { await addDoc(collection(db, "settings"), { type: "letter_template", url: url }); } 
                 else { await updateDoc(doc(db, "settings", snap.docs[0].id), { url: url }); }
@@ -1461,7 +1443,6 @@ onAuthStateChanged(auth, async (user) => {
             logActivity(`Created Letter: ${sub}`, isSuperAdmin ? "Super Admin" : "Sub Admin");
             Swal.fire('यशस्वी', 'पत्र सेव्ह झाले.', 'success');
             
-            // Clear form
             document.getElementById('lp_ref').value = ""; document.getElementById('lp_date').value = "";
             document.getElementById('lp_to').value = ""; document.getElementById('lp_sub').value = ""; document.getElementById('lp_content').value = "";
             loadData();
@@ -1499,7 +1480,7 @@ onAuthStateChanged(auth, async (user) => {
             let l = lettersData.find(x => x.id === id); if(!l) return;
             let printArea = document.getElementById('printLetterArea');
             printArea.innerHTML = window.getLetterHTML(l.ref, l.date, l.to, l.subject, l.body);
-            printArea.style.display = 'block'; // Make it visible for html2pdf
+            printArea.style.display = 'block';
             
             let opt = { margin: 0, filename: `Letter_${l.subject}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
             html2pdf().set(opt).from(printArea.firstElementChild).save().then(()=>{ printArea.style.display = 'none'; });
@@ -1521,63 +1502,50 @@ onAuthStateChanged(auth, async (user) => {
             }
         }
 
-        // --- SUB ADMIN PERMISSIONS SETTINGS ---
         window.selectAllPermissions = () => { document.querySelectorAll('#permission_boxes input[type="checkbox"]').forEach(cb => cb.checked = true); }
         
         window.addSubAdmin = async () => {
-    if(!isSuperAdmin) return alert("Only Super Admin can do this.");
-    
-    let name = document.getElementById('sub_admin_name').value;
-    let email = document.getElementById('sub_admin_email').value;
-    let pass = document.getElementById('sub_admin_pass').value;
-    let access = document.getElementById('sub_admin_access').value;
-    let perms = []; document.querySelectorAll('#permission_boxes input:checked').forEach(cb => perms.push(cb.value));
+            if(!isSuperAdmin) return alert("Only Super Admin can do this.");
+            
+            let name = document.getElementById('sub_admin_name').value;
+            let email = document.getElementById('sub_admin_email').value;
+            let pass = document.getElementById('sub_admin_pass').value;
+            let access = document.getElementById('sub_admin_access').value;
+            let perms = []; document.querySelectorAll('#permission_boxes input:checked').forEach(cb => perms.push(cb.value));
 
-    if(!name || !email || !pass) return alert("कृपया सर्व माहिती भरा.");
-    
-    Swal.fire({title: 'सब-ॲडमिन बनवत आहे...', didOpen: () => Swal.showLoading()});
+            if(!name || !email || !pass) return alert("कृपया सर्व माहिती भरा.");
+            
+            Swal.fire({title: 'सब-ॲडमिन बनवत आहे...', didOpen: () => Swal.showLoading()});
 
-    try {
-        // १. दुय्यम फायरबेस ॲप तयार करा (जेणेकरून मुख्य ॲडमिन लॉगआउट होणार नाही)
-        const secondaryApp = initializeApp(firebaseConfig, "SecondaryApp");
-        const secondaryAuth = getAuth(secondaryApp);
+            try {
+                const secondaryApp = initializeApp(firebaseConfig, "SecondaryApp");
+                const secondaryAuth = getAuth(secondaryApp);
 
-        // २. ऑथेंटिकेशन (Firebase Authentication) मध्ये नवीन युजर तयार करा
-        await createUserWithEmailAndPassword(secondaryAuth, email, pass);
-        
-        // ३. काम झाल्यावर दुय्यम ॲपमधून लगेच साईन-आउट करा
-        await signOut(secondaryAuth);
+                await createUserWithEmailAndPassword(secondaryAuth, email, pass);
+                await signOut(secondaryAuth);
 
-        // ४. आता नेहमीप्रमाणे फायरस्टोअर (Firestore Database) मध्ये युजरची माहिती सेव्ह करा
-        await addDoc(collection(db, "admins"), { name, email, pass, access, permissions: perms, isActive: true });
-        
-        
-        logActivity(`Added Sub Admin: ${name} (${access})`, "Super Admin");
-        Swal.fire('यशस्वी', 'सब-ॲडमिन ऑथेंटिकेशन आणि डेटाबेस दोन्हीकडे यशस्वीरित्या जोडला गेला. आता ते लॉगिन करू शकतील.', 'success'); 
-        
-        // फॉर्ममधील टाईप केलेली माहिती रिकामी करा
-        document.getElementById('sub_admin_name').value = "";
-        document.getElementById('sub_admin_email').value = "";
-        document.getElementById('sub_admin_pass').value = "";
-        
-        loadData(); // लिस्ट रिफ्रेश करा
-    } catch (error) {
-        console.error(error);
-        
-        // जर काही एरर आला तर तो युजरला समजेल असा दाखवा
-        if(error.code === 'auth/email-already-in-use') {
-            Swal.fire('Error', 'या ईमेल आयडीवर आधीपासूनच अकाउंट बनवलेले आहे. कृपया दुसरा ईमेल आयडी वापरा.', 'error');
-        } else if(error.code === 'auth/weak-password') {
-            Swal.fire('Error', 'पासवर्ड खूप सोपा आहे. कृपया किमान ६ अक्षरांचा किंवा अंकांचा पासवर्ड द्या.', 'error');
-        } else {
-            Swal.fire('Error', 'सब-ॲडमिन जोडताना त्रुटी आली: ' + error.message, 'error');
+                await addDoc(collection(db, "admins"), { name, email, pass, access, permissions: perms, isActive: true });
+                
+                logActivity(`Added Sub Admin: ${name} (${access})`, "Super Admin");
+                Swal.fire('यशस्वी', 'सब-ॲडमिन ऑथेंटिकेशन आणि डेटाबेस दोन्हीकडे यशस्वीरित्या जोडला गेला. आता ते लॉगिन करू शकतील.', 'success'); 
+                
+                document.getElementById('sub_admin_name').value = "";
+                document.getElementById('sub_admin_email').value = "";
+                document.getElementById('sub_admin_pass').value = "";
+                
+                loadData();
+            } catch (error) {
+                console.error(error);
+                if(error.code === 'auth/email-already-in-use') {
+                    Swal.fire('Error', 'या ईमेल आयडीवर आधीपासूनच अकाउंट बनवलेले आहे. कृपया दुसरा ईमेल आयडी वापरा.', 'error');
+                } else if(error.code === 'auth/weak-password') {
+                    Swal.fire('Error', 'पासवर्ड खूप सोपा आहे. कृपया किमान ६ अक्षरांचा किंवा अंकांचा पासवर्ड द्या.', 'error');
+                } else {
+                    Swal.fire('Error', 'सब-ॲडमिन जोडताना त्रुटी आली: ' + error.message, 'error');
+                }
+            }
         }
-    }
-        }
-        
 
-        // --- SUB ADMIN TABLE & ACTIONS (Unchanged) ---
-                // --- नवीन renderSubAdmins फंक्शन ---
         window.renderSubAdmins = () => {
             let s = document.getElementById('searchSubAdmin').value.toLowerCase();
             let fil = subAdminsList.filter(a => (a.name||'').toLowerCase().includes(s));
@@ -1592,9 +1560,7 @@ onAuthStateChanged(auth, async (user) => {
                     <td>${a.pass}</td>
                     <td>${a.access}</td>
                     <td style="white-space:nowrap;">
-                        <!-- हे नवीन पासवर्ड रिसेट बटण ॲड केले आहे -->
                         <button class="btn-action bg-info" onclick="sendResetLink('${a.email}')" title="पासवर्ड रिसेट लिंक पाठवा"><i class="fa fa-key"></i></button>
-                        
                         <button class="btn-action bg-wa" onclick="sendLoginWA('${a.name}', '${a.email}', '${a.pass}')" title="लॉगिन पाठवा"><i class="fa fa-whatsapp"></i></button>
                         <button class="btn-action ${isActive ? 'bg-warning' : 'bg-success'}" onclick="toggleSubAdminStatus('${a.id}', ${isActive})" title="${isActive ? 'अकाउंट ब्लॉक करा' : 'अकाउंट चालू करा'}"><i class="fa ${isActive ? 'fa-ban' : 'fa-check-circle'}"></i></button>
                         <button class="btn-action bg-danger" onclick="deleteSubAdmin('${a.id}')" title="कायमचे डिलीट करा"><i class="fa fa-trash"></i></button>
@@ -1602,7 +1568,7 @@ onAuthStateChanged(auth, async (user) => {
                 </tr>`;
             }).join('');
         }
-        // --- सब-ॲडमिन ब्लॉक किंवा अन-ब्लॉक करण्याचे फंक्शन ---
+
         window.toggleSubAdminStatus = async (id, currentStatus) => {
             let msg = currentStatus ? "या सब-ॲडमिनला 'ब्लॉक' करायचे आहे का? (ते लॉगिन करू शकणार नाहीत)" : "या सब-ॲडमिनचे अकाउंट पुन्हा 'चालू' करायचे आहे का?";
             if(confirm(msg)) {
@@ -1614,7 +1580,6 @@ onAuthStateChanged(auth, async (user) => {
             }
         }
 
-        // --- सब-ॲडमिन कायमचे डिलीट करण्याचे फंक्शन ---
         window.deleteSubAdmin = async (id) => {
             if(confirm("सावधान! या सब-ॲडमिनला कायमचे डिलीट करायचे आहे का?")) {
                 Swal.fire({title: 'डिलीट करत आहे...', didOpen: () => Swal.showLoading()});
@@ -1625,7 +1590,7 @@ onAuthStateChanged(auth, async (user) => {
             }
         }
         
-window.filterSubAdmins = () => renderSubAdmins();
+        window.filterSubAdmins = () => renderSubAdmins();
         
         window.sendLoginWA = (name, id, pass) => { 
             let msg = "नमस्कार " + name + ",\n\nयुझरनेम: " + id + "\nपासवर्ड: " + pass;
@@ -1638,14 +1603,7 @@ window.filterSubAdmins = () => renderSubAdmins();
         }
 
         window.saveAdminSettings = () => { Swal.fire('सेव्ह झाले', 'जनरल सेटिंग्ज यशस्वीरित्या अपडेट केल्या.', 'success'); logActivity("Updated General Settings", "Super Admin"); }
-   window.sendLoginEmail = (name, id, pass) => { 
-            let msg = "युझरनेम: " + id + "\nपासवर्ड: " + pass;
-            window.location.href = "mailto:" + id + "?subject=लॉगिन डिटेल्स&body=" + encodeURIComponent(msg); 
-        }
 
-        window.saveAdminSettings = () => { Swal.fire('सेव्ह झाले', 'जनरल सेटिंग्ज यशस्वीरित्या अपडेट केल्या.', 'success'); logActivity("Updated General Settings", "Super Admin"); }
-
-        // --- 1. लॉगिन स्क्रीनवरील Forgot Password फंक्शन ---
         window.forgotPassword = async () => {
             let email = document.getElementById('adminEmail').value.trim();
             if(!email) {
@@ -1667,7 +1625,6 @@ window.filterSubAdmins = () => renderSubAdmins();
             }
         };
 
-        // --- 2. सुपर ॲडमिनकडून पासवर्ड रिसेट लिंक पाठवण्याचे फंक्शन ---
         window.sendResetLink = async (email) => {
             if(confirm(`खरोखर ${email} या आयडीवर पासवर्ड रिसेट लिंक पाठवायची आहे का?`)) {
                 Swal.fire({title: 'लिंक पाठवत आहे...', didOpen: () => Swal.showLoading()});
@@ -1680,35 +1637,6 @@ window.filterSubAdmins = () => renderSubAdmins();
                 }
             }
         };
-        
-        // --- फाईल डिलीट करून नवीन अपलोडचा बॉक्स दाखवणारे फंक्शन ---
-        window.removeExistingFile = (boxType, hiddenInputId, fileInputId) => {
-            if(confirm("तुम्हाला खरोखर ही फाईल डिलीट करून नवीन फाईल अपलोड करायची आहे का? (लक्षात ठेवा: माहिती सेव्ह केल्यावरच जुनी फाईल कायमची निघून जाईल)")) {
-                
-                // 1. Hidden field मधील URL रिकामी करा (जेणेकरून जुनी फाईल सेव्ह होणार नाही)
-                document.getElementById(hiddenInputId).value = ""; 
-                
-                // 2. फाईल इनपुट रिकामा करा
-                document.getElementById(fileInputId).value = ""; 
-                
-                // 3. 'फाईल पहा' बॉक्स लपवा आणि 'अपलोड बॉक्स' पुन्हा दाखवा
-                document.getElementById(`existing_box_${boxType}`).style.display = "none";
-                document.getElementById(`upload_box_${boxType}`).style.display = "block";
-            }
-        }
-
-        // --- फाईल आधीच आहे की नाही ते चेक करून UI सेट करणारे फंक्शन ---
-        const toggleFileUI = (boxType, urlValue) => {
-            if(urlValue && urlValue.trim() !== "") {
-                document.getElementById(`upload_box_${boxType}`).style.display = "none"; // फाईल निवडायचा बॉक्स लपवा
-                document.getElementById(`existing_box_${boxType}`).style.display = "flex"; // डिलीटचे बटण दाखवा
-                document.getElementById(`link_${boxType}`).href = urlValue; // फाईलची लिंक सेट करा
-            } else {
-                document.getElementById(`upload_box_${boxType}`).style.display = "block"; // फाईल निवडायचा बॉक्स दाखवा
-                document.getElementById(`existing_box_${boxType}`).style.display = "none"; // डिलीटचे बटण लपवा
-            }
-        }
-
     </script>
 </body>
 </html>
