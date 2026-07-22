@@ -1641,6 +1641,34 @@ window.filterSubAdmins = () => renderSubAdmins();
                 }
             }
         };
+        
+        // --- फाईल डिलीट करून नवीन अपलोडचा बॉक्स दाखवणारे फंक्शन ---
+        window.removeExistingFile = (boxType, hiddenInputId, fileInputId) => {
+            if(confirm("तुम्हाला खरोखर ही फाईल डिलीट करून नवीन फाईल अपलोड करायची आहे का? (लक्षात ठेवा: माहिती सेव्ह केल्यावरच जुनी फाईल कायमची निघून जाईल)")) {
+                
+                // 1. Hidden field मधील URL रिकामी करा (जेणेकरून जुनी फाईल सेव्ह होणार नाही)
+                document.getElementById(hiddenInputId).value = ""; 
+                
+                // 2. फाईल इनपुट रिकामा करा
+                document.getElementById(fileInputId).value = ""; 
+                
+                // 3. 'फाईल पहा' बॉक्स लपवा आणि 'अपलोड बॉक्स' पुन्हा दाखवा
+                document.getElementById(`existing_box_${boxType}`).style.display = "none";
+                document.getElementById(`upload_box_${boxType}`).style.display = "block";
+            }
+        }
+
+        // --- फाईल आधीच आहे की नाही ते चेक करून UI सेट करणारे फंक्शन ---
+        const toggleFileUI = (boxType, urlValue) => {
+            if(urlValue && urlValue.trim() !== "") {
+                document.getElementById(`upload_box_${boxType}`).style.display = "none"; // फाईल निवडायचा बॉक्स लपवा
+                document.getElementById(`existing_box_${boxType}`).style.display = "flex"; // डिलीटचे बटण दाखवा
+                document.getElementById(`link_${boxType}`).href = urlValue; // फाईलची लिंक सेट करा
+            } else {
+                document.getElementById(`upload_box_${boxType}`).style.display = "block"; // फाईल निवडायचा बॉक्स दाखवा
+                document.getElementById(`existing_box_${boxType}`).style.display = "none"; // डिलीटचे बटण लपवा
+            }
+        }
 
     </script>
 </body>
