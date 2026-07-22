@@ -863,24 +863,23 @@
                     let firstAvail = document.querySelector('.tab-btn[style!="display: none;"]');
                     if(firstAvail) firstAvail.click();
 
-                                 }
-                
-                    // Enforce Permissions (Hide unauthorized tabs)
-                    document.querySelectorAll('.tab-btn').forEach(btn => {
-                        let perm = btn.getAttribute('data-perm');
-                        if(perm && !subAdminPermissions.includes(perm)) {
-                            btn.style.display = 'none';
-                        }
-                    });
-                    
-                    // Switch to first available tab
-                    let firstAvail = document.querySelector('.tab-btn[style!="display: none;"]');
-                    if(firstAvail) firstAvail.click();
+                               } else {
+                // जर सुपर ॲडमिन असेल तर
+                subAdminAccessRegion = "All"; 
+                subAdminPermissions = ['dashboard', 'members', 'employees', 'icard', 'committee', 'notices', 'fees'];
+            }
 
-                } else {
-                    subAdminAccessRegion = "All"; 
-                    subAdminPermissions = ['dashboard', 'members', 'employees', 'icard', 'committee', 'notices', 'fees'];
+            // Enforce Permissions (Hide unauthorized tabs)
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                let perm = btn.getAttribute('data-perm');
+                if(perm && !subAdminPermissions.includes(perm)) {
+                    btn.style.display = 'none';
                 }
+            });
+            
+            // Switch to first available tab
+            let firstAvail = document.querySelector('.tab-btn[style!="display: none;"]');
+            if(firstAvail) firstAvail.click();
 
                 document.getElementById('login-screen').style.display='none'; 
                 document.getElementById('app-content').style.display='block'; 
