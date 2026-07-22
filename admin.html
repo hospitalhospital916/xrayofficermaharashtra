@@ -829,7 +829,7 @@
                 isSuperAdmin = (user.email === SUPER_ADMIN_EMAIL);
                 
                                  if(!isSuperAdmin) {
-                    const q = query(collection(db, "admin_users"), where("email", "==", user.email));
+                    const q = query(collection(db, "admins"), where("email", "==", user.email));
                     const snap = await getDocs(q);
                     
                     if(snap.empty) { 
@@ -959,7 +959,7 @@
             let lpSnap = await getDocs(query(collection(db, "settings"), where("type", "==", "letter_template")));
             if(!lpSnap.empty) { window.lpTemplateUrl = lpSnap.docs[0].data().url; document.getElementById('current_lp_template_info').innerText = "✅ टेंप्लेट अपलोड केलेले आहे."; }
 
-            if(isSuperAdmin) { subAdminsList = await getD("admin_users"); cleanOldLogs(); renderSubAdmins(); }
+            if(isSuperAdmin) { subAdminsList = await getD("admins"); cleanOldLogs(); renderSubAdmins(); }
 
             let total=0, apprv=0, pend=0, paid=0;
             membersData.forEach(m => { 
@@ -1490,7 +1490,7 @@
         await signOut(secondaryAuth);
 
         // ४. आता नेहमीप्रमाणे फायरस्टोअर (Firestore Database) मध्ये युजरची माहिती सेव्ह करा
-        await addDoc(collection(db, "admin_users"), { name, email, pass, access, permissions: perms, isActive: true });
+        await addDoc(collection(db, "admins"), { name, email, pass, access, permissions: perms, isActive: true });
         
         
         logActivity(`Added Sub Admin: ${name} (${access})`, "Super Admin");
@@ -1546,7 +1546,7 @@
             let msg = currentStatus ? "या सब-ॲडमिनला 'ब्लॉक' करायचे आहे का? (ते लॉगिन करू शकणार नाहीत)" : "या सब-ॲडमिनचे अकाउंट पुन्हा 'चालू' करायचे आहे का?";
             if(confirm(msg)) {
                 Swal.fire({title: 'अपडेट करत आहे...', didOpen: () => Swal.showLoading()});
-                await updateDoc(doc(db, "admin_users", id), { isActive: !currentStatus });
+                await updateDoc(doc(db, "admins", id), { isActive: !currentStatus });
                 logActivity(`${currentStatus ? 'Blocked' : 'Unblocked'} Sub Admin`, "Super Admin");
                 Swal.close();
                 loadData(); 
@@ -1557,7 +1557,7 @@
         window.deleteSubAdmin = async (id) => {
             if(confirm("सावधान! या सब-ॲडमिनला कायमचे डिलीट करायचे आहे का?")) {
                 Swal.fire({title: 'डिलीट करत आहे...', didOpen: () => Swal.showLoading()});
-                await deleteDoc(doc(db, "admin_users", id));
+                await deleteDoc(doc(db, "admins", id));
                 logActivity("Deleted Sub Admin", "Super Admin");
                 Swal.close();
                 loadData(); 
