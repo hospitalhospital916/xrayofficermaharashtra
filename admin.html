@@ -823,17 +823,15 @@
             if(tabId === 'tab-dash') setTimeout(renderDashboard, 200); 
             if(tabId === 'tab-design') { updateICardPreview(); renderLetters(); }
         };
-
-        onAuthStateChanged(auth, async (user) => { 
+onAuthStateChanged(auth, async (user) => { 
             if (user) { 
                 isSuperAdmin = (user.email === SUPER_ADMIN_EMAIL);
                 
-                                 if(!isSuperAdmin) {
+                if (!isSuperAdmin) {
                     const q = query(collection(db, "admins"), where("email", "==", user.email));
                     const snap = await getDocs(q);
                     
                     if(snap.empty) { 
-                        // जर युजर डेटाबेसमधून डिलीट केला असेल
                         await signOut(auth);
                         Swal.fire('एरर', 'तुमचे अकाउंट ॲडमिनने डिलीट केले आहे.', 'error');
                         return;
@@ -842,7 +840,6 @@
                     let adminData = snap.docs[0].data();
                     
                     if(adminData.isActive === false) {
-                        // जर युजरला ब्लॉक (बंद) केले असेल
                         await signOut(auth);
                         Swal.fire('अॅक्सेस नाकारला', 'तुमचे अकाउंट ॲडमिनने ब्लॉक केले आहे.', 'error');
                         return;
@@ -850,37 +847,22 @@
 
                     subAdminAccessRegion = adminData.access || "All"; 
                     subAdminPermissions = adminData.permissions || [];
-                    
-                    // Enforce Permissions (Hide unauthorized tabs)
-                    document.querySelectorAll('.tab-btn').forEach(btn => {
-                        let perm = btn.getAttribute('data-perm');
-                        if(perm && !subAdminPermissions.includes(perm)) {
-                            btn.style.display = 'none';
-                        }
-                    });
-                    
-                    // Switch to first available tab
-                    let firstAvail = document.querySelector('.tab-btn[style!="display: none;"]');
-                    if(firstAvail) firstAvail.click();
-
-                                 }
-                
-                    // Enforce Permissions (Hide unauthorized tabs)
-                    document.querySelectorAll('.tab-btn').forEach(btn => {
-                        let perm = btn.getAttribute('data-perm');
-                        if(perm && !subAdminPermissions.includes(perm)) {
-                            btn.style.display = 'none';
-                        }
-                    });
-                    
-                    // Switch to first available tab
-                    let firstAvail = document.querySelector('.tab-btn[style!="display: none;"]');
-                    if(firstAvail) firstAvail.click();
-
                 } else {
                     subAdminAccessRegion = "All"; 
                     subAdminPermissions = ['dashboard', 'members', 'employees', 'icard', 'committee', 'notices', 'fees'];
                 }
+
+                // Enforce Permissions (Hide unauthorized tabs)
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    let perm = btn.getAttribute('data-perm');
+                    if(perm && !subAdminPermissions.includes(perm)) {
+                        btn.style.display = 'none';
+                    }
+                });
+                
+                // Switch to first available tab
+                let firstAvail = document.querySelector('.tab-btn[style!="display: none;"]');
+                if(firstAvail) firstAvail.click();
 
                 document.getElementById('login-screen').style.display='none'; 
                 document.getElementById('app-content').style.display='block'; 
@@ -902,9 +884,11 @@
                 logActivity("User Logged In", isSuperAdmin ? "Super Admin" : "Sub Admin");
                 updateICardPreview(); 
             } 
-            else { document.getElementById('login-screen').style.display='flex'; document.getElementById('app-content').style.display='none'; } 
+            else { 
+                document.getElementById('login-screen').style.display='flex'; 
+                document.getElementById('app-content').style.display='none'; 
+            } 
         });
-        
         window.loginAdmin = async () => { 
             let e = document.getElementById('adminEmail').value.trim(); let p = document.getElementById('adminPass').value.trim();
             if(!e || !p) return; Swal.fire({title: 'लॉगिन करत आहे...', didOpen: () => Swal.showLoading()});
