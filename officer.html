@@ -159,8 +159,13 @@
                     membersMap[mDoc.id] = mDoc.data();
                 });
 
-                let commArray = [];
+               let commArray = [];
                 commSnap.forEach(doc => commArray.push(doc.data()));
+                
+                // ॲडमिन पॅनेलमध्ये ठरवलेल्या क्रमानुसार सॉर्ट करा
+                commArray.sort((a, b) => (a.order || 0) - (b.order || 0));
+
+                let html = '';
 
                 let html = '';
                 for (let c of commArray) {
