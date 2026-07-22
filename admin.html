@@ -179,21 +179,51 @@
                     <input type="hidden" id="edit_type">
                     
                     <div class="form-row">
+                        <!-- १. प्रोफाईल फोटो -->
                         <div style="flex:1;">
                             <label style="color:var(--primary); font-weight:bold;"><i class="fa fa-camera"></i> प्रोफाईल फोटो (Max 400 KB)</label>
-                            <input type="file" id="edit_photo" accept="image/*" class="form-control" style="border: 2px dashed var(--primary); padding: 10px;" onchange="checkFileSize(this, 400)">
+                            
+                            <div id="upload_box_photo">
+                                <input type="file" id="edit_photo" accept="image/*" class="form-control" style="border: 2px dashed var(--primary); padding: 10px;" onchange="checkFileSize(this, 400)">
+                            </div>
+                            
+                            <div id="existing_box_photo" style="display:none; align-items:center; gap:10px; padding:10px; border:1px solid #ccc; border-radius:6px; background:#f8fafc;">
+                                <a id="link_photo" href="#" target="_blank" class="badge bg-success" style="text-decoration:none; padding:8px;"><i class="fa fa-eye"></i> फोटो पहा</a>
+                                <button type="button" class="btn-action bg-danger" onclick="removeExistingFile('photo', 'existing_photo_url', 'edit_photo')"><i class="fa fa-trash"></i> डिलीट व नवीन अपलोड</button>
+                            </div>
                             <input type="hidden" id="existing_photo_url">
                         </div>
+
+                        <!-- २. डॉक्युमेंट अपलोड -->
                         <div style="flex:1;">
                             <label style="color:var(--danger); font-weight:bold;"><i class="fa fa-file-pdf"></i> डॉक्युमेंट अपलोड (Max 400 KB)</label>
-                            <input type="file" id="edit_document" accept="image/*,.pdf" class="form-control" style="border: 2px dashed var(--danger); padding: 10px;" onchange="checkFileSize(this, 400)">
+                            
+                            <div id="upload_box_doc">
+                                <input type="file" id="edit_document" accept="image/*,.pdf" class="form-control" style="border: 2px dashed var(--danger); padding: 10px;" onchange="checkFileSize(this, 400)">
+                            </div>
+
+                            <div id="existing_box_doc" style="display:none; align-items:center; gap:10px; padding:10px; border:1px solid #ccc; border-radius:6px; background:#f8fafc;">
+                                <a id="link_doc" href="#" target="_blank" class="badge bg-success" style="text-decoration:none; padding:8px;"><i class="fa fa-eye"></i> फाईल पहा</a>
+                                <button type="button" class="btn-action bg-danger" onclick="removeExistingFile('doc', 'existing_doc_url', 'edit_document')"><i class="fa fa-trash"></i> डिलीट व नवीन अपलोड</button>
+                            </div>
                             <input type="hidden" id="existing_doc_url">
                         </div>
+
+                        <!-- ३. इतर कागदपत्रे -->
                         <div style="flex:1;">
                             <label id="lbl_other_doc" style="color:var(--info); font-weight:bold;"><i class="fa fa-folder-open"></i> इतर कागदपत्रे (Max 400 KB)</label>
-                            <input type="file" id="edit_other_doc" accept=".pdf" class="form-control" style="border: 2px dashed var(--info); padding: 10px;" onchange="checkFileSize(this, 400)">
+                            
+                            <div id="upload_box_other">
+                                <input type="file" id="edit_other_doc" accept=".pdf" class="form-control" style="border: 2px dashed var(--info); padding: 10px;" onchange="checkFileSize(this, 400)">
+                            </div>
+
+                            <div id="existing_box_other" style="display:none; align-items:center; gap:10px; padding:10px; border:1px solid #ccc; border-radius:6px; background:#f8fafc;">
+                                <a id="link_other" href="#" target="_blank" class="badge bg-success" style="text-decoration:none; padding:8px;"><i class="fa fa-eye"></i> फाईल पहा</a>
+                                <button type="button" class="btn-action bg-danger" onclick="removeExistingFile('other', 'existing_other_url', 'edit_other_doc')"><i class="fa fa-trash"></i> डिलीट व नवीन अपलोड</button>
+                            </div>
                             <input type="hidden" id="existing_other_url">
                         </div>
+                    </div>
                     </div>
 
                     <div class="form-row">
