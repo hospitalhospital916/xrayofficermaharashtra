@@ -51,9 +51,9 @@
         .panel-header { padding: 15px 25px; font-size: 1.2rem; font-weight: 800; background: #f8fafc; border-bottom: 1px solid #e2e8f0; border-top: 5px solid var(--primary); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap:10px;}
         .panel-body { padding: 25px; overflow-x: auto;}
 
-        /* Dashboard specific */
+        /* Dashboard Mini Cards */
         .dash-cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-bottom: 20px; }
-        .dash-card-mini { background: #fff; border: 1px solid #e2e8f0; border-left: 5px solid var(--primary); padding: 10px 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); text-align: center;}
+        .dash-card-mini { background: #fff; border: 1px solid #e2e8f0; border-left: 5px solid var(--primary); padding: 10px 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); text-align: center; cursor: pointer;}
         .dash-card-mini h3 { font-size: 0.9rem; color: #666; margin-bottom: 2px; } .dash-card-mini h2 { font-size: 1.5rem; color: var(--dark); font-weight: 800;}
         .map-pie-grid { display: grid; grid-template-columns: 2.5fr 1fr; gap: 20px; margin-bottom: 20px; }
         @media(max-width: 900px) { .map-pie-grid { grid-template-columns: 1fr; } }
@@ -96,31 +96,20 @@
         .profile-img-sec img { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 4px solid var(--primary); }
         .profile-details p { margin-bottom: 8px; font-size: 1rem; border-bottom: 1px solid #eee; padding-bottom: 5px;}
         .profile-details b { color: var(--primary); width: 120px; display: inline-block;}
+
+        .folder-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; }
+        .folder-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; transition: 0.2s; position:relative;}
+        .folder-card:hover { border-color: var(--primary); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
         
-        .ob-search-box { position: relative; width: 100%; max-width: 400px; }
-        .ob-search-results { position: absolute; top: 100%; left: 0; width: 100%; background: white; border: 1px solid #ccc; z-index: 100; max-height: 200px; overflow-y: auto; display: none; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .ob-search-item { padding: 10px; border-bottom: 1px solid #eee; cursor: pointer; display: flex; align-items: center; gap: 10px; }
-        .ob-search-item:hover { background: #f0f4f8; }
-        .ob-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; text-align: center; padding: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); position: relative;}
-        .ob-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px; margin-bottom: 20px;}
-        .ob-action-bar { position: absolute; top: 5px; right: 5px; display: flex; gap: 5px; }
-
-        .folder-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 15px; }
-        .folder-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; text-align: center; cursor: pointer; transition: 0.2s; position:relative;}
-        .folder-card:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-        .folder-card i { font-size: 2.5rem; color: #f59e0b; margin-bottom: 8px; }
-        .folder-card img.folder-icon { width: 50px; height: 50px; object-fit: contain; margin-bottom: 8px; }
-        .edit-folder-btn { position: absolute; top: 5px; right: 5px; background: none; border: none; color: var(--primary); cursor: pointer; font-size:0.9rem;}
-
-        /* Upload slots grid */
         .template-slots-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 15px; margin-bottom: 20px;}
         .template-slot { border: 2px dashed #cbd5e1; border-radius: 8px; padding: 12px; text-align: center; background: #fff; }
         .template-slot img { width: 100%; height: 110px; object-fit: cover; border-radius: 4px; margin-bottom: 8px; }
 
-        /* A4 Letter Print Container */
+        /* A4 Letter Print Styling FIX */
         .a4-print-container {
             width: 210mm;
-            min-height: 297mm;
+            height: 297mm;
+            max-height: 297mm;
             background: white;
             margin: 0 auto;
             position: relative;
@@ -132,12 +121,13 @@
             color: #000;
             box-sizing: border-box;
             text-align: left;
+            overflow: hidden;
         }
         .lp-header-info { display: flex; justify-content: space-between; margin-bottom: 15px; font-weight: bold; font-size: 14px;}
         .lp-to { margin-bottom: 15px; font-size: 15px; font-weight: bold; line-height: 1.4;}
         .lp-subject { margin-bottom: 20px; font-size: 15px; font-weight: bold; text-align: center; text-decoration: underline;}
-        .lp-body { font-size: 15px; line-height: 1.6; text-align: justify; white-space: pre-wrap; margin-bottom: 40px;}
-        .lp-footer { display: flex; justify-content: space-around; flex-wrap: wrap; margin-top: 30px; gap: 15px;}
+        .lp-body { font-size: 15px; line-height: 1.6; text-align: justify; white-space: pre-wrap; margin-bottom: 30px;}
+        .lp-footer { display: flex; justify-content: space-around; flex-wrap: wrap; margin-top: 20px; gap: 15px;}
         .sign-box { text-align: center; font-size: 0.85rem; width: 120px; }
         .sign-box img { max-height: 45px; max-width: 100px; object-fit: contain; }
 
@@ -151,13 +141,18 @@
         .id-card-info p { border-bottom: 1px dashed #ddd; padding-bottom: 2px; margin-bottom: 4px; }
         .id-card-footer { position: absolute; bottom: 0; width: 100%; background: #f8fafc; padding: 10px; text-align: center; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-around; align-items: flex-end; }
 
+        /* Printable Receipt styling */
+        .receipt-container { width: 100%; max-width: 650px; background: #fff; padding: 25px; border: 2px solid #0B3D91; border-radius: 8px; margin: 0 auto; font-family: 'Mukta', sans-serif;}
+
         @media print {
-            body { background: white; color: black; margin: 0; padding: 0;}
-            .navbar, .tab-menu, .no-print, .panel-header, #login-screen { display: none !important; }
-            .container { margin: 0; padding: 0; max-width: none; width: 100%;}
-            .panel { border: none; box-shadow: none; margin: 0;}
-            #printLetterArea { display: block !important; width: 100%; height: auto;}
-            .a4-print-container { box-shadow: none; margin: 0; width: 210mm; height: 297mm; page-break-after: always; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            body { background: white; color: black; margin: 0; padding: 0; }
+            .navbar, .tab-menu, .no-print, .panel-header, #login-screen, .mem-thumb, th:nth-child(2), td:nth-child(2), th:last-child, td:last-child { display: none !important; }
+            .container { margin: 0; padding: 0; max-width: none; width: 100%; }
+            .panel { border: none; box-shadow: none; margin: 0; }
+            #printLetterArea { display: block !important; width: 210mm; height: 297mm; }
+            .a4-print-container { box-shadow: none; margin: 0; width: 210mm !important; height: 297mm !important; page-break-after: avoid !important; page-break-inside: avoid !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            table { width: 100% !important; border: 1px solid #000; }
+            th, td { border: 1px solid #000 !important; color: #000 !important; }
         }
     </style>
 </head>
@@ -259,9 +254,9 @@
 
     <!-- Profile Pop-up Modal -->
     <div id="profileModalOverlay" class="custom-modal-overlay">
-        <div class="custom-modal" style="max-width: 600px;">
+        <div class="custom-modal" style="max-width: 650px;">
             <div class="custom-modal-header">
-                <h3>सदस्य प्रोफाईल</h3>
+                <h3>सदस्य प्रोफाईल व कागदपत्रे</h3>
                 <button onclick="closeModal('profileModalOverlay')" style="background:transparent; border:none; color:white; font-size:1.5rem; cursor:pointer;">&times;</button>
             </div>
             <div class="custom-modal-body profile-modal-grid">
@@ -269,7 +264,7 @@
                     <img id="prof_img" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png">
                     <h4 id="prof_name" style="margin-top:10px; color:var(--primary);"></h4>
                     <p id="prof_desig" style="color:gray; font-size:0.9rem;"></p>
-                    <div style="margin-top:15px; display:flex; justify-content:center; flex-wrap:wrap; gap:10px;" id="prof_actions_box"></div>
+                    <div style="margin-top:15px; display:flex; justify-content:center; flex-wrap:wrap; gap:8px;" id="prof_actions_box"></div>
                 </div>
                 <div class="profile-details">
                     <p><b>मोबाईल:</b> <span id="prof_mob"></span></p>
@@ -279,11 +274,30 @@
                     <p><b>रुजू दिनांक:</b> <span id="prof_join"></span></p>
                     <p><b>आधार क्र.:</b> <span id="prof_aadhaar"></span></p>
                     <p><b>स्टेटस:</b> <span id="prof_status"></span></p>
-                    <div style="margin-top:15px; display:flex; gap:10px;">
-                        <a id="prof_doc_link" href="#" target="_blank" class="badge bg-info" style="display:none; text-decoration:none;"><i class="fa fa-file-pdf"></i> डॉक्युमेंट पाहा</a>
-                        <button class="badge bg-primary" style="border:none; cursor:pointer;" onclick="openMemberICardModal()"><i class="fa fa-id-card"></i> I-Card पहा</button>
+                    <div style="margin-top:15px; display:flex; gap:10px; flex-wrap:wrap;">
+                        <a id="prof_doc_link" href="#" target="_blank" class="btn-action bg-info" style="display:none; text-decoration:none;"><i class="fa fa-file-pdf"></i> मुख्य कागदपत्र पाहा</a>
+                        <a id="prof_other_link" href="#" target="_blank" class="btn-action bg-warning" style="display:none; text-decoration:none;"><i class="fa fa-folder-open"></i> इतर कागदपत्रे</a>
+                        <button class="btn-action bg-primary" style="border:none; cursor:pointer;" onclick="openMemberICardModal()"><i class="fa fa-id-card"></i> I-Card पहा</button>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pending Requests Modal -->
+    <div id="pendingModalOverlay" class="custom-modal-overlay">
+        <div class="custom-modal" style="max-width:850px;">
+            <div class="custom-modal-header bg-danger">
+                <h3><i class="fa fa-clock"></i> प्रलंबित सदस्य अर्ज (Pending Requests)</h3>
+                <button onclick="closeModal('pendingModalOverlay')" style="background:transparent; border:none; color:white; font-size:1.5rem; cursor:pointer;">&times;</button>
+            </div>
+            <div class="custom-modal-body">
+                <table style="font-size:0.85rem;">
+                    <thead>
+                        <tr><th>अ.क्र.</th><th>नाव व पद</th><th>मोबाईल / ईमेल</th><th>जिल्हा व मंडळ</th><th>Action</th></tr>
+                    </thead>
+                    <tbody id="pendingRequestsBody"></tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -297,7 +311,20 @@
             </div>
             <div class="custom-modal-body" style="text-align:center;">
                 <div id="icardRenderBox" class="id-card-box"></div>
-                <button class="btn-action bg-primary" onclick="printICard()" style="margin-top:15px; width:100%;"><i class="fa fa-print"></i> आई-कार्ड प्रिंट करा</button>
+                <button class="btn-action bg-primary" onclick="printICard()" style="margin-top:15px; width:100%;"><i class="fa fa-print"></i> आय-कार्ड प्रिंट करा</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Full Screen Photo Preview Modal -->
+    <div id="imagePreviewModal" class="custom-modal-overlay">
+        <div class="custom-modal" style="max-width:700px; text-align:center;">
+            <div class="custom-modal-header">
+                <h3 id="img_preview_title">फोटो पहा</h3>
+                <button onclick="closeModal('imagePreviewModal')" style="background:transparent; border:none; color:white; font-size:1.5rem; cursor:pointer;">&times;</button>
+            </div>
+            <div class="custom-modal-body">
+                <img id="img_preview_src" src="" style="width:100%; max-height:70vh; object-fit:contain; border-radius:8px;">
             </div>
         </div>
     </div>
@@ -308,8 +335,9 @@
     <!-- APP CONTENT START -->
     <div id="app-content" style="display: none;">
         <div class="navbar">
-            <h2><i class="fa fa-shield-alt"></i> क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना महाराष्ट्र राज्य </h2>
+            <h2><i class="fa fa-shield-alt"></i> क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना महाराष्ट्र </h2>
             <div style="display:flex; align-items:center; gap:15px;">
+                <span id="pending_requests_badge" class="badge bg-danger" style="cursor:pointer; font-size:0.9rem; padding:8px 12px;" onclick="openPendingRequests()"><i class="fa fa-user-clock"></i> प्रलंबित अर्ज: <b id="pending_cnt">0</b></span>
                 <span id="login_user_role" style="font-weight:bold; color:var(--success);"></span>
                 <span id="login_user_region" style="font-size:0.85rem; color:var(--danger); font-weight:bold;"></span>
                 <button class="btn-logout" onclick="logoutAdmin()"><i class="fa fa-power-off"></i> लॉगआउट</button>
@@ -334,7 +362,7 @@
                 <div class="dash-cards-grid">
                     <div class="dash-card-mini" style="border-left-color: var(--primary);"><h3>एकूण सदस्य</h3><h2 id="cnt-all">0</h2></div>
                     <div class="dash-card-mini" style="border-left-color: var(--success);"><h3>मान्य (Approved)</h3><h2 id="cnt-approved">0</h2></div>
-                    <div class="dash-card-mini" style="border-left-color: var(--danger);"><h3>प्रलंबित (Pending)</h3><h2 id="cnt-pending">0</h2></div>
+                    <div class="dash-card-mini" style="border-left-color: var(--danger);" onclick="openPendingRequests()"><h3>प्रलंबित अर्ज (Pending)</h3><h2 id="cnt-pending">0</h2></div>
                     <div class="dash-card-mini" style="border-left-color: var(--warning);"><h3>फी भरलेले</h3><h2 id="cnt-paid">0</h2></div>
                 </div>
 
@@ -360,10 +388,13 @@
                     <div class="panel-header">
                         <span><i class="fa fa-user-check"></i> सदस्य नियंत्रण कक्ष</span>
                         <div style="display:flex; gap:10px;">
+                            <button class="btn-action bg-info" onclick="document.getElementById('importExcelMem').click()"><i class="fa fa-file-excel"></i> Import Excel</button>
+                            <input type="file" id="importExcelMem" accept=".xlsx, .xls" style="display:none;" onchange="importMemberExcelData(event)">
+                            <button class="btn-action bg-success" onclick="exportMembersToExcel()"><i class="fa fa-file-excel"></i> Export Excel</button>
                             <button class="btn-action bg-wa" onclick="bulkWhatsApp()"><i class="fa fa-whatsapp"></i> Bulk MSG</button>
                             <button class="btn-action bg-mail" onclick="bulkEmailMembers()"><i class="fa fa-envelope"></i> Bulk Email</button>
                             <button class="btn-action bg-success" onclick="openAddNew('members')"><i class="fa fa-user-plus"></i> नवीन जोडा</button>
-                            <button class="btn-action bg-primary" onclick="window.print()"><i class="fa fa-print"></i> Print</button>
+                            <button class="btn-action bg-primary" onclick="window.print()"><i class="fa fa-print"></i> प्रिंट यादी</button>
                         </div>
                     </div>
                     
@@ -411,16 +442,15 @@
                 </div>
             </div>
 
-            <!-- 3. STATE EMPLOYEES -->
+            <!-- 3. STATE EMPLOYEES DATABASE -->
             <div id="tab-other" class="tab-content">
                 <div class="panel">
                     <div class="panel-header">
-                        <span><i class="fa fa-users"></i> राज्यातील कर्मचारी डेटाबेस</span>
+                        <span><i class="fa fa-users"></i> राज्यातील कर्मचारी डेटाबेस (Auto Feed PDF/Excel)</span>
                         <div style="display:flex; gap:10px;" class="no-print">
-                            <button class="btn-action bg-info" onclick="document.getElementById('importExcel').click()"><i class="fa fa-file-excel"></i> Import Excel</button>
-                            <input type="file" id="importExcel" accept=".xlsx, .xls" style="display:none;" onchange="importExcelData(event)">
+                            <button class="btn-action bg-info" onclick="document.getElementById('importExcel').click()"><i class="fa fa-file-excel"></i> Import Excel/PDF</button>
+                            <input type="file" id="importExcel" accept=".xlsx, .xls, .pdf" style="display:none;" onchange="importEmployeeData(event)">
                             <button class="btn-action bg-success" onclick="exportToExcel()"><i class="fa fa-file-excel"></i> Export</button>
-                            <button class="btn-action bg-danger" onclick="downloadEmployeePDF()"><i class="fa fa-file-pdf"></i> PDF</button>
                             <button class="btn-action bg-primary" onclick="window.print()"><i class="fa fa-print"></i> Print List</button>
                         </div>
                     </div>
@@ -445,11 +475,33 @@
 
             <!-- 4. I-CARD & LETTER PAD DESIGN -->
             <div id="tab-design" class="tab-content">
-                <!-- I-CARD SETTINGS -->
+                <!-- I-CARD SEARCH & VIEW -->
                 <div class="panel">
-                    <div class="panel-header h-primary"><span><i class="fa fa-id-badge"></i> ओळखपत्र (ID Card) सेटिंग्ज व चेकबॉक्सेस</span></div>
+                    <div class="panel-header h-primary"><span><i class="fa fa-id-badge"></i> सदस्य I-Card सर्च व पाहा</span></div>
                     <div class="panel-body">
-                        <h4 style="color:var(--primary); margin-bottom:10px;">सदस्यांच्या आय कार्ड वर कोणती माहिती दाखवायची? (Checkboxes)</h4>
+                        <div class="form-row">
+                            <div style="flex:1;">
+                                <label>विभाग (मंडळ) निवडा:</label>
+                                <select id="icard_search_mandal" class="form-control" onchange="populateDistricts('icard_search_mandal', 'icard_search_district'); filterICardMembers();"><option value="All">सर्व मंडळे</option></select>
+                            </div>
+                            <div style="flex:1;">
+                                <label>जिल्हा निवडा:</label>
+                                <select id="icard_search_district" class="form-control" onchange="filterICardMembers()"><option value="All">सर्व जिल्हे</option></select>
+                            </div>
+                            <div style="flex:2;">
+                                <label>सदस्याचे नाव शोधा:</label>
+                                <input type="text" id="icard_search_name" class="form-control" placeholder="नावाचे काही अक्षरे टाईप करा..." onkeyup="filterICardMembers()">
+                            </div>
+                        </div>
+                        <div style="margin-top:15px; max-height:250px; overflow-y:auto;">
+                            <table style="font-size:0.85rem;">
+                                <thead><tr><th>नाव</th><th>पद</th><th>जिल्हा</th><th>मंडळ</th><th>Action</th></tr></thead>
+                                <tbody id="icardSearchResultsBody"></tbody>
+                            </table>
+                        </div>
+
+                        <hr style="margin:20px 0;">
+                        <h4 style="color:var(--primary); margin-bottom:10px;">सदस्यांच्या आय कार्ड वर दाखवायची माहिती (Checkboxes)</h4>
                         <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:10px; background:#f8fafc; padding:15px; border-radius:8px; border:1px solid #e2e8f0;">
                             <label><input type="checkbox" id="sh_name" checked onchange="saveICardFieldSettings()"> सदस्याचे नाव</label>
                             <label><input type="checkbox" id="sh_post" checked onchange="saveICardFieldSettings()"> पद/हुद्दा</label>
@@ -467,23 +519,19 @@
                     </div>
                 </div>
 
-                <!-- LETTER PAD MANAGEMENT WITH ADVANCED 4-DIRECTION MARGIN CONTROLS -->
+                <!-- LETTER PAD MANAGEMENT -->
                 <div class="panel">
                     <div class="panel-header h-info"><span><i class="fa fa-file-alt"></i> Letter Pad Management (लेटरपॅड व्यवस्थापन)</span></div>
                     <div class="panel-body">
                         
-                        <!-- 1. 5 Template Slots -->
                         <div style="background:#f1f5f9; padding:15px; border-radius:8px; margin-bottom:20px;">
                             <h4 style="color:var(--primary); margin-bottom:10px;">१. लेटरपॅड डिझाईन्स (५ डिझाईन कप्पे / Templates)</h4>
                             <p style="font-size:0.85rem; color:gray; margin-bottom:10px;">जुनी डिझाईन डिलीट केल्याशिवाय नवीन डिझाईन टाकता येणार नाही (Space Saver Rule).</p>
-                            
                             <div class="template-slots-grid" id="lpTemplateSlots"></div>
                         </div>
 
-                        <!-- 2. Logo, Stamp & 5 Signatures Config -->
                         <div style="background:#f8fafc; padding:15px; border-radius:8px; margin-bottom:20px; border:1px solid #cbd5e1;">
                             <h4 style="color:var(--dark); margin-bottom:10px;">२. लोगो, शिक्का व सही सेटिंग्ज</h4>
-                            
                             <div class="form-row">
                                 <div style="flex:1;">
                                     <label>संघटनेचा लोगो (Logo):</label>
@@ -499,32 +547,29 @@
                             <div class="form-row" id="signsContainer"></div>
                         </div>
 
-                        <!-- 3. New Letter Form & MARGIN ADJUSTMENTS -->
                         <div style="background:#fffbeb; padding:15px; border-radius:8px; margin-bottom:20px; border-left:4px solid var(--warning);">
                             <h4 style="color:#b45309; margin-bottom:10px;">३. नवीन पत्र तयार करा व मार्जिन सेट करा</h4>
                             
-                            <!-- 4-DIRECTION MARGIN CONTROL PANEL -->
                             <div style="background:#fef3c7; border:1px solid #fde68a; padding:12px; border-radius:8px; margin-bottom:15px;">
-                                <h5 style="color:#92400e; margin-bottom:8px;"><i class="fa fa-arrows-alt"></i> पत्राचे सर्व बाजूंचे मार्जिन (जागा अडजस्टमेंट):</h5>
+                                <h5 style="color:#92400e; margin-bottom:8px;"><i class="fa fa-arrows-alt"></i> पत्राचे ४ दिशांचे मार्जिन (जागा अडजस्टमेंट):</h5>
                                 <div class="form-row" style="gap:10px;">
                                     <div style="flex:1;">
-                                        <label style="font-size:0.8rem; font-weight:bold;">वरची जागा (Top Margin mm):</label>
-                                        <input type="number" id="lp_top_padding" class="form-control" value="60" min="10" max="150" placeholder="उदा. 60">
+                                        <label style="font-size:0.8rem; font-weight:bold;">वरची जागा (Top mm):</label>
+                                        <input type="number" id="lp_top_padding" class="form-control" value="60" min="10" max="150">
                                     </div>
                                     <div style="flex:1;">
-                                        <label style="font-size:0.8rem; font-weight:bold;">डावी बाजू (Left Margin mm):</label>
-                                        <input type="number" id="lp_left_padding" class="form-control" value="80" min="10" max="150" placeholder="उदा. 80">
+                                        <label style="font-size:0.8rem; font-weight:bold;">डावी बाजू (Left mm):</label>
+                                        <input type="number" id="lp_left_padding" class="form-control" value="80" min="10" max="150">
                                     </div>
                                     <div style="flex:1;">
-                                        <label style="font-size:0.8rem; font-weight:bold;">उजवी बाजू (Right Margin mm):</label>
-                                        <input type="number" id="lp_right_padding" class="form-control" value="15" min="5" max="100" placeholder="उदा. 15">
+                                        <label style="font-size:0.8rem; font-weight:bold;">उजवी बाजू (Right mm):</label>
+                                        <input type="number" id="lp_right_padding" class="form-control" value="15" min="5" max="100">
                                     </div>
                                     <div style="flex:1;">
-                                        <label style="font-size:0.8rem; font-weight:bold;">खालची जागा (Bottom Margin mm):</label>
-                                        <input type="number" id="lp_bottom_padding" class="form-control" value="20" min="5" max="100" placeholder="उदा. 20">
+                                        <label style="font-size:0.8rem; font-weight:bold;">खालची जागा (Bottom mm):</label>
+                                        <input type="number" id="lp_bottom_padding" class="form-control" value="20" min="5" max="100">
                                     </div>
                                 </div>
-                                <small style="color:#b45309;">💡 टीप: डाव्या बाजूचे पदाधिकाऱ्यांचे नाव टाळण्यासाठी डावे मार्जिन ८० mm व वरचे हेडर टाळण्यासाठी ६० mm योग्य आहे.</small>
                             </div>
 
                             <div class="form-row">
@@ -621,29 +666,41 @@
                         <div class="ob-grid" id="committeeGridDist"></div>
                         
                         <hr style="margin:25px 0;">
-                        <h4 style="margin-bottom:10px; color:var(--info);"><i class="fa fa-images"></i> गॅलरी फोटो अपलोड</h4>
-                        <div class="form-row" style="background:#fffbeb; padding:15px; border-radius:8px;">
+                        
+                        <!-- GALLERY MANAGEMENT WITH BULK DELETE & INDEX VIEW -->
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                            <h4 style="color:var(--info);"><i class="fa fa-images"></i> गॅलरी फोटो व्यवस्थापन</h4>
+                            <button class="btn-action bg-danger" onclick="deleteSelectedGalleryPhotos()"><i class="fa fa-trash"></i> निवडलेले फोटो डिलीट करा (Bulk Delete)</button>
+                        </div>
+                        <div class="form-row" style="background:#fffbeb; padding:15px; border-radius:8px; margin-bottom:15px;">
                             <input type="file" id="gallery_photo" accept="image/*" class="form-control" onchange="checkFileSize(this, 400)">
                             <input type="text" id="gallery_title" class="form-control" placeholder="फोटोचे टायटल / माहिती">
+                            <label style="display:flex; align-items:center; gap:5px; font-weight:bold;"><input type="checkbox" id="gallery_show_index" checked> मुख्य पानावर (Index) दाखवा</label>
                             <button class="btn-action bg-success" onclick="uploadGalleryPhoto()"><i class="fa fa-upload"></i> गॅलरीत ॲड करा</button>
                         </div>
-                        <div class="folder-grid" id="galleryGrid" style="margin-top:20px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));"></div>
+                        <div class="folder-grid" id="galleryGrid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));"></div>
                     </div>
                 </div>
             </div>
 
-            <!-- 6. NOTICES -->
+            <!-- 6. NOTICES & SCROLLING NOTICE -->
             <div id="tab-notices" class="tab-content">
                 <div class="panel">
                     <div class="panel-header">
-                        <span><i class="fa fa-bullhorn"></i> नोटीस बोर्ड</span>
+                        <span><i class="fa fa-bullhorn"></i> नोटीस बोर्ड व इंडेक्स सूचना</span>
                     </div>
                     <div class="panel-body">
-                        <div class="form-row no-print" style="margin-bottom:20px; align-items:center; background:#fffbeb; padding:10px; border-radius:6px; border-left:4px solid var(--warning);">
-                            <label style="font-weight:bold; color:#b45309;"><input type="checkbox" id="show_notices_home" checked> होम पेज (Index Page) वर नोटिसा दर्शवा</label>
-                        </div>
                         
-                        <h4>PDF नोटीस अपलोड (Max 400 KB)</h4>
+                        <!-- SCROLLING MARQUEE NOTICE EDIT -->
+                        <div style="background:#fffbeb; padding:15px; border-radius:8px; border-left:4px solid var(--warning); margin-bottom:20px;">
+                            <h4 style="color:#b45309; margin-bottom:8px;"><i class="fa fa-scroll"></i> मुख्य पानावर (Index Page) फिरणारी टिप/सूचना:</h4>
+                            <div class="form-row">
+                                <input type="text" id="scrolling_notice_input" class="form-control" placeholder="उदा. नवीन सदस्य नोंदणी सुरू झाली आहे. अंतिम तारीख ३१ जुलै..." value="क्ष-किरण वैज्ञानिक अधिकारी संघटनेच्या अधिकृत वेबसाईटवर आपले सहर्ष स्वागत आहे.">
+                                <button class="btn-action bg-primary" onclick="saveScrollingNotice()"><i class="fa fa-save"></i> सूचना अपडेट करा</button>
+                            </div>
+                        </div>
+
+                        <h4>इंडेक्स / नोटीस बोर्ड PDF अपलोड (Max 400 KB)</h4>
                         <div class="form-row" style="margin-top:10px;">
                             <input type="file" id="notice_file" accept=".pdf" class="form-control" onchange="checkFileSize(this, 400)">
                             <input type="text" id="notice_name" placeholder="नोटिसचे नाव / शीर्षक" class="form-control">
@@ -651,7 +708,7 @@
                         </div>
                         
                         <hr style="margin:20px 0;">
-                        <h4>अपलोड केलेल्या नोटिसा</h4>
+                        <h4>अपलोड केलेल्या नोटिसांची यादी</h4>
                         <table style="font-size:0.9rem;">
                             <thead><tr><th>दिनांक</th><th>शीर्षक</th><th>Action</th></tr></thead>
                             <tbody id="noticesListBody"></tbody>
@@ -660,24 +717,35 @@
                 </div>
             </div>
 
-            <!-- 7. FEES & RECEIPTS -->
+            <!-- 7. FEES & RECEIPTS DEPARTMENT -->
             <div id="tab-fees" class="tab-content">
                 <div class="panel">
                     <div class="panel-header h-warning">
-                        <span><i class="fa fa-rupee-sign"></i> शुल्क विभाग (Fees & Receipts)</span>
+                        <span><i class="fa fa-rupee-sign"></i> शुल्क विभाग (Fees Management)</span>
                         <div style="display:flex; gap:10px;">
-                            <button class="btn-action bg-mail" onclick="bulkEmailBCC()"><i class="fa fa-envelope"></i> Bulk Email</button>
+                            <button class="btn-action bg-wa" onclick="bulkWhatsAppFees()"><i class="fa fa-whatsapp"></i> Bulk MSG</button>
+                            <button class="btn-action bg-mail" onclick="bulkEmailFees()"><i class="fa fa-envelope"></i> Bulk Email</button>
                         </div>
                     </div>
                     <div class="panel-body">
+                        <div class="form-row no-print" style="margin-bottom:15px;">
+                            <input type="text" id="feeSearch" class="form-control" placeholder="🔍 नाव शोधा..." onkeyup="renderFees()">
+                            <select id="feeFilterStatus" class="form-control" onchange="renderFees()">
+                                <option value="All">सर्व फी स्टेटस</option>
+                                <option value="Paid">भरलेले (Paid)</option>
+                                <option value="Unpaid">बाकी (Unpaid)</option>
+                            </select>
+                        </div>
+
                         <table id="feesTable">
                             <thead>
                                 <tr>
-                                    <th><input type="checkbox" id="selectAllFees" onchange="toggleSelectAll(this)"></th>
+                                    <th style="width:30px;"><input type="checkbox" id="selectAllFees" onchange="toggleSelectAllFees(this)"></th>
                                     <th>नाव व पद</th>
                                     <th>मोबाईल / ईमेल</th>
+                                    <th>शुल्काची रक्कम (₹)</th>
                                     <th>फी स्टेटस</th>
-                                    <th class="no-print">पावती जनरेट</th>
+                                    <th class="no-print">पावती / Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="feesBody"></tbody>
@@ -686,7 +754,7 @@
                 </div>
             </div>
 
-            <!-- 8. MEMBER FOLDERS -->
+            <!-- 8. MEMBER FOLDERS (६ फोल्डर्स, प्रतिबंधित डाऊनलोड व वॉटरमार्क चेक्स) -->
             <div id="tab-member-folders" class="tab-content">
                 <div class="panel">
                     <div class="panel-header h-primary">
@@ -697,20 +765,7 @@
                     </div>
                     <div class="panel-body">
                         
-                        <div style="background:#f1f5f9; padding:12px; border-radius:8px; margin-bottom:20px; border-left:4px solid var(--danger); display:flex; justify-content:space-between; align-items:center;">
-                            <div>
-                                <b><i class="fa fa-user-shield"></i> सदस्य व्ह्यू सुरक्षा (Member Restrictions):</b>
-                                <p style="font-size:0.85rem; color:#666;">सदस्यांना फाईल्स डाऊनलोड आणि स्क्रीनशॉट घेण्यापासून रोखण्यासाठी ऑन करा.</p>
-                            </div>
-                            <div>
-                                <label style="font-weight:bold; cursor:pointer;">
-                                    <input type="checkbox" id="sec_restrict_download" checked style="width:18px; height:18px;" onchange="toggleMemberSecurity()"> प्रतिबंध चालू ठेवा (Restrict Download & Screenshot)
-                                </label>
-                            </div>
-                        </div>
-
-                        <!-- 6 FOLDERS GRID -->
-                        <h4 style="color:var(--primary); margin-bottom:10px;">६ सदस्यांचे फोल्डर्स (Folders)</h4>
+                        <h4 style="color:var(--primary); margin-bottom:10px;">६ सदस्यांचे फोल्डर्स (Folders Settings & Security)</h4>
                         <div class="folder-grid" id="sixFoldersGrid"></div>
 
                         <hr style="margin:25px 0;">
@@ -733,10 +788,9 @@
                                 </div>
                             </div>
 
-                            <!-- ADVANCED ACCESS DROPDOWN -->
                             <div class="form-row">
                                 <div style="flex:1.5;">
-                                    <label style="font-weight:bold; color:var(--primary);">ही फाईल कोणाला दाखवायची? (Visibility Control)</label>
+                                    <label style="font-weight:bold; color:var(--primary);">ही फाईल कोणाला दाखवायची? (Visibility)</label>
                                     <select id="mf_visibility" class="form-control" onchange="toggleFolderVisibilityFilter()">
                                         <option value="OnlyMe">केवळ मी (Private to Admin)</option>
                                         <option value="AllDivisions">सर्व विभाग (सर्व मंडळे)</option>
@@ -762,7 +816,6 @@
                             </div>
                         </div>
 
-                        <!-- UPLOADED FILES LIST -->
                         <h4 style="color:var(--dark); margin-bottom:10px;">अपलोड केलेल्या सर्व फाईल्सची यादी</h4>
                         <table style="font-size:0.9rem;">
                             <thead>
@@ -770,7 +823,7 @@
                                     <th>अ.क्र.</th>
                                     <th>फोल्डर</th>
                                     <th>फाईलचे नाव</th>
-                                    <th>व्हिजिट/दाखवणे (Access)</th>
+                                    <th>Access Control</th>
                                     <th>दिनांक</th>
                                     <th class="no-print">Action</th>
                                 </tr>
@@ -785,7 +838,7 @@
             <!-- 9. SETTINGS -->
             <div id="tab-settings" class="tab-content">
                 <div class="panel">
-                    <div class="panel-header"><span><i class="fa fa-cogs"></i> सुपर ॲडमिन सेटिंग्ज व परवानग्या</span></div>
+                    <div class="panel-header"><span><i class="fa fa-cogs"></i> सुपर ॲडमिन सेटिंग्ज व सब-ॲडमिन</span></div>
                     <div class="panel-body">
                         <div class="form-row" style="background:#f8fafc; padding:15px; border-radius:8px; margin-bottom:20px; border-left:4px solid var(--info);">
                             <div style="flex:1;">
@@ -800,7 +853,7 @@
                                 <input type="text" id="set_other_doc_label" class="form-control" value="इतर कागदपत्रे">
                             </div>
                             <div style="width:100%;">
-                                <button class="btn-action bg-success" onclick="saveAdminSettings()" style="margin-top:10px;"><i class="fa fa-save"></i> जनरल सेटिंग्ज सेव्ह करा</button>
+                                <button class="btn-action bg-success" onclick="saveAdminSettings()" style="margin-top:10px;"><i class="fa fa-save"></i> सेव्ह करा</button>
                             </div>
                         </div>
 
@@ -813,8 +866,8 @@
                                 <button class="btn-action bg-success" onclick="addSubAdmin()"><i class="fa fa-plus"></i> ॲड करा</button>
                             </div>
                             <div style="margin-bottom:10px;">
-                                <label style="font-weight:bold;">परवानग्या (Independent Checkboxes):</label> 
-                                <button onclick="selectAllPermissions()" style="margin-left:10px; font-size:0.8rem; cursor:pointer;">Select All (Full Access)</button>
+                                <label style="font-weight:bold;">परवानग्या:</label> 
+                                <button onclick="selectAllPermissions()" style="margin-left:10px; font-size:0.8rem; cursor:pointer;">Select All</button>
                                 <div style="display:flex; gap:15px; margin-top:5px; flex-wrap:wrap;" id="permission_boxes">
                                     <label><input type="checkbox" value="dashboard"> डॅशबोर्ड</label>
                                     <label><input type="checkbox" value="members"> सदस्य नियंत्रण</label>
@@ -826,7 +879,7 @@
                                     <label><input type="checkbox" value="member_folders"> सदस्यांसाठी फोल्डर</label>
                                 </div>
                                 <div style="margin-top:10px;">
-                                    <label>डेटा ॲक्सेस (मंडळ फिल्टर): </label>
+                                    <label>डेटा ॲक्सेस (मंडळ): </label>
                                     <select id="sub_admin_access" class="form-control" style="width:auto; display:inline-block;">
                                         <option value="All">संपूर्ण महाराष्ट्र (All)</option>
                                         <option value="पुणे मंडळ">फक्त पुणे मंडळ</option>
@@ -842,10 +895,10 @@
                             </div>
                             
                             <hr>
-                            <h5>सध्याचे सब-ॲडमिन (सर्च करा)</h5>
+                            <h5>सध्याचे सब-ॲडमिन</h5>
                             <input type="text" id="searchSubAdmin" class="form-control" placeholder="सर्च..." style="margin-bottom:10px; max-width:300px;" onkeyup="filterSubAdmins()">
                             <table style="font-size:0.85rem;">
-                                <thead><tr><th>नाव</th><th>लॉगिन आयडी</th><th>पासवर्ड</th><th>ॲक्सेस (मंडळ)</th><th>Action (Share Login)</th></tr></thead>
+                                <thead><tr><th>नाव</th><th>लॉगिन आयडी</th><th>पासवर्ड</th><th>ॲक्सेस (मंडळ)</th><th>Action</th></tr></thead>
                                 <tbody id="subAdminListBody"></tbody>
                             </table>
                         </div>
@@ -856,11 +909,11 @@
         </div>
     </div>
 
-    <!-- Receipt Modal -->
+    <!-- Receipt Dynamic Modal -->
     <div id="receiptModal" class="custom-modal-overlay">
-        <div class="custom-modal" style="max-width:700px;">
+        <div class="custom-modal" style="max-width:750px;">
             <div class="custom-modal-header h-warning">
-                <h3>पावती (Receipt) तयार करा</h3>
+                <h3>पावती (Receipt) तयार करा व पाठवा</h3>
                 <button onclick="closeModal('receiptModal')" style="background:transparent; border:none; color:white; font-size:1.5rem; cursor:pointer;">&times;</button>
             </div>
             <div class="custom-modal-body">
@@ -868,47 +921,54 @@
                     <input type="hidden" id="rect_mem_id">
                     <input type="hidden" id="rect_mem_mob">
                     <input type="hidden" id="rect_mem_email">
+                    
                     <div class="form-row">
                         <div style="flex:1;"><label>पावती क्र.</label><input type="text" id="rect_no" class="form-control" required></div>
                         <div style="flex:1;"><label>दिनांक</label><input type="date" id="rect_date" class="form-control" required></div>
                     </div>
                     <div class="form-row">
-                        <div style="flex:2;"><label>श्री./श्रीमती.</label><input type="text" id="rect_name" class="form-control" readonly></div>
-                        <div style="flex:1;"><label>पद / हुद्दा</label><input type="text" id="rect_post" class="form-control" readonly></div>
+                        <div style="flex:2;"><label>प्राप्त झाले श्री./श्रीमती.</label><input type="text" id="rect_name" class="form-control" readonly></div>
+                        <div style="flex:1;"><label>सदस्य ID / क्र.</label><input type="text" id="rect_mem_code" class="form-control"></div>
+                    </div>
+                    <div class="form-row">
+                        <div style="flex:1;"><label>पद</label><input type="text" id="rect_post" class="form-control"></div>
+                        <div style="flex:1;"><label>कार्यरत ठिकाण</label><input type="text" id="rect_workplace" class="form-control"></div>
                     </div>
                     <div class="form-row">
                         <div style="flex:1;"><label>जिल्हा</label><input type="text" id="rect_dist" class="form-control"></div>
-                        <div style="flex:1;"><label>तालुका</label><input type="text" id="rect_taluka" class="form-control"></div>
+                        <div style="flex:1;"><label>मंडळ</label><input type="text" id="rect_mandal" class="form-control"></div>
                     </div>
                     
-                    <label style="font-weight:bold; margin-top:10px; display:block;">रक्कम प्राप्तीचा प्रकार / Purpose:</label>
-                    <div style="display:flex; gap:15px; flex-wrap:wrap; margin-bottom:15px;">
-                        <label><input type="radio" name="rect_purpose" value="सभासद शुल्क" checked> सभासद शुल्क</label>
-                        <label><input type="radio" name="rect_purpose" value="वार्षिक सभासद वर्गणी"> वार्षिक सभासद वर्गणी</label>
-                        <label><input type="radio" name="rect_purpose" value="आजीव सभासद शुल्क"> आजीव सभासद शुल्क</label>
-                        <label><input type="radio" name="rect_purpose" value="देणगी"> देणगी</label>
-                        <label><input type="radio" name="rect_purpose" value="इतर"> इतर <input type="text" id="rect_purpose_other" style="border:none; border-bottom:1px solid #000; outline:none; width:100px;"></label>
+                    <label style="font-weight:bold; margin-top:10px; display:block; color:var(--primary);">शुल्काचा प्रकार (चेक करा):</label>
+                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:10px; margin-bottom:15px; background:#f8fafc; padding:10px; border-radius:6px;">
+                        <label><input type="checkbox" name="rect_type" value="सभासद नोंदणी शुल्क"> सभासद नोंदणी शुल्क</label>
+                        <label><input type="checkbox" name="rect_type" value="वार्षिक सभासद शुल्क" checked> वार्षिक सभासद शुल्क</label>
+                        <label><input type="checkbox" name="rect_type" value="आजीव सभासद शुल्क"> आजीवन सभासद शुल्क</label>
+                        <label><input type="checkbox" name="rect_type" value="वर्गणी / नियमित शुल्क"> वर्गणी / नियमित शुल्क</label>
+                        <label><input type="checkbox" name="rect_type" value="विशेष शुल्क"> विशेष शुल्क</label>
+                        <label><input type="checkbox" name="rect_type" value="देणगी"> देणगी</label>
                     </div>
+
                     <div class="form-row">
-                        <div style="flex:1;"><label>रक्कम (अंकी) ₹</label><input type="number" id="rect_amt_num" class="form-control" required></div>
-                        <div style="flex:2;"><label>रक्कम (अक्षरी) रुपये</label><input type="text" id="rect_amt_words" class="form-control" required></div>
+                        <div style="flex:1;"><label>प्राप्त रक्कम (अंकी) ₹</label><input type="number" id="rect_amt_num" class="form-control" required onkeyup="updateAmtWords()"></div>
+                        <div style="flex:2;"><label>रक्कम (अक्षरी) रुपये</label><input type="text" id="rect_amt_words" class="form-control" required placeholder="उदा. पाचशे रुपये फक्त"></div>
                     </div>
                     <div class="form-row">
                         <div style="flex:1;">
-                            <label>भरणा पद्धत:</label>
+                            <label>पेमेंट पद्धत:</label>
                             <select id="rect_pay_mode" class="form-control">
                                 <option value="रोख">रोख</option>
-                                <option value="UPI">UPI</option>
+                                <option value="UPI">UPI / GPay / PhonePe</option>
                                 <option value="बँक ट्रान्सफर">बँक ट्रान्सफर</option>
                                 <option value="धनादेश">धनादेश</option>
                             </select>
                         </div>
-                        <div style="flex:1;"><label>व्यवहार क्र. / UTR / Cheque No.</label><input type="text" id="rect_utr" class="form-control" placeholder="असल्यास भरा"></div>
+                        <div style="flex:1;"><label>Transaction ID / UTR No.</label><input type="text" id="rect_utr" class="form-control" placeholder="असल्यास भरा"></div>
                     </div>
+                    
                     <div style="display:flex; gap:10px; margin-top:20px;">
-                        <button type="button" class="btn-action bg-primary" style="flex:1; padding:12px; font-size:1.1rem;" onclick="printReceipt()"><i class="fa fa-print"></i> प्रिंट / PDF काढा</button>
-                        <button type="button" class="btn-action bg-wa" style="flex:1; padding:12px; font-size:1.1rem;" onclick="shareReceiptWA()"><i class="fa fa-whatsapp"></i> WhatsApp वर पाठवा</button>
-                        <button type="button" class="btn-action bg-mail" style="flex:1; padding:12px; font-size:1.1rem;" onclick="shareReceiptEmail()"><i class="fa fa-envelope"></i> Email वर पाठवा</button>
+                        <button type="button" class="btn-action bg-primary" style="flex:1; padding:12px; font-size:1.1rem;" onclick="generatePrintReceipt()"><i class="fa fa-print"></i> पावती पाहा व प्रिंट करा</button>
+                        <button type="button" class="btn-action bg-mail" style="flex:1; padding:12px; font-size:1.1rem;" onclick="sendEmailReceipt()"><i class="fa fa-envelope"></i> ईमेलवर पावती पाठवा</button>
                     </div>
                 </form>
             </div>
@@ -949,6 +1009,7 @@
             document.getElementById('filterMandal').innerHTML = options;
             document.getElementById('edit_mandal').innerHTML = optionsForm;
             document.getElementById('empMandal').innerHTML = options;
+            document.getElementById('icard_search_mandal').innerHTML = options;
             document.getElementById('lp_recipient_mandal').innerHTML = optionsForm;
             
             let allDistHtml = '<option value="">जिल्हा निवडा</option>';
@@ -959,8 +1020,8 @@
         window.populateDistricts = function(mSelectId, dSelectId) {
             let m = document.getElementById(mSelectId).value;
             let dSelect = document.getElementById(dSelectId);
-            if(m === "All" || m === "") { dSelect.innerHTML = mSelectId.includes('Filter') ? '<option value="All">सर्व जिल्हे</option>' : '<option value="">प्रथम मंडळ निवडा</option>'; return; }
-            let html = mSelectId.includes('Filter') ? '<option value="All">सर्व जिल्हे</option>' : '<option value="">जिल्हा निवडा</option>';
+            if(m === "All" || m === "") { dSelect.innerHTML = mSelectId.includes('Filter') || mSelectId.includes('search') ? '<option value="All">सर्व जिल्हे</option>' : '<option value="">प्रथम मंडळ निवडा</option>'; return; }
+            let html = mSelectId.includes('Filter') || mSelectId.includes('search') ? '<option value="All">सर्व जिल्हे</option>' : '<option value="">जिल्हा निवडा</option>';
             mandalData[m].forEach(d => { html += `<option value="${d}">${d}</option>`; }); dSelect.innerHTML = html;
         }
 
@@ -996,8 +1057,9 @@
             document.getElementById(tabId).classList.add('active'); 
             event.currentTarget.classList.add('active'); 
             if(tabId === 'tab-dash') setTimeout(renderDashboard, 200); 
-            if(tabId === 'tab-design') { renderLetterPadAdmin(); renderLetters(); }
+            if(tabId === 'tab-design') { renderLetterPadAdmin(); renderLetters(); filterICardMembers(); }
             if(tabId === 'tab-member-folders') { renderSixFolders(); renderMemberFilesList(); }
+            if(tabId === 'tab-fees') { renderFees(); }
         };
 
         onAuthStateChanged(auth, async (user) => { 
@@ -1085,15 +1147,16 @@
             membersData = await getD("members"); otherStaffData = await getD("other_staff"); committeeData = await getD("committee"); lettersData = await getD("letters");
             memberFilesData = await getD("member_files");
             
+            // Member Folders initialization
             let fSnap = await getDocs(collection(db, "member_folders"));
             if(fSnap.empty) {
                 memberFoldersData = [
-                    { id: "f1", name: "शासकीय परिपत्रके", iconUrl: "" },
-                    { id: "f2", name: "महत्त्वाच्या नोटीस", iconUrl: "" },
-                    { id: "f3", name: "अर्जाचे नमुने", iconUrl: "" },
-                    { id: "f4", name: "कायदेशीर कागदपत्रे", iconUrl: "" },
-                    { id: "f5", name: "संघटना अहवाल", iconUrl: "" },
-                    { id: "f6", name: "इतर माहिती", iconUrl: "" }
+                    { id: "f1", name: "शासकीय परिपत्रके", iconUrl: "", isRestricted: true, hasWatermark: true, wmName: true, wmOrg: true, wmWeb: true },
+                    { id: "f2", name: "महत्त्वाच्या नोटीस", iconUrl: "", isRestricted: false, hasWatermark: true, wmName: true, wmOrg: true, wmWeb: true },
+                    { id: "f3", name: "अर्जाचे नमुने", iconUrl: "", isRestricted: false, hasWatermark: false, wmName: false, wmOrg: false, wmWeb: false },
+                    { id: "f4", name: "कायदेशीर कागदपत्रे", iconUrl: "", isRestricted: true, hasWatermark: true, wmName: true, wmOrg: true, wmWeb: true },
+                    { id: "f5", name: "संघटना अहवाल", iconUrl: "", isRestricted: false, hasWatermark: true, wmName: true, wmOrg: true, wmWeb: true },
+                    { id: "f6", name: "इतर माहिती", iconUrl: "", isRestricted: false, hasWatermark: false, wmName: false, wmOrg: false, wmWeb: false }
                 ];
                 for(let f of memberFoldersData) { await setDoc(doc(db, "member_folders", f.id), f); }
             } else {
@@ -1122,7 +1185,11 @@
                     }
                 }
             });
-            document.getElementById('cnt-all').innerText = total; document.getElementById('cnt-approved').innerText = apprv; document.getElementById('cnt-pending').innerText = pend; document.getElementById('cnt-paid').innerText = paid;
+            document.getElementById('cnt-all').innerText = total; 
+            document.getElementById('cnt-approved').innerText = apprv; 
+            document.getElementById('cnt-pending').innerText = pend; 
+            document.getElementById('pending_cnt').innerText = pend;
+            document.getElementById('cnt-paid').innerText = paid;
             
             renderMembers(); renderOtherStaff(); renderDashboard(); renderCommittee(); renderFees(); renderLetters();
             renderSixFolders(); renderMemberFilesList();
@@ -1233,6 +1300,33 @@
             } catch (err) { Swal.fire('Error', err.message, 'error'); }
         }
 
+        /* PENDING REQUESTS MODAL */
+        window.openPendingRequests = () => {
+            let pendingList = membersData.filter(m => m.isMember !== false && m.status === 'Pending');
+            document.getElementById('pendingRequestsBody').innerHTML = pendingList.map((m, i) => `
+                <tr>
+                    <td>${i+1}</td>
+                    <td><b>${m.name}</b><br><small>${m.designation||'-'}</small></td>
+                    <td>${m.mobile||'-'}<br><small>${m.email||'-'}</small></td>
+                    <td>${m.district||'-'} / ${m.mandal||'-'}</td>
+                    <td>
+                        <button class="btn-action bg-success" onclick="approveMemberStatus('${m.id}')"><i class="fa fa-check"></i> मंजूर करा</button>
+                        <button class="btn-action bg-primary" onclick="openFullEditModal('${m.id}','members')"><i class="fa fa-pen"></i> एडिट</button>
+                    </td>
+                </tr>
+            `).join('') || '<tr><td colspan="5" style="text-align:center;">कोणताही प्रलंबित अर्ज नाही.</td></tr>';
+            document.getElementById('pendingModalOverlay').style.display = 'flex';
+        }
+
+        window.approveMemberStatus = async (id) => {
+            if(confirm("या सदस्याचा अर्ज मंजूर करायचा आहे का?")) {
+                await updateDoc(doc(db, "members", id), { status: "Approved" });
+                Swal.fire('यशस्वी', 'सदस्यत्व मंजूर केले!', 'success');
+                closeModal('pendingModalOverlay');
+                loadData();
+            }
+        }
+
         let selectedMemberForICard = null;
         window.viewProfileModal = (id) => {
             let m = membersData.find(x => x.id === id); if(!m) return;
@@ -1243,9 +1337,9 @@
             
             let actionBox = document.getElementById('prof_actions_box');
             actionBox.innerHTML = `
-                <button class="btn-action bg-wa" onclick="window.open('https://wa.me/91${m.mobile}', '_blank')" title="WhatsApp"><i class="fa fa-whatsapp"></i></button>
-                <button class="btn-action bg-primary" onclick="window.location.href='tel:${m.mobile}'" title="Call"><i class="fa fa-phone"></i></button>
-                <button class="btn-action bg-mail" onclick="window.location.href='mailto:${m.email}'" title="Email"><i class="fa fa-envelope"></i></button>
+                <button class="btn-action bg-wa" onclick="window.open('https://wa.me/91${m.mobile}', '_blank')" title="WhatsApp"><i class="fa fa-whatsapp"></i> WhatsApp</button>
+                <button class="btn-action bg-primary" onclick="window.location.href='tel:${m.mobile}'" title="Call"><i class="fa fa-phone"></i> कॉल</button>
+                <button class="btn-action bg-mail" onclick="window.location.href='mailto:${m.email}'" title="Email"><i class="fa fa-envelope"></i> ईमेल</button>
             `;
 
             document.getElementById('prof_mob').innerText = m.mobile || '-';
@@ -1258,6 +1352,9 @@
 
             let docLink = document.getElementById('prof_doc_link');
             if(m.docUrl) { docLink.href = m.docUrl; docLink.style.display = 'inline-block'; } else { docLink.style.display = 'none'; }
+
+            let otherLink = document.getElementById('prof_other_link');
+            if(m.otherUrl) { otherLink.href = m.otherUrl; otherLink.style.display = 'inline-block'; } else { otherLink.style.display = 'none'; }
             
             document.getElementById('profileModalOverlay').style.display = 'flex';
         }
@@ -1316,6 +1413,30 @@
             Swal.fire({toast: true, position: 'top-end', icon: 'success', title: 'I-Card फिल्ड्स सेव्ह झाल्या!', showConfirmButton: false, timer: 1500});
         }
 
+        window.filterICardMembers = () => {
+            let mVal = document.getElementById('icard_search_mandal').value;
+            let dVal = document.getElementById('icard_search_district').value;
+            let nameVal = document.getElementById('icard_search_name').value.toLowerCase();
+
+            let filtered = membersData.filter(m => {
+                if(m.isMember === false || m.status !== 'Approved') return false;
+                if(mVal !== 'All' && m.mandal !== mVal) return false;
+                if(dVal !== 'All' && dVal !== '' && m.district !== dVal) return false;
+                if(nameVal && !((m.name||'').toLowerCase().includes(nameVal))) return false;
+                return true;
+            });
+
+            document.getElementById('icardSearchResultsBody').innerHTML = filtered.map(m => `
+                <tr>
+                    <td><b>${m.name}</b></td>
+                    <td>${m.designation||'-'}</td>
+                    <td>${m.district||'-'}</td>
+                    <td>${m.mandal||'-'}</td>
+                    <td><button class="btn-action bg-primary" onclick="viewProfileModal('${m.id}'); openMemberICardModal();"><i class="fa fa-id-card"></i> I-Card पाहा</button></td>
+                </tr>
+            `).join('') || '<tr><td colspan="5" style="text-align:center;">सदस्य आढळले नाहीत.</td></tr>';
+        }
+
         window.renderDashboard = function() {
             let mandalStat = {}; let distStat = {};
             let allowedMandals = subAdminAccessRegion === "All" ? Object.keys(mandalData) : [subAdminAccessRegion];
@@ -1362,6 +1483,7 @@
             renderMembers();
         }
 
+        /* CLEAN PRINTABLE MEMBER LIST FUNCTION */
         window.renderMembers = function() {
             let s = document.getElementById('searchName').value.toLowerCase(); 
             let fStatus = document.getElementById('filterStatus').value; 
@@ -1392,7 +1514,7 @@
                     <td>${i + 1}</td>
                     <td><input type="checkbox" class="mem-chk" value="${m.mobile}" data-email="${m.email||''}"></td>
                     <td>
-                        <div class="mem-name-cell" onclick="viewProfileModal('${m.id}')" title="प्रोफाईल पहा">
+                        <div class="mem-name-cell" onclick="viewProfileModal('${m.id}')" title="प्रोफाईल व डॉक्युमेंट पाहा">
                             <img src="${tblImg}" class="mem-thumb">
                             <div><b>${m.name||'-'}</b><br><small>${m.designation||'-'}</small></div>
                         </div>
@@ -1404,8 +1526,8 @@
                     <td><small>${m.joinDate||'-'}</small></td>
                     <td>${statusBadge}</td>
                     <td class="no-print" style="white-space:nowrap;">
+                        <button class="btn-action bg-info" onclick="viewProfileModal('${m.id}')" title="डॉक्युमेंट पाहा"><i class="fa fa-eye"></i></button>
                         <button class="btn-action bg-wa" onclick="window.open('https://wa.me/91${m.mobile}', '_blank')"><i class="fa fa-whatsapp"></i></button>
-                        <button class="btn-action bg-mail" onclick="window.location.href='mailto:${m.email}'"><i class="fa fa-envelope"></i></button>
                         <button class="btn-action bg-primary" onclick="openFullEditModal('${m.id}','members')"><i class="fa fa-pen"></i></button>
                     </td>
                 </tr>`;
@@ -1413,6 +1535,59 @@
         };
 
         window.toggleSelectAll = (el) => { document.querySelectorAll('.mem-chk').forEach(cb => cb.checked = el.checked); };
+
+        /* SMART EXCEL IMPORT / EXPORT FOR MEMBERS */
+        window.exportMembersToExcel = () => {
+            let data = membersData.map((m, i) => ({
+                "अ.क्र.": i + 1,
+                "नाव": m.name || "",
+                "पद": m.designation || "",
+                "मोबाईल": m.mobile || "",
+                "ई-मेल": m.email || "",
+                "जिल्हा": m.district || "",
+                "मंडळ": m.mandal || "",
+                "कार्यरत ठिकाण": m.workplace || "",
+                "रुजू दिनांक": m.joinDate || "",
+                "फी स्टेटस": m.feeStatus || "",
+                "Approval": m.status || ""
+            }));
+            let ws = XLSX.utils.json_to_sheet(data);
+            let wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Members");
+            XLSX.writeFile(wb, "Members_List_2026.xlsx");
+        }
+
+        window.importMemberExcelData = (e) => {
+            let file = e.target.files[0]; if(!file) return;
+            let reader = new FileReader();
+            reader.onload = async (evt) => {
+                let data = new Uint8Array(evt.target.result);
+                let workbook = XLSX.read(data, { type: 'array' });
+                let sheet = workbook.Sheets[workbook.SheetNames[0]];
+                let rows = XLSX.utils.sheet_to_json(sheet);
+                
+                Swal.fire({title: 'डेटा ऑटो-डिटेक्ट करून सेव्ह होत आहे...', didOpen: () => Swal.showLoading()});
+                for(let r of rows) {
+                    let obj = {
+                        name: r['नाव'] || r['Name'] || r['Full Name'] || '',
+                        designation: r['पद'] || r['Designation'] || r['Post'] || '',
+                        mobile: String(r['मोबाईल'] || r['Mobile'] || r['Contact'] || ''),
+                        email: r['ई-मेल'] || r['Email'] || '',
+                        district: r['जिल्हा'] || r['District'] || '',
+                        mandal: r['मंडळ'] || r['Mandal'] || '',
+                        workplace: r['कार्यरत ठिकाण'] || r['Workplace'] || '',
+                        joinDate: r['रुजू दिनांक'] || r['Join Date'] || '',
+                        feeStatus: r['फी स्टेटस'] || 'Unpaid',
+                        status: 'Approved',
+                        isMember: true
+                    };
+                    if(obj.name) await addDoc(collection(db, "members"), obj);
+                }
+                Swal.fire('यशस्वी', 'एक्सेल डेटा ऑटो-मॅप करून सेव्ह झाला!', 'success');
+                loadData();
+            };
+            reader.readAsArrayBuffer(file);
+        }
         
         window.renderOtherStaff = () => {
             let s = document.getElementById('empSearch').value.toLowerCase();
@@ -1428,7 +1603,36 @@
             document.getElementById('otherBody').innerHTML = fil.map((s, i) => `<tr><td>${i+1}</td><td><b>${s.name}</b><br><small>${s.post||'-'}</small></td><td>${s.mobile||'-'}</td><td>${s.workplace||'-'}</td><td>${s.district||'-'}</td><td>${s.mandal||'-'}</td><td>${s.joinDate||'-'}</td><td class="no-print"><button class="btn-action bg-primary" onclick="openFullEditModal('${s.id}','other_staff')"><i class="fa fa-pen"></i></button></td></tr>`).join('');
         }
 
-        /* LETTER PAD ADMIN FUNCTIONS */
+        window.importEmployeeData = (e) => {
+            let file = e.target.files[0]; if(!file) return;
+            let reader = new FileReader();
+            reader.onload = async (evt) => {
+                let data = new Uint8Array(evt.target.result);
+                let workbook = XLSX.read(data, { type: 'array' });
+                let sheet = workbook.Sheets[workbook.SheetNames[0]];
+                let rows = XLSX.utils.sheet_to_json(sheet);
+                
+                Swal.fire({title: 'कर्मचारी डेटा ऑटो-फीड होत आहे...', didOpen: () => Swal.showLoading()});
+                for(let r of rows) {
+                    let obj = {
+                        name: r['नाव'] || r['Name'] || '',
+                        post: r['पद'] || r['Post'] || '',
+                        mobile: String(r['मोबाईल'] || r['Mobile'] || ''),
+                        workplace: r['कार्यरत ठिकाण'] || r['Workplace'] || '',
+                        district: r['जिल्हा'] || r['District'] || '',
+                        mandal: r['मंडळ'] || r['Mandal'] || '',
+                        joinDate: r['रुजू दिनांक'] || r['Join Date'] || '',
+                        retireDate: r['सेवानिवृत्ती'] || r['Retire Date'] || ''
+                    };
+                    if(obj.name) await addDoc(collection(db, "other_staff"), obj);
+                }
+                Swal.fire('यशस्वी', 'कर्मचारी डेटा जोडला गेला!', 'success');
+                loadData();
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        /* LETTER PAD ADMIN & SINGLE PAGE PRINT FIX */
         window.renderLetterPadAdmin = () => {
             let htmlSlots = '';
             let templateOptionsHtml = '';
@@ -1447,7 +1651,7 @@
                     htmlSlots += `
                         <div class="template-slot">
                             <b>कप्पा ${i+1}</b>
-                            <p style="font-size:0.75rem; color:gray; margin:15px 0;">खालील बटणाने फोटो (JPG/PNG) अपलोड करा</p>
+                            <p style="font-size:0.75rem; color:gray; margin:15px 0;">फोटो (JPG/PNG) अपलोड करा</p>
                             <input type="file" id="lp_slot_input_${i}" accept="image/*" style="display:none;" onchange="uploadLpTemplateSlot(${i})">
                             <button class="btn-action bg-primary" onclick="document.getElementById('lp_slot_input_${i}').click()"><i class="fa fa-upload"></i> अपलोड</button>
                         </div>
@@ -1564,10 +1768,10 @@
             document.getElementById('lp_recipient_district').style.display = type === 'District' ? 'block' : 'none';
         }
 
-        /* DYNAMIC 4-MARGIN LETTER GENERATION */
+        /* SINGLE PAGE EXACT LETTER GENERATION */
         window.getLetterHTML = (templateUrl, topPad, leftPad, rightPad, bottomPad, ref, date, to, sub, body) => {
             let signsFooterHtml = lpSignaturesData.map(s => s.signUrl ? `<div class="sign-box"><img src="${s.signUrl}"><br><b>${s.name}</b></div>` : (s.name ? `<div class="sign-box"><br><br><b>${s.name}</b></div>` : '')).join('');
-            let stampHtml = lpStampUrl ? `<div style="text-align:center;"><img src="${lpStampUrl}" style="height:60px;"></div>` : '';
+            let stampHtml = lpStampUrl ? `<div style="text-align:center;"><img src="${lpStampUrl}" style="height:55px;"></div>` : '';
 
             return `
                 <div class="a4-print-container" style="background-image: url('${templateUrl||''}'); padding: ${topPad||60}mm ${rightPad||15}mm ${bottomPad||20}mm ${leftPad||80}mm;">
@@ -1601,12 +1805,12 @@
             previewWin.document.write(`
                 <html><head><title>Letter Preview</title>
                 <style>
-                    body { background: #525659; display: flex; justify-content: center; padding: 20px; font-family: sans-serif; }
-                    .a4-print-container { width: 210mm; min-height: 297mm; background: white; margin: 0 auto; position: relative; box-shadow: 0 0 10px rgba(0,0,0,0.5); background-size: 100% 100%; background-position: center; background-repeat: no-repeat; font-family: 'Mukta', Arial, sans-serif; color: #000; box-sizing: border-box; text-align: left; }
+                    body { background: #525659; display: flex; justify-content: center; padding: 20px; font-family: sans-serif; margin:0;}
+                    .a4-print-container { width: 210mm; height: 297mm; max-height:297mm; background: white; margin: 0 auto; position: relative; box-shadow: 0 0 10px rgba(0,0,0,0.5); background-size: 100% 100%; background-position: center; background-repeat: no-repeat; font-family: 'Mukta', Arial, sans-serif; color: #000; box-sizing: border-box; text-align: left; overflow:hidden;}
                     .lp-header-info { display: flex; justify-content: space-between; margin-bottom: 15px; font-weight: bold; font-size: 14px;}
                     .lp-to { margin-bottom: 15px; font-size: 15px; font-weight: bold; line-height: 1.4;}
                     .lp-subject { margin-bottom: 20px; font-size: 15px; font-weight: bold; text-align: center; text-decoration: underline;}
-                    .lp-body { font-size: 15px; line-height: 1.6; text-align: justify; white-space: pre-wrap; margin-bottom: 30px;}
+                    .lp-body { font-size: 15px; line-height: 1.6; text-align: justify; white-space: pre-wrap; margin-bottom: 20px;}
                     .lp-footer { display: flex; justify-content: space-around; flex-wrap: wrap; margin-top: 20px;}
                     .sign-box { text-align: center; font-size: 0.85rem; width: 120px; }
                     .sign-box img { max-height: 45px; max-width: 100px; object-fit: contain; }
@@ -1682,8 +1886,15 @@
             printArea.innerHTML = window.getLetterHTML(l.templateUrl, l.topPadding||60, l.leftPadding||80, l.rightPadding||15, l.bottomPadding||20, l.ref, l.date, l.to, l.subject, l.body);
             printArea.style.display = 'block';
             
-            let opt = { margin: 0, filename: `Letter_${l.subject}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
-            html2pdf().set(opt).from(printArea.firstElementChild).save().then(()=>{ printArea.style.display = 'none'; });
+            let element = printArea.firstElementChild;
+            let opt = {
+                margin:       0,
+                filename:     `Letter_${(l.subject||'doc').replace(/[^a-zA-Z0-9]/g, '_')}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            html2pdf().set(opt).from(element).save().then(()=>{ printArea.style.display = 'none'; });
         }
 
         window.togglePublishLetter = async (id, currentStatus) => {
@@ -1702,23 +1913,53 @@
             }
         }
 
-        /* MEMBER FOLDERS & FILES SYSTEM */
+        /* 8. MEMBER FOLDERS, RESTRICTIONS & WATERMARK CHECKS */
         window.renderSixFolders = () => {
             let html = '';
             let dropdownHtml = '';
             memberFoldersData.forEach(f => {
-                let iconHtml = f.iconUrl ? `<img src="${f.iconUrl}" class="folder-icon">` : `<i class="fa fa-folder"></i>`;
+                let iconHtml = f.iconUrl ? `<img src="${f.iconUrl}" style="width:40px; height:40px; object-fit:contain;">` : `<i class="fa fa-folder" style="font-size:2rem; color:#f59e0b;"></i>`;
                 html += `
                     <div class="folder-card">
-                        <button class="edit-folder-btn" title="रिनेम व आयकॉन बदला" onclick="openRenameFolderModal('${f.id}', '${f.name}')"><i class="fa fa-pen"></i></button>
-                        ${iconHtml}
-                        <h4 style="font-size:0.95rem; color:var(--dark);">${f.name}</h4>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                            <div style="display:flex; align-items:center; gap:10px;">
+                                ${iconHtml}
+                                <h4 style="font-size:1rem; color:var(--dark);">${f.name}</h4>
+                            </div>
+                            <button class="btn-action bg-primary" title="रिनेम व Icon बदला" onclick="openRenameFolderModal('${f.id}', '${f.name}')"><i class="fa fa-pen"></i></button>
+                        </div>
+                        
+                        <div style="background:#f8fafc; padding:8px; border-radius:6px; font-size:0.8rem; border:1px solid #eee;">
+                            <label style="display:block; margin-bottom:5px; font-weight:bold; color:var(--danger);">
+                                <input type="checkbox" ${f.isRestricted ? 'checked' : ''} onchange="updateFolderSetting('${f.id}', 'isRestricted', this.checked)"> 🛑 डाऊनलोड / स्क्रीनशॉट प्रतिबंध ऑन ठेवा
+                            </label>
+                            <label style="display:block; margin-bottom:5px; font-weight:bold; color:var(--primary);">
+                                <input type="checkbox" ${f.hasWatermark ? 'checked' : ''} onchange="updateFolderSetting('${f.id}', 'hasWatermark', this.checked)"> 💧 वॉटरमार्क जोडा
+                            </label>
+
+                            ${f.hasWatermark ? `
+                                <div style="margin-left:15px; margin-top:5px; border-left:2px solid var(--primary); padding-left:8px;">
+                                    <label><input type="checkbox" ${f.wmName ? 'checked' : ''} onchange="updateFolderSetting('${f.id}', 'wmName', this.checked)"> सदस्याचे नाव</label><br>
+                                    <label><input type="checkbox" ${f.wmOrg ? 'checked' : ''} onchange="updateFolderSetting('${f.id}', 'wmOrg', this.checked)"> संघटनेचे नाव</label><br>
+                                    <label><input type="checkbox" ${f.wmWeb ? 'checked' : ''} onchange="updateFolderSetting('${f.id}', 'wmWeb', this.checked)"> वेबसाईट (xrayunionmah.web.app)</label>
+                                </div>
+                            ` : ''}
+                        </div>
                     </div>
                 `;
                 dropdownHtml += `<option value="${f.id}">${f.name}</option>`;
             });
             document.getElementById('sixFoldersGrid').innerHTML = html;
             document.getElementById('mf_target_folder').innerHTML = dropdownHtml;
+        }
+
+        window.updateFolderSetting = async (fId, key, value) => {
+            let f = memberFoldersData.find(x => x.id === fId);
+            if(f) {
+                f[key] = value;
+                await updateDoc(doc(db, "member_folders", fId), { [key]: value });
+                renderSixFolders();
+            }
         }
 
         window.openRenameFolderModal = async (fId, oldName) => {
@@ -1840,17 +2081,168 @@
             setTimeout(() => { printWin.print(); }, 300);
         }
 
-        window.toggleMemberSecurity = () => {
-            let isRestricted = document.getElementById('sec_restrict_download').checked;
-            if(isRestricted) {
-                document.body.classList.add('no-screenshot');
-            } else {
-                document.body.classList.remove('no-screenshot');
-            }
-            Swal.fire({toast: true, position: 'top-end', icon: 'info', title: isRestricted ? 'सुरक्षा मोड सुरू करण्यात आला.' : 'सुरक्षा मोड बंद केला.', showConfirmButton: false, timer: 1500});
+        /* 7. FEES & RECEIPTS MANAGEMENT */
+        window.renderFees = () => {
+            let s = document.getElementById('feeSearch').value.toLowerCase();
+            let statusFil = document.getElementById('feeFilterStatus').value;
+
+            let fil = membersData.filter(m => {
+                if(m.isMember === false) return false;
+                if(statusFil !== 'All' && (m.feeStatus||'Unpaid') !== statusFil) return false;
+                if(s && !((m.name||'').toLowerCase().includes(s))) return false;
+                return true;
+            });
+
+            document.getElementById('feesBody').innerHTML = fil.map((m, i) => `
+                <tr>
+                    <td><input type="checkbox" class="fee-chk" value="${m.mobile}" data-email="${m.email||''}"></td>
+                    <td><b>${m.name}</b><br><small>${m.designation||'-'}</small></td>
+                    <td>${m.mobile||'-'}<br><small>${m.email||'-'}</small></td>
+                    <td><input type="number" value="${m.feeAmount||500}" class="form-control" style="width:100px;" onchange="updateMemberFeeAmount('${m.id}', this.value)"></td>
+                    <td>
+                        <select class="form-control" onchange="toggleFeeStatus('${m.id}', this.value)">
+                            <option value="Paid" ${m.feeStatus === 'Paid' ? 'selected' : ''}>Paid</option>
+                            <option value="Unpaid" ${m.feeStatus !== 'Paid' ? 'selected' : ''}>Unpaid</option>
+                        </select>
+                    </td>
+                    <td class="no-print">
+                        <button class="btn-action bg-warning" onclick="openReceiptModal('${m.id}')"><i class="fa fa-receipt"></i> पावती जनरेट करा</button>
+                    </td>
+                </tr>
+            `).join('') || '<tr><td colspan="6" style="text-align:center;">सदस्य आढळले नाहीत.</td></tr>';
         }
 
-        /* NOTICES LOGIC */
+        window.toggleSelectAllFees = (el) => { document.querySelectorAll('.fee-chk').forEach(cb => cb.checked = el.checked); }
+
+        window.updateMemberFeeAmount = async (id, val) => {
+            await updateDoc(doc(db, "members", id), { feeAmount: Number(val) });
+        }
+
+        window.toggleFeeStatus = async (id, val) => {
+            await updateDoc(doc(db, "members", id), { feeStatus: val });
+            loadData();
+        }
+
+        window.bulkWhatsAppFees = () => {
+            let nums = []; document.querySelectorAll('.fee-chk:checked').forEach(cb => { if(cb.value && cb.value.length >= 10) nums.push(cb.value); });
+            if(nums.length === 0) return alert("किमान एक सदस्य निवडा.");
+            let msg = encodeURIComponent("नमस्कार, क्ष-किरण संघटना महाराष्ट्र कडून वार्षिक सभासद शुल्क भरण्याबाबत विनंती संदेश.");
+            window.open(`whatsapp://send?phone=91${nums[0]}&text=${msg}`, '_blank');
+        }
+
+        window.bulkEmailFees = () => {
+            let emails = []; document.querySelectorAll('.fee-chk:checked').forEach(cb => { if(cb.dataset.email && cb.dataset.email.includes("@")) emails.push(cb.dataset.email); });
+            if(emails.length === 0) return alert("किमान एक सदस्य निवडा.");
+            window.location.href = `mailto:?bcc=${emails.join(',')}&subject=सभासद शुल्क भरण्याबाबत - क्ष-किरण संघटना`;
+        }
+
+        window.openReceiptModal = (mId) => {
+            let m = membersData.find(x => x.id === mId); if(!m) return;
+            document.getElementById('rect_mem_id').value = m.id;
+            document.getElementById('rect_mem_mob').value = m.mobile || '';
+            document.getElementById('rect_mem_email').value = m.email || '';
+            
+            document.getElementById('rect_no').value = "REC-" + Math.floor(1000 + Math.random() * 9000);
+            document.getElementById('rect_date').value = new Date().toISOString().split('T')[0];
+            document.getElementById('rect_name').value = m.name || '';
+            document.getElementById('rect_mem_code').value = m.sevarthId || m.id.substring(0,6);
+            document.getElementById('rect_post').value = m.designation || '';
+            document.getElementById('rect_workplace').value = m.workplace || '';
+            document.getElementById('rect_dist').value = m.district || '';
+            document.getElementById('rect_mandal').value = m.mandal || '';
+            document.getElementById('rect_amt_num').value = m.feeAmount || 500;
+            
+            document.getElementById('receiptModal').style.display = 'flex';
+        }
+
+        window.generatePrintReceipt = () => {
+            let rNo = document.getElementById('rect_no').value;
+            let rDate = document.getElementById('rect_date').value;
+            let rName = document.getElementById('rect_name').value;
+            let rCode = document.getElementById('rect_mem_code').value;
+            let rPost = document.getElementById('rect_post').value;
+            let rWork = document.getElementById('rect_workplace').value;
+            let rDist = document.getElementById('rect_dist').value;
+            let rMandal = document.getElementById('rect_mandal').value;
+            let rAmt = document.getElementById('rect_amt_num').value;
+            let rWords = document.getElementById('rect_amt_words').value;
+            let rPayMode = document.getElementById('rect_pay_mode').value;
+            let rUtr = document.getElementById('rect_utr').value;
+
+            let checkedTypes = [];
+            document.querySelectorAll('input[name="rect_type"]:checked').forEach(c => checkedTypes.push(c.value));
+
+            let logoHtml = lpLogoUrl ? `<img src="${lpLogoUrl}" style="height:50px;">` : '';
+            let stampHtml = lpStampUrl ? `<img src="${lpStampUrl}" style="height:60px;">` : '<b>संघटनेचा शिक्का</b>';
+            let signHtml = (lpSignaturesData[0] && lpSignaturesData[0].signUrl) ? `<img src="${lpSignaturesData[0].signUrl}" style="height:40px;"><br><b>पावती देणाऱ्याची सही</b>` : '<b>पावती देणाऱ्याची सही</b>';
+
+            let receiptHtml = `
+                <div class="receipt-container">
+                    <div style="text-align:center; border-bottom:2px solid #0B3D91; padding-bottom:10px; margin-bottom:15px;">
+                        ${logoHtml}
+                        <h2 style="color:#0B3D91; font-size:1.4rem;">क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना</h2>
+                        <h3 style="font-size:1.1rem; color:#f39c12;">महाराष्ट्र राज्य</h3>
+                        <h4 style="margin-top:5px; text-decoration:underline;">पावती / RECEIPT</h4>
+                    </div>
+
+                    <div style="display:flex; justify-content:space-between; font-weight:bold; margin-bottom:12px;">
+                        <div>पावती क्र.: ${rNo}</div>
+                        <div>दिनांक: ${rDate}</div>
+                    </div>
+
+                    <p style="font-size:1rem; line-height:1.8;">
+                        प्राप्त झाले श्री./श्रीमती <b>${rName}</b> (सदस्य ID: ${rCode})<br>
+                        पद: <b>${rPost}</b> | कार्यालय: <b>${rWork}</b><br>
+                        जिल्हा: <b>${rDist}</b> | मंडळ: <b>${rMandal}</b>
+                    </p>
+
+                    <p style="margin-top:10px; font-weight:bold;">यांचेकडून खालील शुल्कापोटी रक्कम प्राप्त झाली:</p>
+                    <ul style="margin-left:20px; margin-bottom:10px;">
+                        ${checkedTypes.map(t => `<li>☑ ${t}</li>`).join('')}
+                    </ul>
+
+                    <div style="background:#f1f5f9; padding:10px; border-radius:6px; font-weight:bold; margin-bottom:15px;">
+                        रक्कम (अंकी): ₹ ${rAmt} /-<br>
+                        रक्कम (अक्षरी): रुपये ${rWords} फक्त.
+                    </div>
+
+                    <p>भरणा पद्धत: <b>${rPayMode}</b> ${rUtr ? `(UTR/Ref: ${rUtr})` : ''}</p>
+
+                    <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-top:30px; text-align:center;">
+                        <div>${signHtml}</div>
+                        <div>${stampHtml}</div>
+                    </div>
+
+                    <hr style="margin:20px 0;">
+                    <p style="font-size:0.8rem; color:gray; text-align:center;">टीप: ही पावती संघटनेच्या नोंदीसाठी व शुल्क भरल्याचा पुरावा म्हणून जतन करावी.</p>
+                </div>
+            `;
+
+            let win = window.open('', '_blank');
+            win.document.write(`<html><head><title>Receipt Print</title></head><body>${receiptHtml}</body></html>`);
+            setTimeout(() => { win.print(); }, 300);
+        }
+
+        window.sendEmailReceipt = () => {
+            let email = document.getElementById('rect_mem_email').value;
+            if(!email) return alert("या सदस्याचा ईमेल आयडी उपलब्ध नाही.");
+            let name = document.getElementById('rect_name').value;
+            let amt = document.getElementById('rect_amt_num').value;
+            let no = document.getElementById('rect_no').value;
+
+            let subject = encodeURIComponent("क्ष-किरण संघटना महाराष्ट्र - शुल्क प्राप्ती पावती");
+            let body = encodeURIComponent(`नमस्कार ${name},\n\nतुमची शुल्क रक्कम ₹ ${amt}/- यशस्वीरित्या प्राप्त झाली आहे.\nपावती क्र: ${no}\n\nधन्यवाद!\nक्ष-किरण वैज्ञानिक अधिकारी कर्मचारी संघटना महाराष्ट्र राज्य.`);
+            
+            window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+        }
+
+        /* 6. NOTICES & MARQUEE LOGIC */
+        window.saveScrollingNotice = async () => {
+            let txt = document.getElementById('scrolling_notice_input').value.trim();
+            await setDoc(doc(db, "settings", "scrolling_notice"), { text: txt });
+            Swal.fire('यशस्वी', 'मुख्य पानावरील सूचना सेव्ह झाली!', 'success');
+        }
+
         window.uploadNoticePDF = async () => {
             let file = document.getElementById('notice_file').files[0];
             let name = document.getElementById('notice_name').value.trim();
@@ -1875,6 +2267,66 @@
 
         window.deleteNotice = async (id) => {
             if(confirm("नोटीस डिलीट करायची आहे का?")) { await deleteDoc(doc(db, "notices", id)); loadNotices(); }
+        }
+
+        /* 5. GALLERY LOGIC WITH BULK DELETE & FULLSCREEN PREVIEW */
+        window.uploadGalleryPhoto = async () => {
+            let file = document.getElementById('gallery_photo').files[0];
+            let title = document.getElementById('gallery_title').value;
+            let showIndex = document.getElementById('gallery_show_index').checked;
+
+            if(!file) return alert("कृपया फोटो निवडा.");
+            Swal.fire({title: 'फोटो अपलोड होत आहे...', didOpen: () => Swal.showLoading()});
+            try {
+                let url = await uploadToCloudinary(file);
+                await addDoc(collection(db, "gallery"), { url, title, showIndex, date: new Date().toLocaleDateString('mr-IN') });
+                Swal.fire('यशस्वी', 'फोटो गॅलरीत ॲड झाला!', 'success');
+                document.getElementById('gallery_photo').value = ''; document.getElementById('gallery_title').value = '';
+                loadGallery();
+            } catch(e) { Swal.fire('Error', e.message, 'error'); }
+        }
+        
+        async function loadGallery() {
+            let snap = await getDocs(collection(db, "gallery"));
+            galleryData = []; snap.forEach(d => galleryData.push({id: d.id, ...d.data()}));
+            document.getElementById('galleryGrid').innerHTML = galleryData.map(g => `
+                <div class="folder-card" style="padding:10px; text-align:center;">
+                    <div style="position:absolute; top:12px; left:12px; z-index:2;">
+                        <input type="checkbox" class="gal-chk" value="${g.id}">
+                    </div>
+                    <img src="${g.url}" style="width:100%; height:120px; object-fit:cover; border-radius:5px; cursor:pointer;" onclick="openImagePreview('${g.url}', '${g.title||''}')">
+                    <p style="font-size:0.85rem; margin-top:8px; font-weight:bold; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${g.title||'No Title'}</p>
+                    <div style="display:flex; gap:5px; margin-top:5px;">
+                        <button class="btn-action bg-primary" onclick="openImagePreview('${g.url}', '${g.title||''}')" style="flex:1;"><i class="fa fa-expand"></i> पाहा</button>
+                        <button class="btn-action bg-danger" onclick="deleteGalleryPhoto('${g.id}')" style="flex:1;"><i class="fa fa-trash"></i> डिलीट</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        window.openImagePreview = (url, title) => {
+            document.getElementById('img_preview_src').src = url;
+            document.getElementById('img_preview_title').innerText = title || "फोटो प्रिव्ह्यू";
+            document.getElementById('imagePreviewModal').style.display = 'flex';
+        }
+
+        window.deleteGalleryPhoto = async (id) => {
+            if(confirm("हा फोटो डिलीट करायचा आहे का?")) {
+                await deleteDoc(doc(db, "gallery", id)); loadGallery();
+            }
+        }
+
+        window.deleteSelectedGalleryPhotos = async () => {
+            let ids = [];
+            document.querySelectorAll('.gal-chk:checked').forEach(cb => ids.push(cb.value));
+            if(ids.length === 0) return alert("कृपया डिलीट करण्यासाठी किमान एक फोटो निवडा.");
+
+            if(confirm(`निवडलेले ${ids.length} फोटो डिलीट करायचे आहेत का?`)) {
+                Swal.fire({title: 'डिलीट होत आहे...', didOpen: () => Swal.showLoading()});
+                for(let id of ids) { await deleteDoc(doc(db, "gallery", id)); }
+                Swal.fire('यशस्वी', 'फोटो डिलीट झाले!', 'success');
+                loadGallery();
+            }
         }
 
         window.renderCommittee = () => {
@@ -1917,41 +2369,6 @@
         window.deleteOB = async (id) => {
             if(confirm("या पदाधिकाऱ्याला काढायचे आहे का?")) {
                 await deleteDoc(doc(db, "committee", id)); loadData();
-            }
-        }
-
-        window.uploadGalleryPhoto = async () => {
-            let file = document.getElementById('gallery_photo').files[0];
-            let title = document.getElementById('gallery_title').value;
-            if(!file) return alert("कृपया फोटो निवडा.");
-            Swal.fire({title: 'फोटो अपलोड होत आहे...', didOpen: () => Swal.showLoading()});
-            try {
-                let url = await uploadToCloudinary(file);
-                await addDoc(collection(db, "gallery"), { url, title, date: new Date().toLocaleDateString('mr-IN') });
-                Swal.fire('यशस्वी', 'फोटो गॅलरीत ॲड झाला!', 'success');
-                document.getElementById('gallery_photo').value = ''; document.getElementById('gallery_title').value = '';
-                loadGallery();
-            } catch(e) { Swal.fire('Error', e.message, 'error'); }
-        }
-        
-        async function loadGallery() {
-            let snap = await getDocs(collection(db, "gallery"));
-            galleryData = []; snap.forEach(d => galleryData.push({id: d.id, ...d.data()}));
-            document.getElementById('galleryGrid').innerHTML = galleryData.map(g => `
-                <div class="folder-card" style="padding:10px;">
-                    <img src="${g.url}" style="width:100%; height:120px; object-fit:cover; border-radius:5px;">
-                    <p style="font-size:0.85rem; margin-top:8px; font-weight:bold; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${g.title||'No Title'}</p>
-                    <div style="display:flex; gap:5px; margin-top:5px;">
-                        <button class="btn-action bg-primary" onclick="window.open('${g.url}', '_blank')" style="flex:1;"><i class="fa fa-eye"></i> View</button>
-                        <button class="btn-action bg-danger" onclick="deleteGalleryPhoto('${g.id}')" style="flex:1;"><i class="fa fa-trash"></i> Delete</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-        
-        window.deleteGalleryPhoto = async (id) => {
-            if(confirm("हा फोटो डिलीट करायचा आहे का?")) {
-                await deleteDoc(doc(db, "gallery", id)); loadGallery();
             }
         }
 
