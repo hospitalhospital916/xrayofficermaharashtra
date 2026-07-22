@@ -1523,6 +1523,9 @@ onAuthStateChanged(auth, async (user) => {
                     <td>${a.pass}</td>
                     <td>${a.access}</td>
                     <td style="white-space:nowrap;">
+                        <!-- हे नवीन पासवर्ड रिसेट बटण ॲड केले आहे -->
+                        <button class="btn-action bg-info" onclick="sendResetLink('${a.email}')" title="पासवर्ड रिसेट लिंक पाठवा"><i class="fa fa-key"></i></button>
+                        
                         <button class="btn-action bg-wa" onclick="sendLoginWA('${a.name}', '${a.email}', '${a.pass}')" title="लॉगिन पाठवा"><i class="fa fa-whatsapp"></i></button>
                         <button class="btn-action ${isActive ? 'bg-warning' : 'bg-success'}" onclick="toggleSubAdminStatus('${a.id}', ${isActive})" title="${isActive ? 'अकाउंट ब्लॉक करा' : 'अकाउंट चालू करा'}"><i class="fa ${isActive ? 'fa-ban' : 'fa-check-circle'}"></i></button>
                         <button class="btn-action bg-danger" onclick="deleteSubAdmin('${a.id}')" title="कायमचे डिलीट करा"><i class="fa fa-trash"></i></button>
@@ -1530,7 +1533,6 @@ onAuthStateChanged(auth, async (user) => {
                 </tr>`;
             }).join('');
         }
-
         // --- सब-ॲडमिन ब्लॉक किंवा अन-ब्लॉक करण्याचे फंक्शन ---
         window.toggleSubAdminStatus = async (id, currentStatus) => {
             let msg = currentStatus ? "या सब-ॲडमिनला 'ब्लॉक' करायचे आहे का? (ते लॉगिन करू शकणार नाहीत)" : "या सब-ॲडमिनचे अकाउंट पुन्हा 'चालू' करायचे आहे का?";
