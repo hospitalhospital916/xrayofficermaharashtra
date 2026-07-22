@@ -1461,7 +1461,8 @@
         await signOut(secondaryAuth);
 
         // ४. आता नेहमीप्रमाणे फायरस्टोअर (Firestore Database) मध्ये युजरची माहिती सेव्ह करा
-        await addDoc(collection(db, "admin_users"), { name, email, pass, access, permissions: perms });
+        await addDoc(collection(db, "admin_users"), { name, email, pass, access, permissions: perms, isActive: true });
+        
         
         logActivity(`Added Sub Admin: ${name} (${access})`, "Super Admin");
         Swal.fire('यशस्वी', 'सब-ॲडमिन ऑथेंटिकेशन आणि डेटाबेस दोन्हीकडे यशस्वीरित्या जोडला गेला. आता ते लॉगिन करू शकतील.', 'success'); 
