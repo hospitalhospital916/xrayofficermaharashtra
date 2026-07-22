@@ -828,14 +828,43 @@
             if (user) { 
                 isSuperAdmin = (user.email === SUPER_ADMIN_EMAIL);
                 
-                if(!isSuperAdmin) {
+                                 if(!isSuperAdmin) {
                     const q = query(collection(db, "admin_users"), where("email", "==", user.email));
                     const snap = await getDocs(q);
-                    if(!snap.empty) { 
-                        subAdminAccessRegion = snap.docs[0].data().access || "All"; 
-                        subAdminPermissions = snap.docs[0].data().permissions || [];
+                    
+                    if(snap.empty) { 
+                        // जर युजर डेटाबेसमधून डिलीट केला असेल
+                        await signOut(auth);
+                        Swal.fire('एरर', 'तुमचे अकाउंट ॲडमिनने डिलीट केले आहे.', 'error');
+                        return;
                     }
                     
+                    let adminData = snap.docs[0].data();
+                    
+                    if(adminData.isActive === false) {
+                        // जर युजरला ब्लॉक (बंद) केले असेल
+                        await signOut(auth);
+                        Swal.fire('अॅक्सेस नाकारला', 'तुमचे अकाउंट ॲडमिनने ब्लॉक केले आहे.', 'error');
+                        return;
+                    }
+
+                    subAdminAccessRegion = adminData.access || "All"; 
+                    subAdminPermissions = adminData.permissions || [];
+                    
+                    // Enforce Permissions (Hide unauthorized tabs)
+                    document.querySelectorAll('.tab-btn').forEach(btn => {
+                        let perm = btn.getAttribute('data-perm');
+                        if(perm && !subAdminPermissions.includes(perm)) {
+                            btn.style.display = 'none';
+                        }
+                    });
+                    
+                    // Switch to first available tab
+                    let firstAvail = document.querySelector('.tab-btn[style!="display: none;"]');
+                    if(firstAvail) firstAvail.click();
+
+                                 }
+                
                     // Enforce Permissions (Hide unauthorized tabs)
                     document.querySelectorAll('.tab-btn').forEach(btn => {
                         let perm = btn.getAttribute('data-perm');
