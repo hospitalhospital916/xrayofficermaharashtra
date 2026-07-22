@@ -1005,9 +1005,24 @@ onAuthStateChanged(auth, async (user) => {
             if(data.secure_url) return data.secure_url; throw new Error("अपलोड अयशस्वी.");
         };
 
-        window.openAddNew = (colName) => { 
-            document.getElementById('fullEditForm').reset(); document.getElementById('edit_id').value = ""; document.getElementById('edit_type').value = colName;
+        
+
+        window.saveFullEdit = async (e) => {
+            e.preventDefault(); 
+            Swal.fire({title: 'सेव्ह होत आहे...', allowOutsideClick: false, didOpen: () => Swal.showLoading()});
+            let id = document.getElementById('edit_id').value; let col = document.getElementById('edit_type').value;
+         window.openAddNew = (colName) => { 
+            document.getElementById('fullEditForm').reset(); 
+            document.getElementById('edit_id').value = ""; 
+            document.getElementById('edit_type').value = colName;
+            
             ['existing_photo_url', 'existing_doc_url', 'existing_other_url'].forEach(id => document.getElementById(id).value = "");
+            
+            // नवीन फॉर्म उघडताना नेहमी अपलोड बॉक्सेस दिसले पाहिजेत
+            toggleFileUI('photo', '');
+            toggleFileUI('doc', '');
+            toggleFileUI('other', '');
+
             document.getElementById('editModalTitle').innerText = colName === 'members' ? "नवीन सदस्य जोडा" : "नवीन कर्मचारी जोडा";
             document.getElementById('feeStatusDiv').style.display = colName === 'members' ? 'flex' : 'none';
             document.getElementById('editModalOverlay').style.display = 'flex';
@@ -1015,18 +1030,42 @@ onAuthStateChanged(auth, async (user) => {
 
         window.openFullEditModal = (id, colName) => { 
             let m = (colName === 'members' ? membersData : otherStaffData).find(x => x.id === id); if(!m) return;
-            document.getElementById('edit_id').value = id; document.getElementById('edit_type').value = colName;
-            document.getElementById('existing_photo_url').value = m.photoUrl || ''; document.getElementById('existing_doc_url').value = m.docUrl || ''; document.getElementById('existing_other_url').value = m.otherUrl || '';
-            document.getElementById('edit_name').value = m.name||''; document.getElementById('edit_post').value = m.designation||m.post||''; document.getElementById('edit_mobile').value = m.mobile||''; document.getElementById('edit_email').value = m.email||''; document.getElementById('edit_aadhaar').value = m.aadhaar||''; document.getElementById('edit_sevarth').value = m.sevarthId||''; document.getElementById('edit_workplace').value = m.workplace||''; document.getElementById('edit_joinDate').value = m.joinDate||''; document.getElementById('edit_retireDate').value = m.retireDate||''; document.getElementById('edit_address').value = m.address||''; document.getElementById('edit_mandal').value = m.mandal||''; populateDistricts('edit_mandal', 'edit_district'); document.getElementById('edit_district').value = m.district||'';
-            if(colName === 'members') { document.getElementById('feeStatusDiv').style.display = 'flex'; document.getElementById('edit_fee').value = m.feeStatus||'Unpaid'; document.getElementById('edit_status').value = m.status||'Approved'; }
-            document.getElementById('editModalOverlay').style.display = 'flex';
-        }
+            
+            document.getElementById('edit_id').value = id; 
+            document.getElementById('edit_type').value = colName;
+            
+            document.getElementById('existing_photo_url').value = m.photoUrl || ''; 
+            document.getElementById('existing_doc_url').value = m.docUrl || ''; 
+            document.getElementById('existing_other_url').value = m.otherUrl || '';
+            
+            // डेटा उघडताना जर फाईल असेल तर ती लपवा व डिलीट बटण दाखवा
+            toggleFileUI('photo', m.photoUrl);
+            toggleFileUI('doc', m.docUrl);
+            toggleFileUI('other', m.otherUrl);
 
-        window.saveFullEdit = async (e) => {
-            e.preventDefault(); 
-            Swal.fire({title: 'सेव्ह होत आहे...', allowOutsideClick: false, didOpen: () => Swal.showLoading()});
-            let id = document.getElementById('edit_id').value; let col = document.getElementById('edit_type').value;
-            let finalPhotoUrl = document.getElementById('existing_photo_url').value; let finalDocUrl = document.getElementById('existing_doc_url').value; let finalOtherUrl = document.getElementById('existing_other_url').value;
+            document.getElementById('edit_name').value = m.name||''; 
+            document.getElementById('edit_post').value = m.designation||m.post||''; 
+            document.getElementById('edit_mobile').value = m.mobile||''; 
+            document.getElementById('edit_email').value = m.email||''; 
+            document.getElementById('edit_aadhaar').value = m.aadhaar||''; 
+            document.getElementById('edit_sevarth').value = m.sevarthId||''; 
+            document.getElementById('edit_workplace').value = m.workplace||''; 
+            document.getElementById('edit_joinDate').value = m.joinDate||''; 
+            document.getElementById('edit_retireDate').value = m.retireDate||''; 
+            document.getElementById('edit_address').value = m.address||''; 
+            
+            document.getElementById('edit_mandal').value = m.mandal||''; 
+            populateDistricts('edit_mandal', 'edit_district'); 
+            document.getElementById('edit_district').value = m.district||'';
+            
+            if(colName === 'members') { 
+                document.getElementById('feeStatusDiv').style.display = 'flex'; 
+                document.getElementById('edit_fee').value = m.feeStatus||'Unpaid'; 
+                document.getElementById('edit_status').value = m.status||'Approved'; 
+            }
+            
+            document.getElementById('editModalOverlay').style.display = 'flex';
+        }   let finalPhotoUrl = document.getElementById('existing_photo_url').value; let finalDocUrl = document.getElementById('existing_doc_url').value; let finalOtherUrl = document.getElementById('existing_other_url').value;
             try {
                 let photoFile = document.getElementById('edit_photo').files[0]; if(photoFile) finalPhotoUrl = await uploadToCloudinary(photoFile);
                 let docFile = document.getElementById('edit_document').files[0]; if(docFile) finalDocUrl = await uploadToCloudinary(docFile);
