@@ -117,7 +117,7 @@
         <a href="admin.html" class="admin-link">Admin Login</a>
     </footer>
 
-    <!-- Firebase Script & Logic -->
+   <!-- Firebase Script & Logic -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
         import { getFirestore, doc, collection, onSnapshot, getDocs } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
@@ -145,7 +145,7 @@
             }
         });
 
-       // Fetch Office Bearers & Link with Members Database
+        // Fetch Office Bearers & Link with Members Database
         async function loadCommittee() {
             try {
                 // Fetch Committee List
@@ -203,18 +203,6 @@
             }
         }
 
-                const committeeGrid = document.getElementById('public-committee-grid');
-                if(committeeGrid) {
-                    committeeGrid.innerHTML = html || '<p style="text-align:center; color:gray; width:100%;">सध्या कोणतेही पदाधिकारी उपलब्ध नाहीत.</p>';
-                }
-            } catch (error) {
-                console.error("Error loading committee data:", error);
-                document.getElementById('public-committee-grid').innerHTML = '<p style="text-align:center; color:red; width:100%;">डेटा लोड करताना तांत्रिक त्रुटी आली.</p>';
-            }
-        }
-
         // Initialize fetching
         loadCommittee();
     </script>
-</body>
-</html>
