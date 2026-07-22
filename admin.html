@@ -1567,4 +1567,49 @@ window.filterSubAdmins = () => renderSubAdmins();
         }
 
         window.saveAdminSettings = () => { Swal.fire('सेव्ह झाले', 'जनरल सेटिंग्ज यशस्वीरित्या अपडेट केल्या.', 'success'); logActivity("Updated General Settings", "Super Admin"); }
+   window.sendLoginEmail = (name, id, pass) => { 
+            let msg = "युझरनेम: " + id + "\nपासवर्ड: " + pass;
+            window.location.href = "mailto:" + id + "?subject=लॉगिन डिटेल्स&body=" + encodeURIComponent(msg); 
+        }
+
+        window.saveAdminSettings = () => { Swal.fire('सेव्ह झाले', 'जनरल सेटिंग्ज यशस्वीरित्या अपडेट केल्या.', 'success'); logActivity("Updated General Settings", "Super Admin"); }
+
+        // --- 1. लॉगिन स्क्रीनवरील Forgot Password फंक्शन ---
+        window.forgotPassword = async () => {
+            let email = document.getElementById('adminEmail').value.trim();
+            if(!email) {
+                return Swal.fire('माहिती अपूर्ण', 'कृपया प्रथम तुमचा रजिस्टर Email आयडी वरील बॉक्समध्ये टाका आणि नंतर "पासवर्ड विसरलात?" वर क्लिक करा.', 'warning');
+            }
+            
+            Swal.fire({title: 'लिंक पाठवत आहे...', didOpen: () => Swal.showLoading()});
+            try {
+                await sendPasswordResetEmail(auth, email);
+                Swal.fire('यशस्वी!', 'पासवर्ड रिसेट करण्याची लिंक तुमच्या ईमेलवर पाठवली आहे. कृपया तुमचा इनबॉक्स (आणि Spam फोल्डर) तपासा.', 'success');
+            } catch(error) {
+                if(error.code === 'auth/user-not-found') {
+                    Swal.fire('एरर', 'या ईमेल आयडीवर कोणतेही अकाउंट आढळले नाही.', 'error');
+                } else if(error.code === 'auth/invalid-email') {
+                    Swal.fire('एरर', 'कृपया योग्य ईमेल आयडी टाका.', 'error');
+                } else {
+                    Swal.fire('एरर', error.message, 'error');
+                }
+            }
+        };
+
+        // --- 2. सुपर ॲडमिनकडून पासवर्ड रिसेट लिंक पाठवण्याचे फंक्शन ---
+        window.sendResetLink = async (email) => {
+            if(confirm(`खरोखर ${email} या आयडीवर पासवर्ड रिसेट लिंक पाठवायची आहे का?`)) {
+                Swal.fire({title: 'लिंक पाठवत आहे...', didOpen: () => Swal.showLoading()});
+                try {
+                    await sendPasswordResetEmail(auth, email);
+                    logActivity(`Sent Password Reset Link to ${email}`, "Super Admin");
+                    Swal.fire('यशस्वी', 'सब-अॅडमिनच्या ईमेलवर पासवर्ड रिसेट लिंक पाठवली आहे!', 'success');
+                } catch(error) {
+                    Swal.fire('एरर', error.message, 'error');
+                }
+            }
+        };
+
     </script>
+</body>
+</html>
