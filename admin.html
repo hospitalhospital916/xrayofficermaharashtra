@@ -860,8 +860,8 @@ onAuthStateChanged(auth, async (user) => {
                     }
                 });
                 
-                // Switch to first available tab
-                let firstAvail = document.querySelector('.tab-btn[style!="display: none;"]');
+                // Switch to first available tab (तुम्ही शोधलेली चूक इथे दुरुस्त केली आहे)
+                let firstAvail = Array.from(document.querySelectorAll('.tab-btn')).find(btn => btn.style.display !== 'none');
                 if(firstAvail) firstAvail.click();
 
                 document.getElementById('login-screen').style.display='none'; 
@@ -888,7 +888,8 @@ onAuthStateChanged(auth, async (user) => {
                 document.getElementById('login-screen').style.display='flex'; 
                 document.getElementById('app-content').style.display='none'; 
             } 
-        });
+        }); 
+        
         window.loginAdmin = async () => { 
             let e = document.getElementById('adminEmail').value.trim(); let p = document.getElementById('adminPass').value.trim();
             if(!e || !p) return; Swal.fire({title: 'लॉगिन करत आहे...', didOpen: () => Swal.showLoading()});
@@ -1548,11 +1549,17 @@ onAuthStateChanged(auth, async (user) => {
             }
         }
         
-        window.filterSubAdmins = () => renderSubAdmins();
-        window.sendLoginWA = (name, id, pass) => { window.open(`https://wa.me/?text=${encodeURIComponent(`नमस्कार ${name},\n\nयुझरनेम: ${id}\nपासवर्ड: ${pass}`)}`, '_blank'); }
-        window.sendLoginEmail = (name, id, pass) => { window.location.href = `mailto:${id}?subject=लॉगिन डिटेल्स&body=युझरनेम: ${id}\nपासवर्ड: ${pass}`; }
+window.filterSubAdmins = () => renderSubAdmins();
+        
+        window.sendLoginWA = (name, id, pass) => { 
+            let msg = "नमस्कार " + name + ",\n\nयुझरनेम: " + id + "\nपासवर्ड: " + pass;
+            window.open("https://wa.me/?text=" + encodeURIComponent(msg), "_blank"); 
+        }
+        
+        window.sendLoginEmail = (name, id, pass) => { 
+            let msg = "युझरनेम: " + id + "\nपासवर्ड: " + pass;
+            window.location.href = "mailto:" + id + "?subject=लॉगिन डिटेल्स&body=" + encodeURIComponent(msg); 
+        }
 
         window.saveAdminSettings = () => { Swal.fire('सेव्ह झाले', 'जनरल सेटिंग्ज यशस्वीरित्या अपडेट केल्या.', 'success'); logActivity("Updated General Settings", "Super Admin"); }
     </script>
-</body>
-</html>
