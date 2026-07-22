@@ -11,7 +11,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
-    <!-- html2pdf for robust Letter Pad PDF generation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
@@ -19,6 +18,16 @@
         :root { --bg: #f0f4f8; --white: #ffffff; --text: #2d3748; --primary: #0B3D91; --secondary: #f39c12; --success: #10b981; --danger: #ef4444; --info: #3b82f6; --warning: #f59e0b; --dark: #1e293b; --verified: #e6ffed; }
         @media screen { * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mukta', sans-serif; user-select: none; } }
         body { background-color: var(--bg); color: var(--text); overflow-x: hidden; }
+
+        /* Protection mode */
+        body.no-screenshot {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
 
         /* Login */
         #login-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, var(--dark), var(--primary)); display: flex; justify-content: center; align-items: center; z-index: 9999; }
@@ -96,17 +105,17 @@
         .ob-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px; margin-bottom: 20px;}
         .ob-action-bar { position: absolute; top: 5px; right: 5px; display: flex; gap: 5px; }
 
-        .preview-container { border: 2px dashed #cbd5e1; padding: 20px; background: #f8fafc; display: flex; justify-content: center; align-items: center; flex-direction: column; min-height: 300px; overflow:auto;}
-        
-        .id-card-preview { width: 300px; min-height: 450px; background: white; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; padding: 15px; text-align: center; }
-        .letterpad-preview { width: 100%; max-width: 800px; background: white; border: 1px solid #ccc; box-shadow: 0 5px 15px rgba(0,0,0,0.1); min-height: 500px; position: relative; padding: 20px; }
-        
-        .folder-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; }
+        .folder-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 15px; }
         .folder-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; text-align: center; cursor: pointer; transition: 0.2s; position:relative;}
         .folder-card:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-        .folder-card i { font-size: 3rem; color: #f59e0b; margin-bottom: 10px; }
-        .edit-folder-btn { position: absolute; top: 5px; right: 5px; background: none; border: none; color: var(--primary); cursor: pointer; display: none;}
-        .folder-card:hover .edit-folder-btn { display: block; }
+        .folder-card i { font-size: 2.5rem; color: #f59e0b; margin-bottom: 8px; }
+        .folder-card img.folder-icon { width: 50px; height: 50px; object-fit: contain; margin-bottom: 8px; }
+        .edit-folder-btn { position: absolute; top: 5px; right: 5px; background: none; border: none; color: var(--primary); cursor: pointer; font-size:0.9rem;}
+
+        /* Upload slots grid */
+        .template-slots-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 15px; margin-bottom: 20px;}
+        .template-slot { border: 2px dashed #cbd5e1; border-radius: 8px; padding: 12px; text-align: center; background: #fff; }
+        .template-slot img { width: 100%; height: 110px; object-fit: cover; border-radius: 4px; margin-bottom: 8px; }
 
         /* A4 Letter Print Container */
         .a4-print-container {
@@ -129,27 +138,31 @@
         .lp-to { margin-bottom: 15px; font-size: 15px; font-weight: bold; line-height: 1.4;}
         .lp-subject { margin-bottom: 20px; font-size: 15px; font-weight: bold; text-align: center; text-decoration: underline;}
         .lp-body { font-size: 15px; line-height: 1.6; text-align: justify; white-space: pre-wrap; margin-bottom: 40px;}
-        .lp-footer { display: flex; justify-content: flex-end; margin-top: 30px;}
+        .lp-footer { display: flex; justify-content: space-around; flex-wrap: wrap; margin-top: 30px; gap: 15px;}
+        .sign-box { text-align: center; font-size: 0.85rem; width: 120px; }
+        .sign-box img { max-height: 45px; max-width: 100px; object-fit: contain; }
+
+        /* ID Card Layout */
+        .id-card-box { width: 320px; height: 500px; border: 2px solid var(--primary); border-radius: 12px; background: #fff; position: relative; overflow: hidden; font-family: 'Mukta', sans-serif; box-shadow: 0 5px 15px rgba(0,0,0,0.15); margin: 0 auto; }
+        .id-card-header { background: var(--primary); color: white; padding: 12px; text-align: center; }
+        .id-card-header h3 { font-size: 0.95rem; line-height: 1.2; }
+        .id-card-body { padding: 15px; text-align: center; }
+        .id-card-img { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--secondary); object-fit: cover; margin-bottom: 8px; }
+        .id-card-info { text-align: left; font-size: 0.85rem; line-height: 1.5; margin-top: 10px; }
+        .id-card-info p { border-bottom: 1px dashed #ddd; padding-bottom: 2px; margin-bottom: 4px; }
+        .id-card-footer { position: absolute; bottom: 0; width: 100%; background: #f8fafc; padding: 10px; text-align: center; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-around; align-items: flex-end; }
 
         @media print {
             body { background: white; color: black; margin: 0; padding: 0;}
             .navbar, .tab-menu, .no-print, .panel-header, #login-screen { display: none !important; }
             .container { margin: 0; padding: 0; max-width: none; width: 100%;}
             .panel { border: none; box-shadow: none; margin: 0;}
-            
             #printLetterArea { display: block !important; width: 100%; height: auto;}
-            .a4-print-container { 
-                box-shadow: none; 
-                margin: 0; 
-                padding: 35mm 20mm 25mm 20mm !important;
-                width: 210mm; height: 297mm; 
-                page-break-after: always;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
+            .a4-print-container { box-shadow: none; margin: 0; padding: 35mm 20mm 25mm 20mm !important; width: 210mm; height: 297mm; page-break-after: always; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         }
     </style>
-</head><body>
+</head>
+<body>
     <!-- LOGIN -->
     <div id="login-screen">
         <div class="login-box">
@@ -157,15 +170,13 @@
             <input type="email" id="adminEmail" placeholder="नोंदणीकृत Email" autocomplete="off">
             <input type="password" id="adminPass" placeholder="Password">
             <button type="button" onclick="loginAdmin()">लॉगिन करा <i class="fa fa-arrow-right"></i></button>
-            
-            <!-- फॉरगॉट पासवर्ड ऑप्शन -->
             <p style="margin-top: 15px; cursor: pointer; color: var(--primary); font-weight: bold; text-decoration: underline;" onclick="forgotPassword()">
                 <i class="fa fa-key"></i> पासवर्ड विसरलात? (Forgot Password)
             </p>
         </div>
     </div>
 
-    <!-- Full Edit/Add Modal -->
+    <!-- Edit/Add Modal -->
     <div id="editModalOverlay" class="custom-modal-overlay">
         <div class="custom-modal">
             <div class="custom-modal-header">
@@ -178,14 +189,11 @@
                     <input type="hidden" id="edit_type">
                     
                     <div class="form-row">
-                        <!-- १. प्रोफाईल फोटो -->
                         <div style="flex:1;">
                             <label style="color:var(--primary); font-weight:bold;"><i class="fa fa-camera"></i> प्रोफाईल फोटो (Max 400 KB)</label>
-                            
                             <div id="upload_box_photo">
                                 <input type="file" id="edit_photo" accept="image/*" class="form-control" style="border: 2px dashed var(--primary); padding: 10px;" onchange="checkFileSize(this, 400)">
                             </div>
-                            
                             <div id="existing_box_photo" style="display:none; align-items:center; gap:10px; padding:10px; border:1px solid #ccc; border-radius:6px; background:#f8fafc;">
                                 <a id="link_photo" href="#" target="_blank" class="badge bg-success" style="text-decoration:none; padding:8px;"><i class="fa fa-eye"></i> फोटो पहा</a>
                                 <button type="button" class="btn-action bg-danger" onclick="removeExistingFile('photo', 'existing_photo_url', 'edit_photo')"><i class="fa fa-trash"></i> डिलीट व नवीन अपलोड</button>
@@ -193,14 +201,11 @@
                             <input type="hidden" id="existing_photo_url">
                         </div>
 
-                        <!-- २. डॉक्युमेंट अपलोड -->
                         <div style="flex:1;">
                             <label style="color:var(--danger); font-weight:bold;"><i class="fa fa-file-pdf"></i> डॉक्युमेंट अपलोड (Max 400 KB)</label>
-                            
                             <div id="upload_box_doc">
                                 <input type="file" id="edit_document" accept="image/*,.pdf" class="form-control" style="border: 2px dashed var(--danger); padding: 10px;" onchange="checkFileSize(this, 400)">
                             </div>
-
                             <div id="existing_box_doc" style="display:none; align-items:center; gap:10px; padding:10px; border:1px solid #ccc; border-radius:6px; background:#f8fafc;">
                                 <a id="link_doc" href="#" target="_blank" class="badge bg-success" style="text-decoration:none; padding:8px;"><i class="fa fa-eye"></i> फाईल पहा</a>
                                 <button type="button" class="btn-action bg-danger" onclick="removeExistingFile('doc', 'existing_doc_url', 'edit_document')"><i class="fa fa-trash"></i> डिलीट व नवीन अपलोड</button>
@@ -208,14 +213,11 @@
                             <input type="hidden" id="existing_doc_url">
                         </div>
 
-                        <!-- ३. इतर कागदपत्रे -->
                         <div style="flex:1;">
                             <label id="lbl_other_doc" style="color:var(--info); font-weight:bold;"><i class="fa fa-folder-open"></i> इतर कागदपत्रे (Max 400 KB)</label>
-                            
                             <div id="upload_box_other">
                                 <input type="file" id="edit_other_doc" accept=".pdf" class="form-control" style="border: 2px dashed var(--info); padding: 10px;" onchange="checkFileSize(this, 400)">
                             </div>
-
                             <div id="existing_box_other" style="display:none; align-items:center; gap:10px; padding:10px; border:1px solid #ccc; border-radius:6px; background:#f8fafc;">
                                 <a id="link_other" href="#" target="_blank" class="badge bg-success" style="text-decoration:none; padding:8px;"><i class="fa fa-eye"></i> फाईल पहा</a>
                                 <button type="button" class="btn-action bg-danger" onclick="removeExistingFile('other', 'existing_other_url', 'edit_other_doc')"><i class="fa fa-trash"></i> डिलीट व नवीन अपलोड</button>
@@ -233,11 +235,15 @@
                     <div class="form-row">
                         <div><label>आधार क्रमांक</label><input type="text" id="edit_aadhaar" class="form-control"></div>
                         <div><label>सेवार्थ आयडी</label><input type="text" id="edit_sevarth" class="form-control"></div>
-                        <div><label>मंडळ</label><select id="edit_mandal" class="form-control" onchange="populateDistricts('edit_mandal', 'edit_district')"><option value="">मंडळ निवडा</option></select></div>
-                        <div><label>जिल्हा</label><select id="edit_district" class="form-control"><option value="">प्रथम मंडळ निवडा</option></select></div>
+                        <div><label>जन्मतारीख</label><input type="date" id="edit_dob" class="form-control"></div>
+                        <div><label>रक्तगट</label><input type="text" id="edit_bloodGroup" class="form-control" placeholder="उदा. O+"></div>
                     </div>
                     <div class="form-row">
+                        <div><label>मंडळ</label><select id="edit_mandal" class="form-control" onchange="populateDistricts('edit_mandal', 'edit_district')"><option value="">मंडळ निवडा</option></select></div>
+                        <div><label>जिल्हा</label><select id="edit_district" class="form-control"><option value="">प्रथम मंडळ निवडा</option></select></div>
                         <div><label>कार्य ठिकाण</label><input type="text" id="edit_workplace" class="form-control"></div>
+                    </div>
+                    <div class="form-row">
                         <div><label>रुजू दिनांक</label><input type="date" id="edit_joinDate" class="form-control"></div>
                         <div><label>सेवानिवृत्ती दिनांक</label><input type="date" id="edit_retireDate" class="form-control"></div>
                         <div style="flex:2;"><label>कायमचा पत्ता</label><input type="text" id="edit_address" class="form-control"></div>
@@ -274,15 +280,30 @@
                     <p><b>रुजू दिनांक:</b> <span id="prof_join"></span></p>
                     <p><b>आधार क्र.:</b> <span id="prof_aadhaar"></span></p>
                     <p><b>स्टेटस:</b> <span id="prof_status"></span></p>
-                    <div style="margin-top:15px;">
+                    <div style="margin-top:15px; display:flex; gap:10px;">
                         <a id="prof_doc_link" href="#" target="_blank" class="badge bg-info" style="display:none; text-decoration:none;"><i class="fa fa-file-pdf"></i> डॉक्युमेंट पाहा</a>
+                        <button class="badge bg-primary" style="border:none; cursor:pointer;" onclick="openMemberICardModal()"><i class="fa fa-id-card"></i> I-Card पहा</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Letter Pad Preview Modal for PDF/Print -->
+    <!-- Admin Member I-Card Modal -->
+    <div id="memberICardOverlay" class="custom-modal-overlay">
+        <div class="custom-modal" style="max-width:420px;">
+            <div class="custom-modal-header">
+                <h3>सदस्याचे ओळखपत्र (I-Card)</h3>
+                <button onclick="closeModal('memberICardOverlay')" style="background:transparent; border:none; color:white; font-size:1.5rem; cursor:pointer;">&times;</button>
+            </div>
+            <div class="custom-modal-body" style="text-align:center;">
+                <div id="icardRenderBox" class="id-card-box"></div>
+                <button class="btn-action bg-primary" onclick="printICard()" style="margin-top:15px; width:100%;"><i class="fa fa-print"></i> आई-कार्ड प्रिंट करा</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Letter Pad Preview Area -->
     <div id="printLetterArea" style="display:none;" class="no-print"></div>
 
     <!-- APP CONTENT START -->
@@ -296,19 +317,21 @@
             </div>
         </div>
 
+        <!-- MENU ORDER MODIFIED AS REQUESTED -->
         <div class="tab-menu" id="mainTabMenu">
             <button class="tab-btn active" onclick="openTab('tab-dash')" data-perm="dashboard"><i class="fa fa-chart-pie"></i> डॅशबोर्ड</button>
             <button class="tab-btn" onclick="openTab('tab-members')" data-perm="members"><i class="fa fa-user-check"></i> सदस्य नियंत्रण</button>
             <button class="tab-btn" onclick="openTab('tab-other')" data-perm="employees"><i class="fa fa-users"></i> राज्यातील कर्मचारी</button>
-            <button class="tab-btn" onclick="openTab('tab-design')" data-perm="icard"><i class="fa fa-id-card"></i> I-Card व लेटरपॅड</button>
+            <button class="tab-btn" onclick="openTab('tab-design')" data-perm="icard"><i class="fa fa-id-card"></i> आय कार्ड व लेटरपॅड</button>
             <button class="tab-btn" onclick="openTab('tab-committee')" data-perm="committee"><i class="fa fa-users-cog"></i> पदाधिकारी व गॅलरी</button>
             <button class="tab-btn" onclick="openTab('tab-notices')" data-perm="notices"><i class="fa fa-bullhorn"></i> नोटीस बोर्ड</button>
             <button class="tab-btn" onclick="openTab('tab-fees')" data-perm="fees"><i class="fa fa-rupee-sign"></i> शुल्क विभाग</button>
+            <button class="tab-btn" onclick="openTab('tab-member-folders')" data-perm="member_folders"><i class="fa fa-folder-open"></i> सदस्यांसाठी फोल्डर</button>
             <button class="tab-btn" id="btn-settings" onclick="openTab('tab-settings')" style="display:none;"><i class="fa fa-cogs"></i> सेटिंग्ज</button>
         </div>
         
         <div class="container">
-            <!-- TAB: DASHBOARD -->
+            <!-- 1. DASHBOARD -->
             <div id="tab-dash" class="tab-content active">
                 <div class="dash-cards-grid">
                     <div class="dash-card-mini" style="border-left-color: var(--primary);"><h3>एकूण सदस्य</h3><h2 id="cnt-all">0</h2></div>
@@ -324,16 +347,17 @@
                             <div id="mandalMapGrid" class="mandal-map-grid"></div>
                         </div>
                     </div>
+                    <!-- PIE CHART FIX -->
                     <div class="panel" style="margin-bottom:0;">
-                        <div class="panel-header h-warning"><span><i class="fa fa-chart-pie"></i> मंडळनिहाय मान्य</span></div>
-                        <div class="panel-body" style="height:350px; display:flex; justify-content:center;">
+                        <div class="panel-header h-warning"><span><i class="fa fa-chart-pie"></i> मंडळनिहाय मान्य सदस्य</span></div>
+                        <div class="panel-body" style="height:350px; display:flex; justify-content:center; align-items:center;">
                             <canvas id="mandalPieChart"></canvas>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- TAB: MEMBERS CONTROL PANEL -->
+            <!-- 2. MEMBERS CONTROL -->
             <div id="tab-members" class="tab-content">
                 <div class="panel">
                     <div class="panel-header">
@@ -390,7 +414,7 @@
                 </div>
             </div>
 
-            <!-- TAB: STATE EMPLOYEES -->
+            <!-- 3. STATE EMPLOYEES -->
             <div id="tab-other" class="tab-content">
                 <div class="panel">
                     <div class="panel-header">
@@ -422,46 +446,117 @@
                 </div>
             </div>
 
-            <!-- TAB: NOTICES -->
-            <div id="tab-notices" class="tab-content">
+            <!-- 4. I-CARD & LETTER PAD DESIGN -->
+            <div id="tab-design" class="tab-content">
+                <!-- I-CARD SETTINGS WITH COMPREHENSIVE CHECKBOXES -->
                 <div class="panel">
-                    <div class="panel-header">
-                        <span><i class="fa fa-bullhorn"></i> नोटीस व कंट्रोल बोर्ड (सदस्य लॉगिन फोल्डर्स)</span>
-                    </div>
+                    <div class="panel-header h-primary"><span><i class="fa fa-id-badge"></i> ओळखपत्र (ID Card) सेटिंग्ज व चेकबॉक्सेस</span></div>
                     <div class="panel-body">
-                        <div class="form-row no-print" style="margin-bottom:20px; align-items:center; background:#fffbeb; padding:10px; border-radius:6px; border-left:4px solid var(--warning);">
-                            <label style="font-weight:bold; color:#b45309;"><input type="checkbox" id="show_notices_home" checked> होम पेज (Index Page) वर नोटिसा दर्शवा</label>
+                        <h4 style="color:var(--primary); margin-bottom:10px;">सदस्यांच्या आय कार्ड वर कोणती माहिती दाखवायची? (Checkboxes)</h4>
+                        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:10px; background:#f8fafc; padding:15px; border-radius:8px; border:1px solid #e2e8f0;">
+                            <label><input type="checkbox" id="sh_name" checked onchange="saveICardFieldSettings()"> सदस्याचे नाव</label>
+                            <label><input type="checkbox" id="sh_post" checked onchange="saveICardFieldSettings()"> पद/हुद्दा</label>
+                            <label><input type="checkbox" id="sh_mob" checked onchange="saveICardFieldSettings()"> मोबाईल क्रमांक</label>
+                            <label><input type="checkbox" id="sh_email" checked onchange="saveICardFieldSettings()"> ई-मेल आयडी</label>
+                            <label><input type="checkbox" id="sh_dist" checked onchange="saveICardFieldSettings()"> जिल्हा</label>
+                            <label><input type="checkbox" id="sh_mandal" checked onchange="saveICardFieldSettings()"> मंडळ</label>
+                            <label><input type="checkbox" id="sh_workplace" checked onchange="saveICardFieldSettings()"> कार्य ठिकाण</label>
+                            <label><input type="checkbox" id="sh_dob" checked onchange="saveICardFieldSettings()"> जन्मतारीख</label>
+                            <label><input type="checkbox" id="sh_bg" checked onchange="saveICardFieldSettings()"> रक्तगट</label>
+                            <label><input type="checkbox" id="sh_join" checked onchange="saveICardFieldSettings()"> रुजू दिनांक</label>
+                            <label><input type="checkbox" id="sh_sevarth" checked onchange="saveICardFieldSettings()"> सेवार्थ आयडी</label>
+                            <label><input type="checkbox" id="sh_aadhaar" checked onchange="saveICardFieldSettings()"> आधार क्रमांक</label>
                         </div>
+                    </div>
+                </div>
+
+                <!-- LETTER PAD MANAGEMENT WITH 5 SLOTS, PADDING SLIDER, LOGO, STAMP & 5 SIGNATURES -->
+                <div class="panel">
+                    <div class="panel-header h-info"><span><i class="fa fa-file-alt"></i> Letter Pad Management (लेटरपॅड व्यवस्थापन)</span></div>
+                    <div class="panel-body">
                         
-                        <div class="folder-grid" id="noticeFolders">
-                            <div class="folder-card">
-                                <button class="edit-folder-btn" onclick="renameFolder('folder1')"><i class="fa fa-pen"></i></button>
-                                <i class="fa fa-folder"></i>
-                                <h4 id="folder1_name">शासकीय परिपत्रके</h4>
+                        <!-- 1. 4-5 Template Slots (Delete required before upload) -->
+                        <div style="background:#f1f5f9; padding:15px; border-radius:8px; margin-bottom:20px;">
+                            <h4 style="color:var(--primary); margin-bottom:10px;">१. लेटरपॅड डिझाईन्स (५ डिझाईन कप्पे / Templates)</h4>
+                            <p style="font-size:0.85rem; color:gray; margin-bottom:10px;">जुनी डिझाईन डिलीट केल्याशिवाय नवीन डिझाईन टाकता येणार नाही (Space Saver Rule).</p>
+                            
+                            <div class="template-slots-grid" id="lpTemplateSlots"></div>
+                        </div>
+
+                        <!-- 2. Logo, Stamp & 5 Signatures Config -->
+                        <div style="background:#f8fafc; padding:15px; border-radius:8px; margin-bottom:20px; border:1px solid #cbd5e1;">
+                            <h4 style="color:var(--dark); margin-bottom:10px;">२. लोगो, शिक्का, सही व मार्जिन सेटिंग्ज</h4>
+                            
+                            <div class="form-row">
+                                <div style="flex:1;">
+                                    <label>संघटनेचा लोगो (Logo):</label>
+                                    <div id="slot_logo_box"></div>
+                                </div>
+                                <div style="flex:1;">
+                                    <label>अधिकृत शिक्का (Stamp):</label>
+                                    <div id="slot_stamp_box"></div>
+                                </div>
+                                <div style="flex:1;">
+                                    <label>डाव्या बाजूचा मॅटर मार्जिन (Padding mm):</label>
+                                    <input type="number" id="lp_left_padding" class="form-control" value="20" min="10" max="80" placeholder="उदा. 20">
+                                </div>
                             </div>
-                            <div class="folder-card">
-                                <button class="edit-folder-btn" onclick="renameFolder('folder2')"><i class="fa fa-folder-open"></i></button>
-                                <i class="fa fa-folder"></i>
-                                <h4 id="folder2_name">महत्त्वाच्या नोटीस</h4>
+
+                            <h5 style="margin-top:15px; margin-bottom:8px; color:var(--primary);">वेगवेगळ्या ५ पदाधिकाऱ्यांच्या सह्या (5 Signatures & Names)</h5>
+                            <div class="form-row" id="signsContainer"></div>
+                        </div>
+
+                        <!-- 3. New Letter Form -->
+                        <div style="background:#fffbeb; padding:15px; border-radius:8px; margin-bottom:20px; border-left:4px solid var(--warning);">
+                            <h4 style="color:#b45309; margin-bottom:10px;">३. नवीन पत्र तयार करा</h4>
+                            <div class="form-row">
+                                <div style="flex:1;">
+                                    <label>टेंप्लेट निवडा:</label>
+                                    <select id="lp_selected_template" class="form-control"></select>
+                                </div>
+                                <div style="flex:1;"><label>जावक/संदर्भ क्र.</label><input type="text" id="lp_ref" class="form-control" placeholder="उदा. क्ष.सं./2026/01"></div>
+                                <div style="flex:1;"><label>दिनांक</label><input type="date" id="lp_date" class="form-control"></div>
+                            </div>
+                            <div class="form-row">
+                                <div style="flex:1;"><label>प्रति (To)</label><textarea id="lp_to" class="form-control" rows="2" placeholder="उदा. मा. संचालक,\nआरोग्य सेवा, मुंबई"></textarea></div>
+                            </div>
+                            <div class="form-row">
+                                <div style="flex:1;"><label>विषय (Subject)</label><input type="text" id="lp_sub" class="form-control" placeholder="पत्राचा विषय..."></div>
+                            </div>
+                            <div class="form-row">
+                                <div style="flex:1;"><label>मुख्य मजकूर (Body Content)</label><textarea id="lp_content" class="form-control" rows="8" placeholder="येथे सविस्तर पत्र टाईप करा..."></textarea></div>
+                            </div>
+                            
+                            <h5 style="margin-top:15px; border-bottom:1px solid #ccc; padding-bottom:5px;">हे पत्र कोणाला दाखवायचे? (Recipient Selection)</h5>
+                            <div class="form-row" style="margin-top:10px;">
+                                <select id="lp_recipient_type" class="form-control" onchange="toggleLpRecipientFilters()">
+                                    <option value="OnlyMe">केवळ मी (Private / Only Me)</option>
+                                    <option value="All">सर्व सदस्य (राज्यातील सर्वांना)</option>
+                                    <option value="Mandal">विशिष्ट मंडळ (Mandal)</option>
+                                    <option value="District">विशिष्ट जिल्हा (District)</option>
+                                </select>
+                                <select id="lp_recipient_mandal" class="form-control" style="display:none;" onchange="if(document.getElementById('lp_recipient_type').value === 'District') populateDistricts('lp_recipient_mandal', 'lp_recipient_district')"><option value="">मंडळ निवडा</option></select>
+                                <select id="lp_recipient_district" class="form-control" style="display:none;"><option value="">प्रथम मंडळ निवडा</option></select>
+                            </div>
+                            
+                            <div style="display:flex; gap:10px; margin-top:15px;">
+                                <button class="btn-action bg-info" onclick="previewLetter()"><i class="fa fa-eye"></i> Preview (पहा)</button>
+                                <button class="btn-action bg-success" onclick="saveLetter()"><i class="fa fa-save"></i> Save (सेव्ह करा)</button>
                             </div>
                         </div>
-                        
-                        <hr style="margin:20px 0;">
-                        <h4>PDF फाईल अपलोड (Max 400 KB)</h4>
-                        <div class="form-row" style="margin-top:10px;">
-                            <input type="file" id="notice_file" accept=".pdf" class="form-control" onchange="checkFileSize(this, 400)">
-                            <input type="text" id="notice_name" placeholder="पीडीएफचे नाव (Rename)" class="form-control">
-                            <select class="form-control" id="notice_target_folder">
-                                <option value="folder1">फोल्डर १ (शासकीय)</option>
-                                <option value="folder2">फोल्डर २ (महत्त्वाचे)</option>
-                            </select>
-                            <button class="btn-action bg-success" onclick="uploadNoticePDF()"><i class="fa fa-upload"></i> अपलोड</button>
-                        </div>
+
+                        <h4>४. तयार केलेली पत्रे (Saved Letters)</h4>
+                        <table style="font-size:0.9rem;">
+                            <thead>
+                                <tr><th>दिनांक</th><th>विषय</th><th>Recipient</th><th>Status</th><th>Actions</th></tr>
+                            </thead>
+                            <tbody id="lettersBody"></tbody>
+                        </table>
                     </div>
                 </div>
             </div>
 
-            <!-- TAB: OFFICE BEARERS & GALLERY -->
+            <!-- 5. OFFICE BEARERS & GALLERY -->
             <div id="tab-committee" class="tab-content">
                 <div class="panel">
                     <div class="panel-header h-purple"><span><i class="fa fa-users-cog"></i> पदाधिकारी व गॅलरी (Office Bearers & Gallery)</span></div>
@@ -519,96 +614,35 @@
                 </div>
             </div>
 
-            <!-- TAB: I-CARD & LETTER DESIGN -->
-            <div id="tab-design" class="tab-content">
+            <!-- 6. NOTICES -->
+            <div id="tab-notices" class="tab-content">
                 <div class="panel">
-                    <div class="panel-header h-primary"><span><i class="fa fa-id-badge"></i> ओळखपत्र (ID Card) डिझाईन</span></div>
-                    <div class="panel-body">
-                        <div class="form-row">
-                            <div style="flex:1;">
-                                <label>डिझाईन निवडा:</label>
-                                <select id="icard_theme" class="form-control" onchange="updateICardPreview()">
-                                    <option value="modern">Modern Blue (Default)</option>
-                                    <option value="classic">Classic White</option>
-                                    <option value="bold">Bold Orange</option>
-                                </select>
-                            </div>
-                            <div style="flex:1;">
-                                <label>अध्यक्षांची सही अपलोड:</label>
-                                <input type="file" id="president_sign" class="form-control" accept="image/png">
-                            </div>
-                        </div>
-                        <div style="margin: 15px 0;">
-                            <label style="font-weight:bold;">आय-कार्डवर काय दाखवायचे? (Tick)</label>
-                            <div style="display:flex; gap:15px; margin-top:5px; flex-wrap:wrap;">
-                                <label><input type="checkbox" id="sh_dob" checked onchange="updateICardPreview()"> जन्मतारीख</label>
-                                <label><input type="checkbox" id="sh_bg" checked onchange="updateICardPreview()"> रक्तगट</label>
-                                <label><input type="checkbox" id="sh_mob" checked onchange="updateICardPreview()"> मोबाईल</label>
-                                <label><input type="checkbox" id="sh_dist" checked onchange="updateICardPreview()"> जिल्हा</label>
-                            </div>
-                        </div>
-                        <button class="btn-action bg-success" onclick="saveDesignSettings()"><i class="fa fa-save"></i> सेव्ह करा</button>
+                    <div class="panel-header">
+                        <span><i class="fa fa-bullhorn"></i> नोटीस बोर्ड</span>
                     </div>
-                </div>
-
-                <div class="panel">
-                    <div class="panel-header h-info"><span><i class="fa fa-file-alt"></i> Letter Pad Management (लेटरपॅड व्यवस्थापन)</span></div>
                     <div class="panel-body">
-                        <div style="background:#f1f5f9; padding:15px; border-radius:8px; margin-bottom:20px;">
-                            <h4 style="color:var(--primary); margin-bottom:10px;">१. लेटरपॅड डिझाईन अपलोड (Template Upload)</h4>
-                            <p style="font-size:0.85rem; color:gray; margin-bottom:10px;">येथे तुमच्या संघटनेच्या मूळ लेटरपॅडचा <b>JPG किंवा PNG</b> फोटो अपलोड करा.</p>
-                            <div class="form-row">
-                                <input type="file" id="lp_template_upload" accept="image/jpeg, image/png" class="form-control" onchange="checkFileSize(this, 1000)">
-                                <button class="btn-action bg-primary" onclick="uploadLetterTemplate()"><i class="fa fa-upload"></i> टेंप्लेट अपलोड करा</button>
-                            </div>
-                            <div id="current_lp_template_info" style="font-size:0.85rem; color:var(--success); font-weight:bold; margin-top:5px;"></div>
+                        <div class="form-row no-print" style="margin-bottom:20px; align-items:center; background:#fffbeb; padding:10px; border-radius:6px; border-left:4px solid var(--warning);">
+                            <label style="font-weight:bold; color:#b45309;"><input type="checkbox" id="show_notices_home" checked> होम पेज (Index Page) वर नोटिसा दर्शवा</label>
                         </div>
-
-                        <div style="background:#fffbeb; padding:15px; border-radius:8px; margin-bottom:20px; border-left:4px solid var(--warning);">
-                            <h4 style="color:#b45309; margin-bottom:10px;">२. नवीन पत्र तयार करा</h4>
-                            <div class="form-row">
-                                <div style="flex:1;"><label>जावक/संदर्भ क्र.</label><input type="text" id="lp_ref" class="form-control" placeholder="उदा. क्ष.सं./2026/01"></div>
-                                <div style="flex:1;"><label>दिनांक</label><input type="date" id="lp_date" class="form-control"></div>
-                            </div>
-                            <div class="form-row">
-                                <div style="flex:1;"><label>प्रति (To)</label><textarea id="lp_to" class="form-control" rows="2" placeholder="उदा. मा. संचालक,\nआरोग्य सेवा, मुंबई"></textarea></div>
-                            </div>
-                            <div class="form-row">
-                                <div style="flex:1;"><label>विषय (Subject)</label><input type="text" id="lp_sub" class="form-control" placeholder="पत्राचा विषय..."></div>
-                            </div>
-                            <div class="form-row">
-                                <div style="flex:1;"><label>मुख्य मजकूर (Body Content)</label><textarea id="lp_content" class="form-control" rows="8" placeholder="येथे सविस्तर पत्र टाईप करा..."></textarea></div>
-                            </div>
-                            
-                            <h5 style="margin-top:15px; border-bottom:1px solid #ccc; padding-bottom:5px;">हे पत्र कोणाला दाखवायचे? (Recipient Selection)</h5>
-                            <div class="form-row" style="margin-top:10px;">
-                                <select id="lp_recipient_type" class="form-control" onchange="toggleLpRecipientFilters()">
-                                    <option value="All">सर्व सदस्य (राज्यातील सर्वांना)</option>
-                                    <option value="Mandal">विशिष्ट मंडळ (Mandal)</option>
-                                    <option value="District">विशिष्ट जिल्हा (District)</option>
-                                </select>
-                                <select id="lp_recipient_mandal" class="form-control" style="display:none;" onchange="if(document.getElementById('lp_recipient_type').value === 'District') populateDistricts('lp_recipient_mandal', 'lp_recipient_district')"><option value="">मंडळ निवडा</option></select>
-                                <select id="lp_recipient_district" class="form-control" style="display:none;"><option value="">प्रथम मंडळ निवडा</option></select>
-                            </div>
-                            
-                            <div style="display:flex; gap:10px; margin-top:15px;">
-                                <button class="btn-action bg-info" onclick="previewLetter()"><i class="fa fa-eye"></i> Preview (पहा)</button>
-                                <button class="btn-action bg-success" onclick="saveLetter()"><i class="fa fa-save"></i> Save (सेव्ह करा)</button>
-                            </div>
+                        
+                        <h4>PDF नोटीस अपलोड (Max 400 KB)</h4>
+                        <div class="form-row" style="margin-top:10px;">
+                            <input type="file" id="notice_file" accept=".pdf" class="form-control" onchange="checkFileSize(this, 400)">
+                            <input type="text" id="notice_name" placeholder="नोटिसचे नाव / शीर्षक" class="form-control">
+                            <button class="btn-action bg-success" onclick="uploadNoticePDF()"><i class="fa fa-upload"></i> अपलोड करा</button>
                         </div>
-
-                        <h4>३. तयार केलेली पत्रे (Saved Letters)</h4>
+                        
+                        <hr style="margin:20px 0;">
+                        <h4>अपलोड केलेल्या नोटिसा</h4>
                         <table style="font-size:0.9rem;">
-                            <thead>
-                                <tr><th>दिनांक</th><th>विषय</th><th>Recipient</th><th>Status</th><th>Actions</th></tr>
-                            </thead>
-                            <tbody id="lettersBody"></tbody>
+                            <thead><tr><th>दिनांक</th><th>शीर्षक</th><th>Action</th></tr></thead>
+                            <tbody id="noticesListBody"></tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
-            <!-- TAB: FEES & RECEIPTS -->
+            <!-- 7. FEES & RECEIPTS -->
             <div id="tab-fees" class="tab-content">
                 <div class="panel">
                     <div class="panel-header h-warning">
@@ -633,8 +667,105 @@
                     </div>
                 </div>
             </div>
+
+            <!-- 8. MEMBER FOLDERS (६ फोल्डर सिस्टीम, रिनेम, ICON, ४०० KB फाईल्स, प्रिंटींग, व्हिजिट ड्रॉपडाऊन व स्क्रीनशॉट प्रतिबंध) -->
+            <div id="tab-member-folders" class="tab-content">
+                <div class="panel">
+                    <div class="panel-header h-primary">
+                        <span><i class="fa fa-folder-open"></i> सदस्यांसाठी फोल्डर्स व फाईल्स व्यवस्थापन</span>
+                        <div style="display:flex; gap:10px;">
+                            <button class="btn-action bg-primary" onclick="printFolderFiles()"><i class="fa fa-print"></i> प्रिंट काढा</button>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        
+                        <!-- ScreenShot & Download Security Toggle for Admin -->
+                        <div style="background:#f1f5f9; padding:12px; border-radius:8px; margin-bottom:20px; border-left:4px solid var(--danger); display:flex; justify-content:space-between; align-items:center;">
+                            <div>
+                                <b><i class="fa fa-user-shield"></i> सदस्य व्ह्यू सुरक्षा (Member Restrictions):</b>
+                                <p style="font-size:0.85rem; color:#666;">सदस्यांना फाईल्स डाऊनलोड आणि स्क्रीनशॉट घेण्यापासून रोखण्यासाठी ऑन करा.</p>
+                            </div>
+                            <div>
+                                <label style="font-weight:bold; cursor:pointer;">
+                                    <input type="checkbox" id="sec_restrict_download" checked style="width:18px; height:18px;" onchange="toggleMemberSecurity()"> प्रतिबंध चालू ठेवा (Restrict Download & Screenshot)
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- 6 FOLDERS GRID -->
+                        <h4 style="color:var(--primary); margin-bottom:10px;">६ सदस्यांचे फोल्डर्स (Folders)</h4>
+                        <div class="folder-grid" id="sixFoldersGrid"></div>
+
+                        <hr style="margin:25px 0;">
+
+                        <!-- FILE UPLOAD INTO SELECTED FOLDER -->
+                        <div style="background:#fffbeb; padding:15px; border-radius:8px; border:1px solid #fcd34d; margin-bottom:20px;">
+                            <h4 style="color:#b45309; margin-bottom:10px;"><i class="fa fa-cloud-upload-alt"></i> फोल्डरमध्ये नवीन फाईल अपलोड करा (Max 400 KB)</h4>
+                            <div class="form-row">
+                                <div style="flex:1;">
+                                    <label>फोल्डर निवडा:</label>
+                                    <select id="mf_target_folder" class="form-control"></select>
+                                </div>
+                                <div style="flex:1;">
+                                    <label>फाईल निवडा (PDF/Image - Max 400 KB):</label>
+                                    <input type="file" id="mf_file" class="form-control" accept=".pdf, image/*" onchange="checkFileSize(this, 400)">
+                                </div>
+                                <div style="flex:1;">
+                                    <label>फाईलचे नाव:</label>
+                                    <input type="text" id="mf_file_name" class="form-control" placeholder="उदा. परिपत्रक 2026">
+                                </div>
+                            </div>
+
+                            <!-- ADVANCED ACCESS DROPDOWN -->
+                            <div class="form-row">
+                                <div style="flex:1.5;">
+                                    <label style="font-weight:bold; color:var(--primary);">ही फाईल कोणाला दाखवायची? (Visibility Control)</label>
+                                    <select id="mf_visibility" class="form-control" onchange="toggleFolderVisibilityFilter()">
+                                        <option value="OnlyMe">केवळ मी (Private to Admin)</option>
+                                        <option value="AllDivisions">सर्व विभाग (सर्व मंडळे)</option>
+                                        <option value="AllMembers">सर्व सदस्य</option>
+                                        <option value="AllDistricts">सर्व जिल्हे</option>
+                                        <option value="SpecificDistrict">एखाद्या जिल्ह्याला (Specific District)</option>
+                                        <option value="SpecificMember">एखाद्या सदस्याला (Specific Member)</option>
+                                    </select>
+                                </div>
+
+                                <div style="flex:1; display:none;" id="mf_dist_filter_box">
+                                    <label>जिल्हा निवडा:</label>
+                                    <select id="mf_target_district" class="form-control"></select>
+                                </div>
+
+                                <div style="flex:1.5; display:none;" id="mf_mem_filter_box">
+                                    <label>सदस्य शोधा:</label>
+                                    <input type="text" id="mf_target_member_search" class="form-control" placeholder="सदस्याचे नाव टाईप करा..." onkeyup="filterFolderMemberSearch()">
+                                    <select id="mf_target_member" class="form-control" style="margin-top:5px;"></select>
+                                </div>
+
+                                <button class="btn-action bg-success" onclick="uploadMemberFolderFile()" style="padding:10px 20px;"><i class="fa fa-upload"></i> फाईल अपलोड करा</button>
+                            </div>
+                        </div>
+
+                        <!-- UPLOADED FILES LIST -->
+                        <h4 style="color:var(--dark); margin-bottom:10px;">अपलोड केलेल्या सर्व फाईल्सची यादी</h4>
+                        <table style="font-size:0.9rem;">
+                            <thead>
+                                <tr>
+                                    <th>अ.क्र.</th>
+                                    <th>फोल्डर</th>
+                                    <th>फाईलचे नाव</th>
+                                    <th>व्हिजिट/दाखवणे (Access)</th>
+                                    <th>दिनांक</th>
+                                    <th class="no-print">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="memberFilesTableBody"></tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
             
-            <!-- TAB: SETTINGS -->
+            <!-- 9. SETTINGS -->
             <div id="tab-settings" class="tab-content">
                 <div class="panel">
                     <div class="panel-header"><span><i class="fa fa-cogs"></i> सुपर ॲडमिन सेटिंग्ज व परवानग्या</span></div>
@@ -675,6 +806,7 @@
                                     <label><input type="checkbox" value="committee"> पदाधिकारी व गॅलरी</label>
                                     <label><input type="checkbox" value="notices"> नोटीस बोर्ड</label>
                                     <label><input type="checkbox" value="fees"> शुल्क विभाग</label>
+                                    <label><input type="checkbox" value="member_folders"> सदस्यांसाठी फोल्डर</label>
                                 </div>
                                 <div style="margin-top:10px;">
                                     <label>डेटा ॲक्सेस (मंडळ फिल्टर): </label>
@@ -699,11 +831,6 @@
                                 <thead><tr><th>नाव</th><th>लॉगिन आयडी</th><th>पासवर्ड</th><th>ॲक्सेस (मंडळ)</th><th>Action (Share Login)</th></tr></thead>
                                 <tbody id="subAdminListBody"></tbody>
                             </table>
-                        </div>
-
-                        <div style="background:#fffbeb; padding:15px; border-radius:8px; border-left:4px solid var(--warning);">
-                            <h4 style="color:#b45309; margin-bottom:10px;"><i class="fa fa-history"></i> ॲक्टिव्हिटी लॉग (मागील ७ दिवस)</h4>
-                            <div style="max-height:300px; overflow-y:auto; font-size:0.85rem;" id="activityLogBox"></div>
                         </div>
 
                     </div>
@@ -774,7 +901,7 @@
     <!-- FIREBASE & JS LOGIC -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where, orderBy, setDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, sendPasswordResetEmail, browserSessionPersistence, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
         
         const firebaseConfig = { apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk", authDomain: "xrayunionmah.firebaseapp.com", projectId: "xrayunionmah" };
@@ -806,6 +933,11 @@
             document.getElementById('edit_mandal').innerHTML = optionsForm;
             document.getElementById('empMandal').innerHTML = options;
             document.getElementById('lp_recipient_mandal').innerHTML = optionsForm;
+            
+            // Populate district options for Member Folders filter
+            let allDistHtml = '<option value="">जिल्हा निवडा</option>';
+            Object.values(mandalData).flat().forEach(d => { allDistHtml += `<option value="${d}">${d}</option>`; });
+            document.getElementById('mf_target_district').innerHTML = allDistHtml;
         }
 
         window.populateDistricts = function(mSelectId, dSelectId) {
@@ -826,14 +958,30 @@
             }
         }
 
-        let membersData=[], otherStaffData=[], committeeData=[], galleryData=[], lettersData=[];
-        
+        let membersData=[], otherStaffData=[], committeeData=[], galleryData=[], lettersData=[], memberFoldersData=[], memberFilesData=[];
+        let lpTemplatesData = [null, null, null, null, null];
+        let lpSignaturesData = [
+            { name: "अध्यक्ष", signUrl: "" },
+            { name: "उपाध्यक्ष", signUrl: "" },
+            { name: "सचिव", signUrl: "" },
+            { name: "कोषाध्यक्ष", signUrl: "" },
+            { name: "प्रमुख कार्यवाह", signUrl: "" }
+        ];
+        let lpLogoUrl = "", lpStampUrl = "";
+
+        let icardFieldSettings = {
+            sh_name: true, sh_post: true, sh_mob: true, sh_email: true,
+            sh_dist: true, sh_mandal: true, sh_workplace: true, sh_dob: true,
+            sh_bg: true, sh_join: true, sh_sevarth: true, sh_aadhaar: true
+        };
+
         window.openTab = function(tabId) { 
             document.querySelectorAll('.tab-content, .tab-btn').forEach(e=>e.classList.remove('active')); 
             document.getElementById(tabId).classList.add('active'); 
             event.currentTarget.classList.add('active'); 
             if(tabId === 'tab-dash') setTimeout(renderDashboard, 200); 
-            if(tabId === 'tab-design') { updateICardPreview(); renderLetters(); }
+            if(tabId === 'tab-design') { renderLetterPadAdmin(); renderLetters(); }
+            if(tabId === 'tab-member-folders') { renderSixFolders(); renderMemberFilesList(); }
         };
 
         onAuthStateChanged(auth, async (user) => { 
@@ -860,9 +1008,11 @@
 
                     subAdminAccessRegion = adminData.access || "All"; 
                     subAdminPermissions = adminData.permissions || [];
+                    // Ensure member_folders is available for sub admin as requested
+                    if(!subAdminPermissions.includes('member_folders')) subAdminPermissions.push('member_folders');
                 } else {
                     subAdminAccessRegion = "All"; 
-                    subAdminPermissions = ['dashboard', 'members', 'employees', 'icard', 'committee', 'notices', 'fees'];
+                    subAdminPermissions = ['dashboard', 'members', 'employees', 'icard', 'committee', 'notices', 'fees', 'member_folders'];
                 }
 
                 document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -893,14 +1043,13 @@
 
                 populateMandals(); await loadData(); 
                 logActivity("User Logged In", isSuperAdmin ? "Super Admin" : "Sub Admin");
-                updateICardPreview(); 
             } 
             else { 
                 document.getElementById('login-screen').style.display='flex'; 
                 document.getElementById('app-content').style.display='none'; 
             } 
         }); 
-        
+
         window.loginAdmin = async () => { 
             let e = document.getElementById('adminEmail').value.trim(); let p = document.getElementById('adminPass').value.trim();
             if(!e || !p) return; Swal.fire({title: 'लॉगिन करत आहे...', didOpen: () => Swal.showLoading()});
@@ -912,48 +1061,45 @@
             let userEmail = auth.currentUser ? auth.currentUser.email : "System";
             let now = new Date().getTime();
             await addDoc(collection(db, "activity_logs"), { 
-                user: userEmail, 
-                userType: userType, 
-                action: actionMsg, 
-                timestamp: now, 
-                dateString: new Date().toLocaleString('mr-IN') 
+                user: userEmail, userType: userType, action: actionMsg, timestamp: now, dateString: new Date().toLocaleString('mr-IN') 
             });
-        }
-        
-        async function cleanOldLogs() {
-            if(!isSuperAdmin) return;
-            let sevenDaysAgo = new Date().getTime() - (7 * 24 * 60 * 60 * 1000);
-            const logs = await getDocs(collection(db, "activity_logs"));
-            logs.forEach(async (d) => { 
-                if(d.data().timestamp < sevenDaysAgo) { 
-                    await deleteDoc(doc(db, "activity_logs", d.id)); 
-                } 
-            });
-            renderActivityLog(logs);
-        }
-
-        function renderActivityLog(logsSnapshot) {
-            let logsArr = [];
-            logsSnapshot.forEach(d => logsArr.push(d.data()));
-            logsArr.sort((a,b) => b.timestamp - a.timestamp);
-            document.getElementById('activityLogBox').innerHTML = logsArr.map(l => `
-                <div style="border-bottom:1px solid #ccc; padding:8px 0; display:flex; justify-content:space-between;">
-                    <div><span class="badge ${l.userType==='Super Admin'?'bg-danger':'bg-primary'}">${l.userType}</span> <b>${l.user}</b></div>
-                    <div style="text-align:right;">${l.action}<br><small style="color:gray;">${l.dateString}</small></div>
-                </div>
-            `).join('');
         }
 
         async function loadData() {
             const getD = async (col) => { let arr=[]; (await getDocs(collection(db,col))).forEach(d=>arr.push({...d.data(), id:d.id})); return arr; };
             membersData = await getD("members"); otherStaffData = await getD("other_staff"); committeeData = await getD("committee"); lettersData = await getD("letters");
+            memberFilesData = await getD("member_files");
             
-            loadGallery();
-            
-            let lpSnap = await getDocs(query(collection(db, "settings"), where("type", "==", "letter_template")));
-            if(!lpSnap.empty) { window.lpTemplateUrl = lpSnap.docs[0].data().url; document.getElementById('current_lp_template_info').innerText = "✅ टेंप्लेट अपलोड केलेले आहे."; }
+            // Load 6 Member Folders info
+            let fSnap = await getDocs(collection(db, "member_folders"));
+            if(fSnap.empty) {
+                memberFoldersData = [
+                    { id: "f1", name: "शासकीय परिपत्रके", iconUrl: "" },
+                    { id: "f2", name: "महत्त्वाच्या नोटीस", iconUrl: "" },
+                    { id: "f3", name: "अर्जाचे नमुने", iconUrl: "" },
+                    { id: "f4", name: "कायदेशीर कागदपत्रे", iconUrl: "" },
+                    { id: "f5", name: "संघटना अहवाल", iconUrl: "" },
+                    { id: "f6", name: "इतर माहिती", iconUrl: "" }
+                ];
+                for(let f of memberFoldersData) { await setDoc(doc(db, "member_folders", f.id), f); }
+            } else {
+                memberFoldersData = []; fSnap.forEach(d => memberFoldersData.push({ id: d.id, ...d.data() }));
+                memberFoldersData.sort((a,b) => a.id.localeCompare(b.id));
+            }
 
-            if(isSuperAdmin) { subAdminsList = await getD("admins"); cleanOldLogs(); renderSubAdmins(); }
+            // Load Letter Pad Settings
+            let setSnap = await getDocs(collection(db, "lp_settings"));
+            setSnap.forEach(d => {
+                let data = d.data();
+                if(data.type === "templates") lpTemplatesData = data.val || [null, null, null, null, null];
+                if(data.type === "signatures") lpSignaturesData = data.val || lpSignaturesData;
+                if(data.type === "logo") lpLogoUrl = data.val || "";
+                if(data.type === "stamp") lpStampUrl = data.val || "";
+            });
+
+            loadGallery(); loadNotices();
+
+            if(isSuperAdmin) { subAdminsList = await getD("admins"); renderSubAdmins(); }
 
             let total=0, apprv=0, pend=0, paid=0;
             membersData.forEach(m => { 
@@ -966,6 +1112,7 @@
             document.getElementById('cnt-all').innerText = total; document.getElementById('cnt-approved').innerText = apprv; document.getElementById('cnt-pending').innerText = pend; document.getElementById('cnt-paid').innerText = paid;
             
             renderMembers(); renderOtherStaff(); renderDashboard(); renderCommittee(); renderFees(); renderLetters();
+            renderSixFolders(); renderMemberFilesList();
         }
 
         window.closeModal = (id) => document.getElementById(id).style.display = 'none';
@@ -980,7 +1127,7 @@
         };
 
         window.removeExistingFile = (boxType, hiddenInputId, fileInputId) => {
-            if(confirm("तुम्हाला खरोखर ही फाईल डिलीट करून नवीन फाईल अपलोड करायची आहे का? (लक्षात ठेवा: माहिती सेव्ह केल्यावरच जुनी फाईल कायमची निघून जाईल)")) {
+            if(confirm("तुम्हाला खरोखर ही फाईल डिलीट करून नवीन फाईल अपलोड करायची आहे का?")) {
                 document.getElementById(hiddenInputId).value = ""; 
                 document.getElementById(fileInputId).value = ""; 
                 document.getElementById(`existing_box_${boxType}`).style.display = "none";
@@ -1006,9 +1153,7 @@
             
             ['existing_photo_url', 'existing_doc_url', 'existing_other_url'].forEach(id => document.getElementById(id).value = "");
             
-            toggleFileUI('photo', '');
-            toggleFileUI('doc', '');
-            toggleFileUI('other', '');
+            toggleFileUI('photo', ''); toggleFileUI('doc', ''); toggleFileUI('other', '');
 
             document.getElementById('editModalTitle').innerText = colName === 'members' ? "नवीन सदस्य जोडा" : "नवीन कर्मचारी जोडा";
             document.getElementById('feeStatusDiv').style.display = colName === 'members' ? 'flex' : 'none';
@@ -1025,9 +1170,7 @@
             document.getElementById('existing_doc_url').value = m.docUrl || ''; 
             document.getElementById('existing_other_url').value = m.otherUrl || '';
             
-            toggleFileUI('photo', m.photoUrl);
-            toggleFileUI('doc', m.docUrl);
-            toggleFileUI('other', m.otherUrl);
+            toggleFileUI('photo', m.photoUrl); toggleFileUI('doc', m.docUrl); toggleFileUI('other', m.otherUrl);
 
             document.getElementById('edit_name').value = m.name||''; 
             document.getElementById('edit_post').value = m.designation||m.post||''; 
@@ -1035,6 +1178,8 @@
             document.getElementById('edit_email').value = m.email||''; 
             document.getElementById('edit_aadhaar').value = m.aadhaar||''; 
             document.getElementById('edit_sevarth').value = m.sevarthId||''; 
+            document.getElementById('edit_dob').value = m.dob||'';
+            document.getElementById('edit_bloodGroup').value = m.bloodGroup||'';
             document.getElementById('edit_workplace').value = m.workplace||''; 
             document.getElementById('edit_joinDate').value = m.joinDate||''; 
             document.getElementById('edit_retireDate').value = m.retireDate||''; 
@@ -1067,7 +1212,7 @@
                 let docFile = document.getElementById('edit_document').files[0]; if(docFile) finalDocUrl = await uploadToCloudinary(docFile);
                 let otherFile = document.getElementById('edit_other_doc').files[0]; if(otherFile) finalOtherUrl = await uploadToCloudinary(otherFile);
 
-                let p = { name: document.getElementById('edit_name').value, mobile: document.getElementById('edit_mobile').value, email: document.getElementById('edit_email').value, aadhaar: document.getElementById('edit_aadhaar').value, sevarthId: document.getElementById('edit_sevarth').value, workplace: document.getElementById('edit_workplace').value, mandal: document.getElementById('edit_mandal').value, district: document.getElementById('edit_district').value, joinDate: document.getElementById('edit_joinDate').value, retireDate: document.getElementById('edit_retireDate').value, address: document.getElementById('edit_address').value, photoUrl: finalPhotoUrl, docUrl: finalDocUrl, otherUrl: finalOtherUrl };
+                let p = { name: document.getElementById('edit_name').value, mobile: document.getElementById('edit_mobile').value, email: document.getElementById('edit_email').value, aadhaar: document.getElementById('edit_aadhaar').value, sevarthId: document.getElementById('edit_sevarth').value, dob: document.getElementById('edit_dob').value, bloodGroup: document.getElementById('edit_bloodGroup').value, workplace: document.getElementById('edit_workplace').value, mandal: document.getElementById('edit_mandal').value, district: document.getElementById('edit_district').value, joinDate: document.getElementById('edit_joinDate').value, retireDate: document.getElementById('edit_retireDate').value, address: document.getElementById('edit_address').value, photoUrl: finalPhotoUrl, docUrl: finalDocUrl, otherUrl: finalOtherUrl };
                 if(col === 'members') { p.designation = document.getElementById('edit_post').value; p.feeStatus = document.getElementById('edit_fee').value; p.status = document.getElementById('edit_status').value; if(!id) p.isMember=true; } else { p.post = document.getElementById('edit_post').value; }
                 if(id) await updateDoc(doc(db, col, id), p); else await addDoc(collection(db, col), p); 
                 logActivity(`Updated ${col}: ${p.name}`, isSuperAdmin ? "Super Admin" : "Sub Admin");
@@ -1075,8 +1220,10 @@
             } catch (err) { Swal.fire('Error', err.message, 'error'); }
         }
 
+        let selectedMemberForICard = null;
         window.viewProfileModal = (id) => {
             let m = membersData.find(x => x.id === id); if(!m) return;
+            selectedMemberForICard = m;
             document.getElementById('prof_img').src = m.photoUrl || "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
             document.getElementById('prof_name').innerText = m.name || '-';
             document.getElementById('prof_desig').innerText = m.designation || '-';
@@ -1102,6 +1249,61 @@
             document.getElementById('profileModalOverlay').style.display = 'flex';
         }
 
+        window.openMemberICardModal = () => {
+            if(!selectedMemberForICard) return;
+            let m = selectedMemberForICard;
+            let set = icardFieldSettings;
+            let logoHtml = lpLogoUrl ? `<img src="${lpLogoUrl}" style="height:30px; margin-bottom:5px;">` : '';
+            let signHtml = (lpSignaturesData[0] && lpSignaturesData[0].signUrl) ? `<img src="${lpSignaturesData[0].signUrl}" style="height:30px;"><br><small>${lpSignaturesData[0].name||''}</small>` : '<small>अध्यक्ष</small>';
+
+            let html = `
+                <div class="id-card-header">
+                    ${logoHtml}
+                    <h3>क्ष-किरण वैज्ञानिक अधिकारी संघटना महाराष्ट्र</h3>
+                </div>
+                <div class="id-card-body">
+                    <img src="${m.photoUrl||'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'}" class="id-card-img">
+                    <h4 style="color:var(--primary);">${set.sh_name ? m.name : ''}</h4>
+                    <p style="font-weight:bold; font-size:0.8rem;">${set.sh_post ? (m.designation||'') : ''}</p>
+                    
+                    <div class="id-card-info">
+                        ${set.sh_mob ? `<p><b>मोबाईल:</b> ${m.mobile||'-'}</p>` : ''}
+                        ${set.sh_email ? `<p><b>ई-मेल:</b> ${m.email||'-'}</p>` : ''}
+                        ${set.sh_dist ? `<p><b>जिल्हा:</b> ${m.district||'-'}</p>` : ''}
+                        ${set.sh_mandal ? `<p><b>मंडळ:</b> ${m.mandal||'-'}</p>` : ''}
+                        ${set.sh_workplace ? `<p><b>कार्य ठिकाण:</b> ${m.workplace||'-'}</p>` : ''}
+                        ${set.sh_dob ? `<p><b>जन्मतारीख:</b> ${m.dob||'-'}</p>` : ''}
+                        ${set.sh_bg ? `<p><b>रक्तगट:</b> ${m.bloodGroup||'-'}</p>` : ''}
+                        ${set.sh_join ? `<p><b>रुजू दिनांक:</b> ${m.joinDate||'-'}</p>` : ''}
+                        ${set.sh_sevarth ? `<p><b>सेवार्थ ID:</b> ${m.sevarthId||'-'}</p>` : ''}
+                        ${set.sh_aadhaar ? `<p><b>आधार क्र.:</b> ${m.aadhaar||'-'}</p>` : ''}
+                    </div>
+                </div>
+                <div class="id-card-footer">
+                    <div><small>सदस्यत्व: मान्य</small></div>
+                    <div>${signHtml}</div>
+                </div>
+            `;
+            document.getElementById('icardRenderBox').innerHTML = html;
+            document.getElementById('memberICardOverlay').style.display = 'flex';
+        }
+
+        window.printICard = () => {
+            let content = document.getElementById('icardRenderBox').innerHTML;
+            let win = window.open('', '_blank');
+            win.document.write(`<html><head><title>Print I-Card</title><style>body{display:flex;justify-content:center;align-items:center;height:100vh;margin:0;font-family:'Mukta',sans-serif;}.id-card-box{width:320px;height:500px;border:2px solid #0B3D91;border-radius:12px;background:#fff;position:relative;overflow:hidden;padding:0;text-align:center;}.id-card-header{background:#0B3D91;color:white;padding:10px;}.id-card-img{width:100px;height:100px;border-radius:50%;border:3px solid #f39c12;object-fit:cover;}.id-card-info{text-align:left;font-size:0.85rem;padding:0 15px;line-height:1.4;}.id-card-footer{position:absolute;bottom:0;width:100%;background:#f8fafc;padding:10px;display:flex;justify-content:space-around;border-top:1px solid #ddd;}</style></head><body><div class="id-card-box">${content}</div></body></html>`);
+            setTimeout(() => { win.print(); }, 300);
+        }
+
+        window.saveICardFieldSettings = () => {
+            Object.keys(icardFieldSettings).forEach(k => {
+                let el = document.getElementById(k);
+                if(el) icardFieldSettings[k] = el.checked;
+            });
+            Swal.fire({toast: true, position: 'top-end', icon: 'success', title: 'I-Card फिल्ड्स सेव्ह झाल्या!', showConfirmButton: false, timer: 1500});
+        }
+
+        /* PIE CHART RENDER FUNCTION FIXED */
         window.renderDashboard = function() {
             let mandalStat = {}; let distStat = {};
             let allowedMandals = subAdminAccessRegion === "All" ? Object.keys(mandalData) : [subAdminAccessRegion];
@@ -1124,6 +1326,29 @@
                 mapHtml += `<div class="mandal-card" style="background:${colors[m]};"><h3>${m}</h3><h2>${mandalStat[m]||0}</h2><div>${distHtml}</div></div>`;
             });
             document.getElementById('mandalMapGrid').innerHTML = mapHtml;
+
+            // Render Chart.js Pie Chart
+            try {
+                if(window.mandalChartInstance) {
+                    window.mandalChartInstance.destroy();
+                }
+                const ctx = document.getElementById('mandalPieChart').getContext('2d');
+                window.mandalChartInstance = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: allowedMandals,
+                        datasets: [{
+                            data: allowedMandals.map(m => mandalStat[m] || 0),
+                            backgroundColor: allowedMandals.map(m => colors[m] || '#3b82f6')
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { position: 'bottom' } }
+                    }
+                });
+            } catch(err) { console.error("Pie chart error:", err); }
         }
 
         window.handleMandalFilterChange = () => {
@@ -1143,10 +1368,8 @@
                 if (m.isMember === false) return false;
                 if (subAdminAccessRegion !== "All" && m.mandal !== subAdminAccessRegion) return false;
                 if (fStatus !== 'All' && m.status !== fStatus) return false;
-                
                 if (fMandal !== 'All' && m.mandal !== fMandal) return false;
                 if (fDist !== 'All' && fDist !== '' && m.district !== fDist) return false;
-                
                 if (s && !((m.name||'').toLowerCase().includes(s) || (m.mobile||'').includes(s))) return false; 
                 return true;
             });
@@ -1186,19 +1409,6 @@
 
         window.toggleSelectAll = (el) => { document.querySelectorAll('.mem-chk').forEach(cb => cb.checked = el.checked); };
         
-        window.bulkWhatsApp = () => {
-            let nums = []; document.querySelectorAll('.mem-chk:checked').forEach(cb => { if(cb.value && cb.value.length >= 10) nums.push(cb.value); });
-            if(nums.length === 0) return alert("किमान एक सदस्य निवडा.");
-            let text = encodeURIComponent("नमस्कार, क्ष-किरण संघटना महाराष्ट्र कडून संदेश: ");
-            window.open(`whatsapp://send?phone=91${nums[0]}&text=${text}`, '_blank');
-        }
-
-        window.bulkEmailMembers = () => {
-            let emails = []; document.querySelectorAll('.mem-chk:checked').forEach(cb => { if(cb.dataset.email && cb.dataset.email.includes("@")) emails.push(cb.dataset.email); });
-            if(emails.length === 0) return alert("किमान एक सदस्य निवडा.");
-            window.location.href = `mailto:?bcc=${emails.join(',')}&subject=क्ष-किरण संघटना महाराष्ट्र - महत्वाचे`;
-        }
-
         window.renderOtherStaff = () => {
             let s = document.getElementById('empSearch').value.toLowerCase();
             let mFil = document.getElementById('empMandal').value;
@@ -1213,38 +1423,448 @@
             document.getElementById('otherBody').innerHTML = fil.map((s, i) => `<tr><td>${i+1}</td><td><b>${s.name}</b><br><small>${s.post||'-'}</small></td><td>${s.mobile||'-'}</td><td>${s.workplace||'-'}</td><td>${s.district||'-'}</td><td>${s.mandal||'-'}</td><td>${s.joinDate||'-'}</td><td class="no-print"><button class="btn-action bg-primary" onclick="openFullEditModal('${s.id}','other_staff')"><i class="fa fa-pen"></i></button></td></tr>`).join('');
         }
 
-        window.filterOBMembers = () => {
-            let txt = document.getElementById('ob_search').value.toLowerCase();
-            let resBox = document.getElementById('ob_search_results');
-            if(txt.length < 2) { resBox.style.display = 'none'; return; }
-            let matches = membersData.filter(m => m.isMember!==false && m.status==='Approved' && m.name.toLowerCase().includes(txt)).slice(0,5);
-            if(matches.length > 0) {
-                resBox.innerHTML = matches.map(m => `<div class="ob-search-item" onclick="selectOB('${m.id}', '${m.name}', '${m.district}', '${m.mobile}', '${m.photoUrl||''}')"><b>${m.name}</b> (${m.district})</div>`).join('');
-                resBox.style.display = 'block';
-            } else { resBox.innerHTML = '<div class="ob-search-item">Not found</div>'; resBox.style.display = 'block';}
-        }
-        
-        let tempSelectedOB = null;
-        window.selectOB = (id, name, dist, mob, pUrl) => {
-            tempSelectedOB = { id, name, district: dist, mobile: mob, photoUrl: pUrl };
-            document.getElementById('ob_search').value = name;
-            document.getElementById('ob_search_results').style.display = 'none';
+        /* LETTER PAD ADMIN FUNCTIONS (5 SLOTS, LOGO, STAMP & SIGNATURES) */
+        window.renderLetterPadAdmin = () => {
+            // Render 5 Template Slots
+            let htmlSlots = '';
+            let templateOptionsHtml = '';
+            for(let i=0; i<5; i++) {
+                let url = lpTemplatesData[i];
+                if(url) {
+                    htmlSlots += `
+                        <div class="template-slot">
+                            <b>कप्पा ${i+1}</b>
+                            <img src="${url}">
+                            <button class="btn-action bg-danger" onclick="deleteLpTemplate(${i})"><i class="fa fa-trash"></i> डिलीट करा</button>
+                        </div>
+                    `;
+                    templateOptionsHtml += `<option value="${url}">टेंप्लेट डिझाईन ${i+1}</option>`;
+                } else {
+                    htmlSlots += `
+                        <div class="template-slot">
+                            <b>कप्पा ${i+1}</b>
+                            <p style="font-size:0.75rem; color:gray; margin:15px 0;">खालील बटणाने फोटो (JPG/PNG) अपलोड करा</p>
+                            <input type="file" id="lp_slot_input_${i}" accept="image/*" style="display:none;" onchange="uploadLpTemplateSlot(${i})">
+                            <button class="btn-action bg-primary" onclick="document.getElementById('lp_slot_input_${i}').click()"><i class="fa fa-upload"></i> अपलोड</button>
+                        </div>
+                    `;
+                }
+            }
+            document.getElementById('lpTemplateSlots').innerHTML = htmlSlots;
+            document.getElementById('lp_selected_template').innerHTML = templateOptionsHtml || '<option value="">प्रथम टेंप्लेट अपलोड करा</option>';
+
+            // Logo UI
+            let logoBox = document.getElementById('slot_logo_box');
+            if(lpLogoUrl) {
+                logoBox.innerHTML = `<img src="${lpLogoUrl}" style="height:40px; margin-right:10px;"><button class="btn-action bg-danger" onclick="deleteLpLogo()"><i class="fa fa-trash"></i></button>`;
+            } else {
+                logoBox.innerHTML = `<input type="file" id="inp_logo" accept="image/*" class="form-control" onchange="uploadLpLogo()">`;
+            }
+
+            // Stamp UI
+            let stampBox = document.getElementById('slot_stamp_box');
+            if(lpStampUrl) {
+                stampBox.innerHTML = `<img src="${lpStampUrl}" style="height:40px; margin-right:10px;"><button class="btn-action bg-danger" onclick="deleteLpStamp()"><i class="fa fa-trash"></i></button>`;
+            } else {
+                stampBox.innerHTML = `<input type="file" id="inp_stamp" accept="image/*" class="form-control" onchange="uploadLpStamp()">`;
+            }
+
+            // Render 5 Signature Slots
+            let signsHtml = '';
+            for(let i=0; i<5; i++) {
+                let sig = lpSignaturesData[i] || { name: `पदाधिकारी ${i+1}`, signUrl: "" };
+                signsHtml += `
+                    <div style="flex:1; min-width:160px; background:#fff; padding:10px; border:1px solid #cbd5e1; border-radius:6px; text-align:center;">
+                        <label style="font-size:0.8rem; font-weight:bold;">सही ${i+1} चे नाव/पद</label>
+                        <input type="text" value="${sig.name}" onchange="updateSignName(${i}, this.value)" class="form-control" style="margin-bottom:8px; text-align:center;">
+                        
+                        ${sig.signUrl ? 
+                            `<div><img src="${sig.signUrl}" style="height:35px;"><br><button class="btn-action bg-danger" style="font-size:0.7rem;" onclick="deleteLpSign(${i})"><i class="fa fa-trash"></i> डिलीट</button></div>` : 
+                            `<input type="file" id="sign_inp_${i}" accept="image/png, image/jpeg" style="display:none;" onchange="uploadLpSign(${i})"><button class="btn-action bg-info" style="font-size:0.75rem;" onclick="document.getElementById('sign_inp_${i}').click()"><i class="fa fa-upload"></i> सही फोटो</button>`
+                        }
+                    </div>
+                `;
+            }
+            document.getElementById('signsContainer').innerHTML = signsHtml;
         }
 
-        window.addOfficeBearer = async () => {
-            if(!tempSelectedOB) return alert("कृपया सर्च करून सदस्य निवडा.");
-            let desig = document.getElementById('ob_designation').value; 
-            let level = document.getElementById('ob_level').value;
-            if(!desig) return alert("कृपया पद निवडा किंवा टाईप करा.");
+        window.uploadLpTemplateSlot = async (index) => {
+            let file = document.getElementById(`lp_slot_input_${index}`).files[0];
+            if(!file) return;
+            Swal.fire({title: 'अपलोड होत आहे...', didOpen: () => Swal.showLoading()});
+            try {
+                let url = await uploadToCloudinary(file);
+                lpTemplatesData[index] = url;
+                await setDoc(doc(db, "lp_settings", "templates"), { type: "templates", val: lpTemplatesData });
+                Swal.close(); renderLetterPadAdmin();
+            } catch(e) { Swal.fire('Error', e.message, 'error'); }
+        }
+
+        window.deleteLpTemplate = async (index) => {
+            if(confirm("ही डिझाईन डिलीट करायची आहे का? डिलीट केल्यावरच नवीन टाकता येईल.")) {
+                lpTemplatesData[index] = null;
+                await setDoc(doc(db, "lp_settings", "templates"), { type: "templates", val: lpTemplatesData });
+                renderLetterPadAdmin();
+            }
+        }
+
+        window.uploadLpLogo = async () => {
+            let file = document.getElementById('inp_logo').files[0]; if(!file) return;
+            Swal.fire({title: 'लोगो अपलोड होत आहे...', didOpen: () => Swal.showLoading()});
+            try {
+                lpLogoUrl = await uploadToCloudinary(file);
+                await setDoc(doc(db, "lp_settings", "logo"), { type: "logo", val: lpLogoUrl });
+                Swal.close(); renderLetterPadAdmin();
+            } catch(e) { Swal.fire('Error', e.message, 'error'); }
+        }
+        window.deleteLpLogo = async () => {
+            if(confirm("लोगो डिलीट करायचा आहे का?")) { lpLogoUrl = ""; await setDoc(doc(db, "lp_settings", "logo"), { type: "logo", val: "" }); renderLetterPadAdmin(); }
+        }
+
+        window.uploadLpStamp = async () => {
+            let file = document.getElementById('inp_stamp').files[0]; if(!file) return;
+            Swal.fire({title: 'शिक्का अपलोड होत आहे...', didOpen: () => Swal.showLoading()});
+            try {
+                lpStampUrl = await uploadToCloudinary(file);
+                await setDoc(doc(db, "lp_settings", "stamp"), { type: "stamp", val: lpStampUrl });
+                Swal.close(); renderLetterPadAdmin();
+            } catch(e) { Swal.fire('Error', e.message, 'error'); }
+        }
+        window.deleteLpStamp = async () => {
+            if(confirm("शिक्का डिलीट करायचा आहे का?")) { lpStampUrl = ""; await setDoc(doc(db, "lp_settings", "stamp"), { type: "stamp", val: "" }); renderLetterPadAdmin(); }
+        }
+
+        window.updateSignName = async (i, val) => {
+            lpSignaturesData[i].name = val;
+            await setDoc(doc(db, "lp_settings", "signatures"), { type: "signatures", val: lpSignaturesData });
+        }
+
+        window.uploadLpSign = async (index) => {
+            let file = document.getElementById(`sign_inp_${index}`).files[0]; if(!file) return;
+            Swal.fire({title: 'सही अपलोड होत आहे...', didOpen: () => Swal.showLoading()});
+            try {
+                let url = await uploadToCloudinary(file);
+                lpSignaturesData[index].signUrl = url;
+                await setDoc(doc(db, "lp_settings", "signatures"), { type: "signatures", val: lpSignaturesData });
+                Swal.close(); renderLetterPadAdmin();
+            } catch(e) { Swal.fire('Error', e.message, 'error'); }
+        }
+
+        window.deleteLpSign = async (index) => {
+            if(confirm("ही सही डिलीट करायची आहे का?")) {
+                lpSignaturesData[index].signUrl = "";
+                await setDoc(doc(db, "lp_settings", "signatures"), { type: "signatures", val: lpSignaturesData });
+                renderLetterPadAdmin();
+            }
+        }
+
+        window.toggleLpRecipientFilters = () => {
+            let type = document.getElementById('lp_recipient_type').value;
+            document.getElementById('lp_recipient_mandal').style.display = (type === 'Mandal' || type === 'District') ? 'block' : 'none';
+            document.getElementById('lp_recipient_district').style.display = type === 'District' ? 'block' : 'none';
+        }
+
+        window.getLetterHTML = (templateUrl, leftPad, ref, date, to, sub, body) => {
+            let signsFooterHtml = lpSignaturesData.map(s => s.signUrl ? `<div class="sign-box"><img src="${s.signUrl}"><br><b>${s.name}</b></div>` : (s.name ? `<div class="sign-box"><br><br><b>${s.name}</b></div>` : '')).join('');
+            let stampHtml = lpStampUrl ? `<div style="text-align:center;"><img src="${lpStampUrl}" style="height:60px;"></div>` : '';
+
+            return `
+                <div class="a4-print-container" style="background-image: url('${templateUrl||''}'); padding-left: ${leftPad}mm;">
+                    <div class="lp-header-info">
+                        <div>संदर्भ: ${ref}</div>
+                        <div>दिनांक: ${date}</div>
+                    </div>
+                    <div class="lp-to">प्रति,<br>${to.replace(/\n/g, '<br>')}</div>
+                    <div class="lp-subject">विषय: ${sub}</div>
+                    <div class="lp-body">${body}</div>
+                    ${stampHtml}
+                    <div class="lp-footer">${signsFooterHtml}</div>
+                </div>
+            `;
+        }
+
+        window.previewLetter = () => {
+            let tmpl = document.getElementById('lp_selected_template').value;
+            let leftPad = document.getElementById('lp_left_padding').value || 20;
+            let ref = document.getElementById('lp_ref').value || '____';
+            let date = document.getElementById('lp_date').value || 'DD/MM/YYYY';
+            let to = document.getElementById('lp_to').value || '____';
+            let sub = document.getElementById('lp_sub').value || '____';
+            let body = document.getElementById('lp_content').value || '____';
             
-            Swal.fire({title: 'अपडेट करत आहे...', didOpen: () => Swal.showLoading()});
-            let obData = { ...tempSelectedOB, post: desig, level: level, order: Date.now() };
-            delete obData.id; 
-            await addDoc(collection(db, "committee"), obData);
+            let previewWin = window.open('', '_blank');
+            previewWin.document.write(`
+                <html><head><title>Letter Preview</title>
+                <style>
+                    body { background: #525659; display: flex; justify-content: center; padding: 20px; font-family: sans-serif; }
+                    .a4-print-container { width: 210mm; min-height: 297mm; background: white; margin: 0 auto; position: relative; box-shadow: 0 0 10px rgba(0,0,0,0.5); background-size: cover; background-position: center; background-repeat: no-repeat; padding: 35mm 20mm 25mm 20mm; font-family: 'Mukta', Arial, sans-serif; color: #000; box-sizing: border-box; text-align: left; }
+                    .lp-header-info { display: flex; justify-content: space-between; margin-bottom: 15px; font-weight: bold; font-size: 14px;}
+                    .lp-to { margin-bottom: 15px; font-size: 15px; font-weight: bold; line-height: 1.4;}
+                    .lp-subject { margin-bottom: 20px; font-size: 15px; font-weight: bold; text-align: center; text-decoration: underline;}
+                    .lp-body { font-size: 15px; line-height: 1.6; text-align: justify; white-space: pre-wrap; margin-bottom: 30px;}
+                    .lp-footer { display: flex; justify-content: space-around; flex-wrap: wrap; margin-top: 20px;}
+                    .sign-box { text-align: center; font-size: 0.85rem; width: 120px; }
+                    .sign-box img { max-height: 45px; max-width: 100px; object-fit: contain; }
+                </style>
+                </head><body>${window.getLetterHTML(tmpl, leftPad, ref, date, to, sub, body)}</body></html>
+            `);
+        }
+
+        window.saveLetter = async () => {
+            let tmpl = document.getElementById('lp_selected_template').value;
+            let leftPad = document.getElementById('lp_left_padding').value || 20;
+            let ref = document.getElementById('lp_ref').value;
+            let date = document.getElementById('lp_date').value;
+            let to = document.getElementById('lp_to').value;
+            let sub = document.getElementById('lp_sub').value;
+            let body = document.getElementById('lp_content').value;
+            let rType = document.getElementById('lp_recipient_type').value;
+            let rMandal = document.getElementById('lp_recipient_mandal').value;
+            let rDist = document.getElementById('lp_recipient_district').value;
             
-            logActivity(`Added Office Bearer: ${obData.name} - ${desig} (${level})`, isSuperAdmin ? "Super Admin" : "Sub Admin");
-            tempSelectedOB = null; document.getElementById('ob_search').value = ""; document.getElementById('ob_designation').value = "";
-            Swal.close(); loadData();
+            if(!sub || !body) return alert("विषय आणि मजकूर भरणे आवश्यक आहे.");
+            Swal.fire({title: 'पत्र सेव्ह करत आहे...', didOpen: () => Swal.showLoading()});
+            
+            await addDoc(collection(db, "letters"), {
+                templateUrl: tmpl, leftPadding: leftPad, ref: ref, date: date, to: to, subject: sub, body: body,
+                recipientType: rType, recipientMandal: rMandal, recipientDistrict: rDist,
+                published: false, timestamp: Date.now()
+            });
+            logActivity(`Created Letter: ${sub}`, isSuperAdmin ? "Super Admin" : "Sub Admin");
+            Swal.fire('यशस्वी', 'पत्र सेव्ह झाले.', 'success');
+            
+            document.getElementById('lp_ref').value = ""; document.getElementById('lp_date').value = "";
+            document.getElementById('lp_to').value = ""; document.getElementById('lp_sub').value = ""; document.getElementById('lp_content').value = "";
+            loadData();
+        }
+
+        window.renderLetters = () => {
+            let tbody = document.getElementById('lettersBody');
+            lettersData.sort((a,b) => b.timestamp - a.timestamp);
+            tbody.innerHTML = lettersData.map((l) => {
+                let recpStr = l.recipientType === 'OnlyMe' ? 'केवळ मी (Private)' : (l.recipientType === 'All' ? 'सर्व सदस्य' : (l.recipientType === 'Mandal' ? `${l.recipientMandal} मंडळ` : `${l.recipientDistrict} जिल्हा`));
+                let pubBadge = l.published ? `<span class="badge bg-success">Published</span>` : `<span class="badge bg-warning">Draft</span>`;
+                return `<tr>
+                    <td>${l.date || '-'}</td>
+                    <td><b>${l.subject}</b></td>
+                    <td>${recpStr}</td>
+                    <td>${pubBadge}</td>
+                    <td style="white-space:nowrap;">
+                        <button class="btn-action bg-primary" title="Print" onclick="printSavedLetter('${l.id}')"><i class="fa fa-print"></i></button>
+                        <button class="btn-action bg-info" title="Download PDF" onclick="downloadPDFLetter('${l.id}')"><i class="fa fa-file-pdf"></i></button>
+                        <button class="btn-action ${l.published ? 'bg-warning' : 'bg-success'}" title="${l.published ? 'Unpublish' : 'Publish to Members'}" onclick="togglePublishLetter('${l.id}', ${l.published})"><i class="fa ${l.published ? 'fa-eye-slash' : 'fa-globe'}"></i></button>
+                        <button class="btn-action bg-danger" title="Delete" onclick="deleteLetter('${l.id}')"><i class="fa fa-trash"></i></button>
+                    </td>
+                </tr>`;
+            }).join('') || '<tr><td colspan="5" style="text-align:center;">कोणतेही पत्र उपलब्ध नाही.</td></tr>';
+        }
+
+        window.printSavedLetter = (id) => {
+            let l = lettersData.find(x => x.id === id); if(!l) return;
+            let printArea = document.getElementById('printLetterArea');
+            printArea.innerHTML = window.getLetterHTML(l.templateUrl, l.leftPadding||20, l.ref, l.date, l.to, l.subject, l.body);
+            setTimeout(() => { window.print(); }, 200);
+        }
+
+        window.downloadPDFLetter = (id) => {
+            let l = lettersData.find(x => x.id === id); if(!l) return;
+            let printArea = document.getElementById('printLetterArea');
+            printArea.innerHTML = window.getLetterHTML(l.templateUrl, l.leftPadding||20, l.ref, l.date, l.to, l.subject, l.body);
+            printArea.style.display = 'block';
+            
+            let opt = { margin: 0, filename: `Letter_${l.subject}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
+            html2pdf().set(opt).from(printArea.firstElementChild).save().then(()=>{ printArea.style.display = 'none'; });
+        }
+
+        window.togglePublishLetter = async (id, currentStatus) => {
+            if(confirm(`हे पत्र सदस्यांना ${currentStatus ? 'दिसणे बंद' : 'दिसण्यासाठी प्रसिद्ध'} करायचे आहे का?`)) {
+                await updateDoc(doc(db, "letters", id), { published: !currentStatus });
+                logActivity(`${currentStatus ? 'Unpublished' : 'Published'} Letter`, isSuperAdmin ? "Super Admin" : "Sub Admin");
+                loadData();
+            }
+        }
+
+        window.deleteLetter = async (id) => {
+            if(confirm("हे पत्र कायमचे डिलीट करायचे आहे का?")) {
+                await deleteDoc(doc(db, "letters", id));
+                logActivity("Deleted Letter", isSuperAdmin ? "Super Admin" : "Sub Admin");
+                loadData();
+            }
+        }
+
+        /* 8. MEMBER FOLDERS & FILES SYSTEM */
+        window.renderSixFolders = () => {
+            let html = '';
+            let dropdownHtml = '';
+            memberFoldersData.forEach(f => {
+                let iconHtml = f.iconUrl ? `<img src="${f.iconUrl}" class="folder-icon">` : `<i class="fa fa-folder"></i>`;
+                html += `
+                    <div class="folder-card">
+                        <button class="edit-folder-btn" title="रिनेम व आयकॉन बदला" onclick="openRenameFolderModal('${f.id}', '${f.name}')"><i class="fa fa-pen"></i></button>
+                        ${iconHtml}
+                        <h4 style="font-size:0.95rem; color:var(--dark);">${f.name}</h4>
+                    </div>
+                `;
+                dropdownHtml += `<option value="${f.id}">${f.name}</option>`;
+            });
+            document.getElementById('sixFoldersGrid').innerHTML = html;
+            document.getElementById('mf_target_folder').innerHTML = dropdownHtml;
+        }
+
+        window.openRenameFolderModal = async (fId, oldName) => {
+            const { value: formValues } = await Swal.fire({
+                title: 'फोल्डर रिनेम व Icon बदला',
+                html:
+                    `<input id="swal-input1" class="swal2-input" value="${oldName}" placeholder="फोल्डर नाव">` +
+                    `<label style="font-size:0.8rem; margin-top:10px; display:block;">नवीन Icon/इमेज पाठवा (Optional):</label>` +
+                    `<input type="file" id="swal-input2" class="swal2-file" accept="image/*">`,
+                focusConfirm: false,
+                showCancelButton: true,
+                confirmButtonText: 'सेव्ह करा',
+                preConfirm: () => {
+                    return [
+                        document.getElementById('swal-input1').value,
+                        document.getElementById('swal-input2').files[0]
+                    ]
+                }
+            });
+
+            if (formValues && formValues[0]) {
+                let newName = formValues[0];
+                let file = formValues[1];
+                let iconUrl = "";
+                if(file) {
+                    Swal.fire({title: 'आयकॉन अपलोड होत आहे...', didOpen: () => Swal.showLoading()});
+                    iconUrl = await uploadToCloudinary(file);
+                }
+                let updateData = { name: newName };
+                if(iconUrl) updateData.iconUrl = iconUrl;
+
+                await updateDoc(doc(db, "member_folders", fId), updateData);
+                Swal.fire('यशस्वी', 'फोल्डर अपडेट झाले!', 'success');
+                loadData();
+            }
+        }
+
+        window.toggleFolderVisibilityFilter = () => {
+            let val = document.getElementById('mf_visibility').value;
+            document.getElementById('mf_dist_filter_box').style.display = (val === 'SpecificDistrict') ? 'block' : 'none';
+            document.getElementById('mf_mem_filter_box').style.display = (val === 'SpecificMember') ? 'block' : 'none';
+        }
+
+        window.filterFolderMemberSearch = () => {
+            let txt = document.getElementById('mf_target_member_search').value.toLowerCase();
+            let select = document.getElementById('mf_target_member');
+            if(txt.length < 2) return;
+            let matches = membersData.filter(m => m.isMember!==false && (m.name||'').toLowerCase().includes(txt));
+            select.innerHTML = matches.map(m => `<option value="${m.id}">${m.name} (${m.district})</option>`).join('') || '<option value="">सदस्य सापडला नाही</option>';
+        }
+
+        window.uploadMemberFolderFile = async () => {
+            let fId = document.getElementById('mf_target_folder').value;
+            let file = document.getElementById('mf_file').files[0];
+            let fileName = document.getElementById('mf_file_name').value.trim();
+            let vis = document.getElementById('mf_visibility').value;
+            let targetDist = document.getElementById('mf_target_district').value;
+            let targetMem = document.getElementById('mf_target_member').value;
+
+            if(!file) return alert("कृपया फाईल निवडा.");
+            if(!fileName) fileName = file.name;
+
+            Swal.fire({title: 'फाईल अपलोड होत आहे...', didOpen: () => Swal.showLoading()});
+            try {
+                let fileUrl = await uploadToCloudinary(file);
+                await addDoc(collection(db, "member_files"), {
+                    folderId: fId, fileName: fileName, fileUrl: fileUrl,
+                    visibility: vis, targetDistrict: targetDist||"", targetMemberId: targetMem||"",
+                    uploadedAt: new Date().toLocaleDateString('mr-IN'), timestamp: Date.now()
+                });
+                logActivity(`Uploaded Member File: ${fileName}`, isSuperAdmin ? "Super Admin" : "Sub Admin");
+                Swal.fire('यशस्वी', 'फाईल यशस्वी अपलोड झाली!', 'success');
+                document.getElementById('mf_file').value = ''; document.getElementById('mf_file_name').value = '';
+                loadData();
+            } catch(e) { Swal.fire('Error', e.message, 'error'); }
+        }
+
+        window.renderMemberFilesList = () => {
+            let tbody = document.getElementById('memberFilesTableBody');
+            memberFilesData.sort((a,b) => b.timestamp - a.timestamp);
+            
+            tbody.innerHTML = memberFilesData.map((f, i) => {
+                let folderObj = memberFoldersData.find(x => x.id === f.folderId);
+                let folderName = folderObj ? folderObj.name : f.folderId;
+                let visText = f.visibility === 'OnlyMe' ? '<span class="badge bg-danger">केवळ मी</span>' :
+                             (f.visibility === 'AllDivisions' ? '<span class="badge bg-info">सर्व विभाग</span>' :
+                             (f.visibility === 'AllMembers' ? '<span class="badge bg-success">सर्व सदस्य</span>' :
+                             (f.visibility === 'AllDistricts' ? '<span class="badge bg-primary">सर्व जिल्हे</span>' :
+                             (f.visibility === 'SpecificDistrict' ? `<span class="badge bg-warning">${f.targetDistrict} जिल्हा</span>` : '<span class="badge bg-dark">विशिष्ट सदस्य</span>'))));
+
+                return `
+                    <tr>
+                        <td>${i+1}</td>
+                        <td><b>${folderName}</b></td>
+                        <td>${f.fileName}</td>
+                        <td>${visText}</td>
+                        <td><small>${f.uploadedAt||'-'}</small></td>
+                        <td class="no-print">
+                            <button class="btn-action bg-primary" onclick="window.open('${f.fileUrl}', '_blank')"><i class="fa fa-eye"></i> View</button>
+                            <button class="btn-action bg-danger" onclick="deleteMemberFile('${f.id}')"><i class="fa fa-trash"></i> Delete</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('') || '<tr><td colspan="6" style="text-align:center;">कोणतीही फाईल अपलोड केलेली नाही.</td></tr>';
+        }
+
+        window.deleteMemberFile = async (id) => {
+            if(confirm("ही फाईल डिलीट करायची आहे का?")) {
+                await deleteDoc(doc(db, "member_files", id));
+                logActivity("Deleted Member File", isSuperAdmin ? "Super Admin" : "Sub Admin");
+                loadData();
+            }
+        }
+
+        window.printFolderFiles = () => {
+            let printWin = window.open('', '_blank');
+            let rowsHtml = memberFilesData.map((f, i) => `<tr><td>${i+1}</td><td>${f.fileName}</td><td>${f.uploadedAt||'-'}</td></tr>`).join('');
+            printWin.document.write(`<html><head><title>Member Files Print</title><style>table{width:100%;border-collapse:collapse;}th,td{border:1px solid #000;padding:8px;text-align:left;}</style></head><body><h2>सदस्यांच्या फाईल्सची यादी</h2><table><thead><tr><th>अ.क्र.</th><th>फाईलचे नाव</th><th>दिनांक</th></tr></thead><tbody>${rowsHtml}</tbody></table></body></html>`);
+            setTimeout(() => { printWin.print(); }, 300);
+        }
+
+        window.toggleMemberSecurity = () => {
+            let isRestricted = document.getElementById('sec_restrict_download').checked;
+            if(isRestricted) {
+                document.body.classList.add('no-screenshot');
+            } else {
+                document.body.classList.remove('no-screenshot');
+            }
+            Swal.fire({toast: true, position: 'top-end', icon: 'info', title: isRestricted ? 'सुरक्षा मोड सुरू करण्यात आला.' : 'सुरक्षा मोड बंद केला.', showConfirmButton: false, timer: 1500});
+        }
+
+        /* NOTICES LOGIC */
+        window.uploadNoticePDF = async () => {
+            let file = document.getElementById('notice_file').files[0];
+            let name = document.getElementById('notice_name').value.trim();
+            if(!file || !name) return alert("कृपया फाईल व नोटीस शीर्षक दोन्ही टाका.");
+            Swal.fire({title: 'अपलोड होत आहे...', didOpen: () => Swal.showLoading()});
+            try {
+                let url = await uploadToCloudinary(file);
+                await addDoc(collection(db, "notices"), { name, url, date: new Date().toLocaleDateString('mr-IN'), timestamp: Date.now() });
+                Swal.fire('यशस्वी', 'नोटीस अपलोड झाली!', 'success');
+                document.getElementById('notice_file').value = ''; document.getElementById('notice_name').value = '';
+                loadNotices();
+            } catch(e) { Swal.fire('Error', e.message, 'error'); }
+        }
+
+        async function loadNotices() {
+            let snap = await getDocs(collection(db, "notices"));
+            let list = []; snap.forEach(d => list.push({id: d.id, ...d.data()}));
+            document.getElementById('noticesListBody').innerHTML = list.map(n => `
+                <tr><td>${n.date}</td><td><b>${n.name}</b></td><td><button class="btn-action bg-primary" onclick="window.open('${n.url}', '_blank')"><i class="fa fa-eye"></i></button> <button class="btn-action bg-danger" onclick="deleteNotice('${n.id}')"><i class="fa fa-trash"></i></button></td></tr>
+            `).join('');
+        }
+
+        window.deleteNotice = async (id) => {
+            if(confirm("नोटीस डिलीट करायची आहे का?")) { await deleteDoc(doc(db, "notices", id)); loadNotices(); }
         }
 
         window.renderCommittee = () => {
@@ -1274,35 +1894,19 @@
             try {
                 let doc1 = committeeData.find(c => c.id === id1);
                 let doc2 = committeeData.find(c => c.id === id2);
-                
                 if(doc1 && doc2) {
-                    Swal.fire({title: 'क्रम बदलत आहे...', didOpen: () => Swal.showLoading()});
                     let order1 = doc1.order || Date.now();
                     let order2 = doc2.order || (Date.now() + 1000);
-                    
                     await updateDoc(doc(db, "committee", id1), { order: order2 });
                     await updateDoc(doc(db, "committee", id2), { order: order1 });
-                    
-                    Swal.close();
                     loadData();
                 }
-            } catch(error) {
-                Swal.fire('Error', 'क्रम बदलताना त्रुटी आली: ' + error.message, 'error');
-            }
+            } catch(e) { console.error(e); }
         }
 
         window.deleteOB = async (id) => {
-            if(confirm("या पदाधिकाऱ्याला यादीतून काढायचे आहे का? (सदस्य डेटाबेसमधून डिलीट होणार नाही)")) {
-                try {
-                    Swal.fire({title: 'डिलीट करत आहे...', didOpen: () => Swal.showLoading()});
-                    await deleteDoc(doc(db, "committee", id)); 
-                    await logActivity("Deleted Office Bearer", isSuperAdmin ? "Super Admin" : "Sub Admin"); 
-                    committeeData = committeeData.filter(c => c.id !== id);
-                    window.renderCommittee();
-                    Swal.fire('यशस्वी', 'पदाधिकारी यादीतून काढला!', 'success');
-                } catch(error) {
-                    Swal.fire('Error', 'डिलीट करताना त्रुटी आली: ' + error.message, 'error');
-                }
+            if(confirm("या पदाधिकाऱ्याला काढायचे आहे का?")) {
+                await deleteDoc(doc(db, "committee", id)); loadData();
             }
         }
 
@@ -1314,7 +1918,6 @@
             try {
                 let url = await uploadToCloudinary(file);
                 await addDoc(collection(db, "gallery"), { url, title, date: new Date().toLocaleDateString('mr-IN') });
-                logActivity(`Uploaded Gallery Photo: ${title}`, isSuperAdmin ? "Super Admin" : "Sub Admin");
                 Swal.fire('यशस्वी', 'फोटो गॅलरीत ॲड झाला!', 'success');
                 document.getElementById('gallery_photo').value = ''; document.getElementById('gallery_title').value = '';
                 loadGallery();
@@ -1337,176 +1940,16 @@
         }
         
         window.deleteGalleryPhoto = async (id) => {
-            if(confirm("हा फोटो कायमचा डिलीट करायचा आहे का?")) {
-                try {
-                    Swal.fire({title: 'डिलीट करत आहे...', didOpen: () => Swal.showLoading()});
-                    await deleteDoc(doc(db, "gallery", id)); 
-                    await logActivity("Deleted Gallery Photo", isSuperAdmin ? "Super Admin" : "Sub Admin"); 
-                    Swal.fire('यशस्वी', 'फोटो डिलीट झाला!', 'success');
-                    loadGallery();
-                } catch(error) {
-                    Swal.fire('Error', 'फोटो डिलीट करताना त्रुटी आली: ' + error.message, 'error');
-                }
+            if(confirm("हा फोटो डिलीट करायचा आहे का?")) {
+                await deleteDoc(doc(db, "gallery", id)); loadGallery();
             }
         }
 
-        window.uploadLetterTemplate = async () => {
-            let file = document.getElementById('lp_template_upload').files[0];
-            if(!file) return alert("कृपया इमेज फाईल (JPG/PNG) निवडा.");
-            Swal.fire({title: 'टेंप्लेट अपलोड होत आहे...', didOpen: () => Swal.showLoading()});
-            try {
-                let url = await uploadToCloudinary(file);
-                let snap = await getDocs(query(collection(db, "settings"), where("type", "==", "letter_template")));
-                if(snap.empty) { await addDoc(collection(db, "settings"), { type: "letter_template", url: url }); } 
-                else { await updateDoc(doc(db, "settings", snap.docs[0].id), { url: url }); }
-                window.lpTemplateUrl = url;
-                document.getElementById('current_lp_template_info').innerText = "✅ टेंप्लेट यशस्वी अपलोड झाले.";
-                Swal.close();
-            } catch(e) { Swal.fire('Error', e.message, 'error'); }
-        }
-
-        window.toggleLpRecipientFilters = () => {
-            let type = document.getElementById('lp_recipient_type').value;
-            document.getElementById('lp_recipient_mandal').style.display = (type === 'Mandal' || type === 'District') ? 'block' : 'none';
-            document.getElementById('lp_recipient_district').style.display = type === 'District' ? 'block' : 'none';
-        }
-
-        window.getLetterHTML = (ref, date, to, sub, body) => {
-            let bgUrl = window.lpTemplateUrl || '';
-            return `
-                <div class="a4-print-container" style="background-image: url('${bgUrl}');">
-                    <div class="lp-header-info">
-                        <div>संदर्भ: ${ref}</div>
-                        <div>दिनांक: ${date}</div>
-                    </div>
-                    <div class="lp-to">प्रति,<br>${to.replace(/\n/g, '<br>')}</div>
-                    <div class="lp-subject">विषय: ${sub}</div>
-                    <div class="lp-body">${body}</div>
-                    <div class="lp-footer">
-                        <div style="text-align:center; width:200px;">
-                            <br><br><br>
-                            <b>अध्यक्ष / सचिव</b><br>
-                            क्ष-किरण संघटना महाराष्ट्र
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        window.previewLetter = () => {
-            let ref = document.getElementById('lp_ref').value || '____';
-            let date = document.getElementById('lp_date').value || 'DD/MM/YYYY';
-            let to = document.getElementById('lp_to').value || '____';
-            let sub = document.getElementById('lp_sub').value || '____';
-            let body = document.getElementById('lp_content').value || '____';
-            
-            let previewWin = window.open('', '_blank');
-            previewWin.document.write(`
-                <html><head><title>Letter Preview</title>
-                <style>
-                    body { background: #525659; display: flex; justify-content: center; padding: 20px; font-family: sans-serif; }
-                    .a4-print-container {
-                        width: 210mm; min-height: 297mm; background: white; margin: 0 auto; position: relative;
-                        box-shadow: 0 0 10px rgba(0,0,0,0.5); background-size: cover; background-position: center; background-repeat: no-repeat;
-                        padding: 35mm 20mm 25mm 20mm; font-family: 'Mukta', Arial, sans-serif; color: #000; box-sizing: border-box; text-align: left;
-                    }
-                    .lp-header-info { display: flex; justify-content: space-between; margin-bottom: 15px; font-weight: bold; font-size: 14px;}
-                    .lp-to { margin-bottom: 15px; font-size: 15px; font-weight: bold; line-height: 1.4;}
-                    .lp-subject { margin-bottom: 20px; font-size: 15px; font-weight: bold; text-align: center; text-decoration: underline;}
-                    .lp-body { font-size: 15px; line-height: 1.6; text-align: justify; white-space: pre-wrap; margin-bottom: 40px;}
-                    .lp-footer { display: flex; justify-content: flex-end; margin-top: 30px;}
-                </style>
-                </head><body>
-                ${window.getLetterHTML(ref, date, to, sub, body)}
-                </body></html>
-            `);
-        }
-
-        window.saveLetter = async () => {
-            let ref = document.getElementById('lp_ref').value;
-            let date = document.getElementById('lp_date').value;
-            let to = document.getElementById('lp_to').value;
-            let sub = document.getElementById('lp_sub').value;
-            let body = document.getElementById('lp_content').value;
-            let rType = document.getElementById('lp_recipient_type').value;
-            let rMandal = document.getElementById('lp_recipient_mandal').value;
-            let rDist = document.getElementById('lp_recipient_district').value;
-            
-            if(!sub || !body) return alert("विषय आणि मजकूर भरणे आवश्यक आहे.");
-            Swal.fire({title: 'पत्र सेव्ह करत आहे...', didOpen: () => Swal.showLoading()});
-            
-            await addDoc(collection(db, "letters"), {
-                ref: ref, date: date, to: to, subject: sub, body: body,
-                recipientType: rType, recipientMandal: rMandal, recipientDistrict: rDist,
-                published: false, timestamp: Date.now()
-            });
-            logActivity(`Created Letter: ${sub}`, isSuperAdmin ? "Super Admin" : "Sub Admin");
-            Swal.fire('यशस्वी', 'पत्र सेव्ह झाले.', 'success');
-            
-            document.getElementById('lp_ref').value = ""; document.getElementById('lp_date').value = "";
-            document.getElementById('lp_to').value = ""; document.getElementById('lp_sub').value = ""; document.getElementById('lp_content').value = "";
-            loadData();
-        }
-
-        window.renderLetters = () => {
-            let tbody = document.getElementById('lettersBody');
-            lettersData.sort((a,b) => b.timestamp - a.timestamp);
-            tbody.innerHTML = lettersData.map((l) => {
-                let recpStr = l.recipientType === 'All' ? 'सर्व सदस्य' : (l.recipientType === 'Mandal' ? `${l.recipientMandal} मंडळ` : `${l.recipientDistrict} जिल्हा`);
-                let pubBadge = l.published ? `<span class="badge bg-success">Published</span>` : `<span class="badge bg-warning">Draft</span>`;
-                return `<tr>
-                    <td>${l.date || '-'}</td>
-                    <td><b>${l.subject}</b></td>
-                    <td>${recpStr}</td>
-                    <td>${pubBadge}</td>
-                    <td style="white-space:nowrap;">
-                        <button class="btn-action bg-primary" title="Print" onclick="printSavedLetter('${l.id}')"><i class="fa fa-print"></i></button>
-                        <button class="btn-action bg-info" title="Download PDF" onclick="downloadPDFLetter('${l.id}')"><i class="fa fa-file-pdf"></i></button>
-                        <button class="btn-action ${l.published ? 'bg-warning' : 'bg-success'}" title="${l.published ? 'Unpublish' : 'Publish to Members'}" onclick="togglePublishLetter('${l.id}', ${l.published})"><i class="fa ${l.published ? 'fa-eye-slash' : 'fa-globe'}"></i></button>
-                        <button class="btn-action bg-danger" title="Delete" onclick="deleteLetter('${l.id}')"><i class="fa fa-trash"></i></button>
-                    </td>
-                </tr>`;
-            }).join('') || '<tr><td colspan="5" style="text-align:center;">कोणतेही पत्र उपलब्ध नाही.</td></tr>';
-        }
-
-        window.printSavedLetter = (id) => {
-            let l = lettersData.find(x => x.id === id); if(!l) return;
-            let printArea = document.getElementById('printLetterArea');
-            printArea.innerHTML = window.getLetterHTML(l.ref, l.date, l.to, l.subject, l.body);
-            setTimeout(() => { window.print(); }, 200);
-        }
-
-        window.downloadPDFLetter = (id) => {
-            let l = lettersData.find(x => x.id === id); if(!l) return;
-            let printArea = document.getElementById('printLetterArea');
-            printArea.innerHTML = window.getLetterHTML(l.ref, l.date, l.to, l.subject, l.body);
-            printArea.style.display = 'block';
-            
-            let opt = { margin: 0, filename: `Letter_${l.subject}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
-            html2pdf().set(opt).from(printArea.firstElementChild).save().then(()=>{ printArea.style.display = 'none'; });
-        }
-
-        window.togglePublishLetter = async (id, currentStatus) => {
-            if(confirm(`हे पत्र सदस्यांना ${currentStatus ? 'दिसणे बंद' : 'दिसण्यासाठी प्रसिद्ध'} करायचे आहे का?`)) {
-                await updateDoc(doc(db, "letters", id), { published: !currentStatus });
-                logActivity(`${currentStatus ? 'Unpublished' : 'Published'} Letter`, isSuperAdmin ? "Super Admin" : "Sub Admin");
-                loadData();
-            }
-        }
-
-        window.deleteLetter = async (id) => {
-            if(confirm("हे पत्र कायमचे डिलीट करायचे आहे का?")) {
-                await deleteDoc(doc(db, "letters", id));
-                logActivity("Deleted Letter", isSuperAdmin ? "Super Admin" : "Sub Admin");
-                loadData();
-            }
-        }
-
+        /* SUB ADMIN & SETTINGS */
         window.selectAllPermissions = () => { document.querySelectorAll('#permission_boxes input[type="checkbox"]').forEach(cb => cb.checked = true); }
         
         window.addSubAdmin = async () => {
             if(!isSuperAdmin) return alert("Only Super Admin can do this.");
-            
             let name = document.getElementById('sub_admin_name').value;
             let email = document.getElementById('sub_admin_email').value;
             let pass = document.getElementById('sub_admin_pass').value;
@@ -1514,36 +1957,18 @@
             let perms = []; document.querySelectorAll('#permission_boxes input:checked').forEach(cb => perms.push(cb.value));
 
             if(!name || !email || !pass) return alert("कृपया सर्व माहिती भरा.");
-            
             Swal.fire({title: 'सब-ॲडमिन बनवत आहे...', didOpen: () => Swal.showLoading()});
 
             try {
                 const secondaryApp = initializeApp(firebaseConfig, "SecondaryApp");
                 const secondaryAuth = getAuth(secondaryApp);
-
                 await createUserWithEmailAndPassword(secondaryAuth, email, pass);
                 await signOut(secondaryAuth);
-
                 await addDoc(collection(db, "admins"), { name, email, pass, access, permissions: perms, isActive: true });
-                
-                logActivity(`Added Sub Admin: ${name} (${access})`, "Super Admin");
-                Swal.fire('यशस्वी', 'सब-ॲडमिन ऑथेंटिकेशन आणि डेटाबेस दोन्हीकडे यशस्वीरित्या जोडला गेला. आता ते लॉगिन करू शकतील.', 'success'); 
-                
-                document.getElementById('sub_admin_name').value = "";
-                document.getElementById('sub_admin_email').value = "";
-                document.getElementById('sub_admin_pass').value = "";
-                
+                Swal.fire('यशस्वी', 'सब-ॲडमिन जोडला गेला!', 'success'); 
+                document.getElementById('sub_admin_name').value = ""; document.getElementById('sub_admin_email').value = ""; document.getElementById('sub_admin_pass').value = "";
                 loadData();
-            } catch (error) {
-                console.error(error);
-                if(error.code === 'auth/email-already-in-use') {
-                    Swal.fire('Error', 'या ईमेल आयडीवर आधीपासूनच अकाउंट बनवलेले आहे. कृपया दुसरा ईमेल आयडी वापरा.', 'error');
-                } else if(error.code === 'auth/weak-password') {
-                    Swal.fire('Error', 'पासवर्ड खूप सोपा आहे. कृपया किमान ६ अक्षरांचा किंवा अंकांचा पासवर्ड द्या.', 'error');
-                } else {
-                    Swal.fire('Error', 'सब-ॲडमिन जोडताना त्रुटी आली: ' + error.message, 'error');
-                }
-            }
+            } catch (error) { Swal.fire('Error', error.message, 'error'); }
         }
 
         window.renderSubAdmins = () => {
@@ -1552,7 +1977,6 @@
             document.getElementById('subAdminListBody').innerHTML = fil.map(a => {
                 let isActive = a.isActive !== false; 
                 let statusBadge = isActive ? '<span class="badge bg-success" style="font-size:0.65rem;">Active</span>' : '<span class="badge bg-danger" style="font-size:0.65rem;">Blocked</span>';
-                
                 return `
                 <tr>
                     <td><b>${a.name}</b> <br> ${statusBadge}</td>
@@ -1560,82 +1984,42 @@
                     <td>${a.pass}</td>
                     <td>${a.access}</td>
                     <td style="white-space:nowrap;">
-                        <button class="btn-action bg-info" onclick="sendResetLink('${a.email}')" title="पासवर्ड रिसेट लिंक पाठवा"><i class="fa fa-key"></i></button>
+                        <button class="btn-action bg-info" onclick="sendResetLink('${a.email}')" title="पासवर्ड रिसेट"><i class="fa fa-key"></i></button>
                         <button class="btn-action bg-wa" onclick="sendLoginWA('${a.name}', '${a.email}', '${a.pass}')" title="लॉगिन पाठवा"><i class="fa fa-whatsapp"></i></button>
-                        <button class="btn-action ${isActive ? 'bg-warning' : 'bg-success'}" onclick="toggleSubAdminStatus('${a.id}', ${isActive})" title="${isActive ? 'अकाउंट ब्लॉक करा' : 'अकाउंट चालू करा'}"><i class="fa ${isActive ? 'fa-ban' : 'fa-check-circle'}"></i></button>
-                        <button class="btn-action bg-danger" onclick="deleteSubAdmin('${a.id}')" title="कायमचे डिलीट करा"><i class="fa fa-trash"></i></button>
+                        <button class="btn-action ${isActive ? 'bg-warning' : 'bg-success'}" onclick="toggleSubAdminStatus('${a.id}', ${isActive})"><i class="fa ${isActive ? 'fa-ban' : 'fa-check-circle'}"></i></button>
+                        <button class="btn-action bg-danger" onclick="deleteSubAdmin('${a.id}')"><i class="fa fa-trash"></i></button>
                     </td>
                 </tr>`;
             }).join('');
         }
 
         window.toggleSubAdminStatus = async (id, currentStatus) => {
-            let msg = currentStatus ? "या सब-ॲडमिनला 'ब्लॉक' करायचे आहे का? (ते लॉगिन करू शकणार नाहीत)" : "या सब-ॲडमिनचे अकाउंट पुन्हा 'चालू' करायचे आहे का?";
-            if(confirm(msg)) {
-                Swal.fire({title: 'अपडेट करत आहे...', didOpen: () => Swal.showLoading()});
-                await updateDoc(doc(db, "admins", id), { isActive: !currentStatus });
-                logActivity(`${currentStatus ? 'Blocked' : 'Unblocked'} Sub Admin`, "Super Admin");
-                Swal.close();
-                loadData(); 
+            if(confirm("सब-ॲडमिन चे स्टेटस बदलायचे आहे का?")) {
+                await updateDoc(doc(db, "admins", id), { isActive: !currentStatus }); loadData(); 
             }
         }
 
         window.deleteSubAdmin = async (id) => {
-            if(confirm("सावधान! या सब-ॲडमिनला कायमचे डिलीट करायचे आहे का?")) {
-                Swal.fire({title: 'डिलीट करत आहे...', didOpen: () => Swal.showLoading()});
-                await deleteDoc(doc(db, "admins", id));
-                logActivity("Deleted Sub Admin", "Super Admin");
-                Swal.close();
-                loadData(); 
+            if(confirm("या सब-ॲडमिनला कायमचे डिलीट करायचे आहे का?")) {
+                await deleteDoc(doc(db, "admins", id)); loadData(); 
             }
         }
         
         window.filterSubAdmins = () => renderSubAdmins();
-        
-        window.sendLoginWA = (name, id, pass) => { 
-            let msg = "नमस्कार " + name + ",\n\nयुझरनेम: " + id + "\nपासवर्ड: " + pass;
-            window.open("https://wa.me/?text=" + encodeURIComponent(msg), "_blank"); 
-        }
-        
-        window.sendLoginEmail = (name, id, pass) => { 
-            let msg = "युझरनेम: " + id + "\nपासवर्ड: " + pass;
-            window.location.href = "mailto:" + id + "?subject=लॉगिन डिटेल्स&body=" + encodeURIComponent(msg); 
-        }
-
-        window.saveAdminSettings = () => { Swal.fire('सेव्ह झाले', 'जनरल सेटिंग्ज यशस्वीरित्या अपडेट केल्या.', 'success'); logActivity("Updated General Settings", "Super Admin"); }
+        window.sendLoginWA = (name, id, pass) => { window.open("https://wa.me/?text=" + encodeURIComponent("नमस्कार " + name + ",\nयुझरनेम: " + id + "\nपासवर्ड: " + pass), "_blank"); }
+        window.saveAdminSettings = () => { Swal.fire('सेव्ह झाले', 'जनरल सेटिंग्ज अपडेट झाल्या.', 'success'); }
 
         window.forgotPassword = async () => {
             let email = document.getElementById('adminEmail').value.trim();
-            if(!email) {
-                return Swal.fire('माहिती अपूर्ण', 'कृपया प्रथम तुमचा रजिस्टर Email आयडी वरील बॉक्समध्ये टाका आणि नंतर "पासवर्ड विसरलात?" वर क्लिक करा.', 'warning');
-            }
-            
-            Swal.fire({title: 'लिंक पाठवत आहे...', didOpen: () => Swal.showLoading()});
+            if(!email) return Swal.fire('माहिती अपूर्ण', 'कृपया तुमचा रजिस्टर Email टाका.', 'warning');
             try {
                 await sendPasswordResetEmail(auth, email);
-                Swal.fire('यशस्वी!', 'पासवर्ड रिसेट करण्याची लिंक तुमच्या ईमेलवर पाठवली आहे. कृपया तुमचा इनबॉक्स (आणि Spam फोल्डर) तपासा.', 'success');
-            } catch(error) {
-                if(error.code === 'auth/user-not-found') {
-                    Swal.fire('एरर', 'या ईमेल आयडीवर कोणतेही अकाउंट आढळले नाही.', 'error');
-                } else if(error.code === 'auth/invalid-email') {
-                    Swal.fire('एरर', 'कृपया योग्य ईमेल आयडी टाका.', 'error');
-                } else {
-                    Swal.fire('एरर', error.message, 'error');
-                }
-            }
+                Swal.fire('यशस्वी!', 'पासवर्ड रिसेट लिंक तुमच्या ईमेलवर पाठवली आहे.', 'success');
+            } catch(error) { Swal.fire('एरर', error.message, 'error'); }
         };
 
         window.sendResetLink = async (email) => {
-            if(confirm(`खरोखर ${email} या आयडीवर पासवर्ड रिसेट लिंक पाठवायची आहे का?`)) {
-                Swal.fire({title: 'लिंक पाठवत आहे...', didOpen: () => Swal.showLoading()});
-                try {
-                    await sendPasswordResetEmail(auth, email);
-                    logActivity(`Sent Password Reset Link to ${email}`, "Super Admin");
-                    Swal.fire('यशस्वी', 'सब-अॅडमिनच्या ईमेलवर पासवर्ड रिसेट लिंक पाठवली आहे!', 'success');
-                } catch(error) {
-                    Swal.fire('एरर', error.message, 'error');
-                }
-            }
+            try { await sendPasswordResetEmail(auth, email); Swal.fire('यशस्वी', 'लिंक पाठवली!', 'success'); } catch(e) { Swal.fire('एरर', e.message, 'error'); }
         };
     </script>
 </body>
