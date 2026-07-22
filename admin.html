@@ -1211,14 +1211,21 @@
             }
         }
 
-       window.deleteOB = async (id) => {
+       // --- सुधारित पदाधिकारी डिलीट करणे (Delete OB) ---
+        window.deleteOB = async (id) => {
             if(confirm("या पदाधिकाऱ्याला यादीतून काढायचे आहे का? (सदस्य डेटाबेसमधून डिलीट होणार नाही)")) {
                 try {
                     Swal.fire({title: 'डिलीट करत आहे...', didOpen: () => Swal.showLoading()});
+                    
+                    // १. डेटाबेसमधून डिलीट करा
                     await deleteDoc(doc(db, "committee", id)); 
                     await logActivity("Deleted Office Bearer", isSuperAdmin ? "Super Admin" : "Sub Admin"); 
+                    
+                    // २. मुख्य बदल: संपूर्ण डेटाबेस लोड न करता फक्त स्क्रीनवरील यादी अपडेट करा
+                    committeeData = committeeData.filter(c => c.id !== id);
+                    window.renderCommittee();
+                    
                     Swal.fire('यशस्वी', 'पदाधिकारी यादीतून काढला!', 'success');
-                    loadData();
                 } catch(error) {
                     Swal.fire('Error', 'डिलीट करताना त्रुटी आली: ' + error.message, 'error');
                 }
