@@ -1189,21 +1189,39 @@
         };
 
         window.moveOB = async (id1, id2) => {
-            let doc1 = committeeData.find(c => c.id === id1);
-            let doc2 = committeeData.find(c => c.id === id2);
-            if(doc1 && doc2) {
-                let tempOrder = doc1.order || 0;
-                await updateDoc(doc(db, "committee", id1), { order: doc2.order || 0 });
-                await updateDoc(doc(db, "committee", id2), { order: tempOrder });
-                loadData();
+            try {
+                let doc1 = committeeData.find(c => c.id === id1);
+                let doc2 = committeeData.find(c => c.id === id2);
+                
+                if(doc1 && doc2) {
+                    Swal.fire({title: 'क्रम बदलत आहे...', didOpen: () => Swal.showLoading()});
+                    
+                    // जर जुन्या डेटाला order नसेल, तर तात्पुरता order सेट करा
+                    let order1 = doc1.order || Date.now();
+                    let order2 = doc2.order || (Date.now() + 1000);
+                    
+                    await updateDoc(doc(db, "committee", id1), { order: order2 });
+                    await updateDoc(doc(db, "committee", id2), { order: order1 });
+                    
+                    Swal.close();
+                    loadData(); // लिस्ट रिफ्रेश होईल
+                }
+            } catch(error) {
+                Swal.fire('Error', 'क्रम बदलताना त्रुटी आली: ' + error.message, 'error');
             }
         }
 
-        window.deleteOB = async (id) => {
+       window.deleteOB = async (id) => {
             if(confirm("या पदाधिकाऱ्याला यादीतून काढायचे आहे का? (सदस्य डेटाबेसमधून डिलीट होणार नाही)")) {
-                await deleteDoc(doc(db, "committee", id)); 
-                logActivity("Deleted Office Bearer", isSuperAdmin ? "Super Admin" : "Sub Admin"); 
-                loadData();
+                try {
+                    Swal.fire({title: 'डिलीट करत आहे...', didOpen: () => Swal.showLoading()});
+                    await deleteDoc(doc(db, "committee", id)); 
+                    await logActivity("Deleted Office Bearer", isSuperAdmin ? "Super Admin" : "Sub Admin"); 
+                    Swal.fire('यशस्वी', 'पदाधिकारी यादीतून काढला!', 'success');
+                    loadData();
+                } catch(error) {
+                    Swal.fire('Error', 'डिलीट करताना त्रुटी आली: ' + error.message, 'error');
+                }
             }
         }
 
@@ -1239,12 +1257,16 @@
         }
         
         window.deleteGalleryPhoto = async (id) => {
-            if(confirm("हा फोटो कायमचा डिलीट करायचा आहे का? (डेटाबेस आणि स्टोरेजमधून)")) {
-                // Since Cloudinary simulates storage, we delete from DB. 
-                // Actual Cloudinary deletion requires backend API secret, so we just remove DB link.
-                await deleteDoc(doc(db, "gallery", id)); 
-                logActivity("Deleted Gallery Photo", isSuperAdmin ? "Super Admin" : "Sub Admin"); 
-                loadGallery();
+            if(confirm("हा फोटो कायमचा डिलीट करायचा आहे का?")) {
+                try {
+                    Swal.fire({title: 'डिलीट करत आहे...', didOpen: () => Swal.showLoading()});
+                    await deleteDoc(doc(db, "gallery", id)); 
+                    await logActivity("Deleted Gallery Photo", isSuperAdmin ? "Super Admin" : "Sub Admin"); 
+                    Swal.fire('यशस्वी', 'फोटो डिलीट झाला!', 'success');
+                    loadGallery();
+                } catch(error) {
+                    Swal.fire('Error', 'फोटो डिलीट करताना त्रुटी आली: ' + error.message, 'error');
+                }
             }
         }
 
