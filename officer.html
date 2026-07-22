@@ -145,7 +145,7 @@
             }
         });
 
-        // Fetch Office Bearers & Link with Members Database
+       // Fetch Office Bearers & Link with Members Database
         async function loadCommittee() {
             try {
                 // Fetch Committee List
@@ -159,13 +159,14 @@
                     membersMap[mDoc.id] = mDoc.data();
                 });
 
-               let commArray = [];
-                commSnap.forEach(doc => commArray.push(doc.data()));
-                
+                let commArray = [];
+                commSnap.forEach(doc => {
+                    // ID आणि डेटा दोन्ही एकत्र घेणे जेणेकरून फोटो मॅच होतील
+                    commArray.push({ id: doc.id, ...doc.data() });
+                });
+
                 // ॲडमिन पॅनेलमध्ये ठरवलेल्या क्रमानुसार सॉर्ट करा
                 commArray.sort((a, b) => (a.order || 0) - (b.order || 0));
-
-                let html = '';
 
                 let html = '';
                 for (let c of commArray) {
@@ -191,6 +192,16 @@
                         </div>
                     `;
                 }
+
+                const committeeGrid = document.getElementById('public-committee-grid');
+                if(committeeGrid) {
+                    committeeGrid.innerHTML = html || '<p style="text-align:center; color:gray; width:100%;">सध्या कोणतेही पदाधिकारी उपलब्ध नाहीत.</p>';
+                }
+            } catch (error) {
+                console.error("Error loading committee data:", error);
+                document.getElementById('public-committee-grid').innerHTML = '<p style="text-align:center; color:red; width:100%;">डेटा लोड करताना तांत्रिक त्रुटी आली.</p>';
+            }
+        }
 
                 const committeeGrid = document.getElementById('public-committee-grid');
                 if(committeeGrid) {
