@@ -921,7 +921,7 @@
         }
 
         async function loadData() {
-            const getD = async (col) => { let arr=[]; (await getDocs(collection(db,col))).forEach(d=>arr.push({id:d.id, ...d.data()})); return arr; };
+            const getD = async (col) => { let arr=[]; (await getDocs(collection(db,col))).forEach(d=>arr.push({...d.data(), id:d.id})); return arr; };
             membersData = await getD("members"); otherStaffData = await getD("other_staff"); committeeData = await getD("committee"); lettersData = await getD("letters");
             
             loadGallery();
@@ -1158,6 +1158,7 @@
             
             Swal.fire({title: 'अपडेट करत आहे...', didOpen: () => Swal.showLoading()});
             let obData = { ...tempSelectedOB, post: desig, level: level, order: Date.now() }; // Assign default order
+            delete obData.id; 
             await addDoc(collection(db, "committee"), obData);
             
             logActivity(`Added Office Bearer: ${obData.name} - ${desig} (${level})`, isSuperAdmin ? "Super Admin" : "Sub Admin");
