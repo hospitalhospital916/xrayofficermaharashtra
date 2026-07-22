@@ -1518,18 +1518,52 @@
         
 
         // --- SUB ADMIN TABLE & ACTIONS (Unchanged) ---
+                // --- नवीन renderSubAdmins फंक्शन ---
         window.renderSubAdmins = () => {
             let s = document.getElementById('searchSubAdmin').value.toLowerCase();
             let fil = subAdminsList.filter(a => (a.name||'').toLowerCase().includes(s));
-            document.getElementById('subAdminListBody').innerHTML = fil.map(a => `
+            document.getElementById('subAdminListBody').innerHTML = fil.map(a => {
+                let isActive = a.isActive !== false; 
+                let statusBadge = isActive ? '<span class="badge bg-success" style="font-size:0.65rem;">Active</span>' : '<span class="badge bg-danger" style="font-size:0.65rem;">Blocked</span>';
+                
+                return `
                 <tr>
-                    <td>${a.name}</td><td>${a.email}</td><td>${a.pass}</td><td>${a.access}</td>
+                    <td><b>${a.name}</b> <br> ${statusBadge}</td>
+                    <td>${a.email}</td>
+                    <td>${a.pass}</td>
+                    <td>${a.access}</td>
                     <td style="white-space:nowrap;">
-                        <button class="btn-action bg-wa" onclick="sendLoginWA('${a.name}', '${a.email}', '${a.pass}')" title="Send via WhatsApp"><i class="fa fa-whatsapp"></i></button>
-                        <button class="btn-action bg-mail" onclick="sendLoginEmail('${a.name}', '${a.email}', '${a.pass}')" title="Send via Email"><i class="fa fa-envelope"></i></button>
+                        <button class="btn-action bg-wa" onclick="sendLoginWA('${a.name}', '${a.email}', '${a.pass}')" title="लॉगिन पाठवा"><i class="fa fa-whatsapp"></i></button>
+                        <button class="btn-action ${isActive ? 'bg-warning' : 'bg-success'}" onclick="toggleSubAdminStatus('${a.id}', ${isActive})" title="${isActive ? 'अकाउंट ब्लॉक करा' : 'अकाउंट चालू करा'}"><i class="fa ${isActive ? 'fa-ban' : 'fa-check-circle'}"></i></button>
+                        <button class="btn-action bg-danger" onclick="deleteSubAdmin('${a.id}')" title="कायमचे डिलीट करा"><i class="fa fa-trash"></i></button>
                     </td>
-                </tr>`).join('');
+                </tr>`;
+            }).join('');
         }
+
+        // --- सब-ॲडमिन ब्लॉक किंवा अन-ब्लॉक करण्याचे फंक्शन ---
+        window.toggleSubAdminStatus = async (id, currentStatus) => {
+            let msg = currentStatus ? "या सब-ॲडमिनला 'ब्लॉक' करायचे आहे का? (ते लॉगिन करू शकणार नाहीत)" : "या सब-ॲडमिनचे अकाउंट पुन्हा 'चालू' करायचे आहे का?";
+            if(confirm(msg)) {
+                Swal.fire({title: 'अपडेट करत आहे...', didOpen: () => Swal.showLoading()});
+                await updateDoc(doc(db, "admin_users", id), { isActive: !currentStatus });
+                logActivity(`${currentStatus ? 'Blocked' : 'Unblocked'} Sub Admin`, "Super Admin");
+                Swal.close();
+                loadData(); 
+            }
+        }
+
+        // --- सब-ॲडमिन कायमचे डिलीट करण्याचे फंक्शन ---
+        window.deleteSubAdmin = async (id) => {
+            if(confirm("सावधान! या सब-ॲडमिनला कायमचे डिलीट करायचे आहे का?")) {
+                Swal.fire({title: 'डिलीट करत आहे...', didOpen: () => Swal.showLoading()});
+                await deleteDoc(doc(db, "admin_users", id));
+                logActivity("Deleted Sub Admin", "Super Admin");
+                Swal.close();
+                loadData(); 
+            }
+        }
+        
         window.filterSubAdmins = () => renderSubAdmins();
         window.sendLoginWA = (name, id, pass) => { window.open(`https://wa.me/?text=${encodeURIComponent(`नमस्कार ${name},\n\nयुझरनेम: ${id}\nपासवर्ड: ${pass}`)}`, '_blank'); }
         window.sendLoginEmail = (name, id, pass) => { window.location.href = `mailto:${id}?subject=लॉगिन डिटेल्स&body=युझरनेम: ${id}\nपासवर्ड: ${pass}`; }
