@@ -1437,18 +1437,55 @@
         window.selectAllPermissions = () => { document.querySelectorAll('#permission_boxes input[type="checkbox"]').forEach(cb => cb.checked = true); }
         
         window.addSubAdmin = async () => {
-            if(!isSuperAdmin) return alert("Only Super Admin can do this.");
-            let name = document.getElementById('sub_admin_name').value;
-            let email = document.getElementById('sub_admin_email').value;
-            let pass = document.getElementById('sub_admin_pass').value;
-            let access = document.getElementById('sub_admin_access').value;
-            let perms = []; document.querySelectorAll('#permission_boxes input:checked').forEach(cb => perms.push(cb.value));
+    if(!isSuperAdmin) return alert("Only Super Admin can do this.");
+    
+    let name = document.getElementById('sub_admin_name').value;
+    let email = document.getElementById('sub_admin_email').value;
+    let pass = document.getElementById('sub_admin_pass').value;
+    let access = document.getElementById('sub_admin_access').value;
+    let perms = []; document.querySelectorAll('#permission_boxes input:checked').forEach(cb => perms.push(cb.value));
 
-            if(!name || !email || !pass) return alert("सर्व माहिती भरा.");
-            await addDoc(collection(db, "admin_users"), { name, email, pass, access, permissions: perms });
-            logActivity(`Added Sub Admin: ${name} (${access})`, "Super Admin");
-            Swal.fire('यशस्वी', 'सब-ॲडमिन जोडला गेला.', 'success'); loadData();
+    if(!name || !email || !pass) return alert("कृपया सर्व माहिती भरा.");
+    
+    Swal.fire({title: 'सब-ॲडमिन बनवत आहे...', didOpen: () => Swal.showLoading()});
+
+    try {
+        // १. दुय्यम फायरबेस ॲप तयार करा (जेणेकरून मुख्य ॲडमिन लॉगआउट होणार नाही)
+        const secondaryApp = initializeApp(firebaseConfig, "SecondaryApp");
+        const secondaryAuth = getAuth(secondaryApp);
+
+        // २. ऑथेंटिकेशन (Firebase Authentication) मध्ये नवीन युजर तयार करा
+        await createUserWithEmailAndPassword(secondaryAuth, email, pass);
+        
+        // ३. काम झाल्यावर दुय्यम ॲपमधून लगेच साईन-आउट करा
+        await signOut(secondaryAuth);
+
+        // ४. आता नेहमीप्रमाणे फायरस्टोअर (Firestore Database) मध्ये युजरची माहिती सेव्ह करा
+        await addDoc(collection(db, "admin_users"), { name, email, pass, access, permissions: perms });
+        
+        logActivity(`Added Sub Admin: ${name} (${access})`, "Super Admin");
+        Swal.fire('यशस्वी', 'सब-ॲडमिन ऑथेंटिकेशन आणि डेटाबेस दोन्हीकडे यशस्वीरित्या जोडला गेला. आता ते लॉगिन करू शकतील.', 'success'); 
+        
+        // फॉर्ममधील टाईप केलेली माहिती रिकामी करा
+        document.getElementById('sub_admin_name').value = "";
+        document.getElementById('sub_admin_email').value = "";
+        document.getElementById('sub_admin_pass').value = "";
+        
+        loadData(); // लिस्ट रिफ्रेश करा
+    } catch (error) {
+        console.error(error);
+        
+        // जर काही एरर आला तर तो युजरला समजेल असा दाखवा
+        if(error.code === 'auth/email-already-in-use') {
+            Swal.fire('Error', 'या ईमेल आयडीवर आधीपासूनच अकाउंट बनवलेले आहे. कृपया दुसरा ईमेल आयडी वापरा.', 'error');
+        } else if(error.code === 'auth/weak-password') {
+            Swal.fire('Error', 'पासवर्ड खूप सोपा आहे. कृपया किमान ६ अक्षरांचा किंवा अंकांचा पासवर्ड द्या.', 'error');
+        } else {
+            Swal.fire('Error', 'सब-ॲडमिन जोडताना त्रुटी आली: ' + error.message, 'error');
         }
+    }
+        }
+        
 
         // --- SUB ADMIN TABLE & ACTIONS (Unchanged) ---
         window.renderSubAdmins = () => {
