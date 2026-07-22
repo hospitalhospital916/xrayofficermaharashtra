@@ -125,10 +125,9 @@
             margin: 0 auto;
             position: relative;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            background-size: cover;
+            background-size: 100% 100%;
             background-position: center;
             background-repeat: no-repeat;
-            padding: 35mm 20mm 25mm 20mm;
             font-family: 'Mukta', Arial, sans-serif;
             color: #000;
             box-sizing: border-box;
@@ -158,7 +157,7 @@
             .container { margin: 0; padding: 0; max-width: none; width: 100%;}
             .panel { border: none; box-shadow: none; margin: 0;}
             #printLetterArea { display: block !important; width: 100%; height: auto;}
-            .a4-print-container { box-shadow: none; margin: 0; padding: 35mm 20mm 25mm 20mm !important; width: 210mm; height: 297mm; page-break-after: always; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .a4-print-container { box-shadow: none; margin: 0; width: 210mm; height: 297mm; page-break-after: always; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
         }
     </style>
 </head>
@@ -317,7 +316,6 @@
             </div>
         </div>
 
-        <!-- MENU ORDER MODIFIED AS REQUESTED -->
         <div class="tab-menu" id="mainTabMenu">
             <button class="tab-btn active" onclick="openTab('tab-dash')" data-perm="dashboard"><i class="fa fa-chart-pie"></i> डॅशबोर्ड</button>
             <button class="tab-btn" onclick="openTab('tab-members')" data-perm="members"><i class="fa fa-user-check"></i> सदस्य नियंत्रण</button>
@@ -347,7 +345,6 @@
                             <div id="mandalMapGrid" class="mandal-map-grid"></div>
                         </div>
                     </div>
-                    <!-- PIE CHART FIX -->
                     <div class="panel" style="margin-bottom:0;">
                         <div class="panel-header h-warning"><span><i class="fa fa-chart-pie"></i> मंडळनिहाय मान्य सदस्य</span></div>
                         <div class="panel-body" style="height:350px; display:flex; justify-content:center; align-items:center;">
@@ -448,7 +445,7 @@
 
             <!-- 4. I-CARD & LETTER PAD DESIGN -->
             <div id="tab-design" class="tab-content">
-                <!-- I-CARD SETTINGS WITH COMPREHENSIVE CHECKBOXES -->
+                <!-- I-CARD SETTINGS -->
                 <div class="panel">
                     <div class="panel-header h-primary"><span><i class="fa fa-id-badge"></i> ओळखपत्र (ID Card) सेटिंग्ज व चेकबॉक्सेस</span></div>
                     <div class="panel-body">
@@ -470,12 +467,12 @@
                     </div>
                 </div>
 
-                <!-- LETTER PAD MANAGEMENT WITH 5 SLOTS, PADDING SLIDER, LOGO, STAMP & 5 SIGNATURES -->
+                <!-- LETTER PAD MANAGEMENT WITH ADVANCED 4-DIRECTION MARGIN CONTROLS -->
                 <div class="panel">
                     <div class="panel-header h-info"><span><i class="fa fa-file-alt"></i> Letter Pad Management (लेटरपॅड व्यवस्थापन)</span></div>
                     <div class="panel-body">
                         
-                        <!-- 1. 4-5 Template Slots (Delete required before upload) -->
+                        <!-- 1. 5 Template Slots -->
                         <div style="background:#f1f5f9; padding:15px; border-radius:8px; margin-bottom:20px;">
                             <h4 style="color:var(--primary); margin-bottom:10px;">१. लेटरपॅड डिझाईन्स (५ डिझाईन कप्पे / Templates)</h4>
                             <p style="font-size:0.85rem; color:gray; margin-bottom:10px;">जुनी डिझाईन डिलीट केल्याशिवाय नवीन डिझाईन टाकता येणार नाही (Space Saver Rule).</p>
@@ -485,7 +482,7 @@
 
                         <!-- 2. Logo, Stamp & 5 Signatures Config -->
                         <div style="background:#f8fafc; padding:15px; border-radius:8px; margin-bottom:20px; border:1px solid #cbd5e1;">
-                            <h4 style="color:var(--dark); margin-bottom:10px;">२. लोगो, शिक्का, सही व मार्जिन सेटिंग्ज</h4>
+                            <h4 style="color:var(--dark); margin-bottom:10px;">२. लोगो, शिक्का व सही सेटिंग्ज</h4>
                             
                             <div class="form-row">
                                 <div style="flex:1;">
@@ -496,19 +493,40 @@
                                     <label>अधिकृत शिक्का (Stamp):</label>
                                     <div id="slot_stamp_box"></div>
                                 </div>
-                                <div style="flex:1;">
-                                    <label>डाव्या बाजूचा मॅटर मार्जिन (Padding mm):</label>
-                                    <input type="number" id="lp_left_padding" class="form-control" value="20" min="10" max="80" placeholder="उदा. 20">
-                                </div>
                             </div>
 
                             <h5 style="margin-top:15px; margin-bottom:8px; color:var(--primary);">वेगवेगळ्या ५ पदाधिकाऱ्यांच्या सह्या (5 Signatures & Names)</h5>
                             <div class="form-row" id="signsContainer"></div>
                         </div>
 
-                        <!-- 3. New Letter Form -->
+                        <!-- 3. New Letter Form & MARGIN ADJUSTMENTS -->
                         <div style="background:#fffbeb; padding:15px; border-radius:8px; margin-bottom:20px; border-left:4px solid var(--warning);">
-                            <h4 style="color:#b45309; margin-bottom:10px;">३. नवीन पत्र तयार करा</h4>
+                            <h4 style="color:#b45309; margin-bottom:10px;">३. नवीन पत्र तयार करा व मार्जिन सेट करा</h4>
+                            
+                            <!-- 4-DIRECTION MARGIN CONTROL PANEL -->
+                            <div style="background:#fef3c7; border:1px solid #fde68a; padding:12px; border-radius:8px; margin-bottom:15px;">
+                                <h5 style="color:#92400e; margin-bottom:8px;"><i class="fa fa-arrows-alt"></i> पत्राचे सर्व बाजूंचे मार्जिन (जागा अडजस्टमेंट):</h5>
+                                <div class="form-row" style="gap:10px;">
+                                    <div style="flex:1;">
+                                        <label style="font-size:0.8rem; font-weight:bold;">वरची जागा (Top Margin mm):</label>
+                                        <input type="number" id="lp_top_padding" class="form-control" value="60" min="10" max="150" placeholder="उदा. 60">
+                                    </div>
+                                    <div style="flex:1;">
+                                        <label style="font-size:0.8rem; font-weight:bold;">डावी बाजू (Left Margin mm):</label>
+                                        <input type="number" id="lp_left_padding" class="form-control" value="80" min="10" max="150" placeholder="उदा. 80">
+                                    </div>
+                                    <div style="flex:1;">
+                                        <label style="font-size:0.8rem; font-weight:bold;">उजवी बाजू (Right Margin mm):</label>
+                                        <input type="number" id="lp_right_padding" class="form-control" value="15" min="5" max="100" placeholder="उदा. 15">
+                                    </div>
+                                    <div style="flex:1;">
+                                        <label style="font-size:0.8rem; font-weight:bold;">खालची जागा (Bottom Margin mm):</label>
+                                        <input type="number" id="lp_bottom_padding" class="form-control" value="20" min="5" max="100" placeholder="उदा. 20">
+                                    </div>
+                                </div>
+                                <small style="color:#b45309;">💡 टीप: डाव्या बाजूचे पदाधिकाऱ्यांचे नाव टाळण्यासाठी डावे मार्जिन ८० mm व वरचे हेडर टाळण्यासाठी ६० mm योग्य आहे.</small>
+                            </div>
+
                             <div class="form-row">
                                 <div style="flex:1;">
                                     <label>टेंप्लेट निवडा:</label>
@@ -668,7 +686,7 @@
                 </div>
             </div>
 
-            <!-- 8. MEMBER FOLDERS (६ फोल्डर सिस्टीम, रिनेम, ICON, ४०० KB फाईल्स, प्रिंटींग, व्हिजिट ड्रॉपडाऊन व स्क्रीनशॉट प्रतिबंध) -->
+            <!-- 8. MEMBER FOLDERS -->
             <div id="tab-member-folders" class="tab-content">
                 <div class="panel">
                     <div class="panel-header h-primary">
@@ -679,7 +697,6 @@
                     </div>
                     <div class="panel-body">
                         
-                        <!-- ScreenShot & Download Security Toggle for Admin -->
                         <div style="background:#f1f5f9; padding:12px; border-radius:8px; margin-bottom:20px; border-left:4px solid var(--danger); display:flex; justify-content:space-between; align-items:center;">
                             <div>
                                 <b><i class="fa fa-user-shield"></i> सदस्य व्ह्यू सुरक्षा (Member Restrictions):</b>
@@ -934,7 +951,6 @@
             document.getElementById('empMandal').innerHTML = options;
             document.getElementById('lp_recipient_mandal').innerHTML = optionsForm;
             
-            // Populate district options for Member Folders filter
             let allDistHtml = '<option value="">जिल्हा निवडा</option>';
             Object.values(mandalData).flat().forEach(d => { allDistHtml += `<option value="${d}">${d}</option>`; });
             document.getElementById('mf_target_district').innerHTML = allDistHtml;
@@ -1008,7 +1024,6 @@
 
                     subAdminAccessRegion = adminData.access || "All"; 
                     subAdminPermissions = adminData.permissions || [];
-                    // Ensure member_folders is available for sub admin as requested
                     if(!subAdminPermissions.includes('member_folders')) subAdminPermissions.push('member_folders');
                 } else {
                     subAdminAccessRegion = "All"; 
@@ -1070,7 +1085,6 @@
             membersData = await getD("members"); otherStaffData = await getD("other_staff"); committeeData = await getD("committee"); lettersData = await getD("letters");
             memberFilesData = await getD("member_files");
             
-            // Load 6 Member Folders info
             let fSnap = await getDocs(collection(db, "member_folders"));
             if(fSnap.empty) {
                 memberFoldersData = [
@@ -1087,7 +1101,6 @@
                 memberFoldersData.sort((a,b) => a.id.localeCompare(b.id));
             }
 
-            // Load Letter Pad Settings
             let setSnap = await getDocs(collection(db, "lp_settings"));
             setSnap.forEach(d => {
                 let data = d.data();
@@ -1303,7 +1316,6 @@
             Swal.fire({toast: true, position: 'top-end', icon: 'success', title: 'I-Card फिल्ड्स सेव्ह झाल्या!', showConfirmButton: false, timer: 1500});
         }
 
-        /* PIE CHART RENDER FUNCTION FIXED */
         window.renderDashboard = function() {
             let mandalStat = {}; let distStat = {};
             let allowedMandals = subAdminAccessRegion === "All" ? Object.keys(mandalData) : [subAdminAccessRegion];
@@ -1327,11 +1339,8 @@
             });
             document.getElementById('mandalMapGrid').innerHTML = mapHtml;
 
-            // Render Chart.js Pie Chart
             try {
-                if(window.mandalChartInstance) {
-                    window.mandalChartInstance.destroy();
-                }
+                if(window.mandalChartInstance) { window.mandalChartInstance.destroy(); }
                 const ctx = document.getElementById('mandalPieChart').getContext('2d');
                 window.mandalChartInstance = new Chart(ctx, {
                     type: 'pie',
@@ -1342,11 +1351,7 @@
                             backgroundColor: allowedMandals.map(m => colors[m] || '#3b82f6')
                         }]
                     },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: { legend: { position: 'bottom' } }
-                    }
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
                 });
             } catch(err) { console.error("Pie chart error:", err); }
         }
@@ -1423,9 +1428,8 @@
             document.getElementById('otherBody').innerHTML = fil.map((s, i) => `<tr><td>${i+1}</td><td><b>${s.name}</b><br><small>${s.post||'-'}</small></td><td>${s.mobile||'-'}</td><td>${s.workplace||'-'}</td><td>${s.district||'-'}</td><td>${s.mandal||'-'}</td><td>${s.joinDate||'-'}</td><td class="no-print"><button class="btn-action bg-primary" onclick="openFullEditModal('${s.id}','other_staff')"><i class="fa fa-pen"></i></button></td></tr>`).join('');
         }
 
-        /* LETTER PAD ADMIN FUNCTIONS (5 SLOTS, LOGO, STAMP & SIGNATURES) */
+        /* LETTER PAD ADMIN FUNCTIONS */
         window.renderLetterPadAdmin = () => {
-            // Render 5 Template Slots
             let htmlSlots = '';
             let templateOptionsHtml = '';
             for(let i=0; i<5; i++) {
@@ -1453,7 +1457,6 @@
             document.getElementById('lpTemplateSlots').innerHTML = htmlSlots;
             document.getElementById('lp_selected_template').innerHTML = templateOptionsHtml || '<option value="">प्रथम टेंप्लेट अपलोड करा</option>';
 
-            // Logo UI
             let logoBox = document.getElementById('slot_logo_box');
             if(lpLogoUrl) {
                 logoBox.innerHTML = `<img src="${lpLogoUrl}" style="height:40px; margin-right:10px;"><button class="btn-action bg-danger" onclick="deleteLpLogo()"><i class="fa fa-trash"></i></button>`;
@@ -1461,7 +1464,6 @@
                 logoBox.innerHTML = `<input type="file" id="inp_logo" accept="image/*" class="form-control" onchange="uploadLpLogo()">`;
             }
 
-            // Stamp UI
             let stampBox = document.getElementById('slot_stamp_box');
             if(lpStampUrl) {
                 stampBox.innerHTML = `<img src="${lpStampUrl}" style="height:40px; margin-right:10px;"><button class="btn-action bg-danger" onclick="deleteLpStamp()"><i class="fa fa-trash"></i></button>`;
@@ -1469,7 +1471,6 @@
                 stampBox.innerHTML = `<input type="file" id="inp_stamp" accept="image/*" class="form-control" onchange="uploadLpStamp()">`;
             }
 
-            // Render 5 Signature Slots
             let signsHtml = '';
             for(let i=0; i<5; i++) {
                 let sig = lpSignaturesData[i] || { name: `पदाधिकारी ${i+1}`, signUrl: "" };
@@ -1489,8 +1490,7 @@
         }
 
         window.uploadLpTemplateSlot = async (index) => {
-            let file = document.getElementById(`lp_slot_input_${index}`).files[0];
-            if(!file) return;
+            let file = document.getElementById(`lp_slot_input_${index}`).files[0]; if(!file) return;
             Swal.fire({title: 'अपलोड होत आहे...', didOpen: () => Swal.showLoading()});
             try {
                 let url = await uploadToCloudinary(file);
@@ -1564,12 +1564,13 @@
             document.getElementById('lp_recipient_district').style.display = type === 'District' ? 'block' : 'none';
         }
 
-        window.getLetterHTML = (templateUrl, leftPad, ref, date, to, sub, body) => {
+        /* DYNAMIC 4-MARGIN LETTER GENERATION */
+        window.getLetterHTML = (templateUrl, topPad, leftPad, rightPad, bottomPad, ref, date, to, sub, body) => {
             let signsFooterHtml = lpSignaturesData.map(s => s.signUrl ? `<div class="sign-box"><img src="${s.signUrl}"><br><b>${s.name}</b></div>` : (s.name ? `<div class="sign-box"><br><br><b>${s.name}</b></div>` : '')).join('');
             let stampHtml = lpStampUrl ? `<div style="text-align:center;"><img src="${lpStampUrl}" style="height:60px;"></div>` : '';
 
             return `
-                <div class="a4-print-container" style="background-image: url('${templateUrl||''}'); padding-left: ${leftPad}mm;">
+                <div class="a4-print-container" style="background-image: url('${templateUrl||''}'); padding: ${topPad||60}mm ${rightPad||15}mm ${bottomPad||20}mm ${leftPad||80}mm;">
                     <div class="lp-header-info">
                         <div>संदर्भ: ${ref}</div>
                         <div>दिनांक: ${date}</div>
@@ -1585,7 +1586,11 @@
 
         window.previewLetter = () => {
             let tmpl = document.getElementById('lp_selected_template').value;
-            let leftPad = document.getElementById('lp_left_padding').value || 20;
+            let topPad = document.getElementById('lp_top_padding').value || 60;
+            let leftPad = document.getElementById('lp_left_padding').value || 80;
+            let rightPad = document.getElementById('lp_right_padding').value || 15;
+            let bottomPad = document.getElementById('lp_bottom_padding').value || 20;
+
             let ref = document.getElementById('lp_ref').value || '____';
             let date = document.getElementById('lp_date').value || 'DD/MM/YYYY';
             let to = document.getElementById('lp_to').value || '____';
@@ -1597,7 +1602,7 @@
                 <html><head><title>Letter Preview</title>
                 <style>
                     body { background: #525659; display: flex; justify-content: center; padding: 20px; font-family: sans-serif; }
-                    .a4-print-container { width: 210mm; min-height: 297mm; background: white; margin: 0 auto; position: relative; box-shadow: 0 0 10px rgba(0,0,0,0.5); background-size: cover; background-position: center; background-repeat: no-repeat; padding: 35mm 20mm 25mm 20mm; font-family: 'Mukta', Arial, sans-serif; color: #000; box-sizing: border-box; text-align: left; }
+                    .a4-print-container { width: 210mm; min-height: 297mm; background: white; margin: 0 auto; position: relative; box-shadow: 0 0 10px rgba(0,0,0,0.5); background-size: 100% 100%; background-position: center; background-repeat: no-repeat; font-family: 'Mukta', Arial, sans-serif; color: #000; box-sizing: border-box; text-align: left; }
                     .lp-header-info { display: flex; justify-content: space-between; margin-bottom: 15px; font-weight: bold; font-size: 14px;}
                     .lp-to { margin-bottom: 15px; font-size: 15px; font-weight: bold; line-height: 1.4;}
                     .lp-subject { margin-bottom: 20px; font-size: 15px; font-weight: bold; text-align: center; text-decoration: underline;}
@@ -1606,13 +1611,17 @@
                     .sign-box { text-align: center; font-size: 0.85rem; width: 120px; }
                     .sign-box img { max-height: 45px; max-width: 100px; object-fit: contain; }
                 </style>
-                </head><body>${window.getLetterHTML(tmpl, leftPad, ref, date, to, sub, body)}</body></html>
+                </head><body>${window.getLetterHTML(tmpl, topPad, leftPad, rightPad, bottomPad, ref, date, to, sub, body)}</body></html>
             `);
         }
 
         window.saveLetter = async () => {
             let tmpl = document.getElementById('lp_selected_template').value;
-            let leftPad = document.getElementById('lp_left_padding').value || 20;
+            let topPad = document.getElementById('lp_top_padding').value || 60;
+            let leftPad = document.getElementById('lp_left_padding').value || 80;
+            let rightPad = document.getElementById('lp_right_padding').value || 15;
+            let bottomPad = document.getElementById('lp_bottom_padding').value || 20;
+
             let ref = document.getElementById('lp_ref').value;
             let date = document.getElementById('lp_date').value;
             let to = document.getElementById('lp_to').value;
@@ -1626,7 +1635,8 @@
             Swal.fire({title: 'पत्र सेव्ह करत आहे...', didOpen: () => Swal.showLoading()});
             
             await addDoc(collection(db, "letters"), {
-                templateUrl: tmpl, leftPadding: leftPad, ref: ref, date: date, to: to, subject: sub, body: body,
+                templateUrl: tmpl, topPadding: topPad, leftPadding: leftPad, rightPadding: rightPad, bottomPadding: bottomPad,
+                ref: ref, date: date, to: to, subject: sub, body: body,
                 recipientType: rType, recipientMandal: rMandal, recipientDistrict: rDist,
                 published: false, timestamp: Date.now()
             });
@@ -1662,14 +1672,14 @@
         window.printSavedLetter = (id) => {
             let l = lettersData.find(x => x.id === id); if(!l) return;
             let printArea = document.getElementById('printLetterArea');
-            printArea.innerHTML = window.getLetterHTML(l.templateUrl, l.leftPadding||20, l.ref, l.date, l.to, l.subject, l.body);
+            printArea.innerHTML = window.getLetterHTML(l.templateUrl, l.topPadding||60, l.leftPadding||80, l.rightPadding||15, l.bottomPadding||20, l.ref, l.date, l.to, l.subject, l.body);
             setTimeout(() => { window.print(); }, 200);
         }
 
         window.downloadPDFLetter = (id) => {
             let l = lettersData.find(x => x.id === id); if(!l) return;
             let printArea = document.getElementById('printLetterArea');
-            printArea.innerHTML = window.getLetterHTML(l.templateUrl, l.leftPadding||20, l.ref, l.date, l.to, l.subject, l.body);
+            printArea.innerHTML = window.getLetterHTML(l.templateUrl, l.topPadding||60, l.leftPadding||80, l.rightPadding||15, l.bottomPadding||20, l.ref, l.date, l.to, l.subject, l.body);
             printArea.style.display = 'block';
             
             let opt = { margin: 0, filename: `Letter_${l.subject}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
@@ -1692,7 +1702,7 @@
             }
         }
 
-        /* 8. MEMBER FOLDERS & FILES SYSTEM */
+        /* MEMBER FOLDERS & FILES SYSTEM */
         window.renderSixFolders = () => {
             let html = '';
             let dropdownHtml = '';
