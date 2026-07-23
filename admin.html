@@ -1554,36 +1554,43 @@
         }
 
         window.importMemberExcelData = (e) => {
-            let file = e.target.files[0]; if(!file) return;
-            let reader = new FileReader();
-            reader.onload = async (evt) => {
-                let data = new Uint8Array(evt.target.result);
-                let workbook = XLSX.read(data, { type: 'array' });
-                let sheet = workbook.Sheets[workbook.SheetNames[0]];
-                let rows = XLSX.utils.sheet_to_json(sheet);
-                
-                Swal.fire({title: 'डेटा ऑटो-डिटेक्ट करून सेव्ह होत आहे...', didOpen: () => Swal.showLoading()});
-                for(let r of rows) {
-                    let obj = {
-                        name: r['नाव'] || r['Name'] || r['Full Name'] || '',
-                        designation: r['पद'] || r['Designation'] || r['Post'] || '',
-                        mobile: String(r['मोबाईल'] || r['Mobile'] || r['Contact'] || ''),
-                        email: r['ई-मेल'] || r['Email'] || '',
-                        district: r['जिल्हा'] || r['District'] || '',
-                        mandal: r['मंडळ'] || r['Mandal'] || '',
-                        workplace: r['कार्यरत ठिकाण'] || r['Workplace'] || '',
-                        joinDate: r['रुजू दिनांक'] || r['Join Date'] || '',
-                        feeStatus: r['फी स्टेटस'] || 'Unpaid',
-                        status: 'Approved',
-                        isMember: true
-                    };
-                    if(obj.name) await addDoc(collection(db, "members"), obj);
-                }
-                Swal.fire('यशस्वी', 'एक्सेल डेटा ऑटो-मॅप करून सेव्ह झाला!', 'success');
-                loadData();
+    let file = e.target.files[0]; if(!file) return;
+    let reader = new FileReader();
+    reader.onload = async (evt) => {
+        let data = new Uint8Array(evt.target.result);
+        let workbook = XLSX.read(data, { type: 'array' });
+        let sheet = workbook.Sheets[workbook.SheetNames[0]];
+        let rows = XLSX.utils.sheet_to_json(sheet);
+        
+        Swal.fire({title: 'डेटा ऑटो-डिटेक्ट करून सेव्ह होत आहे...', didOpen: () => Swal.showLoading()});
+        for(let r of rows) {
+            let obj = {
+                name: r['नाव'] || r['Name'] || r['Full Name'] || '',
+                designation: r['पद'] || r['Designation'] || r['Post'] || 'X-Ray Scientific Officer',
+                mobile: String(r['मोबाईल'] || r['Mobile'] || r['Contact'] || ''),
+                email: r['ई-मेल'] || r['Email'] || '',
+                district: r['जिल्हा'] || r['District'] || '',
+                mandal: r['मंडळ'] || r['Mandal'] || '',
+                workplace: r['कार्यरत ठिकाण'] || r['Workplace'] || '',
+                address: r['कायमचा पत्ता'] || r['Address'] || r['पत्ता'] || r['पूर्ण पत्ता (पिनकोड सह)'] || '',
+                sevarthId: r['सेवार्थ आयडी'] || r['Sevarth ID'] || '',
+                dob: r['जन्मतारीख'] || r['DOB'] || '',
+                joinDate: r['रुजू दिनांक'] || r['Join Date'] || '-',
+                feeStatus: r['फी स्टेटस'] || 'Unpaid',
+                docUrl: r['ओळखपत्र डाऊनलोड लिन्क'] || r['Doc URL'] || '',
+                otherUrl: r['आधार कार्ड लिन्क'] || r['Other URL'] || '',
+                status: 'Approved',
+                isMember: true
             };
-            reader.readAsArrayBuffer(file);
+            if(obj.name && obj.name.trim() !== '') {
+                await addDoc(collection(db, "members"), obj);
+            }
         }
+        Swal.fire('यशस्वी', 'एक्सेल डेटा ऑटो-मॅप करून सेव्ह झाला!', 'success');
+        loadData();
+    };
+    reader.readAsArrayBuffer(file);
+}
         
         window.renderOtherStaff = () => {
             let s = document.getElementById('empSearch').value.toLowerCase();
