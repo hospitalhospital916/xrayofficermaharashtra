@@ -2448,6 +2448,218 @@
         window.sendResetLink = async (email) => {
             try { await sendPasswordResetEmail(auth, email); Swal.fire('यशस्वी', 'लिंक पाठवली!', 'success'); } catch(e) { Swal.fire('एरर', e.message, 'error'); }
         };
-    </script>
+// ==========================================================
+// १. FUZZY MATCHING, TOKENIZATION व DUPLICATE SEARCH LOGIC
+// ==========================================================
+
+function getLevenshteinDistance(a, b) {
+    if (!a || !b) return (a || b).length;
+    const matrix = [];
+    for (let i = 0; i <= b.length; i++) matrix[i] = [i];
+    for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
+
+    for (let i = 1; i <= b.length; i++) {
+        for (let j = 1; j <= a.length; j++) {
+            if (b.charAt(i - 1) === a.charAt(j - 1)) {
+                matrix[i][j] = matrix[i - 1][j - 1];
+            } else {
+                matrix[i][j] = Math.min(
+                    matrix[i - 1][j - 1] + 1,
+                    matrix[i][j - 1] + 1,
+                    matrix[i - 1][j] + 1
+                );
+            }
+        }
+    }
+    return matrix[b.length][a.length];
+}
+
+function getNameSimilarity(str1, str2) {
+    if (!str1 || !str2) return 0;
+    const clean1 = str1.toLowerCase().trim().replace(/[^a-z0-9\s\u0900-\u097F]/g, '');
+    const clean2 = str2.toLowerCase().trim().replace(/[^a-z0-9\s\u0900-\u097F]/g, '');
+
+    const tokens1 = clean1.split(/\s+/).sort().join(' ');
+    const tokens2 = clean2.split(/\s+/).sort().join(' ');
+
+    if (tokens1 === tokens2) return 1.0;
+
+    const maxLen = Math.max(tokens1.length, tokens2.length);
+    if (maxLen === 0) return 1.0;
+    const dist = getLevenshteinDistance(tokens1, tokens2);
+    return (maxLen - dist) / maxLen;
+}
+
+function checkDuplicatePair(mem1, mem2, threshold = 0.80) {
+    if (mem1.mobile && mem2.mobile && mem1.mobile.toString().trim() === mem2.mobile.toString().trim()) {
+        return { duplicate: true, reason: 'मोबाईल नंबर समान' };
+    }
+    if (mem1.email && mem2.email && mem1.email.toLowerCase().trim() === mem2.email.toLowerCase().trim()) {
+        return { duplicate: true, reason: 'ई-मेल आयडी समान' };
+    }
+    const sim = getNameSimilarity(mem1.name, mem2.name);
+    if (sim >= threshold) {
+        return { duplicate: true, reason: `नावात साम्य: ${Math.round(sim * 100)}%` };
+    }
+    return { duplicate: false, reason: '' };
+}
+
+window.showDuplicateMembersModal = function() {
+    let duplicatePairs = [];
+    for (let i = 0; i < membersData.length; i++) {
+        for (let j = i + 1; j < membersData.length; j++) {
+            const result = checkDuplicatePair(membersData[i], membersData[j]);
+            if (result.duplicate) {
+                duplicatePairs.push({ original: membersData[i], duplicate: membersData[j], reason: result.reason });
+            }
+        }
+    }
+
+    let tableRows = duplicatePairs.map((d, i) => `
+        <tr>
+            <td style="text-align:center;"><input type="checkbox" class="dup-select-chk" value="${d.duplicate.id}"></td>
+            <td><b>${d.original.name}</b><br><small>${d.original.mobile || '-'}</small></td>
+            <td><b style="color:red;">${d.duplicate.name}</b><br><small>${d.duplicate.mobile || '-'}</small></td>
+            <td><span class="badge bg-danger">${d.reason}</span></td>
+            <td>
+                <button class="btn-action bg-danger" onclick="deleteSingleMember('${d.duplicate.id}')"><i class="fa fa-trash"></i> डिलीट</button>
+            </td>
+        </tr>
+    `).join('') || '<tr><td colspan="5" style="text-align:center; padding:15px;">कोणतेही डुप्लिकेट सदस्य सापडले नाहीत.</td></tr>';
+
+    Swal.fire({
+        title: '🔍 डुप्लिकेट सदस्य शोध निकाल',
+        width: '900px',
+        html: `
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                <label><input type="checkbox" onchange="document.querySelectorAll('.dup-select-chk').forEach(c => c.checked = this.checked)"> <b>Select All</b></label>
+                <button class="btn-action bg-danger" onclick="deleteSelectedDuplicates()"><i class="fa fa-trash"></i> निवडलेले मल्टी-डिलीट करा</button>
+            </div>
+            <div style="max-height:400px; overflow-y:auto;">
+                <table border="1" style="width:100%; border-collapse:collapse; font-size:0.85rem;">
+                    <thead>
+                        <tr style="background:#0B3D91; color:white;">
+                            <th>निवड</th>
+                            <th>मूळ सदस्य १</th>
+                            <th>संभाव्य डुप्लिकेट २</th>
+                            <th>साम्यांचे कारण</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>${tableRows}</tbody>
+                </table>
+            </div>
+        `,
+        showConfirmButton: false,
+        showCloseButton: true
+    });
+};
+
+window.deleteSelectedDuplicates = async function() {
+    const selected = document.querySelectorAll('.dup-select-chk:checked');
+    if (selected.length === 0) return Swal.fire('सूचना', 'कृपया डिलीट करण्यासाठी पर्याय निवडा.', 'warning');
+
+    if (confirm(`तुम्हाला खरोखर निवडलेले ${selected.length} डुप्लिकेट सदस्य डिलीट करायचे आहेत का?`)) {
+        Swal.fire({ title: 'डिलीट होत आहे...', didOpen: () => Swal.showLoading() });
+        for (let cb of selected) {
+            await deleteDoc(doc(db, "members", cb.value));
+        }
+        Swal.fire('यशस्वी', 'निवडलेले डुप्लिकेट सदस्य डिलीट झाले!', 'success');
+        loadData();
+    }
+};
+
+window.deleteSingleMember = async function(id) {
+    if (confirm("हा सदस्य डिलीट करायचा आहे का?")) {
+        await deleteDoc(doc(db, "members", id));
+        Swal.fire('यशस्वी', 'सदस्य डिलीट झाला!', 'success');
+        loadData();
+    }
+};
+
+// ==========================================================
+// २. ऍक्टिव्हिटी लॉग (७ दिवसांनंतर ऑटो डिलीट) LOGIC
+// ==========================================================
+
+async function renderActivityLogs() {
+    const logsRef = collection(db, "activity_logs");
+    const sevenDaysAgo = Date.now() - (7 * 24 * 60 * 60 * 1000);
+    
+    const q = query(logsRef, orderBy("timestamp", "desc"));
+    const snap = await getDocs(q);
+    
+    let html = '';
+    snap.forEach(async (docSnap) => {
+        const log = docSnap.data();
+        const logId = docSnap.id;
+        
+        if (log.timestamp < sevenDaysAgo) {
+            await deleteDoc(doc(db, "activity_logs", logId));
+            return;
+        }
+
+        html += `<tr>
+            <td><small>${log.dateString || new Date(log.timestamp).toLocaleString('mr-IN')}</small></td>
+            <td><b>${log.user}</b> (${log.userType || 'Admin'})</td>
+            <td>${log.action}</td>
+        </tr>`;
+    });
+
+    const container = document.getElementById('activityLogsBody');
+    if (container) container.innerHTML = html || '<tr><td colspan="3" style="text-align:center;">मागील ७ दिवसांत कोणतीही ऍक्टिव्हिटी नाही.</td></tr>';
+}
+
+// ==========================================================
+// ३. शुल्क विभाग: ग्लोबल अमाऊंट व बल्क पावती LOGIC
+// ==========================================================
+
+window.applyGlobalFeeAmount = function(globalAmount) {
+    const amt = Number(globalAmount);
+    if (isNaN(amt) || amt < 0) return;
+
+    document.querySelectorAll('#feesTable tbody tr input[type="number"]').forEach(input => {
+        input.value = amt;
+        input.dispatchEvent(new Event('change'));
+    });
+};
+
+window.generateBulkReceipts = function() {
+    const checkedBoxes = document.querySelectorAll('.fee-chk:checked');
+    let selectedMembers = [];
+
+    checkedBoxes.forEach(cb => {
+        const m = membersData.find(x => x.mobile === cb.value || x.id === cb.value);
+        if (m) selectedMembers.push(m);
+    });
+
+    if (selectedMembers.length === 0) {
+        Swal.fire('सूचना', 'कृपया ज्यांची पावती काढायची आहे ते सदस्य निवडा.', 'warning');
+        return;
+    }
+
+    let bulkHtml = selectedMembers.map((m, idx) => `
+        <div class="receipt-container" style="page-break-after: always; margin-bottom: 25px; border:2px solid #0B3D91; padding:20px; border-radius:8px;">
+            <div style="text-align:center; border-bottom:2px solid #0B3D91; padding-bottom:10px;">
+                <h2 style="color:#0B3D91;">क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना महाराष्ट्र</h2>
+                <h4 style="color:#f39c12;">अधिकृत शुल्क पावती (Receipt No: REC-${1000 + idx})</h4>
+            </div>
+            <br>
+            <p><b>सदस्याचे नाव:</b> ${m.name}</p>
+            <p><b>पद व कार्य ठिकाण:</b> ${m.designation || '-'} (${m.workplace || '-'})</p>
+            <p><b>मोबाईल:</b> ${m.mobile || '-'} | <b>जिल्हा:</b> ${m.district || '-'}</p>
+            <p><b>प्राप्त रक्कम:</b> ₹ ${m.feeAmount || 500} /-</p>
+            <p><b>दिनांक:</b> ${new Date().toLocaleDateString('mr-IN')}</p>
+            <br>
+            <div style="display:flex; justify-content:space-between; margin-top:30px;">
+                <span><b>स्वाक्षरी (कोषाध्यक्ष)</b></span>
+                <span><b>अधिकृत शिक्का</b></span>
+            </div>
+        </div>
+    `).join('');
+
+    const printWin = window.open('', '_blank');
+    printWin.document.write(`<html><head><title>Bulk Receipts</title><style>body{font-family:'Mukta',sans-serif; padding:20px;}</style></head><body>${bulkHtml}</body></html>`);
+    setTimeout(() => { printWin.print(); }, 500);
+};    </script>
 </body>
 </html>
