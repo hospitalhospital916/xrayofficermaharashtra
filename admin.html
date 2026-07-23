@@ -2737,25 +2737,44 @@
                 }
             }
         };
+window.deleteSelectedMembers = async function() {
+    // १. सिलेक्ट केलेल्या सर्व चेकबॉक्सचे मूळ IDs आधीच साठवून घेणे
+    const selectedCbs = Array.from(document.querySelectorAll('.mem-chk:checked'));
+    const idsToDelete = selectedCbs.map(cb => cb.dataset.id).filter(id => id && id.trim() !== '');
 
-        window.deleteSelectedMembers = async function() {
-            const selected = document.querySelectorAll('.mem-chk:checked');
-            if (selected.length === 0) return Swal.fire('सूचना', 'कृपया डिलीट करण्यासाठी मुख्य यादीतून किमान एक सदस्य निवडा.', 'warning');
+    if (idsToDelete.length === 0) {
+        return Swal.fire('सूचना', 'कृपया मुख्य यादीतून डिलीट करण्यासाठी किमान एक सदस्य निवडा.', 'warning');
+    }
 
-            if (confirm(`तुम्हाला खरोखर निवडलेले ${selected.length} सदस्य कायमचे डिलीट करायचे आहेत का?`)) {
-                Swal.fire({ title: 'डिलीट होत आहे...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
-                for (let cb of selected) {
-                    let mId = cb.dataset.id || cb.value;
-                    let memObj = membersData.find(x => x.id === mId || x.mobile === cb.value);
-                    if (memObj) {
-                        await deleteDoc(doc(db, "members", memObj.id));
-                    }
-                }
-                await logActivity(`Multi-deleted ${selected.length} members`, isSuperAdmin ? "Super Admin" : "Sub Admin");
-                Swal.fire('यशस्वी', 'निवडलेले सदस्य डिलीट झाले!', 'success');
-                await loadData();
+    // २. कन्फर्मेशन पॉप-अप
+    const confirmRes = await Swal.fire({
+        title: 'खात्री करा',
+        text: `तुम्हाला खरोखर निवडलेले ${idsToDelete.length} सदस्य कायमचे डिलीट करायचे आहेत का?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#ef4444',
+        cancelButtonColor: '#64748b',
+        confirmButtonText: 'होय, डिलीट करा!',
+        cancelButtonText: 'रद्द करा'
+    });
+
+    if (confirmRes.isConfirmed) {
+        Swal.fire({ title: 'डिलीट होत आहे...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+        try {
+            let deleteCount = 0;
+            for (let id of idsToDelete) {
+                await deleteDoc(doc(db, "members", id));
+                deleteCount++;
             }
-        };
+            await logActivity(`Multi-deleted ${deleteCount} members`, isSuperAdmin ? "Super Admin" : "Sub Admin");
+            Swal.fire('यशस्वी', `${deleteCount} सदस्य यशस्वीरीत्या डिलीट झाले!`, 'success');
+            await loadData();
+        } catch (err) {
+            console.error("Multi-delete error:", err);
+            Swal.fire('एरर', 'डिलीट करताना अडचण आली: ' + err.message, 'error');
+        }
+    }
+};
 
         // ==========================================================
         // ऍक्टिव्हिटी लॉग (फक्त सुपर ॲडमिन व ७ दिवसांनंतर ऑटो डिलीट)
