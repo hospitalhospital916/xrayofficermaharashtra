@@ -2474,7 +2474,7 @@
             try { await sendPasswordResetEmail(auth, email); Swal.fire('यशस्वी', 'लिंक पाठवली!', 'success'); } catch(e) { Swal.fire('एरर', e.message, 'error'); }
         };
 
-       // ==========================================================
+  // ==========================================================
         // FUZZY MATCHING, TOKENIZATION, DUPLICATE SEARCH & FILTER LOGIC
         // ==========================================================
 
@@ -2670,7 +2670,6 @@
                 }
             });
         };
-
         window.filterDuplicateModalTable = function() {
             const reasonFilter = document.getElementById('dup_filter_reason')?.value || 'All';
             const mandalFilter = document.getElementById('dup_filter_mandal')?.value || 'All';
