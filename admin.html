@@ -2474,7 +2474,7 @@
             try { await sendPasswordResetEmail(auth, email); Swal.fire('यशस्वी', 'लिंक पाठवली!', 'success'); } catch(e) { Swal.fire('एरर', e.message, 'error'); }
         };
 
-        // ==========================================================
+       // ==========================================================
         // FUZZY MATCHING, TOKENIZATION, DUPLICATE SEARCH & FILTER LOGIC
         // ==========================================================
 
@@ -2500,42 +2500,87 @@
             return matrix[b.length][a.length];
         }
 
-        // १. नाव-आडनाव मागे-पुढे असले तरी अचूक मॅच करणारे टोकनायझेशन व सॉर्टिंग फंक्शन
-        function getNameSimilarity(str1, str2) {
-            if (!str1 || !str2) return 0;
-            
-            const clean1 = str1.toLowerCase().trim().replace(/[^a-z0-9\s\u0900-\u097F]/g, '');
-            const clean2 = str2.toLowerCase().trim().replace(/[^a-z0-9\s\u0900-\u097F]/g, '');
-
-            const tokens1 = clean1.split(/\s+/).filter(t => t.length > 0).sort().join(' ');
-            const tokens2 = clean2.split(/\s+/).filter(t => t.length > 0).sort().join(' ');
-
-            if (tokens1 === tokens2) return 1.0; // १००% मॅच (मागे-पुढे असले तरी)
-
-            const maxLen = Math.max(tokens1.length, tokens2.length);
-            if (maxLen === 0) return 1.0;
-            const dist = getLevenshteinDistance(tokens1, tokens2);
-            return (maxLen - dist) / maxLen;
-        }
-
-        // २. डुप्लिकेट शोधणारे सुधारित फंक्शन (ई-मेल चेक काढून टाकला आहे)
+        // २. सुधारित डुप्लिकेट शोधणारे फंक्शन (अपूर्ण नावे, पहिले-शेवटचे नाव व मोबाईल मॅच)
         function checkDuplicatePair(mem1, mem2, threshold = 0.80) {
             // अ) मोबाईल नंबर समान असल्यास
-            if (mem1.mobile && mem2.mobile && mem1.mobile.toString().trim() !== "" && mem1.mobile.toString().trim() === mem2.mobile.toString().trim()) {
+            let mob1 = (mem1.mobile || '').toString().trim();
+            let mob2 = (mem2.mobile || '').toString().trim();
+            if (mob1 && mob2 && mob1 !== '-' && mob1 === mob2) {
                 return { duplicate: true, reason: 'मोबाईल नंबर समान', reasonType: 'mobile' };
             }
             
-            // ब) नाव व आडनाव क्रमानिरपेक्ष/Fuzzy Match
-            const sim = getNameSimilarity(mem1.name, mem2.name);
-            if (sim >= threshold) {
-                const percent = Math.round(sim * 100);
-                if (sim === 1.0) {
-                    return { duplicate: true, reason: 'नाव व आडनाव हुबेहूब समान (क्रमानिरपेक्ष)', reasonType: 'exact_name' };
-                } else {
+            let name1 = (mem1.name || '').toString().trim();
+            let name2 = (mem2.name || '').toString().trim();
+            if (!name1 || !name2) return { duplicate: false, reason: '', reasonType: '' };
+
+            const clean1 = name1.toLowerCase().replace(/[^a-z0-9\s\u0900-\u097F]/g, '').trim();
+            const clean2 = name2.toLowerCase().replace(/[^a-z0-9\s\u0900-\u097F]/g, '').trim();
+
+            const words1 = clean1.split(/\s+/).filter(t => t.length > 0);
+            const words2 = clean2.split(/\s+/).filter(t => t.length > 0);
+
+            if (words1.length === 0 || words2.length === 0) return { duplicate: false, reason: '', reasonType: '' };
+
+            // १) नाव व आडनाव हुबेहूब समान (क्रमानिरपेक्ष)
+            const sorted1 = [...words1].sort().join(' ');
+            const sorted2 = [...words2].sort().join(' ');
+            if (sorted1 === sorted2) {
+                return { duplicate: true, reason: 'नाव व आडनाव हुबेहूब समान (100%)', reasonType: 'exact_name' };
+            }
+
+            const set1 = new Set(words1);
+            const set2 = new Set(words2);
+
+            // २) अपूर्ण नाव / एका नावात दुसरे नाव समाविष्ट असणे (उदा. "Abhijit" vs "Abhijit Vitthal Mekhale")
+            let isSubset = true;
+            if (words1.length <= words2.length) {
+                for (let w of words1) { if (!set2.has(w)) { isSubset = false; break; } }
+            } else {
+                for (let w of words2) { if (!set1.has(w)) { isSubset = false; break; } }
+            }
+
+            if (isSubset) {
+                let common = words1.filter(w => set2.has(w));
+                if (common.some(w => w.length >= 3)) {
+                    let matchedStr = common.map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+                    return { duplicate: true, reason: `अपूर्ण नाव / नावात साम्य ('${matchedStr}')`, reasonType: 'partial_name' };
+                }
+            }
+
+            // ३) पहिले नाव व आडनाव जुळणे (मध्यम नाव नसले तरी)
+            if (words1.length >= 2 && words2.length >= 2) {
+                let fn1 = words1[0], ln1 = words1[words1.length - 1];
+                let fn2 = words2[0], ln2 = words2[words2.length - 1];
+
+                let fnDist = getLevenshteinDistance(fn1, fn2);
+                let lnDist = getLevenshteinDistance(ln1, ln2);
+
+                let fnSim = (Math.max(fn1.length, fn2.length) - fnDist) / Math.max(fn1.length, fn2.length);
+                let lnSim = (Math.max(ln1.length, ln2.length) - lnDist) / Math.max(ln1.length, ln2.length);
+
+                if (fnSim >= 0.80 && lnSim >= 0.80) {
+                    let pct = Math.round(((fnSim + lnSim) / 2) * 100);
+                    let fnCap = fn1.charAt(0).toUpperCase() + fn1.slice(1);
+                    let lnCap = ln1.charAt(0).toUpperCase() + ln1.slice(1);
+                    return { duplicate: true, reason: `पहिले नाव व आडनाव जुळते (${fnCap} ${lnCap} - ${pct}%)`, reasonType: 'first_last_match' };
+                }
+            }
+
+            // ४) स्पेलिंग मधील साम्य (Fuzzy Match)
+            let fn1 = words1[0], fn2 = words2[0];
+            let fnDist = getLevenshteinDistance(fn1, fn2);
+            let fnSim = (Math.max(fn1.length, fn2.length) - fnDist) / Math.max(fn1.length, fn2.length);
+
+            if (fnSim >= 0.70) {
+                const maxLen = Math.max(sorted1.length, sorted2.length);
+                const dist = getLevenshteinDistance(sorted1, sorted2);
+                const sim = (maxLen - dist) / maxLen;
+                if (sim >= threshold) {
+                    const percent = Math.round(sim * 100);
                     return { duplicate: true, reason: `नावात साम्य: ${percent}%`, reasonType: 'fuzzy_name' };
                 }
             }
-            
+
             return { duplicate: false, reason: '', reasonType: '' };
         }
 
@@ -2575,6 +2620,8 @@
                                     <option value="All">सर्व कारणे (All Reasons)</option>
                                     <option value="mobile">फक्त मोबाईल नंबर समान</option>
                                     <option value="exact_name">फक्त नाव-आडनाव हुबेहूब समान</option>
+                                    <option value="partial_name">अपूर्ण नाव / नावात साम्य (Single Name Match)</option>
+                                    <option value="first_last_match">पहिले नाव व आडनाव जुळते</option>
                                     <option value="fuzzy_name">फक्त स्पेलिंग/नावात साम्य</option>
                                 </select>
                             </div>
