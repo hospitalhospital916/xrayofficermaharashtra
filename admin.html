@@ -985,6 +985,7 @@
 
     <!-- FIREBASE & JS LOGIC -->
     <script type="module">
+        <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where, orderBy, setDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, sendPasswordResetEmail, browserSessionPersistence, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
@@ -995,10 +996,13 @@
         
         const SUPER_ADMIN_EMAIL = "hangemahesh498@gmail.com";
         let isSuperAdmin = false;
+        let subAdminAccessRegion = "All"; 
+        let subAdminPermissions = [];
+        let subAdminsList = [];
+
+        // ही ओळ फक्त इथेच (एकदाच) असावी:
         let currentLoggedInAdminName = "मा. अधिकारी";
         let currentLoggedInAdminDesignation = "संघटना पदाधिकारी";
-        let currentLoggedInAdminName = "अधिकृत अधिकारी";
-        let currentLoggedInAdminDesignation = "राज्य कोषाध्यक्ष / ॲडमिन";
         let subAdminAccessRegion = "All"; 
         let subAdminPermissions = [];
         let subAdminsList = [];
