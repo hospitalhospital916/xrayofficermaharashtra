@@ -346,8 +346,8 @@
                     </div>
                 </div>
 
-                <!-- ऍक्टिव्हिटी लॉग (मागील ७ दिवस) -->
-                <div class="panel">
+                <!-- ऍक्टिव्हिटी लॉग (फक्त सुपर ॲडमिनसाठी) -->
+                <div class="panel" id="activityLogPanel" style="display: none;">
                     <div class="panel-header h-primary">
                         <span><i class="fa fa-history"></i> मुख्य ॲडमिन ऍक्टिव्हिटी लॉग (मागील ७ दिवस)</span>
                     </div>
@@ -434,10 +434,10 @@
             <div id="tab-other" class="tab-content">
                 <div class="panel">
                     <div class="panel-header">
-                        <span><i class="fa fa-users"></i> राज्यातील कर्मचारी डेटाबेस (Auto Feed PDF/Excel)</span>
+                        <span><i class="fa fa-users"></i> राज्यातील कर्मचारी डेटाबेस (Excel Auto Feed)</span>
                         <div style="display:flex; gap:10px;" class="no-print">
-                            <button class="btn-action bg-info" onclick="document.getElementById('importExcel').click()"><i class="fa fa-file-excel"></i> Import Excel/PDF</button>
-                            <input type="file" id="importExcel" accept=".xlsx, .xls, .pdf" style="display:none;" onchange="importEmployeeData(event)">
+                            <button class="btn-action bg-info" onclick="document.getElementById('importExcel').click()"><i class="fa fa-file-excel"></i> Import Excel</button>
+                            <input type="file" id="importExcel" accept=".xlsx, .xls" style="display:none;" onchange="importEmployeeData(event)">
                             <button class="btn-action bg-success" onclick="exportToExcel()"><i class="fa fa-file-excel"></i> Export</button>
                             <button class="btn-action bg-primary" onclick="window.print()"><i class="fa fa-print"></i> Print List</button>
                         </div>
@@ -783,14 +783,14 @@
 
                             <div class="form-row">
                                 <div style="flex:1.5;">
-                                    <label style="font-weight:bold; color:var(--primary);">ही फाईल कोणाला दाखवायची? (Visibility)</label>
+                                    <label style="font-weight:bold; color:var(--primary);">ही फाईल कोणाला दाखवायची? (Visibility Controls)</label>
                                     <select id="mf_visibility" class="form-control" onchange="toggleFolderVisibilityFilter()">
-                                        <option value="OnlyMe">केवळ मी (Private to Admin)</option>
+                                        <option value="AllMembers" selected>☑ सर्व सदस्य (सर्वांना दाखवा)</option>
                                         <option value="AllDivisions">सर्व विभाग (सर्व मंडळे)</option>
-                                        <option value="AllMembers">सर्व सदस्य</option>
                                         <option value="AllDistricts">सर्व जिल्हे</option>
-                                        <option value="SpecificDistrict">एखाद्या जिल्ह्याला (Specific District)</option>
-                                        <option value="SpecificMember">एखाद्या सदस्याला (Specific Member)</option>
+                                        <option value="SpecificDistrict">एखाद्या विशिष्ट जिल्ह्याला (Specific District)</option>
+                                        <option value="SpecificMember">एखाद्या विशिष्ट सदस्याला (Specific Member)</option>
+                                        <option value="OnlyMe">केवळ मी (Private to Admin)</option>
                                     </select>
                                 </div>
 
@@ -1016,9 +1016,11 @@
         window.populateDistricts = function(mSelectId, dSelectId) {
             let m = document.getElementById(mSelectId).value;
             let dSelect = document.getElementById(dSelectId);
-            if(m === "All" || m === "") { dSelect.innerHTML = mSelectId.includes('Filter') || mSelectId.includes('search') ? '<option value="All">सर्व जिल्हे</option>' : '<option value="">प्रथम मंडळ निवडा</option>'; return; }
-            let html = mSelectId.includes('Filter') || mSelectId.includes('search') ? '<option value="All">सर्व जिल्हे</option>' : '<option value="">जिल्हा निवडा</option>';
-            mandalData[m].forEach(d => { html += `<option value="${d}">${d}</option>`; }); dSelect.innerHTML = html;
+            if(!dSelect) return;
+            if(m === "All" || m === "") { dSelect.innerHTML = mSelectId.includes('Filter') || mSelectId.includes('search') || mSelectId.includes('dup') ? '<option value="All">सर्व जिल्हे</option>' : '<option value="">प्रथम मंडळ निवडा</option>'; return; }
+            let html = mSelectId.includes('Filter') || mSelectId.includes('search') || mSelectId.includes('dup') ? '<option value="All">सर्व जिल्हे</option>' : '<option value="">जिल्हा निवडा</option>';
+            if(mandalData[m]) { mandalData[m].forEach(d => { html += `<option value="${d}">${d}</option>`; }); }
+            dSelect.innerHTML = html;
         }
 
         window.checkFileSize = (input, maxKB) => {
@@ -1051,7 +1053,7 @@
         window.openTab = function(tabId) { 
             document.querySelectorAll('.tab-content, .tab-btn').forEach(e=>e.classList.remove('active')); 
             document.getElementById(tabId).classList.add('active'); 
-            event.currentTarget.classList.add('active'); 
+            if(event && event.currentTarget) event.currentTarget.classList.add('active'); 
             if(tabId === 'tab-dash') { setTimeout(renderDashboard, 200); renderActivityLogs(); }
             if(tabId === 'tab-design') { renderLetterPadAdmin(); renderLetters(); filterICardMembers(); }
             if(tabId === 'tab-member-folders') { renderSixFolders(); renderMemberFilesList(); }
@@ -1143,7 +1145,6 @@
             membersData = await getD("members"); otherStaffData = await getD("other_staff"); committeeData = await getD("committee"); lettersData = await getD("letters");
             memberFilesData = await getD("member_files");
             
-            // Member Folders initialization
             let fSnap = await getDocs(collection(db, "member_folders"));
             if(fSnap.empty) {
                 memberFoldersData = [
@@ -1595,8 +1596,31 @@
                 if (s && !((e.name||'').toLowerCase().includes(s))) return false; return true;
             });
             if(sen === 'Senior') { fil.sort((a,b) => new Date(a.joinDate || '2099-01-01') - new Date(b.joinDate || '2099-01-01')); }
-            document.getElementById('otherBody').innerHTML = fil.map((s, i) => `<tr><td>${i+1}</td><td><b>${s.name}</b><br><small>${s.post||'-'}</small></td><td>${s.mobile||'-'}</td><td>${s.workplace||'-'}</td><td>${s.district||'-'}</td><td>${s.mandal||'-'}</td><td>${s.joinDate||'-'}</td><td class="no-print"><button class="btn-action bg-primary" onclick="openFullEditModal('${s.id}','other_staff')"><i class="fa fa-pen"></i></button></td></tr>`).join('');
+            document.getElementById('otherBody').innerHTML = fil.map((s, i) => `
+                <tr>
+                    <td>${i+1}</td>
+                    <td><b>${s.name}</b><br><small>${s.post||'-'}</small></td>
+                    <td>${s.mobile||'-'}</td>
+                    <td>${s.workplace||'-'}</td>
+                    <td>${s.district||'-'}</td>
+                    <td>${s.mandal||'-'}</td>
+                    <td>${s.joinDate||'-'}</td>
+                    <td class="no-print" style="white-space:nowrap;">
+                        <button class="btn-action bg-primary" onclick="openFullEditModal('${s.id}','other_staff')" title="एडिट"><i class="fa fa-pen"></i></button>
+                        <button class="btn-action bg-danger" onclick="deleteOtherStaff('${s.id}')" title="डिलीट"><i class="fa fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('') || '<tr><td colspan="8" style="text-align:center;">डेटा नाही</td></tr>';
         }
+
+        window.deleteOtherStaff = async (id) => {
+            if (confirm("या कर्मचाऱ्याची माहिती कायमची डिलीट करायची आहे का?")) {
+                await deleteDoc(doc(db, "other_staff", id));
+                await logActivity(`Deleted Employee ID: ${id}`, isSuperAdmin ? "Super Admin" : "Sub Admin");
+                Swal.fire('यशस्वी', 'कर्मचारी डिलीट झाला!', 'success');
+                loadData();
+            }
+        };
 
         window.importEmployeeData = (e) => {
             let file = e.target.files[0]; if(!file) return;
@@ -1627,7 +1651,7 @@
             reader.readAsArrayBuffer(file);
         }
 
-        /* LETTER PAD ADMIN & PRINT FIX */
+        /* LETTER PAD ADMIN */
         window.renderLetterPadAdmin = () => {
             let htmlSlots = '';
             let templateOptionsHtml = '';
@@ -2040,7 +2064,7 @@
                 let folderName = folderObj ? folderObj.name : f.folderId;
                 let visText = f.visibility === 'OnlyMe' ? '<span class="badge bg-danger">केवळ मी</span>' :
                              (f.visibility === 'AllDivisions' ? '<span class="badge bg-info">सर्व विभाग</span>' :
-                             (f.visibility === 'AllMembers' ? '<span class="badge bg-success">सर्व सदस्य</span>' :
+                             (f.visibility === 'AllMembers' ? '<span class="badge bg-success">सर्व सदस्य (सर्वांना)</span>' :
                              (f.visibility === 'AllDistricts' ? '<span class="badge bg-primary">सर्व जिल्हे</span>' :
                              (f.visibility === 'SpecificDistrict' ? `<span class="badge bg-warning">${f.targetDistrict} जिल्हा</span>` : '<span class="badge bg-dark">विशिष्ट सदस्य</span>'))));
 
@@ -2444,7 +2468,7 @@
         };
 
         // ==========================================================
-        // FUZZY MATCHING, TOKENIZATION व DUPLICATE SEARCH & DELETE LOGIC
+        // FUZZY MATCHING, TOKENIZATION, DUPLICATE SEARCH & FILTER LOGIC
         // ==========================================================
 
         function getLevenshteinDistance(a, b) {
@@ -2469,101 +2493,167 @@
             return matrix[b.length][a.length];
         }
 
-       // १. नाव-आडनाव मागे-पुढे असले तरी मॅच करणारे फंक्शन (Token Sorting + Fuzzy Matching)
-function getNameSimilarity(str1, str2) {
-    if (!str1 || !str2) return 0;
-    
-    // स्पेशल कॅरेक्टर्स काढून लोअरकेस करणे
-    const clean1 = str1.toLowerCase().trim().replace(/[^a-z0-9\s\u0900-\u097F]/g, '');
-    const clean2 = str2.toLowerCase().trim().replace(/[^a-z0-9\s\u0900-\u097F]/g, '');
+        // १. नाव-आडनाव मागे-पुढे असले तरी अचूक मॅच करणारे टोकनायझेशन व सॉर्टिंग फंक्शन
+        function getNameSimilarity(str1, str2) {
+            if (!str1 || !str2) return 0;
+            
+            const clean1 = str1.toLowerCase().trim().replace(/[^a-z0-9\s\u0900-\u097F]/g, '');
+            const clean2 = str2.toLowerCase().trim().replace(/[^a-z0-9\s\u0900-\u097F]/g, '');
 
-    // शब्द वेगळे करून अकारविल्हे (Sort) लावणे (Anil Jadhav -> "anil jadhav")
-    const tokens1 = clean1.split(/\s+/).filter(t => t.length > 0).sort().join(' ');
-    const tokens2 = clean2.split(/\s+/).filter(t => t.length > 0).sort().join(' ');
+            const tokens1 = clean1.split(/\s+/).filter(t => t.length > 0).sort().join(' ');
+            const tokens2 = clean2.split(/\s+/).filter(t => t.length > 0).sort().join(' ');
 
-    if (tokens1 === tokens2) return 1.0; // १००% मॅच (मागे-पुढे असले तरी)
+            if (tokens1 === tokens2) return 1.0; // १००% मॅच (मागे-पुढे असले तरी)
 
-    const maxLen = Math.max(tokens1.length, tokens2.length);
-    if (maxLen === 0) return 1.0;
-    const dist = getLevenshteinDistance(tokens1, tokens2);
-    return (maxLen - dist) / maxLen;
-}
-
-// २. डुप्लिकेट शोधणारे फंक्शन (तुमचा सुधारित कोड)
-function checkDuplicatePair(mem1, mem2, threshold = 0.80) {
-    // अ) मोबाईल नंबर समान असल्यास
-    if (mem1.mobile && mem2.mobile && mem1.mobile.toString().trim() === mem2.mobile.toString().trim()) {
-        return { duplicate: true, reason: 'मोबाईल नंबर समान' };
-    }
-    
-    // ब) नाव व आडनाव Similarity मॅच
-    const sim = getNameSimilarity(mem1.name, mem2.name);
-    if (sim >= threshold) {
-        const percent = Math.round(sim * 100);
-        const reasonStr = (sim === 1.0) ? 'नाव व आडनाव हुबेहूब समान (क्रमानिरपेक्ष)' : `नावात साम्य: ${percent}%`;
-        return { duplicate: true, reason: reasonStr };
-    }
-    
-    return { duplicate: false, reason: '' };
-}
-            const sim = getNameSimilarity(mem1.name, mem2.name);
-            if (sim >= threshold) {
-                return { duplicate: true, reason: `नावात साम्य: ${Math.round(sim * 100)}%` };
-            }
-            return { duplicate: false, reason: '' };
+            const maxLen = Math.max(tokens1.length, tokens2.length);
+            if (maxLen === 0) return 1.0;
+            const dist = getLevenshteinDistance(tokens1, tokens2);
+            return (maxLen - dist) / maxLen;
         }
 
+        // २. डुप्लिकेट शोधणारे सुधारित फंक्शन (ई-मेल चेक काढून टाकला आहे)
+        function checkDuplicatePair(mem1, mem2, threshold = 0.80) {
+            // अ) मोबाईल नंबर समान असल्यास
+            if (mem1.mobile && mem2.mobile && mem1.mobile.toString().trim() !== "" && mem1.mobile.toString().trim() === mem2.mobile.toString().trim()) {
+                return { duplicate: true, reason: 'मोबाईल नंबर समान', reasonType: 'mobile' };
+            }
+            
+            // ब) नाव व आडनाव क्रमानिरपेक्ष/Fuzzy Match
+            const sim = getNameSimilarity(mem1.name, mem2.name);
+            if (sim >= threshold) {
+                const percent = Math.round(sim * 100);
+                if (sim === 1.0) {
+                    return { duplicate: true, reason: 'नाव व आडनाव हुबेहूब समान (क्रमानिरपेक्ष)', reasonType: 'exact_name' };
+                } else {
+                    return { duplicate: true, reason: `नावात साम्य: ${percent}%`, reasonType: 'fuzzy_name' };
+                }
+            }
+            
+            return { duplicate: false, reason: '', reasonType: '' };
+        }
+
+        // डुप्लिकेट सदस्य दाखवणारा व फिल्टर सुविधा असणारा पॉप-अप
+        let currentDuplicatePairs = [];
+
         window.showDuplicateMembersModal = function() {
-            let duplicatePairs = [];
+            currentDuplicatePairs = [];
             for (let i = 0; i < membersData.length; i++) {
                 for (let j = i + 1; j < membersData.length; j++) {
                     const result = checkDuplicatePair(membersData[i], membersData[j]);
                     if (result.duplicate) {
-                        duplicatePairs.push({ original: membersData[i], duplicate: membersData[j], reason: result.reason });
+                        currentDuplicatePairs.push({
+                            id: membersData[j].id,
+                            original: membersData[i],
+                            duplicate: membersData[j],
+                            reason: result.reason,
+                            reasonType: result.reasonType
+                        });
                     }
                 }
             }
 
-            let tableRows = duplicatePairs.map((d, i) => `
-                <tr style="border-bottom: 1px solid #cbd5e1;">
-                    <td style="text-align:center; padding:10px;"><input type="checkbox" class="dup-select-chk" value="${d.duplicate.id}"></td>
-                    <td style="padding:10px;"><b>${d.original.name}</b><br><small style="color:#666;"><i class="fa fa-phone"></i> ${d.original.mobile || '-'}</small></td>
-                    <td style="padding:10px;"><b style="color:var(--danger);">${d.duplicate.name}</b><br><small style="color:#666;"><i class="fa fa-phone"></i> ${d.duplicate.mobile || '-'}</small></td>
-                    <td style="padding:10px;"><span class="badge bg-danger" style="font-size:0.8rem; padding:5px 8px;">${d.reason}</span></td>
-                    <td style="padding:10px; text-align:center;">
-                        <button class="btn-action bg-danger" onclick="deleteSingleMember('${d.duplicate.id}')"><i class="fa fa-trash"></i> डिलीट</button>
-                    </td>
-                </tr>
-            `).join('') || '<tr><td colspan="5" style="text-align:center; padding:20px; font-weight:bold; color:var(--success);">🎉 एकही डुप्लिकेट सदस्य सापडला नाही!</td></tr>';
+            let mandalOptions = '<option value="All">सर्व मंडळे</option>';
+            Object.keys(mandalData).forEach(m => mandalOptions += `<option value="${m}">${m}</option>`);
 
             Swal.fire({
-                title: '🔍 डुप्लिकेट सदस्य शोध व नियंत्रण कक्ष',
-                width: '950px',
+                title: '🔍 डुप्लिकेट सदस्य शोध व फिल्टर नियंत्रण',
+                width: '1000px',
                 html: `
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; padding:10px; background:#f8fafc; border-radius:8px; border:1px solid #e2e8f0;">
-                        <label style="cursor:pointer; font-weight:bold; font-size:0.95rem; display:flex; align-items:center; gap:8px;">
-                            <input type="checkbox" onchange="document.querySelectorAll('.dup-select-chk').forEach(c => c.checked = this.checked)" style="width:18px; height:18px;"> सर्व सिलेक्ट करा (Select All)
-                        </label>
-                        <button class="btn-action bg-danger" onclick="deleteSelectedDuplicates()" style="padding:8px 16px; font-size:0.95rem;"><i class="fa fa-trash"></i> निवडलेले मल्टी-डिलीट करा (Multi Delete)</button>
+                    <!-- फिल्टर कंट्रोल्स -->
+                    <div style="background:#f1f5f9; padding:12px; border-radius:8px; border:1px solid #cbd5e1; margin-bottom:15px; text-align:left;">
+                        <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+                            <div style="flex:1; min-width:180px;">
+                                <label style="font-size:0.8rem; font-weight:bold;">साम्याचे कारण:</label>
+                                <select id="dup_filter_reason" class="form-control" onchange="filterDuplicateModalTable()">
+                                    <option value="All">सर्व कारणे (All Reasons)</option>
+                                    <option value="mobile">फक्त मोबाईल नंबर समान</option>
+                                    <option value="exact_name">फक्त नाव-आडनाव हुबेहूब समान</option>
+                                    <option value="fuzzy_name">फक्त स्पेलिंग/नावात साम्य</option>
+                                </select>
+                            </div>
+                            <div style="flex:1; min-width:180px;">
+                                <label style="font-size:0.8rem; font-weight:bold;">मंडळ:</label>
+                                <select id="dup_filter_mandal" class="form-control" onchange="populateDistricts('dup_filter_mandal', 'dup_filter_district'); filterDuplicateModalTable();">
+                                    ${mandalOptions}
+                                </select>
+                            </div>
+                            <div style="flex:1; min-width:180px;">
+                                <label style="font-size:0.8rem; font-weight:bold;">जिल्हा:</label>
+                                <select id="dup_filter_district" class="form-control" onchange="filterDuplicateModalTable()">
+                                    <option value="All">सर्व जिल्हे</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px; border-top:1px dashed #cbd5e1; padding-top:8px;">
+                            <label style="cursor:pointer; font-weight:bold; font-size:0.9rem; display:flex; align-items:center; gap:8px;">
+                                <input type="checkbox" id="dupSelectAllChk" onchange="document.querySelectorAll('.dup-select-chk').forEach(c => c.checked = this.checked)" style="width:18px; height:18px;"> 
+                                फिल्टर केलेले सर्व निवडा (Select All Filtered)
+                            </label>
+                            <button class="btn-action bg-danger" onclick="deleteSelectedDuplicates()" style="padding:8px 16px; font-size:0.9rem;"><i class="fa fa-trash"></i> निवडलेले मल्टी-डिलीट करा</button>
+                        </div>
                     </div>
-                    <div style="max-height:420px; overflow-y:auto; border:1px solid #cbd5e1; border-radius:8px;">
-                        <table style="width:100%; border-collapse:collapse; font-size:0.9rem; text-align:left;">
+
+                    <!-- तक्ता -->
+                    <div style="max-height:380px; overflow-y:auto; border:1px solid #cbd5e1; border-radius:8px;">
+                        <table style="width:100%; border-collapse:collapse; font-size:0.88rem; text-align:left;">
                             <thead>
                                 <tr style="background:var(--primary); color:white;">
-                                    <th style="padding:10px; text-align:center; width:50px;">निवड</th>
-                                    <th style="padding:10px;">मूळ सदस्य (Original)</th>
-                                    <th style="padding:10px;">संभाव्य डुप्लिकेट (Duplicate)</th>
+                                    <th style="padding:10px; text-align:center; width:40px;">निवड</th>
+                                    <th style="padding:10px;">मूळ सदस्य १ (Original)</th>
+                                    <th style="padding:10px;">संभाव्य डुप्लिकेट २ (Duplicate)</th>
                                     <th style="padding:10px;">साम्याचे कारण</th>
-                                    <th style="padding:10px; text-align:center; width:100px;">Action</th>
+                                    <th style="padding:10px; text-align:center; width:90px;">Action</th>
                                 </tr>
                             </thead>
-                            <tbody>${tableRows}</tbody>
+                            <tbody id="dupTableModalBody"></tbody>
                         </table>
                     </div>
                 `,
                 showConfirmButton: false,
-                showCloseButton: true
+                showCloseButton: true,
+                didOpen: () => {
+                    filterDuplicateModalTable();
+                }
             });
+        };
+
+        window.filterDuplicateModalTable = function() {
+            const reasonFilter = document.getElementById('dup_filter_reason')?.value || 'All';
+            const mandalFilter = document.getElementById('dup_filter_mandal')?.value || 'All';
+            const distFilter = document.getElementById('dup_filter_district')?.value || 'All';
+
+            let filtered = currentDuplicatePairs.filter(d => {
+                if (reasonFilter !== 'All' && d.reasonType !== reasonFilter) return false;
+                if (mandalFilter !== 'All' && (d.duplicate.mandal !== mandalFilter && d.original.mandal !== mandalFilter)) return false;
+                if (distFilter !== 'All' && distFilter !== '' && (d.duplicate.district !== distFilter && d.original.district !== distFilter)) return false;
+                return true;
+            });
+
+            const tbody = document.getElementById('dupTableModalBody');
+            if (!tbody) return;
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px; font-weight:bold; color:var(--success);">🎉 या फिल्टरनुसार एकही डुप्लिकेट सदस्य सापडला नाही!</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = filtered.map((d) => `
+                <tr style="border-bottom: 1px solid #e2e8f0;">
+                    <td style="text-align:center; padding:8px;"><input type="checkbox" class="dup-select-chk" value="${d.duplicate.id}"></td>
+                    <td style="padding:8px;">
+                        <b>${d.original.name}</b><br>
+                        <small style="color:#555;"><i class="fa fa-phone"></i> ${d.original.mobile || '-'} | ${d.original.district || '-'}</small>
+                    </td>
+                    <td style="padding:8px;">
+                        <b style="color:var(--danger);">${d.duplicate.name}</b><br>
+                        <small style="color:#555;"><i class="fa fa-phone"></i> ${d.duplicate.mobile || '-'} | ${d.duplicate.district || '-'}</small>
+                    </td>
+                    <td style="padding:8px;"><span class="badge bg-danger" style="font-size:0.75rem; padding:4px 8px;">${d.reason}</span></td>
+                    <td style="padding:8px; text-align:center;">
+                        <button class="btn-action bg-danger" onclick="deleteSingleMember('${d.duplicate.id}')" title="डिलीट"><i class="fa fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('');
         };
 
         window.deleteSelectedDuplicates = async function() {
@@ -2589,7 +2679,7 @@ function checkDuplicatePair(mem1, mem2, threshold = 0.80) {
                 await logActivity(`Deleted member ID: ${id}`, isSuperAdmin ? "Super Admin" : "Sub Admin");
                 Swal.fire('यशस्वी', 'सदस्य यशस्वीरीत्या डिलीट झाला!', 'success');
                 await loadData();
-                if (document.querySelector('.swal2-container')) {
+                if (document.getElementById('dupTableModalBody')) {
                     showDuplicateMembersModal();
                 }
             }
@@ -2615,10 +2705,20 @@ function checkDuplicatePair(mem1, mem2, threshold = 0.80) {
         };
 
         // ==========================================================
-        // ऍक्टिव्हिटी लॉग (७ दिवसांनंतर ऑटो डिलीट) LOGIC
+        // ऍक्टिव्हिटी लॉग (फक्त सुपर ॲडमिन व ७ दिवसांनंतर ऑटो डिलीट)
         // ==========================================================
 
         async function renderActivityLogs() {
+            const logPanel = document.getElementById('activityLogPanel');
+            
+            // सुपर ॲडमिन नसल्यास ऍक्टिव्हिटी लॉग पॅनेल पूर्णपणे लपवा
+            if (!isSuperAdmin) {
+                if (logPanel) logPanel.style.display = 'none';
+                return;
+            }
+
+            if (logPanel) logPanel.style.display = 'block';
+
             if (!db) return;
             try {
                 const logsRef = collection(db, "activity_logs");
