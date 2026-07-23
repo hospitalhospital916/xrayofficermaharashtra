@@ -1089,14 +1089,14 @@
             subAdminAccessRegion = adminData.access || "All"; 
             subAdminPermissions = adminData.permissions || [];
             currentLoggedInAdminName = adminData.name || "अधिकृत सब-ॲडमिन";
-            currentLoggedInAdminDesignation = adminData.designation || "संघटना पदाधिकारी";
+            currentLoggedInAdminDesignation = adminData.designation || adminData.post || "संघटना पदाधिकारी";
 
             if(!subAdminPermissions.includes('member_folders')) subAdminPermissions.push('member_folders');
         } else {
             subAdminAccessRegion = "All"; 
             subAdminPermissions = ['dashboard', 'members', 'employees', 'icard', 'committee', 'notices', 'fees', 'member_folders'];
-            currentLoggedInAdminName = "महेश हांगे"; // सुपर ॲडमिनचे नाव
-            currentLoggedInAdminDesignation = "मुख्य ॲडमिन व राज्य पदाधिकारी";
+            currentLoggedInAdminName = "महेश हांगे"; // मुख्य सुपर ॲडमिनचे नाव
+            currentLoggedInAdminDesignation = "राज्य अध्यक्ष / मुख्य ॲडमिन"; // मूळ पद
         }
 
         document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -1111,7 +1111,7 @@
 
         document.getElementById('login-screen').style.display='none'; 
         document.getElementById('app-content').style.display='block'; 
-        document.getElementById('login_user_role').innerText = isSuperAdmin ? "Super Admin" : currentLoggedInAdminDesignation;
+        document.getElementById('login_user_role').innerText = currentLoggedInAdminDesignation;
         document.getElementById('login_user_region').innerText = subAdminAccessRegion !== "All" ? `(${subAdminAccessRegion})` : "";
         
         if(isSuperAdmin) { 
@@ -2189,7 +2189,7 @@
             document.getElementById('receiptModal').style.display = 'flex';
         }
 
-      window.generatePrintReceipt = () => {
+     window.generatePrintReceipt = () => {
     let rNo = document.getElementById('rect_no').value;
     let rDate = document.getElementById('rect_date').value;
     let rName = document.getElementById('rect_name').value;
@@ -2203,101 +2203,117 @@
     let rPayMode = document.getElementById('rect_pay_mode').value;
     let rUtr = document.getElementById('rect_utr').value;
 
+    // लॉगिन केलेल्या कर्मचाऱ्याचे नाव व कार्यकारिणीतील पद
+    let rIssuerName = document.getElementById('rect_issuer_name')?.value || currentLoggedInAdminName;
+    let rIssuerPost = document.getElementById('rect_issuer_post')?.value || currentLoggedInAdminDesignation;
+
+    // अचूक मंजुरी तारीख व वेळ (तास, मिनिटे, सेकंद व AM/PM सह)
+    let now = new Date();
+    let rTimestamp = now.toLocaleDateString('mr-IN') + ' - ' + now.toLocaleTimeString('mr-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+
     let checkedTypes = [];
     document.querySelectorAll('input[name="rect_type"]:checked').forEach(c => checkedTypes.push(c.value));
 
-    let logoHtml = lpLogoUrl ? `<img src="${lpLogoUrl}" style="height:60px;">` : `<i class="fa fa-shield-alt" style="font-size:2.5rem; color:#0B3D91;"></i>`;
+    let logoHtml = lpLogoUrl ? `<img src="${lpLogoUrl}" style="height:65px;">` : `<i class="fa fa-shield-alt" style="font-size:2.8rem; color:#0B3D91;"></i>`;
 
-    let qrData = encodeURIComponent(`Receipt:${rNo}|Member:${rName}|Amount:${rAmt}|ApprovedBy:${currentLoggedInAdminName}|Status:VERIFIED`);
-    let qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=90x90&data=${qrData}`;
+    let qrData = encodeURIComponent(`ReceiptNo:${rNo}|Member:${rName}|Amount:Rs.${rAmt}|ApprovedBy:${rIssuerName}(${rIssuerPost})|Timestamp:${rTimestamp}`);
+    let qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=95x95&data=${qrData}`;
     let barcodeUrl = `https://bwipjs-api.metafloor.com/?bcid=code128&text=${rNo}&scale=2&rotate=N&includetext`;
 
     let receiptHtml = `
-        <div style="width: 760px; margin: 15px auto; padding: 25px; border: 3px double #0B3D91; border-radius: 12px; background: #ffffff; font-family: 'Mukta', Arial, sans-serif; position: relative; box-shadow: 0 5px 20px rgba(0,0,0,0.1);">
+        <div style="width: 780px; margin: 15px auto; padding: 25px; border: 3px double #0B3D91; border-radius: 12px; background: #ffffff; font-family: 'Mukta', Arial, sans-serif; position: relative; box-shadow: 0 8px 25px rgba(0,0,0,0.12);">
             
-            <!-- Header with Logo and QR Code -->
-            <div style="border-bottom: 2px solid #0B3D91; padding-bottom: 12px; margin-bottom: 15px;">
+            <!-- Header with Association Title, Logo & QR Code -->
+            <div style="border-bottom: 2.5px solid #0B3D91; padding-bottom: 12px; margin-bottom: 15px;">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <div style="width: 80px; text-align: left;">${logoHtml}</div>
-                    <div style="flex: 1; text-align: center;">
-                        <h2 style="color: #0B3D91; font-size: 1.45rem; margin: 0; font-weight: 800;">क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना</h2>
-                        <h3 style="color: #f39c12; font-size: 1.1rem; margin: 3px 0 0 0; font-weight: 700;">महाराष्ट्र राज्य (अधिकृत ई-पावती)</h3>
-                        <span style="display: inline-block; background: #0B3D91; color: #fff; padding: 2px 14px; border-radius: 12px; font-size: 0.8rem; margin-top: 5px; font-weight: bold;">E-RECEIPT / इलेक्ट्रॉनिक नोंदणी शुल्क पावती</span>
+                    <div style="width: 85px; text-align: left;">${logoHtml}</div>
+                    <div style="flex: 1; text-align: center; padding: 0 10px;">
+                        <h2 style="color: #0B3D91; font-size: 1.5rem; margin: 0; font-weight: 800; letter-spacing: 0.2px;">क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना</h2>
+                        <h3 style="color: #d97706; font-size: 1.15rem; margin: 3px 0 0 0; font-weight: 700;">महाराष्ट्र राज्य (अधिकृत डिजिटल ई-पावती)</h3>
+                        <span style="display: inline-block; background: #0B3D91; color: #fff; padding: 3px 16px; border-radius: 15px; font-size: 0.82rem; margin-top: 6px; font-weight: bold; letter-spacing: 0.5px;">E-RECEIPT / इलेक्ट्रॉनिक नोंदणी व वर्गणी पावती</span>
                     </div>
-                    <div style="width: 80px; text-align: right;">
-                        <img src="${qrUrl}" style="width: 75px; height: 75px; border: 1px solid #cbd5e1; padding: 2px; border-radius: 6px;" title="Scan to Verify">
+                    <div style="width: 85px; text-align: right;">
+                        <img src="${qrUrl}" style="width: 80px; height: 80px; border: 1.5px solid #cbd5e1; padding: 2px; border-radius: 6px;" title="Scan to Verify Receipt">
                     </div>
                 </div>
             </div>
 
-            <!-- Receipt No, Date & ID Bar -->
-            <div style="display: flex; justify-content: space-between; background: #f0f4f8; padding: 8px 15px; border-radius: 6px; font-weight: bold; margin-bottom: 15px; border: 1px solid #cbd5e1; font-size: 0.92rem;">
-                <div><span style="color: #64748b;">पावती क्र.:</span> <b style="color: #0B3D91;">${rNo}</b></div>
-                <div><span style="color: #64748b;">दिनांक:</span> <b style="color: #000;">${rDate}</b></div>
-                <div><span style="color: #64748b;">सदस्य ID / सेवार्थ ID:</span> <b style="color: #10b981;">${rCode}</b></div>
+            <!-- Receipt No, Date & Member ID Bar -->
+            <div style="display: flex; justify-content: space-between; background: #f0f4f8; padding: 9px 16px; border-radius: 6px; font-weight: bold; margin-bottom: 15px; border: 1px solid #cbd5e1; font-size: 0.92rem;">
+                <div><span style="color: #64748b;">पावती क्रमांक:</span> <b style="color: #0B3D91; font-size: 1.05rem;">${rNo}</b></div>
+                <div><span style="color: #64748b;">पावती दिनांक:</span> <b style="color: #000;">${rDate}</b></div>
+                <div><span style="color: #64748b;">सेवार्थ ID / सदस्य ID:</span> <b style="color: #059669;">${rCode}</b></div>
             </div>
 
-            <!-- Member Info Grid -->
+            <!-- Member Information Table -->
             <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 0.95rem;">
                 <tr>
-                    <td style="padding: 6px; width: 18%; font-weight: bold; color: #334155;">सदस्याचे नाव:</td>
-                    <td style="padding: 6px; font-weight: bold; color: #0B3D91; font-size: 1.05rem;" colspan="3">श्री./श्रीमती ${rName}</td>
+                    <td style="padding: 7px; width: 20%; font-weight: bold; color: #334155;">सभासदाचे नाव:</td>
+                    <td style="padding: 7px; font-weight: 800; color: #0B3D91; font-size: 1.1rem;" colspan="3">श्री./श्रीमती ${rName}</td>
                 </tr>
                 <tr>
-                    <td style="padding: 6px; font-weight: bold; color: #334155;">पद / हुद्दा:</td>
-                    <td style="padding: 6px; color: #1e293b;">${rPost || '-'}</td>
-                    <td style="padding: 6px; font-weight: bold; color: #334155;">कार्यरत रुग्णालय:</td>
-                    <td style="padding: 6px; color: #1e293b;">${rWork || '-'}</td>
+                    <td style="padding: 7px; font-weight: bold; color: #334155;">पद / हुद्दा:</td>
+                    <td style="padding: 7px; color: #1e293b; font-weight:600;">${rPost || '-'}</td>
+                    <td style="padding: 7px; font-weight: bold; color: #334155;">कार्यरत रुग्णालय:</td>
+                    <td style="padding: 7px; color: #1e293b; font-weight:600;">${rWork || '-'}</td>
                 </tr>
                 <tr>
-                    <td style="padding: 6px; font-weight: bold; color: #334155;">जिल्हा व मंडळ:</td>
-                    <td style="padding: 6px; color: #1e293b;">${rDist} (${rMandal})</td>
-                    <td style="padding: 6px; font-weight: bold; color: #334155;">भरणा पद्धत:</td>
-                    <td style="padding: 6px; color: #1e293b;"><b>${rPayMode}</b> ${rUtr ? `(UTR: ${rUtr})` : ''}</td>
+                    <td style="padding: 7px; font-weight: bold; color: #334155;">जिल्हा व मंडळ:</td>
+                    <td style="padding: 7px; color: #1e293b; font-weight:600;">${rDist} (${rMandal})</td>
+                    <td style="padding: 7px; font-weight: bold; color: #334155;">भरणा पद्धत:</td>
+                    <td style="padding: 7px; color: #1e293b; font-weight:600;"><b>${rPayMode}</b> ${rUtr ? `(Ref/UTR: ${rUtr})` : ''}</td>
                 </tr>
             </table>
 
-            <!-- Fee Purpose Badges -->
+            <!-- Fee Purpose Categories -->
             <div style="background: #fafafa; border: 1px solid #e2e8f0; padding: 10px 15px; border-radius: 6px; margin-bottom: 15px;">
-                <span style="font-weight: bold; color: #0B3D91; display: block; margin-bottom: 6px; font-size:0.88rem;">शुल्काचा प्रकार (Fee Details):</span>
+                <span style="font-weight: bold; color: #0B3D91; display: block; margin-bottom: 6px; font-size: 0.88rem;">शुल्काचा प्रकार (Fee Details):</span>
                 <div style="display: flex; flex-wrap: wrap; gap: 10px; font-size: 0.88rem;">
-                    ${checkedTypes.map(t => `<span style="background: #e0f2fe; color: #0369a1; padding: 3px 10px; border-radius: 4px; font-weight: 600; border: 1px solid #bae6fd;">☑ ${t}</span>`).join('')}
+                    ${checkedTypes.map(t => `<span style="background: #e0f2fe; color: #0369a1; padding: 4px 12px; border-radius: 4px; font-weight: 700; border: 1px solid #bae6fd;">☑ ${t}</span>`).join('')}
                 </div>
             </div>
 
-            <!-- Amount Banner -->
-            <div style="display: flex; align-items: center; justify-content: space-between; background: linear-gradient(135deg, #0B3D91, #1e3a8a); color: white; padding: 12px 20px; border-radius: 8px; margin-bottom: 18px;">
+            <!-- Amount Banner (Royalty Grand Blue) -->
+            <div style="display: flex; align-items: center; justify-content: space-between; background: linear-gradient(135deg, #0B3D91, #1e3a8a); color: white; padding: 14px 22px; border-radius: 8px; margin-bottom: 20px;">
                 <div>
                     <span style="font-size: 0.82rem; opacity: 0.9; display: block;">प्राप्त रक्कम (अक्षरी):</span>
-                    <b style="font-size: 1.15rem; color: #fef08a;">रुपये ${rWords}</b>
+                    <b style="font-size: 1.18rem; color: #fef08a;">रुपये ${rWords}</b>
                 </div>
-                <div style="text-align: right; background: rgba(255,255,255,0.18); padding: 6px 16px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.3);">
-                    <span style="font-size: 0.78rem; opacity: 0.9;">एकूण जमा रक्कम:</span>
-                    <span style="font-size: 1.45rem; font-weight: 800; color: #ffffff; display: block;">₹ ${rAmt} /-</span>
+                <div style="text-align: right; background: rgba(255,255,255,0.18); padding: 6px 18px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.3);">
+                    <span style="font-size: 0.78rem; opacity: 0.9;">एकूण प्राप्त रक्कम:</span>
+                    <span style="font-size: 1.55rem; font-weight: 800; color: #ffffff; display: block;">₹ ${rAmt} /-</span>
                 </div>
             </div>
 
-            <!-- Official Verification & Signature Row -->
-            <div style="display: flex; justify-content: space-between; align-items: flex-end; border-top: 2px dashed #cbd5e1; padding-top: 12px; margin-top: 10px;">
+            <!-- Official Verification, Timestamp & Issuer Stamp Row -->
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; border-top: 2px dashed #cbd5e1; padding-top: 14px; margin-top: 10px;">
                 
                 <!-- Electronic Disclaimer & Barcode -->
                 <div style="flex: 1.2; padding-right: 15px;">
-                    <div style="background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; padding: 8px 12px; border-radius: 6px; font-size: 0.78rem; line-height: 1.4; margin-bottom: 8px;">
-                        <b>🔒 अधिकृत ई-पावती:</b> सदर पावती संगणकीय प्रणालीद्वारे तयार केली असून यावर भौतिक स्वाक्षरी किंवा शिक्क्याची गरज नाही.
+                    <div style="background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; padding: 10px 12px; border-radius: 6px; font-size: 0.78rem; line-height: 1.45; margin-bottom: 8px;">
+                        <b>🔒 अधिकृत संगणकीय ई-पावती:</b><br>
+                        सदर पावती सिस्टीमद्वारे वेळेच्या नोंदीसह तयार केली असून यावर भौतिक (हस्तलिखित) स्वाक्षरी किंवा शिक्क्याची आवश्यकता नाही.
                     </div>
-                    <img src="${barcodeUrl}" alt="Barcode" style="height: 38px; max-width: 180px;">
+                    <img src="${barcodeUrl}" alt="Barcode" style="height: 38px; max-width: 190px;">
+                    <div style="font-size: 0.65rem; color: #64748b; margin-top: 2px;">डिजिटल व्हेरीफिकेश कोड: ${rNo}</div>
                 </div>
 
-                <!-- Verified Admin Badge & Signature Box -->
+                <!-- Verified Admin Officer Badge (Dynamic Name + Executive Post + Exact Time) -->
                 <div style="flex: 1; text-align: right;">
-                    <div style="display: inline-block; text-align: center; background: #f0fdf4; border: 1.5px solid #16a34a; padding: 8px 16px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.05);">
-                        <div style="color: #16a34a; font-size: 1.1rem; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 5px; margin-bottom: 2px;">
-                            <span style="background: #16a34a; color: white; border-radius: 50%; width: 18px; height: 18px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.75rem;">✓</span>
-                            <span>डिजिटली प्रमाणित</span>
+                    <div style="display: inline-block; text-align: center; background: #f0fdf4; border: 2px solid #16a34a; padding: 10px 18px; border-radius: 10px; box-shadow: 0 3px 8px rgba(22,163,74,0.12); min-width: 240px;">
+                        
+                        <div style="color: #16a34a; font-size: 1.05rem; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 4px;">
+                            <span style="background: #16a34a; color: white; border-radius: 50%; width: 20px; height: 20px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.8rem;">✓</span>
+                            <span>डिजिटली मंजूर व प्रमाणित</span>
                         </div>
-                        <div style="font-size: 0.75rem; color: #64748b; margin-bottom: 4px;">पावती देणारे अधिकारी:</div>
-                        <b style="color: #0B3D91; font-size: 1rem; display: block;">${currentLoggedInAdminName}</b>
-                        <span style="font-size: 0.82rem; color: #166534; font-weight: bold; display: block; margin-top: 1px;">(${currentLoggedInAdminDesignation})</span>
+                        
+                        <div style="font-size: 0.72rem; color: #64748b; margin-top: 2px;">पावती मंजुरी देणारे अधिकारी:</div>
+                        <b style="color: #0B3D91; font-size: 1.05rem; display: block; margin-top: 1px;">${rIssuerName}</b>
+                        <span style="font-size: 0.85rem; color: #15803d; font-weight: 800; display: block; margin-top: 1px;">(${rIssuerPost})</span>
+                        
+                        <div style="border-top: 1px dashed #bbf7d0; margin-top: 6px; padding-top: 5px; font-size: 0.72rem; color: #047857; font-weight: 700;">
+                            🕒 मंजुरी वेळ: ${rTimestamp}
+                        </div>
                     </div>
                 </div>
 
