@@ -380,7 +380,26 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div><!-- ऍक्टिव्हिटी लॉग (७ दिवसांचे रेकॉर्ड्स) -->
+<div class="panel" style="margin-top: 20px;">
+    <div class="panel-header h-primary">
+        <span><i class="fa fa-history"></i> मुख्य ॲडमिन ऍक्टिव्हिटी लॉग (मागील ७ दिवस)</span>
+    </div>
+    <div class="panel-body" style="padding: 0; overflow-x: auto;">
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 180px;">दिनांक व वेळ</th>
+                    <th>युझर (ॲडमिन / सब-ॲडमिन)</th>
+                    <th>केलेली ऍक्टिव्हिटी (Action)</th>
+                </tr>
+            </thead>
+            <tbody id="activityLogsBody">
+                <tr><td colspan="3" style="text-align:center;">लॉग्स लोड होत आहेत...</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 
             <!-- 2. MEMBERS CONTROL -->
             <div id="tab-members" class="tab-content">
@@ -394,6 +413,7 @@
                             <button class="btn-action bg-wa" onclick="bulkWhatsApp()"><i class="fa fa-whatsapp"></i> Bulk MSG</button>
                             <button class="btn-action bg-mail" onclick="bulkEmailMembers()"><i class="fa fa-envelope"></i> Bulk Email</button>
                             <button class="btn-action bg-success" onclick="openAddNew('members')"><i class="fa fa-user-plus"></i> नवीन जोडा</button>
+                            <button class="btn-action bg-danger" onclick="showDuplicateMembersModal()"><i class="fa fa-copy"></i> डुप्लिकेट सदस्य शोधा</button> 
                             <button class="btn-action bg-primary" onclick="window.print()"><i class="fa fa-print"></i> प्रिंट यादी</button>
                         </div>
                     </div>
@@ -726,7 +746,15 @@
                             <button class="btn-action bg-wa" onclick="bulkWhatsAppFees()"><i class="fa fa-whatsapp"></i> Bulk MSG</button>
                             <button class="btn-action bg-mail" onclick="bulkEmailFees()"><i class="fa fa-envelope"></i> Bulk Email</button>
                         </div>
-                    </div>
+                    </div>   
+                    <div class="form-row no-print" style="background:#e2e8f0; padding:12px; border-radius:8px; margin-bottom:15px; align-items:center;"> <div style="flex:1;">
+                           <label style="font-weight:bold; color:var(--primary);">सर्व सदस्यांसाठी एकदाच शुल्काची रक्कम टाका:</label>
+                       <input type="number" id="global_fee_input" class="form-control" placeholder="उदा. 500" onkeyup="applyGlobalFeeAmount(this.value)">
+                               </div>
+                            <div style="margin-top:18px;">
+                           <button class="btn-action bg-primary" onclick="generateBulkReceipts()"><i class="fa fa-receipt"></i> निवडलेल्यांची पावती एकत्र काढा (Bulk Receipt)</button>
+                                  </div>
+                                      </div>
                     <div class="panel-body">
                         <div class="form-row no-print" style="margin-bottom:15px;">
                             <input type="text" id="feeSearch" class="form-control" placeholder="🔍 नाव शोधा..." onkeyup="renderFees()">
