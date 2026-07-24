@@ -2646,108 +2646,140 @@
         }
 
         // ==========================================================
-        // ३. अचूक डिजिटल ई-पावती प्रिंट लॉजिक
-        // ==========================================================
-        window.generatePrintReceipt = () => {
-            let rNo = document.getElementById('rect_no').value;
-            let rDate = document.getElementById('rect_date').value;
-            let rName = document.getElementById('rect_name').value;
-            let rCode = document.getElementById('rect_mem_code').value;
-            let rPost = document.getElementById('rect_post').value;
-            let rWork = document.getElementById('rect_workplace').value;
-            let rDist = document.getElementById('rect_dist').value;
-            let rMandal = document.getElementById('rect_mandal').value;
-            let rFeeType = document.getElementById('rect_fee_type').value;
-            let rAmt = document.getElementById('rect_amt_num').value;
-            let rWords = document.getElementById('rect_amt_words').value || numberToMarathiWords(rAmt);
-            let rPayMode = document.getElementById('rect_pay_mode').value;
-            let rUtr = document.getElementById('rect_utr').value;
-            let showSevarth = document.getElementById('set_show_sevarth_receipt')?.checked;
+// ३. अचूक डिजिटल ई-पावती प्रिंट लॉजिक (अखंड व पूर्ण कोड)
+// ==========================================================
+window.generatePrintReceipt = () => {
+    let rNo = document.getElementById('rect_no').value;
+    let rDate = document.getElementById('rect_date').value;
+    let rName = document.getElementById('rect_name').value;
+    let rCode = document.getElementById('rect_mem_code').value;
+    let rPost = document.getElementById('rect_post').value;
+    let rWork = document.getElementById('rect_workplace').value;
+    let rDist = document.getElementById('rect_dist').value;
+    let rMandal = document.getElementById('rect_mandal').value;
+    let rFeeType = document.getElementById('rect_fee_type').value;
+    let rAmt = document.getElementById('rect_amt_num').value;
+    let rWords = document.getElementById('rect_amt_words').value || numberToMarathiWords(rAmt);
+    let rPayMode = document.getElementById('rect_pay_mode').value;
+    let rUtr = document.getElementById('rect_utr').value;
+    let showSevarth = document.getElementById('set_show_sevarth_receipt')?.checked;
 
-            let rIssuerName = currentLoggedInAdminName || "अधिकृत अधिकारी";
-            let rIssuerPost = currentLoggedInAdminDesignation || "संघटना पदाधिकारी";
+    let rIssuerName = currentLoggedInAdminName || "अधिकृत अधिकारी";
+    let rIssuerPost = currentLoggedInAdminDesignation || "संघटना पदाधिकारी";
 
-            let now = new Date();
-            let liveTime = now.toLocaleTimeString('mr-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
-            let liveDate = now.toLocaleDateString('mr-IN');
-            let fullTimestamp = `${liveDate} - ${liveTime}`;
+    let now = new Date();
+    let liveTime = now.toLocaleTimeString('mr-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+    let liveDate = now.toLocaleDateString('mr-IN');
+    let fullTimestamp = `${liveDate} - ${liveTime}`;
 
-            let logoHtml = lpLogoUrl ? `<img src="${lpLogoUrl}" style="height:60px;">` : `<i class="fa fa-shield-alt" style="font-size:2.5rem; color:#0B3D91;"></i>`;
+    // लोगो तपासणी व लोड आयडी
+    let logoHtml = lpLogoUrl 
+        ? `<img src="${lpLogoUrl}" id="receiptLogoImg" style="height:65px; max-width:90px; object-fit:contain;">` 
+        : `<i class="fa fa-shield-alt" style="font-size:2.5rem; color:#0B3D91;"></i>`;
 
-            let receiptHtml = `
-                <div style="width: 750px; margin: 10px auto; padding: 20px; border: 3px double #0B3D91; border-radius: 10px; background: #ffffff; font-family: 'Mukta', Arial, sans-serif; position: relative;">
-                    
-                    <!-- Header -->
-                    <div style="border-bottom: 2.5px solid #0B3D91; padding-bottom: 10px; margin-bottom: 12px; text-align: center;">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <div style="width: 80px; text-align: left;">${logoHtml}</div>
-                            <div style="flex: 1; text-align: center;">
-                                <h2 style="color: #0B3D91; font-size: 1.45rem; margin: 0; font-weight: 800; font-family: 'Mukta', sans-serif;">
-                                    क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना <span style="color: #0B3D91; font-weight: 800;">महाराष्ट्र राज्य</span>
-                                </h2>
-                                <span style="display: inline-block; background: #0B3D91; color: #fff; padding: 2px 14px; border-radius: 12px; font-size: 0.82rem; margin-top: 4px; font-weight: bold;">E-RECEIPT / इलेक्ट्रॉनिक पावती</span>
-                            </div>
-                            <div style="width: 80px; text-align: right;">
-                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=75x75&data=ReceiptNo:${rNo}" style="width: 70px; height: 70px; border: 1px solid #cbd5e1; padding: 2px; border-radius: 4px;">
-                            </div>
-                        </div>
+    let receiptHtml = `
+        <div style="width: 750px; margin: 10px auto; padding: 20px; border: 3px double #0B3D91; border-radius: 10px; background: #ffffff; font-family: 'Mukta', Arial, sans-serif; position: relative;">
+            
+            <!-- Header -->
+            <div style="border-bottom: 2.5px solid #0B3D91; padding-bottom: 10px; margin-bottom: 12px; text-align: center;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="width: 90px; text-align: left;">${logoHtml}</div>
+                    <div style="flex: 1; text-align: center;">
+                        <h2 style="color: #0B3D91; font-size: 1.45rem; margin: 0; font-weight: 800; font-family: 'Mukta', sans-serif;">
+                            क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना <span style="color: #0B3D91; font-weight: 800;">महाराष्ट्र राज्य</span>
+                        </h2>
+                        <span style="display: inline-block; background: #0B3D91; color: #fff; padding: 2px 14px; border-radius: 12px; font-size: 0.82rem; margin-top: 4px; font-weight: bold;">E-RECEIPT / इलेक्ट्रॉनिक पावती</span>
                     </div>
-
-                    <!-- Receipt Metadata -->
-                    <div style="display: flex; justify-content: space-between; background: #f0f4f8; padding: 8px 12px; border-radius: 6px; font-weight: bold; margin-bottom: 12px; font-size: 0.9rem;">
-                        <div><span style="color: #64748b;">पावती क्रमांक:</span> <b style="color: #0B3D91;">${rNo}</b></div>
-                        <div><span style="color: #64748b;">दिनांक:</span> <b style="color: #000;">${rDate}</b></div>
-                        ${showSevarth ? `<div><span style="color: #64748b;">सेवार्थ ID / सदस्य ID:</span> <b style="color: #059669;">${rCode}</b></div>` : ''}
+                    <div style="width: 80px; text-align: right;">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=75x75&data=ReceiptNo:${rNo}|Member:${encodeURIComponent(rName)}" style="width: 70px; height: 70px; border: 1px solid #cbd5e1; padding: 2px; border-radius: 4px;">
                     </div>
-
-                    <!-- Member Details Grid -->
-                    <div style="font-size: 0.95rem; line-height: 1.8;">
-                        <div style="display: flex; align-items: center;">
-                            <b style="color: #334155; width: 140px;">सभासदाचे नाव:</b>
-                            <span style="color: #0B3D91; font-weight: 800; font-size: 1.1rem;">श्री./श्रीमती ${rName}</span>
-                        </div>
-                        <div style="display: flex; align-items: center; white-space: nowrap;">
-                            <b style="color: #334155; width: 140px;">पद / हुद्दा:</b>
-                            <span style="color: #1e293b; font-weight: 600;">${rPost || 'X-Ray Scientific Officer'}</span>
-                        </div>
-                        <div style="display: flex; align-items: center; white-space: nowrap;">
-                            <b style="color: #334155; width: 140px;">कार्यरत रुग्णालय:</b>
-                            <span style="color: #1e293b; font-weight: 600;">${rWork || '-'}</span>
-                        </div>
-                        <div style="display: flex; align-items: center;">
-                            <b style="color: #334155; width: 140px;">जिल्हा व मंडळ:</b>
-                            <span style="color: #1e293b; font-weight: 600;">${rDist} (${rMandal})</span>
-                        </div>
-                        <div style="display: flex; align-items: center;">
-                            <b style="color: #334155; width: 140px;">शुल्काचा प्रकार:</b>
-                            <span style="color: #0369a1; font-weight: 700;">${rFeeType}</span>
-                        </div>
-                        <div style="display: flex; align-items: center; background: #e0f2fe; padding: 6px 12px; border-radius: 6px; margin-top: 8px; white-space: nowrap;">
-                            <b style="color: #334155; width: 140px;">प्राप्त रक्कम (अक्षरी):</b>
-                            <span style="color: #0B3D91; font-weight: 800; font-size: 1.05rem;">₹ ${rAmt}/- (रुपये ${rWords})</span>
-                        </div>
-                        <div style="display: flex; align-items: center; font-size: 0.88rem; color: #475569; margin-top: 4px;">
-                            <b style="width: 140px;">भरणा पद्धत:</b>
-                            <span>${rPayMode} ${rUtr ? `(Ref/UTR: ${rUtr})` : ''}</span>
-                        </div>
-                    </div>
-
-                    <!-- Footer Stamp & Timestamp -->
-                    <div style="display: flex; justify-content: space-between; align-items: flex-end; border-top: 1.5px dashed #cbd5e1; padding-top: 10px; margin-top: 15px;">
-                        <div style="font-size: 0.75rem; color: #64748b;">
-                            <b>🔒 अधिकृत संगणकीय ई-पावती:</b><br>
-                            सदर पावती सिस्टीमद्वारे वेळेच्या नोंदीसह तयार केली असून यावर सहीची आवश्यकता नाही.
-                        </div>
-                        <div style="text-align: center; background: #f0fdf4; border: 1.5px solid #16a34a; padding: 6px 14px; border-radius: 8px;">
-                            <div style="color: #16a34a; font-size: 0.88rem; font-weight: 800;">✓ Digitally Verified</div>
-                            <b style="color: #0B3D91; font-size: 0.95rem;">${rIssuerName}</b><br>
-                            <small style="color: #15803d; font-weight: 700;">(${rIssuerPost})</small><br>
-                            <small style="font-size: 0.68rem; color: #047857;">🕒 ${fullTimestamp}</small>
-                        </div>
-                    </div>
-
                 </div>
-            `;
+            </div>
+
+            <!-- Receipt Metadata -->
+            <div style="display: flex; justify-content: space-between; background: #f0f4f8; padding: 8px 12px; border-radius: 6px; font-weight: bold; margin-bottom: 12px; font-size: 0.9rem;">
+                <div><span style="color: #64748b;">पावती क्रमांक:</span> <b style="color: #0B3D91;">${rNo}</b></div>
+                <div><span style="color: #64748b;">दिनांक:</span> <b style="color: #000;">${rDate}</b></div>
+                ${showSevarth ? `<div><span style="color: #64748b;">सेवार्थ ID / सदस्य ID:</span> <b style="color: #059669;">${rCode}</b></div>` : ''}
+            </div>
+
+            <!-- Member Details Grid -->
+            <div style="font-size: 0.95rem; line-height: 1.8;">
+                <div style="display: flex; align-items: center;">
+                    <b style="color: #334155; width: 140px;">सभासदाचे नाव:</b>
+                    <span style="color: #0B3D91; font-weight: 800; font-size: 1.1rem;">श्री./श्रीमती ${rName}</span>
+                </div>
+                <div style="display: flex; align-items: center; white-space: nowrap;">
+                    <b style="color: #334155; width: 140px;">पद:</b>
+                    <span style="color: #1e293b; font-weight: 600;">${rPost || 'X-Ray Scientific Officer'}</span>
+                </div>
+                <div style="display: flex; align-items: center; white-space: nowrap;">
+                    <b style="color: #334155; width: 140px;">कार्यरत रुग्णालय:</b>
+                    <span style="color: #1e293b; font-weight: 600;">${rWork || '-'}</span>
+                </div>
+                <div style="display: flex; align-items: center;">
+                    <b style="color: #334155; width: 140px;">जिल्हा व मंडळ:</b>
+                    <span style="color: #1e293b; font-weight: 600;">${rDist} (${rMandal})</span>
+                </div>
+                <div style="display: flex; align-items: center;">
+                    <b style="color: #334155; width: 140px;">शुल्काचा प्रकार:</b>
+                    <span style="color: #0369a1; font-weight: 700;">${rFeeType}</span>
+                </div>
+                <div style="display: flex; align-items: center; background: #e0f2fe; padding: 6px 12px; border-radius: 6px; margin-top: 8px; white-space: nowrap;">
+                    <b style="color: #334155; width: 140px;">प्राप्त रक्कम (अक्षरी):</b>
+                    <span style="color: #0B3D91; font-weight: 800; font-size: 1.05rem;">₹ ${rAmt}/- (रुपये ${rWords})</span>
+                </div>
+                <div style="display: flex; align-items: center; font-size: 0.88rem; color: #475569; margin-top: 4px;">
+                    <b style="width: 140px;">भरणा पद्धत:</b>
+                    <span>${rPayMode} ${rUtr ? `(Ref/UTR: ${rUtr})` : ''}</span>
+                </div>
+            </div>
+
+            <!-- Footer Stamp & Timestamp -->
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; border-top: 1.5px dashed #cbd5e1; padding-top: 10px; margin-top: 15px;">
+                <div style="font-size: 0.75rem; color: #64748b;">
+                    <b>🔒 अधिकृत संगणकीय ई-पावती:</b><br>
+                    सदर पावती सिस्टीमद्वारे वेळेच्या नोंदीसह तयार केली असून यावर सहीची आवश्यकता नाही.
+                </div>
+                <div style="text-align: center; background: #f0fdf4; border: 1.5px solid #16a34a; padding: 6px 14px; border-radius: 8px;">
+                    <div style="color: #16a34a; font-size: 0.88rem; font-weight: 800;">✓ Digitally Verified</div>
+                    <b style="color: #0B3D91; font-size: 0.95rem;">${rIssuerName}</b><br>
+                    <small style="color: #15803d; font-weight: 700;">(${rIssuerPost})</small><br>
+                    <small style="font-size: 0.68rem; color: #047857;">🕒 ${fullTimestamp}</small>
+                </div>
+            </div>
+
+        </div>
+    `;
+
+    // नवीन प्रिंट विंडो उघडणे आणि हेड टॅग लावणे
+    let win = window.open('', '_blank');
+    win.document.write(`
+        <html>
+        <head>
+            <title>Receipt_${rNo}</title>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+            <style>
+                @import url('https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;700;800&display=swap');
+                body { font-family: 'Mukta', sans-serif; background: #f8fafc; margin: 0; padding: 10px; }
+                @media print { body { background: #fff; padding: 0; } }
+            </style>
+        </head>
+        <body>${receiptHtml}</body>
+        </html>
+    `);
+    win.document.close();
+
+    // इमेज (लोगो) लोड झाल्याची खात्री करूनच प्रिंट कमांड देणे
+    let img = win.document.getElementById('receiptLogoImg');
+    if (img) {
+        img.onload = () => { win.print(); };
+        img.onerror = () => { win.print(); };
+        setTimeout(() => { win.print(); }, 800); // सुरक्षित फॉलबॅक टाइमर
+    } else {
+        setTimeout(() => { win.print(); }, 400);
+    }
+};
 
             let win = window.open('', '_blank');
             win.document.write(`
