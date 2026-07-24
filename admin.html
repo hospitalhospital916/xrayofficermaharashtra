@@ -1454,140 +1454,53 @@
         </div>
     </div>
 
-    <!-- FIREBASE & ALL APPLICATION JS LOGIC START -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where, orderBy, setDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
-        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, sendPasswordResetEmail, browserSessionPersistence, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-        
-        // FIREBASE CONFIGURATION
-        const firebaseConfig = { 
-            apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk", 
-            authDomain: "xrayunionmah.firebaseapp.com", 
-            projectId: "xrayunionmah" 
-        };
-        const app = initializeApp(firebaseConfig); 
-        const db = getFirestore(app); 
-        const auth = getAuth(app);
-        
-        const SUPER_ADMIN_EMAIL = "hangemahesh498@gmail.com";
-        let isSuperAdmin = false;
-        let subAdminAccessRegion = "All"; 
-        let subAdminPermissions = [];
-        let subAdminsList = [];
+  // प्रलंबित अर्जांचे मॉडेल उघडणे (Pending Requests Modal)
+window.openPendingRequests = function() {
+    let pendingList = membersData.filter(m => m.status === 'Pending');
+    let html = pendingList.map((m, i) => `
+        <tr>
+            <td>${i + 1}</td>
+            <td><b>${m.name}</b><br><small>${m.designation || '-'}</small></td>
+            <td>${m.mobile || '-'}<br><small>${m.email || '-'}</small></td>
+            <td>${m.district || '-'} (${m.mandal || '-'})</td>
+            <td>
+                <button class="btn-action bg-success" onclick="approveMemberStatus('${m.id}')"><i class="fa fa-check"></i> मंजुरी द्या</button>
+            </td>
+        </tr>
+    `).join('') || '<tr><td colspan="5" style="text-align:center;">एकही प्रलंबित अर्ज नाही.</td></tr>';
+    
+    document.getElementById('pendingRequestsBody').innerHTML = html;
+    document.getElementById('pendingModalOverlay').style.display = 'flex';
+};
 
-        let currentLoggedInAdminName = "महेश हांगे";
-        let currentLoggedInAdminDesignation = "मुख्य ॲडमिन";
+// सदस्याला मंजुरी देण्याचे फंक्शन
+window.approveMemberStatus = async function(id) {
+    await updateDoc(doc(db, "members", id), { status: 'Approved' });
+    Swal.fire('यशस्वी', 'सदस्याचा अर्ज मंजूर करण्यात आला आहे!', 'success');
+    closeModal('pendingModalOverlay');
+    loadData();
+};
 
-        const mandalData = {
-            "पुणे मंडळ": ["पुणे", "सातारा", "सोलापूर"],
-            "नागपूर मंडळ": ["नागपूर", "भंडारा", "वर्धा", "गोंदिया", "चंद्रपूर", "गडचिरोली"],
-            "नाशिक मंडळ": ["नाशिक", "अहमदनगर", "धुळे", "जळगाव", "नंदुरबार"],
-            "अकोला मंडळ": ["अकोला", "अमरावती", "बुलढाणा", "यवतमाळ", "वाशिम"],
-            "कोल्हापूर मंडळ": ["कोल्हापूर", "सांगली", "रत्नागिरी", "सिंधुदुर्ग"],
-            "छत्रपती संभाजीनगर मंडळ": ["छत्रपती संभाजीनगर", "जालना", "परभणी", "हिंगोली"],
-            "लातूर मंडळ": ["लातूर", "धाराशिव", "बीड", "नांदेड"],
-            "ठाणे मंडळ": ["ठाणे", "पालघर", "रायगड", "मुंबई शहर", "मुंबई उपनगर"]
-        };
+// पदाधिकारी शोधण्याचे फंक्शन (Office Bearers Search)
+window.filterOBMembers = function() {
+    let query = document.getElementById('ob_search').value.toLowerCase();
+    let resBox = document.getElementById('ob_search_results');
+    if (query.length < 2) { resBox.innerHTML = ''; return; }
 
-        let membersData = [], otherStaffData = [], committeeData = [], galleryData = [], lettersData = [], memberFoldersData = [], memberFilesData = [], electionCandidatesData = [], recycleBinData = [];
-        let lpTemplatesData = [null, null]; // Strictly 2 Design Slots
-        let lpSignaturesData = [
-            { name: "अध्यक्ष", signUrl: "" },
-            { name: "उपाध्यक्ष", signUrl: "" },
-            { name: "सचिव", signUrl: "" },
-            { name: "कोषाध्यक्ष", signUrl: "" },
-            { name: "प्रमुख कार्यवाह", signUrl: "" }
-        ];
-        let lpLogoUrl = "", lpStampUrl = "";
-        let currentICardStyle = "1";
+    let matches = membersData.filter(m => (m.name || '').toLowerCase().includes(query));
+    resBox.innerHTML = matches.map(m => `
+        <div style="padding:8px; border-bottom:1px solid #eee; cursor:pointer; background:#fff;" onclick="selectOBMember('${m.name}', '${m.mobile}', '${m.district}', '${m.photoUrl||''}')">
+            <b>${m.name}</b> - <small>${m.district}</small>
+        </div>
+    `).join('');
+};
 
-        let icardFieldSettings = {
-            sh_name: true, sh_post: true, sh_mob: true, sh_email: true,
-            sh_dist: true, sh_mandal: true, sh_workplace: true, sh_dob: true,
-            sh_bg: true, sh_join: true, sh_sevarth: true, sh_aadhaar: true
-        };
-
-        // ==========================================================
-        // INITIALIZATION & TAB NAVIGATION UTILITIES
-        // ==========================================================
-        window.populateMandals = function() {
-            let options = '<option value="All">सर्व मंडळे</option>';
-            let optionsForm = '<option value="">मंडळ निवडा</option>';
-            Object.keys(mandalData).forEach(m => { options += `<option value="${m}">${m}</option>`; optionsForm += `<option value="${m}">${m}</option>`; });
-            if(document.getElementById('filterMandal')) document.getElementById('filterMandal').innerHTML = options;
-            if(document.getElementById('edit_mandal')) document.getElementById('edit_mandal').innerHTML = optionsForm;
-            if(document.getElementById('empMandal')) document.getElementById('empMandal').innerHTML = options;
-            if(document.getElementById('icard_search_mandal')) document.getElementById('icard_search_mandal').innerHTML = options;
-            if(document.getElementById('lp_recipient_mandal')) document.getElementById('lp_recipient_mandal').innerHTML = optionsForm;
-            
-            let allDistHtml = '<option value="">जिल्हा निवडा</option>';
-            Object.values(mandalData).flat().forEach(d => { allDistHtml += `<option value="${d}">${d}</option>`; });
-            if(document.getElementById('mf_target_district')) document.getElementById('mf_target_district').innerHTML = allDistHtml;
-        };
-
-        window.populateDistricts = function(mSelectId, dSelectId) {
-            let m = document.getElementById(mSelectId).value;
-            let dSelect = document.getElementById(dSelectId);
-            if(!dSelect) return;
-            if(m === "All" || m === "") { dSelect.innerHTML = mSelectId.includes('Filter') || mSelectId.includes('search') || mSelectId.includes('dup') ? '<option value="All">सर्व जिल्हे</option>' : '<option value="">प्रथम मंडळ निवडा</option>'; return; }
-            let html = mSelectId.includes('Filter') || mSelectId.includes('search') || mSelectId.includes('dup') ? '<option value="All">सर्व जिल्हे</option>' : '<option value="">जिल्हा निवडा</option>';
-            if(mandalData[m]) { mandalData[m].forEach(d => { html += `<option value="${d}">${d}</option>`; }); }
-            dSelect.innerHTML = html;
-        };
-
-        window.checkFileSize = (input, maxKB) => {
-            if (input.files && input.files.length > 0) {
-                let fileSize = input.files[0].size / 1024;
-                if (fileSize > maxKB) {
-                    Swal.fire('मर्यादा ओलांडली', `फाईलची साईझ ${maxKB} KB पेक्षा जास्त असू नये. (सध्याची साईझ: ${Math.round(fileSize)} KB)`, 'error');
-                    input.value = ""; 
-                }
-            }
-        };
-
-        window.openTab = function(tabId) { 
-            document.querySelectorAll('.tab-content, .tab-btn').forEach(e=>e.classList.remove('active')); 
-            let targetTab = document.getElementById(tabId);
-            if(targetTab) targetTab.classList.add('active'); 
-            if(event && event.currentTarget) event.currentTarget.classList.add('active'); 
-            if(tabId === 'tab-dash') { setTimeout(renderDashboard, 200); }
-            if(tabId === 'tab-admin-logs') renderAdminLogs();
-            if(tabId === 'tab-member-logs') renderMemberLogs();
-            if(tabId === 'tab-recyclebin') renderRecycleBin();
-            if(tabId === 'tab-letterpad') { renderLetterPadAdmin(); renderLetters(); }
-            if(tabId === 'tab-icard') { filterICardMembers(); }
-            if(tabId === 'tab-member-folders') { renderSixFolders(); renderMemberFilesList(); }
-            if(tabId === 'tab-fees') { renderFees(); }
-            if(tabId === 'tab-voting') { renderElectionCandidates(); }
-            if(tabId === 'tab-committee') { renderCommittee(); }
-            if(tabId === 'tab-gallery') { loadGallery(); }
-        };
-
-        // ==========================================================
-        // AUTHENTICATION & TICK-BOX PERMISSIONS LISTENER
-        // ==========================================================
-        onAuthStateChanged(auth, async (user) => { 
-            if (user) { 
-                isSuperAdmin = (user.email === SUPER_ADMIN_EMAIL);
-                
-                if (!isSuperAdmin) {
-                    const q = query(collection(db, "admins"), where("email", "==", user.email));
-                    const snap = await getDocs(q);
-                    
-                    if(snap.empty) { 
-                        await signOut(auth);
-                        Swal.fire('एरर', 'तुमचे अकाउंट ॲडमिनने डिलीट केले आहे.', 'error');
-                        return;
-                    }
-                    
-                    let adminData = snap.docs[0].data();
-                    
-                    if(adminData.isActive === false) {
-                        await signOut(auth);
-                        Swal.fire('अॅक्सेस नाकारला', 'तुमचे अकाउंट ॲडमिनने ब्लॉक केले आहे.', 'error');
-                        return;
-                    }
+window.selectOBMember = function(name, mob, dist, photo) {
+    document.getElementById('ob_manual_name').value = name;
+    document.getElementById('ob_manual_mobile').value = mob;
+    document.getElementById('ob_manual_district').value = dist;
+    document.getElementById('ob_search_results').innerHTML = '';
+};
 
                     subAdminAccessRegion = adminData.access || "All"; 
                     subAdminPermissions = adminData.permissions || [];
