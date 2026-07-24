@@ -185,87 +185,137 @@
         </div>
     </div>
 
-    <!-- Edit/Add Modal -->
-    <div id="editModalOverlay" class="custom-modal-overlay">
-        <div class="custom-modal">
-            <div class="custom-modal-header">
-                <h3 id="editModalTitle">सदस्य/कर्मचारी माहिती अपडेट करा</h3>
-                <button onclick="closeModal('editModalOverlay')" style="background:transparent; border:none; color:white; font-size:1.5rem; cursor:pointer;">&times;</button>
-            </div>
-            <div class="custom-modal-body">
-                <form id="fullEditForm" onsubmit="saveFullEdit(event)">
-                    <input type="hidden" id="edit_id">
-                    <input type="hidden" id="edit_type">
-                    
-                    <div class="form-row">
-                        <div style="flex:1;">
-                            <label style="color:var(--primary); font-weight:bold;"><i class="fa fa-camera"></i> प्रोफाईल फोटो (Max 400 KB - १ फोटो)</label>
-                            <div id="upload_box_photo">
-                                <input type="file" id="edit_photo" accept="image/*" class="form-control" style="border: 2px dashed var(--primary); padding: 10px;" onchange="checkFileSize(this, 400)">
-                            </div>
-                            <div id="existing_box_photo" style="display:none; align-items:center; gap:10px; padding:10px; border:1px solid #ccc; border-radius:6px; background:#f8fafc;">
-                                <a id="link_photo" href="#" target="_blank" class="badge bg-success" style="text-decoration:none; padding:8px;"><i class="fa fa-eye"></i> फोटो पहा</a>
-                                <button type="button" class="btn-action bg-danger" onclick="removeExistingFile('photo', 'existing_photo_url', 'edit_photo')"><i class="fa fa-trash"></i> डिलीट व नवीन बदला</button>
-                            </div>
-                            <input type="hidden" id="existing_photo_url">
+  <!-- Edit/Add Modal (प्रवर्ग, शेरा, स्टेटस व ठिकाण ट्रॅकिंगसह) -->
+<div id="editModalOverlay" class="custom-modal-overlay">
+    <div class="custom-modal">
+        <div class="custom-modal-header">
+            <h3 id="editModalTitle">सदस्य/कर्मचारी माहिती अपडेट करा</h3>
+            <button onclick="closeModal('editModalOverlay')" style="background:transparent; border:none; color:white; font-size:1.5rem; cursor:pointer;">&times;</button>
+        </div>
+        <div class="custom-modal-body">
+            <form id="fullEditForm" onsubmit="saveFullEdit(event)">
+                <input type="hidden" id="edit_id">
+                <input type="hidden" id="edit_type">
+                
+                <!-- १ ली रेष: फोटो व डॉक्युमेंट्स अपलोड -->
+                <div class="form-row">
+                    <div style="flex:1;">
+                        <label style="color:var(--primary); font-weight:bold;"><i class="fa fa-camera"></i> प्रोफाईल फोटो (Max 400 KB)</label>
+                        <div id="upload_box_photo">
+                            <input type="file" id="edit_photo" accept="image/*" class="form-control" style="border: 2px dashed var(--primary); padding: 10px;" onchange="checkFileSize(this, 400)">
                         </div>
-
-                        <div style="flex:1;">
-                            <label style="color:var(--danger); font-weight:bold;"><i class="fa fa-file-pdf"></i> डॉक्युमेंट अपलोड (Max 400 KB)</label>
-                            <div id="upload_box_doc">
-                                <input type="file" id="edit_document" accept="image/*,.pdf" class="form-control" style="border: 2px dashed var(--danger); padding: 10px;" onchange="checkFileSize(this, 400)">
-                            </div>
-                            <div id="existing_box_doc" style="display:none; align-items:center; gap:10px; padding:10px; border:1px solid #ccc; border-radius:6px; background:#f8fafc;">
-                                <a id="link_doc" href="#" target="_blank" class="badge bg-success" style="text-decoration:none; padding:8px;"><i class="fa fa-eye"></i> फाईल पहा</a>
-                                <button type="button" class="btn-action bg-danger" onclick="removeExistingFile('doc', 'existing_doc_url', 'edit_document')"><i class="fa fa-trash"></i> डिलीट व नवीन अपलोड</button>
-                            </div>
-                            <input type="hidden" id="existing_doc_url">
+                        <div id="existing_box_photo" style="display:none; align-items:center; gap:10px; padding:10px; border:1px solid #ccc; border-radius:6px; background:#f8fafc;">
+                            <a id="link_photo" href="#" target="_blank" class="badge bg-success" style="text-decoration:none; padding:8px;"><i class="fa fa-eye"></i> फोटो पहा</a>
+                            <button type="button" class="btn-action bg-danger" onclick="removeExistingFile('photo', 'existing_photo_url', 'edit_photo')"><i class="fa fa-trash"></i> डिलीट व नवीन बदला</button>
                         </div>
-
-                        <div style="flex:1;">
-                            <label id="lbl_other_doc" style="color:var(--info); font-weight:bold;"><i class="fa fa-folder-open"></i> आधार / इतर कागदपत्रे (Max 400 KB)</label>
-                            <div id="upload_box_other">
-                                <input type="file" id="edit_other_doc" accept=".pdf, image/*" class="form-control" style="border: 2px dashed var(--info); padding: 10px;" onchange="checkFileSize(this, 400)">
-                            </div>
-                            <div id="existing_box_other" style="display:none; align-items:center; gap:10px; padding:10px; border:1px solid #ccc; border-radius:6px; background:#f8fafc;">
-                                <a id="link_other" href="#" target="_blank" class="badge bg-success" style="text-decoration:none; padding:8px;"><i class="fa fa-eye"></i> फाईल पहा</a>
-                                <button type="button" class="btn-action bg-danger" onclick="removeExistingFile('other', 'existing_other_url', 'edit_other_doc')"><i class="fa fa-trash"></i> डिलीट व नवीन अपलोड</button>
-                            </div>
-                            <input type="hidden" id="existing_other_url">
-                        </div>
+                        <input type="hidden" id="existing_photo_url">
                     </div>
 
-                    <div class="form-row">
-                        <div><label>पूर्ण नाव</label><input type="text" id="edit_name" class="form-control" required></div>
-                        <div><label>पद</label><input type="text" id="edit_post" class="form-control" required></div>
-                        <div><label>मोबाईल क्रमांक</label><input type="tel" id="edit_mobile" class="form-control" required></div>
-                        <div><label>ई-मेल आयडी</label><input type="email" id="edit_email" class="form-control"></div>
+                    <div style="flex:1;">
+                        <label style="color:var(--danger); font-weight:bold;"><i class="fa fa-file-pdf"></i> डॉक्युमेंट अपलोड (Max 400 KB)</label>
+                        <div id="upload_box_doc">
+                            <input type="file" id="edit_document" accept="image/*,.pdf" class="form-control" style="border: 2px dashed var(--danger); padding: 10px;" onchange="checkFileSize(this, 400)">
+                        </div>
+                        <div id="existing_box_doc" style="display:none; align-items:center; gap:10px; padding:10px; border:1px solid #ccc; border-radius:6px; background:#f8fafc;">
+                            <a id="link_doc" href="#" target="_blank" class="badge bg-success" style="text-decoration:none; padding:8px;"><i class="fa fa-eye"></i> फाईल पहा</a>
+                            <button type="button" class="btn-action bg-danger" onclick="removeExistingFile('doc', 'existing_doc_url', 'edit_document')"><i class="fa fa-trash"></i> डिलीट व नवीन अपलोड</button>
+                        </div>
+                        <input type="hidden" id="existing_doc_url">
                     </div>
-                    <div class="form-row">
-                        <div><label>आधार क्रमांक</label><input type="text" id="edit_aadhaar" class="form-control"></div>
-                        <div><label>सेवार्थ आयडी</label><input type="text" id="edit_sevarth" class="form-control"></div>
-                        <div><label>जन्मतारीख</label><input type="date" id="edit_dob" class="form-control"></div>
-                        <div><label>रक्तगट</label><input type="text" id="edit_bloodGroup" class="form-control" placeholder="उदा. O+"></div>
+
+                    <div style="flex:1;">
+                        <label id="lbl_other_doc" style="color:var(--info); font-weight:bold;"><i class="fa fa-folder-open"></i> आधार / इतर कागदपत्रे (Max 400 KB)</label>
+                        <div id="upload_box_other">
+                            <input type="file" id="edit_other_doc" accept=".pdf, image/*" class="form-control" style="border: 2px dashed var(--info); padding: 10px;" onchange="checkFileSize(this, 400)">
+                        </div>
+                        <div id="existing_box_other" style="display:none; align-items:center; gap:10px; padding:10px; border:1px solid #ccc; border-radius:6px; background:#f8fafc;">
+                            <a id="link_other" href="#" target="_blank" class="badge bg-success" style="text-decoration:none; padding:8px;"><i class="fa fa-eye"></i> फाईल पहा</a>
+                            <button type="button" class="btn-action bg-danger" onclick="removeExistingFile('other', 'existing_other_url', 'edit_other_doc')"><i class="fa fa-trash"></i> डिलीट व नवीन अपलोड</button>
+                        </div>
+                        <input type="hidden" id="existing_other_url">
                     </div>
-                    <div class="form-row">
-                        <div><label>मंडळ</label><select id="edit_mandal" class="form-control" onchange="populateDistricts('edit_mandal', 'edit_district')"><option value="">मंडळ निवडा</option></select></div>
-                        <div><label>जिल्हा</label><select id="edit_district" class="form-control"><option value="">प्रथम मंडळ निवडा</option></select></div>
-                        <div><label>कार्य ठिकाण</label><input type="text" id="edit_workplace" class="form-control"></div>
+                </div>
+
+                <!-- २ री रेष: मूलभूत माहिती व प्रवर्ग -->
+                <div class="form-row">
+                    <div style="flex:1.5;"><label>पूर्ण नाव</label><input type="text" id="edit_name" class="form-control" required></div>
+                    <div style="flex:1;"><label>पद / हुद्दा</label><input type="text" id="edit_post" class="form-control" required></div>
+                    <div style="flex:1;">
+                        <label style="color:var(--primary); font-weight:bold;">प्रवर्ग (Category)</label>
+                        <select id="edit_category" class="form-control">
+                            <option value="">प्रवर्ग निवडा</option>
+                            <option value="खुला">खुला (Open)</option>
+                            <option value="अ.जा.">अ.जा. (SC)</option>
+                            <option value="अ.ज.">अ.ज. (ST)</option>
+                            <option value="वि.जा.-अ">वि.जा.-अ (VJ-A)</option>
+                            <option value="भ.ज.-ब">भ.ज.-ब (NT-B)</option>
+                            <option value="भ.ज.-क">भ.ज.-क (NT-C)</option>
+                            <option value="भ.ज.-ड">भ.ज.-ड (NT-D)</option>
+                            <option value="वि.मा.प्र.">वि.मा.प्र. (SBC)</option>
+                            <option value="इ.मा.व.">इ.मा.व. (OBC)</option>
+                            <option value="EWS">EWS</option>
+                        </select>
                     </div>
-                    <div class="form-row">
-                        <div><label>रुजू दिनांक</label><input type="date" id="edit_joinDate" class="form-control"></div>
-                        <div><label>सेवानिवृत्ती दिनांक</label><input type="date" id="edit_retireDate" class="form-control"></div>
-                        <div style="flex:2;"><label>कायमचा पत्ता</label><input type="text" id="edit_address" class="form-control"></div>
+                    <div style="flex:1;"><label>मोबाईल क्रमांक</label><input type="tel" id="edit_mobile" class="form-control" required></div>
+                </div>
+
+                <!-- ३ री रेष: इतर वैयक्तिक माहिती -->
+                <div class="form-row">
+                    <div><label>ई-मेल आयडी</label><input type="email" id="edit_email" class="form-control"></div>
+                    <div><label>आधार क्रमांक</label><input type="text" id="edit_aadhaar" class="form-control"></div>
+                    <div><label>सेवार्थ आयडी</label><input type="text" id="edit_sevarth" class="form-control"></div>
+                    <div><label>जन्मतारीख</label><input type="date" id="edit_dob" class="form-control"></div>
+                </div>
+
+                <!-- ४ थी रेष: मंडळ, जिल्हा व स्टेटस -->
+                <div class="form-row">
+                    <div><label>मंडळ</label><select id="edit_mandal" class="form-control" onchange="populateDistricts('edit_mandal', 'edit_district')"><option value="">मंडळ निवडा</option></select></div>
+                    <div><label>जिल्हा</label><select id="edit_district" class="form-control"><option value="">प्रथम मंडळ निवडा</option></select></div>
+                    <div>
+                        <label style="color:var(--danger); font-weight:bold;">कर्मचारी स्टेटस</label>
+                        <select id="edit_empStatus" class="form-control">
+                            <option value="Active">कार्यरत (Active)</option>
+                            <option value="Retired">सेवानिवृत्त (Retired)</option>
+                            <option value="Transferred">बदली झालेले (Transferred)</option>
+                            <option value="InterMandal">आंतरमंडळ बदली (Inter-Mandal)</option>
+                        </select>
                     </div>
-                    <div class="form-row" id="feeStatusDiv">
-                        <div><label>फी स्टेटस</label><select id="edit_fee" class="form-control"><option value="Paid">Paid</option><option value="Unpaid">Unpaid</option></select></div>
-                        <div><label>Approval स्टेटस</label><select id="edit_status" class="form-control"><option value="Approved">Approved</option><option value="Pending">Pending</option><option value="Rejected">Rejected</option></select></div>
+                </div>
+
+                <!-- ५ वी रेष: ठिकाण व बदल्यांचे एक्स्ट्रा कॉलम्स -->
+                <div class="form-row" style="background:#f0f4f8; padding:12px; border-radius:8px; border:1px solid #cbd5e1;">
+                    <div style="flex:1;"><label style="font-weight:bold;">१. सध्या कार्यरत ठिकाण</label><input type="text" id="edit_workplace" class="form-control" placeholder="उदा. जि.रु. लातूर"></div>
+                    <div style="flex:1;"><label style="font-weight:bold; color:blue;">२. बदलीने पदस्थापना</label><input type="text" id="edit_transferPosting" class="form-control" placeholder="उदा. उ.जि.रु. उदगीर"></div>
+                    <div style="flex:1;"><label style="font-weight:bold; color:green;">३. पुन्हा कार्यरत ठिकाण</label><input type="text" id="edit_rejoinedWorkplace" class="form-control" placeholder="उदा. ग्रा.रु. अहमदपूर"></div>
+                </div>
+
+                <!-- ६ वी रेष: सेवा कालावधी व पत्ता -->
+                <div class="form-row" style="margin-top:15px;">
+                    <div><label>रुजू दिनांक</label><input type="date" id="edit_joinDate" class="form-control"></div>
+                    <div><label>सेवानिवृत्ती दिनांक</label><input type="date" id="edit_retireDate" class="form-control"></div>
+                    <div><label>रक्तगट</label><input type="text" id="edit_bloodGroup" class="form-control" placeholder="उदा. O+"></div>
+                </div>
+
+                <!-- ७ वी रेष: पत्ता व अभिप्राय/शेरा -->
+                <div class="form-row">
+                    <div style="flex:1.5;"><label>कायमचा पत्ता</label><input type="text" id="edit_address" class="form-control"></div>
+                    <div style="flex:1.5;">
+                        <label style="color:#854d0e; font-weight:bold;">अभिप्राय / शेरा (Remarks)</label>
+                        <input type="text" id="edit_remarks" class="form-control" placeholder="उदा. प्रकल्पग्रस्त / अनुकंपा / अपंग">
                     </div>
-                    <button type="submit" class="btn-save" style="width:100%; font-size:1.2rem; padding:12px; margin-top:10px; justify-content:center;"><i class="fa fa-save"></i> माहिती सेव्ह करा</button>
-                </form>
-            </div>
+                </div>
+
+                <!-- ८ वी रेष: शुल्क व अप्रुव्हल (फक्त सदस्यांसाठी लागू) -->
+                <div class="form-row" id="feeStatusDiv">
+                    <div><label>फी स्टेटस</label><select id="edit_fee" class="form-control"><option value="Paid">Paid</option><option value="Unpaid">Unpaid</option></select></div>
+                    <div><label>Approval स्टेटस</label><select id="edit_status" class="form-control"><option value="Approved">Approved</option><option value="Pending">Pending</option><option value="Rejected">Rejected</option></select></div>
+                </div>
+
+                <button type="submit" class="btn-save" style="width:100%; font-size:1.2rem; padding:12px; margin-top:15px; justify-content:center;"><i class="fa fa-save"></i> माहिती सेव्ह करा</button>
+            </form>
         </div>
     </div>
+</div>
 
     <!-- Profile Pop-up Modal -->
     <div id="profileModalOverlay" class="custom-modal-overlay">
@@ -670,12 +720,22 @@
                     </div>
                     <div class="panel-body" style="padding:0; overflow-x:auto;">
                         <table id="employeeTable">
-                            <thead><tr><th>अ.क्र.</th><th>नाव व पद</th><th>मोबाईल</th><th>कार्यरत ठिकाण</th><th>जिल्हा</th><th>मंडळ</th><th>रुजू दिनांक</th><th class="no-print">Action</th></tr></thead>
-                            <tbody id="otherBody"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+                            <thead>
+    <tr>
+        <th style="width:40px;">अ.क्र.</th>
+        <th>नाव व पद</th>
+        <th>प्रवर्ग</th>
+        <th>मोबाईल</th>
+        <th>सध्या कार्यरत ठिकाण</th>
+        <th>बदलीने पदस्थापना</th>
+        <th>पुन्हा कार्यरत ठिकाण</th>
+        <th>जिल्हा</th>
+        <th>मंडळ</th>
+        <th>रुजू दिनांक</th>
+        <th>अभिप्राय / शेरा</th>
+        <th class="no-print" style="text-align:center;">Action</th>
+    </tr>
+</thead>
 
             <!-- 4. OFFICE BEARERS (पदाधिकारी - SEPARATE TAB) -->
             <div id="tab-committee" class="tab-content">
@@ -1793,7 +1853,8 @@
         };
 
         window.openFullEditModal = (id, colName) => { 
-            let m = (colName === 'members' ? membersData : otherStaffData).find(x => x.id === id); if(!m) return;
+            let m = (colName === 'members' ? membersData : otherStaffData).find(x => x.id === id); 
+            if(!m) return;
             
             document.getElementById('edit_id').value = id; 
             document.getElementById('edit_type').value = colName;
@@ -1804,27 +1865,36 @@
             
             toggleFileUI('photo', m.photoUrl); toggleFileUI('doc', m.docUrl); toggleFileUI('other', m.otherUrl);
 
-            document.getElementById('edit_name').value = m.name||''; 
-            document.getElementById('edit_post').value = m.designation||m.post||''; 
-            document.getElementById('edit_mobile').value = m.mobile||''; 
-            document.getElementById('edit_email').value = m.email||''; 
-            document.getElementById('edit_aadhaar').value = m.aadhaar||''; 
-            document.getElementById('edit_sevarth').value = m.sevarthId||''; 
-            document.getElementById('edit_dob').value = m.dob||'';
-            document.getElementById('edit_bloodGroup').value = m.bloodGroup||'';
-            document.getElementById('edit_workplace').value = m.workplace||''; 
-            document.getElementById('edit_joinDate').value = m.joinDate||''; 
-            document.getElementById('edit_retireDate').value = m.retireDate||''; 
-            document.getElementById('edit_address').value = m.address||''; 
+            document.getElementById('edit_name').value = m.name || ''; 
+            document.getElementById('edit_post').value = m.designation || m.post || ''; 
+            document.getElementById('edit_mobile').value = m.mobile || ''; 
+            document.getElementById('edit_email').value = m.email || ''; 
+            document.getElementById('edit_aadhaar').value = m.aadhaar || ''; 
+            document.getElementById('edit_sevarth').value = m.sevarthId || ''; 
+            document.getElementById('edit_dob').value = m.dob || '';
+            document.getElementById('edit_bloodGroup').value = m.bloodGroup || '';
+            document.getElementById('edit_workplace').value = m.workplace || m.currentWorkplace || ''; 
+            document.getElementById('edit_joinDate').value = m.joinDate || ''; 
+            document.getElementById('edit_retireDate').value = m.retireDate || ''; 
+            document.getElementById('edit_address').value = m.address || ''; 
             
-            document.getElementById('edit_mandal').value = m.mandal||''; 
+            // नवीन एक्स्ट्रा फिल्ड्स
+            if(document.getElementById('edit_category')) document.getElementById('edit_category').value = m.category || '';
+            if(document.getElementById('edit_remarks')) document.getElementById('edit_remarks').value = m.remarks || m.shera || '';
+            if(document.getElementById('edit_empStatus')) document.getElementById('edit_empStatus').value = m.empStatus || 'Active';
+            if(document.getElementById('edit_transferPosting')) document.getElementById('edit_transferPosting').value = m.transferPosting || '';
+            if(document.getElementById('edit_rejoinedWorkplace')) document.getElementById('edit_rejoinedWorkplace').value = m.rejoinedWorkplace || '';
+
+            document.getElementById('edit_mandal').value = m.mandal || ''; 
             populateDistricts('edit_mandal', 'edit_district'); 
-            document.getElementById('edit_district').value = m.district||'';
+            document.getElementById('edit_district').value = m.district || '';
             
             if(colName === 'members') { 
                 document.getElementById('feeStatusDiv').style.display = 'flex'; 
-                document.getElementById('edit_fee').value = m.feeStatus||'Unpaid'; 
-                document.getElementById('edit_status').value = m.status||'Approved'; 
+                document.getElementById('edit_fee').value = m.feeStatus || 'Unpaid'; 
+                document.getElementById('edit_status').value = m.status || 'Approved'; 
+            } else {
+                document.getElementById('feeStatusDiv').style.display = 'none';
             }
             
             document.getElementById('editModalOverlay').style.display = 'flex';
@@ -1840,16 +1910,53 @@
             let finalOtherUrl = document.getElementById('existing_other_url').value;
 
             try {
-                let photoFile = document.getElementById('edit_photo').files[0]; if(photoFile) finalPhotoUrl = await uploadToCloudinary(photoFile);
-                let docFile = document.getElementById('edit_document').files[0]; if(docFile) finalDocUrl = await uploadToCloudinary(docFile);
-                let otherFile = document.getElementById('edit_other_doc').files[0]; if(otherFile) finalOtherUrl = await uploadToCloudinary(otherFile);
+                let photoFile = document.getElementById('edit_photo')?.files[0]; if(photoFile) finalPhotoUrl = await uploadToCloudinary(photoFile);
+                let docFile = document.getElementById('edit_document')?.files[0]; if(docFile) finalDocUrl = await uploadToCloudinary(docFile);
+                let otherFile = document.getElementById('edit_other_doc')?.files[0]; if(otherFile) finalOtherUrl = await uploadToCloudinary(otherFile);
 
-                let p = { name: document.getElementById('edit_name').value, mobile: document.getElementById('edit_mobile').value, email: document.getElementById('edit_email').value, aadhaar: document.getElementById('edit_aadhaar').value, sevarthId: document.getElementById('edit_sevarth').value, dob: document.getElementById('edit_dob').value, bloodGroup: document.getElementById('edit_bloodGroup').value, workplace: document.getElementById('edit_workplace').value, mandal: document.getElementById('edit_mandal').value, district: document.getElementById('edit_district').value, joinDate: document.getElementById('edit_joinDate').value, retireDate: document.getElementById('edit_retireDate').value, address: document.getElementById('edit_address').value, photoUrl: finalPhotoUrl, docUrl: finalDocUrl, otherUrl: finalOtherUrl };
-                if(col === 'members') { p.designation = document.getElementById('edit_post').value; p.feeStatus = document.getElementById('edit_fee').value; p.status = document.getElementById('edit_status').value; if(!id) p.isMember=true; } else { p.post = document.getElementById('edit_post').value; }
-                if(id) await updateDoc(doc(db, col, id), p); else await addDoc(collection(db, col), p); 
+                let p = { 
+                    name: document.getElementById('edit_name').value, 
+                    mobile: document.getElementById('edit_mobile').value, 
+                    email: document.getElementById('edit_email').value, 
+                    aadhaar: document.getElementById('edit_aadhaar').value, 
+                    sevarthId: document.getElementById('edit_sevarth').value, 
+                    dob: document.getElementById('edit_dob').value, 
+                    bloodGroup: document.getElementById('edit_bloodGroup').value, 
+                    workplace: document.getElementById('edit_workplace').value, 
+                    mandal: document.getElementById('edit_mandal').value, 
+                    district: document.getElementById('edit_district').value, 
+                    joinDate: document.getElementById('edit_joinDate').value, 
+                    retireDate: document.getElementById('edit_retireDate').value, 
+                    address: document.getElementById('edit_address').value, 
+                    photoUrl: finalPhotoUrl, 
+                    docUrl: finalDocUrl, 
+                    otherUrl: finalOtherUrl,
+                    category: document.getElementById('edit_category')?.value || '',
+                    remarks: document.getElementById('edit_remarks')?.value || '',
+                    empStatus: document.getElementById('edit_empStatus')?.value || 'Active',
+                    transferPosting: document.getElementById('edit_transferPosting')?.value || '',
+                    rejoinedWorkplace: document.getElementById('edit_rejoinedWorkplace')?.value || ''
+                };
+
+                if(col === 'members') { 
+                    p.designation = document.getElementById('edit_post').value; 
+                    p.feeStatus = document.getElementById('edit_fee').value; 
+                    p.status = document.getElementById('edit_status').value; 
+                    if(!id) p.isMember = true; 
+                } else { 
+                    p.post = document.getElementById('edit_post').value; 
+                }
+
+                if(id) await updateDoc(doc(db, col, id), p); 
+                else await addDoc(collection(db, col), p); 
+
                 await logAdminActivity(`Updated ${col}: ${p.name}`);
-                closeModal('editModalOverlay'); Swal.fire('यशस्वी', 'माहिती सेव्ह झाली!', 'success'); loadData(); 
-            } catch (err) { Swal.fire('Error', err.message, 'error'); }
+                closeModal('editModalOverlay'); 
+                Swal.fire('यशस्वी', 'माहिती सेव्ह झाली!', 'success'); 
+                loadData(); 
+            } catch (err) { 
+                Swal.fire('Error', err.message, 'error'); 
+            }
         };
 
         // ==========================================================
@@ -2093,48 +2200,221 @@
             }
         };
 
+  // ==========================================================
+        // STATE EMPLOYEES DATABASE (OTHER STAFF) - प्रगत वर्गवारी, बदल्या व शिफ्टिंग
         // ==========================================================
-        // STATE EMPLOYEES DATABASE (OTHER STAFF)
-        // ==========================================================
-        window.renderOtherStaff = () => {
-            let s = document.getElementById('empSearch').value.toLowerCase();
-            let mFil = document.getElementById('empMandal').value;
-            let sen = document.getElementById('empSeniority').value;
-            
-            let fil = otherStaffData.filter(e => {
-                if (subAdminAccessRegion !== "All" && e.mandal !== subAdminAccessRegion) return false;
-                if (mFil !== 'All' && e.mandal !== mFil) return false;
-                if (s && !((e.name||'').toLowerCase().includes(s))) return false; return true;
+
+        // १. आंतरमंडळ बदली (Shift Mandal) फंक्शन
+        window.shiftEmployeeMandal = async (empId) => {
+            let emp = otherStaffData.find(x => x.id === empId);
+            if (!emp) return;
+
+            let mandalOptionsHtml = '<option value="">नवीन मंडळ निवडा</option>';
+            Object.keys(mandalData).forEach(m => {
+                if (m !== emp.mandal) {
+                    mandalOptionsHtml += `<option value="${m}">${m}</option>`;
+                }
             });
-            if(sen === 'Senior') { fil.sort((a,b) => new Date(a.joinDate || '2099-01-01') - new Date(b.joinDate || '2099-01-01')); }
-            document.getElementById('otherBody').innerHTML = fil.map((s, i) => `
-                <tr>
-                    <td>${i+1}</td>
-                    <td><b>${s.name}</b><br><small>${s.post||'-'}</small></td>
-                    <td>${s.mobile||'-'}</td>
-                    <td>${s.workplace||'-'}</td>
-                    <td>${s.district||'-'}</td>
-                    <td>${s.mandal||'-'}</td>
-                    <td>${s.joinDate||'-'}</td>
-                    <td class="no-print" style="white-space:nowrap;">
-                        <button class="btn-action bg-primary" onclick="openFullEditModal('${s.id}','other_staff')" title="एडिट"><i class="fa fa-pen"></i></button>
-                        <button class="btn-action bg-danger" onclick="deleteOtherStaff('${s.id}')" title="डिलीट"><i class="fa fa-trash"></i></button>
-                    </td>
-                </tr>
-            `).join('') || '<tr><td colspan="8" style="text-align:center;">डेटा उपलब्ध नाही</td></tr>';
+
+            const { value: formValues } = await Swal.fire({
+                title: `🏢 आंतरमंडळ बदली - ${emp.name}`,
+                html: `
+                    <div style="text-align:left; font-size:0.9rem;">
+                        <p><b>सध्याचे मंडळ:</b> ${emp.mandal || '-'}</p>
+                        <p><b>सध्याचा जिल्हा:</b> ${emp.district || '-'}</p>
+                        <hr style="margin:10px 0;">
+                        <label><b>नवीन मंडळ:</b></label>
+                        <select id="shift_new_mandal" class="swal2-input">${mandalOptionsHtml}</select>
+                        
+                        <label><b>नवीन जिल्हा:</b></label>
+                        <input id="shift_new_district" class="swal2-input" placeholder="उदा. लातूर">
+                        
+                        <label><b>नवीन कार्यरत ठिकाण (पुन्हा कार्यरत ठिकाण):</b></label>
+                        <input id="shift_new_workplace" class="swal2-input" placeholder="उदा. उपजिल्हा रुग्णालय, उदगीर">
+                        
+                        <label><b>बदलीने पदस्थापना आदेश/टीप:</b></label>
+                        <input id="shift_transfer_note" class="swal2-input" placeholder="उदा. शासन आदेश क्र. १४०७नुसार">
+                    </div>
+                `,
+                focusConfirm: false,
+                showCancelButton: true,
+                confirmButtonText: 'बदली करून शिफ्ट करा',
+                cancelButtonText: 'रद्द करा',
+                preConfirm: () => {
+                    let newM = document.getElementById('shift_new_mandal').value;
+                    let newD = document.getElementById('shift_new_district').value;
+                    let newW = document.getElementById('shift_new_workplace').value;
+                    let note = document.getElementById('shift_transfer_note').value;
+                    if (!newM || !newD) {
+                        Swal.showValidationMessage('कृपया नवीन मंडळ आणि जिल्हा निवडा.');
+                        return false;
+                    }
+                    return { newMandal: newM, newDistrict: newD, newWorkplace: newW, note: note };
+                }
+            });
+
+            if (formValues) {
+                Swal.fire({ title: 'शिफ्ट होत आहे...', didOpen: () => Swal.showLoading() });
+                try {
+                    await updateDoc(doc(db, "other_staff", empId), {
+                        previousMandal: emp.mandal,
+                        mandal: formValues.newMandal,
+                        district: formValues.newDistrict,
+                        transferPosting: formValues.note || `बदली (${emp.mandal} -> ${formValues.newMandal})`,
+                        rejoinedWorkplace: formValues.newWorkplace || emp.workplace,
+                        empStatus: 'InterMandal',
+                        lastShiftDate: new Date().toLocaleDateString('mr-IN')
+                    });
+
+                    await logAdminActivity(`आंतरमंडळ बदली: ${emp.name} (${emp.mandal} मधून ${formValues.newMandal} मध्ये शिफ्ट)`);
+                    Swal.fire('बदली यशस्वी!', `कर्मचारी आता ${formValues.newMandal} मध्ये पाठवण्यात आला आहे.`, 'success');
+                    loadData();
+                } catch (e) {
+                    Swal.fire('Error', e.message, 'error');
+                }
+            }
         };
 
+        // २. कर्मचाऱ्यांची यादी दाखवणे (renderOtherStaff - प्रवर्ग, शेरा, टिक मार्क व सेपरेट समरीसह)
+        window.renderOtherStaff = () => {
+            let s = document.getElementById('empSearch')?.value.toLowerCase() || '';
+            let mFil = document.getElementById('empMandal')?.value || 'All';
+            let sen = document.getElementById('empSeniority')?.value || 'All';
+
+            // ॲडमिन/सब-ॲडमिन युझर चेक (सभासद टिक दाखवण्यासाठी)
+            let isAdminUser = (typeof auth !== 'undefined' && auth.currentUser) || isSuperAdmin;
+
+            let activeStaff = [];
+            let retiredStaff = [];
+            let transferredStaff = [];
+            let interMandalStaff = [];
+
+            otherStaffData.forEach(e => {
+                if (subAdminAccessRegion !== "All" && e.mandal !== subAdminAccessRegion) return;
+                if (mFil !== 'All' && e.mandal !== mFil) return;
+                if (s && !((e.name || '').toLowerCase().includes(s) || (e.mobile || '').includes(s) || (e.category || '').toLowerCase().includes(s))) return;
+
+                let status = e.empStatus || 'Active';
+
+                if (status === 'Retired') {
+                    retiredStaff.push(e);
+                } else if (status === 'Transferred') {
+                    transferredStaff.push(e);
+                } else if (status === 'InterMandal') {
+                    interMandalStaff.push(e);
+                    activeStaff.push(e);
+                } else {
+                    activeStaff.push(e);
+                }
+            });
+
+            if (sen === 'Senior') {
+                activeStaff.sort((a, b) => new Date(a.joinDate || '2099-01-01') - new Date(b.joinDate || '2099-01-01'));
+            }
+
+            // सभासद टिक मार्क (फक्त ॲडमिन आणि सब-ॲडमिनसाठी)
+            let getMemberTickHtml = (emp) => {
+                if (!isAdminUser) return ''; 
+                
+                let isMem = membersData.some(m => 
+                    (m.mobile && emp.mobile && m.mobile === emp.mobile) ||
+                    (m.name && emp.name && m.name.trim().toLowerCase() === emp.name.trim().toLowerCase())
+                );
+
+                if (isMem) {
+                    return `<span class="badge bg-success" style="margin-left:5px; font-size:0.68rem;"><i class="fa fa-check-circle"></i> ✓ सभासद</span>`;
+                }
+                return '';
+            };
+
+            let activeHtml = activeStaff.map((s, i) => {
+                let interTag = s.previousMandal ? `<br><small style="color:var(--purple); font-weight:bold;">🔄 बदलीने आलेले (${s.previousMandal})</small>` : '';
+                let memberTick = getMemberTickHtml(s);
+                let categoryBadge = s.category ? `<span class="badge bg-info">${s.category}</span>` : '-';
+
+                return `<tr>
+                    <td>${i + 1}</td>
+                    <td><b>${s.name}</b> ${memberTick}${interTag}<br><small style="color:gray;">${s.post || s.designation || '-'}</small></td>
+                    <td>${categoryBadge}</td>
+                    <td>${s.mobile || '-'}</td>
+                    <td><b>${s.workplace || s.currentWorkplace || '-'}</b></td>
+                    <td><small style="color:blue;">${s.transferPosting || '-'}</small></td>
+                    <td><small style="color:green;">${s.rejoinedWorkplace || '-'}</small></td>
+                    <td>${s.district || '-'}</td>
+                    <td>${s.mandal || '-'}</td>
+                    <td><small>${s.joinDate || '-'}</small></td>
+                    <td><small style="color:#854d0e; font-weight:600;">${s.remarks || s.shera || '-'}</small></td>
+                    <td class="no-print" style="white-space:nowrap; text-align:center;">
+                        <button class="btn-action bg-warning" onclick="shiftEmployeeMandal('${s.id}')" title="आंतरमंडळ बदली शिफ्ट करा"><i class="fa fa-exchange-alt"></i> Shift</button>
+                        <button class="btn-action bg-primary" onclick="openFullEditModal('${s.id}','other_staff')" title="एडिट"><i class="fa fa-pen"></i></button>
+                        <button class="btn-action bg-danger" onclick="deleteOtherStaff('${s.id}')" title="डिलीट (सभासद यादीवर प्रभाव पडणार नाही)"><i class="fa fa-trash"></i></button>
+                    </td>
+                </tr>`;
+            }).join('') || '<tr><td colspan="12" style="text-align:center;">सध्या एकही कर्मचारी उपलब्ध नाही.</td></tr>';
+
+            document.getElementById('otherBody').innerHTML = activeHtml;
+
+            // खालील स्वतंत्र बॉक्स (Retired & Status Counter Summary)
+            let summaryBox = document.getElementById('emp_status_summary_box');
+            if (!summaryBox) {
+                summaryBox = document.createElement('div');
+                summaryBox.id = 'emp_status_summary_box';
+                let tabOtherPanel = document.getElementById('tab-other')?.querySelector('.panel-body');
+                if (tabOtherPanel) tabOtherPanel.appendChild(summaryBox);
+            }
+
+            if (summaryBox) {
+                summaryBox.innerHTML = `
+                    <hr style="margin:25px 0;">
+                    <h3 style="color:var(--primary); margin-bottom:15px;"><i class="fa fa-list-alt"></i> कर्मचारी स्टेटस वर्गवारी सांख्यिकी</h3>
+                    
+                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:15px; margin-bottom:20px;">
+                        <div style="background:#f0fdf4; border:1px solid #86efac; padding:12px; border-radius:8px;">
+                            <h4 style="color:#166534; font-size:0.9rem;">✅ कार्यरत कर्मचारी</h4>
+                            <h2 style="color:#15803d;">${activeStaff.length}</h2>
+                        </div>
+                        <div style="background:#fef2f2; border:1px solid #fca5a5; padding:12px; border-radius:8px;">
+                            <h4 style="color:#991b1b; font-size:0.9rem;">🎖️ सेवानिवृत्त कर्मचारी</h4>
+                            <h2 style="color:#b91c1c;">${retiredStaff.length}</h2>
+                        </div>
+                        <div style="background:#fefce8; border:1px solid #fde047; padding:12px; border-radius:8px;">
+                            <h4 style="color:#854d0e; font-size:0.9rem;">🔄 आंतरमंडळ बदली झालेले</h4>
+                            <h2 style="color:#a16207;">${interMandalStaff.length}</h2>
+                        </div>
+                        <div style="background:#f0f9ff; border:1px solid #7dd3fc; padding:12px; border-radius:8px;">
+                            <h4 style="color:#075985; font-size:0.9rem;">🚚 इतर बदली झालेले</h4>
+                            <h2 style="color:#0369a1;">${transferredStaff.length}</h2>
+                        </div>
+                    </div>
+
+                    ${retiredStaff.length > 0 ? `
+                        <div style="background:#fff; border:1px solid #fca5a5; border-radius:8px; padding:15px; margin-bottom:15px;">
+                            <h4 style="color:#991b1b; margin-bottom:10px;"><i class="fa fa-user-clock"></i> सेवानिवृत्त कर्मचारी यादी (${retiredStaff.length})</h4>
+                            <table style="font-size:0.85rem;">
+                                <thead><tr style="background:#fee2e2; color:#991b1b;"><th>नाव</th><th>पद</th><th>प्रवर्ग</th><th>निवृत्ती दिनांक</th><th>शेवटचे ठिकाण</th><th>मंडळ</th></tr></thead>
+                                <tbody>
+                                    ${retiredStaff.map(r => `<tr><td><b>${r.name}</b></td><td>${r.post||'-'}</td><td>${r.category||'-'}</td><td>${r.retireDate||'-'}</td><td>${r.workplace||'-'}</td><td>${r.mandal||'-'}</td></tr>`).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    ` : ''}
+                `;
+            }
+        };
+
+        // ३. कर्मचाऱ्याची माहिती डिलीट करणे (फक्त other_staff मधून डिलीट होईल)
         window.deleteOtherStaff = async (id) => {
             let st = otherStaffData.find(x => x.id === id);
-            if (confirm("या कर्मचाऱ्याची माहिती डिलीट करून रिसायकल बिनमध्ये हलवायची आहे का?")) {
+            if (confirm("या कर्मचाऱ्याची माहिती डिलीट करून रिसायकल बिनमध्ये हलवायची आहे का? (सभासद यादीवर याचा काहीही प्रभाव पडणार नाही)")) {
                 if(st) await moveToRecycleBin("कर्मचारी", st, st.name);
                 await deleteDoc(doc(db, "other_staff", id));
-                await logAdminActivity(`Deleted Employee ID: ${id}`);
+                await logAdminActivity(`Deleted Employee: ${st ? st.name : id}`);
                 Swal.fire('यशस्वी', 'कर्मचारी रिसायकल बिनमध्ये पाठवला!', 'success');
                 loadData();
             }
         };
 
+        // ४. एक्सेल इंपोर्ट करणे (प्रवर्ग, शेरा, बदली ठिकाणांसह)
         window.importEmployeeData = (e) => {
             let file = e.target.files[0]; if(!file) return;
             let reader = new FileReader();
@@ -2149,11 +2429,16 @@
                     let obj = {
                         name: r['नाव'] || r['Name'] || '',
                         post: r['पद'] || r['Post'] || '',
+                        category: r['प्रवर्ग'] || r['Category'] || '',
                         mobile: String(r['मोबाईल'] || r['Mobile'] || ''),
-                        workplace: r['कार्यरत ठिकाण'] || r['Workplace'] || '',
+                        workplace: r['सध्या कार्यरत ठिकाण'] || r['कार्यरत ठिकाण'] || r['Workplace'] || '',
+                        transferPosting: r['बदलीने पदस्थापना'] || r['Transfer Posting'] || '',
+                        rejoinedWorkplace: r['पुन्हा कार्यरत ठिकाण'] || r['Rejoined Workplace'] || '',
                         district: r['जिल्हा'] || r['District'] || '',
                         mandal: r['मंडळ'] || r['Mandal'] || '',
-                        joinDate: r['रुजू दिनांक'] || r['Join Date'] || ''
+                        joinDate: r['रुजू दिनांक'] || r['Join Date'] || '',
+                        remarks: r['अभिप्राय'] || r['शेरा'] || r['Remarks'] || '',
+                        empStatus: 'Active'
                     };
                     if(obj.name) await addDoc(collection(db, "other_staff"), obj);
                 }
