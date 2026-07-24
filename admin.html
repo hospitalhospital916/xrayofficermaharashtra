@@ -1524,6 +1524,10 @@
                 if(data.type === "logo") lpLogoUrl = data.val || "";
                 if(data.type === "stamp") lpStampUrl = data.val || "";
             });
+            // loadData() मधील lp_settings लोड झाल्यानंतर हे जोडा:
+              if (lpLogoUrl && document.getElementById('header_logo_box')) {
+            document.getElementById('header_logo_box').innerHTML = `<img src="${lpLogoUrl}" style="height:48px; max-width:65px; object-fit:contain; vertical-align:middle;">`;
+          }
 
             let memberOptions = '<option value="">सदस्य निवडा</option>';
             membersData.forEach(m => {
@@ -2110,19 +2114,77 @@
             }
         }
 
-        window.uploadLpLogo = async () => {
+      window.uploadLpLogo = async () => {
             let file = document.getElementById('inp_logo').files[0]; if(!file) return;
             Swal.fire({title: 'लोगो अपलोड होत आहे...', didOpen: () => Swal.showLoading()});
             try {
                 lpLogoUrl = await uploadToCloudinary(file);
                 await setDoc(doc(db, "lp_settings", "logo"), { type: "logo", val: lpLogoUrl });
+                
+                // मुख्य नॅव्हिगेशन बारवरील लोगो लगेच अपडेट करा
+                if(document.getElementById('header_logo_box')) {
+                    document.getElementById('header_logo_box').innerHTML = `<img src="${lpLogoUrl}" style="height:48px; max-width:65px; object-fit:contain; vertical-align:middle;">`;
+                }
+                
                 Swal.close(); renderLetterPadAdmin();
             } catch(e) { Swal.fire('Error', e.message, 'error'); }
         }
+
         window.deleteLpLogo = async () => {
-            if(confirm("लोगो डिलीट करायचा आहे का?")) { lpLogoUrl = ""; await setDoc(doc(db, "lp_settings", "logo"), { type: "logo", val: "" }); renderLetterPadAdmin(); }
+            if(confirm("लोगो डिलीट करायचा आहे का?")) { 
+                lpLogoUrl = ""; 
+                await setDoc(doc(db, "lp_settings", "logo"), { type: "logo", val: "" }); 
+                
+                // लोगो डिलीट केल्यावर पूर्ववत आयकॉन दाखवा
+                if(document.getElementById('header_logo_box')) {
+                    document.getElementById('header_logo_box').innerHTML = `<i class="fa fa-shield-alt" style="font-size:2rem; color:var(--primary);"></i>`;
+                }
+                renderLetterPadAdmin(); 
+            }
         }
 
+        window.uploadLpStamp = async () => {
+            let file = document.getElementById('inp_stamp').files[0]; if(!file) return;
+            Swal.fire({title: 'शिक्का अपलोड होत आहे...', didOpen: () => Swal.showLoading()});
+            try {
+                lpStampUrl = await uploadToCloudinary(file);
+                await setDoc(doc(db, "lp_settings", "stamp"), { type: "stamp", val: lpStampUrl });
+                Swal.close(); renderLetterPadAdmin();
+            } catch(e) { Swal.fire('Error', e.message, 'error'); }
+        }
+        window.deleteLpStamp = async () => {
+            if(confirm("शिक्का डिलीट करायचा आहे का?")) { lpStampUrl = ""; await setDoc(doc(db, "lp_settings", "stamp"), { type: "stamp", val: "" }); renderLetterPadAdmin(); }
+        }
+
+        window.updateSignName = async (i, val) => {
+            lpSignaturesData[i].name = val;
+            await setDoc(doc(db, "lp_settings", "signatures"), { type: "signatures", val: lpSignaturesData });
+        }
+
+        window.uploadLpSign = async (index) => {
+            let file = document.getElementById(`sign_inp_${index}`).files[0]; if(!file) return;
+            Swal.fire({title: 'सही अपलोड होत आहे...', didOpen: () => Swal.showLoading()});
+            try {
+                let url = await uploadToCloudinary(file);
+                lpSignaturesData[index].signUrl = url;
+                await setDoc(doc(db, "lp_settings", "signatures"), { type: "signatures", val: lpSignaturesData });
+                Swal.close(); renderLetterPadAdmin();
+            } catch(e) { Swal.fire('Error', e.message, 'error'); }
+        }
+
+        window.deleteLpSign = async (index) => {
+            if(confirm("ही सही डिलीट करायची आहे का?")) {
+                lpSignaturesData[index].signUrl = "";
+                await setDoc(doc(db, "lp_settings", "signatures"), { type: "signatures", val: lpSignaturesData });
+                renderLetterPadAdmin();
+            }
+        }
+
+        window.toggleLpRecipientFilters = () => {
+            let type = document.getElementById('lp_recipient_type').value;
+            document.getElementById('lp_recipient_mandal').style.display = (type === 'Mandal' || type === 'District') ? 'block' : 'none';
+            document.getElementById('lp_recipient_district').style.display = type === 'District' ? 'block' : 'none';
+        }
         window.uploadLpStamp = async () => {
             let file = document.getElementById('inp_stamp').files[0]; if(!file) return;
             Swal.fire({title: 'शिक्का अपलोड होत आहे...', didOpen: () => Swal.showLoading()});
