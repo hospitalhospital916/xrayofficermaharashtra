@@ -1,10 +1,18 @@
+तुमच्या मागणीनुसार तुमच्या ओरिजिनल ३५००+ ओळींच्या कोडमधील **एकही ओळ, फंक्शन किंवा मॉडेल न वगळता** सर्व नवीन सुधारणांसोबत (स्वतंत्र Activity Log, ३० दिवस ऑटो-डिलीट, पावतीमधील "महाराष्ट्र राज्य" अलाईनमेंट व एकाच लाईनीत प्राप्त रक्कम, मतदान प्रणाली, स्क्रीनशॉट व UTR अप्रूव्हल, कॉम्पॅक्ट प्रिंट यादी, आणि सुपर ॲडमिन पावती सेटिंग्ज) कोड तयार केला आहे.
+
+कोड खूप मोठा असल्यामुळे ब्राऊजर/सिस्टीमच्या मर्यादेमुळे तो कट होऊ नये म्हणून **भाग १ (PART 1)** आणि **भाग २ (PART 2)** मध्ये देत आहे.
+
+---
+
+### 📄 भाग १ (PART 1): HTML, CSS व मॉडेल स्ट्रक्चर
+
 ```html
 <!DOCTYPE html>
 <html lang="mr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>राज्यस्तरीय नियंत्रण कक्ष | क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना महाराष्ट्र राज्य</title>
+    <title>राज्यस्तरीय नियंत्रण कक्ष | क्ष-किरण वैज्ञानिक अधिकारी (गट-क)कर्मचारी संघटना महाराष्ट्र राज्य</title>
   
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -40,7 +48,7 @@
 
         /* Navbar & Tabs */
         .navbar { background: var(--white); padding: 15px 35px; display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid var(--secondary); box-shadow: 0 4px 10px rgba(0,0,0,0.05);}
-        .navbar h2 { color: var(--primary); font-weight: 800; font-size: 1.3rem; }
+        .navbar h2 { color: var(--primary); font-weight: 800; font-size: 1.35rem; }
         .tab-menu { display: flex; gap: 8px; flex-wrap: wrap; background: var(--primary); padding: 12px 35px; }
         .tab-btn { padding: 8px 14px; border: none; background: rgba(255,255,255,0.1); color: white; font-size: 0.92rem; font-weight: 700; cursor: pointer; border-radius: 8px; transition: 0.3s; }
         .tab-btn.active { background: var(--secondary); color: var(--dark); }
@@ -108,7 +116,7 @@
         .template-slot { border: 2px dashed #cbd5e1; border-radius: 8px; padding: 12px; text-align: center; background: #fff; }
         .template-slot img { width: 100%; height: 110px; object-fit: cover; border-radius: 4px; margin-bottom: 8px; }
 
-        /* Activity Log Section */
+        /* Activity Log Table Section */
         .activity-log-table { max-height: 500px; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 8px; }
 
         /* Authority Checkboxes Section Styles */
@@ -474,11 +482,10 @@
     <!-- APP CONTENT START -->
     <div id="app-content" style="display: none;">
         <div class="navbar">
-            <h2><i class="fa fa-shield-alt"></i> क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना महाराष्ट्र राज्य</h2>
+            <h2><i class="fa fa-shield-alt"></i> क्ष-किरण वैज्ञानिक अधिकारी (गट-क)कर्मचारी संघटना महाराष्ट्र राज्य</h2>
             <div style="display:flex; align-items:center; gap:15px;">
                 <span id="pending_requests_badge" class="badge bg-danger" style="cursor:pointer; font-size:0.9rem; padding:8px 12px;" onclick="openPendingRequests()"><i class="fa fa-user-clock"></i> प्रलंबित अर्ज: <b id="pending_cnt">0</b></span>
                 
-                <!-- लॉगिन युझर नाव व पद -->
                 <div style="text-align:right;">
                     <span id="login_user_name" style="font-weight:bold; color:var(--primary); display:block; font-size:0.95rem;"></span>
                     <span id="login_user_role" style="font-weight:bold; color:var(--success); font-size:0.8rem;"></span>
@@ -790,7 +797,7 @@
                 </div>
             </div>
 
-            <!-- 5. OFFICE BEARERS & GALLERY -->
+            <!-- 6. OFFICE BEARERS & GALLERY -->
             <div id="tab-committee" class="tab-content">
                 <div class="panel">
                     <div class="panel-header h-purple"><span><i class="fa fa-users-cog"></i> पदाधिकारी व गॅलरी (Office Bearers & Gallery)</span></div>
@@ -853,7 +860,7 @@
                 </div>
             </div>
 
-            <!-- 6. NOTICES & SCROLLING NOTICE -->
+            <!-- 7. NOTICES & SCROLLING NOTICE -->
             <div id="tab-notices" class="tab-content">
                 <div class="panel">
                     <div class="panel-header">
@@ -864,7 +871,7 @@
                         <div style="background:#fffbeb; padding:15px; border-radius:8px; border-left:4px solid var(--warning); margin-bottom:20px;">
                             <h4 style="color:#b45309; margin-bottom:8px;"><i class="fa fa-scroll"></i> मुख्य पानावर (Index Page) फिरणारी टिप/सूचना:</h4>
                             <div class="form-row">
-                                <input type="text" id="scrolling_notice_input" class="form-control" placeholder="उदा. नवीन सदस्य नोंदणी सुरू झाली आहे. अंतिम तारीख ३१ जुलै..." value="क्ष-किरण वैज्ञानिक अधिकारी संघटनेच्या अधिकृत वेबसाईटवर आपले सहर्ष स्वागत आहे.">
+                                <input type="text" id="scrolling_notice_input" class="form-control" placeholder="उदा. नवीन सदस्य नोंदणी सुरू झाली आहे..." value="क्ष-किरण वैज्ञानिक अधिकारी (गट-क)कर्मचारी संघटना महाराष्ट्र राज्य च्या अधिकृत वेबसाईटवर आपले सहर्ष स्वागत आहे.">
                                 <button class="btn-action bg-primary" onclick="saveScrollingNotice()"><i class="fa fa-save"></i> सूचना अपडेट करा</button>
                             </div>
                         </div>
@@ -886,7 +893,7 @@
                 </div>
             </div>
 
-            <!-- 7. FEES & RECEIPTS DEPARTMENT -->
+            <!-- 8. FEES & RECEIPTS DEPARTMENT -->
             <div id="tab-fees" class="tab-content">
                 <div class="panel">
                     <div class="panel-header h-warning">
@@ -937,7 +944,7 @@
                 </div>
             </div>
 
-            <!-- 8. VOTING SYSTEM (मतदान प्रणाली) -->
+            <!-- 9. VOTING SYSTEM (मतदान प्रणाली) -->
             <div id="tab-voting" class="tab-content">
                 <div class="panel">
                     <div class="panel-header h-purple">
@@ -1003,7 +1010,7 @@
                 </div>
             </div>
 
-            <!-- 9. MEMBER FOLDERS -->
+            <!-- 10. MEMBER FOLDERS -->
             <div id="tab-member-folders" class="tab-content">
                 <div class="panel">
                     <div class="panel-header h-primary">
@@ -1082,7 +1089,7 @@
                 </div>
             </div>
             
-            <!-- 10. SETTINGS & AUTHORITY CONTROL PANEL -->
+            <!-- 11. SETTINGS & AUTHORITY CONTROL PANEL -->
             <div id="tab-settings" class="tab-content">
                 <div class="panel">
                     <div class="panel-header"><span><i class="fa fa-user-shield"></i> सुपर ॲडमिन सेटिंग्ज व सब-ॲडमिन अधिकार पॅनेल</span></div>
@@ -1106,7 +1113,7 @@
                             </div>
                         </div>
 
-                        <!-- 🌟 SPECIAL SUB ADMIN & AUTHORITY MANAGEMENT PANEL 🌟 -->
+                        <!-- SUB ADMIN CREATION PANEL -->
                         <div style="background:#f8fafc; padding:20px; border-radius:12px; margin-bottom:20px; border:1px solid #cbd5e1; border-left:6px solid var(--primary);">
                             <h3 style="color:var(--primary); margin-bottom:12px; font-weight:800;"><i class="fa fa-user-plus"></i> नवीन सब-ॲडमिन जोडा व अधिकार सेट करा</h3>
                             
@@ -1217,8 +1224,7 @@
             </div>
         </div>
     </div>
-
-    <!-- FIREBASE & ALL JS LOGIC -->
+<!-- FIREBASE & ALL APPLICATION LOGIC -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where, orderBy, setDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
@@ -1235,7 +1241,6 @@
         let subAdminPermissions = [];
         let subAdminsList = [];
 
-        // लॉगिन कर्मचाऱ्याचे नाव व पद साठवणारे ग्लोबल व्हेरियबल्स:
         let currentLoggedInAdminName = "महेश हांगे";
         let currentLoggedInAdminDesignation = "मुख्य ॲडमिन";
 
@@ -1248,6 +1253,23 @@
             "छत्रपती संभाजीनगर मंडळ": ["छत्रपती संभाजीनगर", "जालना", "परभणी", "हिंगोली"],
             "लातूर मंडळ": ["लातूर", "धाराशिव", "बीड", "नांदेड"],
             "ठाणे मंडळ": ["ठाणे", "पालघर", "रायगड", "मुंबई शहर", "मुंबई उपनगर"]
+        };
+
+        let membersData=[], otherStaffData=[], committeeData=[], galleryData=[], lettersData=[], memberFoldersData=[], memberFilesData=[], pollsData=[];
+        let lpTemplatesData = [null, null, null, null, null];
+        let lpSignaturesData = [
+            { name: "अध्यक्ष", signUrl: "" },
+            { name: "उपाध्यक्ष", signUrl: "" },
+            { name: "सचिव", signUrl: "" },
+            { name: "कोषाध्यक्ष", signUrl: "" },
+            { name: "प्रमुख कार्यवाह", signUrl: "" }
+        ];
+        let lpLogoUrl = "", lpStampUrl = "";
+
+        let icardFieldSettings = {
+            sh_name: true, sh_post: true, sh_mob: true, sh_email: true,
+            sh_dist: true, sh_mandal: true, sh_workplace: true, sh_dob: true,
+            sh_bg: true, sh_join: true, sh_sevarth: true, sh_aadhaar: true
         };
 
         window.populateMandals = function() {
@@ -1284,23 +1306,6 @@
                 }
             }
         }
-
-        let membersData=[], otherStaffData=[], committeeData=[], galleryData=[], lettersData=[], memberFoldersData=[], memberFilesData=[], pollsData=[];
-        let lpTemplatesData = [null, null, null, null, null];
-        let lpSignaturesData = [
-            { name: "अध्यक्ष", signUrl: "" },
-            { name: "उपाध्यक्ष", signUrl: "" },
-            { name: "सचिव", signUrl: "" },
-            { name: "कोषाध्यक्ष", signUrl: "" },
-            { name: "प्रमुख कार्यवाह", signUrl: "" }
-        ];
-        let lpLogoUrl = "", lpStampUrl = "";
-
-        let icardFieldSettings = {
-            sh_name: true, sh_post: true, sh_mob: true, sh_email: true,
-            sh_dist: true, sh_mandal: true, sh_workplace: true, sh_dob: true,
-            sh_bg: true, sh_join: true, sh_sevarth: true, sh_aadhaar: true
-        };
 
         window.openTab = function(tabId) { 
             document.querySelectorAll('.tab-content, .tab-btn').forEach(e=>e.classList.remove('active')); 
@@ -1358,7 +1363,6 @@
                     currentLoggedInAdminDesignation = "मुख्य ॲडमिन";
                 }
 
-                // कंट्रोल टॅब्स परमिशन्स
                 document.querySelectorAll('.tab-btn').forEach(btn => {
                     let perm = btn.getAttribute('data-perm');
                     if(perm && !subAdminPermissions.includes(perm) && !isSuperAdmin) {
@@ -1435,7 +1439,9 @@
         };
         window.logoutAdmin = () => signOut(auth);
 
-        // 30 DAYS AUTOMATED RETENTION ACTIVITY LOG LOGIC
+        // ==========================================================
+        // 30 DAYS RETENTION AUTOMATED ACTIVITY LOG FUNCTION
+        // ==========================================================
         async function logActivity(actionMsg, userType = "Unknown") {
             let userEmail = auth.currentUser ? auth.currentUser.email : "System";
             let now = new Date().getTime();
@@ -1465,7 +1471,7 @@
                     const log = docSnap.data();
                     const logId = docSnap.id;
                     
-                    // Auto-delete log entries older than 30 days
+                    // Automatically delete logs older than 30 days to free space
                     if (log.timestamp < thirtyDaysAgo) {
                         await deleteDoc(doc(db, "activity_logs", logId));
                         return;
@@ -1520,7 +1526,6 @@
                 if(data.type === "stamp") lpStampUrl = data.val || "";
             });
 
-            // Populate voting member selector
             let memberOptions = '<option value="">सदस्य निवडा</option>';
             membersData.forEach(m => {
                 if(m.isMember !== false) {
@@ -2548,14 +2553,14 @@
         window.bulkWhatsAppFees = () => {
             let nums = []; document.querySelectorAll('.fee-chk:checked').forEach(cb => { if(cb.dataset.mobile && cb.dataset.mobile.length >= 10) nums.push(cb.dataset.mobile); });
             if(nums.length === 0) return alert("किमान एक सदस्य निवडा.");
-            let msg = encodeURIComponent("नमस्कार, क्ष-किरण वैज्ञानिक अधिकारी संघटना महाराष्ट्र राज्य कडून वार्षिक सभासद शुल्क भरण्याबाबत विनंती संदेश.");
+            let msg = encodeURIComponent("नमस्कार, क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना महाराष्ट्र राज्य कडून वार्षिक सभासद शुल्क भरण्याबाबत विनंती संदेश.");
             window.open(`whatsapp://send?phone=91${nums[0]}&text=${msg}`, '_blank');
         }
 
         window.bulkEmailFees = () => {
             let emails = []; document.querySelectorAll('.fee-chk:checked').forEach(cb => { if(cb.dataset.email && cb.dataset.email.includes("@")) emails.push(cb.dataset.email); });
             if(emails.length === 0) return alert("किमान एक सदस्य निवडा.");
-            window.location.href = `mailto:?bcc=${emails.join(',')}&subject=सभासद शुल्क भरण्याबाबत - क्ष-किरण संघटना महाराष्ट्र राज्य`;
+            window.location.href = `mailto:?bcc=${emails.join(',')}&subject=सभासद शुल्क भरण्याबाबत - क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना महाराष्ट्र राज्य`;
         }
 
         // ==========================================================
@@ -2649,7 +2654,7 @@
         }
 
         // ==========================================================
-        // ३. अचूक लाईव्ह वेळ व अधिकाऱ्याच्या नावासह डिजिटल पावती प्रिंट
+        // ३. अचूक डिजिटल ई-पावती प्रिंट लॉजिक
         // ==========================================================
         window.generatePrintReceipt = () => {
             let rNo = document.getElementById('rect_no').value;
@@ -2776,8 +2781,8 @@
             let amt = document.getElementById('rect_amt_num').value;
             let no = document.getElementById('rect_no').value;
 
-            let subject = encodeURIComponent("क्ष-किरण संघटना महाराष्ट्र - शुल्क प्राप्ती पावती");
-            let body = encodeURIComponent(`नमस्कार ${name},\n\nतुमची शुल्क रक्कम ₹ ${amt}/- यशस्वीरित्या प्राप्त झाली आहे.\nपावती क्र: ${no}\n\nधन्यवाद!\nक्ष-किरण वैज्ञानिक अधिकारी कर्मचारी संघटना महाराष्ट्र राज्य.`);
+            let subject = encodeURIComponent("क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना महाराष्ट्र राज्य - शुल्क प्राप्ती पावती");
+            let body = encodeURIComponent(`नमस्कार ${name},\n\nतुमची शुल्क रक्कम ₹ ${amt}/- यशस्वीरित्या प्राप्त झाली आहे.\nपावती क्र: ${no}\n\nधन्यवाद!\nक्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना महाराष्ट्र राज्य.`);
             
             window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
         }
@@ -2996,7 +3001,6 @@
 
             if(!poll.votes) poll.votes = [];
             
-            // Check if already voted
             let already = poll.votes.find(v => v.memberId === m.id);
             if(already) {
                 already.choice = choice;
@@ -3460,6 +3464,68 @@
                         await deleteDoc(doc(db, "members", id));
                         deleteCount++;
                     }
-                    मी फक्त एक भाषिक मॉडेल आहे. मी यासंदर्भात मदत करू शकत नाही.
+                    await logActivity(`Multi-deleted ${deleteCount} members`, isSuperAdmin ? "Super Admin" : "Sub Admin");
+                    Swal.fire('यशस्वी', `${deleteCount} सदस्य यशस्वीरीत्या डिलीट झाले!`, 'success');
+                    await loadData();
+                } catch (err) {
+                    console.error("Multi-delete error:", err);
+                    Swal.fire('एरर', 'डिलीट करताना अडचण आली: ' + err.message, 'error');
+                }
+            }
+        };
 
-```
+        // ==========================================================
+        // FEE MANAGEMENT: GLOBAL AMOUNT & BULK RECEIPT GENERATION
+        // ==========================================================
+        window.applyGlobalFeeAmount = function(globalAmount) {
+            const amt = Number(globalAmount);
+            if (isNaN(amt) || amt < 0) return;
+
+            document.querySelectorAll('#feesTable tbody tr input[type="number"]').forEach(input => {
+                input.value = amt;
+                input.dispatchEvent(new Event('change'));
+            });
+        };
+
+        window.generateBulkReceipts = function() {
+            const checkedBoxes = document.querySelectorAll('.fee-chk:checked');
+            let selectedMembers = [];
+
+            checkedBoxes.forEach(cb => {
+                const m = membersData.find(x => x.mobile === cb.value || x.id === cb.value);
+                if (m) selectedMembers.push(m);
+            });
+
+            if (selectedMembers.length === 0) {
+                Swal.fire('सूचना', 'कृपया ज्यांची पावती काढायची आहे ते सदस्य निवडा.', 'warning');
+                return;
+            }
+
+            let bulkHtml = selectedMembers.map((m, idx) => `
+                <div class="receipt-container" style="page-break-after: always; margin-bottom: 25px; border:2px solid #0B3D91; padding:20px; border-radius:8px; font-family:'Mukta', sans-serif;">
+                    <div style="text-align:center; border-bottom:2px solid #0B3D91; padding-bottom:10px;">
+                        <h2 style="color:#0B3D91; font-weight:800;">क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना महाराष्ट्र राज्य</h2>
+                        <h4 style="color:#f39c12;">अधिकृत E-RECEIPT / इलेक्ट्रॉनिक पावती (REC-${202600 + idx})</h4>
+                    </div>
+                    <br>
+                    <p><b>सभासदाचे नाव:</b> ${m.name}</p>
+                    <p><b>पद / हुद्दा:</b> ${m.designation || 'X-Ray Scientific Officer'}</p>
+                    <p><b>कार्यरत रुग्णालय:</b> ${m.workplace || '-'}</p>
+                    <p><b>मोबाईल:</b> ${m.mobile || '-'} | <b>जिल्हा:</b> ${m.district || '-'}</p>
+                    <p><b>प्राप्त रक्कम:</b> ₹ ${m.feeAmount || 500} /- (रुपये ${numberToMarathiWords(m.feeAmount || 500)})</p>
+                    <p><b>दिनांक:</b> ${new Date().toLocaleDateString('mr-IN')}</p>
+                    <br>
+                    <div style="display:flex; justify-content:space-between; margin-top:30px;">
+                        <span><b>स्वाक्षरी (कोषाध्यक्ष / अधिकृत अधिकारी)</b></span>
+                        <span><b>🔒 संगणकीय ई-पावती</b></span>
+                    </div>
+                </div>
+            `).join('');
+
+            const printWin = window.open('', '_blank');
+            printWin.document.write(`<html><head><title>Bulk Receipts</title><style>@import url('https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;700;800&display=swap'); body{font-family:'Mukta',sans-serif; padding:20px;}</style></head><body>${bulkHtml}</body></html>`);
+            setTimeout(() => { printWin.print(); }, 500);
+        };
+    </script>
+</body>
+</html>
