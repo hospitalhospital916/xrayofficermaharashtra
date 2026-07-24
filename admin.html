@@ -473,27 +473,26 @@
     <!-- APP CONTENT START -->
     <div id="app-content" style="display: none;">
         <div class="navbar">
-    <div style="display:flex; align-items:center; gap:12px;">
-        <!-- येथे संघटनेचा लोगो ऑटोमॅटिक लोड होईल -->
-        <span id="header_logo_box">
-            <i class="fa fa-shield-alt" style="font-size:2rem; color:var(--primary);"></i>
-        </span>
-        <h2>क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना महाराष्ट्र राज्य</h2>
-    </div>
-    <div style="display:flex; align-items:center; gap:15px;">
-        <span id="pending_requests_badge" class="badge bg-danger" style="cursor:pointer; font-size:0.9rem; padding:8px 12px;" onclick="openPendingRequests()">
-            <i class="fa fa-user-clock"></i> प्रलंबित अर्ज: <b id="pending_cnt">0</b>
-        </span>
-        
-        <div style="text-align:right;">
-            <span id="login_user_name" style="font-weight:bold; color:var(--primary); display:block; font-size:0.95rem;"></span>
-            <span id="login_user_role" style="font-weight:bold; color:var(--success); font-size:0.8rem;"></span>
-            <span id="login_user_region" style="font-size:0.8rem; color:var(--danger); font-weight:bold;"></span>
-        </div>
+            <div style="display:flex; align-items:center; gap:12px;">
+                <span id="header_logo_box">
+                    <i class="fa fa-shield-alt" style="font-size:2rem; color:var(--primary);"></i>
+                </span>
+                <h2>क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना महाराष्ट्र राज्य</h2>
+            </div>
+            <div style="display:flex; align-items:center; gap:15px;">
+                <span id="pending_requests_badge" class="badge bg-danger" style="cursor:pointer; font-size:0.9rem; padding:8px 12px;" onclick="openPendingRequests()">
+                    <i class="fa fa-user-clock"></i> प्रलंबित अर्ज: <b id="pending_cnt">0</b>
+                </span>
+                
+                <div style="text-align:right;">
+                    <span id="login_user_name" style="font-weight:bold; color:var(--primary); display:block; font-size:0.95rem;"></span>
+                    <span id="login_user_role" style="font-weight:bold; color:var(--success); font-size:0.8rem;"></span>
+                    <span id="login_user_region" style="font-size:0.8rem; color:var(--danger); font-weight:bold;"></span>
+                </div>
 
-        <button class="btn-logout" onclick="logoutAdmin()"><i class="fa fa-power-off"></i> लॉगआउट</button>
-    </div>
-</div>
+                <button class="btn-logout" onclick="logoutAdmin()"><i class="fa fa-power-off"></i> लॉगआउट</button>
+            </div>
+        </div>
 
         <div class="tab-menu" id="mainTabMenu">
             <button class="tab-btn active" onclick="openTab('tab-dash')" data-perm="dashboard"><i class="fa fa-chart-pie"></i> डॅशबोर्ड</button>
@@ -535,7 +534,7 @@
                 </div>
             </div>
 
-            <!-- 2. SEPARATE TAB: ACTIVITY LOGS (30 DAYS AUTO DELETE) -->
+            <!-- 2. SEPARATE TAB: ACTIVITY LOGS -->
             <div id="tab-logs" class="tab-content">
                 <div class="panel">
                     <div class="panel-header h-primary">
@@ -1223,7 +1222,8 @@
             </div>
         </div>
     </div>
-<!-- FIREBASE & ALL APPLICATION LOGIC -->
+
+    <!-- FIREBASE & ALL APPLICATION LOGIC -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where, orderBy, setDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
@@ -1470,7 +1470,6 @@
                     const log = docSnap.data();
                     const logId = docSnap.id;
                     
-                    // Automatically delete logs older than 30 days to free space
                     if (log.timestamp < thirtyDaysAgo) {
                         await deleteDoc(doc(db, "activity_logs", logId));
                         return;
@@ -1524,10 +1523,10 @@
                 if(data.type === "logo") lpLogoUrl = data.val || "";
                 if(data.type === "stamp") lpStampUrl = data.val || "";
             });
-            // loadData() मधील lp_settings लोड झाल्यानंतर हे जोडा:
-              if (lpLogoUrl && document.getElementById('header_logo_box')) {
-            document.getElementById('header_logo_box').innerHTML = `<img src="${lpLogoUrl}" style="height:48px; max-width:65px; object-fit:contain; vertical-align:middle;">`;
-          }
+
+            if (lpLogoUrl && document.getElementById('header_logo_box')) {
+                document.getElementById('header_logo_box').innerHTML = `<img src="${lpLogoUrl}" style="height:48px; max-width:65px; object-fit:contain; vertical-align:middle;">`;
+            }
 
             let memberOptions = '<option value="">सदस्य निवडा</option>';
             membersData.forEach(m => {
@@ -1906,8 +1905,7 @@
                 </tr>`;
             }).join('') || '<tr><td colspan="10" style="text-align:center;">डेटा नाही</td></tr>';
         };
-
-        window.toggleSelectAll = (el) => { document.querySelectorAll('.mem-chk').forEach(cb => cb.checked = el.checked); };
+window.toggleSelectAll = (el) => { document.querySelectorAll('.mem-chk').forEach(cb => cb.checked = el.checked); };
 
         window.exportMembersToExcel = () => {
             let data = membersData.map((m, i) => ({
@@ -2114,18 +2112,15 @@
             }
         }
 
-      window.uploadLpLogo = async () => {
+        window.uploadLpLogo = async () => {
             let file = document.getElementById('inp_logo').files[0]; if(!file) return;
             Swal.fire({title: 'लोगो अपलोड होत आहे...', didOpen: () => Swal.showLoading()});
             try {
                 lpLogoUrl = await uploadToCloudinary(file);
                 await setDoc(doc(db, "lp_settings", "logo"), { type: "logo", val: lpLogoUrl });
-                
-                // मुख्य नॅव्हिगेशन बारवरील लोगो लगेच अपडेट करा
                 if(document.getElementById('header_logo_box')) {
                     document.getElementById('header_logo_box').innerHTML = `<img src="${lpLogoUrl}" style="height:48px; max-width:65px; object-fit:contain; vertical-align:middle;">`;
                 }
-                
                 Swal.close(); renderLetterPadAdmin();
             } catch(e) { Swal.fire('Error', e.message, 'error'); }
         }
@@ -2134,8 +2129,6 @@
             if(confirm("लोगो डिलीट करायचा आहे का?")) { 
                 lpLogoUrl = ""; 
                 await setDoc(doc(db, "lp_settings", "logo"), { type: "logo", val: "" }); 
-                
-                // लोगो डिलीट केल्यावर पूर्ववत आयकॉन दाखवा
                 if(document.getElementById('header_logo_box')) {
                     document.getElementById('header_logo_box').innerHTML = `<i class="fa fa-shield-alt" style="font-size:2rem; color:var(--primary);"></i>`;
                 }
@@ -2152,48 +2145,7 @@
                 Swal.close(); renderLetterPadAdmin();
             } catch(e) { Swal.fire('Error', e.message, 'error'); }
         }
-        window.deleteLpStamp = async () => {
-            if(confirm("शिक्का डिलीट करायचा आहे का?")) { lpStampUrl = ""; await setDoc(doc(db, "lp_settings", "stamp"), { type: "stamp", val: "" }); renderLetterPadAdmin(); }
-        }
 
-        window.updateSignName = async (i, val) => {
-            lpSignaturesData[i].name = val;
-            await setDoc(doc(db, "lp_settings", "signatures"), { type: "signatures", val: lpSignaturesData });
-        }
-
-        window.uploadLpSign = async (index) => {
-            let file = document.getElementById(`sign_inp_${index}`).files[0]; if(!file) return;
-            Swal.fire({title: 'सही अपलोड होत आहे...', didOpen: () => Swal.showLoading()});
-            try {
-                let url = await uploadToCloudinary(file);
-                lpSignaturesData[index].signUrl = url;
-                await setDoc(doc(db, "lp_settings", "signatures"), { type: "signatures", val: lpSignaturesData });
-                Swal.close(); renderLetterPadAdmin();
-            } catch(e) { Swal.fire('Error', e.message, 'error'); }
-        }
-
-        window.deleteLpSign = async (index) => {
-            if(confirm("ही सही डिलीट करायची आहे का?")) {
-                lpSignaturesData[index].signUrl = "";
-                await setDoc(doc(db, "lp_settings", "signatures"), { type: "signatures", val: lpSignaturesData });
-                renderLetterPadAdmin();
-            }
-        }
-
-        window.toggleLpRecipientFilters = () => {
-            let type = document.getElementById('lp_recipient_type').value;
-            document.getElementById('lp_recipient_mandal').style.display = (type === 'Mandal' || type === 'District') ? 'block' : 'none';
-            document.getElementById('lp_recipient_district').style.display = type === 'District' ? 'block' : 'none';
-        }
-        window.uploadLpStamp = async () => {
-            let file = document.getElementById('inp_stamp').files[0]; if(!file) return;
-            Swal.fire({title: 'शिक्का अपलोड होत आहे...', didOpen: () => Swal.showLoading()});
-            try {
-                lpStampUrl = await uploadToCloudinary(file);
-                await setDoc(doc(db, "lp_settings", "stamp"), { type: "stamp", val: lpStampUrl });
-                Swal.close(); renderLetterPadAdmin();
-            } catch(e) { Swal.fire('Error', e.message, 'error'); }
-        }
         window.deleteLpStamp = async () => {
             if(confirm("शिक्का डिलीट करायचा आहे का?")) { lpStampUrl = ""; await setDoc(doc(db, "lp_settings", "stamp"), { type: "stamp", val: "" }); renderLetterPadAdmin(); }
         }
@@ -2624,9 +2576,6 @@
             window.location.href = `mailto:?bcc=${emails.join(',')}&subject=सभासद शुल्क भरण्याबाबत - क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना महाराष्ट्र राज्य`;
         }
 
-        // ==========================================================
-        // १. अंकी रक्कमेचे ऑटोमॅटिक मराठी अक्षरांमध्ये रूपांतर
-        // ==========================================================
         window.numberToMarathiWords = function(n) {
             n = parseInt(n, 10);
             if (isNaN(n) || n <= 0) return "";
@@ -2679,9 +2628,6 @@
             document.getElementById('rect_amt_words').value = words;
         };
 
-        // ==========================================================
-        // २. पावती उघडताना ऑटो सिस्टीम डिटेक्ट
-        // ==========================================================
         window.openReceiptModal = (mId) => {
             let m = membersData.find(x => x.id === mId); if(!m) return;
             let prefix = document.getElementById('set_receipt_prefix')?.value || 'REC-2026-';
@@ -2714,10 +2660,7 @@
             document.getElementById('receiptModal').style.display = 'flex';
         }
 
-        // ==========================================================
-// ==========================================================
-        // ३. अचूक डिजिटल ई-पावती प्रिंट लॉजिक (Corrected Code)
-        // ==========================================================
+        /* 🟢 अचूक दुरुस्त केलेले E-Receipt प्रिंट लॉजिक (कोणताही सिंटॅक्स एरर नाही) */
         window.generatePrintReceipt = () => {
             let rNo = document.getElementById('rect_no').value;
             let rDate = document.getElementById('rect_date').value;
@@ -2841,23 +2784,6 @@
                 setTimeout(() => { win.print(); }, 400);
             }
         };
-
-            let win = window.open('', '_blank');
-            win.document.write(`
-                <html>
-                <head>
-                    <title>Receipt_${rNo}</title>
-                    <style>
-                        @import url('https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;700;800&display=swap');
-                        body { font-family: 'Mukta', sans-serif; background: #f8fafc; margin: 0; padding: 10px; }
-                        @media print { body { background: #fff; padding: 0; } }
-                    </style>
-                </head>
-                <body>${receiptHtml}</body>
-                </html>
-            `);
-            setTimeout(() => { win.print(); }, 300);
-        }
 
         window.sendEmailReceipt = () => {
             let email = document.getElementById('rect_mem_email').value;
