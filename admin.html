@@ -2960,65 +2960,128 @@ window.selectOBMember = function(name, mob, dist, photo) {
             }
         };
 
-        // ==========================================================
-        // OFFICE BEARERS (SINGLE PHOTO OVERWRITE RULE)
-        // ==========================================================
-        window.addOfficeBearerManual = async () => {
-            let name = document.getElementById('ob_manual_name').value.trim();
-            let mobile = document.getElementById('ob_manual_mobile').value.trim();
-            let district = document.getElementById('ob_manual_district').value.trim();
-            let level = document.getElementById('ob_level').value;
-            let post = document.getElementById('ob_designation').value.trim();
-            let photoFile = document.getElementById('ob_manual_photo').files[0];
+     // ==========================================================
+// १. पदाधिकारी (OFFICE BEARERS) - पूर्ण दुरुस्त केलेला कोड
+// ==========================================================
 
-            if(!name || !post) return alert("कृपया नाव व पद भरा.");
+// डेटाबेसमधून सदस्य शोधणे (Search Members for OB)
+window.filterOBMembers = function() {
+    let query = document.getElementById('ob_search').value.toLowerCase().trim();
+    let resBox = document.getElementById('ob_search_results');
+    if (!resBox) return;
 
-            Swal.fire({title: 'पदाधिकारी जोडत आहे...', didOpen: () => Swal.showLoading()});
-            try {
-                let photoUrl = "";
-                if(photoFile) photoUrl = await uploadToCloudinary(photoFile);
+    if (query.length < 2) { 
+        resBox.innerHTML = ''; 
+        return; 
+    }
 
-                await addDoc(collection(db, "committee"), {
-                    name, mobile, district, level, post, photoUrl, order: Date.now()
-                });
+    let matches = membersData.filter(m => (m.name || '').toLowerCase().includes(query) || (m.mobile || '').includes(query));
+    
+    if (matches.length === 0) {
+        resBox.innerHTML = '<div style="padding:10px; background:#fff; border:1px solid #ccc; color:red; font-size:0.85rem;">एकही सदस्य सापडला नाही.</div>';
+        return;
+    }
 
-                await logAdminActivity(`Added Office Bearer: ${name} (${post})`);
-                Swal.fire('यशस्वी', 'पदाधिकारी यशस्वी जोडले!', 'success');
-                document.getElementById('ob_manual_name').value = '';
-                document.getElementById('ob_manual_mobile').value = '';
-                document.getElementById('ob_manual_district').value = '';
-                loadData();
-            } catch(e) { Swal.fire('Error', e.message, 'error'); }
-        };
+    resBox.innerHTML = matches.map(m => `
+        <div style="padding:8px 12px; border-bottom:1px solid #eee; cursor:pointer; background:#fff; font-size:0.9rem;" 
+             onclick="selectOBMember('${m.name.replace(/'/g, "\\'")}', '${m.mobile||''}', '${m.district||''}', '${m.photoUrl||''}')">
+            <b>${m.name}</b> <small style="color:var(--primary);">(${m.district||'जिल्हा नाही'})</small>
+        </div>
+    `).join('');
+};
 
-        window.renderCommittee = () => {
-            let renderLevel = (lvlId, lvlName) => {
-                let lvlData = committeeData.filter(c => c.level === lvlName || (!c.level && lvlName==='राज्यस्तरीय')).sort((a,b) => (a.order||0) - (b.order||0));
-                document.getElementById(lvlId).innerHTML = lvlData.map((c, i) => `
-                    <div class="folder-card" style="text-align:center; padding:12px;">
-                        <img src="${c.photoUrl||'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'}" style="width:75px; height:75px; border-radius:50%; object-fit:cover; border:3px solid var(--primary); margin-bottom:8px;">
-                        <h4 style="color:var(--primary); font-size:0.95rem;">${c.post}</h4>
-                        <h3 style="color:#8b0000; font-size:1.05rem;">${c.name}</h3>
-                        <p style="font-size:0.8rem;">${c.district||'-'}</p>
-                        <button class="btn-action bg-danger" style="margin-top:8px;" onclick="deleteOB('${c.id}')"><i class="fa fa-trash"></i> डिलीट</button>
-                    </div>
-                `).join('') || '<p style="color:gray; font-size:0.85rem;">पदाधिकारी उपलब्ध नाहीत.</p>';
-            };
-            
-            renderLevel('committeeGridState', 'राज्यस्तरीय');
-            renderLevel('committeeGridDiv', 'विभागीय');
-            renderLevel('committeeGridDist', 'जिल्हास्तरीय');
-        };
+// शोधलेला सदस्य निवडून फॉर्ममध्ये माहिती भरणे
+window.selectOBMember = function(name, mob, dist, photoUrl) {
+    document.getElementById('ob_manual_name').value = name;
+    document.getElementById('ob_manual_mobile').value = mob;
+    document.getElementById('ob_manual_district').value = dist;
+    
+    document.getElementById('ob_search').value = name;
+    document.getElementById('ob_search_results').innerHTML = '';
+    window.selectedOBPhotoUrl = photoUrl;
+};
 
-        window.deleteOB = async (id) => {
-            let ob = committeeData.find(x => x.id === id);
-            if(confirm("या पदाधिकाऱ्याला डिलीट करून रिसायकल बिनमध्ये पाठवायचे आहे का?")) {
-                if(ob) await moveToRecycleBin("पदाधिकारी", ob, ob.name);
-                await deleteDoc(doc(db, "committee", id)); 
-                loadData();
-            }
-        };
+// पदाधिकारी ॲड करणे
+window.addOfficeBearerManual = async () => {
+    let name = document.getElementById('ob_manual_name').value.trim();
+    let mobile = document.getElementById('ob_manual_mobile').value.trim();
+    let district = document.getElementById('ob_manual_district').value.trim();
+    let level = document.getElementById('ob_level').value;
+    let post = document.getElementById('ob_designation').value.trim();
+    let photoFile = document.getElementById('ob_manual_photo').files[0];
 
+    if(!name || !post) return Swal.fire('माहिती अपूर्ण', 'कृपया पदाधिकाऱ्याचे नाव आणि पद (Designation) निश्चित भरा.', 'warning');
+
+    Swal.fire({title: 'पदाधिकारी जोडत आहे...', allowOutsideClick: false, didOpen: () => Swal.showLoading()});
+    try {
+        let photoUrl = window.selectedOBPhotoUrl || "";
+        if(photoFile) {
+            photoUrl = await uploadToCloudinary(photoFile);
+        }
+
+        await addDoc(collection(db, "committee"), {
+            name: name, 
+            mobile: mobile, 
+            district: district, 
+            level: level, 
+            post: post, 
+            photoUrl: photoUrl, 
+            order: Date.now()
+        });
+
+        await logAdminActivity(`Added Office Bearer: ${name} (${post})`);
+        window.selectedOBPhotoUrl = "";
+        
+        // फॉर्म रिसेट करणे
+        document.getElementById('ob_manual_name').value = '';
+        document.getElementById('ob_manual_mobile').value = '';
+        document.getElementById('ob_manual_district').value = '';
+        document.getElementById('ob_designation').value = '';
+        document.getElementById('ob_search').value = '';
+        document.getElementById('ob_manual_photo').value = '';
+
+        Swal.fire('यशस्वी', 'पदाधिकारी यशस्वीरित्या जोडले गेले!', 'success');
+        loadData();
+    } catch(e) { 
+        Swal.fire('Error', e.message, 'error'); 
+    }
+};
+
+// पदाधिकारी यादी दाखवणे
+window.renderCommittee = () => {
+    let renderLevel = (lvlId, lvlName) => {
+        let lvlData = committeeData.filter(c => c.level === lvlName || (!c.level && lvlName==='राज्यस्तरीय')).sort((a,b) => (a.order||0) - (b.order||0));
+        let targetEl = document.getElementById(lvlId);
+        if(!targetEl) return;
+
+        targetEl.innerHTML = lvlData.map((c) => `
+            <div class="folder-card" style="text-align:center; padding:12px;">
+                <img src="${c.photoUrl || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'}" 
+                     style="width:80px; height:80px; border-radius:50%; object-fit:cover; border:3px solid var(--primary); margin-bottom:8px;">
+                <h4 style="color:var(--primary); font-size:0.95rem; margin-bottom:4px;">${c.post}</h4>
+                <h3 style="color:#8b0000; font-size:1.05rem; margin-bottom:4px;">${c.name}</h3>
+                <p style="font-size:0.8rem; color:#555;">${c.district || '-'}</p>
+                <button class="btn-action bg-danger" style="margin-top:8px; width:100%;" onclick="deleteOB('${c.id}')"><i class="fa fa-trash"></i> डिलीट</button>
+            </div>
+        `).join('') || '<p style="color:gray; font-size:0.85rem; padding:10px;">एकही पदाधिकारी जोडलेला नाही.</p>';
+    };
+    
+    renderLevel('committeeGridState', 'राज्यस्तरीय');
+    renderLevel('committeeGridDiv', 'विभागीय');
+    renderLevel('committeeGridDist', 'जिल्हास्तरीय');
+};
+
+// पदाधिकारी डिलीट करणे (रिसायकल बिनसह)
+window.deleteOB = async (id) => {
+    let ob = committeeData.find(x => x.id === id);
+    if(confirm("या पदाधिकाऱ्याला डिलीट करून रिसायकल बिनमध्ये पाठवायचे आहे का?")) {
+        if(ob) await moveToRecycleBin("पदाधिकारी", ob, ob.name);
+        await deleteDoc(doc(db, "committee", id)); 
+        await logAdminActivity(`Deleted Office Bearer: ${ob ? ob.name : id}`);
+        Swal.fire('यशस्वी', 'पदाधिकारी रिसायकल बिनमध्ये हलवले!', 'success');
+        loadData();
+    }
+};
         // ==========================================================
         // ELECTION & VOTING SYSTEM (FULL ELECTION SYSTEM)
         // ==========================================================
@@ -3405,52 +3468,100 @@ window.selectOBMember = function(name, mob, dist, photo) {
             }
         };
 
-        window.uploadGalleryPhoto = async () => {
-            let file = document.getElementById('gallery_photo').files[0];
-            let title = document.getElementById('gallery_title').value;
-            let showIndex = document.getElementById('gallery_show_index').checked;
+       window.uploadGalleryPhoto = async () => {
+    let fileInput = document.getElementById('gallery_photo');
+    let file = fileInput ? fileInput.files[0] : null;
+    let title = document.getElementById('gallery_title').value.trim();
+    let showIndex = document.getElementById('gallery_show_index').checked;
 
-            if(!file) return alert("कृपया फोटो निवडा.");
-            Swal.fire({title: 'फोटो अपलोड होत आहे...', didOpen: () => Swal.showLoading()});
-            try {
-                let url = await uploadToCloudinary(file);
-                await addDoc(collection(db, "gallery"), { url, title, showIndex, date: new Date().toLocaleDateString('mr-IN') });
-                Swal.fire('यशस्वी', 'फोटो गॅलरीत ॲड झाला!', 'success');
-                loadGallery();
-            } catch(e) { Swal.fire('Error', e.message, 'error'); }
-        };
+    if(!file) return Swal.fire('फोटो निवडा', 'कृपया अपलोड करण्यासाठी फोटो निवडा.', 'warning');
 
-        async function loadGallery() {
-            let snap = await getDocs(collection(db, "gallery"));
-            galleryData = []; snap.forEach(d => galleryData.push({id: d.id, ...d.data()}));
-            document.getElementById('galleryGrid').innerHTML = galleryData.map(g => `
-                <div class="folder-card" style="padding:10px; text-align:center;">
-                    <input type="checkbox" class="gal-chk" value="${g.id}" style="position:absolute; top:8px; left:8px;">
-                    <img src="${g.url}" style="width:100%; height:120px; object-fit:cover; border-radius:5px; cursor:pointer;" onclick="openImagePreview('${g.url}', '${g.title||''}')">
-                    <p style="font-size:0.85rem; margin-top:6px; font-weight:bold;">${g.title||'No Title'}</p>
-                    <button class="btn-action bg-danger" onclick="deleteGalleryPhoto('${g.id}')" style="width:100%; margin-top:5px;"><i class="fa fa-trash"></i> डिलीट</button>
-                </div>
-            `).join('');
+    Swal.fire({title: 'फोटो गॅलरीत अपलोड होत आहे...', allowOutsideClick: false, didOpen: () => Swal.showLoading()});
+    try {
+        let url = await uploadToCloudinary(file);
+        await addDoc(collection(db, "gallery"), { 
+            url: url, 
+            title: title || 'गॅलरी फोटो', 
+            showIndex: showIndex, 
+            date: new Date().toLocaleDateString('mr-IN'),
+            timestamp: Date.now()
+        });
+
+        await logAdminActivity(`Uploaded Gallery Photo: ${title || 'Photo'}`);
+        
+        // फॉर्म रिसेट करणे
+        fileInput.value = '';
+        document.getElementById('gallery_title').value = '';
+        
+        Swal.fire('यशस्वी', 'फोटो गॅलरीमध्ये जोडला गेला!', 'success');
+        loadGallery();
+    } catch(e) { 
+        Swal.fire('Error', e.message, 'error'); 
+    }
+};
+
+// गॅलरीचे फोटो लोड करून दाखवणे
+async function loadGallery() {
+    let galleryGrid = document.getElementById('galleryGrid');
+    if(!galleryGrid) return;
+
+    try {
+        let snap = await getDocs(query(collection(db, "gallery"), orderBy("timestamp", "desc")));
+        galleryData = []; 
+        snap.forEach(d => galleryData.push({id: d.id, ...d.data()}));
+
+        galleryGrid.innerHTML = galleryData.map(g => `
+            <div class="folder-card" style="padding:10px; text-align:center; position:relative;">
+                <input type="checkbox" class="gal-chk" value="${g.id}" style="position:absolute; top:12px; left:12px; width:18px; height:18px; z-index:2; cursor:pointer;">
+                <img src="${g.url}" style="width:100%; height:130px; object-fit:cover; border-radius:6px; cursor:pointer;" onclick="openImagePreview('${g.url}', '${(g.title||'').replace(/'/g, "\\'")}')">
+                <p style="font-size:0.85rem; margin-top:8px; font-weight:bold; color:var(--dark); text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">${g.title||'शीर्षक नाही'}</p>
+                <small style="color:gray; display:block; margin-bottom:6px;">${g.date||''}</small>
+                <button class="btn-action bg-danger" onclick="deleteGalleryPhoto('${g.id}')" style="width:100%;"><i class="fa fa-trash"></i> डिलीट</button>
+            </div>
+        `).join('') || '<div style="grid-column: 1/-1; text-align:center; padding:20px; color:gray;">गॅलरीमध्ये एकही फोटो उपलब्ध नाही.</div>';
+    } catch(e) {
+        console.error("Gallery Load Error:", e);
+    }
+}
+
+// फोटोचा फुल स्क्रीन प्रिव्ह्यू पाहणे
+window.openImagePreview = (url, title) => {
+    document.getElementById('img_preview_src').src = url;
+    document.getElementById('img_preview_title').innerText = title || "फोटो प्रिव्ह्यू";
+    document.getElementById('imagePreviewModal').style.display = 'flex';
+};
+
+// सिंगल गॅलरी फोटो डिलीट (रिसायकल बिनसह)
+window.deleteGalleryPhoto = async (id) => {
+    let photo = galleryData.find(x => x.id === id);
+    if(confirm("हा फोटो डिलीट करायचा आहे का?")) {
+        if(photo) await moveToRecycleBin("गॅलरी फोटो", photo, photo.title || "Gallery Photo");
+        await deleteDoc(doc(db, "gallery", id)); 
+        await logAdminActivity(`Deleted Gallery Photo: ${photo ? photo.title : id}`);
+        Swal.fire('यशस्वी', 'फोटो डिलीट झाला!', 'success');
+        loadGallery(); 
+    }
+};
+
+// निवडलेले बहुसंख्य फोटो डिलीट करणे (Bulk Delete)
+window.deleteSelectedGalleryPhotos = async () => {
+    let selectedCbs = Array.from(document.querySelectorAll('.gal-chk:checked'));
+    let ids = selectedCbs.map(cb => cb.value);
+
+    if(ids.length === 0) return Swal.fire('सूचना', 'कृपया डिलीट करण्यासाठी किमान एक फोटो निवडा.', 'warning');
+
+    if(confirm(`निवडलेले ${ids.length} फोटो नक्की डिलीट करायचे आहेत का?`)) {
+        Swal.fire({title: 'फोटो डिलीट होत आहेत...', allowOutsideClick: false, didOpen: () => Swal.showLoading()});
+        for(let id of ids) { 
+            let photo = galleryData.find(x => x.id === id);
+            if(photo) await moveToRecycleBin("गॅलरी फोटो", photo, photo.title || "Gallery Photo");
+            await deleteDoc(doc(db, "gallery", id)); 
         }
-
-        window.openImagePreview = (url, title) => {
-            document.getElementById('img_preview_src').src = url;
-            document.getElementById('img_preview_title').innerText = title || "फोटो प्रिव्ह्यू";
-            document.getElementById('imagePreviewModal').style.display = 'flex';
-        };
-
-        window.deleteGalleryPhoto = async (id) => {
-            if(confirm("हा फोटो डिलीट करायचा आहे का?")) { await deleteDoc(doc(db, "gallery", id)); loadGallery(); }
-        };
-
-        window.deleteSelectedGalleryPhotos = async () => {
-            let ids = []; document.querySelectorAll('.gal-chk:checked').forEach(cb => ids.push(cb.value));
-            if(ids.length === 0) return alert("किमान एक फोटो निवडा.");
-            if(confirm(`निवडलेले ${ids.length} फोटो डिलीट करायचे आहेत का?`)) {
-                for(let id of ids) { await deleteDoc(doc(db, "gallery", id)); }
-                loadGallery();
-            }
-        };
+        await logAdminActivity(`Bulk deleted ${ids.length} gallery photos`);
+        Swal.fire('यशस्वी', `${ids.length} फोटो डिलीट झाले!`, 'success');
+        loadGallery();
+    }
+};
 
         window.bulkWhatsApp = () => {
             let nums = []; document.querySelectorAll('.mem-chk:checked').forEach(cb => { if(cb.value) nums.push(cb.value); });
