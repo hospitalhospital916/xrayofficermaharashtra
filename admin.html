@@ -473,19 +473,27 @@
     <!-- APP CONTENT START -->
     <div id="app-content" style="display: none;">
         <div class="navbar">
-            <h2><i class="fa fa-shield-alt"></i> क्ष-किरण वैज्ञानिक अधिकारी (गट-क)कर्मचारी संघटना महाराष्ट्र राज्य</h2>
-            <div style="display:flex; align-items:center; gap:15px;">
-                <span id="pending_requests_badge" class="badge bg-danger" style="cursor:pointer; font-size:0.9rem; padding:8px 12px;" onclick="openPendingRequests()"><i class="fa fa-user-clock"></i> प्रलंबित अर्ज: <b id="pending_cnt">0</b></span>
-                
-                <div style="text-align:right;">
-                    <span id="login_user_name" style="font-weight:bold; color:var(--primary); display:block; font-size:0.95rem;"></span>
-                    <span id="login_user_role" style="font-weight:bold; color:var(--success); font-size:0.8rem;"></span>
-                    <span id="login_user_region" style="font-size:0.8rem; color:var(--danger); font-weight:bold;"></span>
-                </div>
-
-                <button class="btn-logout" onclick="logoutAdmin()"><i class="fa fa-power-off"></i> लॉगआउट</button>
-            </div>
+    <div style="display:flex; align-items:center; gap:12px;">
+        <!-- येथे संघटनेचा लोगो ऑटोमॅटिक लोड होईल -->
+        <span id="header_logo_box">
+            <i class="fa fa-shield-alt" style="font-size:2rem; color:var(--primary);"></i>
+        </span>
+        <h2>क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना महाराष्ट्र राज्य</h2>
+    </div>
+    <div style="display:flex; align-items:center; gap:15px;">
+        <span id="pending_requests_badge" class="badge bg-danger" style="cursor:pointer; font-size:0.9rem; padding:8px 12px;" onclick="openPendingRequests()">
+            <i class="fa fa-user-clock"></i> प्रलंबित अर्ज: <b id="pending_cnt">0</b>
+        </span>
+        
+        <div style="text-align:right;">
+            <span id="login_user_name" style="font-weight:bold; color:var(--primary); display:block; font-size:0.95rem;"></span>
+            <span id="login_user_role" style="font-weight:bold; color:var(--success); font-size:0.8rem;"></span>
+            <span id="login_user_region" style="font-size:0.8rem; color:var(--danger); font-weight:bold;"></span>
         </div>
+
+        <button class="btn-logout" onclick="logoutAdmin()"><i class="fa fa-power-off"></i> लॉगआउट</button>
+    </div>
+</div>
 
         <div class="tab-menu" id="mainTabMenu">
             <button class="tab-btn active" onclick="openTab('tab-dash')" data-perm="dashboard"><i class="fa fa-chart-pie"></i> डॅशबोर्ड</button>
