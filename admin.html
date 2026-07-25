@@ -1607,50 +1607,7 @@
                 </div>
             </div>
 
-            <!-- TAB 18: LIVE CHAT SYSTEM -->
-            <div id="tab-chat" class="tab-content">
-                <div class="panel">
-                    <div class="panel-header" style="background:#128C7E; color:white;">
-                        <span><i class="fa fa-comments"></i> Live Chat - संघटना थेट संवाद केंद्र</span>
-                        <span class="badge bg-success">Online Live</span>
-                    </div>
-                    <div class="panel-body" style="padding:0;">
-                        
-                        <div style="display:grid; grid-template-columns: 280px 1fr; min-height:500px; background:#e5ddd5;">
-                            <!-- Chat Sidebar Users List -->
-                            <div style="background:#ffffff; border-right:1px solid #cbd5e1; padding:10px; overflow-y:auto;">
-                                <h5 style="color:var(--primary); margin-bottom:10px;"><i class="fa fa-users"></i> संवाद कक्ष</h5>
-                                <div style="background:#25D366; color:white; padding:10px; border-radius:8px; cursor:pointer; font-weight:bold; margin-bottom:8px;" onclick="switchChatRoom('GroupAll')">
-                                    📢 सर्व सदस्य ग्रुप चॅट
-                                </div>
-                                <hr style="margin:8px 0;">
-                                <small style="color:gray; font-weight:bold;">थेट सदस्य संवाद (Direct Chats):</small>
-                                <div id="chatUserList" style="margin-top:8px;"></div>
-                            </div>
-
-                            <!-- Chat Messages Window -->
-                            <div style="display:flex; flex-direction:column; justify-content:space-between; height:100%;">
-                                <div id="chatHeader" style="background:#075E54; color:white; padding:12px 18px; font-weight:bold; display:flex; justify-content:space-between; align-items:center;">
-                                    <span id="chatTargetTitle">📢 सर्व सदस्य ग्रुप चॅट</span>
-                                    <small id="chatTargetStatus">Active</small>
-                                </div>
-
-                                <div id="chatMessagesBox" style="padding:15px; overflow-y:auto; flex:1; display:flex; flex-direction:column; gap:10px; max-height:400px;">
-                                    <!-- Dynamic Realtime Messages Render Here -->
-                                </div>
-
-                                <!-- Input Box -->
-                                <div style="background:#f0f0f0; padding:10px; display:flex; gap:10px; align-items:center;">
-                                    <input type="text" id="chatInputMessage" class="form-control" placeholder="येथे मेसेज टाईप करा..." onkeypress="if(event.key==='Enter') sendLiveChatMessage()">
-                                    <button class="btn-action bg-success" onclick="sendLiveChatMessage()" style="padding:10px 18px; font-size:1.1rem;"><i class="fa fa-paper-plane"></i></button>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
+           
             <!-- TAB 19: ADMIN ACTIVITY LOGS -->
             <div id="tab-admin-logs" class="tab-content">
                 <div class="panel">
@@ -3675,52 +3632,9 @@
         // ==========================================================
         // REALTIME LIVE CHAT ENGINE (WHATSAPP STYLE)
         // ==========================================================
-        window.initLiveChatEngine = () => {
-            const chatQ = query(collection(db, "chat_messages"), orderBy("timestamp", "asc"));
-            onSnapshot(chatQ, (snapshot) => {
-                window.chatMessagesData = [];
-                snapshot.forEach(d => window.chatMessagesData.push({ id: d.id, ...d.data() }));
-                window.renderChatMessages();
-            });
-        };
-
-        window.switchChatRoom = (target) => {
-            window.currentActiveChatRoom = target;
-            document.getElementById('chatTargetTitle').innerText = target === 'GroupAll' ? '📢 सर्व सदस्य ग्रुप चॅट' : target;
-            window.renderChatMessages();
-        };
-
-        window.renderChatMessages = () => {
-            let msgBox = document.getElementById('chatMessagesBox'); if(!msgBox) return;
-            let filMsgs = window.chatMessagesData.filter(m => m.room === window.currentActiveChatRoom || (m.room === undefined && window.currentActiveChatRoom === 'GroupAll'));
-
-            msgBox.innerHTML = filMsgs.map(m => {
-                let isMe = m.senderName === currentLoggedInAdminName;
-                return `
-                    <div style="align-self: ${isMe ? 'flex-end' : 'flex-start'}; background: ${isMe ? '#dcf8c6' : '#ffffff'}; padding:8px 14px; border-radius:8px; max-width:70%; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
-                        <small style="font-weight:bold; color:#075E54;">${m.senderName} (${m.senderRole||'Admin'})</small>
-                        <p style="margin:4px 0; font-size:0.95rem; color:#111;">${m.text}</p>
-                        <span style="font-size:0.65rem; color:gray; float:right;">${m.time||''}</span>
-                    </div>
-                `;
-            }).join('');
-            msgBox.scrollTop = msgBox.scrollHeight;
-        };
-
-        window.sendLiveChatMessage = async () => {
-            let txt = document.getElementById('chatInputMessage').value.trim();
-            if(!txt) return;
-
-            let now = new Date();
-            let timeStr = now.toLocaleTimeString('mr-IN', { hour: '2-digit', minute: '2-digit' });
-
-            await addDoc(collection(db, "chat_messages"), {
-                room: window.currentActiveChatRoom, text: txt, senderName: currentLoggedInAdminName,
-                senderRole: currentLoggedInAdminDesignation, timestamp: Date.now(), time: timeStr
-            });
-
-            document.getElementById('chatInputMessage').value = '';
-        };
+       window.initLiveChatEngine = () => {
+    // chat.html फाईल iframe द्वारे थेट उघडत असल्यामुळे येथे अतिरिक्त कोडची गरज नाही.
+};
 
         // ==========================================================
         // SMART I-CARD & PRINT ENGINE
