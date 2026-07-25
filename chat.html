@@ -3,84 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pro Chat: Mobile & Admin Data Retention System</title>
-    <style>
-        /* --- मोबाईल आणि डेस्कटॉप रिस्पॉन्सिव्ह WhatsApp / Telegram CSS --- */
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #d1d7db; display: flex; justify-content: center; height: 100vh; overflow: hidden; }
+    <title>चॅट प्रणाली | क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना महाराष्ट्र राज्य</title>
+    
+    <!-- External Fonts & Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 
-        .chat-container { width: 100%; max-width: 850px; background: #ffffff; display: flex; flex-direction: column; height: 100vh; position: relative; box-shadow: 0 5px 20px rgba(0,0,0,0.15); }
-        
-        @media (min-width: 768px) {
-            body { padding: 15px; }
-            .chat-container { height: 95vh; border-radius: 12px; overflow: hidden; border: 1px solid #ccc; }
+    <style>
+        :root {
+            --primary: #0B3D91;
+            --primary-dark: #07275e;
+            --secondary: #f39c12;
+            --bg-chat: #efeae2;
+            --white: #ffffff;
+            --text-dark: #1e293b;
+            --danger: #ef4444;
+            --success: #10b981;
         }
 
-        /* हेडर आणि सर्च बार */
-        .header { background: #075e54; color: white; padding: 12px 15px; display: flex; flex-direction: column; gap: 10px; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-        .top-row { display: flex; justify-content: space-between; align-items: center; }
-        .header-title { font-size: 18px; font-weight: bold; display: flex; align-items: center; gap: 8px; }
-        
-        /* सर्च बॉक्स */
-        .search-box { width: 100%; display: flex; align-items: center; background: rgba(255, 255, 255, 0.2); border-radius: 20px; padding: 4px 12px; }
-        .search-box input { border: none; background: transparent; outline: none; color: white; width: 100%; padding: 6px; font-size: 14px; }
-        .search-box input::placeholder { color: #e0e0e0; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Mukta', sans-serif; }
+        body { background-color: #d1d7db; display: flex; justify-content: center; height: 100vh; overflow: hidden; }
 
-        /* टॅब्स (रूम्स) */
-        .tabs { display: flex; gap: 8px; margin-top: 2px; }
-        .tabs button { background: rgba(255,255,255,0.2); border: none; color: white; font-size: 13px; padding: 6px 14px; border-radius: 15px; cursor: pointer; transition: 0.3s; }
-        .tabs button.active { background: #fff; color: #075e54; font-weight: bold; }
+        /* चॅट कंटेनर */
+        .chat-container { width: 100%; max-width: 900px; background: #ffffff; display: flex; flex-direction: column; height: 100vh; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        
+        @media (min-width: 768px) {
+            body { padding: 12px; }
+            .chat-container { height: 96vh; border-radius: 16px; overflow: hidden; border: 1px solid #cbd5e1; }
+        }
+
+        /* संघटना मुख्य हेडर */
+        .org-header { background: linear-gradient(135deg, var(--primary-dark), var(--primary)); color: white; padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; z-index: 10; box-shadow: 0 4px 10px rgba(0,0,0,0.15); border-bottom: 3px solid var(--secondary); }
+        .top-brand { display: flex; justify-content: space-between; align-items: center; }
+        .org-title { font-size: 1.05rem; font-weight: 800; display: flex; align-items: center; gap: 10px; line-height: 1.2; }
+        .org-title i { font-size: 1.6rem; color: var(--secondary); }
 
         /* ॲडमिन बटण */
-        .admin-btn { background: #128C7E; color: white; border: none; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: bold; display: flex; align-items: center; gap: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-        .admin-btn:hover { background: #0b6156; }
+        .admin-btn { background: var(--secondary); color: var(--primary-dark); border: none; padding: 6px 14px; border-radius: 20px; cursor: pointer; font-size: 0.85rem; font-weight: 800; display: flex; align-items: center; gap: 6px; transition: 0.3s; box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
+        .admin-btn:hover { background: #e08e0b; transform: translateY(-1px); }
 
-        /* चॅट बॉक्स (WhatsApp Pattern) */
-        .chat-box { flex: 1; padding: 15px; overflow-y: auto; background-color: #efeae2; background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); display: flex; flex-direction: column; gap: 10px; }
+        /* सर्च बार आणि टॅब्स */
+        .search-tab-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+        .search-box { flex: 1; min-width: 200px; display: flex; align-items: center; background: rgba(255, 255, 255, 0.15); border-radius: 20px; padding: 2px 12px; border: 1px solid rgba(255,255,255,0.2); }
+        .search-box input { border: none; background: transparent; outline: none; color: white; width: 100%; padding: 5px; font-size: 0.9rem; }
+        .search-box input::placeholder { color: #e2e8f0; }
 
-        /* मेसेज फुगे (Message Bubbles) */
+        .tabs { display: flex; gap: 6px; }
+        .tabs button { background: rgba(255,255,255,0.2); border: none; color: white; font-size: 0.82rem; font-weight: 700; padding: 5px 12px; border-radius: 12px; cursor: pointer; transition: 0.3s; }
+        .tabs button.active { background: #ffffff; color: var(--primary); font-weight: 800; }
+
+        /* PDF व गुगल ड्राईव्ह स्वतंत्र बॅनर (खास जागा) */
+        .pdf-drive-banner { background: linear-gradient(90deg, #fffbe3, #ffeed0); border: 1.5px dashed var(--secondary); padding: 8px 14px; display: flex; justify-content: space-between; align-items: center; font-size: 0.88rem; color: #854d0e; font-weight: 700; border-bottom: 1px solid #fcd34d; }
+        .pdf-drive-link { background: var(--primary); color: white; text-decoration: none; padding: 4px 12px; border-radius: 6px; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 5px; transition: 0.2s; }
+        .pdf-drive-link:hover { background: var(--primary-dark); }
+
+        /* चॅट बॉक्स एरिया */
+        .chat-box { flex: 1; padding: 15px; overflow-y: auto; background-color: var(--bg-chat); background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); display: flex; flex-direction: column; gap: 12px; }
+
+        /* मेसेज फुगे */
         .message-wrapper { display: flex; align-items: flex-end; gap: 8px; max-width: 82%; }
         .message-wrapper.my-msg-wrapper { align-self: flex-end; flex-direction: row-reverse; }
 
-        .avatar { width: 32px; height: 32px; border-radius: 50%; background: #128C7E; color: white; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: bold; flex-shrink: 0; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+        .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 800; flex-shrink: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.15); border: 1.5px solid white; }
 
-        .message { padding: 8px 12px; border-radius: 10px; background: #fff; position: relative; box-shadow: 0 1px 2px rgba(0,0,0,0.2); font-size: 14px; line-height: 1.4; border-top-left-radius: 0; word-break: break-word; }
-        .message-wrapper.my-msg-wrapper .message { background: #dcf8c6; border-top-left-radius: 10px; border-top-right-radius: 0; }
+        .message { padding: 8px 14px; border-radius: 12px; background: #ffffff; position: relative; box-shadow: 0 1px 3px rgba(0,0,0,0.12); font-size: 0.92rem; line-height: 1.4; border-top-left-radius: 0; word-break: break-word; color: var(--text-dark); }
+        .message-wrapper.my-msg-wrapper .message { background: #dcf8c6; border-top-left-radius: 12px; border-top-right-radius: 0; }
         
-        .msg-user { font-size: 11px; font-weight: bold; color: #075e54; margin-bottom: 3px; }
-        .msg-time { font-size: 10px; color: #888; text-align: right; margin-top: 4px; }
-        .msg-image { max-width: 100%; border-radius: 8px; margin-top: 5px; cursor: pointer; border: 1px solid #ddd; }
-        .msg-pdf { display: inline-block; margin-top: 5px; padding: 6px 10px; background: #f1f1f1; border-radius: 5px; font-size: 12px; color: #333; text-decoration: none; border: 1px solid #ccc; }
+        .msg-user { font-size: 0.75rem; font-weight: 800; color: var(--primary); margin-bottom: 2px; }
+        .msg-time { font-size: 0.65rem; color: #64748b; text-align: right; margin-top: 4px; font-weight: 600; }
+        .msg-image { max-width: 100%; border-radius: 8px; margin-top: 5px; cursor: pointer; border: 1px solid #cbd5e1; max-height: 250px; object-fit: cover; }
+        .msg-pdf-card { display: flex; align-items: center; gap: 8px; margin-top: 5px; padding: 8px 12px; background: #f1f5f9; border-radius: 8px; font-size: 0.82rem; color: var(--primary); text-decoration: none; border: 1px solid #cbd5e1; font-weight: bold; }
 
         /* डिलीट बटण */
-        .delete-btn { position: absolute; top: -6px; right: -6px; background: #ff3b30; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; cursor: pointer; font-size: 10px; display: none; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.3); }
-        .message:hover .delete-btn, .message-wrapper:active .delete-btn { display: flex; }
+        .delete-btn { position: absolute; top: -6px; right: -6px; background: var(--danger); color: white; border: none; border-radius: 50%; width: 22px; height: 22px; cursor: pointer; font-size: 0.7rem; display: none; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        .message:hover .delete-btn { display: flex; }
 
         /* इनपुट एरिया */
-        .input-area { display: flex; padding: 10px; background: #f0f0f0; align-items: center; gap: 8px; border-top: 1px solid #ddd; }
-        .file-label { cursor: pointer; font-size: 22px; color: #54656f; padding: 0 5px; transition: 0.2s; }
-        .file-label:hover { color: #128C7E; }
+        .input-area { display: flex; padding: 10px 14px; background: #f0f4f8; align-items: center; gap: 10px; border-top: 1px solid #cbd5e1; }
+        .file-label { cursor: pointer; font-size: 1.3rem; color: #475569; padding: 4px; transition: 0.2s; display: flex; align-items: center; }
+        .file-label:hover { color: var(--primary); }
         #fileInput { display: none; }
         
-        .input-area input[type="text"] { flex: 1; padding: 12px 15px; border-radius: 20px; border: 1px solid #ccc; outline: none; font-size: 14px; background: #fff; }
-        .send-btn { background: #128C7E; color: white; border: none; padding: 12px 18px; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 14px; transition: 0.3s; }
-        .send-btn:hover { background: #075e54; }
+        .input-area input[type="text"] { flex: 1; padding: 10px 16px; border-radius: 25px; border: 1px solid #cbd5e1; outline: none; font-size: 0.95rem; background: #ffffff; }
+        .input-area input[type="text"]:focus { border-color: var(--primary); }
+        .send-btn { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; font-weight: 800; font-size: 0.9rem; transition: 0.3s; display: flex; align-items: center; gap: 6px; }
+        .send-btn:hover { background: var(--primary-dark); }
 
         /* लोडर */
-        #loader { display: none; background: #ffeb3b; color: #333; padding: 6px; text-align: center; font-size: 12px; font-weight: bold; }
+        #loader { display: none; background: #fef08a; color: #854d0e; padding: 6px; text-align: center; font-size: 0.82rem; font-weight: bold; border-bottom: 1px solid #fef08a; }
 
-        /* ॲडमिन सेटिंग्ज पॉप-अप (Modal) */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 100; }
-        .modal-content { background: white; padding: 20px; border-radius: 12px; width: 92%; max-width: 450px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); max-height: 90vh; overflow-y: auto; }
-        .modal-header { font-size: 18px; font-weight: bold; margin-bottom: 15px; color: #075e54; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        /* ॲडमिन पॉप-अप मोडल */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(3px); }
+        .modal-content { background: white; padding: 22px; border-radius: 16px; width: 92%; max-width: 480px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); max-height: 90vh; overflow-y: auto; }
+        .modal-header { font-size: 1.1rem; font-weight: 800; margin-bottom: 15px; color: var(--primary); display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; }
         .setting-section { margin-bottom: 15px; }
-        .setting-title { font-weight: bold; font-size: 13px; color: #555; margin-bottom: 6px; text-transform: uppercase; }
-        .setting-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 14px; }
-        .setting-item select { padding: 6px 10px; border-radius: 6px; border: 1px solid #ccc; outline: none; font-size: 13px; }
-        .close-modal { cursor: pointer; font-size: 20px; border: none; background: none; color: #777; }
-        .btn-danger { background: #d32f2f; color: white; border: none; padding: 10px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 13px; width: 100%; margin-top: 5px; }
-        .btn-danger:hover { background: #b71c1c; }
-        .btn-warning { background: #f57c00; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 12px; }
+        .setting-title { font-weight: 800; font-size: 0.82rem; color: #64748b; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .setting-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 0.9rem; font-weight: 600; }
+        .setting-item input[type="text"], .setting-item select { padding: 6px 10px; border-radius: 6px; border: 1px solid #cbd5e1; outline: none; font-size: 0.85rem; width: 60%; }
+        .close-modal { cursor: pointer; font-size: 1.3rem; border: none; background: none; color: #64748b; }
+        .btn-danger { background: var(--danger); color: white; border: none; padding: 10px 14px; border-radius: 8px; cursor: pointer; font-weight: 800; font-size: 0.85rem; width: 100%; margin-top: 5px; }
+        .btn-danger:hover { background: #dc2626; }
+        .btn-warning { background: var(--secondary); color: var(--primary-dark); border: none; padding: 8px 10px; border-radius: 8px; cursor: pointer; font-weight: 800; font-size: 0.8rem; }
         .manual-clean-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
     </style>
 </head>
@@ -88,44 +111,61 @@
 
 <div class="chat-container">
     
-    <!-- हेडर, सर्च बार आणि टॅब्स -->
-    <div class="header">
-        <div class="top-row">
-            <span class="header-title">💬 Pro Chat System</span>
+    <!-- १. संघटना ब्रँडिंग हेडर -->
+    <div class="org-header">
+        <div class="top-brand">
+            <div class="org-title">
+                <i class="fa-solid fa-shield-halved"></i>
+                <span>क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना महाराष्ट्र राज्य</span>
+            </div>
             <div id="adminControls" style="display:none;">
-                <button class="admin-btn" onclick="openAdminSettings()">⚙️ ॲडमिन सेटिंग्ज</button>
+                <button class="admin-btn" onclick="openAdminSettings()">⚙️ ॲडमिन</button>
             </div>
         </div>
 
-        <!-- सर्च बॉक्स -->
-        <div class="search-box">
-            🔍 <input type="text" id="searchInput" placeholder="जुनी चॅट किंवा नाव शोधा..." oninput="filterMessages()">
-        </div>
+        <!-- सर्च व चॅट रूम्स -->
+        <div class="search-tab-row">
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass" style="color:#e2e8f0; font-size:0.8rem; margin-right:5px;"></i>
+                <input type="text" id="searchInput" placeholder="मेसेज किंवा नाव शोधा..." oninput="filterMessages()">
+            </div>
 
-        <!-- चॅट रूम्स -->
-        <div class="tabs">
-            <button id="tab-all" class="active" onclick="switchRoom('all_chat')">Member + Admin</button>
-            <button id="tab-admin" style="display:none;" onclick="switchRoom('admin_chat')">Admin Private</button>
+            <div class="tabs">
+                <button id="tab-all" class="active" onclick="switchRoom('all_chat')">सर्व सदस्य</button>
+                <button id="tab-admin" style="display:none;" onclick="switchRoom('admin_chat')">ॲडमिन प्रायव्हेट</button>
+            </div>
         </div>
+    </div>
+
+    <!-- २. PDF व गुगल ड्राईव्ह/टेलिग्राम लिंक्ससाठी स्वतंत्र जागा -->
+    <div class="pdf-drive-banner" id="pdfDriveBanner">
+        <span>📄 अधिकृत PDF कागदपत्रे व ड्राईव्ह फोल्डर:</span>
+        <a href="#" id="pdfDriveLinkBtn" target="_blank" class="pdf-drive-link">
+            <i class="fa-solid fa-folder-open"></i> लिंक उघडा
+        </a>
     </div>
 
     <!-- लोडिंग इंडिकेटर -->
-    <div id="loader">⏳ फाईल अपलोड होत आहे, कृपया थांबा...</div>
+    <div id="loader"><i class="fa-solid fa-spinner fa-spin"></i> फाईल अपलोड होत आहे, कृपया थांबा...</div>
     
-    <!-- चॅट बॉक्स -->
+    <!-- ३. चॅट मेसेज बॉक्स -->
     <div class="chat-box" id="chatBox"></div>
 
-    <!-- मेसेज टाईप आणि फाईल सेंड बार -->
+    <!-- ४. इनपुट बार -->
     <div class="input-area">
-        <label for="fileInput" class="file-label" title="फोटो किंवा PDF जोडा">📎</label>
-        <input type="file" id="fileInput" accept="image/*,.pdf" onchange="handleFileUpload(event)">
+        <label for="fileInput" class="file-label" title="फोटो जोडा (ImgBB)">
+            <i class="fa-solid fa-paperclip"></i>
+        </label>
+        <input type="file" id="fileInput" accept="image/*" onchange="handleFileUpload(event)">
         
-        <input type="text" id="msgInput" placeholder="येथे मेसेज लिहा..." autocomplete="off" onkeypress="handleEnter(event)">
-        <button class="send-btn" onclick="sendTextMessage()">Send</button>
+        <input type="text" id="msgInput" placeholder="येथे मेसेज टाईप करा..." autocomplete="off" onkeypress="handleEnter(event)">
+        <button class="send-btn" onclick="sendTextMessage()">
+            <span>पाठवा</span> <i class="fa-solid fa-paper-plane"></i>
+        </button>
     </div>
 </div>
 
-<!-- ॲडमिन कंट्रोल पॅनेल (Modal Pop-up) -->
+<!-- ५. ॲडमिन कंट्रोल पॅनेल (Modal) -->
 <div class="modal" id="adminModal">
     <div class="modal-content">
         <div class="modal-header">
@@ -133,26 +173,38 @@
             <button class="close-modal" onclick="closeAdminSettings()">✖</button>
         </div>
         
-        <!-- १. परवानग्या आणि डिस्प्ले -->
+        <!-- PDF / टेलिग्राम / ड्राईव्ह लिंक कॉन्फिगरेशन (स्वतंत्र जागा) -->
+        <div class="setting-section" style="background:#fffbe3; padding:10px; border-radius:8px; border:1px solid #fcd34d;">
+            <div class="setting-title" style="color:#b45309;">📁 PDF व ड्राईव्ह / टेलिग्राम लिंक सेटिंग</div>
+            <div class="setting-item" style="flex-direction:column; align-items:flex-start; gap:5px;">
+                <span style="font-size:0.8rem;">गूगल ड्राईव्ह / टेलिग्राम बॉटची URL टाका:</span>
+                <input type="text" id="driveUrlInput" placeholder="https://drive.google.com/..." style="width:100%;">
+                <button class="btn-warning" onclick="saveDriveUrl()" style="margin-top:5px; width:100%;">लिंक सेव्ह करा</button>
+            </div>
+        </div>
+
+        <hr style="margin: 12px 0; border: 0; border-top: 1px solid #eee;">
+
+        <!-- परवानग्या -->
         <div class="setting-section">
             <div class="setting-title">परवानग्या व डिस्प्ले (Permissions)</div>
             <div class="setting-item">
-                <span>सदस्यांना स्वतःचे मेसेज डिलीट करू द्या:</span>
+                <span>सदस्यांना मेसेज डिलीट करू द्या:</span>
                 <input type="checkbox" id="toggleMemberDelete" onchange="updateSettings()">
             </div>
             <div class="setting-item">
-                <span>सदस्यांचे प्रोफाइल फोटो (DP) दाखवा:</span>
+                <span>सदस्यांचे प्रोफाइल आयकॉन दाखवा:</span>
                 <input type="checkbox" id="toggleProfilePhotos" onchange="updateSettings()">
             </div>
         </div>
 
-        <hr style="margin: 10px 0; border: 0; border-top: 1px solid #eee;">
+        <hr style="margin: 12px 0; border: 0; border-top: 1px solid #eee;">
 
-        <!-- २. डेटा रिटेंशन सेटिंग्ज (Auto-Delete) -->
+        <!-- ऑटो-डिलीट -->
         <div class="setting-section">
             <div class="setting-title">डेटा रिटेंशन सेटिंग्ज (Auto-Delete)</div>
             <div class="setting-item">
-                <span>ऑटो-डिलीट कालावधी निवडा:</span>
+                <span>ऑटो-डिलीट कालावधी:</span>
                 <select id="autoDeleteSelect" onchange="updateSettings()">
                     <option value="0">बंद (Off)</option>
                     <option value="30">३० दिवस (30 Days)</option>
@@ -162,12 +214,12 @@
             </div>
         </div>
 
-        <hr style="margin: 10px 0; border: 0; border-top: 1px solid #eee;">
+        <hr style="margin: 12px 0; border: 0; border-top: 1px solid #eee;">
 
-        <!-- ३. मॅन्युअल डेटा क्लियर करा -->
+        <!-- मॅन्युअल क्लिनअप -->
         <div class="setting-section">
             <div class="setting-title">मॅन्युअल डेटा क्लिनअप (Manual Clear)</div>
-            <p style="font-size: 12px; color: #666; margin-bottom: 8px;">ठराविक दिवसांपेक्षा जुने मेसेज एका क्लिकवर डिलीट करा:</p>
+            <p style="font-size: 0.78rem; color: #64748b; margin-bottom: 6px;">ठराविक दिवसांपेक्षा जुने मेसेज डिलीट करा:</p>
             <div class="manual-clean-grid">
                 <button class="btn-warning" onclick="manualCleanup(30)">🗑️ ३० दिवस जुने</button>
                 <button class="btn-warning" onclick="manualCleanup(60)">🗑️ ६० दिवस जुने</button>
@@ -177,9 +229,7 @@
         </div>
 
         <hr style="margin: 15px 0 10px 0; border: 0; border-top: 1px solid #eee;">
-        
-        <!-- ४. पूर्ण रूम क्लियर करा -->
-        <button class="btn-danger" onclick="deleteAllMessages()">⚠️ चालू असलेली पूर्ण रूम रिकामी करा</button>
+        <button class="btn-danger" onclick="deleteAllMessages()">⚠️ संपूर्ण चालू रूम रिकामी करा</button>
     </div>
 </div>
 
@@ -189,7 +239,7 @@
 
 <script>
     /* =======================================================
-       १. API Keys आणि सिक्रेट कोड्स
+       १. फायरबेस आणि ImgBB API Key
        ======================================================= */
     const firebaseConfig = {
         apiKey: "YOUR_FIREBASE_API_KEY",
@@ -200,37 +250,31 @@
         appId: "YOUR_APP_ID"
     };
 
-    // तुमची ImgBB API Key जोडलेली आहे
+    // तुमची जोडलेली ImgBB API Key
     const IMGBB_API_KEY = "9ebc935a853cef7cef4ab67692b3048a";
 
-    // Telegram Bot माहिती (PDF फाईल्ससाठी)
-    const TELEGRAM_BOT_TOKEN = "YOUR_TELEGRAM_BOT_TOKEN";
-    const TELEGRAM_CHAT_ID = "YOUR_TELEGRAM_CHAT_ID";
-
     /* =======================================================
-       २. युजर रोल आणि ग्लोबल व्हेरिएबल्स
+       २. युजर आणि ग्लोबल व्हेरिएबल्स
        ======================================================= */
-    // टेस्टिंगसाठी: ॲडमिनसाठी "admin", मेंबर्ससाठी "member" ठेवा.
-    const currentUser = "अविनाश (Admin)"; 
-    const currentRole = "admin"; 
+    const currentUser = "महेश हांगे (वैज्ञानिक अधिकारी)"; 
+    const currentRole = "admin"; // ॲडमिनसाठी "admin", मेंबर्ससाठी "member"
 
     let currentRoom = "all_chat"; 
     let unsubscribe = null; 
-    let allLoadedMessages = []; // सर्चसाठी साठवलेले मेसेजेस
+    let allLoadedMessages = [];
 
-    // ॲडमिन सेटिंग्जचा डीफॉल्ट ऑब्जेक्ट
     let appSettings = {
         allowMemberDelete: true,
         showProfilePhotos: true,
-        autoDeleteDays: 0
+        autoDeleteDays: 0,
+        pdfDriveUrl: "https://drive.google.com" // डीफॉल्ट ड्राईव्ह लिंक
     };
 
-    // फायरबेस सुरू करा
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
     /* =======================================================
-       ३. सिस्टीम लोड झाल्यावर
+       ३. सुरुवातीस लोड होणार्या गोष्टी
        ======================================================= */
     window.onload = () => {
         if (currentRole === "admin") {
@@ -238,14 +282,10 @@
             document.getElementById("adminControls").style.display = "block";
         }
 
-        // ॲडमिनच्या सेटिंग्ज डेटाबेसमधून लाईव्ह लोड करा
         listenToSettings();
-
-        // रूमचे मेसेज लोड करा
         loadMessages(currentRoom);
     };
 
-    // ॲडमिन सेटिंग्ज फायबेसवरून ऐकणे (Realtime Settings Sync)
     function listenToSettings() {
         db.collection("settings").doc("config").onSnapshot((doc) => {
             if (doc.exists) {
@@ -254,18 +294,21 @@
                 document.getElementById("toggleProfilePhotos").checked = appSettings.showProfilePhotos || false;
                 document.getElementById("autoDeleteSelect").value = appSettings.autoDeleteDays || 0;
                 
-                // जर ॲडमिनने ऑटो-डिलीट सेट केला असेल, तर जुने मेसेज तपासा
+                let driveUrl = appSettings.pdfDriveUrl || "https://drive.google.com";
+                document.getElementById("driveUrlInput").value = driveUrl;
+                document.getElementById("pdfDriveLinkBtn").href = driveUrl;
+
                 if (currentRole === "admin" && appSettings.autoDeleteDays > 0) {
                     performAutoDeleteCheck(appSettings.autoDeleteDays);
                 }
 
-                renderMessages(allLoadedMessages); // नवीन सेटिंग्जनुसार स्क्रीन अपडेट करा
+                renderMessages(allLoadedMessages);
             }
         });
     }
 
     /* =======================================================
-       ४. मेसेज लोड करणे आणि चॅट दाखवणे
+       ४. चॅट मेसेज लोड व डिस्प्ले करणे
        ======================================================= */
     function switchRoom(room) {
         currentRoom = room;
@@ -293,7 +336,6 @@
             });
     }
 
-    // मेसेज स्क्रीनवर दाखवणे (Render)
     function renderMessages(messages) {
         const chatBox = document.getElementById("chatBox");
         chatBox.innerHTML = "";
@@ -301,11 +343,9 @@
         messages.forEach((data) => {
             const isMyMsg = (data.user === currentUser);
             
-            // मुख्य रॅपर
             const wrapper = document.createElement("div");
             wrapper.className = `message-wrapper ${isMyMsg ? "my-msg-wrapper" : ""}`;
 
-            // प्रोफाइल फोटो (Avatar) जर सेटिंग ऑन असेल तरच दाखवा
             if (appSettings.showProfilePhotos) {
                 const avatar = document.createElement("div");
                 avatar.className = "avatar";
@@ -313,7 +353,6 @@
                 wrapper.appendChild(avatar);
             }
 
-            // मेसेज कंटेंट
             const msgDiv = document.createElement("div");
             msgDiv.className = "message";
 
@@ -323,19 +362,12 @@
                 contentHtml += `<div>${data.message}</div>`;
             } else if (data.type === "image") {
                 contentHtml += `<img src="${data.message}" class="msg-image" alt="Photo" onclick="window.open(this.src, '_blank')">`;
-            } else if (data.type === "pdf") {
-                contentHtml += `<div class="msg-pdf">📎 <b>PDF:</b> ${data.message}</div>`;
             }
 
-            // वेळ (Timestamp)
             const timeStr = data.timestamp ? new Date(data.timestamp.toDate()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '';
             contentHtml += `<div class="msg-time">${timeStr}</div>`;
 
-            // डिलीट अधिकार तपासा:
-            // १. ॲडमिन सर्व मेसेज डिलीट करू शकतो.
-            // २. किंवा 'allowMemberDelete' ऑन असेल तर युजर स्वतःचा मेसेज डिलीट करू शकतो.
             const canDelete = (currentRole === "admin") || (appSettings.allowMemberDelete && isMyMsg);
-
             if (canDelete) {
                 contentHtml += `<button class="delete-btn" onclick="deleteSingleMessage('${data.id}')">✖</button>`;
             }
@@ -345,13 +377,9 @@
             chatBox.appendChild(wrapper);
         });
 
-        // आपोआप खाली स्क्रोल करा
         chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-    /* =======================================================
-       ५. चॅट सर्च पर्याय (Live Search)
-       ======================================================= */
     function filterMessages() {
         const query = document.getElementById("searchInput").value.toLowerCase();
         const filtered = allLoadedMessages.filter(m => 
@@ -362,7 +390,7 @@
     }
 
     /* =======================================================
-       ६. मेसेज आणि फाईल्स सेंड करणे
+       ५. मेसेज पाठवणे आणि ImgBB फोटो अपलोड
        ======================================================= */
     function handleEnter(e) { if(e.key === 'Enter') sendTextMessage(); }
 
@@ -390,7 +418,6 @@
 
         try {
             if (file.type.startsWith("image/")) {
-                // ImgBB वर अपलोड करा
                 const formData = new FormData();
                 formData.append("image", file);
                 
@@ -410,26 +437,8 @@
                 } else {
                     alert("फोटो अपलोड अयशस्वी! ImgBB Key तपासा.");
                 }
-
-            } else if (file.type === "application/pdf") {
-                // Telegram वर PDF अपलोड करा
-                const formData = new FormData();
-                formData.append("chat_id", TELEGRAM_CHAT_ID);
-                formData.append("document", file);
-
-                await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument`, {
-                    method: "POST", body: formData
-                });
-
-                db.collection("chats").add({
-                    room: currentRoom,
-                    user: currentUser,
-                    message: file.name,
-                    type: "pdf",
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                });
             } else {
-                alert("कृपया फक्त फोटो किंवा PDF फाईल निवडा!");
+                alert("कृपया फक्त फोटो फाईल निवडा! PDF लिंकसाठी वरील ड्राईव्ह पर्यायाचा वापर करा.");
             }
         } catch (error) {
             console.error("Upload Error: ", error);
@@ -441,12 +450,11 @@
     }
 
     /* =======================================================
-       ७. ॲडमिन कंट्रोल्स, ऑटो-डिलीट आणि डेटा क्लिनअप
+       ६. ॲडमिन सेटिंग्ज आणि क्लिनअप
        ======================================================= */
     function openAdminSettings() { document.getElementById("adminModal").style.display = "flex"; }
     function closeAdminSettings() { document.getElementById("adminModal").style.display = "none"; }
 
-    // ॲडमिन सेटिंग्ज अपडेट करणे
     function updateSettings() {
         const allowDelete = document.getElementById("toggleMemberDelete").checked;
         const showPhotos = document.getElementById("toggleProfilePhotos").checked;
@@ -459,7 +467,16 @@
         }, { merge: true });
     }
 
-    // ऑटो-डिलीट बॅकग्राउंड चेक
+    function saveDriveUrl() {
+        const url = document.getElementById("driveUrlInput").value.trim();
+        if(url) {
+            db.collection("settings").doc("config").set({
+                pdfDriveUrl: url
+            }, { merge: true });
+            alert("गूगल ड्राईव्ह / टेलिग्राम लिंक सेव्ह झाली!");
+        }
+    }
+
     function performAutoDeleteCheck(days) {
         const cutoffDate = new Date();
         cutoffDate.setDate(cutoffDate.getDate() - days);
@@ -473,11 +490,9 @@
                     snapshot.forEach((doc) => batch.delete(doc.ref));
                     batch.commit();
                 }
-            })
-            .catch(err => console.error("Auto Delete Error: ", err));
+            });
     }
 
-    // मॅन्युअल बल्क क्लिनअप (३०, ६०, ९०, २०० दिवस जुने मेसेज)
     function manualCleanup(days) {
         if(confirm(`तुम्हाला खरोखरच ${days} दिवसांपेक्षा जुने सर्व मेसेजेस डिलीट करायचे आहेत का?`)) {
             const cutoffDate = new Date();
@@ -488,33 +503,25 @@
                 .get()
                 .then((snapshot) => {
                     if (snapshot.empty) {
-                        alert(`${days} दिवसांपेक्षा जुना एकही मेसेज सापडला नाही.`);
+                        alert(`${days} दिवसांपेक्षा जुना मेसेज सापडला नाही.`);
                         return;
                     }
                     const batch = db.batch();
                     snapshot.forEach((doc) => batch.delete(doc.ref));
                     return batch.commit();
                 })
-                .then(() => {
-                    alert(`${days} दिवसांपेक्षा जुने सर्व मेसेजेस यशस्वीरीत्या डिलीट झाले!`);
-                })
-                .catch((err) => {
-                    console.error(err);
-                    alert("मेसेज डिलीट करताना त्रुटी आली!");
-                });
+                .then(() => alert(`${days} दिवसांपेक्षा जुने सर्व मेसेजेस यशस्वीरीत्या डिलीट झाले!`));
         }
     }
 
-    // सिंगल मेसेज डिलीट करणे
     function deleteSingleMessage(docId) {
         if(confirm("हा मेसेज डिलीट करायचा आहे का?")) {
             db.collection("chats").doc(docId).delete();
         }
     }
 
-    // संपूर्ण चालू रूम एकाच वेळी रिकामी करणे
     function deleteAllMessages() {
-        if(confirm(`तुम्हाला खरोखर संपूर्ण रूम (${currentRoom}) मधील सर्व मेसेज डिलीट करायचे आहेत का?`)) {
+        if(confirm(`तुम्हाला खरोखर संपूर्ण रूम मधील सर्व मेसेज डिलीट करायचे आहेत का?`)) {
             db.collection("chats").where("room", "==", currentRoom).get()
             .then((querySnapshot) => {
                 const batch = db.batch();
