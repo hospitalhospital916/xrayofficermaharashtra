@@ -3643,8 +3643,11 @@
         // ==========================================================
         // REALTIME LIVE CHAT ENGINE (WHATSAPP STYLE)
         // ==========================================================
-       window.initLiveChatEngine = () => {
-    // chat.html फाईल iframe द्वारे थेट उघडत असल्यामुळे येथे अतिरिक्त कोडची गरज नाही.
+    window.initLiveChatEngine = () => {
+    const chatFrame = document.querySelector('#tab-chat iframe');
+    if (chatFrame) {
+        chatFrame.src = chatFrame.src; // चॅट विंडो रिफ्रेश / सिंक करण्यासाठी
+    }
 };
 
         // ==========================================================
