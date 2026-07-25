@@ -1964,6 +1964,314 @@
         };
 
         // ==========================================================
+        // 1. MEMBER LOGIN ENABLE/DISABLE & CREDENTIALS EMAIL/PDF ENGINE
+        // ==========================================================
+        window.toggleMemberLoginStatus = async function(memberId, currentStatus) {
+            let newStatus = !currentStatus;
+            let m = window.membersData.find(x => x.id === memberId);
+            let nameStr = m ? m.name : memberId;
+
+            Swal.fire({title: 'स्टेटस बदलत आहे...', didOpen: () => Swal.showLoading()});
+            try {
+                await updateDoc(doc(db, "members", memberId), { loginEnabled: newStatus });
+                await window.logAdminActivity(`Member Login ${newStatus ? 'Enabled' : 'Disabled'} for: ${nameStr}`);
+                Swal.fire('यशस्वी', `सदस्य लॉगिन ${newStatus ? 'चालू (Active)' : 'बंद (Disabled)'} करण्यात आले!`, 'success');
+                loadData();
+            } catch(e) { Swal.fire('Error', e.message, 'error'); }
+        };
+
+        window.openSendCredentialsModal = async function(memberId) {
+            let m = window.membersData.find(x => x.id === memberId);
+            if(!m) return;
+
+            const { value: formValues } = await Swal.fire({
+                title: `🔐 पासवर्ड बदला व क्रेडेंशियल्स पाठवा`,
+                html: `
+                    <div style="text-align:left; font-size:0.9rem;">
+                        <p><b>सदस्य:</b> ${m.name}</p>
+                        <p><b>ईमेल:</b> ${m.email || 'उपलब्ध नाही'}</p>
+                        <p><b>मोबाईल:</b> ${m.mobile || '-'}</p>
+                        <hr style="margin:10px 0;">
+                        <label><b>नवीन पासवर्ड प्रविष्ट करा:</b></label>
+                        <input id="cred_new_pass" class="swal2-input" value="${m.pass || 'Xray@2026'}" placeholder="नवीन पासवर्ड">
+                    </div>
+                `,
+                focusConfirm: false,
+                showCancelButton: true,
+                confirmButtonText: 'ईमेल व PDF पाठवा',
+                cancelButtonText: 'रद्द करा',
+                preConfirm: () => {
+                    let p = document.getElementById('cred_new_pass').value.trim();
+                    if(!p) { Swal.showValidationMessage('पासवर्ड रिकामा असू शकत नाही.'); return false; }
+                    return { pass: p };
+                }
+            });
+
+            if (formValues) {
+                let newPass = formValues.pass;
+                await updateDoc(doc(db, "members", memberId), { pass: newPass });
+                await window.logAdminActivity(`Updated Password & Sent Credentials for: ${m.name}`);
+
+                // Generate Official Printable PDF Body for Credentials
+                let credHtml = `
+                    <div style="padding:30px; font-family:'Mukta',sans-serif; border:3px solid #0B3D91; border-radius:12px;">
+                        <h2 style="color:#0B3D91; text-align:center;">क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना महाराष्ट्र राज्य</h2>
+                        <h3 style="text-align:center;">अधिकृत सदस्य लॉगिन क्रेडेंशियल्स</h3>
+                        <hr>
+                        <p style="font-size:1.1rem;"><b>आदरणीय सभासद,</b> ${m.name}</p>
+                        <p>आपल्या संघटनेच्या अधिकृत पोर्टलवर लॉगिन करण्यासाठी खालील माहिती वापरावी:</p>
+                        <div style="background:#f0f4f8; padding:15px; border-radius:8px; font-size:1rem; margin:15px 0;">
+                            <p><b>लॉगिन ईमेल / आयडी:</b> ${m.email || m.mobile}</p>
+                            <p><b>पासवर्ड:</b> ${newPass}</p>
+                            <p><b>पोर्टल लिंक:</b> https://xrayunionmah.web.app</p>
+                        </div>
+                        <p style="color:#854d0e; font-size:0.85rem;"><b>सूचना:</b> सुरक्षेच्या कारणास्तव आपला पासवर्ड कोणासही शेअर करू नये.</p>
+                    </div>
+                `;
+
+                let win = window.open('', '_blank');
+                win.document.write(`<html><head><title>Credentials_${m.name}</title></head><body>${credHtml}</body></html>`);
+                setTimeout(() => win.print(), 400);
+
+                if(m.email) {
+                    let subject = encodeURIComponent("क्ष-किरण वैज्ञानिक अधिकारी संघटना - लॉगिन क्रेडेंशियल्स");
+                    let body = encodeURIComponent(`नमस्कार ${m.name},\n\nआपला संघटना लॉगिन पासवर्ड: ${newPass}\nवेबसाईट: https://xrayunionmah.web.app\n\nधन्यवाद!`);
+                    window.location.href = `mailto:${m.email}?subject=${subject}&body=${body}`;
+                }
+            }
+        };
+
+        // ==========================================================
+        // 2. ENFORCED COLUMN & FILTER VISIBILITY RULES ENGINE
+        // ==========================================================
+        window.applyColumnVisibilityRules = function() {
+            let showMob = document.getElementById('col_show_mobile')?.checked ?? true;
+            let showSev = document.getElementById('col_show_sevarth')?.checked ?? true;
+            let showCat = document.getElementById('col_show_category')?.checked ?? true;
+            let showJoin = document.getElementById('col_show_joindate')?.checked ?? true;
+            let showTrans = document.getElementById('col_show_transfers')?.checked ?? true;
+
+            // Save Settings to Firestore
+            setDoc(doc(db, "settings", "column_visibility"), {
+                showMobile: showMob, showSevarth: showSev, showCategory: showCat,
+                showJoinDate: showJoin, showTransfers: showTrans
+            });
+
+            window.renderOtherStaff();
+            window.renderMembers();
+        };
+
+        // ==========================================================
+        // 3. MEETING CALENDAR DASHBOARD WIDGET & POPUP NOTIFICATIONS
+        // ==========================================================
+        window.renderDashboardMeetingCalendar = async function() {
+            try {
+                let snap = await getDocs(query(collection(db, "meeting_calendar"), orderBy("createdAt", "desc")));
+                let meetings = [];
+                snap.forEach(d => meetings.push({ id: d.id, ...d.data() }));
+
+                let upcomingBox = document.getElementById('dashboard_upcoming_meetings_box');
+                if(!upcomingBox) {
+                    upcomingBox = document.createElement('div');
+                    upcomingBox.id = 'dashboard_upcoming_meetings_box';
+                    let dashPanel = document.getElementById('tab-dash');
+                    if(dashPanel) dashPanel.insertBefore(upcomingBox, dashPanel.firstChild);
+                }
+
+                if (meetings.length > 0) {
+                    let latestMeet = meetings[0];
+                    upcomingBox.innerHTML = `
+                        <div style="background: linear-gradient(135deg, #1e293b, #0B3D91); color:white; padding:15px 20px; border-radius:12px; margin-bottom:20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                            <div>
+                                <span class="badge bg-warning"><i class="fa fa-bell"></i> आगामी बैठक सूचना</span>
+                                <h3 style="margin:5px 0; font-size:1.2rem;">${latestMeet.title}</h3>
+                                <p style="font-size:0.88rem; opacity:0.9;"><i class="fa fa-clock"></i> दिनांक व वेळ: ${new Date(latestMeet.datetime).toLocaleString('mr-IN')}</p>
+                            </div>
+                            <button class="btn-action bg-success" onclick="openTab('tab-assoc-hub')" style="padding:10px 18px; font-size:0.95rem;"><i class="fa fa-video"></i> मीटिंग जॉईन करा / अटेंडन्स</button>
+                        </div>
+                    `;
+
+                    // Check for Active Online Meeting Banner Link
+                    let meetSnap = await getDocs(collection(db, "settings"));
+                    meetSnap.forEach(d => {
+                        if(d.id === "online_meeting" && d.data().active) {
+                            Swal.fire({
+                                title: '🎥 ऑनलाईन मीटिंग सुरू आहे!',
+                                text: latestMeet.title,
+                                icon: 'info',
+                                showCancelButton: true,
+                                confirmButtonText: 'मीटिंग जॉईन करा',
+                                cancelButtonText: 'नंतर'
+                            }).then((res) => {
+                                if(res.isConfirmed) window.open(d.data().link, '_blank');
+                            });
+                        }
+                    });
+                }
+            } catch(e) { console.error(e); }
+        };
+
+        // ==========================================================
+        // 4. MEMBER LOGIN MANAGEMENT & TABS REORDERING
+        // ==========================================================
+        window.memberTabsList = [
+            { id: "m_profile", name: "👤 माझे प्रोफाईल & आई-कार्ड", order: 1 },
+            { id: "m_folders", name: "📁 संघटना फोल्डर्स & परिपत्रके", order: 2 },
+            { id: "m_template", name: "✍️ ऑटो-लेटर जनरेटर", order: 3 },
+            { id: "m_grievance", name: "📑 माझी तक्रार नोंदवा", order: 4 },
+            { id: "m_poll", name: "🗳️ ऑनलाईन पोल मत नोंदवा", order: 5 },
+            { id: "m_chat", name: "💬 Live Chat थेट संवाद", order: 6 }
+        ];
+
+        window.moveMemberTabOrder = async function(index, direction) {
+            let targetIndex = direction === 'up' ? index - 1 : index + 1;
+            if(targetIndex < 0 || targetIndex >= window.memberTabsList.length) return;
+
+            let temp = window.memberTabsList[index];
+            window.memberTabsList[index] = window.memberTabsList[targetIndex];
+            window.memberTabsList[targetIndex] = temp;
+
+            await setDoc(doc(db, "settings", "member_tabs_order"), { tabs: window.memberTabsList });
+            window.renderMemberTabsOrder();
+        };
+
+        window.renderMemberTabsOrder = async function() {
+            let snap = await getDocs(collection(db, "settings"));
+            snap.forEach(d => {
+                if(d.id === "member_tabs_order" && d.data().tabs) {
+                    window.memberTabsList = d.data().tabs;
+                }
+            });
+
+            let tbody = document.getElementById('memberTabsOrderTableBody');
+            if(!tbody) return;
+
+            tbody.innerHTML = window.memberTabsList.map((t, i) => `
+                <tr>
+                    <td><b>${t.name}</b></td>
+                    <td><span class="badge bg-primary">स्थान: ${i+1}</span></td>
+                    <td class="no-print">
+                        <button class="btn-order" onclick="moveMemberTabOrder(${i}, 'up')"><i class="fa fa-arrow-up"></i> वर</button>
+                        <button class="btn-order" onclick="moveMemberTabOrder(${i}, 'down')"><i class="fa fa-arrow-down"></i> खाली</button>
+                    </td>
+                </tr>
+            `).join('');
+        };
+
+        // ==========================================================
+        // 5. INDEX PAGE EDITABLE CONTENT & TABS ENGINE
+        // ==========================================================
+        window.editIndexTabTitle = async function(id, oldTitle) {
+            const { value: newTitle } = await Swal.fire({
+                title: 'टॅबचे नाव बदला', input: 'text', inputValue: oldTitle, showCancelButton: true
+            });
+            if(newTitle) {
+                await updateDoc(doc(db, "index_tabs", id), { title: newTitle });
+                window.renderIndexMgmt();
+            }
+        };
+
+        window.renderIndexMgmt = async function() {
+            let snap = await getDocs(query(collection(db, "index_tabs"), orderBy("order", "asc")));
+            let list = []; snap.forEach(d => list.push({id: d.id, ...d.data()}));
+
+            let tbody = document.getElementById('indexMgmtTableBody'); if(!tbody) return;
+            tbody.innerHTML = list.map((x, i) => `
+                <tr>
+                    <td>${i+1}</td>
+                    <td><b>${x.title}</b></td>
+                    <td>${x.fileUrl ? `<a href="${x.fileUrl}" target="_blank" class="badge bg-success">पहा / फाईल</a>` : 'नाही'}</td>
+                    <td><small>${x.date||'-'}</small></td>
+                    <td class="no-print">
+                        <button class="btn-action bg-primary" onclick="editIndexTabTitle('${x.id}', '${x.title.replace(/'/g, "\\'")}')"><i class="fa fa-pen"></i> एडिट</button>
+                        <button class="btn-action bg-danger" onclick="deleteIndexTab('${x.id}')"><i class="fa fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('') || '<tr><td colspan="5" style="text-align:center;">टॅब्स उपलब्ध नाहीत.</td></tr>';
+        };
+
+        // ==========================================================
+        // 6. TEMPLATE BUILDER FULL PLACEHOLDER ENGINE ({नाव}, {पद}, {स्थान})
+        // ==========================================================
+        window.renderTemplateBuilderList = () => {
+            let tbody = document.getElementById('templateBuilderListBody'); if(!tbody) return;
+
+            tbody.innerHTML = window.templateBuilderData.map((t) => `
+                <tr>
+                    <td><input type="checkbox" class="tb-chk" value="${t.id}"></td>
+                    <td><small>${new Date(t.createdAt||Date.now()).toLocaleDateString('mr-IN')}</small></td>
+                    <td><b>${t.title}</b></td>
+                    <td>${t.memberName || 'ॲडमिन / सिस्टीम'}</td>
+                    <td><span class="badge bg-info">${t.source || 'Auto'}</span></td>
+                    <td class="no-print">
+                        <button class="btn-action bg-info" onclick="previewTBLetter('${t.id}')"><i class="fa fa-eye"></i> प्रिव्ह्यू</button>
+                        <button class="btn-action bg-primary" onclick="downloadPDFTBLetter('${t.id}')"><i class="fa fa-file-pdf"></i> A4 PDF</button>
+                        <button class="btn-action bg-danger" onclick="deleteTBLetter('${t.id}')"><i class="fa fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('') || '<tr><td colspan="6" style="text-align:center;">टेम्प्लेट फॉरमॅट्स उपलब्ध नाहीत.</td></tr>';
+        };
+
+        window.previewTBLetter = (id) => {
+            let item = window.templateBuilderData.find(x => x.id === id); if(!item) return;
+            
+            // Dynamic Placeholder Replacement Logic
+            let sampleName = currentLoggedInAdminName;
+            let samplePost = currentLoggedInAdminDesignation;
+            let sampleWork = "जिल्हा रुग्णालय, लातूर";
+
+            let processedBody = item.body
+                .replace(/{नाव}/g, sampleName)
+                .replace(/{पद}/g, samplePost)
+                .replace(/{स्थान}/g, sampleWork)
+                .replace(/{रुग्णालय}/g, sampleWork)
+                .replace(/{दिनांक}/g, new Date().toLocaleDateString('mr-IN'));
+
+            let previewWin = window.open('', '_blank');
+            previewWin.document.write(`
+                <html><head><title>Letter Preview</title><style>body{font-family:'Mukta',sans-serif; background:#525659; display:flex; justify-content:center; padding:20px;}</style></head>
+                <body>
+                    <div style="width:210mm; min-height:297mm; background:#fff; padding:${item.topMargin||120}mm ${item.rightMargin||20}mm ${item.bottomMargin||20}mm ${item.leftMargin||20}mm; box-sizing:border-box;">
+                        <h3 style="text-align:center; text-decoration:underline;">${item.subject||'अर्ज'}</h3>
+                        <div style="font-size:15px; line-height:1.8; text-align:justify; white-space:pre-wrap; margin-top:20px;">${processedBody}</div>
+                    </div>
+                </body></html>
+            `);
+        };
+
+        // ==========================================================
+        // 7. REALTIME LIVE CHAT UNREAD BADGE & CHAT ROOM INITIALIZER
+        // ==========================================================
+        window.initLiveChatEngine = () => {
+            const chatQ = query(collection(db, "chat_messages"), orderBy("timestamp", "asc"));
+            onSnapshot(chatQ, (snapshot) => {
+                window.chatMessagesData = [];
+                snapshot.forEach(d => window.chatMessagesData.push({ id: d.id, ...d.data() }));
+
+                let badge = document.getElementById('chatUnreadCount');
+                if(badge) badge.innerText = window.chatMessagesData.length;
+
+                window.renderChatMessages();
+                window.renderChatUsersList();
+            });
+        };
+
+        window.renderChatUsersList = () => {
+            let uList = document.getElementById('chatUserList'); if(!uList) return;
+            let html = window.membersData.slice(0, 15).map(m => `
+                <div style="padding:8px; border-bottom:1px solid #eee; cursor:pointer; font-size:0.85rem;" onclick="switchChatRoom('${m.name.replace(/'/g, "\\'")}')">
+                    <b>${m.name}</b><br><small style="color:gray;">${m.district||'-'}</small>
+                </div>
+            `).join('');
+            uList.innerHTML = html;
+        };
+
+        // AUTO-TRIGGER DASHBOARD CALENDAR WIDGET ON LOAD
+        setTimeout(() => {
+            window.renderDashboardMeetingCalendar();
+        }, 1000);
+
+        // ==========================================================
         // UI UTILITIES & NAVIGATION
         // ==========================================================
         window.navigateToMainIndex = function() {
