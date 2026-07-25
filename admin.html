@@ -173,17 +173,95 @@
         .icard-img-main.square-photo { border-radius: 8px !important; }
         .icard-info-list { text-align: left; font-size: 0.83rem; padding: 0 15px; line-height: 1.4; color: #333; }
 
-        /* Floating Animated Live Chat Launcher Widget */
-        #floatingLiveChatWidget { position: fixed; bottom: 25px; right: 25px; z-index: 9990; }
-        .chat-floating-btn { width: 62px; height: 62px; background: linear-gradient(135deg, #25D366, #128C7E); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.8rem; box-shadow: 0 10px 25px rgba(37,211,102,0.5); cursor: pointer; transition: all 0.3s ease; position: relative; animation: pulseChat 2s infinite; }
-        .chat-floating-btn:hover { transform: scale(1.1); box-shadow: 0 15px 30px rgba(37,211,102,0.7); }
-        .chat-unread-badge { position: absolute; top: -2px; right: -2px; background: var(--danger); color: white; border-radius: 50%; width: 22px; height: 22px; font-size: 0.75rem; font-weight: 800; display: flex; justify-content: center; align-items: center; border: 2px solid white; }
+    /* 🚀 नवीन आणि अत्यंत आकर्षक (भारी) फ्लोटिंग चॅट बटण CSS */
+#floatingLiveChatWidget { 
+    position: fixed; 
+    bottom: 25px; 
+    right: 20px; 
+    z-index: 9990; 
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
 
-        @keyframes pulseChat {
-            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
-            70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
-        }
+/* "चॅट करा" आकर्षक लेबल */
+.chat-pill-label {
+    background: linear-gradient(135deg, #0B3D91, #07275e);
+    color: #ffffff;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 800;
+    box-shadow: 0 6px 18px rgba(11, 61, 145, 0.35);
+    border: 1.5px solid #f39c12;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    animation: bounceLeft 2s infinite;
+}
+
+/* ३D ग्लोईंग आयकॉन बटण */
+.chat-floating-btn { 
+    width: 62px; 
+    height: 62px; 
+    background: linear-gradient(135deg, #0B3D91, #25D366); 
+    color: white; 
+    border-radius: 50%; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    font-size: 1.8rem; 
+    box-shadow: 0 8px 25px rgba(37, 211, 102, 0.5); 
+    position: relative; 
+    border: 3px solid #ffffff;
+    animation: pulseGlow 2s infinite; 
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.chat-floating-btn:hover { 
+    transform: scale(1.12) rotate(-6deg); 
+    box-shadow: 0 12px 30px rgba(37, 211, 102, 0.7); 
+}
+
+/* लाईव्ह बॅज (Live Badge) */
+.chat-unread-badge { 
+    position: absolute; 
+    top: -3px; 
+    right: -3px; 
+    background: #ef4444; 
+    color: white; 
+    border-radius: 12px; 
+    padding: 2px 6px; 
+    font-size: 0.65rem; 
+    font-weight: 800; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    border: 2px solid white; 
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    letter-spacing: 0.5px;
+}
+
+/* प्रकाश टाकणारे लाईव्ह अ‍ॅनिमेशन */
+@keyframes pulseGlow {
+    0% { box-shadow: 0 0 0 0 rgba(11, 61, 145, 0.7); }
+    70% { box-shadow: 0 0 0 16px rgba(37, 211, 102, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(11, 61, 145, 0); }
+}
+
+@keyframes bounceLeft {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(-4px); }
+}
+
+/* मोबाईल व्ह्यूमध्ये मेसेज बारच्या थोडे वर बसवणे */
+@media (max-width: 768px) {
+    #floatingLiveChatWidget {
+        bottom: 20px;
+        right: 15px;
+    }
+}
 
         /* A4 Portrait Print Styles */
         @media print {
