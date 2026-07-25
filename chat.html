@@ -157,9 +157,9 @@
 
             <!-- २ चॅट रूम्स (फक्त ॲडमिनला दिसतील) -->
             <div class="tabs" id="tabsContainer">
-                <button id="tab-all" class="active" onclick="switchRoom('all_chat')">👥 सदस्य + ॲडमिन चॅट</button>
-                <button id="tab-admin" onclick="switchRoom('admin_chat')">🔒 ॲडमिन प्रायव्हेट चॅट</button>
-            </div>
+    <button id="tab-all" class="active" onclick="switchRoom('GroupAll')">👥 सदस्य + ॲडमिन चॅट</button>
+    <button id="tab-admin" onclick="switchRoom('admin_chat')">🔒 ॲडमिन प्रायव्हेट चॅट</button>
+</div>
         </div>
     </div>
 
@@ -329,19 +329,17 @@
     const IMGBB_API_KEY = "9ebc935a853cef7cef4ab67692b3048a";
     const SUPER_ADMIN_EMAIL = "hangemahesh498@gmail.com";
 
-    // URL parameters मधून सदस्याची माहिती घेणे (उदा. chat.html?name=अविनाश&mobile=9822001122&post=वैज्ञानिक_अधिकारी)
     const urlParams = new URLSearchParams(window.location.search);
     let currentUser = urlParams.get('name') || "वैज्ञानिक अधिकारी"; 
     let currentUserMobile = urlParams.get('mobile') || "98xxxxxx00";
     let currentUserPost = urlParams.get('post') || "गट-क सदस्य";
     let currentUserPhoto = urlParams.get('photo') || "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
     
-    let currentRole = "member"; // 'super_admin', 'sub_admin', 'member'
-    let currentRoom = "all_chat"; 
+    let currentRole = "member"; 
+    let currentRoom = "GroupAll"; // ॲडमिन पॅनेलच्या सुसंगततेसाठी 'GroupAll' केले
     let unsubscribe = null;
     let allLoadedMessages = [];
 
-    // ग्लोबल ॲप सेटिंग्ज
     let appSettings = {
         allowMemberDelete: true,
         showProfilePhotos: true,
@@ -503,13 +501,13 @@
     }
 
     /* =======================================================
-       ५. चॅट रूम्स व मेसेज लोड/डिस्पले
+       ५. चॅट रूम्स व मेसेज लोड/डिस्पले ('chat_messages' वापरले)
        ======================================================= */
     function switchRoom(room) {
         currentRoom = room;
         document.getElementById("tab-all").classList.remove("active");
         document.getElementById("tab-admin").classList.remove("active");
-        if(room === "all_chat") document.getElementById("tab-all").classList.add("active");
+        if(room === "GroupAll") document.getElementById("tab-all").classList.add("active");
         if(room === "admin_chat") document.getElementById("tab-admin").classList.add("active");
 
         loadMessages(room);
@@ -518,7 +516,8 @@
     function loadMessages(room) {
         if (unsubscribe) unsubscribe();
 
-        unsubscribe = db.collection("chats")
+        // ॲडमिन पॅनेलच्या 'chat_messages' मधून मेसेज लोड करणे
+        unsubscribe = db.collection("chat_messages")
             .where("room", "==", room)
             .orderBy("timestamp")
             .onSnapshot((snapshot) => {
@@ -535,19 +534,21 @@
         chatBox.innerHTML = "";
 
         messages.forEach((data) => {
-            const isMyMsg = (data.user === currentUser);
+            const userName = data.senderName || data.user || "वैज्ञानिक अधिकारी";
+            const userPost = data.senderRole || data.userPost || "गट-क सदस्य";
+            const isMyMsg = (userName === currentUser || data.user === currentUser);
             
             const wrapper = document.createElement("div");
             wrapper.className = `message-wrapper ${isMyMsg ? "my-msg-wrapper" : ""}`;
 
-            // १. सदस्य DP (प्रोफाईल फोटो)
+            // १. सदस्य DP
             if (appSettings.showProfilePhotos) {
                 const avatar = document.createElement("div");
                 avatar.className = "avatar";
                 if (data.userPhoto) {
                     avatar.innerHTML = `<img src="${data.userPhoto}" alt="DP">`;
                 } else {
-                    avatar.innerText = data.user ? data.user.charAt(0).toUpperCase() : "U";
+                    avatar.innerText = userName ? userName.charAt(0).toUpperCase() : "U";
                 }
                 wrapper.appendChild(avatar);
             }
@@ -556,24 +557,26 @@
             msgDiv.className = "message";
 
             // २. सदस्याचे नाव, मोबाईल व पद
-            let subInfoHtml = appSettings.showMobilePost && data.userMobile ? `<br><span class="msg-subinfo"><i class="fa-solid fa-phone"></i> ${data.userMobile} (${data.userPost || 'सदस्य'})</span>` : '';
-            let contentHtml = `<div class="msg-user"><span>${data.user}</span></div>${subInfoHtml}`;
+            let subInfoHtml = appSettings.showMobilePost && data.userMobile ? `<br><span class="msg-subinfo"><i class="fa-solid fa-phone"></i> ${data.userMobile} (${userPost})</span>` : `<br><span class="msg-subinfo">(${userPost})</span>`;
+            let contentHtml = `<div class="msg-user"><span>${userName}</span></div>${subInfoHtml}`;
+
+            const msgText = data.text || data.message || "";
 
             // ३. मेसेज प्रकार (टेक्स्ट / इमेज)
-            if (data.type === "text") {
-                contentHtml += `<div style="margin-top:4px;">${data.message}</div>`;
-            } else if (data.type === "image") {
-                let downloadBtnHtml = appSettings.enableDownload ? `<a href="${data.message}" target="_blank" download="Photo_${Date.now()}.jpg" class="img-download-btn"><i class="fa-solid fa-download"></i> डाऊनलोड फोटो</a>` : '';
+            if (data.type === "image") {
+                let downloadBtnHtml = appSettings.enableDownload ? `<a href="${msgText}" target="_blank" download="Photo_${Date.now()}.jpg" class="img-download-btn"><i class="fa-solid fa-download"></i> डाऊनलोड फोटो</a>` : '';
                 contentHtml += `
                     <div class="msg-image-box">
-                        <img src="${data.message}" class="msg-image" alt="Photo" onclick="viewFullImage('${data.message}')">
+                        <img src="${msgText}" class="msg-image" alt="Photo" onclick="viewFullImage('${msgText}')">
                         ${downloadBtnHtml}
                     </div>
                 `;
+            } else {
+                contentHtml += `<div style="margin-top:4px;">${msgText}</div>`;
             }
 
             // ४. टाइमस्टॅम्प
-            const timeStr = data.timestamp ? new Date(data.timestamp.toDate()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '';
+            const timeStr = data.time || (data.timestamp ? new Date(data.timestamp.toDate()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '');
             contentHtml += `<div class="msg-time">${timeStr}</div>`;
 
             // ५. डिलीट बटण
@@ -609,16 +612,17 @@
 
     function filterMessages() {
         const query = document.getElementById("searchInput").value.toLowerCase();
-        const filtered = allLoadedMessages.filter(m => 
-            (m.message && m.message.toLowerCase().includes(query)) || 
-            (m.user && m.user.toLowerCase().includes(query)) ||
-            (m.userMobile && m.userMobile.includes(query))
-        );
+        const filtered = allLoadedMessages.filter(m => {
+            const txt = (m.text || m.message || '').toLowerCase();
+            const usr = (m.senderName || m.user || '').toLowerCase();
+            const mob = m.userMobile || '';
+            return txt.includes(query) || usr.includes(query) || mob.includes(query);
+        });
         renderMessages(filtered);
     }
 
     /* =======================================================
-       ६. मेसेज व फोटो अपलोड (ImgBB API Key)
+       ६. मेसेज व फोटो अपलोड (ॲडमिन व चॅट सुसंगत डेटा फॉरमॅट)
        ======================================================= */
     function handleEnter(e) { if(e.key === 'Enter') sendTextMessage(); }
 
@@ -627,14 +631,21 @@
         const text = input.value.trim();
         
         if (text) {
-            db.collection("chats").add({
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+            db.collection("chat_messages").add({
                 room: currentRoom,
+                senderName: currentUser,
                 user: currentUser,
-                userMobile: currentUserMobile,
+                senderRole: currentUserPost,
                 userPost: currentUserPost,
+                userMobile: currentUserMobile,
                 userPhoto: currentUserPhoto,
+                text: text,
                 message: text,
                 type: "text",
+                time: timeStr,
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
             });
             input.value = "";
@@ -658,14 +669,21 @@
                 const data = await response.json();
                 
                 if(data.success) {
-                    db.collection("chats").add({
+                    const now = new Date();
+                    const timeStr = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+                    db.collection("chat_messages").add({
                         room: currentRoom,
+                        senderName: currentUser,
                         user: currentUser,
-                        userMobile: currentUserMobile,
+                        senderRole: currentUserPost,
                         userPost: currentUserPost,
+                        userMobile: currentUserMobile,
                         userPhoto: currentUserPhoto,
-                        message: data.data.url, 
+                        text: data.data.url,
+                        message: data.data.url,
                         type: "image",
+                        time: timeStr,
                         timestamp: firebase.firestore.FieldValue.serverTimestamp()
                     });
                 } else {
@@ -683,7 +701,7 @@
     }
 
     /* =======================================================
-       ७. सुपर आणि सब-ॲडमिन टिक-बॉक्स सेव्ह करणे
+       ७. सुपर आणि सब-ॲडमिन सेटिंग्ज व क्लिनअप
        ======================================================= */
     function saveSubAdminPermissions() {
         if (currentRole !== "super_admin") return;
@@ -701,7 +719,7 @@
         db.collection("settings").doc("config").set({
             subAdminPerms: subAdminPerms
         }, { merge: true }).then(() => {
-            Swal.fire('सेव्ह झाले!', 'सब-ॲडमिन टिक-बॉक्स परवानग्या यशस्वीरीत्या सेव्ह झाल्या.', 'success');
+            Swal.fire('सेव्ह झाले!', 'सब-ॲडमिन टिक-बॉक्स परवानग्या सेव्ह झाल्या.', 'success');
         });
     }
 
@@ -735,7 +753,7 @@
         const cutoffDate = new Date();
         cutoffDate.setDate(cutoffDate.getDate() - days);
 
-        db.collection("chats")
+        db.collection("chat_messages")
             .where("timestamp", "<", firebase.firestore.Timestamp.fromDate(cutoffDate))
             .get()
             .then((snapshot) => {
@@ -760,7 +778,7 @@
                 const cutoffDate = new Date();
                 cutoffDate.setDate(cutoffDate.getDate() - days);
 
-                db.collection("chats")
+                db.collection("chat_messages")
                     .where("timestamp", "<", firebase.firestore.Timestamp.fromDate(cutoffDate))
                     .get()
                     .then((snapshot) => {
@@ -779,7 +797,7 @@
 
     function deleteSingleMessage(docId) {
         if(confirm("हा मेसेज डिलीट करायचा आहे का?")) {
-            db.collection("chats").doc(docId).delete();
+            db.collection("chat_messages").doc(docId).delete();
         }
     }
 
@@ -793,7 +811,7 @@
             cancelButtonText: 'रद्द करा'
         }).then((res) => {
             if (res.isConfirmed) {
-                db.collection("chats").where("room", "==", currentRoom).get()
+                db.collection("chat_messages").where("room", "==", currentRoom).get()
                 .then((querySnapshot) => {
                     const batch = db.batch();
                     querySnapshot.forEach((doc) => batch.delete(doc.ref));
