@@ -93,12 +93,12 @@
         .dist-badge { display: inline-flex; justify-content: space-between; align-items: center; width: 100%; background: rgba(0,0,0,0.25); font-size: 0.72rem; padding: 3px 6px; margin: 2px 0; border-radius: 4px; font-weight: 600;}
         .dist-badge .dist-count { background: #fff; color: #000; padding: 1px 5px; border-radius: 10px; font-weight: 800; font-size: 0.65rem;}
 
-        /* Custom Icon Folder Cards (As per User Image) */
-        .icon-service-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 25px; }
-        .icon-service-card { background: #1d528f; border-radius: 12px; padding: 22px 15px; text-align: center; color: white; box-shadow: 0 6px 15px rgba(0,0,0,0.15); cursor: pointer; transition: all 0.3s ease; position: relative; border: 1px solid rgba(255,255,255,0.2); }
-        .icon-service-card:hover { transform: translateY(-5px); background: #0B3D91; box-shadow: 0 10px 25px rgba(11,61,145,0.3); }
-        .icon-service-card i { font-size: 2.2rem; margin-bottom: 12px; color: #f39c12; display: block; }
-        .icon-service-card h4 { font-size: 1.05rem; font-weight: 700; letter-spacing: 0.3px; }
+        /* Custom Icon Service Cards */
+        .icon-service-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 18px; margin-bottom: 25px; }
+        .icon-service-card { background: #1d528f; border-radius: 12px; padding: 20px 15px; text-align: center; color: white; box-shadow: 0 5px 15px rgba(0,0,0,0.12); cursor: pointer; transition: all 0.3s ease; border: 1px solid rgba(255,255,255,0.2); }
+        .icon-service-card:hover { transform: translateY(-4px); background: #0B3D91; box-shadow: 0 8px 20px rgba(11,61,145,0.3); }
+        .icon-service-card i { font-size: 2.2rem; margin-bottom: 10px; color: #f39c12; display: block; }
+        .icon-service-card h4 { font-size: 1rem; font-weight: 700; }
 
         /* Controls & Tables */
         .form-row { display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px; align-items: flex-end;}
@@ -161,7 +161,7 @@
         .authority-box-grid label input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--primary); cursor: pointer; }
         .auth-section-title { font-size: 0.92rem; font-weight: 800; color: var(--primary); margin-top: 14px; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; border-bottom: 2px solid #e2e8f0; padding-bottom: 4px; }
 
-        /* Multi I-Card Layouts & Square Image Option */
+        /* Multi I-Card Layouts & Square Photo Support */
         .icard-card-box { width: 320px; height: 490px; border-radius: 12px; background: #fff; position: relative; overflow: hidden; padding: 0; text-align: center; margin: 10px auto; box-shadow: 0 5px 15px rgba(0,0,0,0.15); border: 2px solid var(--primary); }
         .icard-design-1 { border-color: #0B3D91; }
         .icard-design-1 .icard-head { background: #0B3D91; color: white; padding: 12px 10px; }
@@ -173,7 +173,7 @@
         .icard-img-main.square-photo { border-radius: 8px !important; }
         .icard-info-list { text-align: left; font-size: 0.83rem; padding: 0 15px; line-height: 1.4; color: #333; }
 
-        /* Floating Animated Live Chat Launcher */
+        /* Floating Animated Live Chat Launcher Widget */
         #floatingLiveChatWidget { position: fixed; bottom: 25px; right: 25px; z-index: 9990; }
         .chat-floating-btn { width: 62px; height: 62px; background: linear-gradient(135deg, #25D366, #128C7E); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.8rem; box-shadow: 0 10px 25px rgba(37,211,102,0.5); cursor: pointer; transition: all 0.3s ease; position: relative; animation: pulseChat 2s infinite; }
         .chat-floating-btn:hover { transform: scale(1.1); box-shadow: 0 15px 30px rgba(37,211,102,0.7); }
@@ -232,7 +232,7 @@
         </div>
     </div>
 
-    <!-- 3. MEMBER DATA-GATHERING POPUP MODAL -->
+    <!-- 3. MEMBER DATA GATHERING POPUP MODAL -->
     <div id="memberDataGatheringModal" class="custom-modal-overlay">
         <div class="custom-modal" style="max-width:650px;">
             <div class="custom-modal-header bg-purple">
@@ -240,17 +240,17 @@
                 <button onclick="closeModal('memberDataGatheringModal')" style="background:transparent; border:none; color:white; font-size:1.5rem; cursor:pointer;">&times;</button>
             </div>
             <div class="custom-modal-body">
-                <p style="color:var(--dark); font-weight:bold; margin-bottom:12px;" id="data_gather_prompt">कृपया खालील आवश्यक माहिती अपडेट करा:</p>
+                <p style="color:var(--dark); font-weight:bold; margin-bottom:12px;" id="data_gather_prompt">कृपया खालील आवश्यक माहिती भरून सबमिट करा:</p>
                 <form id="dataGatheringForm" onsubmit="saveMemberGatheredData(event)">
                     <div class="form-row">
-                        <div style="flex:1;"><label>जिल्ह्यातील एकूण आरोग्य संस्था:</label><input type="number" id="gather_institutes_cnt" class="form-control" required></div>
+                        <div style="flex:1;"><label>जिल्ह्यातील आरोग्य संस्था संख्या:</label><input type="number" id="gather_institutes_cnt" class="form-control" required></div>
                         <div style="flex:1;"><label>क्ष-किरण वैज्ञानिक अधिकारी संख्या:</label><input type="number" id="gather_xray_officers_cnt" class="form-control" required></div>
                     </div>
                     <div class="form-row">
                         <div style="flex:1;"><label>सध्याचे रुजू ठिकाण:</label><input type="text" id="gather_joining_place" class="form-control" required></div>
-                        <div style="flex:1;"><label>अंतर-मंडळ / नियमित बदली स्टेटस:</label><input type="text" id="gather_transfer_details" class="form-control"></div>
+                        <div style="flex:1;"><label>अंतर-मंडळ / बदली माहिती:</label><input type="text" id="gather_transfer_details" class="form-control"></div>
                     </div>
-                    <button type="submit" class="btn-save" style="width:100%; justify-content:center; margin-top:15px;"><i class="fa fa-paper-plane"></i> माहिती सादर करा</button>
+                    <button type="submit" class="btn-save" style="width:100%; justify-content:center; margin-top:15px;"><i class="fa fa-paper-plane"></i> माहिती सबमिट करा</button>
                 </form>
             </div>
         </div>
@@ -525,7 +525,7 @@
         </div>
     </div>
 
-    <!-- 8. MEMBER I-CARD MODAL (With Square Photo & President Note Option) -->
+    <!-- 8. MEMBER I-CARD MODAL -->
     <div id="memberICardOverlay" class="custom-modal-overlay">
         <div class="custom-modal" style="max-width:550px;">
             <div class="custom-modal-header">
@@ -642,15 +642,13 @@
         </div>
     </div>
 
-    <!-- 12. FLOATING LIVE CHAT WIDGET LAUNCHER -->
+    <!-- 12. FLOATING LIVE CHAT LAUNCHER WIDGET -->
     <div id="floatingLiveChatWidget" style="display:none;">
         <div class="chat-floating-btn" onclick="openTab('tab-chat')" title="💬 Live Chat (संवाद साधा)">
             <i class="fa fa-comments"></i>
             <span class="chat-unread-badge" id="chatUnreadCount">0</span>
         </div>
-    </div>
-
-    <!-- MAIN APP CONTENT CONTAINER -->
+    </div><!-- MAIN APP CONTENT CONTAINER -->
     <div id="app-content" style="display: none;">
         <div class="navbar">
             <div style="display:flex; align-items:center; gap:12px;">
@@ -674,7 +672,7 @@
             </div>
         </div>
 
-        <!-- NAVIGATION TAB MENU (22 TABS - EXPANDED & DYNAMIC) -->
+        <!-- NAVIGATION TAB MENU (ALL 22 TABS) -->
         <div class="tab-menu" id="mainTabMenu">
             <button class="tab-btn active" onclick="openTab('tab-dash')" data-perm="dashboard"><i class="fa fa-chart-pie"></i> डॅशबोर्ड</button>
             <button class="tab-btn" onclick="openTab('tab-members')" data-perm="members"><i class="fa fa-user-check"></i> सदस्य नियंत्रण</button>
@@ -698,7 +696,9 @@
             <button class="tab-btn" onclick="openTab('tab-member-logs')" data-perm="member_logs"><i class="fa fa-user-clock"></i> मेम्बर लॉग</button>
             <button class="tab-btn" id="btn-tab-recyclebin" onclick="openTab('tab-recyclebin')" data-perm="recyclebin"><i class="fa fa-trash-restore"></i> रिसायकल बिन</button>
             <button class="tab-btn" id="btn-settings" onclick="openTab('tab-settings')" style="display:none;"><i class="fa fa-sliders-h"></i> सेटिंग्ज व अधिकार</button>
-        </div><div class="container">
+        </div>
+
+        <div class="container">
             <!-- TAB 1: DASHBOARD -->
             <div id="tab-dash" class="tab-content active">
                 <div class="dash-cards-grid">
@@ -708,7 +708,7 @@
                     <div class="dash-card-mini" style="border-left-color: var(--warning);"><h3>फी भरलेले</h3><h2 id="cnt-paid">0</h2></div>
                 </div>
 
-                <!-- Custom Service Buttons (From User Provided Screenshot) -->
+                <!-- Custom Service Buttons (Matching Provided Image) -->
                 <h3 style="color:var(--primary); margin-bottom:12px; font-weight:800;"><i class="fa fa-wrench"></i> सदस्यांसाठी सेवा व quick ॲक्सेस कप्पे</h3>
                 <div class="icon-service-grid">
                     <div class="icon-service-card" onclick="openTab('tab-template-builder')">
@@ -725,7 +725,7 @@
                     </div>
                     <div class="icon-service-card" onclick="openTab('tab-letterpad')">
                         <i class="fa fa-radiation border"></i>
-                        <h4>TLD बॅज व शासकीय पत्रे</h4>
+                        <h4>TLD बॅज पत्र व शासकीय अर्ज</h4>
                     </div>
                 </div>
 
@@ -1109,7 +1109,7 @@
                 </div>
             </div>
 
-            <!-- TAB 8: DYNAMIC TEMPLATE BUILDER (NEW FEATURE) -->
+            <!-- TAB 8: DYNAMIC TEMPLATE BUILDER -->
             <div id="tab-template-builder" class="tab-content">
                 <div class="panel">
                     <div class="panel-header bg-primary" style="color:white;">
@@ -1332,7 +1332,7 @@
                         </table>
                     </div>
                 </div>
-            </div><!-- TAB 12: VOTING & POLL SYSTEM (REPLACED WITH DYNAMIC POLL SYSTEM) -->
+            </div><!-- TAB 12: VOTING & DYNAMIC POLL SYSTEM -->
             <div id="tab-voting" class="tab-content">
                 <div class="panel">
                     <div class="panel-header bg-purple" style="color:white;">
@@ -1365,11 +1365,11 @@
                             </div>
                             <div class="form-row">
                                 <div style="flex:1;">
-                                    <label>पर्याय ३ (Option 3 - optional):</label>
+                                    <label>पर्याय ३ (Option 3 - ऐच्छिक):</label>
                                     <input type="text" id="poll_opt3_input" class="form-control" placeholder="उदा. नाशिक">
                                 </div>
                                 <div style="flex:1;">
-                                    <label>पर्याय ४ (Option 4 - optional):</label>
+                                    <label>पर्याय ४ (Option 4 - ऐच्छिक):</label>
                                     <input type="text" id="poll_opt4_input" class="form-control" placeholder="उदा. नागपूर">
                                 </div>
                                 <button class="btn-action bg-success" onclick="createNewPollQuestion()" style="padding:10px 20px; align-self:flex-end;"><i class="fa fa-save"></i> पोल प्रसिद्ध करा</button>
@@ -1407,7 +1407,7 @@
                 </div>
             </div>
 
-            <!-- TAB 13: GRIEVANCE REDRESSAL SYSTEM (NEW FEATURE) -->
+            <!-- TAB 13: GRIEVANCE REDRESSAL SYSTEM -->
             <div id="tab-grievances" class="tab-content">
                 <div class="panel">
                     <div class="panel-header bg-danger" style="color:white;">
@@ -1446,7 +1446,7 @@
                 </div>
             </div>
 
-            <!-- TAB 14: INFORMATION GATHERING MODULE (NEW FEATURE) -->
+            <!-- TAB 14: INFORMATION GATHERING MODULE -->
             <div id="tab-info-gather" class="tab-content">
                 <div class="panel">
                     <div class="panel-header bg-purple" style="color:white;">
@@ -1482,7 +1482,7 @@
                 </div>
             </div>
 
-            <!-- TAB 15: ASSOCIATION WORK HUB (NEW FEATURE) -->
+            <!-- TAB 15: ASSOCIATION WORK HUB -->
             <div id="tab-assoc-hub" class="tab-content">
                 <div class="panel">
                     <div class="panel-header bg-primary" style="color:white;">
@@ -1551,7 +1551,7 @@
                 </div>
             </div>
 
-            <!-- TAB 16: INDEX MANAGEMENT (NEW FEATURE) -->
+            <!-- TAB 16: INDEX MANAGEMENT -->
             <div id="tab-index-mgmt" class="tab-content">
                 <div class="panel">
                     <div class="panel-header bg-dark" style="color:white;">
@@ -1579,7 +1579,7 @@
                 </div>
             </div>
 
-            <!-- TAB 17: MEMBER LOGIN MANAGEMENT (NEW FEATURE) -->
+            <!-- TAB 17: MEMBER LOGIN MANAGEMENT -->
             <div id="tab-member-mgmt" class="tab-content">
                 <div class="panel">
                     <div class="panel-header bg-purple" style="color:white;">
@@ -1607,7 +1607,7 @@
                 </div>
             </div>
 
-            <!-- TAB 18: LIVE CHAT SYSTEM (NEW FEATURE - WHATSAPP STYLE) -->
+            <!-- TAB 18: LIVE CHAT SYSTEM -->
             <div id="tab-chat" class="tab-content">
                 <div class="panel">
                     <div class="panel-header" style="background:#128C7E; color:white;">
@@ -1635,7 +1635,7 @@
                                     <small id="chatTargetStatus">Active</small>
                                 </div>
 
-                                <div id="chatMessagesBox" style="padding:15px; overflow-y:auto; flex:1; display:flex; flex-direction:column; gap:10px;">
+                                <div id="chatMessagesBox" style="padding:15px; overflow-y:auto; flex:1; display:flex; flex-direction:column; gap:10px; max-height:400px;">
                                     <!-- Dynamic Realtime Messages Render Here -->
                                 </div>
 
@@ -1733,9 +1733,9 @@
                     <div class="panel-header"><span><i class="fa fa-user-shield"></i> सुपर ॲडमिन सेटिंग्ज व सब-ॲडमिन अधिकार पॅनेल</span></div>
                     <div class="panel-body">
                         
-                        <!-- Column Visibility Settings for Member & Employee Tables -->
+                        <!-- Column Visibility Controls for Employee & Member Tables -->
                         <div style="background:#f8fafc; padding:15px; border-radius:8px; margin-bottom:20px; border-left:4px solid var(--primary);">
-                            <h4 style="color:var(--primary); margin-bottom:10px;"><i class="fa fa-table"></i> राज्यातील कर्मचारी टेबल कॉलम व फिल्टर दाखवण्याचे अधिकार</h4>
+                            <h4 style="color:var(--primary); margin-bottom:10px;"><i class="fa fa-table"></i> १. राज्यातील कर्मचारी टेबल कॉलम व फिल्टर दाखवण्याचे अधिकार (Display Checkboxes)</h4>
                             <div class="authority-box-grid">
                                 <label><input type="checkbox" id="col_show_mobile" checked> मोबाईल नंबर दाखवा</label>
                                 <label><input type="checkbox" id="col_show_sevarth" checked> सेवार्थ आयडी दाखवा</label>
@@ -1744,7 +1744,7 @@
                                 <label><input type="checkbox" id="col_show_transfers" checked> बदली ठिकाण दाखवा</label>
                             </div>
                             
-                            <h5 style="margin-top:12px; color:var(--dark);">लाइव्ह चॅट, पोल व टेम्प्लेट बिल्डर दाखवण्याचे सुपर ॲडमिन कंट्रोल:</h5>
+                            <h5 style="margin-top:14px; color:var(--dark); font-weight:bold;">२. लाईव्ह चॅट, पोल व टेम्प्लेट बिल्डर दाखवण्याचे सुपर ॲडमिन कंट्रोल:</h5>
                             <div class="authority-box-grid">
                                 <label><input type="checkbox" id="set_show_chat_admin" checked> ॲडमिनला Live Chat दाखवा</label>
                                 <label><input type="checkbox" id="set_show_chat_member" checked> सदस्याला Live Chat दाखवा</label>
@@ -1895,7 +1895,7 @@
         import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where, orderBy, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, sendPasswordResetEmail, browserSessionPersistence, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
         
-        // FIREBASE CONFIGURATION
+        // FIREBASE CONFIGURATION[cite: 3]
         const firebaseConfig = { 
             apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk", 
             authDomain: "xrayunionmah.firebaseapp.com", 
@@ -1905,16 +1905,16 @@
         const db = getFirestore(app); 
         const auth = getAuth(app);
         
-        const SUPER_ADMIN_EMAIL = "hangemahesh498@gmail.com";[cite: 1, 2]
+        const SUPER_ADMIN_EMAIL = "hangemahesh498@gmail.com";[cite: 3]
         let isSuperAdmin = false;
         let subAdminAccessRegion = "All"; 
         let subAdminPermissions = [];
         let subAdminsList = [];
 
-        let currentLoggedInAdminName = "महेश हांगे";[cite: 1, 2]
-        let currentLoggedInAdminDesignation = "मुख्य ॲडमिन";[cite: 1, 2]
+        let currentLoggedInAdminName = "महेश हांगे";[cite: 3]
+        let currentLoggedInAdminDesignation = "मुख्य ॲडमिन";[cite: 3]
 
-        const mandalData = {[cite: 1, 2]
+        const mandalData = {[cite: 3]
             "पुणे मंडळ": ["पुणे", "सातारा", "सोलापूर"],
             "नागपूर मंडळ": ["नागपूर", "भंडारा", "वर्धा", "गोंदिया", "चंद्रपूर", "गडचिरोली"],
             "नाशिक मंडळ": ["नाशिक", "अहमदनगर", "धुळे", "जळगाव", "नंदुरबार"],
@@ -1925,29 +1925,46 @@
             "ठाणे मंडळ": ["ठाणे", "पालघर", "रायगड", "मुंबई शहर", "मुंबई उपनगर"]
         };
 
-        let membersData = [], otherStaffData = [], committeeData = [], galleryData = [], lettersData = [], memberFoldersData = [], memberFilesData = [], pollsData = [], grievancesData = [], infoGatherData = [], assocMeetingsData = [], indexTabsData = [], templateBuilderData = [], chatMessagesData = [], recycleBinData = [];
-        let lpTemplatesData = [null, null]; // Strictly 2 Design Slots
-        let lpSignaturesData = [[cite: 1, 2]
+        // GLOBAL DATA CONTAINERS
+        window.membersData = [];
+        window.otherStaffData = [];
+        window.committeeData = [];
+        window.galleryData = [];
+        window.lettersData = [];
+        window.memberFoldersData = [];
+        window.memberFilesData = [];
+        window.pollsData = [];
+        window.grievancesData = [];
+        window.infoGatherData = [];
+        window.assocMeetingsData = [];
+        window.indexTabsData = [];
+        window.templateBuilderData = [];
+        window.chatMessagesData = [];
+        window.recycleBinData = [];
+
+        window.lpTemplatesData = [null, null]; 
+        window.lpSignaturesData = [[cite: 3]
             { name: "अध्यक्ष", signUrl: "" },
             { name: "उपाध्यक्ष", signUrl: "" },
             { name: "सचिव", signUrl: "" },
             { name: "कोषाध्यक्ष", signUrl: "" },
             { name: "प्रमुख कार्यवाह", signUrl: "" }
         ];
-        let lpLogoUrl = "", lpStampUrl = "";
-        let currentICardStyle = "1";
-        let isSquareICardPhoto = false;
-        let showPresidentNoteOnICard = true;
-        let currentActiveChatRoom = "GroupAll";
+        window.lpLogoUrl = ""; 
+        window.lpStampUrl = "";
+        window.currentICardStyle = "1";
+        window.isSquareICardPhoto = false;
+        window.showPresidentNoteOnICard = true;
+        window.currentActiveChatRoom = "GroupAll";
 
-        let icardFieldSettings = {[cite: 1, 2]
+        window.icardFieldSettings = {[cite: 3]
             sh_name: true, sh_post: true, sh_mob: true, sh_email: true,
             sh_dist: true, sh_mandal: true, sh_workplace: true, sh_dob: true,
             sh_bg: true, sh_join: true, sh_sevarth: true, sh_aadhaar: true
         };
 
         // ==========================================================
-        // UI UTILITIES & MANDAL DROPDOWN POPULATOR
+        // UI UTILITIES & NAVIGATION
         // ==========================================================
         window.navigateToMainIndex = function() {
             window.location.href = "index.html";
@@ -1956,7 +1973,10 @@
         window.populateMandals = function() {
             let options = '<option value="All">सर्व मंडळे</option>';
             let optionsForm = '<option value="">मंडळ निवडा</option>';
-            Object.keys(mandalData).forEach(m => { options += `<option value="${m}">${m}</option>`; optionsForm += `<option value="${m}">${m}</option>`; });
+            Object.keys(mandalData).forEach(m => { 
+                options += `<option value="${m}">${m}</option>`; 
+                optionsForm += `<option value="${m}">${m}</option>`; 
+            });
             if(document.getElementById('filterMandal')) document.getElementById('filterMandal').innerHTML = options;
             if(document.getElementById('edit_mandal')) document.getElementById('edit_mandal').innerHTML = optionsForm;
             if(document.getElementById('empMandal')) document.getElementById('empMandal').innerHTML = options;
@@ -1974,7 +1994,10 @@
             let m = mSelect.value;
             let dSelect = document.getElementById(dSelectId);
             if(!dSelect) return;
-            if(m === "All" || m === "") { dSelect.innerHTML = mSelectId.includes('Filter') || mSelectId.includes('search') || mSelectId.includes('dup') ? '<option value="All">सर्व जिल्हे</option>' : '<option value="">प्रथम मंडळ निवडा</option>'; return; }
+            if(m === "All" || m === "") { 
+                dSelect.innerHTML = mSelectId.includes('Filter') || mSelectId.includes('search') || mSelectId.includes('dup') ? '<option value="All">सर्व जिल्हे</option>' : '<option value="">प्रथम मंडळ निवडा</option>'; 
+                return; 
+            }
             let html = mSelectId.includes('Filter') || mSelectId.includes('search') || mSelectId.includes('dup') ? '<option value="All">सर्व जिल्हे</option>' : '<option value="">जिल्हा निवडा</option>';
             if(mandalData[m]) { mandalData[m].forEach(d => { html += `<option value="${d}">${d}</option>`; }); }
             dSelect.innerHTML = html;
@@ -1996,28 +2019,31 @@
         };
 
         window.openTab = function(tabId) { 
-            document.querySelectorAll('.tab-content, .tab-btn').forEach(e=>e.classList.remove('active')); 
+            document.querySelectorAll('.tab-content, .tab-btn').forEach(e => e.classList.remove('active')); 
             let targetTab = document.getElementById(tabId);
             if(targetTab) targetTab.classList.add('active'); 
             if(event && event.currentTarget) event.currentTarget.classList.add('active'); 
-            if(tabId === 'tab-dash') { setTimeout(renderDashboard, 200); }
-            if(tabId === 'tab-admin-logs') renderAdminLogs();
-            if(tabId === 'tab-member-logs') renderMemberLogs();
-            if(tabId === 'tab-recyclebin') renderRecycleBin();
-            if(tabId === 'tab-letterpad') { renderLetterPadAdmin(); renderLetters(); }
-            if(tabId === 'tab-icard') { filterICardMembers(); }
-            if(tabId === 'tab-member-folders') { renderSixFolders(); renderMemberFilesList(); }
-            if(tabId === 'tab-fees') { renderFees(); }
-            if(tabId === 'tab-voting') { renderPolls(); }
-            if(tabId === 'tab-committee') { renderCommittee(); }
-            if(tabId === 'tab-gallery') { loadGallery(); }
-            if(tabId === 'tab-template-builder') { renderTemplateBuilderList(); }
-            if(tabId === 'tab-grievances') { renderGrievances(); }
-            if(tabId === 'tab-info-gather') { renderGatheredInfo(); }
-            if(tabId === 'tab-assoc-hub') { renderAssocHub(); }
-            if(tabId === 'tab-index-mgmt') { renderIndexMgmt(); }
-            if(tabId === 'tab-member-mgmt') { renderMemberTabsOrder(); }
-            if(tabId === 'tab-chat') { initLiveChatEngine(); }
+            
+            if(tabId === 'tab-dash') { setTimeout(window.renderDashboard, 200); }
+            if(tabId === 'tab-members') { window.renderMembers(); }
+            if(tabId === 'tab-other') { window.renderOtherStaff(); }
+            if(tabId === 'tab-committee') { window.renderCommittee(); }
+            if(tabId === 'tab-gallery') { window.loadGallery(); }
+            if(tabId === 'tab-icard') { window.filterICardMembers(); }
+            if(tabId === 'tab-letterpad') { window.renderLetterPadAdmin(); window.renderLetters(); }
+            if(tabId === 'tab-template-builder') { window.renderTemplateBuilderList(); }
+            if(tabId === 'tab-fees') { window.renderFees(); }
+            if(tabId === 'tab-member-folders') { window.renderSixFolders(); window.renderMemberFilesList(); }
+            if(tabId === 'tab-voting') { window.renderPolls(); }
+            if(tabId === 'tab-grievances') { window.renderGrievances(); }
+            if(tabId === 'tab-info-gather') { window.renderGatheredInfo(); }
+            if(tabId === 'tab-assoc-hub') { window.renderAssocHub(); }
+            if(tabId === 'tab-index-mgmt') { window.renderIndexMgmt(); }
+            if(tabId === 'tab-member-mgmt') { window.renderMemberTabsOrder(); }
+            if(tabId === 'tab-chat') { window.initLiveChatEngine(); }
+            if(tabId === 'tab-admin-logs') window.renderAdminLogs();
+            if(tabId === 'tab-member-logs') window.renderMemberLogs();
+            if(tabId === 'tab-recyclebin') window.renderRecycleBin();
         };
 
         // ==========================================================
@@ -2073,9 +2099,9 @@
                 let firstAvail = Array.from(document.querySelectorAll('.tab-btn')).find(btn => btn.style.display !== 'none');
                 if(firstAvail) firstAvail.click();
 
-                document.getElementById('login-screen').style.display='none'; 
-                document.getElementById('app-content').style.display='block'; 
-                document.getElementById('floatingLiveChatWidget').style.display='block';
+                document.getElementById('login-screen').style.display = 'none'; 
+                document.getElementById('app-content').style.display = 'block'; 
+                document.getElementById('floatingLiveChatWidget').style.display = 'block';
                 
                 document.getElementById('login_user_name').innerText = currentLoggedInAdminName;
                 document.getElementById('login_user_role').innerText = `(${currentLoggedInAdminDesignation})`;
@@ -2100,9 +2126,9 @@
                 checkAndShowPopupNotice();
             } 
             else { 
-                document.getElementById('login-screen').style.display='flex'; 
-                document.getElementById('app-content').style.display='none'; 
-                document.getElementById('floatingLiveChatWidget').style.display='none';
+                document.getElementById('login-screen').style.display = 'flex'; 
+                document.getElementById('app-content').style.display = 'none'; 
+                document.getElementById('floatingLiveChatWidget').style.display = 'none';
             } 
         }); 
 
@@ -2133,9 +2159,9 @@
         window.logoutAdmin = () => signOut(auth);
 
         // ==========================================================
-        // DUAL LOGS & RECYCLE BIN ENGINE
+        // DUAL ACTIVITY LOGS & AUTO-PURGE (120 DAYS)
         // ==========================================================
-        async function logAdminActivity(actionMsg) {
+        window.logAdminActivity = async function(actionMsg) {
             let userEmail = auth.currentUser ? auth.currentUser.email : "System";
             try {
                 await addDoc(collection(db, "admin_logs"), { 
@@ -2143,15 +2169,15 @@
                     email: userEmail, action: actionMsg, timestamp: Date.now(), dateString: new Date().toLocaleString('mr-IN') 
                 });
             } catch(err) { console.error("Log error:", err); }
-        }
+        };
 
-        async function logMemberActivity(memberName, actionMsg) {
+        window.logMemberActivity = async function(memberName, actionMsg) {
             try {
                 await addDoc(collection(db, "member_logs"), { 
                     memberName: memberName, action: actionMsg, timestamp: Date.now(), dateString: new Date().toLocaleString('mr-IN') 
                 });
             } catch(err) { console.error("Log error:", err); }
-        }
+        };
 
         async function autoDeleteOldLogs() {
             const fourMonthsAgo = Date.now() - (120 * 24 * 60 * 60 * 1000);
@@ -2161,10 +2187,10 @@
 
                 let mSnap = await getDocs(query(collection(db, "member_logs"), where("timestamp", "<", fourMonthsAgo)));
                 mSnap.forEach(async (dSnap) => { await deleteDoc(doc(db, "member_logs", dSnap.id)); });
-            } catch(e) { console.error(e); }
+            } catch(e) { console.error("Log purge error:", e); }
         }
 
-        async function renderAdminLogs() {
+        window.renderAdminLogs = async function() {
             try {
                 const snap = await getDocs(query(collection(db, "admin_logs"), orderBy("timestamp", "desc")));
                 let html = '';
@@ -2174,9 +2200,9 @@
                 });
                 document.getElementById('adminLogsBody').innerHTML = html || '<tr><td colspan="3" style="text-align:center;">ॲडमिन लॉग्स उपलब्ध नाहीत.</td></tr>';
             } catch(e) { console.error(e); }
-        }
+        };
 
-        async function renderMemberLogs() {
+        window.renderMemberLogs = async function() {
             try {
                 const snap = await getDocs(query(collection(db, "member_logs"), orderBy("timestamp", "desc")));
                 let html = '';
@@ -2186,7 +2212,7 @@
                 });
                 document.getElementById('memberLogsBody').innerHTML = html || '<tr><td colspan="3" style="text-align:center;">मेम्बर लॉग्स उपलब्ध नाहीत.</td></tr>';
             } catch(e) { console.error(e); }
-        }
+        };
 
         window.clearActivityLogs = async (logType) => {
             if(!isSuperAdmin) return Swal.fire('नाकारले', 'फक्त मुख्य सुपर ॲडमिन सर्व लॉग्स डिलीट करू शकतो.', 'error');
@@ -2195,26 +2221,29 @@
                 let snap = await getDocs(collection(db, col));
                 for(let dSnap of snap.docs) { await deleteDoc(doc(db, col, dSnap.id)); }
                 Swal.fire('यशस्वी', 'लॉग्स डिलीट केले गेले.', 'success');
-                if(logType === 'admin_logs') renderAdminLogs(); else renderMemberLogs();
+                if(logType === 'admin_logs') window.renderAdminLogs(); else window.renderMemberLogs();
             }
         };
 
-        async function moveToRecycleBin(itemType, itemData, itemTitle) {
+        // ==========================================================
+        // RECYCLE BIN ENGINE
+        // ==========================================================
+        window.moveToRecycleBin = async function(itemType, itemData, itemTitle) {
             try {
                 await addDoc(collection(db, "recycle_bin"), {
                     type: itemType, title: itemTitle, data: itemData,
                     deletedBy: currentLoggedInAdminName, deletedAt: new Date().toLocaleString('mr-IN'), timestamp: Date.now()
                 });
-            } catch(e) { console.error(e); }
-        }
+            } catch(e) { console.error("Recycle Bin error:", e); }
+        };
 
-        async function renderRecycleBin() {
+        window.renderRecycleBin = async function() {
             try {
                 const snap = await getDocs(query(collection(db, "recycle_bin"), orderBy("timestamp", "desc")));
-                recycleBinData = [];
-                snap.forEach(d => recycleBinData.push({ id: d.id, ...d.data() }));
+                window.recycleBinData = [];
+                snap.forEach(d => window.recycleBinData.push({ id: d.id, ...d.data() }));
 
-                let html = recycleBinData.map((r) => `
+                let html = window.recycleBinData.map((r) => `
                     <tr>
                         <td><span class="badge bg-danger">${r.type}</span></td>
                         <td><b>${r.title}</b></td>
@@ -2228,10 +2257,10 @@
                 `).join('');
                 document.getElementById('recycleBinBody').innerHTML = html || '<tr><td colspan="5" style="text-align:center;">रिसायकल बिन रिकामे आहे.</td></tr>';
             } catch(e) { console.error(e); }
-        }
+        };
 
         window.restoreRecycleBinItem = async (id) => {
-            let item = recycleBinData.find(x => x.id === id);
+            let item = window.recycleBinData.find(x => x.id === id);
             if(!item) return;
 
             Swal.fire({title: 'डेटा पूर्ववत करत आहे...', didOpen: () => Swal.showLoading()});
@@ -2246,17 +2275,17 @@
                 await addDoc(collection(db, colName), item.data);
                 await deleteDoc(doc(db, "recycle_bin", id));
 
-                await logAdminActivity(`Restored Item: ${item.title} (${item.type})`);
+                await window.logAdminActivity(`Restored Item: ${item.title} (${item.type})`);
                 Swal.fire('यशस्वी', 'डेटा पूर्ववत (Restored) झाला!', 'success');
-                loadData();
-                renderRecycleBin();
+                await loadData();
+                window.renderRecycleBin();
             } catch(e) { Swal.fire('Error', e.message, 'error'); }
         };
 
         window.permanentlyDeleteRecycleItem = async (id) => {
             if(confirm("हा डेटा कायमचा डिलीट करायचा आहे का?")) {
                 await deleteDoc(doc(db, "recycle_bin", id));
-                renderRecycleBin();
+                window.renderRecycleBin();
             }
         };
 
@@ -2265,20 +2294,20 @@
         // ==========================================================
         async function loadData() {
             const getD = async (col) => { let arr=[]; (await getDocs(collection(db,col))).forEach(d=>arr.push({...d.data(), id:d.id})); return arr; };
-            membersData = await getD("members"); 
-            otherStaffData = await getD("other_staff"); 
-            committeeData = await getD("committee"); 
-            lettersData = await getD("letters");
-            memberFilesData = await getD("member_files");
-            pollsData = await getD("polls");
-            grievancesData = await getD("grievances");
-            infoGatherData = await getD("info_gathered");
-            templateBuilderData = await getD("tb_letters");
+            window.membersData = await getD("members"); 
+            window.otherStaffData = await getD("other_staff"); 
+            window.committeeData = await getD("committee"); 
+            window.lettersData = await getD("letters");
+            window.memberFilesData = await getD("member_files");
+            window.pollsData = await getD("polls");
+            window.grievancesData = await getD("grievances");
+            window.infoGatherData = await getD("info_gathered");
+            window.templateBuilderData = await getD("tb_letters");
 
             // Folder Auto-Init
             let fSnap = await getDocs(collection(db, "member_folders"));
             if(fSnap.empty) {
-                memberFoldersData = [
+                window.memberFoldersData = [
                     { id: "f1", name: "शासकीय परिपत्रके", isRestricted: true, hasWatermark: true },
                     { id: "f2", name: "महत्त्वाच्या नोटीस", isRestricted: false, hasWatermark: true },
                     { id: "f3", name: "अर्जाचे नमुने", isRestricted: false, hasWatermark: false },
@@ -2286,38 +2315,38 @@
                     { id: "f5", name: "संघटना अहवाल", isRestricted: false, hasWatermark: true },
                     { id: "f6", name: "इतर माहिती", isRestricted: false, hasWatermark: false }
                 ];
-                for(let f of memberFoldersData) { await setDoc(doc(db, "member_folders", f.id), f); }
+                for(let f of window.memberFoldersData) { await setDoc(doc(db, "member_folders", f.id), f); }
             } else {
-                memberFoldersData = []; fSnap.forEach(d => memberFoldersData.push({ id: d.id, ...d.data() }));
+                window.memberFoldersData = []; fSnap.forEach(d => window.memberFoldersData.push({ id: d.id, ...d.data() }));
             }
 
             let setSnap = await getDocs(collection(db, "lp_settings"));
             setSnap.forEach(d => {
                 let data = d.data();
-                if(data.type === "templates") lpTemplatesData = data.val || [null, null];
-                if(data.type === "signatures") lpSignaturesData = data.val || lpSignaturesData;
-                if(data.type === "logo") lpLogoUrl = data.val || "";
-                if(data.type === "stamp") lpStampUrl = data.val || "";
+                if(data.type === "templates") window.lpTemplatesData = data.val || [null, null];
+                if(data.type === "signatures") window.lpSignaturesData = data.val || window.lpSignaturesData;
+                if(data.type === "logo") window.lpLogoUrl = data.val || "";
+                if(data.type === "stamp") window.lpStampUrl = data.val || "";
             });
 
-            if (lpLogoUrl && document.getElementById('header_logo_box')) {
-                document.getElementById('header_logo_box').innerHTML = `<img src="${lpLogoUrl}" style="height:48px; max-width:65px; object-fit:contain; vertical-align:middle;">`;
+            if (window.lpLogoUrl && document.getElementById('header_logo_box')) {
+                document.getElementById('header_logo_box').innerHTML = `<img src="${window.lpLogoUrl}" style="height:48px; max-width:65px; object-fit:contain; vertical-align:middle;">`;
             }
 
             let memberOptions = '<option value="">सदस्य निवडा</option>';
-            membersData.forEach(m => {
+            window.membersData.forEach(m => {
                 if(m.isMember !== false) {
                     memberOptions += `<option value="${m.id}">${m.name} (${m.district||'-'})</option>`;
                 }
             });
             if(document.getElementById('poll_voter_member_select')) document.getElementById('poll_voter_member_select').innerHTML = memberOptions;
 
-            loadNotices(); autoDeleteOldLogs();
+            window.loadNotices(); autoDeleteOldLogs();
 
-            if(isSuperAdmin) { subAdminsList = await getD("admins"); renderSubAdmins(); }
+            if(isSuperAdmin) { subAdminsList = await getD("admins"); window.renderSubAdmins(); }
 
             let total=0, apprv=0, pend=0, paid=0;
-            membersData.forEach(m => { 
+            window.membersData.forEach(m => { 
                 if(m.isMember !== false) { 
                     if(subAdminAccessRegion === "All" || m.mandal === subAdminAccessRegion) {
                         total++; if(m.status === 'Approved') apprv++; else pend++; if(m.feeStatus === 'Paid') paid++; 
@@ -2330,24 +2359,75 @@
             document.getElementById('pending_cnt').innerText = pend;
             document.getElementById('cnt-paid').innerText = paid;
             
-            renderMembers(); renderOtherStaff(); renderDashboard(); renderCommittee(); renderFees(); renderLetters();
-            renderSixFolders(); renderMemberFilesList(); renderPolls(); renderGrievances();
+            window.renderMembers(); 
+            window.renderOtherStaff(); 
+            window.renderDashboard(); 
+            window.renderCommittee(); 
+            window.renderFees(); 
+            window.renderLetters();
+            window.renderSixFolders(); 
+            window.renderMemberFilesList(); 
+            window.renderPolls(); 
+            window.renderGrievances();
         }
 
         // ==========================================================
-        // CLOUDINARY UPLOAD & MEMBER EDITING logic
+        // DASHBOARD MAP & CHART ENGINE
         // ==========================================================
-        const uploadToCloudinary = async (file) => {
-            const cloudName = "jjavsdh5"; const uploadPreset = "ml_default"; 
+        window.renderDashboard = function() {
+            let mandalStat = {}; let distStat = {};
+            let allowedMandals = subAdminAccessRegion === "All" ? Object.keys(mandalData) : [subAdminAccessRegion];
+            
+            allowedMandals.forEach(m => { mandalStat[m] = 0; mandalData[m].forEach(d => distStat[d] = 0); });
+            window.membersData.forEach(m => {
+                if(m.isMember!==false && m.status === 'Approved') {
+                    if(subAdminAccessRegion === "All" || m.mandal === subAdminAccessRegion) {
+                        if(m.mandal && mandalStat[m.mandal] !== undefined) mandalStat[m.mandal]++;
+                        if(m.district && distStat[m.district] !== undefined) distStat[m.district]++;
+                    }
+                }
+            });
+
+            const colors = {"पुणे मंडळ":"#f59e0b", "नागपूर मंडळ":"#3b82f6", "नाशिक मंडळ":"#10b981", "अकोला मंडळ":"#ef4444", "कोल्हापूर मंडळ":"#8b5cf6", "छत्रपती संभाजीनगर मंडळ":"#ec4899", "लातूर मंडळ":"#f97316", "ठाणे मंडळ":"#0ea5e9"};
+            
+            let mapHtml = '';
+            allowedMandals.forEach(m => {
+                let distHtml = mandalData[m].map(d => `<span class="dist-badge">${d} <span class="dist-count">${distStat[d]||0}</span></span>`).join('');
+                mapHtml += `<div class="mandal-card" style="background:${colors[m]};"><h3>${m}</h3><h2>${mandalStat[m]||0}</h2><div>${distHtml}</div></div>`;
+            });
+            if(document.getElementById('mandalMapGrid')) document.getElementById('mandalMapGrid').innerHTML = mapHtml;
+
+            try {
+                if(window.mandalChartInstance) { window.mandalChartInstance.destroy(); }
+                const ctx = document.getElementById('mandalPieChart').getContext('2d');
+                window.mandalChartInstance = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: allowedMandals,
+                        datasets: [{ data: allowedMandals.map(m => mandalStat[m] || 0), backgroundColor: allowedMandals.map(m => colors[m] || '#3b82f6') }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+                });
+            } catch(err) { console.error("Chart Error:", err); }
+        };// ==========================================================
+        // CLOUDINARY UPLOAD & FILE CONTROL UTILITIES
+        // ==========================================================
+        window.uploadToCloudinary = async (file) => {
+            const cloudName = "jjavsdh5"; 
+            const uploadPreset = "ml_default"; 
             const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`;
-            const formData = new FormData(); formData.append("file", file); formData.append("upload_preset", uploadPreset);
+            const formData = new FormData(); 
+            formData.append("file", file); 
+            formData.append("upload_preset", uploadPreset);
+            
             const res = await fetch(CLOUDINARY_URL, { method: "POST", body: formData });
             const data = await res.json();
-            if(data.secure_url) return data.secure_url; throw new Error("अपलोड अयशस्वी.");
+            if(data.secure_url) return data.secure_url; 
+            throw new Error("अपलोड अयशस्वी.");
         };
 
         window.removeExistingFile = (boxType, hiddenInputId, fileInputId) => {
-            if(confirm("ही फाईल डिलीट करून नवीन फाईल बदलायची आहे का?")) {
+            if(confirm("तुम्हाला खरोखर ही फाईल डिलीट करून नवीन फाईल बदलायची आहे का?")) {
                 document.getElementById(hiddenInputId).value = ""; 
                 document.getElementById(fileInputId).value = ""; 
                 document.getElementById(`existing_box_${boxType}`).style.display = "none";
@@ -2355,7 +2435,7 @@
             }
         };
 
-        const toggleFileUI = (boxType, urlValue) => {
+        window.toggleFileUI = (boxType, urlValue) => {
             if(urlValue && urlValue.trim() !== "") {
                 document.getElementById(`upload_box_${boxType}`).style.display = "none";
                 document.getElementById(`existing_box_${boxType}`).style.display = "flex";
@@ -2370,15 +2450,20 @@
             document.getElementById('fullEditForm').reset(); 
             document.getElementById('edit_id').value = ""; 
             document.getElementById('edit_type').value = colName;
+            
             ['existing_photo_url', 'existing_doc_url', 'existing_other_url'].forEach(id => document.getElementById(id).value = "");
-            toggleFileUI('photo', ''); toggleFileUI('doc', ''); toggleFileUI('other', '');
+            
+            window.toggleFileUI('photo', ''); 
+            window.toggleFileUI('doc', ''); 
+            window.toggleFileUI('other', '');
+
             document.getElementById('editModalTitle').innerText = colName === 'members' ? "नवीन सदस्य जोडा" : "नवीन कर्मचारी जोडा";
             document.getElementById('feeStatusDiv').style.display = colName === 'members' ? 'flex' : 'none';
             document.getElementById('editModalOverlay').style.display = 'flex';
         };
 
         window.openFullEditModal = (id, colName) => { 
-            let m = (colName === 'members' ? membersData : otherStaffData).find(x => x.id === id); 
+            let m = (colName === 'members' ? window.membersData : window.otherStaffData).find(x => x.id === id); 
             if(!m) return;
             
             document.getElementById('edit_id').value = id; 
@@ -2388,7 +2473,9 @@
             document.getElementById('existing_doc_url').value = m.docUrl || ''; 
             document.getElementById('existing_other_url').value = m.otherUrl || '';
             
-            toggleFileUI('photo', m.photoUrl); toggleFileUI('doc', m.docUrl); toggleFileUI('other', m.otherUrl);
+            window.toggleFileUI('photo', m.photoUrl); 
+            window.toggleFileUI('doc', m.docUrl); 
+            window.toggleFileUI('other', m.otherUrl);
 
             document.getElementById('edit_name').value = m.name || ''; 
             document.getElementById('edit_post').value = m.designation || m.post || ''; 
@@ -2410,7 +2497,7 @@
             if(document.getElementById('edit_rejoinedWorkplace')) document.getElementById('edit_rejoinedWorkplace').value = m.rejoinedWorkplace || '';
 
             document.getElementById('edit_mandal').value = m.mandal || ''; 
-            populateDistricts('edit_mandal', 'edit_district'); 
+            window.populateDistricts('edit_mandal', 'edit_district'); 
             document.getElementById('edit_district').value = m.district || '';
             
             if(colName === 'members') { 
@@ -2434,9 +2521,9 @@
             let finalOtherUrl = document.getElementById('existing_other_url').value;
 
             try {
-                let photoFile = document.getElementById('edit_photo')?.files[0]; if(photoFile) finalPhotoUrl = await uploadToCloudinary(photoFile);
-                let docFile = document.getElementById('edit_document')?.files[0]; if(docFile) finalDocUrl = await uploadToCloudinary(docFile);
-                let otherFile = document.getElementById('edit_other_doc')?.files[0]; if(otherFile) finalOtherUrl = await uploadToCloudinary(otherFile);
+                let photoFile = document.getElementById('edit_photo')?.files[0]; if(photoFile) finalPhotoUrl = await window.uploadToCloudinary(photoFile);
+                let docFile = document.getElementById('edit_document')?.files[0]; if(docFile) finalDocUrl = await window.uploadToCloudinary(docFile);
+                let otherFile = document.getElementById('edit_other_doc')?.files[0]; if(otherFile) finalOtherUrl = await window.uploadToCloudinary(otherFile);
 
                 let p = { 
                     name: document.getElementById('edit_name').value, 
@@ -2474,8 +2561,8 @@
                 if(id) await updateDoc(doc(db, col, id), p); 
                 else await addDoc(collection(db, col), p); 
 
-                await logAdminActivity(`Updated ${col}: ${p.name}`);
-                closeModal('editModalOverlay'); 
+                await window.logAdminActivity(`Updated ${col}: ${p.name}`);
+                window.closeModal('editModalOverlay'); 
                 Swal.fire('यशस्वी', 'माहिती सेव्ह झाली!', 'success'); 
                 loadData(); 
             } catch (err) { 
@@ -2484,22 +2571,22 @@
         };
 
         // ==========================================================
-        // MEMBERS RENDER & LEVENSHTEIN FUZZY MATCHING DUPLICATE SEARCH
+        // MEMBER CONTROLS, EXCEL & FUZZY MATCHING DUPLICATE ENGINE
         // ==========================================================
         window.handleMandalFilterChange = () => {
-            populateDistricts('filterMandal', 'filterDistrict');
+            window.populateDistricts('filterMandal', 'filterDistrict');
             document.getElementById('filterDistrict').value = "All";
-            renderMembers();
+            window.renderMembers();
         };
 
         window.renderMembers = function() {
-            let s = document.getElementById('searchName').value.toLowerCase(); 
-            let fStatus = document.getElementById('filterStatus').value; 
-            let fMandal = document.getElementById('filterMandal').value; 
-            let fDist = document.getElementById('filterDistrict').value;
-            let fSen = document.getElementById('filterSeniority').value;
+            let s = document.getElementById('searchName')?.value.toLowerCase() || ''; 
+            let fStatus = document.getElementById('filterStatus')?.value || 'All'; 
+            let fMandal = document.getElementById('filterMandal')?.value || 'All'; 
+            let fDist = document.getElementById('filterDistrict')?.value || 'All';
+            let fSen = document.getElementById('filterSeniority')?.value || 'All';
             
-            let fil = membersData.filter(m => {
+            let fil = window.membersData.filter(m => {
                 if (m.isMember === false) return false;
                 if (subAdminAccessRegion !== "All" && m.mandal !== subAdminAccessRegion) return false;
                 if (fStatus !== 'All' && m.status !== fStatus) return false;
@@ -2513,12 +2600,15 @@
             else { fil.sort((a,b) => (a.name||'').localeCompare(b.name||'')); }
 
             let defImg = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
-            document.getElementById('tableTotalCount').innerText = `एकूण दर्शविलेले सदस्य: ${fil.length}`;
+            if(document.getElementById('tableTotalCount')) document.getElementById('tableTotalCount').innerText = `एकूण दर्शविलेले सदस्य: ${fil.length}`;
             
             let canEdit = isSuperAdmin || subAdminPermissions.includes('member_edit');
             let canDelete = isSuperAdmin || subAdminPermissions.includes('member_delete');
 
-            document.getElementById('membersBody').innerHTML = fil.map((m,i) => {
+            let tbody = document.getElementById('membersBody');
+            if(!tbody) return;
+
+            tbody.innerHTML = fil.map((m,i) => {
                 let statusBadge = m.status === 'Approved' ? '<span class="badge bg-success">Approved</span>' : (m.status === 'Pending' ? '<span class="badge bg-warning">Pending</span>' : '<span class="badge bg-danger">Rejected</span>');
                 let tblImg = m.photoUrl || defImg;
                 
@@ -2552,12 +2642,53 @@
 
         window.toggleSelectAll = (el) => { document.querySelectorAll('.mem-chk').forEach(cb => cb.checked = el.checked); };
 
+        window.exportMembersToExcel = () => {
+            let data = window.membersData.map((m, i) => ({
+                "अ.क्र.": i + 1, "नाव": m.name || "", "पद": m.designation || "", "मोबाईल": m.mobile || "",
+                "ई-मेल": m.email || "", "जिल्हा": m.district || "", "मंडळ": m.mandal || "",
+                "कार्यरत ठिकाण": m.workplace || "", "रुजू दिनांक": m.joinDate || "", "फी स्टेटस": m.feeStatus || "", "Approval": m.status || ""
+            }));
+            let ws = XLSX.utils.json_to_sheet(data);
+            let wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Members");
+            XLSX.writeFile(wb, "Members_List_2026.xlsx");
+        };
+
+        window.importMemberExcelData = (e) => {
+            let file = e.target.files[0]; if(!file) return;
+            let reader = new FileReader();
+            reader.onload = async (evt) => {
+                let data = new Uint8Array(evt.target.result);
+                let workbook = XLSX.read(data, { type: 'array' });
+                let sheet = workbook.Sheets[workbook.SheetNames[0]];
+                let rows = XLSX.utils.sheet_to_json(sheet);
+                
+                Swal.fire({title: 'डेटा ऑटो-डिटेक्ट करून सेव्ह होत आहे...', didOpen: () => Swal.showLoading()});
+                for(let r of rows) {
+                    let obj = {
+                        name: r['नाव'] || r['Name'] || r['Full Name'] || '',
+                        designation: r['पद'] || r['Designation'] || r['Post'] || 'X-Ray Scientific Officer',
+                        mobile: String(r['मोबाईल'] || r['Mobile'] || r['Contact'] || ''),
+                        email: r['ई-मेल'] || r['Email'] || '', district: r['जिल्हा'] || r['District'] || '',
+                        mandal: r['मंडळ'] || r['Mandal'] || '', workplace: r['कार्यरत ठिकाण'] || r['Workplace'] || '',
+                        address: r['कायमचा पत्ता'] || r['Address'] || '', sevarthId: r['सेवार्थ आयडी'] || r['Sevarth ID'] || '',
+                        dob: r['जन्मतारीख'] || r['DOB'] || '', joinDate: r['रुजू दिनांक'] || r['Join Date'] || '-',
+                        feeStatus: r['फी स्टेटस'] || 'Unpaid', status: 'Approved', isMember: true
+                    };
+                    if(obj.name && obj.name.trim() !== '') await addDoc(collection(db, "members"), obj);
+                }
+                Swal.fire('यशस्वी', 'एक्सेल डेटा यशस्वीरित्या सेव्ह झाला!', 'success');
+                loadData();
+            };
+            reader.readAsArrayBuffer(file);
+        };
+
         window.deleteSingleMember = async function(id) {
-            let m = membersData.find(x => x.id === id);
+            let m = window.membersData.find(x => x.id === id);
             if(confirm("हा सदस्य डिलीट करायचा आहे का?")) {
-                if(m) await moveToRecycleBin("सदस्य", m, m.name);
+                if(m) await window.moveToRecycleBin("सदस्य", m, m.name);
                 await deleteDoc(doc(db, "members", id));
-                await logAdminActivity(`Deleted member: ${m ? m.name : id}`);
+                await window.logAdminActivity(`Deleted member: ${m ? m.name : id}`);
                 Swal.fire('यशस्वी', 'सदस्य डिलीट झाला!', 'success');
                 loadData();
             }
@@ -2572,11 +2703,11 @@
             if (confirm(`निवडलेले ${idsToDelete.length} सदस्य डिलीट करायचे आहेत का?`)) {
                 Swal.fire({ title: 'डिलीट होत आहे...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
                 for (let id of idsToDelete) {
-                    let m = membersData.find(x => x.id === id);
-                    if(m) await moveToRecycleBin("सदस्य", m, m.name);
+                    let m = window.membersData.find(x => x.id === id);
+                    if(m) await window.moveToRecycleBin("सदस्य", m, m.name);
                     await deleteDoc(doc(db, "members", id));
                 }
-                await logAdminActivity(`Multi-deleted ${idsToDelete.length} members`);
+                await window.logAdminActivity(`Multi-deleted ${idsToDelete.length} members`);
                 Swal.fire('यशस्वी', `${idsToDelete.length} सदस्य रिसायकल बिनमध्ये पाठवले!`, 'success');
                 await loadData();
             }
@@ -2621,11 +2752,11 @@
 
         window.showDuplicateMembersModal = function() {
             let currentDuplicatePairs = [];
-            for (let i = 0; i < membersData.length; i++) {
-                for (let j = i + 1; j < membersData.length; j++) {
-                    const result = checkDuplicatePair(membersData[i], membersData[j]);
+            for (let i = 0; i < window.membersData.length; i++) {
+                for (let j = i + 1; j < window.membersData.length; j++) {
+                    const result = checkDuplicatePair(window.membersData[i], window.membersData[j]);
                     if (result.duplicate) {
-                        currentDuplicatePairs.push({ id: membersData[j].id, original: membersData[i], duplicate: membersData[j], reason: result.reason });
+                        currentDuplicatePairs.push({ id: window.membersData[j].id, original: window.membersData[i], duplicate: window.membersData[j], reason: result.reason });
                     }
                 }
             }
@@ -2654,22 +2785,22 @@
         };
 
         // ==========================================================
-        // STATE EMPLOYEES SAMPLE EXCEL, MULTI-DELETE & PDF GENERATOR
+        // STATE EMPLOYEES EXCEL FORMAT DOWNLOAD, MULTI-DELETE & PDF EXPORT
         // ==========================================================
         window.downloadSampleEmployeeExcel = function() {
             let sampleData = [
                 {
                     "अ.क्र.": 1,
-                    "नाव": "श्री. राहुल मारुती पाटील",
-                    "पद": "क्ष-किरण वैज्ञानिक अधिकारी",
+                    "नाव": "श्री. महेश रामराव हांगे",
+                    "पद": "क्ष-किरण वैज्ञानिक अधिकारी (गट-क)",
                     "प्रवर्ग": "खुला",
                     "मोबाईल": "9876543210",
-                    "सध्या कार्यरत ठिकाण": "जिल्हा रुग्णालय, लातूर",
-                    "बदलीने पदस्थापना": "-",
-                    "पुन्हा कार्यरत ठिकाण": "-",
+                    "सध्या कार्यरत ठिकाण": "उपजिल्हा रुग्णालय, उदगीर",
+                    "बदलीने पदस्थापना": "जिल्हा रुग्णालय, लातूर",
+                    "पुन्हा कार्यरत ठिकाण": "उपजिल्हा रुग्णालय, उदगीर",
                     "जिल्हा": "लातूर",
                     "मंडळ": "लातूर मंडळ",
-                    "रुजू दिनांक": "2018-06-15",
+                    "रुजू दिनांक": "2015-08-10",
                     "शेरा": "नियमित कार्यरत"
                 }
             ];
@@ -2700,12 +2831,62 @@
             if(confirm(`निवडलेले ${ids.length} कर्मचारी डिलीट करायचे आहेत का?`)) {
                 Swal.fire({title: 'डिलीट होत आहे...', didOpen: () => Swal.showLoading()});
                 for(let id of ids) {
-                    let emp = otherStaffData.find(x => x.id === id);
-                    if(emp) await moveToRecycleBin("कर्मचारी", emp, emp.name);
+                    let emp = window.otherStaffData.find(x => x.id === id);
+                    if(emp) await window.moveToRecycleBin("कर्मचारी", emp, emp.name);
                     await deleteDoc(doc(db, "other_staff", id));
                 }
                 Swal.fire('यशस्वी', 'निवडलेले कर्मचारी रिसायकल बिनमध्ये पाठवले!', 'success');
                 loadData();
+            }
+        };
+
+        window.shiftEmployeeMandal = async (empId) => {
+            let emp = window.otherStaffData.find(x => x.id === empId);
+            if (!emp) return;
+
+            let mandalOptionsHtml = '<option value="">नवीन मंडळ निवडा</option>';
+            Object.keys(mandalData).forEach(m => {
+                if (m !== emp.mandal) mandalOptionsHtml += `<option value="${m}">${m}</option>`;
+            });
+
+            const { value: formValues } = await Swal.fire({
+                title: `🏢 आंतरमंडळ बदली - ${emp.name}`,
+                html: `
+                    <div style="text-align:left; font-size:0.9rem;">
+                        <p><b>सध्याचे मंडळ:</b> ${emp.mandal || '-'}</p>
+                        <p><b>सध्याचा जिल्हा:</b> ${emp.district || '-'}</p>
+                        <hr style="margin:10px 0;">
+                        <label><b>नवीन मंडळ:</b></label>
+                        <select id="shift_new_mandal" class="swal2-input">${mandalOptionsHtml}</select>
+                        <label><b>नवीन जिल्हा:</b></label>
+                        <input id="shift_new_district" class="swal2-input" placeholder="उदा. लातूर">
+                        <label><b>नवीन कार्यरत ठिकाण:</b></label>
+                        <input id="shift_new_workplace" class="swal2-input" placeholder="उदा. उ.जि.रु. उदगीर">
+                        <label><b>बदली टीप:</b></label>
+                        <input id="shift_transfer_note" class="swal2-input" placeholder="उदा. शासन आदेश क्र. १४०७">
+                    </div>
+                `,
+                focusConfirm: false, showCancelButton: true, confirmButtonText: 'शिफ्ट करा', cancelButtonText: 'रद्द करा',
+                preConfirm: () => {
+                    let newM = document.getElementById('shift_new_mandal').value;
+                    let newD = document.getElementById('shift_new_district').value;
+                    if (!newM || !newD) { Swal.showValidationMessage('कृपया मंडळ आणि जिल्हा निवडा.'); return false; }
+                    return { newMandal: newM, newDistrict: newD, newWorkplace: document.getElementById('shift_new_workplace').value, note: document.getElementById('shift_transfer_note').value };
+                }
+            });
+
+            if (formValues) {
+                Swal.fire({ title: 'शिफ्ट होत आहे...', didOpen: () => Swal.showLoading() });
+                try {
+                    await updateDoc(doc(db, "other_staff", empId), {
+                        previousMandal: emp.mandal, mandal: formValues.newMandal, district: formValues.newDistrict,
+                        transferPosting: formValues.note || `बदली (${emp.mandal} -> ${formValues.newMandal})`,
+                        rejoinedWorkplace: formValues.newWorkplace || emp.workplace, empStatus: 'InterMandal', lastShiftDate: new Date().toLocaleDateString('mr-IN')
+                    });
+                    await window.logAdminActivity(`आंतरमंडळ बदली: ${emp.name} (${formValues.newMandal})`);
+                    Swal.fire('बदली यशस्वी!', `कर्मचारी आता ${formValues.newMandal} मध्ये पाठवण्यात आला.`, 'success');
+                    loadData();
+                } catch (e) { Swal.fire('Error', e.message, 'error'); }
             }
         };
 
@@ -2716,9 +2897,8 @@
             let statFil = document.getElementById('empStatusFilter')?.value || 'All';
 
             let showMob = document.getElementById('col_show_mobile')?.checked ?? true;
-            let showSev = document.getElementById('col_show_sevarth')?.checked ?? true;
 
-            let fil = otherStaffData.filter(e => {
+            let fil = window.otherStaffData.filter(e => {
                 if (subAdminAccessRegion !== "All" && e.mandal !== subAdminAccessRegion) return false;
                 if (mFil !== 'All' && e.mandal !== mFil) return false;
                 if (catFil !== 'All' && e.category !== catFil) return false;
@@ -2727,9 +2907,12 @@
                 return true;
             });
 
-            document.getElementById('empCountSummary').innerText = `एकूण कर्मचारी: ${fil.length}`;
+            if(document.getElementById('empCountSummary')) document.getElementById('empCountSummary').innerText = `एकूण कर्मचारी: ${fil.length}`;
 
-            document.getElementById('otherBody').innerHTML = fil.map((s, i) => `
+            let tbody = document.getElementById('otherBody');
+            if(!tbody) return;
+
+            tbody.innerHTML = fil.map((s, i) => `
                 <tr>
                     <td>${i + 1}</td>
                     <td><input type="checkbox" class="emp-chk" value="${s.id}"></td>
@@ -2753,9 +2936,9 @@
         };
 
         window.deleteOtherStaff = async (id) => {
-            let st = otherStaffData.find(x => x.id === id);
+            let st = window.otherStaffData.find(x => x.id === id);
             if (confirm("या कर्मचाऱ्याची माहिती डिलीट करून रिसायकल बिनमध्ये हलवायची आहे का?")) {
-                if(st) await moveToRecycleBin("कर्मचारी", st, st.name);
+                if(st) await window.moveToRecycleBin("कर्मचारी", st, st.name);
                 await deleteDoc(doc(db, "other_staff", id));
                 loadData();
             }
@@ -2787,26 +2970,83 @@
             reader.readAsArrayBuffer(file);
         };
 
+        window.exportToExcel = () => {
+            let data = window.otherStaffData.map((e, i) => ({
+                "अ.क्र.": i + 1, "नाव": e.name || "", "पद": e.post || "", "प्रवर्ग": e.category || "",
+                "मोबाईल": e.mobile || "", "सध्या कार्यरत ठिकाण": e.workplace || "", "बदलीने पदस्थापना": e.transferPosting || "",
+                "पुन्हा कार्यरत ठिकाण": e.rejoinedWorkplace || "", "जिल्हा": e.district || "", "मंडळ": e.mandal || "", "रुजू दिनांक": e.joinDate || "", "शेरा": e.remarks || ""
+            }));
+            let ws = XLSX.utils.json_to_sheet(data);
+            let wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Employees");
+            XLSX.writeFile(wb, "State_Employees_2026.xlsx");
+        };
+
         // ==========================================================
-        // OFFICE BEARERS & GALLERY WITH ARROW REORDERING
+        // OFFICE BEARERS & GALLERY REORDERING ENGINE (ARROWS UP/DOWN)
         // ==========================================================
+        window.filterOBMembers = function() {
+            let queryStr = document.getElementById('ob_search').value.toLowerCase().trim();
+            let resBox = document.getElementById('ob_search_results'); if (!resBox) return;
+            if (queryStr.length < 2) { resBox.innerHTML = ''; return; }
+
+            let matches = window.membersData.filter(m => (m.name || '').toLowerCase().includes(queryStr) || (m.mobile || '').includes(queryStr));
+            if (matches.length === 0) { resBox.innerHTML = '<div style="padding:10px; color:red;">एकही सदस्य सापडला नाही.</div>'; return; }
+
+            resBox.innerHTML = matches.map(m => `
+                <div style="padding:8px; border-bottom:1px solid #eee; cursor:pointer;" onclick="selectOBMember('${m.name.replace(/'/g, "\\'")}', '${m.mobile||''}', '${m.district||''}', '${m.photoUrl||''}')">
+                    <b>${m.name}</b> (${m.district||'-'})
+                </div>
+            `).join('');
+        };
+
+        window.selectOBMember = function(name, mob, dist, photoUrl) {
+            document.getElementById('ob_manual_name').value = name;
+            document.getElementById('ob_manual_mobile').value = mob;
+            document.getElementById('ob_manual_district').value = dist;
+            document.getElementById('ob_search').value = name;
+            document.getElementById('ob_search_results').innerHTML = '';
+            window.selectedOBPhotoUrl = photoUrl;
+        };
+
+        window.addOfficeBearerManual = async () => {
+            let name = document.getElementById('ob_manual_name').value.trim();
+            let mobile = document.getElementById('ob_manual_mobile').value.trim();
+            let district = document.getElementById('ob_manual_district').value.trim();
+            let level = document.getElementById('ob_level').value;
+            let post = document.getElementById('ob_designation').value.trim();
+            let photoFile = document.getElementById('ob_manual_photo').files[0];
+
+            if(!name || !post) return Swal.fire('माहिती अपूर्ण', 'नाव आणि पद भरा.', 'warning');
+
+            Swal.fire({title: 'पदाधिकारी जोडत आहे...', didOpen: () => Swal.showLoading()});
+            try {
+                let photoUrl = window.selectedOBPhotoUrl || "";
+                if(photoFile) photoUrl = await window.uploadToCloudinary(photoFile);
+
+                await addDoc(collection(db, "committee"), { name, mobile, district, level, post, photoUrl, order: Date.now() });
+                Swal.fire('यशस्वी', 'पदाधिकारी जोडले गेले!', 'success');
+                loadData();
+            } catch(e) { Swal.fire('Error', e.message, 'error'); }
+        };
+
         window.moveCommitteeOrder = async (id, direction) => {
-            let index = committeeData.findIndex(x => x.id === id);
+            let index = window.committeeData.findIndex(x => x.id === id);
             if(index < 0) return;
             let targetIndex = direction === 'up' ? index - 1 : index + 1;
-            if(targetIndex < 0 || targetIndex >= committeeData.length) return;
+            if(targetIndex < 0 || targetIndex >= window.committeeData.length) return;
 
-            let currentOrder = committeeData[index].order || Date.now();
-            let targetOrder = committeeData[targetIndex].order || Date.now();
+            let currentOrder = window.committeeData[index].order || Date.now();
+            let targetOrder = window.committeeData[targetIndex].order || Date.now();
 
-            await updateDoc(doc(db, "committee", committeeData[index].id), { order: targetOrder });
-            await updateDoc(doc(db, "committee", committeeData[targetIndex].id), { order: currentOrder });
+            await updateDoc(doc(db, "committee", window.committeeData[index].id), { order: targetOrder });
+            await updateDoc(doc(db, "committee", window.committeeData[targetIndex].id), { order: currentOrder });
             loadData();
         };
 
         window.renderCommittee = () => {
             let renderLevel = (lvlId, lvlName) => {
-                let lvlData = committeeData.filter(c => c.level === lvlName || (!c.level && lvlName==='राज्यस्तरीय')).sort((a,b) => (a.order||0) - (b.order||0));
+                let lvlData = window.committeeData.filter(c => c.level === lvlName || (!c.level && lvlName==='राज्यस्तरीय')).sort((a,b) => (a.order||0) - (b.order||0));
                 let targetEl = document.getElementById(lvlId); if(!targetEl) return;
 
                 targetEl.innerHTML = lvlData.map((c) => `
@@ -2817,8 +3057,8 @@
                         <h3 style="color:#8b0000; font-size:1.05rem; margin-bottom:4px;">${c.name}</h3>
                         <p style="font-size:0.8rem; color:#555;">${c.district || '-'}</p>
                         <div style="margin-top:8px;">
-                            <button class="btn-order" onclick="moveCommitteeOrder('${c.id}', 'up')" title="वर सरकवा"><i class="fa fa-arrow-left"></i></button>
-                            <button class="btn-order" onclick="moveCommitteeOrder('${c.id}', 'down')" title="खाली सरकवा"><i class="fa fa-arrow-right"></i></button>
+                            <button class="btn-order" onclick="moveCommitteeOrder('${c.id}', 'up')" title="वर / डावीकडे सरकवा"><i class="fa fa-arrow-left"></i></button>
+                            <button class="btn-order" onclick="moveCommitteeOrder('${c.id}', 'down')" title="खाली / उजवीकडे सरकवा"><i class="fa fa-arrow-right"></i></button>
                             <button class="btn-action bg-danger" onclick="deleteOB('${c.id}')"><i class="fa fa-trash"></i></button>
                         </div>
                     </div>
@@ -2831,35 +3071,35 @@
         };
 
         window.deleteOB = async (id) => {
-            let ob = committeeData.find(x => x.id === id);
-            if(confirm("या पदाधिकाऱ्याला डिलीट करून रिसायकल बिनमध्ये पाठवायचे आहे का?")) {
-                if(ob) await moveToRecycleBin("पदाधिकारी", ob, ob.name);
+            let ob = window.committeeData.find(x => x.id === id);
+            if(confirm("या पदाधिकाऱ्याला डिलीट करायचे आहे का?")) {
+                if(ob) await window.moveToRecycleBin("पदाधिकारी", ob, ob.name);
                 await deleteDoc(doc(db, "committee", id)); 
                 loadData();
             }
         };
 
         window.moveGalleryOrder = async (id, direction) => {
-            let index = galleryData.findIndex(x => x.id === id);
+            let index = window.galleryData.findIndex(x => x.id === id);
             if(index < 0) return;
             let targetIndex = direction === 'up' ? index - 1 : index + 1;
-            if(targetIndex < 0 || targetIndex >= galleryData.length) return;
+            if(targetIndex < 0 || targetIndex >= window.galleryData.length) return;
 
-            let currentOrder = galleryData[index].order || Date.now();
-            let targetOrder = galleryData[targetIndex].order || Date.now();
+            let currentOrder = window.galleryData[index].order || Date.now();
+            let targetOrder = window.galleryData[targetIndex].order || Date.now();
 
-            await updateDoc(doc(db, "gallery", galleryData[index].id), { order: targetOrder });
-            await updateDoc(doc(db, "gallery", galleryData[targetIndex].id), { order: currentOrder });
-            loadGallery();
+            await updateDoc(doc(db, "gallery", window.galleryData[index].id), { order: targetOrder });
+            await updateDoc(doc(db, "gallery", window.galleryData[targetIndex].id), { order: currentOrder });
+            window.loadGallery();
         };
 
-        async function loadGallery() {
+        window.loadGallery = async function() {
             let galleryGrid = document.getElementById('galleryGrid'); if(!galleryGrid) return;
             try {
                 let snap = await getDocs(query(collection(db, "gallery"), orderBy("order", "asc")));
-                galleryData = []; snap.forEach(d => galleryData.push({id: d.id, ...d.data()}));
+                window.galleryData = []; snap.forEach(d => window.galleryData.push({id: d.id, ...d.data()}));
 
-                galleryGrid.innerHTML = galleryData.map(g => `
+                galleryGrid.innerHTML = window.galleryData.map(g => `
                     <div class="folder-card" style="padding:10px; text-align:center; position:relative;">
                         <input type="checkbox" class="gal-chk" value="${g.id}" style="position:absolute; top:12px; left:12px; width:18px; height:18px; z-index:2; cursor:pointer;">
                         <img src="${g.url}" style="width:100%; height:130px; object-fit:cover; border-radius:6px; cursor:pointer;" onclick="openImagePreview('${g.url}', '${(g.title||'').replace(/'/g, "\\'")}')">
@@ -2872,11 +3112,157 @@
                     </div>
                 `).join('') || '<div style="grid-column: 1/-1; text-align:center; padding:20px; color:gray;">गॅलरीमध्ये एकही फोटो उपलब्ध नाही.</div>';
             } catch(e) { console.error("Gallery Error:", e); }
-        }
+        };
+
+        window.uploadGalleryPhoto = async () => {
+            let fileInput = document.getElementById('gallery_photo');
+            let file = fileInput ? fileInput.files[0] : null;
+            let title = document.getElementById('gallery_title').value.trim();
+            let showIndex = document.getElementById('gallery_show_index').checked;
+
+            if(!file) return Swal.fire('फोटो निवडा', 'कृपया अपलोड करण्यासाठी फोटो निवडा.', 'warning');
+
+            Swal.fire({title: 'फोटो गॅलरीत अपलोड होत आहे...', allowOutsideClick: false, didOpen: () => Swal.showLoading()});
+            try {
+                let url = await window.uploadToCloudinary(file);
+                await addDoc(collection(db, "gallery"), { 
+                    url: url, title: title || 'गॅलरी फोटो', showIndex: showIndex, date: new Date().toLocaleDateString('mr-IN'), order: Date.now(), timestamp: Date.now()
+                });
+                fileInput.value = ''; document.getElementById('gallery_title').value = '';
+                Swal.fire('यशस्वी', 'फोटो गॅलरीमध्ये जोडला गेला!', 'success');
+                window.loadGallery();
+            } catch(e) { Swal.fire('Error', e.message, 'error'); }
+        };
+
+        window.openImagePreview = (url, title) => {
+            document.getElementById('img_preview_src').src = url;
+            document.getElementById('img_preview_title').innerText = title || "फोटो प्रिव्ह्यू";
+            document.getElementById('imagePreviewModal').style.display = 'flex';
+        };
+
+        window.deleteGalleryPhoto = async (id) => {
+            let photo = window.galleryData.find(x => x.id === id);
+            if(confirm("हा फोटो डिलीट करायचा आहे का?")) {
+                if(photo) await window.moveToRecycleBin("गॅलरी फोटो", photo, photo.title || "Gallery Photo");
+                await deleteDoc(doc(db, "gallery", id)); 
+                window.loadGallery(); 
+            }
+        };
+
+        window.deleteSelectedGalleryPhotos = async () => {
+            let selectedCbs = Array.from(document.querySelectorAll('.gal-chk:checked'));
+            let ids = selectedCbs.map(cb => cb.value);
+            if(ids.length === 0) return Swal.fire('सूचना', 'कृपया डिलीट करण्यासाठी किमान एक फोटो निवडा.', 'warning');
+
+            if(confirm(`निवडलेले ${ids.length} फोटो डिलीट करायचे आहेत का?`)) {
+                Swal.fire({title: 'फोटो डिलीट होत आहेत...', didOpen: () => Swal.showLoading()});
+                for(let id of ids) { 
+                    let photo = window.galleryData.find(x => x.id === id);
+                    if(photo) await window.moveToRecycleBin("गॅलरी फोटो", photo, photo.title || "Gallery Photo");
+                    await deleteDoc(doc(db, "gallery", id)); 
+                }
+                Swal.fire('यशस्वी', `${ids.length} फोटो डिलीट झाले!`, 'success');
+                window.loadGallery();
+            }
+        };
 
         // ==========================================================
-        // DYNAMIC POLL SYSTEM (REPLACING OLD ELECTION SYSTEM)
+        // DYNAMIC TEMPLATE BUILDER & SMART MARGINS ENGINE
         // ==========================================================
+        window.saveTemplateBuilderSettings = async () => {
+            let permMem = document.getElementById('tb_perm_member_login').checked;
+            let permIdx = document.getElementById('tb_perm_index_page').checked;
+            let permAuto = document.getElementById('tb_perm_system_auto').checked;
+            let permManual = document.getElementById('tb_perm_manual_entry').checked;
+
+            await setDoc(doc(db, "settings", "tb_permissions"), {
+                showMemberLogin: permMem, showIndexPage: permIdx, allowAutoFetch: permAuto, allowManualEntry: permManual
+            });
+            Swal.fire('सेव्ह झाले', 'टेम्प्लेट बिल्डर परवानग्या अपडेट झाल्या!', 'success');
+        };
+
+        window.createNewTemplateFormat = async () => {
+            let title = document.getElementById('tb_template_title').value.trim();
+            let source = document.getElementById('tb_data_source_type').value;
+            let subject = document.getElementById('tb_default_subject').value.trim();
+            let body = document.getElementById('tb_template_body').value.trim();
+
+            let topMargin = document.getElementById('tb_top_margin').value || 120;
+            let leftMargin = document.getElementById('tb_left_margin').value || 20;
+            let rightMargin = document.getElementById('tb_right_margin').value || 20;
+            let bottomMargin = document.getElementById('tb_bottom_margin').value || 20;
+
+            if(!title || !body) return alert("कृपया पत्राचे नाव व मुख्य मजकूर भरा.");
+
+            Swal.fire({title: 'टेम्प्लेट फॉरमॅट सेव्ह होत आहे...', didOpen: () => Swal.showLoading()});
+            await addDoc(collection(db, "tb_letters"), {
+                title, source, subject, body, topMargin, leftMargin, rightMargin, bottomMargin, createdAt: Date.now()
+            });
+
+            Swal.fire('यशस्वी', 'नवीन टेम्प्लेट फॉरमॅट जोडला गेला!', 'success');
+            document.getElementById('tb_template_title').value = '';
+            document.getElementById('tb_template_body').value = '';
+            loadData();
+        };
+
+        window.renderTemplateBuilderList = () => {
+            let html = window.templateBuilderData.map((t) => `
+                <tr>
+                    <td><input type="checkbox" class="tb-chk" value="${t.id}"></td>
+                    <td><small>${new Date(t.createdAt||Date.now()).toLocaleDateString('mr-IN')}</small></td>
+                    <td><b>${t.title}</b></td>
+                    <td>${t.memberName || 'ॲडमिन / सिस्टीम'}</td>
+                    <td><span class="badge bg-info">${t.source || 'Auto'}</span></td>
+                    <td class="no-print">
+                        <button class="btn-action bg-primary" onclick="downloadPDFTBLetter('${t.id}')"><i class="fa fa-file-pdf"></i> A4 PDF</button>
+                        <button class="btn-action bg-danger" onclick="deleteTBLetter('${t.id}')"><i class="fa fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+
+            document.getElementById('templateBuilderListBody').innerHTML = html || '<tr><td colspan="6" style="text-align:center;">टेम्प्लेट फॉरमॅट्स उपलब्ध नाहीत.</td></tr>';
+        };
+
+        window.toggleSelectAllTB = (el) => { document.querySelectorAll('.tb-chk').forEach(cb => cb.checked = el.checked); };
+        
+        window.deleteSelectedTBLetters = async () => {
+            let ids = Array.from(document.querySelectorAll('.tb-chk:checked')).map(cb => cb.value);
+            if(ids.length === 0) return alert("किमान एक पत्र निवडा.");
+            if(confirm("निवडलेली पत्रे डिलीट करायची आहेत का?")) {
+                for(let id of ids) { await deleteDoc(doc(db, "tb_letters", id)); }
+                loadData();
+            }
+        };
+
+        window.deleteTBLetter = async (id) => {
+            if(confirm("हे पत्र डिलीट करायचे आहे का?")) { 
+                await deleteDoc(doc(db, "tb_letters", id)); 
+                loadData(); 
+            }
+        };
+
+        window.downloadPDFTBLetter = (id) => {
+            let item = window.templateBuilderData.find(x => x.id === id); if(!item) return;
+            let printArea = document.getElementById('printLetterArea');
+            
+            printArea.innerHTML = `
+                <div class="a4-print-container" style="width:210mm; height:297mm; padding:${item.topMargin||120}mm ${item.rightMargin||20}mm ${item.bottomMargin||20}mm ${item.leftMargin||20}mm; box-sizing:border-box;">
+                    <h3 style="text-align:center; text-decoration:underline; margin-bottom:15px;">${item.subject||'अर्ज'}</h3>
+                    <div style="font-size:15px; line-height:1.8; text-align:justify; white-space:pre-wrap;">${item.body}</div>
+                </div>
+            `;
+            printArea.style.display = 'block';
+
+            let element = printArea.firstElementChild;
+            let opt = { margin: 0, filename: `Template_Letter_${id}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
+            html2pdf().set(opt).from(element).save().then(()=>{ printArea.style.display = 'none'; });
+        };// ==========================================================
+        // DYNAMIC POLL SYSTEM LOGIC
+        // ==========================================================
+        window.togglePollOnOff = (status) => {
+            Swal.fire('माहिती', status ? "पोल सिस्टीम सुरू केली!" : "पोल सिस्टीम बंद केली!", 'info');
+        };
+
         window.createNewPollQuestion = async () => {
             let q = document.getElementById('poll_question_input').value.trim();
             let opt1 = document.getElementById('poll_opt1_input').value.trim();
@@ -2887,7 +3273,8 @@
             if(!q || !opt1 || !opt2) return Swal.fire('माहिती अपूर्ण', 'कृपया प्रश्न व किमान २ पर्याय भरा.', 'warning');
 
             let optionsObj = {};
-            optionsObj[opt1] = 0; optionsObj[opt2] = 0;
+            optionsObj[opt1] = 0; 
+            optionsObj[opt2] = 0;
             if(opt3) optionsObj[opt3] = 0;
             if(opt4) optionsObj[opt4] = 0;
 
@@ -2896,10 +3283,13 @@
                 question: q, options: optionsObj, votesTotal: 0, voterIds: [], active: true, createdAt: Date.now()
             });
 
+            await window.logAdminActivity(`Created Poll Question: ${q}`);
             Swal.fire('यशस्वी', 'नवीन पोल प्रसिद्ध झाला!', 'success');
             document.getElementById('poll_question_input').value = '';
             document.getElementById('poll_opt1_input').value = '';
             document.getElementById('poll_opt2_input').value = '';
+            if(document.getElementById('poll_opt3_input')) document.getElementById('poll_opt3_input').value = '';
+            if(document.getElementById('poll_opt4_input')) document.getElementById('poll_opt4_input').value = '';
             loadData();
         };
 
@@ -2907,7 +3297,7 @@
             let selectBox = document.getElementById('active_poll_select');
             let selectHtml = '<option value="">पोल निवडा</option>';
 
-            let html = pollsData.map((p, i) => {
+            let html = window.pollsData.map((p, i) => {
                 if(p.active) selectHtml += `<option value="${p.id}">${p.question}</option>`;
                 let optsHtml = Object.keys(p.options || {}).map(opt => `<span class="badge bg-primary" style="margin:2px;">${opt}: ${p.options[opt]} मते</span>`).join(' ');
 
@@ -2917,7 +3307,7 @@
                         <td><b>${p.question}</b></td>
                         <td>${optsHtml}</td>
                         <td><b style="color:var(--success);">${p.votesTotal||0} मते</b></td>
-                        <td>
+                        <td class="no-print">
                             <button class="btn-action bg-danger" onclick="deletePoll('${p.id}')"><i class="fa fa-trash"></i> डिलीट</button>
                         </td>
                     </tr>
@@ -2925,15 +3315,17 @@
             }).join('');
 
             if(selectBox) selectBox.innerHTML = selectHtml;
-            document.getElementById('pollResultsBody').innerHTML = html || '<tr><td colspan="5" style="text-align:center;">सध्या एकही पोल उपलब्ध नाही.</td></tr>';
+            let tbody = document.getElementById('pollResultsBody');
+            if(tbody) tbody.innerHTML = html || '<tr><td colspan="5" style="text-align:center;">सध्या एकही पोल उपलब्ध नाही.</td></tr>';
         };
 
         window.loadPollOptionsDropdown = () => {
             let pollId = document.getElementById('active_poll_select').value;
             let optDropdown = document.getElementById('poll_option_dropdown');
+            if(!optDropdown) return;
             if(!pollId) { optDropdown.innerHTML = '<option value="">प्रथम प्रश्न निवडा</option>'; return; }
 
-            let poll = pollsData.find(x => x.id === pollId);
+            let poll = window.pollsData.find(x => x.id === pollId);
             if(!poll) return;
 
             let html = '<option value="">पर्याय निवडा</option>';
@@ -2948,7 +3340,8 @@
 
             if(!pollId || !choice || !voterId) return alert("कृपया प्रश्न, पर्याय आणि सदस्य तीनही निवडा.");
 
-            let poll = pollsData.find(x => x.id === pollId);
+            let poll = window.pollsData.find(x => x.id === pollId);
+            if(!poll) return;
             if((poll.voterIds||[]).includes(voterId)) return Swal.fire('नाकारले', 'या सदस्याने आधीच या पोलमध्ये मत दिले आहे.', 'warning');
 
             let newVoterList = [...(poll.voterIds||[]), voterId];
@@ -2959,74 +3352,39 @@
                 options: newOptions, votesTotal: (poll.votesTotal || 0) + 1, voterIds: newVoterList
             });
 
+            let voter = window.membersData.find(m => m.id === voterId);
+            if(voter) await window.logMemberActivity(voter.name, `Voted in poll: ${poll.question}`);
+
             Swal.fire('धन्यवाद!', 'तुमचे मत नोंदवले गेले.', 'success');
             loadData();
         };
 
         window.deletePoll = async (id) => {
-            let poll = pollsData.find(x => x.id === id);
+            let poll = window.pollsData.find(x => x.id === id);
             if(confirm("हा पोल डिलीट करायचा आहे का?")) {
-                if(poll) await moveToRecycleBin("पोल प्रश्न", poll, poll.question);
+                if(poll) await window.moveToRecycleBin("पोल प्रश्न", poll, poll.question);
                 await deleteDoc(doc(db, "polls", id));
                 loadData();
             }
         };
 
-        // ==========================================================
-        // DYNAMIC TEMPLATE BUILDER ENGINE
-        // ==========================================================
-        window.createNewTemplateFormat = async () => {
-            let title = document.getElementById('tb_template_title').value.trim();
-            let source = document.getElementById('tb_data_source_type').value;
-            let subject = document.getElementById('tb_default_subject').value.trim();
-            let body = document.getElementById('tb_template_body').value.trim();
+        window.printOfficialPollReport = () => {
+            let rows = window.pollsData.map((p, i) => {
+                let optsStr = Object.keys(p.options || {}).map(o => `${o}: ${p.options[o]}`).join(', ');
+                return `<tr><td>${i+1}</td><td>${p.question}</td><td>${optsStr}</td><td>${p.votesTotal||0}</td></tr>`;
+            }).join('');
 
-            let topMargin = document.getElementById('tb_top_margin').value || 120;
-            let leftMargin = document.getElementById('tb_left_margin').value || 20;
-
-            if(!title || !body) return alert("कृपया पत्राचे नाव व मुख्य मजकूर भरा.");
-
-            Swal.fire({title: 'टेम्प्लेट फॉरमॅट सेव्ह होत आहे...', didOpen: () => Swal.showLoading()});
-            await addDoc(collection(db, "tb_letters"), {
-                title, source, subject, body, topMargin, leftMargin, createdAt: Date.now()
-            });
-
-            Swal.fire('यशस्वी', 'नवीन टेम्प्लेट फॉरमॅट जोडला गेला!', 'success');
-            document.getElementById('tb_template_title').value = '';
-            document.getElementById('tb_template_body').value = '';
-            loadData();
-        };
-
-        window.renderTemplateBuilderList = () => {
-            let html = templateBuilderData.map((t, i) => `
-                <tr>
-                    <td><input type="checkbox" class="tb-chk" value="${t.id}"></td>
-                    <td><small>${new Date(t.createdAt||Date.now()).toLocaleDateString('mr-IN')}</small></td>
-                    <td><b>${t.title}</b></td>
-                    <td>${t.memberName || 'ॲडमन / सिस्टीम'}</td>
-                    <td><span class="badge bg-info">${t.source || 'Auto'}</span></td>
-                    <td class="no-print">
-                        <button class="btn-action bg-primary" onclick="downloadPDFTBLetter('${t.id}')"><i class="fa fa-file-pdf"></i> A4 PDF</button>
-                        <button class="btn-action bg-danger" onclick="deleteTBLetter('${t.id}')"><i class="fa fa-trash"></i></button>
-                    </td>
-                </tr>
-            `).join('');
-
-            document.getElementById('templateBuilderListBody').innerHTML = html || '<tr><td colspan="6" style="text-align:center;">टेम्प्लेट फॉरमॅट्स उपलब्ध नाहीत.</td></tr>';
-        };
-
-        window.toggleSelectAllTB = (el) => { document.querySelectorAll('.tb-chk').forEach(cb => cb.checked = el.checked); };
-        window.deleteSelectedTBLetters = async () => {
-            let ids = Array.from(document.querySelectorAll('.tb-chk:checked')).map(cb => cb.value);
-            if(ids.length === 0) return alert("किमान एक पत्र निवडा.");
-            if(confirm("निवडलेली पत्रे डिलीट करायची आहेत का?")) {
-                for(let id of ids) { await deleteDoc(doc(db, "tb_letters", id)); }
-                loadData();
-            }
-        };
-
-        window.deleteTBLetter = async (id) => {
-            if(confirm("हे पत्र डिलीट करायचे आहे का?")) { await deleteDoc(doc(db, "tb_letters", id)); loadData(); }
+            let win = window.open('', '_blank');
+            win.document.write(`
+                <html><head><title>Poll Official Report</title><style>body{font-family:'Mukta',sans-serif; padding:20px;} table{width:100%; border-collapse:collapse;} th,td{border:1px solid #000; padding:8px; text-align:left;}</style></head>
+                <body>
+                    <h2 style="text-align:center; color:#0B3D91;">क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना महाराष्ट्र राज्य</h2>
+                    <h3 style="text-align:center;">अधिकृत पोल व सर्वेक्षण निकाल अहवाल 2026</h3>
+                    <p><b>अहवाल दिनांक:</b> ${new Date().toLocaleString('mr-IN')}</p>
+                    <table><thead><tr><th>अ.क्र.</th><th>प्रश्न</th><th>पर्याय व मते</th><th>एकूण मते</th></tr></thead><tbody>${rows}</tbody></table>
+                </body></html>
+            `);
+            setTimeout(() => win.print(), 300);
         };
 
         // ==========================================================
@@ -3036,13 +3394,16 @@
             let s = document.getElementById('searchGrievance')?.value.toLowerCase() || '';
             let statusFil = document.getElementById('filterGrievanceStatus')?.value || 'All';
 
-            let fil = grievancesData.filter(g => {
+            let fil = window.grievancesData.filter(g => {
                 if(statusFil !== 'All' && (g.status||'Pending') !== statusFil) return false;
                 if(s && !((g.inwardNo||'').toLowerCase().includes(s) || (g.subject||'').toLowerCase().includes(s) || (g.memberName||'').toLowerCase().includes(s))) return false;
                 return true;
             });
 
-            document.getElementById('grievanceListBody').innerHTML = fil.map((g) => `
+            let tbody = document.getElementById('grievanceListBody');
+            if(!tbody) return;
+
+            tbody.innerHTML = fil.map((g) => `
                 <tr>
                     <td><b>${g.inwardNo || 'GRI-2026-101'}</b></td>
                     <td><small>${g.date || '-'}</small></td>
@@ -3052,6 +3413,7 @@
                     <td><small>${g.resolvedDate || '-'}</small></td>
                     <td class="no-print">
                         <button class="btn-action bg-success" onclick="resolveGrievance('${g.id}')"><i class="fa fa-check"></i> सोडवा</button>
+                        <button class="btn-action bg-info" onclick="printGrievancePDF('${g.id}')"><i class="fa fa-file-pdf"></i> PDF</button>
                     </td>
                 </tr>
             `).join('') || '<tr><td colspan="7" style="text-align:center;">तक्रारी उपलब्ध नाहीत.</td></tr>';
@@ -3065,25 +3427,72 @@
                 await updateDoc(doc(db, "grievances", id), {
                     status: 'Resolved', remark: remark, resolvedDate: new Date().toLocaleDateString('mr-IN')
                 });
-                Swal.fire('यशस्वी', 'तक्रार निवारण अपडेट झाले व सदस्याला ई-मेल पाठवला!', 'success');
+                await window.logAdminActivity(`Resolved Grievance ID: ${id}`);
+                Swal.fire('यशस्वी', 'तक्रार निवारण अपडेट झाले!', 'success');
                 loadData();
             }
         };
 
+        window.printGrievancePDF = (id) => {
+            let g = window.grievancesData.find(x => x.id === id); if(!g) return;
+            let win = window.open('', '_blank');
+            win.document.write(`
+                <html><head><title>Grievance_${g.inwardNo}</title><style>body{font-family:'Mukta',sans-serif; padding:30px;} .box{border:2px solid #0B3D91; padding:20px; border-radius:10px;}</style></head>
+                <body>
+                    <div class="box">
+                        <h2 style="color:#0B3D91; text-align:center;">क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना</h2>
+                        <h3 style="text-align:center;">तक्रार निवारण पत्र (Grievance Resolution)</h3>
+                        <hr>
+                        <p><b>आवक क्रमांक:</b> ${g.inwardNo}</p>
+                        <p><b>दिनांक:</b> ${g.date}</p>
+                        <p><b>सदस्याचे नाव:</b> ${g.memberName}</p>
+                        <p><b>विषय:</b> ${g.subject}</p>
+                        <p><b>तक्रार स्टेटस:</b> ${g.status}</p>
+                        <p><b>निवारण शेरा:</b> ${g.remark || 'प्रक्रियेत आहे'}</p>
+                    </div>
+                </body></html>
+            `);
+            setTimeout(() => win.print(), 300);
+        };
+
         // ==========================================================
-        // INFORMATION GATHERING & ASSOCIATION WORK HUB
+        // INFO GATHERING & ASSOCIATION WORK HUB ENGINE
         // ==========================================================
+        window.saveInfoGatherNotice = async () => {
+            let txt = document.getElementById('info_gather_notice_text').value.trim();
+            await setDoc(doc(db, "settings", "info_gather_notice"), { text: txt, enabled: true });
+            Swal.fire('यशस्वी', 'पॉप-अप मेसेज सेव्ह झाला!', 'success');
+        };
+
+        window.saveMemberGatheredData = async (e) => {
+            e.preventDefault();
+            let inst = document.getElementById('gather_institutes_cnt').value;
+            let xray = document.getElementById('gather_xray_officers_cnt').value;
+            let joinPlace = document.getElementById('gather_joining_place').value;
+            let transfer = document.getElementById('gather_transfer_details').value;
+
+            await addDoc(collection(db, "info_gathered"), {
+                memberName: currentLoggedInAdminName, district: "लातूर", mandal: "लातूर मंडळ",
+                institutesCount: inst, xrayOfficersCount: xray, joiningPlace: joinPlace,
+                transferDetails: transfer, updatedAt: new Date().toLocaleDateString('mr-IN')
+            });
+            window.closeModal('memberDataGatheringModal');
+            Swal.fire('यशस्वी', 'माहिती सबमिट झाली!', 'success');
+            loadData();
+        };
+
         window.renderGatheredInfo = () => {
-            document.getElementById('gatheredInfoTableBody').innerHTML = infoGatherData.map((d, i) => `
+            let tbody = document.getElementById('gatheredInfoTableBody'); if(!tbody) return;
+            tbody.innerHTML = window.infoGatherData.map((d, i) => `
                 <tr>
                     <td>${i+1}</td>
                     <td><b>${d.memberName}</b></td>
-                    <td>${d.district} (${d.mandal})</td>
-                    <td>${d.institutesCount}</td>
-                    <td>${d.xrayOfficersCount}</td>
-                    <td>${d.joiningPlace}</td>
+                    <td>${d.district||'-'} (${d.mandal||'-'})</td>
+                    <td>${d.institutesCount||'0'}</td>
+                    <td>${d.xrayOfficersCount||'0'}</td>
+                    <td>${d.joiningPlace||'-'}</td>
                     <td><small>${d.transferDetails||'-'}</small></td>
-                    <td><small>${d.updatedAt}</small></td>
+                    <td><small>${d.updatedAt||'-'}</small></td>
                 </tr>
             `).join('') || '<tr><td colspan="8" style="text-align:center;">अद्याप कोणतीही माहिती जमा झालेली नाही.</td></tr>';
         };
@@ -3095,6 +3504,8 @@
             let res = document.getElementById('mm_resolutions').value;
             let dec = document.getElementById('mm_decisions').value;
 
+            if(!date || !place) return alert("कृपया दिनांक व ठिकाण भरा.");
+
             let win = window.open('', '_blank');
             win.document.write(`
                 <html><head><title>Meeting Minutes</title><style>body{font-family:'Mukta',sans-serif; padding:30px;} h2,h3{text-align:center; color:#0B3D91;}</style></head>
@@ -3104,10 +3515,45 @@
                     <p><b>दिनांक:</b> ${date} | <b>ठिकाण:</b> ${place}</p>
                     <p><b>उपस्थिती:</b> ${attendees}</p>
                     <hr>
-                    <h4>चर्चेतील ठराव व विषय:</h4>
-                    <p>${res}</p>
-                    <h4>झालेले निर्णय:</h4>
-                    <p>${dec}</p>
+                    <h4>चर्चेतील ठराव व विषय:</h4><p>${res}</p>
+                    <h4>झालेले निर्णय:</h4><p>${dec}</p>
+                </body></html>
+            `);
+            setTimeout(() => win.print(), 300);
+        };
+
+        window.saveMeetingCalendarEvent = async () => {
+            let title = document.getElementById('cal_title').value.trim();
+            let dt = document.getElementById('cal_datetime').value;
+            let target = document.getElementById('cal_target_audience').value;
+
+            if(!title || !dt) return alert("विषय व दिनांक दोन्ही भरा.");
+
+            await addDoc(collection(db, "meeting_calendar"), { title, datetime: dt, targetAudience: target, createdAt: Date.now() });
+            Swal.fire('यशस्वी', 'बैठक कॅलेंडरमध्ये जोडली गेली!', 'success');
+        };
+
+        window.publishOnlineMeetingLink = async () => {
+            let url = document.getElementById('meet_link_url').value.trim();
+            let vis = document.getElementById('meet_visibility').value;
+
+            if(!url) return alert("मीटिंग लिंक टाका.");
+
+            await setDoc(doc(db, "settings", "online_meeting"), { link: url, visibility: vis, active: true, timestamp: Date.now() });
+            Swal.fire('यशस्वी', 'ऑनलाईन मीटिंग लिंक प्रसिद्ध झाली!', 'success');
+        };
+
+        window.printOfficialAttendanceSheet = () => {
+            let win = window.open('', '_blank');
+            win.document.write(`
+                <html><head><title>Attendance Sheet</title><style>body{font-family:'Mukta',sans-serif; padding:20px;} table{width:100%; border-collapse:collapse;} th,td{border:1px solid #000; padding:6px;}</style></head>
+                <body>
+                    <h2 style="text-align:center; color:#0B3D91;">क्ष-किरण वैज्ञानिक अधिकारी कर्मचारी संघटना</h2>
+                    <h3 style="text-align:center;">ऑनलाईन मीटिंग शासकीय हजेरी पत्रक (Time-Stamped)</h3>
+                    <p><b>प्रिंट वेळ:</b> ${new Date().toLocaleString('mr-IN')}</p>
+                    <table><thead><tr><th>अ.क्र.</th><th>नाव व पद</th><th>जिल्हा व मंडळ</th><th>जॉईन वेळ</th></tr></thead>
+                    <tbody><tr><td>1</td><td>महेश हांगे (मुख्य ॲडमिन)</td><td>लातूर मंडळ</td><td>${new Date().toLocaleTimeString('mr-IN')}</td></tr></tbody>
+                    </table>
                 </body></html>
             `);
             setTimeout(() => win.print(), 300);
@@ -3116,32 +3562,74 @@
         window.renderAssocHub = () => {};
 
         // ==========================================================
-        // INDEX MANAGEMENT & MEMBER PLATFORM REORDERING
+        // INDEX & MEMBER LOGIN MANAGEMENT
         // ==========================================================
-        window.renderIndexMgmt = () => {};
+        window.addIndexPageTab = async () => {
+            let title = document.getElementById('idx_tab_title').value.trim();
+            let file = document.getElementById('idx_tab_file').files[0];
+
+            if(!title) return alert("शीर्षक टाका.");
+            Swal.fire({title: 'अपलोड होत आहे...', didOpen: () => Swal.showLoading()});
+
+            let fileUrl = "";
+            if(file) fileUrl = await window.uploadToCloudinary(file);
+
+            await addDoc(collection(db, "index_tabs"), { title, fileUrl, date: new Date().toLocaleDateString('mr-IN'), order: Date.now() });
+            Swal.fire('यशस्वी', 'नवीन इंडेक्स टॅब प्रसिद्ध झाला!', 'success');
+            loadData();
+        };
+
+        window.renderIndexMgmt = async () => {
+            let snap = await getDocs(query(collection(db, "index_tabs"), orderBy("order", "asc")));
+            let list = []; snap.forEach(d => list.push({id: d.id, ...d.data()}));
+
+            let tbody = document.getElementById('indexMgmtTableBody'); if(!tbody) return;
+            tbody.innerHTML = list.map((x, i) => `
+                <tr>
+                    <td>${i+1}</td>
+                    <td><b>${x.title}</b></td>
+                    <td>${x.fileUrl ? `<a href="${x.fileUrl}" target="_blank" class="badge bg-success">पहा / फाईल</a>` : 'नाही'}</td>
+                    <td><small>${x.date||'-'}</small></td>
+                    <td class="no-print"><button class="btn-action bg-danger" onclick="deleteIndexTab('${x.id}')"><i class="fa fa-trash"></i></button></td>
+                </tr>
+            `).join('') || '<tr><td colspan="5" style="text-align:center;">टॅब्स उपलब्ध नाहीत.</td></tr>';
+        };
+
+        window.deleteIndexTab = async (id) => {
+            if(confirm("हा टॅब डिलीट करायचा आहे का?")) { await deleteDoc(doc(db, "index_tabs", id)); window.renderIndexMgmt(); }
+        };
+
+        window.saveMemberMgmtControls = async () => {
+            let noticePop = document.getElementById('mm_enable_notice_popup').checked;
+            let dataPop = document.getElementById('mm_enable_data_popup').checked;
+
+            await setDoc(doc(db, "settings", "member_mgmt_controls"), { enableNoticePopup: noticePop, enableDataPopup: dataPop });
+            Swal.fire('सेव्ह झाले', 'मेम्बर प्लॅटफॉर्म सेटिंग्ज अपडेट झाल्या.', 'success');
+        };
+
         window.renderMemberTabsOrder = () => {};
 
         // ==========================================================
-        // REALTIME LIVE CHAT ENGINE
+        // REALTIME LIVE CHAT ENGINE (WHATSAPP STYLE)
         // ==========================================================
         window.initLiveChatEngine = () => {
             const chatQ = query(collection(db, "chat_messages"), orderBy("timestamp", "asc"));
             onSnapshot(chatQ, (snapshot) => {
-                chatMessagesData = [];
-                snapshot.forEach(d => chatMessagesData.push({ id: d.id, ...d.data() }));
-                renderChatMessages();
+                window.chatMessagesData = [];
+                snapshot.forEach(d => window.chatMessagesData.push({ id: d.id, ...d.data() }));
+                window.renderChatMessages();
             });
         };
 
         window.switchChatRoom = (target) => {
-            currentActiveChatRoom = target;
+            window.currentActiveChatRoom = target;
             document.getElementById('chatTargetTitle').innerText = target === 'GroupAll' ? '📢 सर्व सदस्य ग्रुप चॅट' : target;
-            renderChatMessages();
+            window.renderChatMessages();
         };
 
         window.renderChatMessages = () => {
             let msgBox = document.getElementById('chatMessagesBox'); if(!msgBox) return;
-            let filMsgs = chatMessagesData.filter(m => m.room === currentActiveChatRoom || (m.room === undefined && currentActiveChatRoom === 'GroupAll'));
+            let filMsgs = window.chatMessagesData.filter(m => m.room === window.currentActiveChatRoom || (m.room === undefined && window.currentActiveChatRoom === 'GroupAll'));
 
             msgBox.innerHTML = filMsgs.map(m => {
                 let isMe = m.senderName === currentLoggedInAdminName;
@@ -3164,7 +3652,7 @@
             let timeStr = now.toLocaleTimeString('mr-IN', { hour: '2-digit', minute: '2-digit' });
 
             await addDoc(collection(db, "chat_messages"), {
-                room: currentActiveChatRoom, text: txt, senderName: currentLoggedInAdminName,
+                room: window.currentActiveChatRoom, text: txt, senderName: currentLoggedInAdminName,
                 senderRole: currentLoggedInAdminDesignation, timestamp: Date.now(), time: timeStr
             });
 
@@ -3174,13 +3662,13 @@
         // ==========================================================
         // SMART I-CARD & PRINT ENGINE
         // ==========================================================
-        window.changeICardStyle = (styleNum) => { currentICardStyle = styleNum; openMemberICardModal(); };
-        window.toggleICardPhotoShape = (isSquare) => { isSquareICardPhoto = isSquare; openMemberICardModal(); };
-        window.togglePresidentNoteICard = (showNote) => { showPresidentNoteICard = showNote; openMemberICardModal(); };
+        window.changeICardStyle = (styleNum) => { window.currentICardStyle = styleNum; window.openMemberICardModal(); };
+        window.toggleICardPhotoShape = (isSquare) => { window.isSquareICardPhoto = isSquare; window.openMemberICardModal(); };
+        window.togglePresidentNoteICard = (showNote) => { window.showPresidentNoteOnICard = showNote; window.openMemberICardModal(); };
 
         let selectedMemberForICard = null;
         window.viewProfileModal = (id) => {
-            let m = membersData.find(x => x.id === id); if(!m) return;
+            let m = window.membersData.find(x => x.id === id); if(!m) return;
             selectedMemberForICard = m;
             document.getElementById('prof_img').src = m.photoUrl || "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
             document.getElementById('prof_name').innerText = m.name || '-';
@@ -3199,10 +3687,10 @@
         window.openMemberICardModal = () => {
             if(!selectedMemberForICard) return;
             let m = selectedMemberForICard;
-            let styleClass = `icard-design-${currentICardStyle}`;
-            let photoShapeClass = isSquareICardPhoto ? 'square-photo' : '';
+            let styleClass = `icard-design-${window.currentICardStyle}`;
+            let photoShapeClass = window.isSquareICardPhoto ? 'square-photo' : '';
 
-            let noteHtml = showPresidentNoteICard ? `<p style="font-size:0.68rem; color:#854d0e; margin-top:5px;"><b>टीप:</b> सदर ओळखपत्र क्ष-किरण वैज्ञानिक अधिकारी संघटनेचे अधिकृत सभासदत्व दर्शवते.</p>` : '';
+            let noteHtml = window.showPresidentNoteOnICard ? `<p style="font-size:0.68rem; color:#854d0e; margin-top:5px;"><b>टीप:</b> सदर ओळखपत्र क्ष-किरण वैज्ञानिक अधिकारी संघटनेचे अधिकृत सभासदत्व दर्शवते.</p>` : '';
 
             let html = `
                 <div class="icard-card-box ${styleClass}">
@@ -3237,12 +3725,20 @@
             setTimeout(() => { win.print(); }, 300);
         };
 
+        window.saveICardFieldSettings = () => {
+            Object.keys(window.icardFieldSettings).forEach(k => {
+                let el = document.getElementById(k);
+                if(el) window.icardFieldSettings[k] = el.checked;
+            });
+            Swal.fire({toast: true, position: 'top-end', icon: 'success', title: 'I-Card फिल्ड्स सेव्ह झाल्या!', showConfirmButton: false, timer: 1200});
+        };
+
         window.filterICardMembers = () => {
             let mVal = document.getElementById('icard_search_mandal').value;
             let dVal = document.getElementById('icard_search_district').value;
             let nameVal = document.getElementById('icard_search_name').value.toLowerCase();
 
-            let filtered = membersData.filter(m => {
+            let filtered = window.membersData.filter(m => {
                 if(m.isMember === false || m.status !== 'Approved') return false;
                 if(mVal !== 'All' && m.mandal !== mVal) return false;
                 if(dVal !== 'All' && dVal !== '' && m.district !== dVal) return false;
@@ -3262,18 +3758,499 @@
         };
 
         // ==========================================================
-        // MEMBER FOLDERS & FEES ENGINE
+        // MARATHI NUMBER TO WORDS CONVERTER & E-RECEIPTS
+        // ==========================================================
+        window.numberToMarathiWords = function(n) {
+            n = parseInt(n, 10);
+            if (isNaN(n) || n <= 0) return "";
+
+            const numbers1to99 = {
+                0:"", 1:"एक", 2:"दोन", 3:"तीन", 4:"चार", 5:"पाच", 6:"सहा", 7:"सात", 8:"आठ", 9:"नऊ", 10:"दहा",
+                11:"अकरा", 12:"बारा", 13:"तेरा", 14:"चौदा", 15:"पंधरा", 16:"सोळा", 17:"सतरा", 18:"अठरा", 19:"एकोणीस", 20:"वीस",
+                21:"एकवीस", 22:"बावीस", 23:"तेवीस", 24:"चौवीस", 25:"पंचवीस", 26:"सव्वीस", 27:"सत्तावीस", 28:"अठ्ठावीस", 29:"एकोणतीस", 30:"तीस",
+                31:"एकतीस", 32:"बत्तीस", 33:"तेत्तीस", 34:"चौतीस", 35:"पस्तीस", 36:"छत्तीस", 37:"सदतीस", 38:"अडतीस", 39:"एकोणचाळीस", 40:"चाळीस",
+                41:"एकचाळीस", 42:"बेचाळीस", 43:"त्रेचाळीस", 44:"चौरेश्चाळीस", 45:"पंचेचाळीस", 46:"सेचाळीस", 47:"सत्तेचाळीस", 48:"अठ्ठेचाळीस", 49:"एकोणपन्नास", 50:"पन्नास",
+                51:"एकपन्नास", 52:"बावन्न", 53:"त्रेपन्न", 54:"चौपन्न", 55:"पन्नस", 56:"छप्पन्न", 57:"सत्तावन्न", 58:"अठ्ठावन्न", 59:"एकोणसाठ", 60:"साठ",
+                61:"एकसष्ट", 62:"बासष्ट", 63:"त्रेसष्ट", 64:"चौसष्ट", 65:"पासष्ट", 66:"सहसष्ट", 67:"सतसष्ट", 68:"अडसष्ट", 69:"एकोणसत्तर", 70:"सत्तर",
+                71:"एकहत्तर", 72:"बाहत्तर", 73:"त्र्याहत्तर", 74:"चौऱ्याहत्तर", 75:"पंच्याहत्तर", 76:"शहात्तर", 77:"सतऱ्याहत्तर", 78:"अठ्ठ्याहत्तर", 79:"एकोणऐंशी", 80:"अंशी",
+                81:"एकऐंशी", 82:"ब्याऐंशी", 83:"त्र्याऐंशी", 84:"चौऱ्याऐंशी", 85:"पंच्याऐंशी", 86:"शहाऐंशी", 87:"सतऱ्याऐंशी", 88:"अठ्ठ्याऐंशी", 89:"एकोणनव्वद", 90:"नव्वद",
+                91:"एक्याणनव्वद", 92:"ब्याणनव्वद", 93:"त्र्याणनव्वद", 94:"चौऱ्याणनव्वद", 95:"पंच्याणनव्वद", 96:"शहाणनव्वद", 97:"सत्याणनव्वद", 98:"अठ्ठ्याणनव्वद", 99:"नव्याण्णव"
+            };
+
+            function convertUnder1000(num) {
+                let str = "";
+                if (num >= 100) {
+                    let hd = Math.floor(num / 100);
+                    let hMap = {1:"एकशे", 2:"दोनशे", 3:"तीनशे", 4:"चारशे", 5:"पाचशे", 6:"सहाशे", 7:"सातशे", 8:"आठशे", 9:"नऊशे"};
+                    str += (hMap[hd] || "") + " ";
+                    num = num % 100;
+                }
+                if (num > 0) { str += numbers1to99[num] + " "; }
+                return str;
+            }
+
+            let result = "";
+            if (n >= 100000) {
+                let lakh = Math.floor(n / 100000);
+                result += numbers1to99[lakh] + " लाख ";
+                n = n % 100000;
+            }
+            if (n >= 1000) {
+                let thousand = Math.floor(n / 1000);
+                result += numbers1to99[thousand] + " हजार ";
+                n = n % 1000;
+            }
+            result += convertUnder1000(n);
+            return result.trim() ? result.trim() + " रुपये फक्त" : "";
+        };
+
+        window.updateAmtWords = function() {
+            let numVal = document.getElementById('rect_amt_num').value;
+            let words = window.numberToMarathiWords(numVal);
+            document.getElementById('rect_amt_words').value = words;
+        };
+
+        window.renderFees = () => {
+            let s = document.getElementById('feeSearch')?.value.toLowerCase() || '';
+            let statusFil = document.getElementById('feeFilterStatus')?.value || 'All';
+
+            let fil = window.membersData.filter(m => {
+                if(m.isMember === false) return false;
+                if(statusFil !== 'All' && (m.feeStatus||'Unpaid') !== statusFil) return false;
+                if(s && !((m.name||'').toLowerCase().includes(s) || (m.utr||'').toLowerCase().includes(s))) return false;
+                return true;
+            });
+
+            let canCancelReceipt = isSuperAdmin || subAdminPermissions.includes('cancel_receipt');
+
+            let tbody = document.getElementById('feesBody');
+            if(tbody) {
+                tbody.innerHTML = fil.map((m) => `
+                    <tr>
+                        <td><input type="checkbox" class="fee-chk" value="${m.id}" data-mobile="${m.mobile||''}" data-email="${m.email||''}"></td>
+                        <td><b>${m.name}</b><br><small>${m.designation||'X-Ray Scientific Officer'}</small></td>
+                        <td>₹ ${m.feeAmount||500}</td>
+                        <td><b>${m.payMethod||'UPI / GPay'}</b></td>
+                        <td><code>${m.utr||'N/A'}</code></td>
+                        <td>${m.screenshotUrl ? `<button class="btn-action bg-info" onclick="window.open('${m.screenshotUrl}', '_blank')"><i class="fa fa-image"></i> पहा</button>` : '<small>नाही</small>'}</td>
+                        <td><span class="badge ${m.feeStatus === 'Paid' ? 'bg-success' : 'bg-danger'}">${m.feeStatus||'Unpaid'}</span></td>
+                        <td class="no-print" style="white-space:nowrap;">
+                            <button class="btn-action bg-warning" onclick="openReceiptModal('${m.id}')"><i class="fa fa-receipt"></i> ई-पावती</button>
+                            ${canCancelReceipt ? `<button class="btn-action bg-danger" onclick="cancelMemberReceipt('${m.id}')" title="पावती रद्द करा"><i class="fa fa-times-circle"></i> पावती कॅन्सल</button>` : ''}
+                        </td>
+                    </tr>
+                `).join('') || '<tr><td colspan="8" style="text-align:center;">सदस्य सापडले नाहीत.</td></tr>';
+            }
+        };
+
+        window.cancelMemberReceipt = async (id) => {
+            let m = window.membersData.find(x => x.id === id);
+            if(!m) return;
+
+            if(confirm(`श्री/श्रीमती ${m.name} यांची पावती खरोखर कॅन्सल / रद्द करायची आहे का?`)) {
+                Swal.fire({title: 'पावती रद्द होत आहे...', didOpen: () => Swal.showLoading()});
+                await updateDoc(doc(db, "members", id), { feeStatus: 'Unpaid', utr: '', payMethod: '' });
+                await window.moveToRecycleBin("रद्द पावती (Receipt)", { memberId: id, name: m.name, feeAmount: m.feeAmount }, `पावती रद्द: ${m.name}`);
+                await window.logAdminActivity(`Cancelled Fee Receipt for: ${m.name}`);
+                Swal.fire('यशस्वी', 'पावती रद्द करण्यात आली!', 'success');
+                loadData();
+            }
+        };
+
+        window.openReceiptModal = (mId) => {
+            let m = window.membersData.find(x => x.id === mId); if(!m) return;
+            let prefix = document.getElementById('set_receipt_prefix')?.value || 'REC-2026-';
+            let showSevarth = document.getElementById('set_show_sevarth_receipt')?.checked;
+
+            document.getElementById('rect_mem_id').value = m.id;
+            document.getElementById('rect_mem_mob').value = m.mobile || '';
+            document.getElementById('rect_mem_email').value = m.email || '';
+            
+            document.getElementById('rect_no').value = prefix + Math.floor(1000 + Math.random() * 9000);
+            document.getElementById('rect_date').value = new Date().toISOString().split('T')[0];
+            document.getElementById('rect_name').value = m.name || '';
+            document.getElementById('rect_mem_code').value = m.sevarthId || (m.id ? m.id.substring(0,8).toUpperCase() : '-');
+            document.getElementById('rect_post').value = m.designation || 'X-Ray Scientific Officer';
+            document.getElementById('rect_workplace').value = m.workplace || '-';
+            document.getElementById('rect_dist').value = m.district || '';
+            document.getElementById('rect_mandal').value = m.mandal || '';
+            document.getElementById('rect_amt_num').value = m.feeAmount || 500;
+            
+            let displayBadge = document.getElementById('display_issuer_info');
+            if(displayBadge) displayBadge.innerHTML = `${currentLoggedInAdminName} <small style="color:#059669;">(${currentLoggedInAdminDesignation})</small>`;
+            if(document.getElementById('rect_sevarth_box')) document.getElementById('rect_sevarth_box').style.display = showSevarth ? 'block' : 'none';
+
+            window.updateAmtWords();
+            document.getElementById('receiptModal').style.display = 'flex';
+        };
+
+        window.generatePrintReceipt = () => {
+            let rNo = document.getElementById('rect_no').value;
+            let rDate = document.getElementById('rect_date').value;
+            let rName = document.getElementById('rect_name').value;
+            let rCode = document.getElementById('rect_mem_code').value;
+            let rPost = document.getElementById('rect_post').value;
+            let rWork = document.getElementById('rect_workplace').value;
+            let rDist = document.getElementById('rect_dist').value;
+            let rMandal = document.getElementById('rect_mandal').value;
+            let rFeeType = document.getElementById('rect_fee_type').value;
+            let rAmt = document.getElementById('rect_amt_num').value;
+            let rWords = document.getElementById('rect_amt_words').value || window.numberToMarathiWords(rAmt);
+            let rPayMode = document.getElementById('rect_pay_mode').value;
+            let rUtr = document.getElementById('rect_utr').value;
+            let showSevarth = document.getElementById('set_show_sevarth_receipt')?.checked;
+
+            let now = new Date();
+            let fullTimestamp = `${now.toLocaleDateString('mr-IN')} - ${now.toLocaleTimeString('mr-IN')}`;
+
+            let logoHtml = window.lpLogoUrl 
+                ? `<img src="${window.lpLogoUrl}" style="height:65px; max-width:90px; object-fit:contain;">` 
+                : `<i class="fa fa-shield-alt" style="font-size:2.5rem; color:#0B3D91;"></i>`;
+
+            let receiptHtml = `
+                <div style="width: 750px; margin: 10px auto; padding: 20px; border: 3px double #0B3D91; border-radius: 10px; background: #ffffff; font-family: 'Mukta', Arial, sans-serif;">
+                    <div style="border-bottom: 2.5px solid #0B3D91; padding-bottom: 10px; margin-bottom: 12px; text-align: center;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div style="width: 90px;">${logoHtml}</div>
+                            <div style="flex: 1; text-align: center;">
+                                <h2 style="color: #0B3D91; font-size: 1.45rem; margin: 0;">
+                                    क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना महाराष्ट्र राज्य
+                                </h2>
+                                <span style="background: #0B3D91; color: #fff; padding: 2px 14px; border-radius: 12px; font-size: 0.82rem;">E-RECEIPT / इलेक्ट्रॉनिक पावती</span>
+                            </div>
+                            <div style="width: 80px;">
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=75x75&data=ReceiptNo:${rNo}|Member:${encodeURIComponent(rName)}" style="width: 70px; height: 70px;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; background: #f0f4f8; padding: 8px 12px; border-radius: 6px; font-weight: bold; margin-bottom: 12px;">
+                        <div>पावती क्रमांक: <b style="color: #0B3D91;">${rNo}</b></div>
+                        <div>दिनांक: <b>${rDate}</b></div>
+                        ${showSevarth ? `<div>सेवार्थ ID: <b style="color: #059669;">${rCode}</b></div>` : ''}
+                    </div>
+
+                    <div style="font-size: 0.95rem; line-height: 1.8;">
+                        <div><b>सभासदाचे नाव:</b> <span style="color: #0B3D91; font-weight: 800;">श्री./श्रीमती ${rName}</span></div>
+                        <div><b>पद:</b> <span>${rPost}</span></div>
+                        <div><b>कार्यरत रुग्णालय:</b> <span>${rWork || '-'}</span></div>
+                        <div><b>जिल्हा व मंडळ:</b> <span>${rDist} (${rMandal})</span></div>
+                        <div><b>शुल्काचा प्रकार:</b> <span style="color: #0369a1; font-weight: 700;">${rFeeType}</span></div>
+                        <div style="background: #e0f2fe; padding: 6px 12px; border-radius: 6px; margin-top: 8px;">
+                            <b>प्राप्त रक्कम:</b> <span style="color: #0B3D91; font-weight: 800;">₹ ${rAmt}/- (रुपये ${rWords})</span>
+                        </div>
+                        <div><b>भरणा पद्धत:</b> <span>${rPayMode} ${rUtr ? `(Ref/UTR: ${rUtr})` : ''}</span></div>
+                    </div>
+
+                    <div style="display: flex; justify-content: space-between; align-items: flex-end; border-top: 1.5px dashed #cbd5e1; padding-top: 10px; margin-top: 15px;">
+                        <div style="font-size: 0.75rem; color: #64748b;">
+                            <b>🔒 संगणकीय ई-पावती:</b> सदर पावती सिस्टीमद्वारे वेळेच्या नोंदीसह तयार केली आहे.
+                        </div>
+                        <div style="text-align: center; background: #f0fdf4; border: 1.5px solid #16a34a; padding: 6px 14px; border-radius: 8px;">
+                            <div style="color: #16a34a; font-weight: 800;">✓ Digitally Verified</div>
+                            <b>${currentLoggedInAdminName}</b><br>
+                            <small>(${currentLoggedInAdminDesignation})</small><br>
+                            <small style="font-size: 0.68rem; color: #047857;">🕒 ${fullTimestamp}</small>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            let win = window.open('', '_blank');
+            win.document.write(`<html><head><title>Receipt_${rNo}</title><style>body{font-family:'Mukta',sans-serif;}</style></head><body>${receiptHtml}</body></html>`);
+            setTimeout(() => win.print(), 500);
+        };
+
+        window.sendEmailReceipt = () => {
+            let email = document.getElementById('rect_mem_email').value;
+            if(!email) return alert("ईमेल आयडी उपलब्ध नाही.");
+            let name = document.getElementById('rect_name').value;
+            let amt = document.getElementById('rect_amt_num').value;
+            let no = document.getElementById('rect_no').value;
+
+            let subject = encodeURIComponent("क्ष-किरण वैज्ञानिक अधिकारी संघटना - ई-पावती");
+            let body = encodeURIComponent(`नमस्कार ${name},\n\nतुमची रक्कम ₹ ${amt}/- प्राप्त झाली आहे.\nपावती क्र: ${no}\n\nधन्यवाद!`);
+            window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+        };
+
+        window.printPaidMembersFullList = function() {
+            let paidList = window.membersData.filter(m => m.feeStatus === 'Paid');
+            let rows = paidList.map((m, i) => `<tr><td>${i+1}</td><td>${m.name}</td><td>${m.designation||'-'}</td><td>${m.district||'-'}</td><td>₹ ${m.feeAmount||500}</td><td>${m.utr||'-'}</td></tr>`).join('');
+            let win = window.open('', '_blank');
+            win.document.write(`<html><head><title>Paid Members List</title><style>table{width:100%;border-collapse:collapse;}th,td{border:1px solid #000;padding:6px;}</style></head><body><h2>क्ष-किरण वैज्ञानिक अधिकारी संघटना - शुल्क भरलेल्यांची यादी</h2><table><thead><tr><th>अ.क्र.</th><th>नाव</th><th>पद</th><th>जिल्हा</th><th>रक्कम</th><th>UTR</th></tr></thead><tbody>${rows}</tbody></table></body></html>`);
+            setTimeout(() => win.print(), 300);
+        };
+
+        window.generateCompactPaidSummaryList = function() {
+            let paidList = window.membersData.filter(m => m.feeStatus === 'Paid');
+            let rows = paidList.map((m, i) => `<span style="display:inline-block; width:48%; border:1px solid #ccc; margin:1%; padding:5px; font-size:11px;"><b>${i+1}. ${m.name}</b> (${m.district||'-'}) - ₹${m.feeAmount||500}</span>`).join('');
+            let win = window.open('', '_blank');
+            win.document.write(`<html><head><title>Compact List</title></head><body><h2>संक्षिप्त शुल्क यादी</h2><div>${rows}</div></body></html>`);
+            setTimeout(() => win.print(), 300);
+        };
+
+        window.toggleSelectAllFees = (el) => { document.querySelectorAll('.fee-chk').forEach(cb => cb.checked = el.checked); };
+        
+        window.applyGlobalFeeAmount = function(globalAmount) {
+            const amt = Number(globalAmount);
+            if (isNaN(amt) || amt < 0) return;
+            document.querySelectorAll('#feesTable tbody tr input[type="number"]').forEach(input => { input.value = amt; });
+        };
+
+        window.bulkWhatsAppFees = () => {
+            let nums = []; document.querySelectorAll('.fee-chk:checked').forEach(cb => { if(cb.dataset.mobile) nums.push(cb.dataset.mobile); });
+            if(nums.length === 0) return alert("किमान एक सदस्य निवडा.");
+            let msg = encodeURIComponent("नमस्कार, वार्षिक सभासद शुल्क भरण्याबाबत नम्र विनंती.");
+            window.open(`whatsapp://send?phone=91${nums[0]}&text=${msg}`, '_blank');
+        };
+
+        // ==========================================================
+        // INDEPENDENT LETTER PAD MANAGEMENT ENGINE
+        // ==========================================================
+        window.renderLetterPadAdmin = () => {
+            let htmlSlots = ''; let templateOptionsHtml = '';
+            for(let i=0; i<2; i++) { 
+                let url = window.lpTemplatesData[i];
+                if(url) {
+                    htmlSlots += `<div class="template-slot"><b>कप्पा ${i+1}</b><img src="${url}"><button class="btn-action bg-danger" onclick="deleteLpTemplate(${i})"><i class="fa fa-trash"></i> डिलीट</button></div>`;
+                    templateOptionsHtml += `<option value="${url}">टेंप्लेट डिझाईन ${i+1}</option>`;
+                } else {
+                    htmlSlots += `<div class="template-slot"><b>कप्पा ${i+1}</b><p style="font-size:0.75rem; color:gray;">इमेज अपलोड</p><input type="file" id="lp_slot_input_${i}" accept="image/*" style="display:none;" onchange="uploadLpTemplateSlot(${i})"><button class="btn-action bg-primary" onclick="document.getElementById('lp_slot_input_${i}').click()"><i class="fa fa-upload"></i> अपलोड ${i+1}</button></div>`;
+                }
+            }
+            if(document.getElementById('lpTemplateSlots')) document.getElementById('lpTemplateSlots').innerHTML = htmlSlots;
+            if(document.getElementById('lp_selected_template')) document.getElementById('lp_selected_template').innerHTML = templateOptionsHtml || '<option value="">प्रथम १ किंवा २ नंबरची डिझाईन अपलोड करा</option>';
+
+            let logoBox = document.getElementById('slot_logo_box');
+            if(logoBox) {
+                if(window.lpLogoUrl) logoBox.innerHTML = `<img src="${window.lpLogoUrl}" style="height:40px;"><button class="btn-action bg-danger" onclick="deleteLpLogo()"><i class="fa fa-trash"></i></button>`;
+                else logoBox.innerHTML = `<input type="file" id="inp_logo" accept="image/*" class="form-control" onchange="uploadLpLogo()">`;
+            }
+
+            let stampBox = document.getElementById('slot_stamp_box');
+            if(stampBox) {
+                if(window.lpStampUrl) stampBox.innerHTML = `<img src="${window.lpStampUrl}" style="height:40px;"><button class="btn-action bg-danger" onclick="deleteLpStamp()"><i class="fa fa-trash"></i></button>`;
+                else stampBox.innerHTML = `<input type="file" id="inp_stamp" accept="image/*" class="form-control" onchange="uploadLpStamp()">`;
+            }
+
+            let signsHtml = '';
+            for(let i=0; i<5; i++) {
+                let sig = window.lpSignaturesData[i] || { name: `पदाधिकारी ${i+1}`, signUrl: "" };
+                signsHtml += `
+                    <div style="flex:1; min-width:140px; background:#fff; padding:6px; border:1px solid #cbd5e1; border-radius:6px; text-align:center;">
+                        <input type="text" value="${sig.name}" onchange="updateSignName(${i}, this.value)" class="form-control" style="font-size:0.8rem; margin-bottom:4px;">
+                        ${sig.signUrl ? 
+                            `<div><img src="${sig.signUrl}" style="height:28px;"><br><button class="btn-action bg-danger" style="font-size:0.65rem;" onclick="deleteLpSign(${i})"><i class="fa fa-trash"></i></button></div>` : 
+                            `<input type="file" id="sign_inp_${i}" accept="image/*" style="display:none;" onchange="uploadLpSign(${i})"><button class="btn-action bg-info" style="font-size:0.7rem;" onclick="document.getElementById('sign_inp_${i}').click()"><i class="fa fa-upload"></i></button>`
+                        }
+                    </div>
+                `;
+            }
+            if(document.getElementById('signsContainer')) document.getElementById('signsContainer').innerHTML = signsHtml;
+        };
+
+        window.uploadLpTemplateSlot = async (index) => {
+            let file = document.getElementById(`lp_slot_input_${index}`).files[0]; if(!file) return;
+            Swal.fire({title: 'अपलोड होत आहे...', didOpen: () => Swal.showLoading()});
+            try {
+                let url = await window.uploadToCloudinary(file);
+                window.lpTemplatesData[index] = url;
+                await setDoc(doc(db, "lp_settings", "templates"), { type: "templates", val: window.lpTemplatesData });
+                Swal.close(); window.renderLetterPadAdmin();
+            } catch(e) { Swal.fire('Error', e.message, 'error'); }
+        };
+
+        window.deleteLpTemplate = async (index) => {
+            if(confirm("ही डिझाईन डिलीट करायची आहे का?")) {
+                window.lpTemplatesData[index] = null;
+                await setDoc(doc(db, "lp_settings", "templates"), { type: "templates", val: window.lpTemplatesData });
+                window.renderLetterPadAdmin();
+            }
+        };
+
+        window.deleteLpLogo = async () => { if(confirm("लोगो डिलीट करायचा आहे का?")) { window.lpLogoUrl = ""; await setDoc(doc(db, "lp_settings", "logo"), { type: "logo", val: "" }); window.renderLetterPadAdmin(); } };
+        window.uploadLpLogo = async () => {
+            let file = document.getElementById('inp_logo').files[0]; if(!file) return;
+            try { window.lpLogoUrl = await window.uploadToCloudinary(file); await setDoc(doc(db, "lp_settings", "logo"), { type: "logo", val: window.lpLogoUrl }); window.renderLetterPadAdmin(); } catch(e) { Swal.fire('Error', e.message, 'error'); }
+        };
+
+        window.deleteLpStamp = async () => { if(confirm("शिक्का डिलीट करायचा आहे का?")) { window.lpStampUrl = ""; await setDoc(doc(db, "lp_settings", "stamp"), { type: "stamp", val: "" }); window.renderLetterPadAdmin(); } };
+        window.uploadLpStamp = async () => {
+            let file = document.getElementById('inp_stamp').files[0]; if(!file) return;
+            try { window.lpStampUrl = await window.uploadToCloudinary(file); await setDoc(doc(db, "lp_settings", "stamp"), { type: "stamp", val: window.lpStampUrl }); window.renderLetterPadAdmin(); } catch(e) { Swal.fire('Error', e.message, 'error'); }
+        };
+
+        window.updateSignName = async (i, val) => {
+            window.lpSignaturesData[i].name = val;
+            await setDoc(doc(db, "lp_settings", "signatures"), { type: "signatures", val: window.lpSignaturesData });
+        };
+
+        window.uploadLpSign = async (index) => {
+            let file = document.getElementById(`sign_inp_${index}`).files[0]; if(!file) return;
+            try {
+                let url = await window.uploadToCloudinary(file);
+                window.lpSignaturesData[index].signUrl = url;
+                await setDoc(doc(db, "lp_settings", "signatures"), { type: "signatures", val: window.lpSignaturesData });
+                window.renderLetterPadAdmin();
+            } catch(e) { Swal.fire('Error', e.message, 'error'); }
+        };
+
+        window.deleteLpSign = async (index) => {
+            if(confirm("ही सही डिलीट करायची आहे का?")) {
+                window.lpSignaturesData[index].signUrl = "";
+                await setDoc(doc(db, "lp_settings", "signatures"), { type: "signatures", val: window.lpSignaturesData });
+                window.renderLetterPadAdmin();
+            }
+        };
+
+        window.toggleLpRecipientFilters = () => {
+            let type = document.getElementById('lp_recipient_type').value;
+            document.getElementById('lp_recipient_mandal').style.display = (type === 'Mandal' || type === 'District') ? 'block' : 'none';
+            document.getElementById('lp_recipient_district').style.display = type === 'District' ? 'block' : 'none';
+        };
+
+        window.getLetterHTML = (templateUrl, topPad, leftPad, rightPad, bottomPad, ref, date, to, sub, body) => {
+            let signsFooterHtml = window.lpSignaturesData.map(s => s.signUrl ? `<div style="text-align:center; width:120px;"><img src="${s.signUrl}" style="max-height:40px;"><br><b>${s.name}</b></div>` : (s.name ? `<div style="text-align:center; width:120px;"><br><b>${s.name}</b></div>` : '')).join('');
+            let stampHtml = window.lpStampUrl ? `<div style="text-align:center;"><img src="${window.lpStampUrl}" style="height:55px;"></div>` : '';
+
+            return `
+                <div class="a4-print-container" style="width:210mm; height:297mm; background-image: url('${templateUrl||''}'); background-size:100% 100%; padding: ${topPad||60}mm ${rightPad||15}mm ${bottomPad||20}mm ${leftPad||80}mm; box-sizing:border-box;">
+                    <div style="display:flex; justify-content:space-between; font-weight:bold; margin-bottom:15px;">
+                        <div>संदर्भ: ${ref}</div><div>दिनांक: ${date}</div>
+                    </div>
+                    <div style="font-size:15px; font-weight:bold; margin-bottom:15px;">प्रति,<br>${to.replace(/\n/g, '<br>')}</div>
+                    <div style="font-size:15px; font-weight:bold; text-align:center; text-decoration:underline; margin-bottom:20px;">विषय: ${sub}</div>
+                    <div style="font-size:15px; line-height:1.6; text-align:justify; white-space:pre-wrap; margin-bottom:20px;">${body}</div>
+                    ${stampHtml}
+                    <div style="display:flex; justify-content:space-around; margin-top:20px;">${signsFooterHtml}</div>
+                </div>
+            `;
+        };
+
+        window.previewLetter = () => {
+            let tmpl = document.getElementById('lp_selected_template').value;
+            let topPad = document.getElementById('lp_top_padding').value || 60;
+            let leftPad = document.getElementById('lp_left_padding').value || 80;
+            let rightPad = document.getElementById('lp_right_padding').value || 15;
+            let bottomPad = document.getElementById('lp_bottom_padding').value || 20;
+
+            let ref = document.getElementById('lp_ref').value || '____';
+            let date = document.getElementById('lp_date').value || 'DD/MM/YYYY';
+            let to = document.getElementById('lp_to').value || '____';
+            let sub = document.getElementById('lp_sub').value || '____';
+            let body = document.getElementById('lp_content').value || '____';
+            
+            let previewWin = window.open('', '_blank');
+            previewWin.document.write(`<html><head><title>Letter Preview</title><style>body{background:#525659; display:flex; justify-content:center; margin:0; padding:20px; font-family:'Mukta',sans-serif;}</style></head><body>${window.getLetterHTML(tmpl, topPad, leftPad, rightPad, bottomPad, ref, date, to, sub, body)}</body></html>`);
+        };
+
+        window.saveLetter = async () => {
+            let tmpl = document.getElementById('lp_selected_template').value;
+            let topPad = document.getElementById('lp_top_padding').value || 60;
+            let leftPad = document.getElementById('lp_left_padding').value || 80;
+            let rightPad = document.getElementById('lp_right_padding').value || 15;
+            let bottomPad = document.getElementById('lp_bottom_padding').value || 20;
+
+            let ref = document.getElementById('lp_ref').value;
+            let date = document.getElementById('lp_date').value;
+            let to = document.getElementById('lp_to').value;
+            let sub = document.getElementById('lp_sub').value;
+            let body = document.getElementById('lp_content').value;
+            let rType = document.getElementById('lp_recipient_type').value;
+            let rMandal = document.getElementById('lp_recipient_mandal').value;
+            let rDist = document.getElementById('lp_recipient_district').value;
+            
+            if(!sub || !body) return alert("विषय आणि मजकूर भरा.");
+            Swal.fire({title: 'पत्र सेव्ह करत आहे...', didOpen: () => Swal.showLoading()});
+            
+            await addDoc(collection(db, "letters"), {
+                templateUrl: tmpl, topPadding: topPad, leftPadding: leftPad, rightPadding: rightPad, bottomPadding: bottomPad,
+                ref, date, to, subject: sub, body, recipientType: rType, recipientMandal: rMandal, recipientDistrict: rDist,
+                published: false, timestamp: Date.now()
+            });
+            await window.logAdminActivity(`Created Letter: ${sub}`);
+            Swal.fire('यशस्वी', 'पत्र सेव्ह झाले.', 'success');
+            
+            document.getElementById('lp_ref').value = ""; 
+            document.getElementById('lp_to').value = ""; 
+            document.getElementById('lp_sub').value = ""; 
+            document.getElementById('lp_content').value = "";
+            loadData();
+        };
+
+        window.renderLetters = () => {
+            let tbody = document.getElementById('lettersBody'); if(!tbody) return;
+            window.lettersData.sort((a,b) => b.timestamp - a.timestamp);
+
+            tbody.innerHTML = window.lettersData.map((l) => {
+                let recpStr = l.recipientType === 'OnlyMe' ? 'केवळ मी' : (l.recipientType === 'All' ? 'सर्व सदस्य' : (l.recipientType === 'Mandal' ? `${l.recipientMandal} मंडळ` : `${l.recipientDistrict} जिल्हा`));
+                let pubBadge = l.published ? `<span class="badge bg-success">Published</span>` : `<span class="badge bg-warning">Draft</span>`;
+                return `<tr>
+                    <td>${l.date || '-'}</td>
+                    <td><b>${l.subject}</b></td>
+                    <td>${recpStr}</td>
+                    <td>${pubBadge}</td>
+                    <td style="white-space:nowrap;">
+                        <button class="btn-action bg-primary" onclick="printSavedLetter('${l.id}')"><i class="fa fa-print"></i></button>
+                        <button class="btn-action bg-info" onclick="downloadPDFLetter('${l.id}')"><i class="fa fa-file-pdf"></i></button>
+                        <button class="btn-action ${l.published ? 'bg-warning' : 'bg-success'}" onclick="togglePublishLetter('${l.id}', ${l.published})"><i class="fa ${l.published ? 'fa-eye-slash' : 'fa-globe'}"></i></button>
+                        <button class="btn-action bg-danger" onclick="deleteLetter('${l.id}')"><i class="fa fa-trash"></i></button>
+                    </td>
+                </tr>`;
+            }).join('') || '<tr><td colspan="5" style="text-align:center;">कोणतेही पत्र उपलब्ध नाही.</td></tr>';
+        };
+
+        window.printSavedLetter = (id) => {
+            let l = window.lettersData.find(x => x.id === id); if(!l) return;
+            let printArea = document.getElementById('printLetterArea');
+            printArea.innerHTML = window.getLetterHTML(l.templateUrl, l.topPadding||60, l.leftPadding||80, l.rightPadding||15, l.bottomPadding||20, l.ref, l.date, l.to, l.subject, l.body);
+            setTimeout(() => { window.print(); }, 200);
+        };
+
+        window.downloadPDFLetter = (id) => {
+            let l = window.lettersData.find(x => x.id === id); if(!l) return;
+            let printArea = document.getElementById('printLetterArea');
+            printArea.innerHTML = window.getLetterHTML(l.templateUrl, l.topPadding||60, l.leftPadding||80, l.rightPadding||15, l.bottomPadding||20, l.ref, l.date, l.to, l.subject, l.body);
+            printArea.style.display = 'block';
+            
+            let element = printArea.firstElementChild;
+            let opt = { margin: 0, filename: `Letter_${id}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
+            html2pdf().set(opt).from(element).save().then(()=>{ printArea.style.display = 'none'; });
+        };
+
+        window.togglePublishLetter = async (id, currentStatus) => {
+            await updateDoc(doc(db, "letters", id), { published: !currentStatus });
+            loadData();
+        };
+
+        window.deleteLetter = async (id) => {
+            let l = window.lettersData.find(x => x.id === id);
+            if(confirm("हे पत्र डिलीट करायचे आहे का?")) {
+                if(l) await window.moveToRecycleBin("पत्र", l, l.subject);
+                await deleteDoc(doc(db, "letters", id));
+                loadData();
+            }
+        };
+
+        // ==========================================================
+        // MEMBER FOLDERS & FILES MANAGEMENT LOGIC
         // ==========================================================
         window.renderSixFolders = () => {
             let html = ''; let dropdownHtml = '';
-            memberFoldersData.forEach(f => {
+            window.memberFoldersData.forEach(f => {
                 html += `
                     <div class="folder-card">
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                             <h4 style="font-size:1rem; color:var(--dark);"><i class="fa fa-folder" style="color:#f59e0b;"></i> ${f.name}</h4>
+                            <button class="btn-action bg-primary" onclick="openRenameFolderModal('${f.id}', '${f.name}')"><i class="fa fa-pen"></i></button>
                         </div>
-                        <div style="background:#f8fafc; padding:8px; border-radius:6px; font-size:0.8rem;">
-                            <label style="display:block; font-weight:bold; color:var(--danger);"><input type="checkbox" ${f.isRestricted ? 'checked' : ''}> 🛑 डाऊनलोड प्रतिबंध</label>
+                        <div style="background:#f8fafc; padding:8px; border-radius:6px; font-size:0.8rem; border:1px solid #eee;">
+                            <label style="display:block; margin-bottom:5px; font-weight:bold; color:var(--danger);">
+                                <input type="checkbox" ${f.isRestricted ? 'checked' : ''} onchange="updateFolderSetting('${f.id}', 'isRestricted', this.checked)"> 🛑 डाऊनलोड प्रतिबंध
+                            </label>
+                            <label style="display:block; font-weight:bold; color:var(--primary);">
+                                <input type="checkbox" ${f.hasWatermark ? 'checked' : ''} onchange="updateFolderSetting('${f.id}', 'hasWatermark', this.checked)"> 💧 वॉटरमार्क ऑन ठेवा
+                            </label>
                         </div>
                     </div>
                 `;
@@ -3283,83 +4260,152 @@
             if(document.getElementById('mf_target_folder')) document.getElementById('mf_target_folder').innerHTML = dropdownHtml;
         };
 
-        window.renderMemberFilesList = () => {};
-        window.saveScrollingNotice = async () => {};
-        window.uploadNoticePDF = async () => {};
-        async function loadNotices() {}
-
-        window.numberToMarathiWords = function(n) {
-            n = parseInt(n, 10); if (isNaN(n) || n <= 0) return "";
-            return n + " रुपये फक्त";
+        window.updateFolderSetting = async (fId, key, value) => {
+            let f = window.memberFoldersData.find(x => x.id === fId);
+            if(f) { f[key] = value; await updateDoc(doc(db, "member_folders", fId), { [key]: value }); window.renderSixFolders(); }
         };
 
-        window.updateAmtWords = function() {
-            let numVal = document.getElementById('rect_amt_num').value;
-            document.getElementById('rect_amt_words').value = numberToMarathiWords(numVal);
-        };
-
-        window.renderFees = () => {
-            let s = document.getElementById('feeSearch')?.value.toLowerCase() || '';
-            let fil = membersData.filter(m => m.isMember !== false && (!s || (m.name||'').toLowerCase().includes(s)));
-
-            if(document.getElementById('feesBody')) {
-                document.getElementById('feesBody').innerHTML = fil.map((m) => `
-                    <tr>
-                        <td><input type="checkbox" class="fee-chk" value="${m.id}"></td>
-                        <td><b>${m.name}</b></td>
-                        <td>₹ ${m.feeAmount||500}</td>
-                        <td><b>${m.payMethod||'UPI / GPay'}</b></td>
-                        <td><code>${m.utr||'N/A'}</code></td>
-                        <td>-</td>
-                        <td><span class="badge ${m.feeStatus === 'Paid' ? 'bg-success' : 'bg-danger'}">${m.feeStatus||'Unpaid'}</span></td>
-                        <td class="no-print">
-                            <button class="btn-action bg-warning" onclick="openReceiptModal('${m.id}')"><i class="fa fa-receipt"></i> ई-पावती</button>
-                        </td>
-                    </tr>
-                `).join('') || '<tr><td colspan="8" style="text-align:center;">सदस्य सापडले नाहीत.</td></tr>';
+        window.openRenameFolderModal = async (fId, oldName) => {
+            const { value: newName } = await Swal.fire({
+                title: 'फोल्डर रिनेम करा', input: 'text', inputValue: oldName, showCancelButton: true, confirmButtonText: 'सेव्ह करा'
+            });
+            if (newName) {
+                await updateDoc(doc(db, "member_folders", fId), { name: newName });
+                loadData();
             }
         };
 
-        window.openReceiptModal = (mId) => {
-            let m = membersData.find(x => x.id === mId); if(!m) return;
-            document.getElementById('rect_mem_id').value = m.id;
-            document.getElementById('rect_no').value = "REC-2026-" + Math.floor(1000 + Math.random() * 9000);
-            document.getElementById('rect_date').value = new Date().toISOString().split('T')[0];
-            document.getElementById('rect_name').value = m.name || '';
-            document.getElementById('rect_mem_code').value = m.sevarthId || '-';
-            document.getElementById('rect_amt_num').value = m.feeAmount || 500;
-            updateAmtWords();
-            document.getElementById('receiptModal').style.display = 'flex';
+        window.toggleFolderVisibilityFilter = () => {
+            let val = document.getElementById('mf_visibility').value;
+            document.getElementById('mf_dist_filter_box').style.display = (val === 'SpecificDistrict') ? 'block' : 'none';
+            document.getElementById('mf_mem_filter_box').style.display = (val === 'SpecificMember') ? 'block' : 'none';
         };
 
-        window.generatePrintReceipt = () => {
-            let rNo = document.getElementById('rect_no').value;
-            let rName = document.getElementById('rect_name').value;
-            let rAmt = document.getElementById('rect_amt_num').value;
+        window.filterFolderMemberSearch = () => {
+            let txt = document.getElementById('mf_target_member_search').value.toLowerCase();
+            let select = document.getElementById('mf_target_member');
+            if(txt.length < 2) return;
+            let matches = window.membersData.filter(m => m.isMember!==false && (m.name||'').toLowerCase().includes(txt));
+            select.innerHTML = matches.map(m => `<option value="${m.id}">${m.name} (${m.district})</option>`).join('') || '<option value="">सदस्य सापडला नाही</option>';
+        };
+
+        window.uploadMemberFolderFile = async () => {
+            let fId = document.getElementById('mf_target_folder').value;
+            let file = document.getElementById('mf_file').files[0];
+            let fileName = document.getElementById('mf_file_name').value.trim();
+            let vis = document.getElementById('mf_visibility').value;
+            let targetDist = document.getElementById('mf_target_district').value;
+            let targetMem = document.getElementById('mf_target_member').value;
+
+            if(!file) return alert("कृपया फाईल निवडा.");
+            if(!fileName) fileName = file.name;
+
+            Swal.fire({title: 'फाईल अपलोड होत आहे...', didOpen: () => Swal.showLoading()});
+            try {
+                let fileUrl = await window.uploadToCloudinary(file);
+                await addDoc(collection(db, "member_files"), {
+                    folderId: fId, fileName, fileUrl, visibility: vis, targetDistrict: targetDist||"", targetMemberId: targetMem||"",
+                    uploadedAt: new Date().toLocaleDateString('mr-IN'), timestamp: Date.now()
+                });
+                await window.logAdminActivity(`Uploaded Member File: ${fileName}`);
+                Swal.fire('यशस्वी', 'फाईल अपलोड झाली!', 'success');
+                loadData();
+            } catch(e) { Swal.fire('Error', e.message, 'error'); }
+        };
+
+        window.renderMemberFilesList = () => {
+            let tbody = document.getElementById('memberFilesTableBody'); if(!tbody) return;
+            window.memberFilesData.sort((a,b) => b.timestamp - a.timestamp);
+            
+            tbody.innerHTML = window.memberFilesData.map((f, i) => {
+                let folderObj = window.memberFoldersData.find(x => x.id === f.folderId);
+                return `
+                    <tr>
+                        <td>${i+1}</td>
+                        <td><b>${folderObj ? folderObj.name : f.folderId}</b></td>
+                        <td>${f.fileName}</td>
+                        <td><span class="badge bg-info">${f.visibility}</span></td>
+                        <td><small>${f.uploadedAt||'-'}</small></td>
+                        <td class="no-print">
+                            <button class="btn-action bg-primary" onclick="window.open('${f.fileUrl}', '_blank')"><i class="fa fa-eye"></i> View</button>
+                            <button class="btn-action bg-danger" onclick="deleteMemberFile('${f.id}')"><i class="fa fa-trash"></i> Delete</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('') || '<tr><td colspan="6" style="text-align:center;">कोणतीही फाईल अपलोड केलेली नाही.</td></tr>';
+        };
+
+        window.deleteMemberFile = async (id) => {
+            if(confirm("ही फाईल डिलीट करायची आहे का?")) {
+                await deleteDoc(doc(db, "member_files", id));
+                loadData();
+            }
+        };
+
+        window.printFolderFiles = () => {
             let win = window.open('', '_blank');
-            win.document.write(`<html><head><title>Receipt_${rNo}</title></head><body><h2>ई-पावती - ${rNo}</h2><p>नाव: ${rName}</p><p>रक्कम: ₹ ${rAmt}</p></body></html>`);
-            setTimeout(() => win.print(), 300);
+            let rowsHtml = window.memberFilesData.map((f, i) => `<tr><td>${i+1}</td><td>${f.fileName}</td><td>${f.uploadedAt||'-'}</td></tr>`).join('');
+            win.document.write(`<html><head><title>Member Files</title><style>table{width:100%;border-collapse:collapse;}th,td{border:1px solid #000;padding:8px;}</style></head><body><h2>सदस्यांच्या फाईल्सची यादी</h2><table><thead><tr><th>अ.क्र.</th><th>फाईलचे नाव</th><th>दिनांक</th></tr></thead><tbody>${rowsHtml}</tbody></table></body></html>`);
+            setTimeout(() => { win.print(); }, 300);
         };
 
-        window.sendEmailReceipt = () => {};
-        window.printPaidMembersFullList = () => {};
-        window.generateCompactPaidSummaryList = () => {};
-        window.toggleSelectAllFees = (el) => { document.querySelectorAll('.fee-chk').forEach(cb => cb.checked = el.checked); };
-        window.applyGlobalFeeAmount = (v) => {};
-        window.bulkWhatsAppFees = () => {};
+        // ==========================================================
+        // NOTICES LOGIC & BULK ACTIONS
+        // ==========================================================
+        window.saveScrollingNotice = async () => {
+            let txt = document.getElementById('scrolling_notice_input').value.trim();
+            await setDoc(doc(db, "settings", "scrolling_notice"), { text: txt });
+            Swal.fire('यशस्वी', 'मुख्य पानावरील सूचना अपडेट झाली!', 'success');
+        };
+
+        window.uploadNoticePDF = async () => {
+            let file = document.getElementById('notice_file').files[0];
+            let name = document.getElementById('notice_name').value.trim();
+            if(!file || !name) return alert("कृपया फाईल व नोटीस शीर्षक दोन्ही टाका.");
+            Swal.fire({title: 'अपलोड होत आहे...', didOpen: () => Swal.showLoading()});
+            try {
+                let url = await window.uploadToCloudinary(file);
+                await addDoc(collection(db, "notices"), { name, url, date: new Date().toLocaleDateString('mr-IN'), timestamp: Date.now() });
+                Swal.fire('यशस्वी', 'नोटीस अपलोड झाली!', 'success');
+                window.loadNotices();
+            } catch(e) { Swal.fire('Error', e.message, 'error'); }
+        };
+
+        window.loadNotices = async function() {
+            let snap = await getDocs(collection(db, "notices"));
+            let list = []; snap.forEach(d => list.push({id: d.id, ...d.data()}));
+            let tbody = document.getElementById('noticesListBody'); if(!tbody) return;
+            tbody.innerHTML = list.map(n => `
+                <tr><td>${n.date}</td><td><b>${n.name}</b></td><td><button class="btn-action bg-primary" onclick="window.open('${n.url}', '_blank')"><i class="fa fa-eye"></i></button> <button class="btn-action bg-danger" onclick="deleteNotice('${n.id}')"><i class="fa fa-trash"></i></button></td></tr>
+            `).join('');
+        };
+
+        window.deleteNotice = async (id) => {
+            let snap = await getDocs(collection(db, "notices"));
+            let n = snap.docs.find(d => d.id === id);
+            if(confirm("नोटीस डिलीट करायची आहे का?")) {
+                if(n) await window.moveToRecycleBin("नोटीस", n.data(), n.data().name);
+                await deleteDoc(doc(db, "notices", id)); 
+                window.loadNotices(); 
+            }
+        };
+
+        window.bulkWhatsApp = () => {
+            let nums = []; document.querySelectorAll('.mem-chk:checked').forEach(cb => { if(cb.value) nums.push(cb.value); });
+            if(nums.length === 0) return alert("किमान एक सदस्य निवडा.");
+            window.open(`whatsapp://send?phone=91${nums[0]}&text=नमस्कार`, '_blank');
+        };
+
+        window.bulkEmailMembers = () => {
+            let emails = []; document.querySelectorAll('.mem-chk:checked').forEach(cb => { if(cb.dataset.email) emails.push(cb.dataset.email); });
+            if(emails.length === 0) return alert("किमान एक सदस्य निवडा.");
+            window.location.href = `mailto:?bcc=${emails.join(',')}`;
+        };
 
         // ==========================================================
-        // LETTER PAD GENERATOR & MANAGEMENT
+        // SUB-ADMIN & SUPER ADMIN ALL-IN-ONE SETTINGS CONTROL
         // ==========================================================
-        window.renderLetterPadAdmin = () => {};
-        window.previewLetter = () => {};
-        window.saveLetter = async () => {};
-        window.renderLetters = () => {};
-
-        // ==========================================================
-        // SUB-ADMIN & SUPER ADMIN SETTINGS
-        // ==========================================================
-        async function checkAndShowPopupNotice() {
+        window.checkAndShowPopupNotice = async function() {
             let pSnap = await getDocs(collection(db, "settings"));
             pSnap.forEach(d => {
                 let data = d.data();
@@ -3368,14 +4414,15 @@
                     document.getElementById('memberLoginPopupModal').style.display = 'flex';
                 }
             });
-        }
+        };
 
         window.saveAdminSettings = async () => {
             let enablePopup = document.getElementById('set_enable_popup_notice').checked;
             let popupText = document.getElementById('set_popup_notice_text').value.trim();
 
             await setDoc(doc(db, "settings", "popup_notice"), { enabled: enablePopup, text: popupText });
-            Swal.fire('सेव्ह झाले', 'सेटिंग्ज अपडेट झाल्या.', 'success');
+            await window.logAdminActivity("Updated Settings & Member Notice Popup");
+            Swal.fire('सेव्ह झाले', 'सर्व जनल व पॉप-अप सूचना सेटिंग्ज सेव्ह झाल्या.', 'success');
         };
 
         window.selectAllPermissions = () => { document.querySelectorAll('#tab-settings input[type="checkbox"].perm-cb').forEach(cb => cb.checked = true); };
@@ -3406,7 +4453,12 @@
                     name, designation, email, pass, access, permissions: perms, isActive: true, createdAt: Date.now()
                 });
 
+                await window.logAdminActivity(`Created Sub-Admin: ${name} (${email})`);
                 Swal.fire('यशस्वी', 'नवीन सब-ॲडमिन जोडला गेला!', 'success'); 
+                document.getElementById('sub_admin_name').value = ""; 
+                document.getElementById('sub_admin_designation').value = ""; 
+                document.getElementById('sub_admin_email').value = ""; 
+                document.getElementById('sub_admin_pass').value = "";
                 loadData();
             } catch (error) { Swal.fire('एरर', error.message, 'error'); }
         };
@@ -3414,72 +4466,72 @@
         window.renderSubAdmins = () => {
             let s = document.getElementById('searchSubAdmin')?.value.toLowerCase() || '';
             let fil = subAdminsList.filter(a => (a.name||'').toLowerCase().includes(s) || (a.email||'').toLowerCase().includes(s));
+            let tbody = document.getElementById('subAdminListBody'); if(!tbody) return;
             
-            document.getElementById('subAdminListBody').innerHTML = fil.map(a => `
+            tbody.innerHTML = fil.map(a => `
                 <tr>
-                    <td><b>${a.name || '-'}</b><br><small>(${a.designation || 'पदाधिकारी'})</small></td>
+                    <td><b>${a.name || '-'}</b><br><small style="color:var(--primary);">(${a.designation || 'पदाधिकारी'})</small></td>
                     <td>${a.email}</td>
                     <td><b>${a.pass}</b></td>
                     <td>${a.access}</td>
                     <td><span class="badge bg-info">${(a.permissions||[]).length} अधिकार</span></td>
-                    <td><span class="badge bg-success">Active</span></td>
-                    <td style="text-align:center;">
-                        <button class="btn-action bg-danger" onclick="deleteSubAdmin('${a.id}')"><i class="fa fa-trash"></i></button>
+                    <td><span class="badge ${a.isActive!==false ? 'bg-success' : 'bg-danger'}">${a.isActive!==false ? 'Active' : 'Blocked'}</span></td>
+                    <td style="white-space:nowrap; text-align:center;">
+                        <button class="btn-action bg-primary" onclick="openEditSubAdminModal('${a.id}')"><i class="fa fa-user-edit"></i> अधिकार बदला</button>
+                        <button class="btn-action bg-danger" onclick="deleteSubAdmin('${a.id}')"><i class="fa fa-trash"></i> डिलीट</button>
                     </td>
                 </tr>
             `).join('') || '<tr><td colspan="7" style="text-align:center;">सब-ॲडमिन आढळले नाहीत.</td></tr>';
         };
 
+        window.openEditSubAdminModal = (id) => {
+            let adminObj = subAdminsList.find(a => a.id === id); if(!adminObj) return;
+
+            document.getElementById('mod_subadmin_id').value = adminObj.id;
+            document.getElementById('mod_subadmin_name').value = adminObj.name || '';
+            document.getElementById('mod_subadmin_designation').value = adminObj.designation || '';
+            document.getElementById('mod_subadmin_email').value = adminObj.email || '';
+            document.getElementById('mod_subadmin_pass').value = adminObj.pass || '';
+            document.getElementById('mod_subadmin_access').value = adminObj.access || 'All';
+
+            let curPerms = adminObj.permissions || [];
+            document.querySelectorAll('#editSubAdminModalOverlay input[type="checkbox"]').forEach(cb => {
+                cb.checked = curPerms.includes(cb.value);
+            });
+
+            document.getElementById('editSubAdminModalOverlay').style.display = 'flex';
+        };
+
+        window.saveUpdatedSubAdmin = async () => {
+            let id = document.getElementById('mod_subadmin_id').value;
+            let name = document.getElementById('mod_subadmin_name').value.trim();
+            let designation = document.getElementById('mod_subadmin_designation').value.trim();
+            let pass = document.getElementById('mod_subadmin_pass').value.trim();
+            let access = document.getElementById('mod_subadmin_access').value;
+
+            let updatedPerms = [];
+            document.querySelectorAll('#editSubAdminModalOverlay input[type="checkbox"]:checked').forEach(cb => updatedPerms.push(cb.value));
+
+            Swal.fire({title: 'अपडेट करत आहे...', didOpen: () => Swal.showLoading()});
+            try {
+                await updateDoc(doc(db, "admins", id), { name, designation, pass, access, permissions: updatedPerms });
+                await window.logAdminActivity(`Updated Sub-Admin Permissions: ${name}`);
+                Swal.fire('यशस्वी', 'सब-ॲडमिन अधिकार अपडेट झाले!', 'success');
+                window.closeModal('editSubAdminModalOverlay');
+                loadData();
+            } catch(e) { Swal.fire('एरर', e.message, 'error'); }
+        };
+
         window.deleteSubAdmin = async (id) => {
             let sub = subAdminsList.find(x => x.id === id);
-            if(confirm("या सब-ॲडमिनला डिलीट करायचे आहे का?")) {
-                if(sub) await moveToRecycleBin("सब-ॲडमिन", sub, sub.name);
+            if(confirm("या सब-ॲडमिनला डिलीट करून रिसायकल बिनमध्ये हलवायचे आहे का?")) {
+                if(sub) await window.moveToRecycleBin("सब-ॲडमिन", sub, sub.name);
                 await deleteDoc(doc(db, "admins", id)); 
                 loadData(); 
             }
         };
 
-        window.filterSubAdmins = () => renderSubAdmins();
-
-        // ==========================================================
-        // DASHBOARD MAP & CHART ENGINE
-        // ==========================================================
-        window.renderDashboard = function() {
-            let mandalStat = {}; let distStat = {};
-            let allowedMandals = subAdminAccessRegion === "All" ? Object.keys(mandalData) : [subAdminAccessRegion];
-            
-            allowedMandals.forEach(m => { mandalStat[m] = 0; mandalData[m].forEach(d => distStat[d] = 0); });
-            membersData.forEach(m => {
-                if(m.isMember!==false && m.status === 'Approved') {
-                    if(subAdminAccessRegion === "All" || m.mandal === subAdminAccessRegion) {
-                        if(m.mandal && mandalStat[m.mandal] !== undefined) mandalStat[m.mandal]++;
-                        if(m.district && distStat[m.district] !== undefined) distStat[m.district]++;
-                    }
-                }
-            });
-
-            const colors = {"पुणे मंडळ":"#f59e0b", "नागपूर मंडळ":"#3b82f6", "नाशिक मंडळ":"#10b981", "अकोला मंडळ":"#ef4444", "कोल्हापूर मंडळ":"#8b5cf6", "छत्रपती संभाजीनगर मंडळ":"#ec4899", "लातूर मंडळ":"#f97316", "ठाणे मंडळ":"#0ea5e9"};
-            
-            let mapHtml = '';
-            allowedMandals.forEach(m => {
-                let distHtml = mandalData[m].map(d => `<span class="dist-badge">${d} <span class="dist-count">${distStat[d]||0}</span></span>`).join('');
-                mapHtml += `<div class="mandal-card" style="background:${colors[m]};"><h3>${m}</h3><h2>${mandalStat[m]||0}</h2><div>${distHtml}</div></div>`;
-            });
-            if(document.getElementById('mandalMapGrid')) document.getElementById('mandalMapGrid').innerHTML = mapHtml;
-
-            try {
-                if(window.mandalChartInstance) { window.mandalChartInstance.destroy(); }
-                const ctx = document.getElementById('mandalPieChart').getContext('2d');
-                window.mandalChartInstance = new Chart(ctx, {
-                    type: 'pie',
-                    data: {
-                        labels: allowedMandals,
-                        datasets: [{ data: allowedMandals.map(m => mandalStat[m] || 0), backgroundColor: allowedMandals.map(m => colors[m] || '#3b82f6') }]
-                    },
-                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
-                });
-            } catch(err) { console.error("Chart Error:", err); }
-        };
+        window.filterSubAdmins = () => window.renderSubAdmins();
     </script>
 </body>
 </html>
