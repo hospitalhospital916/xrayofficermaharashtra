@@ -15,7 +15,7 @@
             --primary: #0B3D91; 
             --primary-dark: #07275e; 
             --secondary: #f39c12; 
-            --bg-chat: #efeae2; 
+            --bg-chat: #f1f5f9; 
             --white: #ffffff; 
             --text-dark: #1e293b; 
             --danger: #ef4444; 
@@ -27,7 +27,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mukta', sans-serif; }
         body { background-color: #cbd5e1; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
 
-        /* मोबाईल व डेस्कटॉप कंटेनर */
+        /* कंटेनर लेआउट */
         .chat-container { width: 100%; max-width: 920px; background: #ffffff; display: flex; flex-direction: column; height: 100vh; position: relative; box-shadow: 0 12px 35px rgba(0,0,0,0.3); }
         
         @media (min-width: 768px) {
@@ -35,102 +35,128 @@
             .chat-container { height: 96vh; border-radius: 18px; overflow: hidden; border: 2px solid #94a3b8; }
         }
 
-        /* संघटना मुख्य हेडर */
-        .org-header { background: linear-gradient(135deg, var(--primary-dark), var(--primary)); color: white; padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; z-index: 10; border-bottom: 4px solid var(--secondary); box-shadow: 0 4px 12px rgba(0,0,0,0.25); }
+        /* १. मोबाईल व डेस्कटॉपसाठी संघटनेची मुख्य ओळख पट्टी (Header Strip) */
+        .org-header { background: linear-gradient(135deg, var(--primary-dark), var(--primary)); color: white; padding: 10px 14px; display: flex; flex-direction: column; gap: 6px; z-index: 10; border-bottom: 3px solid var(--secondary); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
         .top-brand { display: flex; justify-content: space-between; align-items: center; }
-        .org-title { font-size: 1.08rem; font-weight: 800; display: flex; align-items: center; gap: 10px; line-height: 1.25; }
-        .org-title i { font-size: 1.7rem; color: var(--secondary); }
+        .org-title { font-size: 0.98rem; font-weight: 800; display: flex; align-items: center; gap: 8px; line-height: 1.2; }
+        .org-title i { font-size: 1.4rem; color: var(--secondary); }
 
-        .role-badge { background: rgba(255,255,255,0.22); font-size: 0.72rem; padding: 2px 8px; border-radius: 12px; font-weight: 700; color: #fef08a; }
+        .role-badge { background: rgba(255,255,255,0.22); font-size: 0.68rem; padding: 2px 7px; border-radius: 10px; font-weight: 700; color: #fef08a; margin-left: 4px; }
 
-        /* हेडर मधील बटणे */
-        .admin-btn { background: var(--secondary); color: var(--primary-dark); border: none; padding: 6px 14px; border-radius: 20px; cursor: pointer; font-size: 0.85rem; font-weight: 800; display: flex; align-items: center; gap: 5px; transition: 0.3s; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .admin-btn { background: var(--secondary); color: var(--primary-dark); border: none; padding: 5px 11px; border-radius: 15px; cursor: pointer; font-size: 0.78rem; font-weight: 800; display: flex; align-items: center; gap: 4px; transition: 0.3s; }
         .admin-btn:hover { background: #e08e0b; }
-        .login-btn-head { background: #ffffff; color: var(--primary); border: none; padding: 5px 12px; border-radius: 15px; font-weight: 800; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; gap: 4px; }
+        .login-btn-head { background: #ffffff; color: var(--primary); border: none; padding: 4px 10px; border-radius: 12px; font-weight: 800; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; gap: 4px; }
 
         /* सर्च बार व टॅब्स */
-        .search-tab-row { display: flex; flex-direction: column; gap: 6px; }
-        .search-box { width: 100%; display: flex; align-items: center; background: rgba(255, 255, 255, 0.18); border-radius: 20px; padding: 3px 12px; border: 1px solid rgba(255,255,255,0.25); }
-        .search-box input { border: none; background: transparent; outline: none; color: white; width: 100%; padding: 4px; font-size: 0.9rem; }
+        .search-tab-row { display: flex; flex-direction: column; gap: 5px; }
+        .search-box { width: 100%; display: flex; align-items: center; background: rgba(255, 255, 255, 0.18); border-radius: 18px; padding: 2px 10px; border: 1px solid rgba(255,255,255,0.25); }
+        .search-box input { border: none; background: transparent; outline: none; color: white; width: 100%; padding: 3px; font-size: 0.85rem; }
         .search-box input::placeholder { color: #e2e8f0; }
 
-        .tabs { display: none; gap: 6px; }
-        .tabs button { flex: 1; background: rgba(255,255,255,0.2); border: none; color: white; font-size: 0.82rem; font-weight: 700; padding: 6px 10px; border-radius: 10px; cursor: pointer; }
+        .tabs { display: none; gap: 5px; }
+        .tabs button { flex: 1; background: rgba(255,255,255,0.2); border: none; color: white; font-size: 0.78rem; font-weight: 700; padding: 5px 8px; border-radius: 8px; cursor: pointer; }
         .tabs button.active { background: #ffffff; color: var(--primary); font-weight: 800; }
 
-        /* 📄 PDF / गूगल ड्राईव्ह / टेलिग्राम लिंक बॅनर */
-        .pdf-drive-banner { background: linear-gradient(90deg, #fffbe3, #ffeed0); border-bottom: 1.5px solid #fcd34d; padding: 8px 14px; display: flex; justify-content: space-between; align-items: center; font-size: 0.88rem; color: #854d0e; font-weight: 700; }
-        .pdf-drive-link { background: var(--primary); color: white; text-decoration: none; padding: 5px 14px; border-radius: 6px; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 6px; font-weight: 800; transition: 0.2s; }
-        .pdf-drive-link:hover { background: var(--primary-dark); }
+        /* २. PDF / गूगल ड्राईव्ह बॅनर */
+        .pdf-drive-banner { background: linear-gradient(90deg, #fffbe3, #ffeed0); border-bottom: 1px solid #fcd34d; padding: 6px 12px; display: flex; justify-content: space-between; align-items: center; font-size: 0.82rem; color: #854d0e; font-weight: 700; }
+        .pdf-drive-link { background: var(--primary); color: white; text-decoration: none; padding: 4px 10px; border-radius: 5px; font-size: 0.75rem; display: inline-flex; align-items: center; gap: 5px; font-weight: 800; }
 
-        /* 💬 चॅट स्क्रीन एरिया */
-        .chat-box { flex: 1; padding: 15px; overflow-y: auto; background-color: var(--bg-chat); background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); display: flex; flex-direction: column; gap: 12px; }
+        /* ३. 💬 चॅट बॉक्स (संघटनेचा अंधक वॉटरमार्क लोगो) */
+        .chat-box { 
+            flex: 1; 
+            padding: 15px; 
+            overflow-y: auto; 
+            background-color: var(--bg-chat); 
+            display: flex; 
+            flex-direction: column; 
+            gap: 12px; 
+            position: relative;
+        }
 
-        /* मेसेज फुगे (WhatsApp Pattern - Correct Alignment) */
-        .message-wrapper { display: flex; align-items: flex-start; gap: 10px; max-width: 85%; }
+        /* फिकट वॉटरमार्क लोगो */
+        .chat-box::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url('https://cdn-icons-png.flaticon.com/512/3135/3135715.png');
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 260px;
+            opacity: 0.07;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* मेसेज फुगे */
+        .message-wrapper { display: flex; align-items: flex-start; gap: 8px; max-width: 85%; position: relative; z-index: 1; }
         .message-wrapper.my-msg-wrapper { align-self: flex-end; flex-direction: row-reverse; }
 
-        /* सदस्य प्रोफाईल डीपी */
-        .avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; font-weight: 800; flex-shrink: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.2); overflow: hidden; border: 2px solid white; }
+        .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 800; flex-shrink: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.15); overflow: hidden; border: 2px solid white; }
         .avatar img { width: 100%; height: 100%; object-fit: cover; }
 
-        .message { padding: 8px 14px; border-radius: 14px; background: #ffffff; position: relative; box-shadow: 0 2px 4px rgba(0,0,0,0.12); font-size: 0.93rem; line-height: 1.4; border-top-left-radius: 0; word-break: break-word; color: var(--text-dark); }
-        .message-wrapper.my-msg-wrapper .message { background: var(--my-msg); border-top-left-radius: 14px; border-top-right-radius: 0; }
+        .message { padding: 8px 12px; border-radius: 12px; background: #ffffff; position: relative; box-shadow: 0 2px 5px rgba(0,0,0,0.08); font-size: 0.92rem; line-height: 1.4; border-top-left-radius: 0; word-break: break-word; color: var(--text-dark); }
+        .message-wrapper.my-msg-wrapper .message { background: var(--my-msg); border-top-left-radius: 12px; border-top-right-radius: 0; }
         
-        .msg-user { font-size: 0.78rem; font-weight: 800; color: var(--primary); margin-bottom: 2px; display: flex; justify-content: space-between; gap: 10px; }
-        .msg-subinfo { font-size: 0.68rem; color: #64748b; font-weight: 600; }
-        .msg-time { font-size: 0.65rem; color: #64748b; text-align: right; margin-top: 5px; font-weight: 700; }
+        .msg-user { font-size: 0.75rem; font-weight: 800; color: var(--primary); margin-bottom: 2px; display: flex; justify-content: space-between; gap: 8px; }
+        .msg-subinfo { font-size: 0.65rem; color: #64748b; font-weight: 600; }
+        .msg-time { font-size: 0.62rem; color: #64748b; text-align: right; margin-top: 4px; font-weight: 700; }
         
-        /* इमेज व डाऊनलोड बटण */
-        .msg-image-box { position: relative; margin-top: 6px; }
-        .msg-image { max-width: 100%; border-radius: 10px; cursor: pointer; border: 1px solid #cbd5e1; max-height: 280px; object-fit: cover; display: block; }
-        .img-download-btn { display: inline-flex; align-items: center; gap: 5px; background: rgba(11, 61, 145, 0.9); color: white; border: none; padding: 4px 10px; border-radius: 6px; font-size: 0.72rem; font-weight: 700; margin-top: 5px; cursor: pointer; text-decoration: none; }
-        .img-download-btn:hover { background: var(--primary-dark); }
+        .msg-image-box { position: relative; margin-top: 5px; }
+        .msg-image { max-width: 100%; border-radius: 8px; cursor: pointer; border: 1px solid #cbd5e1; max-height: 250px; object-fit: cover; display: block; }
+        .img-download-btn { display: inline-flex; align-items: center; gap: 4px; background: rgba(11, 61, 145, 0.9); color: white; border: none; padding: 3px 8px; border-radius: 5px; font-size: 0.7rem; font-weight: 700; margin-top: 4px; text-decoration: none; }
 
-        /* मेसेज डिलीट बटण */
-        .delete-btn { position: absolute; top: -8px; right: -8px; background: var(--danger); color: white; border: none; border-radius: 50%; width: 22px; height: 22px; cursor: pointer; font-size: 0.7rem; display: none; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
+        .delete-btn { position: absolute; top: -6px; right: -6px; background: var(--danger); color: white; border: none; border-radius: 50%; width: 20px; height: 20px; cursor: pointer; font-size: 0.65rem; display: none; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
         .message:hover .delete-btn { display: flex; }
 
-        /* इनपुट एरिया */
-        .input-area { display: flex; padding: 10px 14px; background: #f0f4f8; align-items: center; gap: 10px; border-top: 1px solid #cbd5e1; }
-        .file-label { cursor: pointer; font-size: 1.35rem; color: #475569; padding: 4px; display: flex; align-items: center; transition: 0.2s; }
+        /* ४. इनपुट एरिया */
+        .input-area { display: flex; padding: 8px 12px; background: #f0f4f8; align-items: center; gap: 8px; border-top: 1px solid #cbd5e1; z-index: 2; }
+        .file-label { cursor: pointer; font-size: 1.25rem; color: #475569; padding: 2px; display: flex; align-items: center; }
         .file-label:hover { color: var(--primary); }
         #fileInput { display: none; }
         
-        .input-area input[type="text"] { flex: 1; padding: 10px 16px; border-radius: 25px; border: 1px solid #cbd5e1; outline: none; font-size: 0.95rem; background: #ffffff; }
-        .send-btn { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 25px; cursor: pointer; font-weight: 800; font-size: 0.9rem; display: flex; align-items: center; gap: 6px; transition: 0.3s; }
-        .send-btn:hover { background: var(--primary-dark); }
+        .input-area input[type="text"] { flex: 1; padding: 9px 14px; border-radius: 20px; border: 1px solid #cbd5e1; outline: none; font-size: 0.9rem; background: #ffffff; }
+        .send-btn { background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-weight: 800; font-size: 0.85rem; display: flex; align-items: center; gap: 5px; }
 
-        #loader { display: none; background: #fef08a; color: #854d0e; padding: 6px; text-align: center; font-size: 0.82rem; font-weight: bold; }
+        #loader { display: none; background: #fef08a; color: #854d0e; padding: 4px; text-align: center; font-size: 0.8rem; font-weight: bold; }
 
-        /* पॉप-अप मोडल्स */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.65); justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(3px); }
-        .modal-content { background: white; padding: 22px; border-radius: 16px; width: 92%; max-width: 580px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); max-height: 90vh; overflow-y: auto; }
-        .modal-header { font-size: 1.1rem; font-weight: 800; margin-bottom: 15px; color: var(--primary); display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; }
+        /* मोडल्स */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.65); justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(2px); }
+        .modal-content { background: white; padding: 18px; border-radius: 14px; width: 92%; max-width: 550px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); max-height: 90vh; overflow-y: auto; }
+        .modal-header { font-size: 1rem; font-weight: 800; margin-bottom: 12px; color: var(--primary); display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 6px; }
         
-        .setting-section { margin-bottom: 15px; background: #f8fafc; padding: 12px; border-radius: 10px; border: 1px solid #e2e8f0; }
-        .setting-title { font-weight: 800; font-size: 0.85rem; color: var(--primary); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 6px; }
-        .setting-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 0.88rem; font-weight: 600; }
-        .setting-item input[type="text"], .setting-item select { padding: 6px 10px; border-radius: 6px; border: 1px solid #cbd5e1; outline: none; font-size: 0.85rem; }
-        .close-modal { cursor: pointer; font-size: 1.3rem; border: none; background: none; color: #64748b; }
+        .setting-section { margin-bottom: 12px; background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0; }
+        .setting-title { font-weight: 800; font-size: 0.82rem; color: var(--primary); margin-bottom: 6px; text-transform: uppercase; display: flex; align-items: center; gap: 5px; }
+        .setting-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 0.85rem; font-weight: 600; }
+        .setting-item input[type="text"], .setting-item select { padding: 5px 8px; border-radius: 5px; border: 1px solid #cbd5e1; outline: none; font-size: 0.82rem; }
+        .close-modal { cursor: pointer; font-size: 1.2rem; border: none; background: none; color: #64748b; }
         
-        .btn-danger { background: var(--danger); color: white; border: none; padding: 10px 14px; border-radius: 8px; cursor: pointer; font-weight: 800; font-size: 0.85rem; width: 100%; margin-top: 5px; }
-        .btn-warning { background: var(--secondary); color: var(--primary-dark); border: none; padding: 8px 10px; border-radius: 8px; cursor: pointer; font-weight: 800; font-size: 0.8rem; }
-        .btn-primary-sm { background: var(--primary); color: white; border: none; padding: 8px 14px; border-radius: 6px; font-size: 0.85rem; font-weight: 700; cursor: pointer; }
+        .btn-danger { background: var(--danger); color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-weight: 800; font-size: 0.82rem; width: 100%; margin-top: 4px; }
+        .btn-warning { background: var(--secondary); color: var(--primary-dark); border: none; padding: 6px 8px; border-radius: 6px; cursor: pointer; font-weight: 800; font-size: 0.78rem; }
+        .btn-primary-sm { background: var(--primary); color: white; border: none; padding: 7px 12px; border-radius: 6px; font-size: 0.82rem; font-weight: 700; cursor: pointer; }
         
-        .manual-clean-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
-        
-        /* टिक बॉक्स ग्रिड (सब-ॲडमिन अधिकार) */
-        .perm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; background: #ffffff; padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; margin-top: 8px; }
-        .perm-grid label { font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; gap: 6px; cursor: pointer; }
-        .perm-grid input[type="checkbox"] { accent-color: var(--primary); width: 16px; height: 16px; }
+        .manual-clean-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 6px; }
+        .perm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; background: #ffffff; padding: 8px; border-radius: 6px; border: 1px solid #cbd5e1; margin-top: 6px; }
+        .perm-grid label { font-size: 0.78rem; font-weight: 600; display: flex; align-items: center; gap: 5px; cursor: pointer; }
+
+        /* मोबाईल विशेष ॲडजस्टमेंट्स */
+        @media (max-width: 768px) {
+            body { padding: 0; }
+            .chat-container { height: 100vh; border-radius: 0; border: none; }
+            .org-header { padding: 7px 10px; gap: 4px; }
+            .org-title { font-size: 0.85rem; gap: 5px; }
+            .org-title i { font-size: 1.2rem; }
+            .role-badge { font-size: 0.62rem; padding: 1px 5px; }
+            .admin-btn, .login-btn-head { padding: 3px 8px; font-size: 0.72rem; }
+            .pdf-drive-banner { font-size: 0.75rem; padding: 5px 10px; }
+            .pdf-drive-link { padding: 3px 8px; font-size: 0.7rem; }
+        }
     </style>
 </head>
 <body>
 
 <div class="chat-container">
     
-    <!-- १. संघटना अधिकृत हेडर -->
+    <!-- १. मोबाईल व संगणकासाठी वेबसाईटची मुख्य ओळख दर्शवणारी पट्टी -->
     <div class="org-header">
         <div class="top-brand">
             <div class="org-title">
@@ -140,45 +166,43 @@
                     <span class="role-badge" id="userRoleBadge">सदस्य (Member)</span>
                 </div>
             </div>
-            <div style="display:flex; gap:6px; align-items:center;">
+            <div style="display:flex; gap:5px; align-items:center;">
                 <div id="adminControls" style="display:none;">
                     <button class="admin-btn" onclick="openAdminSettings()"><i class="fa-solid fa-gear"></i> सेटिंग्ज</button>
                 </div>
-                <button class="login-btn-head" id="loginBtnHead" onclick="openLoginModal()"><i class="fa-solid fa-lock"></i> ॲडमिन लॉगिन</button>
+                <button class="login-btn-head" id="loginBtnHead" onclick="openLoginModal()"><i class="fa-solid fa-lock"></i> ॲडमिन</button>
             </div>
         </div>
 
         <div class="search-tab-row">
-            <!-- सर्च बॉक्स -->
             <div class="search-box">
-                <i class="fa-solid fa-magnifying-glass" style="color:#e2e8f0; font-size:0.8rem; margin-right:5px;"></i>
-                <input type="text" id="searchInput" placeholder="चॅटमधील मेसेज, नाव किंवा मोबाईल शोधा..." oninput="filterMessages()">
+                <i class="fa-solid fa-magnifying-glass" style="color:#e2e8f0; font-size:0.75rem; margin-right:4px;"></i>
+                <input type="text" id="searchInput" placeholder="मेसेज, नाव किंवा मोबाईल शोधा..." oninput="filterMessages()">
             </div>
 
-            <!-- २ चॅट रूम्स (फक्त ॲडमिनला दिसतील) -->
             <div class="tabs" id="tabsContainer">
-    <button id="tab-all" class="active" onclick="switchRoom('GroupAll')">👥 सदस्य + ॲडमिन चॅट</button>
-    <button id="tab-admin" onclick="switchRoom('admin_chat')">🔒 ॲडमिन प्रायव्हेट चॅट</button>
-</div>
+                <button id="tab-all" class="active" onclick="switchRoom('GroupAll')">👥 सदस्य + ॲडमिन चॅट</button>
+                <button id="tab-admin" onclick="switchRoom('admin_chat')">🔒 ॲडमिन प्रायव्हेट चॅट</button>
+            </div>
         </div>
     </div>
 
-    <!-- २. 📄 PDF कागदपत्रे व गूगल ड्राईव्ह / टेलिग्राम बॉट स्वतंत्र बॅनर -->
+    <!-- २. PDF व गूगल ड्राईव्ह बॅनर -->
     <div class="pdf-drive-banner" id="pdfDriveBanner">
-        <span>📄 अधिकृत PDF कागदपत्रे व गूगल ड्राईव्ह/टेलिग्राम फोल्डर:</span>
+        <span>📄 शासकीय परिपत्रके व अधिकृत फाईल्स:</span>
         <a href="https://drive.google.com" id="pdfDriveLinkBtn" target="_blank" class="pdf-drive-link">
-            <i class="fa-solid fa-folder-open"></i> लिंक उघडा
+            <i class="fa-solid fa-folder-open"></i> ड्राईव्ह उघडा
         </a>
     </div>
 
     <div id="loader"><i class="fa-solid fa-spinner fa-spin"></i> फाईल अपलोड होत आहे...</div>
     
-    <!-- ३. चॅट मेसेज बॉक्स -->
+    <!-- ३. चॅट मेसेज विंडो (मध्यभागी फिकट लोगोसह) -->
     <div class="chat-box" id="chatBox"></div>
 
-    <!-- ४. मेसेज टाईप इनपुट -->
+    <!-- ४. इनपुट पट्टी -->
     <div class="input-area">
-        <label for="fileInput" class="file-label" title="फोटो जोडा (ImgBB)">
+        <label for="fileInput" class="file-label" title="फोटो जोडा">
             <i class="fa-solid fa-paperclip"></i>
         </label>
         <input type="file" id="fileInput" accept="image/*" onchange="handleFileUpload(event)">
@@ -190,26 +214,22 @@
     </div>
 </div>
 
-<!-- ========================================================
-     ५. ॲडमिन ऑथेन्टिकेशन मोडल (Login Modal)
-     ======================================================== -->
+<!-- ॲडमिन लॉगिन मोडल -->
 <div class="modal" id="loginModal">
-    <div class="modal-content" style="max-width: 420px; text-align: center;">
+    <div class="modal-content" style="max-width: 400px; text-align: center;">
         <div class="modal-header">
             <span>🔐 ॲडमिन सुरक्षा लॉगिन</span>
             <button class="close-modal" onclick="closeModal('loginModal')">✖</button>
         </div>
         <div style="padding: 10px 0;">
-            <input type="email" id="loginEmail" placeholder="नोंदणीकृत ई-मेल ID" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #cbd5e1; border-radius:8px;">
-            <input type="password" id="loginPass" placeholder="पासवर्ड" style="width:100%; padding:10px; margin-bottom:15px; border:1px solid #cbd5e1; border-radius:8px;">
-            <button class="btn-primary-sm" onclick="performAdminLogin()" style="width:100%; padding:11px; font-size:1rem;"><i class="fa-solid fa-right-to-bracket"></i> लॉगिन करा</button>
+            <input type="email" id="loginEmail" placeholder="नोंदणीकृत ई-मेल ID" style="width:100%; padding:9px; margin-bottom:10px; border:1px solid #cbd5e1; border-radius:8px;">
+            <input type="password" id="loginPass" placeholder="पासवर्ड" style="width:100%; padding:9px; margin-bottom:15px; border:1px solid #cbd5e1; border-radius:8px;">
+            <button class="btn-primary-sm" onclick="performAdminLogin()" style="width:100%; padding:10px; font-size:0.95rem;"><i class="fa-solid fa-right-to-bracket"></i> लॉगिन करा</button>
         </div>
     </div>
 </div>
 
-<!-- ========================================================
-     ६. ॲडमिन कंट्रोल पॅनेल (Super Admin Checkboxes)
-     ======================================================== -->
+<!-- ॲडमिन कंट्रोल पॅनेल -->
 <div class="modal" id="adminModal">
     <div class="modal-content">
         <div class="modal-header">
@@ -217,10 +237,9 @@
             <button class="close-modal" onclick="closeModal('adminModal')">✖</button>
         </div>
         
-        <!-- 👑 सुपर ॲडमिन स्पेशल पॅनेल -->
         <div class="setting-section" id="sec_super_admin_panel" style="background:#f0f9ff; border-color:#0284c7; display:none;">
-            <div class="setting-title" style="color:#0369a1;"><i class="fa-solid fa-user-shield"></i> 👑 सुपर ॲडमिन परवानग्या नियंत्रण (Sub-Admin Checkboxes)</div>
-            <p style="font-size:0.78rem; color:#475569; margin-bottom:8px;">सब-ॲडमिनला कोणत्या सेटिंगचा ॲक्सेस द्यायचा ते निवडा:</p>
+            <div class="setting-title" style="color:#0369a1;"><i class="fa-solid fa-user-shield"></i> 👑 सब-ॲडमिन टिक-बॉक्स परवानग्या</div>
+            <p style="font-size:0.75rem; color:#475569; margin-bottom:6px;">सब-ॲडमिनला कोणते अधिकार द्यायचे ते निवडा:</p>
 
             <div class="perm-grid">
                 <label><input type="checkbox" id="perm_drive_link" checked> 📁 PDF/ड्राईव्ह लिंक बदलणे</label>
@@ -232,57 +251,52 @@
                 <label><input type="checkbox" id="perm_clear_room"> ⚠️ पूर्ण रूम क्लियर करणे</label>
             </div>
 
-            <button class="btn-primary-sm" onclick="saveSubAdminPermissions()" style="width:100%; margin-top:10px;">
-                <i class="fa-solid fa-save"></i> टिक-बॉक्स परवानग्या सेव्ह करा
+            <button class="btn-primary-sm" onclick="saveSubAdminPermissions()" style="width:100%; margin-top:8px;">
+                <i class="fa-solid fa-save"></i> परवानग्या सेव्ह करा
             </button>
         </div>
 
-        <!-- ऑप्शन १: PDF / ड्राईव्ह लिंक सेटिंग -->
         <div class="setting-section" id="sec_drive_link" style="background:#fffbe3; border-color:#fcd34d;">
-            <div class="setting-title" style="color:#b45309;"><i class="fa-solid fa-folder-open"></i> 📁 PDF व ड्राईव्ह / टेलिग्राम लिंक सेटिंग</div>
-            <div class="setting-item" style="flex-direction:column; align-items:flex-start; gap:5px;">
-                <span style="font-size:0.8rem;">गूगल ड्राईव्ह / टेलिग्राम बॉटची URL टाका:</span>
+            <div class="setting-title" style="color:#b45309;"><i class="fa-solid fa-folder-open"></i> 📁 PDF व गूगल ड्राईव्ह लिंक</div>
+            <div class="setting-item" style="flex-direction:column; align-items:flex-start; gap:4px;">
+                <span style="font-size:0.78rem;">गूगल ड्राईव्ह किंवा टेलिग्राम URL:</span>
                 <input type="text" id="driveUrlInput" placeholder="https://drive.google.com/..." style="width:100%;">
-                <button class="btn-warning" onclick="saveDriveUrl()" style="margin-top:5px; width:100%;">लिंक सेव्ह करा</button>
+                <button class="btn-warning" onclick="saveDriveUrl()" style="margin-top:4px; width:100%;">लिंक सेव्ह करा</button>
             </div>
         </div>
 
-        <!-- ऑप्शन २: सदस्य प्रोफाईल, मोबाईल व फोटो सेटिंग्ज -->
         <div class="setting-section" id="sec_profile_settings">
-            <div class="setting-title"><i class="fa-solid fa-user-gear"></i> 👤 सदस्य प्रोफाईल व DP डिस्प्ले सेटिंग्ज</div>
+            <div class="setting-title"><i class="fa-solid fa-user-gear"></i> 👤 सदस्य DP व माहिती</div>
             <div class="setting-item">
-                <span>सदस्यांचे प्रोफाइल फोटो (DP) दाखवा:</span>
+                <span>सदस्यांचे फोटो (DP) दाखवा:</span>
                 <input type="checkbox" id="toggleProfilePhotos" onchange="updateSettings()">
             </div>
             <div class="setting-item">
-                <span>सदस्यांचा मोबाईल नंबर आणि पद दाखवा:</span>
+                <span>मोबाईल नंबर आणि पद दाखवा:</span>
                 <input type="checkbox" id="toggleShowMobilePost" onchange="updateSettings()">
             </div>
         </div>
 
-        <!-- ऑप्शन ३: फोटो डाऊनलोड सेटिंग -->
         <div class="setting-section" id="sec_download_option">
-            <div class="setting-title"><i class="fa-solid fa-download"></i> ⬇️ मोबाईल फोटो डाऊनलोड बटण</div>
+            <div class="setting-title"><i class="fa-solid fa-download"></i> ⬇️ फोटो डाऊनलोड बटण</div>
             <div class="setting-item">
                 <span>चॅटमधील फोटोवर डाऊनलोड बटण दाखवा:</span>
                 <input type="checkbox" id="toggleEnableDownload" onchange="updateSettings()">
             </div>
         </div>
 
-        <!-- ऑप्शन ४: मेसेज डिलीट परवानग्या -->
         <div class="setting-section" id="sec_member_delete">
-            <div class="setting-title"><i class="fa-solid fa-shield"></i> 🛡️ मेसेज परवानग्या</div>
+            <div class="setting-title"><i class="fa-solid fa-shield"></i> 🛡️ मेसेज डिलीट परवानग्या</div>
             <div class="setting-item">
                 <span>सदस्यांना स्वतःचे मेसेज डिलीट करू द्या:</span>
                 <input type="checkbox" id="toggleMemberDelete" onchange="updateSettings()">
             </div>
         </div>
 
-        <!-- ऑप्शन ५: ऑटो-डिलीट कालावधी -->
         <div class="setting-section" id="sec_auto_delete">
-            <div class="setting-title"><i class="fa-solid fa-clock-rotate-left"></i> ⏳ डेटा रिटेंशन (Auto-Delete)</div>
+            <div class="setting-title"><i class="fa-solid fa-clock-rotate-left"></i> ⏳ ऑटो-डिलीट (Auto-Delete)</div>
             <div class="setting-item">
-                <span>ऑटो-डिलीट कालावधी निवडा:</span>
+                <span>कालावधी निवडा:</span>
                 <select id="autoDeleteSelect" onchange="updateSettings()">
                     <option value="0">बंद (Off)</option>
                     <option value="30">३० दिवस (30 Days)</option>
@@ -292,10 +306,8 @@
             </div>
         </div>
 
-        <!-- ऑप्शन ६: मॅन्युअल क्लिनअप (30, 60, 90, 200 दिवस) -->
         <div class="setting-section" id="sec_manual_clean">
-            <div class="setting-title"><i class="fa-solid fa-broom"></i> 🧹 मॅन्युअल क्लिनअप (Manual Clear)</div>
-            <p style="font-size: 0.78rem; color: #64748b; margin-bottom: 6px;">ठराविक दिवसांपेक्षा जुने मेसेज डिलीट करा:</p>
+            <div class="setting-title"><i class="fa-solid fa-broom"></i> 🧹 मॅन्युअल क्लिनअप</div>
             <div class="manual-clean-grid">
                 <button class="btn-warning" onclick="manualCleanup(30)">🗑️ ३० दिवस जुने</button>
                 <button class="btn-warning" onclick="manualCleanup(60)">🗑️ ६० दिवस जुने</button>
@@ -304,7 +316,6 @@
             </div>
         </div>
 
-        <!-- ऑप्शन ७: संपूर्ण चालू रूम क्लियर करा -->
         <div id="sec_clear_room">
             <button class="btn-danger" onclick="deleteAllMessages()">⚠️ संपूर्ण चालू चॅट रूम रिकामी करा</button>
         </div>
@@ -317,9 +328,6 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 
 <script>
-    /* =======================================================
-       १. फायरबेस व ImgBB API Key जोडणी
-       ======================================================= */
     const firebaseConfig = { 
         apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk", 
         authDomain: "xrayunionmah.firebaseapp.com", 
@@ -336,7 +344,7 @@
     let currentUserPhoto = urlParams.get('photo') || "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
     
     let currentRole = "member"; 
-    let currentRoom = "GroupAll"; // ॲडमिन पॅनेलच्या सुसंगततेसाठी 'GroupAll' केले
+    let currentRoom = "GroupAll"; 
     let unsubscribe = null;
     let allLoadedMessages = [];
 
@@ -362,9 +370,6 @@
     const db = firebase.firestore();
     const auth = firebase.auth();
 
-    /* =======================================================
-       २. ऑथेन्टिकेशन आणि युजर ऑटो-डिटेक्ट
-       ======================================================= */
     window.onload = () => {
         auth.onAuthStateChanged(async (user) => {
             if (user) {
@@ -385,7 +390,7 @@
                 document.getElementById("loginBtnHead").onclick = performAdminLogout;
             } else {
                 currentRole = "member";
-                document.getElementById("loginBtnHead").innerHTML = '<i class="fa-solid fa-lock"></i> ॲडमिन लॉगिन';
+                document.getElementById("loginBtnHead").innerHTML = '<i class="fa-solid fa-lock"></i> ॲडमिन';
                 document.getElementById("loginBtnHead").onclick = openLoginModal;
             }
 
@@ -416,9 +421,6 @@
         }
     }
 
-    /* =======================================================
-       ३. टिक-बॉक्सनुसार सब-ॲडमिन परवानग्या
-       ======================================================= */
     function applySubAdminPermissions() {
         if (currentRole === "super_admin") {
             document.getElementById("sec_drive_link").style.display = "block";
@@ -475,9 +477,6 @@
         });
     }
 
-    /* =======================================================
-       ४. ऑथेन्टिकेशन - लॉगिन व लॉगआउट
-       ======================================================= */
     function openLoginModal() { document.getElementById("loginModal").style.display = "flex"; }
     function openAdminSettings() { document.getElementById("adminModal").style.display = "flex"; }
     function closeModal(id) { document.getElementById(id).style.display = "none"; }
@@ -500,9 +499,6 @@
         auth.signOut().then(() => Swal.fire('लॉगआउट झाले', 'आपण यशस्वीरीत्या लॉगआउट झाला आहात.', 'info'));
     }
 
-    /* =======================================================
-       ५. चॅट रूम्स व मेसेज लोड/डिस्पले ('chat_messages' वापरले)
-       ======================================================= */
     function switchRoom(room) {
         currentRoom = room;
         document.getElementById("tab-all").classList.remove("active");
@@ -516,7 +512,6 @@
     function loadMessages(room) {
         if (unsubscribe) unsubscribe();
 
-        // ॲडमिन पॅनेलच्या 'chat_messages' मधून मेसेज लोड करणे
         unsubscribe = db.collection("chat_messages")
             .where("room", "==", room)
             .orderBy("timestamp")
@@ -541,7 +536,6 @@
             const wrapper = document.createElement("div");
             wrapper.className = `message-wrapper ${isMyMsg ? "my-msg-wrapper" : ""}`;
 
-            // १. सदस्य DP
             if (appSettings.showProfilePhotos) {
                 const avatar = document.createElement("div");
                 avatar.className = "avatar";
@@ -556,13 +550,11 @@
             const msgDiv = document.createElement("div");
             msgDiv.className = "message";
 
-            // २. सदस्याचे नाव, मोबाईल व पद
             let subInfoHtml = appSettings.showMobilePost && data.userMobile ? `<br><span class="msg-subinfo"><i class="fa-solid fa-phone"></i> ${data.userMobile} (${userPost})</span>` : `<br><span class="msg-subinfo">(${userPost})</span>`;
             let contentHtml = `<div class="msg-user"><span>${userName}</span></div>${subInfoHtml}`;
 
             const msgText = data.text || data.message || "";
 
-            // ३. मेसेज प्रकार (टेक्स्ट / इमेज)
             if (data.type === "image") {
                 let downloadBtnHtml = appSettings.enableDownload ? `<a href="${msgText}" target="_blank" download="Photo_${Date.now()}.jpg" class="img-download-btn"><i class="fa-solid fa-download"></i> डाऊनलोड फोटो</a>` : '';
                 contentHtml += `
@@ -575,11 +567,9 @@
                 contentHtml += `<div style="margin-top:4px;">${msgText}</div>`;
             }
 
-            // ४. टाइमस्टॅम्प
             const timeStr = data.time || (data.timestamp ? new Date(data.timestamp.toDate()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '');
             contentHtml += `<div class="msg-time">${timeStr}</div>`;
 
-            // ५. डिलीट बटण
             const isAnAdmin = (currentRole === "super_admin" || currentRole === "sub_admin");
             const canDelete = isAnAdmin || (appSettings.allowMemberDelete && isMyMsg);
 
@@ -621,9 +611,6 @@
         renderMessages(filtered);
     }
 
-    /* =======================================================
-       ६. मेसेज व फोटो अपलोड (ॲडमिन व चॅट सुसंगत डेटा फॉरमॅट)
-       ======================================================= */
     function handleEnter(e) { if(e.key === 'Enter') sendTextMessage(); }
 
     function sendTextMessage() {
@@ -687,10 +674,10 @@
                         timestamp: firebase.firestore.FieldValue.serverTimestamp()
                     });
                 } else {
-                    Swal.fire('त्रुटी', 'फोटो अपलोड अयशस्वी! ImgBB Key तपासा.', 'error');
+                    Swal.fire('त्रुटी', 'फोटो अपलोड अयशस्वी!', 'error');
                 }
             } else {
-                Swal.fire('माहिती', 'कृपया फक्त फोटो फाईल निवडा! PDF लिंक्ससाठी वरील बॅनरचा वापर करा.', 'info');
+                Swal.fire('माहिती', 'कृपया फक्त फोटो फाईल निवडा!', 'info');
             }
         } catch (error) {
             console.error("Upload Error: ", error);
@@ -700,9 +687,6 @@
         document.getElementById("fileInput").value = ""; 
     }
 
-    /* =======================================================
-       ७. सुपर आणि सब-ॲडमिन सेटिंग्ज व क्लिनअप
-       ======================================================= */
     function saveSubAdminPermissions() {
         if (currentRole !== "super_admin") return;
 
@@ -719,7 +703,7 @@
         db.collection("settings").doc("config").set({
             subAdminPerms: subAdminPerms
         }, { merge: true }).then(() => {
-            Swal.fire('सेव्ह झाले!', 'सब-ॲडमिन टिक-बॉक्स परवानग्या सेव्ह झाल्या.', 'success');
+            Swal.fire('सेव्ह झाले!', 'सब-ॲडमिन परवानग्या सेव्ह झाल्या.', 'success');
         });
     }
 
