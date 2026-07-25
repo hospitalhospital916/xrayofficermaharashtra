@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>राज्यस्तरीय चॅट नियंत्रण कक्ष | क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना महाराष्ट्र राज्य</title>
+    <title>राज्यस्तरीय चॅट नियंत्रण कक्ष | क्ष-किरण वैज्ञानिक अधिकारी संघटना</title>
   
     <!-- EXTERNAL LIBRARIES -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -15,7 +15,7 @@
             --primary: #0B3D91; 
             --primary-dark: #07275e; 
             --secondary: #f39c12; 
-            --bg-chat: #f1f5f9; 
+            --bg-chat: #f8fafc; /* थोडा अधिक स्वच्छ बॅकग्राऊंड */
             --white: #ffffff; 
             --text-dark: #1e293b; 
             --danger: #ef4444; 
@@ -61,7 +61,7 @@
         .pdf-drive-banner { background: linear-gradient(90deg, #fffbe3, #ffeed0); border-bottom: 1px solid #fcd34d; padding: 6px 12px; display: flex; justify-content: space-between; align-items: center; font-size: 0.82rem; color: #854d0e; font-weight: 700; }
         .pdf-drive-link { background: var(--primary); color: white; text-decoration: none; padding: 4px 10px; border-radius: 5px; font-size: 0.75rem; display: inline-flex; align-items: center; gap: 5px; font-weight: 800; }
 
-        /* ३. 💬 चॅट बॉक्स (संघटनेचा अंधक वॉटरमार्क लोगो) */
+        /* ३. 💬 चॅट बॉक्स (नवीन लोगो वॉटरमार्क) */
         .chat-box { 
             flex: 1; 
             padding: 15px; 
@@ -71,18 +71,19 @@
             flex-direction: column; 
             gap: 12px; 
             position: relative;
+            scroll-behavior: smooth; /* स्मूथ स्क्रोलिंग */
         }
 
-        /* फिकट वॉटरमार्क लोगो */
+        /* फिकट वॉटरमार्क लोगो (तुमचा नवीन लोगो) */
         .chat-box::before {
             content: "";
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            background-image: url('https://cdn-icons-png.flaticon.com/512/3135/3135715.png');
+            background-image: url('1001264489.png'); /* येथे लोगो लिंक आहे */
             background-repeat: no-repeat;
             background-position: center;
-            background-size: 260px;
-            opacity: 0.07;
+            background-size: 320px; /* लोगोचा आकार */
+            opacity: 0.08; /* एकदम फिकट दिसेल जेणेकरून मेसेज वाचायला त्रास होणार नाही */
             pointer-events: none;
             z-index: 0;
         }
@@ -94,8 +95,8 @@
         .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 800; flex-shrink: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.15); overflow: hidden; border: 2px solid white; }
         .avatar img { width: 100%; height: 100%; object-fit: cover; }
 
-        .message { padding: 8px 12px; border-radius: 12px; background: #ffffff; position: relative; box-shadow: 0 2px 5px rgba(0,0,0,0.08); font-size: 0.92rem; line-height: 1.4; border-top-left-radius: 0; word-break: break-word; color: var(--text-dark); }
-        .message-wrapper.my-msg-wrapper .message { background: var(--my-msg); border-top-left-radius: 12px; border-top-right-radius: 0; }
+        .message { padding: 8px 12px; border-radius: 12px; background: #ffffff; position: relative; box-shadow: 0 3px 6px rgba(0,0,0,0.06); font-size: 0.92rem; line-height: 1.4; border-top-left-radius: 0; word-break: break-word; color: var(--text-dark); border: 1px solid #e2e8f0; }
+        .message-wrapper.my-msg-wrapper .message { background: var(--my-msg); border-top-left-radius: 12px; border-top-right-radius: 0; border: 1px solid #bce3a6; }
         
         .msg-user { font-size: 0.75rem; font-weight: 800; color: var(--primary); margin-bottom: 2px; display: flex; justify-content: space-between; gap: 8px; }
         .msg-subinfo { font-size: 0.65rem; color: #64748b; font-weight: 600; }
@@ -111,15 +112,17 @@
 
         .delete-btn { position: absolute; top: -6px; right: -6px; background: var(--danger); color: white; border: none; border-radius: 50%; width: 20px; height: 20px; cursor: pointer; font-size: 0.65rem; display: none; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
         .message:hover .delete-btn { display: flex; }
-
-        /* ४. इनपुट एरिया */
-        .input-area { display: flex; padding: 8px 12px; background: #f0f4f8; align-items: center; gap: 8px; border-top: 1px solid #cbd5e1; z-index: 2; }
-        .file-label { cursor: pointer; font-size: 1.25rem; color: #475569; padding: 2px; display: flex; align-items: center; }
+          /* ४. इनपुट एरिया */
+        .input-area { display: flex; padding: 8px 12px; background: #f0f4f8; align-items: center; gap: 8px; border-top: 1px solid #cbd5e1; z-index: 2; transition: 0.3s; }
+        .file-label { cursor: pointer; font-size: 1.25rem; color: #475569; padding: 2px; display: flex; align-items: center; transition: 0.3s; }
         .file-label:hover { color: var(--primary); }
         #fileInput { display: none; }
         
-        .input-area input[type="text"] { flex: 1; padding: 9px 14px; border-radius: 20px; border: 1px solid #cbd5e1; outline: none; font-size: 0.9rem; background: #ffffff; }
-        .send-btn { background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-weight: 800; font-size: 0.85rem; display: flex; align-items: center; gap: 5px; }
+        .input-area input[type="text"] { flex: 1; padding: 9px 14px; border-radius: 20px; border: 1px solid #cbd5e1; outline: none; font-size: 0.9rem; background: #ffffff; transition: 0.3s; }
+        .input-area input[type="text"]:disabled { background: #e2e8f0; cursor: not-allowed; }
+        
+        .send-btn { background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-weight: 800; font-size: 0.85rem; display: flex; align-items: center; gap: 5px; transition: 0.3s; }
+        .send-btn:disabled { background: #94a3b8; cursor: not-allowed; }
 
         #loader { display: none; background: #fef08a; color: #854d0e; padding: 6px; text-align: center; font-size: 0.82rem; font-weight: bold; border-bottom: 1px solid #fde047; }
 
@@ -205,14 +208,14 @@
     <div class="chat-box" id="chatBox"></div>
 
     <!-- ४. इनपुट पट्टी -->
-    <div class="input-area">
-        <label for="fileInput" class="file-label" title="फोटो किंवा PDF फाईल जोडा">
+    <div class="input-area" id="inputAreaBox">
+        <label for="fileInput" class="file-label" id="fileInputLabel" title="फोटो किंवा PDF फाईल जोडा">
             <i class="fa-solid fa-paperclip"></i>
         </label>
         <input type="file" id="fileInput" accept="image/*,.pdf" onchange="handleFileUpload(event)">
         
         <input type="text" id="msgInput" placeholder="येथे मेसेज टाईप करा..." autocomplete="off" onkeypress="handleEnter(event)">
-        <button class="send-btn" onclick="sendTextMessage()">
+        <button class="send-btn" id="sendMsgBtn" onclick="sendTextMessage()">
             <span>पाठवा</span> <i class="fa-solid fa-paper-plane"></i>
         </button>
     </div>
@@ -235,6 +238,7 @@
 
 <!-- ॲडमिन कंट्रोल पॅनेल -->
 <div class="modal" id="adminModal">
+    <!-- (तुमचे पूर्वीचे सर्व ॲडमिन मोडल जसेच्या तसे) -->
     <div class="modal-content">
         <div class="modal-header">
             <span>⚙️ ॲडमिन कंट्रोल पॅनेल</span>
@@ -334,7 +338,6 @@
         </div>
     </div>
 </div>
-
 <!-- Firebase SDK (V8 Compat) -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
@@ -349,15 +352,13 @@
 
     const IMGBB_API_KEY = "9ebc935a853cef7cef4ab67692b3048a";
     const SUPER_ADMIN_EMAIL = "hangemahesh498@gmail.com";
-
-    // 🤖 TELEGRAM BOT CREDENTIALS
     const TELEGRAM_BOT_TOKEN = "8598859316:AAHzoROJMwIFlm30XO3DxHJdk3kkjv6uS5c";
 
     const urlParams = new URLSearchParams(window.location.search);
     let currentUser = urlParams.get('name') || "वैज्ञानिक अधिकारी"; 
     let currentUserMobile = urlParams.get('mobile') || "98xxxxxx00";
     let currentUserPost = urlParams.get('post') || "गट-क सदस्य";
-    let currentUserPhoto = urlParams.get('photo') || "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
+    let currentUserPhoto = urlParams.get('photo') || "1001264489.png"; // येथेही नवीन लोगो डिफॉल्ट दिला
     
     let currentRole = "member"; 
     let currentRoom = "GroupAll"; 
@@ -372,15 +373,7 @@
         autoDeleteDays: 0,
         pdfDriveUrl: "https://drive.google.com",
         telegramChannelId: "@xrayunion_pdf_storage",
-        subAdminPerms: {
-            perm_drive_link: true,
-            perm_profile_settings: true,
-            perm_download_option: true,
-            perm_member_delete: true,
-            perm_auto_delete: false,
-            perm_manual_clean: false,
-            perm_clear_room: false
-        }
+        subAdminPerms: { perm_drive_link: true, perm_profile_settings: true, perm_download_option: true, perm_member_delete: true, perm_auto_delete: false, perm_manual_clean: false, perm_clear_room: false }
     };
 
     firebase.initializeApp(firebaseConfig);
@@ -405,10 +398,16 @@
                 }
                 document.getElementById("loginBtnHead").innerHTML = '<i class="fa-solid fa-power-off"></i> लॉगआउट';
                 document.getElementById("loginBtnHead").onclick = performAdminLogout;
+                enableInputArea(); // ॲडमिन आल्यावर टायपिंग सुरु
             } else {
                 currentRole = "member";
                 document.getElementById("loginBtnHead").innerHTML = '<i class="fa-solid fa-lock"></i> ॲडमिन';
                 document.getElementById("loginBtnHead").onclick = openLoginModal;
+                
+                // 🔒 सिक्युरिटी चेक: अनोळखी युजर असल्यास टायपिंग बंद करा
+                if (currentUser === "वैज्ञानिक अधिकारी") {
+                    disableInputArea();
+                }
             }
 
             setupRoleUI();
@@ -416,6 +415,25 @@
             loadMessages(currentRoom);
         });
     };
+
+    // इनपुट एरिया बंद करण्याचे फंक्शन
+    function disableInputArea() {
+        const msgInput = document.getElementById("msgInput");
+        msgInput.disabled = true;
+        msgInput.placeholder = "मेसेज पाठवण्यासाठी अधिकृत लिंकने या...";
+        document.getElementById("sendMsgBtn").disabled = true;
+        document.getElementById("fileInputLabel").style.opacity = "0.4";
+        document.getElementById("fileInputLabel").style.pointerEvents = "none";
+    }
+
+    function enableInputArea() {
+        const msgInput = document.getElementById("msgInput");
+        msgInput.disabled = false;
+        msgInput.placeholder = "येथे मेसेज टाईप करा...";
+        document.getElementById("sendMsgBtn").disabled = false;
+        document.getElementById("fileInputLabel").style.opacity = "1";
+        document.getElementById("fileInputLabel").style.pointerEvents = "auto";
+    }
 
     function setupRoleUI() {
         const badge = document.getElementById("userRoleBadge");
@@ -516,8 +534,19 @@
         }
     }
 
+    // 🔒 लॉगआउट केल्यावर पूर्ण पेज रिफ्रेश (सिक्युरिटीसाठी)
     function performAdminLogout() {
-        auth.signOut().then(() => Swal.fire('लॉगआउट झाले', 'आपण यशस्वीरीत्या लॉगआउट झाला आहात.', 'info'));
+        auth.signOut().then(() => {
+            Swal.fire({
+                title: 'लॉगआउट झाले',
+                text: 'आपण यशस्वीरीत्या लॉगआउट झाला आहात.',
+                icon: 'info',
+                confirmButtonText: 'ओके'
+            }).then(() => {
+                // पेज रिफ्रेश करा जेणेकरून URL मधील जुना डेटा निघून जाईल
+                window.location.href = window.location.pathname; 
+            });
+        });
     }
 
     function switchRoom(room) {
@@ -548,9 +577,8 @@
             });
     }
 
-    // 👁️ "मेसेज कोणी कोणी पाहिला" ट्रॅक करणारे फंक्शन (Read Receipts Tracker)
     function markUnreadMessagesAsSeen() {
-        if (!currentUser) return;
+        if (!currentUser || currentUser === "वैज्ञानिक अधिकारी") return;
         const nowTime = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
 
         allLoadedMessages.forEach((msg) => {
@@ -566,7 +594,6 @@
         });
     }
 
-    // 👁️ कोणी पाहिला हे पॉप-अपमध्ये दाखवणारे फंक्शन
     function showSeenByModal(msgId) {
         const msg = allLoadedMessages.find(m => m.id === msgId);
         if (!msg) return;
@@ -593,7 +620,7 @@
         });
         listHtml += `</div>`;
 
-        Swal.fire({
+       Swal.fire({
             title: `👁️ हा मेसेज पाहणारे सदस्य (${readList.length})`,
             html: listHtml,
             showCloseButton: true,
@@ -618,7 +645,7 @@
                 const avatar = document.createElement("div");
                 avatar.className = "avatar";
                 if (data.userPhoto) {
-                    avatar.innerHTML = `<img src="${data.userPhoto}" alt="DP">`;
+                    avatar.innerHTML = `<img src="${data.userPhoto}" alt="DP" onerror="this.src='1001264489.png'">`;
                 } else {
                     avatar.innerText = userName ? userName.charAt(0).toUpperCase() : "U";
                 }
@@ -642,7 +669,6 @@
                     </div>
                 `;
             } else if (data.type === "pdf") {
-                // 📄 PDF डिस्प्ले लेआउट
                 const pdfFileName = data.fileName || "शासकीय परिपत्रक / फाईल";
                 contentHtml += `
                     <div style="margin-top:6px; background:#fff1f2; border:1px solid #fecdd3; padding:10px; border-radius:10px; display:flex; align-items:center; gap:10px;">
@@ -661,7 +687,6 @@
 
             const timeStr = data.time || (data.timestamp ? new Date(data.timestamp.toDate()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '');
             
-            // 👁️ पाहिलेले सदस्य टिक (Read Receipts UI)
             const seenCount = (data.readBy || []).length;
             const seenHtml = `<span class="seen-badge" onclick="showSeenByModal('${data.id}')" title="कोणी पाहिले ते पहा">✓✓ ${seenCount}</span>`;
 
@@ -684,7 +709,8 @@
             chatBox.appendChild(wrapper);
         });
 
-        chatBox.scrollTop = chatBox.scrollHeight;
+        // 🚀 स्मूथ स्क्रोलिंगसाठी
+        setTimeout(() => { chatBox.scrollTop = chatBox.scrollHeight; }, 100);
     }
 
     function viewFullImage(url) {
@@ -716,7 +742,13 @@
 
     function handleEnter(e) { if(e.key === 'Enter') sendTextMessage(); }
 
+    // 🔒 सिक्युरिटी चेक मेसेज पाठवताना
     function sendTextMessage() {
+        if (currentUser === "वैज्ञानिक अधिकारी" || !currentUser) {
+            Swal.fire('थांबा!', 'अनोळखी युजरला मेसेज पाठवण्याची परवानगी नाही. कृपया अधिकृत लिंकवरून या.', 'warning');
+            return;
+        }
+
         const input = document.getElementById("msgInput");
         const text = input.value.trim();
         
@@ -740,7 +772,7 @@
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
             })
             .then(() => {
-                input.value = ""; // सेव्ह झाल्यावरच इनपुट रिकामा करा
+                input.value = ""; 
             })
             .catch((error) => {
                 console.error("Error sending message:", error);
@@ -749,7 +781,6 @@
         }
     }
 
-    // 🤖 TELEGRAM BOT वर PDF अपलोड करणारे अति-जलद व मोफत फंक्शन
     async function uploadPdfToTelegram(file) {
         const channelTarget = appSettings.telegramChannelId || "@xrayunion_pdf_storage";
         const formData = new FormData();
@@ -772,10 +803,17 @@
                 return `https://api.telegram.org/file/bot${TELEGRAM_BOT_TOKEN}/${pathData.result.file_path}`;
             }
         }
-        throw new Error(data.description || "टेलिग्रामवर फाईल अपलोड होऊ शकली नाही. कृपया टेलिग्राम चॅनेल/बॉट सेटिंग तपासा.");
+        throw new Error(data.description || "टेलिग्रामवर फाईल अपलोड होऊ शकली नाही.");
     }
 
+    // 🔒 सिक्युरिटी चेक फाईल अपलोड करताना
     async function handleFileUpload(event) {
+        if (currentUser === "वैज्ञानिक अधिकारी" || !currentUser) {
+            Swal.fire('थांबा!', 'अनोळखी युजरला फाईल पाठवण्याची परवानगी नाही.', 'warning');
+            document.getElementById("fileInput").value = ""; 
+            return;
+        }
+
         const file = event.target.files[0];
         if (!file) return;
 
@@ -786,7 +824,6 @@
             const timeStr = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
 
             if (file.type.startsWith("image/")) {
-                // १. फोटो ImgBB वर अपलोड होईल
                 const formData = new FormData();
                 formData.append("image", file);
                 
@@ -816,7 +853,6 @@
                 }
             } 
             else if (file.type === "application/pdf" || file.name.endsWith(".pdf")) {
-                // २. PDF फाईल Telegram Bot द्वारे अमर्याद व मोफत साठवली जाईल
                 if (file.size > 50 * 1024 * 1024) {
                     Swal.fire('मर्यादा ओलांडली', '५० MB पेक्षा मोठी PDF पाठवता येणार नाही.', 'warning');
                     document.getElementById("loader").style.display = "none";
@@ -858,7 +894,6 @@
 
     function saveSubAdminPermissions() {
         if (currentRole !== "super_admin") return;
-
         const subAdminPerms = {
             perm_drive_link: document.getElementById("perm_drive_link").checked,
             perm_profile_settings: document.getElementById("perm_profile_settings").checked,
@@ -868,10 +903,7 @@
             perm_manual_clean: document.getElementById("perm_manual_clean").checked,
             perm_clear_room: document.getElementById("perm_clear_room").checked
         };
-
-        db.collection("settings").doc("config").set({
-            subAdminPerms: subAdminPerms
-        }, { merge: true }).then(() => {
+        db.collection("settings").doc("config").set({ subAdminPerms: subAdminPerms }, { merge: true }).then(() => {
             Swal.fire('सेव्ह झाले!', 'सब-ॲडमिन परवानग्या सेव्ह झाल्या.', 'success');
         });
     }
@@ -884,20 +916,14 @@
         const autoDays = parseInt(document.getElementById("autoDeleteSelect").value);
 
         db.collection("settings").doc("config").set({
-            allowMemberDelete: allowDelete,
-            showProfilePhotos: showPhotos,
-            showMobilePost: showMob,
-            enableDownload: enableDl,
-            autoDeleteDays: autoDays
+            allowMemberDelete: allowDelete, showProfilePhotos: showPhotos, showMobilePost: showMob, enableDownload: enableDl, autoDeleteDays: autoDays
         }, { merge: true });
     }
 
     function saveDriveUrl() {
         const url = document.getElementById("driveUrlInput").value.trim();
         if(url) {
-            db.collection("settings").doc("config").set({
-                pdfDriveUrl: url
-            }, { merge: true });
+            db.collection("settings").doc("config").set({ pdfDriveUrl: url }, { merge: true });
             Swal.fire('सेव्ह झाले!', 'गूगल ड्राईव्ह / टेलिग्राम लिंक सेव्ह झाली.', 'success');
         }
     }
@@ -905,9 +931,7 @@
     function saveTelegramChannel() {
         const chId = document.getElementById("telegramChannelInput").value.trim();
         if(chId) {
-            db.collection("settings").doc("config").set({
-                telegramChannelId: chId
-            }, { merge: true });
+            db.collection("settings").doc("config").set({ telegramChannelId: chId }, { merge: true });
             Swal.fire('सेव्ह झाले!', 'टेलिग्राम चॅनेल ID सेव्ह झाला.', 'success');
         }
     }
@@ -916,71 +940,46 @@
         const cutoffDate = new Date();
         cutoffDate.setDate(cutoffDate.getDate() - days);
 
-        db.collection("chat_messages")
-            .where("timestamp", "<", firebase.firestore.Timestamp.fromDate(cutoffDate))
-            .get()
-            .then((snapshot) => {
-                if (!snapshot.empty) {
-                    const batch = db.batch();
-                    snapshot.forEach((doc) => batch.delete(doc.ref));
-                    batch.commit();
-                }
-            });
+        db.collection("chat_messages").where("timestamp", "<", firebase.firestore.Timestamp.fromDate(cutoffDate)).get().then((snapshot) => {
+            if (!snapshot.empty) {
+                const batch = db.batch();
+                snapshot.forEach((doc) => batch.delete(doc.ref));
+                batch.commit();
+            }
+        });
     }
 
     function manualCleanup(days) {
-        Swal.fire({
-            title: 'खात्री आहे का?',
-            text: `तुम्हाला खरोखरच ${days} दिवसांपेक्षा जुने सर्व मेसेजेस डिलीट करायचे आहेत का?`,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'होय, डिलीट करा',
-            cancelButtonText: 'रद्द करा'
-        }).then((res) => {
+        Swal.fire({ title: 'खात्री आहे का?', text: `तुम्हाला खरोखरच ${days} दिवसांपेक्षा जुने सर्व मेसेजेस डिलीट करायचे आहेत का?`, icon: 'warning', showCancelButton: true, confirmButtonText: 'होय, डिलीट करा', cancelButtonText: 'रद्द करा' }).then((res) => {
             if (res.isConfirmed) {
                 const cutoffDate = new Date();
                 cutoffDate.setDate(cutoffDate.getDate() - days);
 
-                db.collection("chat_messages")
-                    .where("timestamp", "<", firebase.firestore.Timestamp.fromDate(cutoffDate))
-                    .get()
-                    .then((snapshot) => {
-                        if (snapshot.empty) {
-                            Swal.fire('माहिती', `${days} दिवसांपेक्षा जुना एकही मेसेज सापडला नाही.`, 'info');
-                            return;
-                        }
-                        const batch = db.batch();
-                        snapshot.forEach((doc) => batch.delete(doc.ref));
-                        return batch.commit();
-                    })
-                    .then(() => Swal.fire('यशस्वी', `${days} दिवसांपेक्षा जुने सर्व मेसेजेस डिलीट झाले!`, 'success'));
+                db.collection("chat_messages").where("timestamp", "<", firebase.firestore.Timestamp.fromDate(cutoffDate)).get().then((snapshot) => {
+                    if (snapshot.empty) {
+                        Swal.fire('माहिती', `${days} दिवसांपेक्षा जुना एकही मेसेज सापडला नाही.`, 'info');
+                        return;
+                    }
+                    const batch = db.batch();
+                    snapshot.forEach((doc) => batch.delete(doc.ref));
+                    return batch.commit();
+                }).then(() => Swal.fire('यशस्वी', `${days} दिवसांपेक्षा जुने सर्व मेसेजेस डिलीट झाले!`, 'success'));
             }
         });
     }
 
     function deleteSingleMessage(docId) {
-        if(confirm("हा मेसेज डिलीट करायचा आहे का?")) {
-            db.collection("chat_messages").doc(docId).delete();
-        }
+        if(confirm("हा मेसेज डिलीट करायचा आहे का?")) { db.collection("chat_messages").doc(docId).delete(); }
     }
 
     function deleteAllMessages() {
-        Swal.fire({
-            title: '⚠️ सावधान!',
-            text: 'तुम्हाला खरोखर संपूर्ण चालू चॅट रूम रिकामी करायची आहे का?',
-            icon: 'error',
-            showCancelButton: true,
-            confirmButtonText: 'होय, सर्व डिलीट करा',
-            cancelButtonText: 'रद्द करा'
-        }).then((res) => {
+        Swal.fire({ title: '⚠️ सावधान!', text: 'तुम्हाला खरोखर संपूर्ण चालू चॅट रूम रिकामी करायची आहे का?', icon: 'error', showCancelButton: true, confirmButtonText: 'होय, सर्व डिलीट करा', cancelButtonText: 'रद्द करा' }).then((res) => {
             if (res.isConfirmed) {
-                db.collection("chat_messages").where("room", "==", currentRoom).get()
-                .then((querySnapshot) => {
+                db.collection("chat_messages").where("room", "==", currentRoom).get().then((querySnapshot) => {
                     const batch = db.batch();
                     querySnapshot.forEach((doc) => batch.delete(doc.ref));
                     return batch.commit();
-                })
-                .then(() => {
+                }).then(() => {
                     Swal.fire('रिकामी झाली!', 'संपूर्ण चॅट रूम रिकामी करण्यात आली.', 'success');
                     closeModal("adminModal");
                 });
