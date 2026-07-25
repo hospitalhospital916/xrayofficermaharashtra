@@ -509,20 +509,25 @@
         loadMessages(room);
     }
 
-    function loadMessages(room) {
-        if (unsubscribe) unsubscribe();
+  function loadMessages(room) {
+    if (unsubscribe) unsubscribe();
 
-        unsubscribe = db.collection("chat_messages")
-            .where("room", "==", room)
-            .orderBy("timestamp")
-            .onSnapshot((snapshot) => {
-                allLoadedMessages = [];
-                snapshot.forEach((doc) => {
-                    allLoadedMessages.push({ id: doc.id, ...doc.data() });
-                });
-                renderMessages(allLoadedMessages);
+    unsubscribe = db.collection("chat_messages")
+        .where("room", "==", room)
+        .orderBy("timestamp")
+        .onSnapshot((snapshot) => {
+            allLoadedMessages = [];
+            snapshot.forEach((doc) => {
+                allLoadedMessages.push({ id: doc.id, ...doc.data() });
             });
-    }
+            renderMessages(allLoadedMessages);
+        }, (error) => {
+            console.error("Firestore Listen Error:", error);
+            if (error.message.includes("requires an index")) {
+                alert("Firebase Index आवश्यक आहे! कृपया Browser Console (F12) मधील लिंकवरून Index तयार करा.");
+            }
+        });
+}
 
     function renderMessages(messages) {
         const chatBox = document.getElementById("chatBox");
@@ -612,32 +617,37 @@
     }
 
     function handleEnter(e) { if(e.key === 'Enter') sendTextMessage(); }
+function sendTextMessage() {
+    const input = document.getElementById("msgInput");
+    const text = input.value.trim();
+    
+    if (text) {
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
 
-    function sendTextMessage() {
-        const input = document.getElementById("msgInput");
-        const text = input.value.trim();
-        
-        if (text) {
-            const now = new Date();
-            const timeStr = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-
-            db.collection("chat_messages").add({
-                room: currentRoom,
-                senderName: currentUser,
-                user: currentUser,
-                senderRole: currentUserPost,
-                userPost: currentUserPost,
-                userMobile: currentUserMobile,
-                userPhoto: currentUserPhoto,
-                text: text,
-                message: text,
-                type: "text",
-                time: timeStr,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            });
-            input.value = "";
-        }
+        db.collection("chat_messages").add({
+            room: currentRoom,
+            senderName: currentUser,
+            user: currentUser,
+            senderRole: currentUserPost,
+            userPost: currentUserPost,
+            userMobile: currentUserMobile,
+            userPhoto: currentUserPhoto,
+            text: text,
+            message: text,
+            type: "text",
+            time: timeStr,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        })
+        .then(() => {
+            input.value = ""; // सेव्ह झाल्यावरच इनपुट रिकामा करा
+        })
+        .catch((error) => {
+            console.error("Message send error:", error);
+            Swal.fire('एरर', 'मेसेज पाठवता आला नाही: ' + error.message, 'error');
+        });
     }
+}
 
     async function handleFileUpload(event) {
         const file = event.target.files[0];
