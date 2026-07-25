@@ -2001,33 +2001,43 @@
             if(el) el.style.display = 'none';
         };
 
-        window.openTab = function(tabId) { 
-            document.querySelectorAll('.tab-content, .tab-btn').forEach(e => e.classList.remove('active')); 
-            let targetTab = document.getElementById(tabId);
-            if(targetTab) targetTab.classList.add('active'); 
-            if(event && event.currentTarget) event.currentTarget.classList.add('active'); 
-            
-            if(tabId === 'tab-dash') { setTimeout(window.renderDashboard, 200); }
-            if(tabId === 'tab-members') { window.renderMembers(); }
-            if(tabId === 'tab-other') { window.renderOtherStaff(); }
-            if(tabId === 'tab-committee') { window.renderCommittee(); }
-            if(tabId === 'tab-gallery') { window.loadGallery(); }
-            if(tabId === 'tab-icard') { window.filterICardMembers(); }
-            if(tabId === 'tab-letterpad') { window.renderLetterPadAdmin(); window.renderLetters(); }
-            if(tabId === 'tab-template-builder') { window.renderTemplateBuilderList(); }
-            if(tabId === 'tab-fees') { window.renderFees(); }
-            if(tabId === 'tab-member-folders') { window.renderSixFolders(); window.renderMemberFilesList(); }
-            if(tabId === 'tab-voting') { window.renderPolls(); }
-            if(tabId === 'tab-grievances') { window.renderGrievances(); }
-            if(tabId === 'tab-info-gather') { window.renderGatheredInfo(); }
-            if(tabId === 'tab-assoc-hub') { window.renderAssocHub(); }
-            if(tabId === 'tab-index-mgmt') { window.renderIndexMgmt(); }
-            if(tabId === 'tab-member-mgmt') { window.renderMemberTabsOrder(); }
-            if(tabId === 'tab-chat') { window.initLiveChatEngine(); }
-            if(tabId === 'tab-admin-logs') window.renderAdminLogs();
-            if(tabId === 'tab-member-logs') window.renderMemberLogs();
-            if(tabId === 'tab-recyclebin') window.renderRecycleBin();
-        };
+      window.openTab = function(tabId) { 
+    document.querySelectorAll('.tab-content, .tab-btn').forEach(e => e.classList.remove('active')); 
+    let targetTab = document.getElementById(tabId);
+    if(targetTab) targetTab.classList.add('active'); 
+    if(event && event.currentTarget) event.currentTarget.classList.add('active'); 
+
+    // 🟢 चॅट टॅब उघडल्यावर फ्लोटिंग बटण आपोआप लपवा, इतर टॅबवर दाखवा
+    let floatWidget = document.getElementById('floatingLiveChatWidget');
+    if (floatWidget) {
+        if (tabId === 'tab-chat') {
+            floatWidget.style.display = 'none'; // चॅट रूममध्ये असताना गायब
+        } else {
+            floatWidget.style.display = 'flex'; // इतर सर्व पानांवर दिसेल
+        }
+    }
+
+    if(tabId === 'tab-dash') { setTimeout(window.renderDashboard, 200); }
+    if(tabId === 'tab-members') { window.renderMembers(); }
+    if(tabId === 'tab-other') { window.renderOtherStaff(); }
+    if(tabId === 'tab-committee') { window.renderCommittee(); }
+    if(tabId === 'tab-gallery') { window.loadGallery(); }
+    if(tabId === 'tab-icard') { window.filterICardMembers(); }
+    if(tabId === 'tab-letterpad') { window.renderLetterPadAdmin(); window.renderLetters(); }
+    if(tabId === 'tab-template-builder') { window.renderTemplateBuilderList(); }
+    if(tabId === 'tab-fees') { window.renderFees(); }
+    if(tabId === 'tab-member-folders') { window.renderSixFolders(); window.renderMemberFilesList(); }
+    if(tabId === 'tab-voting') { window.renderPolls(); }
+    if(tabId === 'tab-grievances') { window.renderGrievances(); }
+    if(tabId === 'tab-info-gather') { window.renderGatheredInfo(); }
+    if(tabId === 'tab-assoc-hub') { window.renderAssocHub(); }
+    if(tabId === 'tab-index-mgmt') { window.renderIndexMgmt(); }
+    if(tabId === 'tab-member-mgmt') { window.renderMemberTabsOrder(); }
+    if(tabId === 'tab-chat') { window.initLiveChatEngine(); }
+    if(tabId === 'tab-admin-logs') window.renderAdminLogs();
+    if(tabId === 'tab-member-logs') window.renderMemberLogs();
+    if(tabId === 'tab-recyclebin') window.renderRecycleBin();
+};
 
         // ==========================================================
         // AUTHENTICATION LISTENER
