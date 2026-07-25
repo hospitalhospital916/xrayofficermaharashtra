@@ -2,101 +2,195 @@
 <html lang="mr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pro Chat: Member & Admin System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pro Chat: Mobile & Admin Data Retention System</title>
     <style>
-        /* --- प्रोफेशनल डार्क-थीम आणि WhatsApp स्टाईल डिझाईन --- */
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #d1d7db; margin: 0; padding: 20px; display: flex; justify-content: center; }
-        .chat-container { width: 100%; max-width: 850px; background: #ffffff; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); overflow: hidden; display: flex; flex-direction: column; height: 90vh; border: 1px solid #ccc; }
-        
-        /* हेडर आणि रूम्स (टॅब्स) */
-        .header { background: #128C7E; color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
-        .tabs { display: flex; gap: 10px; }
-        .tabs button { background: rgba(255,255,255,0.2); border: none; color: white; font-size: 15px; padding: 10px 20px; border-radius: 20px; cursor: pointer; transition: 0.3s; }
-        .tabs button:hover { background: rgba(255,255,255,0.4); }
-        .tabs button.active { background: #fff; color: #128C7E; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-        
-        /* ॲडमिनसाठी लाल डिलीट बटण */
-        .admin-controls { display: none; }
-        .btn-danger { background: #ff3b30; color: white; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.2);}
-        .btn-danger:hover { background: #d32f2f; }
-        
-        /* चॅट दिसण्याची जागा (Background Pattern) */
-        .chat-box { flex: 1; padding: 20px; overflow-y: auto; background-color: #efeae2; background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); display: flex; flex-direction: column; gap: 12px; }
-        
-        /* मेसेजचे डिझाईन */
-        .message { max-width: 75%; padding: 10px 15px; border-radius: 10px; background: #fff; position: relative; box-shadow: 0 1px 3px rgba(0,0,0,0.15); font-size: 15px; line-height: 1.4; align-self: flex-start; border-top-left-radius: 0; }
-        .message.my-msg { background: #dcf8c6; align-self: flex-end; border-top-left-radius: 10px; border-top-right-radius: 0; }
-        .msg-user { font-size: 13px; font-weight: bold; color: #075e54; margin-bottom: 4px; }
-        .msg-image { max-width: 100%; border-radius: 8px; margin-top: 8px; cursor: pointer; border: 1px solid #ddd; }
-        .msg-pdf { display: inline-block; margin-top: 5px; padding: 8px; background: #f1f1f1; border-radius: 5px; font-size: 13px; color: #333; border: 1px solid #ccc; }/* सिंगल मेसेज डिलीट आयकॉन (फक्त ॲडमिनसाठी) */
-        .delete-btn { position: absolute; top: -10px; right: -10px; background: #ff3b30; color: white; border: none; border-radius: 50%; width: 25px; height: 25px; cursor: pointer; font-size: 12px; display: none; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.3); }
-        .message:hover .delete-btn { display: flex; }
+        /* --- मोबाईल आणि डेस्कटॉप रिस्पॉन्सिव्ह WhatsApp / Telegram CSS --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #d1d7db; display: flex; justify-content: center; height: 100vh; overflow: hidden; }
 
-        /* टाईप करण्याची जागा (Input Area) */
-        .input-area { display: flex; padding: 15px; background: #f0f0f0; align-items: center; gap: 12px; border-top: 1px solid #ddd; }
-        .file-label { cursor: pointer; font-size: 24px; color: #54656f; transition: 0.3s; }
-        .file-label:hover { color: #128C7E; transform: scale(1.1); }
+        .chat-container { width: 100%; max-width: 850px; background: #ffffff; display: flex; flex-direction: column; height: 100vh; position: relative; box-shadow: 0 5px 20px rgba(0,0,0,0.15); }
+        
+        @media (min-width: 768px) {
+            body { padding: 15px; }
+            .chat-container { height: 95vh; border-radius: 12px; overflow: hidden; border: 1px solid #ccc; }
+        }
+
+        /* हेडर आणि सर्च बार */
+        .header { background: #075e54; color: white; padding: 12px 15px; display: flex; flex-direction: column; gap: 10px; z-index: 10; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .top-row { display: flex; justify-content: space-between; align-items: center; }
+        .header-title { font-size: 18px; font-weight: bold; display: flex; align-items: center; gap: 8px; }
+        
+        /* सर्च बॉक्स */
+        .search-box { width: 100%; display: flex; align-items: center; background: rgba(255, 255, 255, 0.2); border-radius: 20px; padding: 4px 12px; }
+        .search-box input { border: none; background: transparent; outline: none; color: white; width: 100%; padding: 6px; font-size: 14px; }
+        .search-box input::placeholder { color: #e0e0e0; }
+
+        /* टॅब्स (रूम्स) */
+        .tabs { display: flex; gap: 8px; margin-top: 2px; }
+        .tabs button { background: rgba(255,255,255,0.2); border: none; color: white; font-size: 13px; padding: 6px 14px; border-radius: 15px; cursor: pointer; transition: 0.3s; }
+        .tabs button.active { background: #fff; color: #075e54; font-weight: bold; }
+
+        /* ॲडमिन बटण */
+        .admin-btn { background: #128C7E; color: white; border: none; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: bold; display: flex; align-items: center; gap: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .admin-btn:hover { background: #0b6156; }
+
+        /* चॅट बॉक्स (WhatsApp Pattern) */
+        .chat-box { flex: 1; padding: 15px; overflow-y: auto; background-color: #efeae2; background-image: url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png'); display: flex; flex-direction: column; gap: 10px; }
+
+        /* मेसेज फुगे (Message Bubbles) */
+        .message-wrapper { display: flex; align-items: flex-end; gap: 8px; max-width: 82%; }
+        .message-wrapper.my-msg-wrapper { align-self: flex-end; flex-direction: row-reverse; }
+
+        .avatar { width: 32px; height: 32px; border-radius: 50%; background: #128C7E; color: white; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: bold; flex-shrink: 0; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+
+        .message { padding: 8px 12px; border-radius: 10px; background: #fff; position: relative; box-shadow: 0 1px 2px rgba(0,0,0,0.2); font-size: 14px; line-height: 1.4; border-top-left-radius: 0; word-break: break-word; }
+        .message-wrapper.my-msg-wrapper .message { background: #dcf8c6; border-top-left-radius: 10px; border-top-right-radius: 0; }
+        
+        .msg-user { font-size: 11px; font-weight: bold; color: #075e54; margin-bottom: 3px; }
+        .msg-time { font-size: 10px; color: #888; text-align: right; margin-top: 4px; }
+        .msg-image { max-width: 100%; border-radius: 8px; margin-top: 5px; cursor: pointer; border: 1px solid #ddd; }
+        .msg-pdf { display: inline-block; margin-top: 5px; padding: 6px 10px; background: #f1f1f1; border-radius: 5px; font-size: 12px; color: #333; text-decoration: none; border: 1px solid #ccc; }
+
+        /* डिलीट बटण */
+        .delete-btn { position: absolute; top: -6px; right: -6px; background: #ff3b30; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; cursor: pointer; font-size: 10px; display: none; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+        .message:hover .delete-btn, .message-wrapper:active .delete-btn { display: flex; }
+
+        /* इनपुट एरिया */
+        .input-area { display: flex; padding: 10px; background: #f0f0f0; align-items: center; gap: 8px; border-top: 1px solid #ddd; }
+        .file-label { cursor: pointer; font-size: 22px; color: #54656f; padding: 0 5px; transition: 0.2s; }
+        .file-label:hover { color: #128C7E; }
         #fileInput { display: none; }
         
-        .input-area input[type="text"] { flex: 1; padding: 15px; border-radius: 25px; border: 1px solid #ccc; outline: none; font-size: 15px; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); }
-        .input-area button.send-btn { background: #128C7E; color: white; border: none; padding: 14px 25px; border-radius: 25px; cursor: pointer; font-weight: bold; font-size: 15px; transition: 0.3s; }
-        .input-area button.send-btn:hover { background: #075e54; }
-        
-        /* फाईल अपलोड होतानाचा लोडर */
-        #loader { display: none; background: #ffeb3b; color: #333; padding: 8px; text-align: center; font-size: 13px; font-weight: bold; }
+        .input-area input[type="text"] { flex: 1; padding: 12px 15px; border-radius: 20px; border: 1px solid #ccc; outline: none; font-size: 14px; background: #fff; }
+        .send-btn { background: #128C7E; color: white; border: none; padding: 12px 18px; border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 14px; transition: 0.3s; }
+        .send-btn:hover { background: #075e54; }
+
+        /* लोडर */
+        #loader { display: none; background: #ffeb3b; color: #333; padding: 6px; text-align: center; font-size: 12px; font-weight: bold; }
+
+        /* ॲडमिन सेटिंग्ज पॉप-अप (Modal) */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 100; }
+        .modal-content { background: white; padding: 20px; border-radius: 12px; width: 92%; max-width: 450px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); max-height: 90vh; overflow-y: auto; }
+        .modal-header { font-size: 18px; font-weight: bold; margin-bottom: 15px; color: #075e54; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .setting-section { margin-bottom: 15px; }
+        .setting-title { font-weight: bold; font-size: 13px; color: #555; margin-bottom: 6px; text-transform: uppercase; }
+        .setting-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 14px; }
+        .setting-item select { padding: 6px 10px; border-radius: 6px; border: 1px solid #ccc; outline: none; font-size: 13px; }
+        .close-modal { cursor: pointer; font-size: 20px; border: none; background: none; color: #777; }
+        .btn-danger { background: #d32f2f; color: white; border: none; padding: 10px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 13px; width: 100%; margin-top: 5px; }
+        .btn-danger:hover { background: #b71c1c; }
+        .btn-warning { background: #f57c00; color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 12px; }
+        .manual-clean-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 8px; }
     </style>
 </head>
 <body>
 
 <div class="chat-container">
     
-    <!-- हेडर आणि रूम्सचे टॅब्स -->
+    <!-- हेडर, सर्च बार आणि टॅब्स -->
     <div class="header">
-        <div class="tabs">
-            <!-- रूम 1: Member + Admin (सर्वांसाठी उघडी) -->
-            <button id="tab-all" class="active" onclick="switchRoom('all_chat')">Member + Admin</button>
-            
-            <!-- रूम 2: Admin + Admin (ही फक्त ॲडमिनलाच दिसेल) -->
-            <button id="tab-admin" style="display:none;" onclick="switchRoom('admin_chat')">Admin + Admin (Private)</button>
+        <div class="top-row">
+            <span class="header-title">💬 Pro Chat System</span>
+            <div id="adminControls" style="display:none;">
+                <button class="admin-btn" onclick="openAdminSettings()">⚙️ ॲडमिन सेटिंग्ज</button>
+            </div>
         </div>
-        
-        <!-- ॲडमिन कंट्रोल: पूर्ण रूम रिकामी करण्याचे लाल बटण -->
-        <div class="admin-controls" id="adminControls">
-            <button class="btn-danger" onclick="deleteAllMessages()">🗑️ Clear This Room</button>
+
+        <!-- सर्च बॉक्स -->
+        <div class="search-box">
+            🔍 <input type="text" id="searchInput" placeholder="जुनी चॅट किंवा नाव शोधा..." oninput="filterMessages()">
+        </div>
+
+        <!-- चॅट रूम्स -->
+        <div class="tabs">
+            <button id="tab-all" class="active" onclick="switchRoom('all_chat')">Member + Admin</button>
+            <button id="tab-admin" style="display:none;" onclick="switchRoom('admin_chat')">Admin Private</button>
         </div>
     </div>
 
     <!-- लोडिंग इंडिकेटर -->
     <div id="loader">⏳ फाईल अपलोड होत आहे, कृपया थांबा...</div>
     
-    <!-- चॅट मेसेजेस दिसण्याची जागा -->
+    <!-- चॅट बॉक्स -->
     <div class="chat-box" id="chatBox"></div>
 
-    <!-- मेसेज टाईप आणि फाईल सेंड करण्याची जागा -->
+    <!-- मेसेज टाईप आणि फाईल सेंड बार -->
     <div class="input-area">
-        <!-- फोटो आणि PDF जोडण्यासाठी पेपरक्लिप -->
         <label for="fileInput" class="file-label" title="फोटो किंवा PDF जोडा">📎</label>
         <input type="file" id="fileInput" accept="image/*,.pdf" onchange="handleFileUpload(event)">
         
-        <!-- मेसेज टाईप बॉक्स -->
         <input type="text" id="msgInput" placeholder="येथे मेसेज लिहा..." autocomplete="off" onkeypress="handleEnter(event)">
-        
-        <!-- सेंड बटण -->
         <button class="send-btn" onclick="sendTextMessage()">Send</button>
     </div>
 </div>
 
-<!-- Firebase च्या सिस्टीम फाईल्स (V8 Compat) -->
+<!-- ॲडमिन कंट्रोल पॅनेल (Modal Pop-up) -->
+<div class="modal" id="adminModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <span>⚙️ ॲडमिन कंट्रोल पॅनेल</span>
+            <button class="close-modal" onclick="closeAdminSettings()">✖</button>
+        </div>
+        
+        <!-- १. परवानग्या आणि डिस्प्ले -->
+        <div class="setting-section">
+            <div class="setting-title">परवानग्या व डिस्प्ले (Permissions)</div>
+            <div class="setting-item">
+                <span>सदस्यांना स्वतःचे मेसेज डिलीट करू द्या:</span>
+                <input type="checkbox" id="toggleMemberDelete" onchange="updateSettings()">
+            </div>
+            <div class="setting-item">
+                <span>सदस्यांचे प्रोफाइल फोटो (DP) दाखवा:</span>
+                <input type="checkbox" id="toggleProfilePhotos" onchange="updateSettings()">
+            </div>
+        </div>
+
+        <hr style="margin: 10px 0; border: 0; border-top: 1px solid #eee;">
+
+        <!-- २. डेटा रिटेंशन सेटिंग्ज (Auto-Delete) -->
+        <div class="setting-section">
+            <div class="setting-title">डेटा रिटेंशन सेटिंग्ज (Auto-Delete)</div>
+            <div class="setting-item">
+                <span>ऑटो-डिलीट कालावधी निवडा:</span>
+                <select id="autoDeleteSelect" onchange="updateSettings()">
+                    <option value="0">बंद (Off)</option>
+                    <option value="30">३० दिवस (30 Days)</option>
+                    <option value="180">६ महिने (180 Days)</option>
+                    <option value="365">१ वर्ष (365 Days)</option>
+                </select>
+            </div>
+        </div>
+
+        <hr style="margin: 10px 0; border: 0; border-top: 1px solid #eee;">
+
+        <!-- ३. मॅन्युअल डेटा क्लियर करा -->
+        <div class="setting-section">
+            <div class="setting-title">मॅन्युअल डेटा क्लिनअप (Manual Clear)</div>
+            <p style="font-size: 12px; color: #666; margin-bottom: 8px;">ठराविक दिवसांपेक्षा जुने मेसेज एका क्लिकवर डिलीट करा:</p>
+            <div class="manual-clean-grid">
+                <button class="btn-warning" onclick="manualCleanup(30)">🗑️ ३० दिवस जुने</button>
+                <button class="btn-warning" onclick="manualCleanup(60)">🗑️ ६० दिवस जुने</button>
+                <button class="btn-warning" onclick="manualCleanup(90)">🗑️ ९० दिवस जुने</button>
+                <button class="btn-warning" onclick="manualCleanup(200)">🗑️ २०० दिवस जुने</button>
+            </div>
+        </div>
+
+        <hr style="margin: 15px 0 10px 0; border: 0; border-top: 1px solid #eee;">
+        
+        <!-- ४. पूर्ण रूम क्लियर करा -->
+        <button class="btn-danger" onclick="deleteAllMessages()">⚠️ चालू असलेली पूर्ण रूम रिकामी करा</button>
+    </div>
+</div>
+
+<!-- Firebase SDK (V8 Compat) -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
 <script>
     /* =======================================================
-       १. तुमचे API Keys आणि सिक्रेट कोड्स इथे टाका
+       १. API Keys आणि सिक्रेट कोड्स
        ======================================================= */
-    
-    // फायरबेसचा (Firebase) कोड 
     const firebaseConfig = {
         apiKey: "YOUR_FIREBASE_API_KEY",
         authDomain: "YOUR_PROJECT.firebaseapp.com",
@@ -106,115 +200,169 @@
         appId: "YOUR_APP_ID"
     };
 
-    // ImgBB चा सिक्रेट कोड (फोटोंसाठी)
-    const IMGBB_API_KEY = "YOUR_IMGBB_API_KEY";
+    // तुमची ImgBB API Key जोडलेली आहे
+    const IMGBB_API_KEY = "9ebc935a853cef7cef4ab67692b3048a";
 
-    // Telegram Bot ची माहिती (PDF साठी)
+    // Telegram Bot माहिती (PDF फाईल्ससाठी)
     const TELEGRAM_BOT_TOKEN = "YOUR_TELEGRAM_BOT_TOKEN";
     const TELEGRAM_CHAT_ID = "YOUR_TELEGRAM_CHAT_ID";
 
     /* =======================================================
-       २. युजरचे ऑटो-लॉगिन आणि रोल (येथे टेस्टिंगसाठी बदल करा)
+       २. युजर रोल आणि ग्लोबल व्हेरिएबल्स
        ======================================================= */
-    
-    // जर तुम्हाला ॲडमिन म्हणून टेस्ट करायचे असेल तर: currentRole = "admin" ठेवा.
-    // जर मेंबर म्हणून टेस्ट करायचे असेल तर: currentRole = "member" ठेवा.
+    // टेस्टिंगसाठी: ॲडमिनसाठी "admin", मेंबर्ससाठी "member" ठेवा.
     const currentUser = "अविनाश (Admin)"; 
     const currentRole = "admin"; 
 
-    // सुरुवातीला सर्वांची चॅट रूम 'all_chat' (Member + Admin) ओपन होईल
     let currentRoom = "all_chat"; 
     let unsubscribe = null; 
+    let allLoadedMessages = []; // सर्चसाठी साठवलेले मेसेजेस
+
+    // ॲडमिन सेटिंग्जचा डीफॉल्ट ऑब्जेक्ट
+    let appSettings = {
+        allowMemberDelete: true,
+        showProfilePhotos: true,
+        autoDeleteDays: 0
+    };
 
     // फायरबेस सुरू करा
     firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();/* =======================================================
-       ३. सिस्टीम सुरू झाल्यावर (Role नुसार ॲडमिनला अधिकार देणे)
+    const db = firebase.firestore();
+
+    /* =======================================================
+       ३. सिस्टीम लोड झाल्यावर
        ======================================================= */
     window.onload = () => {
         if (currentRole === "admin") {
-            // जर ॲडमिन असेल, तर त्याला दुसरी 'Admin+Admin' रूम आणि डिलीटचे लाल बटण दाखवा
             document.getElementById("tab-admin").style.display = "inline-block";
             document.getElementById("adminControls").style.display = "block";
         }
-        // पहिल्या रूमचे मेसेज लोड करा
+
+        // ॲडमिनच्या सेटिंग्ज डेटाबेसमधून लाईव्ह लोड करा
+        listenToSettings();
+
+        // रूमचे मेसेज लोड करा
         loadMessages(currentRoom);
     };
 
-    // रूम बदलण्याचे फंक्शन
-    function switchRoom(room) {
-        currentRoom = room;
-        
-        // टॅबचे रंग बदलणे
-        document.getElementById("tab-all").classList.remove("active");
-        document.getElementById("tab-admin").classList.remove("active");
-        
-        if(room === "all_chat") document.getElementById("tab-all").classList.add("active");
-        if(room === "admin_chat") document.getElementById("tab-admin").classList.add("active");
+    // ॲडमिन सेटिंग्ज फायबेसवरून ऐकणे (Realtime Settings Sync)
+    function listenToSettings() {
+        db.collection("settings").doc("config").onSnapshot((doc) => {
+            if (doc.exists) {
+                appSettings = doc.data();
+                document.getElementById("toggleMemberDelete").checked = appSettings.allowMemberDelete || false;
+                document.getElementById("toggleProfilePhotos").checked = appSettings.showProfilePhotos || false;
+                document.getElementById("autoDeleteSelect").value = appSettings.autoDeleteDays || 0;
+                
+                // जर ॲडमिनने ऑटो-डिलीट सेट केला असेल, तर जुने मेसेज तपासा
+                if (currentRole === "admin" && appSettings.autoDeleteDays > 0) {
+                    performAutoDeleteCheck(appSettings.autoDeleteDays);
+                }
 
-        // नवीन रूमचे मेसेज लोड करणे
-        loadMessages(room);
+                renderMessages(allLoadedMessages); // नवीन सेटिंग्जनुसार स्क्रीन अपडेट करा
+            }
+        });
     }
 
     /* =======================================================
-       ४. डेटाबेसमधून लाईव्ह मेसेज स्क्रीनवर आणणे
+       ४. मेसेज लोड करणे आणि चॅट दाखवणे
        ======================================================= */
+    function switchRoom(room) {
+        currentRoom = room;
+        document.getElementById("tab-all").classList.remove("active");
+        document.getElementById("tab-admin").classList.remove("active");
+        if(room === "all_chat") document.getElementById("tab-all").classList.add("active");
+        if(room === "admin_chat") document.getElementById("tab-admin").classList.add("active");
+
+        loadMessages(room);
+    }
+
     function loadMessages(room) {
-        if (unsubscribe) unsubscribe(); // जुन्या रूमचे लोड होणे थांबवा
-        document.getElementById("chatBox").innerHTML = ""; // बॉक्स साफ करा
+        if (unsubscribe) unsubscribe();
+        document.getElementById("chatBox").innerHTML = "";
 
         unsubscribe = db.collection("chats")
             .where("room", "==", room)
             .orderBy("timestamp")
             .onSnapshot((snapshot) => {
-                document.getElementById("chatBox").innerHTML = ""; // डबल मेसेज दिसू नये म्हणून
-                
+                allLoadedMessages = [];
                 snapshot.forEach((doc) => {
-                    const data = doc.data();
-                    displayMessage(doc.id, data);
+                    allLoadedMessages.push({ id: doc.id, ...doc.data() });
                 });
-                
-                // नवीन मेसेज आल्यावर स्क्रोल आपोआप खाली घ्या
-                const chatBox = document.getElementById("chatBox");
-                chatBox.scrollTop = chatBox.scrollHeight;
+                renderMessages(allLoadedMessages);
             });
     }
 
-    // मेसेजचे डिझाईन बनवून बॉक्समध्ये टाकणे
-    function displayMessage(docId, data) {
+    // मेसेज स्क्रीनवर दाखवणे (Render)
+    function renderMessages(messages) {
         const chatBox = document.getElementById("chatBox");
-        const msgDiv = document.createElement("div");
-        
-        // माझा स्वतःचा मेसेज असेल तर तो उजव्या बाजूला हिरव्या रंगात दिसेल
-        const isMyMsg = (data.user === currentUser);
-        msgDiv.className = "message " + (isMyMsg ? "my-msg" : "");
+        chatBox.innerHTML = "";
 
-        let contentHtml = <div class="msg-user">${data.user}</div>;
+        messages.forEach((data) => {
+            const isMyMsg = (data.user === currentUser);
+            
+            // मुख्य रॅपर
+            const wrapper = document.createElement("div");
+            wrapper.className = `message-wrapper ${isMyMsg ? "my-msg-wrapper" : ""}`;
 
-        // जर मेसेज टेक्स्ट असेल
-        if (data.type === "text") {
-            contentHtml += <div>${data.message}</div>;
-        } 
-        // जर मेसेज फोटो असेल (ImgBB)
-        else if (data.type === "image") {
-            contentHtml += <img src="${data.message}" class="msg-image" alt="Image" onclick="window.open(this.src, '_blank')">;
-        } 
-        // जर मेसेज PDF असेल (Telegram)
-        else if (data.type === "pdf") {
-            contentHtml += <div class="msg-pdf">📎 <b>PDF फाईल:</b> ${data.message}</div>;
-        }
+            // प्रोफाइल फोटो (Avatar) जर सेटिंग ऑन असेल तरच दाखवा
+            if (appSettings.showProfilePhotos) {
+                const avatar = document.createElement("div");
+                avatar.className = "avatar";
+                avatar.innerText = data.user ? data.user.charAt(0).toUpperCase() : "U";
+                wrapper.appendChild(avatar);
+            }
 
-        // जर युजर ॲडमिन असेल, तर त्याला प्रत्येक मेसेजवर X (डिलीट) बटण दिसेल
-        if (currentRole === "admin") {
-            contentHtml += <button class="delete-btn" onclick="deleteSingleMessage('${docId}')">✖️</button>;
-        }
+            // मेसेज कंटेंट
+            const msgDiv = document.createElement("div");
+            msgDiv.className = "message";
 
-        msgDiv.innerHTML = contentHtml;
-        chatBox.appendChild(msgDiv);
+            let contentHtml = `<div class="msg-user">${data.user}</div>`;
+
+            if (data.type === "text") {
+                contentHtml += `<div>${data.message}</div>`;
+            } else if (data.type === "image") {
+                contentHtml += `<img src="${data.message}" class="msg-image" alt="Photo" onclick="window.open(this.src, '_blank')">`;
+            } else if (data.type === "pdf") {
+                contentHtml += `<div class="msg-pdf">📎 <b>PDF:</b> ${data.message}</div>`;
+            }
+
+            // वेळ (Timestamp)
+            const timeStr = data.timestamp ? new Date(data.timestamp.toDate()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '';
+            contentHtml += `<div class="msg-time">${timeStr}</div>`;
+
+            // डिलीट अधिकार तपासा:
+            // १. ॲडमिन सर्व मेसेज डिलीट करू शकतो.
+            // २. किंवा 'allowMemberDelete' ऑन असेल तर युजर स्वतःचा मेसेज डिलीट करू शकतो.
+            const canDelete = (currentRole === "admin") || (appSettings.allowMemberDelete && isMyMsg);
+
+            if (canDelete) {
+                contentHtml += `<button class="delete-btn" onclick="deleteSingleMessage('${data.id}')">✖</button>`;
+            }
+
+            msgDiv.innerHTML = contentHtml;
+            wrapper.appendChild(msgDiv);
+            chatBox.appendChild(wrapper);
+        });
+
+        // आपोआप खाली स्क्रोल करा
+        chatBox.scrollTop = chatBox.scrollHeight;
     }
 
     /* =======================================================
-       ५. टेक्स्ट मेसेज सेंड करणे
+       ५. चॅट सर्च पर्याय (Live Search)
+       ======================================================= */
+    function filterMessages() {
+        const query = document.getElementById("searchInput").value.toLowerCase();
+        const filtered = allLoadedMessages.filter(m => 
+            (m.message && m.message.toLowerCase().includes(query)) || 
+            (m.user && m.user.toLowerCase().includes(query))
+        );
+        renderMessages(filtered);
+    }
+
+    /* =======================================================
+       ६. मेसेज आणि फाईल्स सेंड करणे
        ======================================================= */
     function handleEnter(e) { if(e.key === 'Enter') sendTextMessage(); }
 
@@ -230,53 +378,49 @@
                 type: "text",
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
             });
-            input.value = ""; // बॉक्स रिकामा करा
+            input.value = "";
         }
     }
 
-    /* =======================================================
-       ६. फोटो (ImgBB) आणि PDF (Telegram) सेंड करणे
-       ======================================================= */
     async function handleFileUpload(event) {
         const file = event.target.files[0];
         if (!file) return;
 
-        // लोडर चालू करा
         document.getElementById("loader").style.display = "block"; 
 
         try {
             if (file.type.startsWith("image/")) {
-                // १. फोटो ImgBB वर अपलोड करा
+                // ImgBB वर अपलोड करा
                 const formData = new FormData();
                 formData.append("image", file);
                 
-                const response = await fetch(https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}, {
-                    method: "POST",
-                    body: formData
+                const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+                    method: "POST", body: formData
                 });
                 const data = await response.json();
                 
-                // २. फोटोची डायरेक्ट लिंक फायरबेसमध्ये टाका
-                db.collection("chats").add({
-                    room: currentRoom,
-                    user: currentUser,
-                    message: data.data.url, 
-                    type: "image",
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                });
+                if(data.success) {
+                    db.collection("chats").add({
+                        room: currentRoom,
+                        user: currentUser,
+                        message: data.data.url, 
+                        type: "image",
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                } else {
+                    alert("फोटो अपलोड अयशस्वी! ImgBB Key तपासा.");
+                }
 
             } else if (file.type === "application/pdf") {
-                // १. PDF टेलिग्रामवर अपलोड करा
+                // Telegram वर PDF अपलोड करा
                 const formData = new FormData();
                 formData.append("chat_id", TELEGRAM_CHAT_ID);
                 formData.append("document", file);
 
-                await fetch(https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument, {
-                    method: "POST",
-                    body: formData
+                await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument`, {
+                    method: "POST", body: formData
                 });
 
-                // २. PDF चे नाव फायरबेसमध्ये टाका
                 db.collection("chats").add({
                     room: currentRoom,
                     user: currentUser,
@@ -285,42 +429,102 @@
                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 });
             } else {
-                alert("कृपया फक्त फोटो (Image) किंवा PDF फाईल निवडा!");
+                alert("कृपया फक्त फोटो किंवा PDF फाईल निवडा!");
             }
         } catch (error) {
             console.error("Upload Error: ", error);
-            alert("अपलोड अयशस्वी! तुमचे API Codes बरोबर आहेत का ते तपासा.");
+            alert("अपलोड करताना त्रुटी आली!");
         }
 
-        // लोडर बंद करा आणि इनपुट रिकामा करा
         document.getElementById("loader").style.display = "none";
         document.getElementById("fileInput").value = ""; 
     }
 
     /* =======================================================
-       ७. ॲडमिनचे महा-अधिकार (सुपरपॉवर्स)
+       ७. ॲडमिन कंट्रोल्स, ऑटो-डिलीट आणि डेटा क्लिनअप
        ======================================================= */
-    
-    // एखादा विशिष्ट चुकीचा मेसेज डिलीट करणे
+    function openAdminSettings() { document.getElementById("adminModal").style.display = "flex"; }
+    function closeAdminSettings() { document.getElementById("adminModal").style.display = "none"; }
+
+    // ॲडमिन सेटिंग्ज अपडेट करणे
+    function updateSettings() {
+        const allowDelete = document.getElementById("toggleMemberDelete").checked;
+        const showPhotos = document.getElementById("toggleProfilePhotos").checked;
+        const autoDays = parseInt(document.getElementById("autoDeleteSelect").value);
+
+        db.collection("settings").doc("config").set({
+            allowMemberDelete: allowDelete,
+            showProfilePhotos: showPhotos,
+            autoDeleteDays: autoDays
+        }, { merge: true });
+    }
+
+    // ऑटो-डिलीट बॅकग्राउंड चेक
+    function performAutoDeleteCheck(days) {
+        const cutoffDate = new Date();
+        cutoffDate.setDate(cutoffDate.getDate() - days);
+
+        db.collection("chats")
+            .where("timestamp", "<", firebase.firestore.Timestamp.fromDate(cutoffDate))
+            .get()
+            .then((snapshot) => {
+                if (!snapshot.empty) {
+                    const batch = db.batch();
+                    snapshot.forEach((doc) => batch.delete(doc.ref));
+                    batch.commit();
+                }
+            })
+            .catch(err => console.error("Auto Delete Error: ", err));
+    }
+
+    // मॅन्युअल बल्क क्लिनअप (३०, ६०, ९०, २०० दिवस जुने मेसेज)
+    function manualCleanup(days) {
+        if(confirm(`तुम्हाला खरोखरच ${days} दिवसांपेक्षा जुने सर्व मेसेजेस डिलीट करायचे आहेत का?`)) {
+            const cutoffDate = new Date();
+            cutoffDate.setDate(cutoffDate.getDate() - days);
+
+            db.collection("chats")
+                .where("timestamp", "<", firebase.firestore.Timestamp.fromDate(cutoffDate))
+                .get()
+                .then((snapshot) => {
+                    if (snapshot.empty) {
+                        alert(`${days} दिवसांपेक्षा जुना एकही मेसेज सापडला नाही.`);
+                        return;
+                    }
+                    const batch = db.batch();
+                    snapshot.forEach((doc) => batch.delete(doc.ref));
+                    return batch.commit();
+                })
+                .then(() => {
+                    alert(`${days} दिवसांपेक्षा जुने सर्व मेसेजेस यशस्वीरीत्या डिलीट झाले!`);
+                })
+                .catch((err) => {
+                    console.error(err);
+                    alert("मेसेज डिलीट करताना त्रुटी आली!");
+                });
+        }
+    }
+
+    // सिंगल मेसेज डिलीट करणे
     function deleteSingleMessage(docId) {
-        if(confirm("हा मेसेज कायमचा डिलीट करायचा आहे का?")) {
+        if(confirm("हा मेसेज डिलीट करायचा आहे का?")) {
             db.collection("chats").doc(docId).delete();
         }
     }
 
-    // चालू असलेली पूर्ण रूम एकाच वेळी रिकामी करणे
+    // संपूर्ण चालू रूम एकाच वेळी रिकामी करणे
     function deleteAllMessages() {
-        if(confirm(तुम्हाला खरोखरच ही संपूर्ण रूम ( ${currentRoom} ) रिकामी करायची आहे का? हा डेटा परत मिळणार नाही!)) {
+        if(confirm(`तुम्हाला खरोखर संपूर्ण रूम (${currentRoom}) मधील सर्व मेसेज डिलीट करायचे आहेत का?`)) {
             db.collection("chats").where("room", "==", currentRoom).get()
             .then((querySnapshot) => {
                 const batch = db.batch();
-                querySnapshot.forEach((doc) => {
-                    batch.delete(doc.ref);
-                });
-                return batch.commit(); // फायरबेसमधून सर्व मेसेज उडवा
+                querySnapshot.forEach((doc) => batch.delete(doc.ref));
+                return batch.commit();
             })
-            .then(() => alert("या रूममधील सर्व मेसेजेस डिलीट झाले!"))
-            .catch((error) => console.error("Error deleting: ", error));
+            .then(() => {
+                alert("संपूर्ण रूम रिकामी करण्यात आली!");
+                closeAdminSettings();
+            });
         }
     }
 </script>
