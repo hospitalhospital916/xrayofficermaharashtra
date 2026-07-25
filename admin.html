@@ -1890,12 +1890,13 @@
 
         </div>
     </div><!-- FIREBASE & CORE JS APPLICATION ENGINE -->
+   <!-- FIREBASE & CORE JS APPLICATION ENGINE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where, orderBy, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, sendPasswordResetEmail, browserSessionPersistence, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
         
-        // FIREBASE CONFIGURATION[cite: 3]
+        // FIREBASE CONFIGURATION
         const firebaseConfig = { 
             apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk", 
             authDomain: "xrayunionmah.firebaseapp.com", 
@@ -1905,16 +1906,16 @@
         const db = getFirestore(app); 
         const auth = getAuth(app);
         
-        const SUPER_ADMIN_EMAIL = "hangemahesh498@gmail.com";[cite: 3]
+        const SUPER_ADMIN_EMAIL = "hangemahesh498@gmail.com";
         let isSuperAdmin = false;
         let subAdminAccessRegion = "All"; 
         let subAdminPermissions = [];
         let subAdminsList = [];
 
-        let currentLoggedInAdminName = "महेश हांगे";[cite: 3]
-        let currentLoggedInAdminDesignation = "मुख्य ॲडमिन";[cite: 3]
+        let currentLoggedInAdminName = "महेश हांगे";
+        let currentLoggedInAdminDesignation = "मुख्य ॲडमिन";
 
-        const mandalData = {[cite: 3]
+        const mandalData = {
             "पुणे मंडळ": ["पुणे", "सातारा", "सोलापूर"],
             "नागपूर मंडळ": ["नागपूर", "भंडारा", "वर्धा", "गोंदिया", "चंद्रपूर", "गडचिरोली"],
             "नाशिक मंडळ": ["नाशिक", "अहमदनगर", "धुळे", "जळगाव", "नंदुरबार"],
@@ -1943,7 +1944,7 @@
         window.recycleBinData = [];
 
         window.lpTemplatesData = [null, null]; 
-        window.lpSignaturesData = [[cite: 3]
+        window.lpSignaturesData = [
             { name: "अध्यक्ष", signUrl: "" },
             { name: "उपाध्यक्ष", signUrl: "" },
             { name: "सचिव", signUrl: "" },
@@ -1957,327 +1958,52 @@
         window.showPresidentNoteOnICard = true;
         window.currentActiveChatRoom = "GroupAll";
 
-        window.icardFieldSettings = {[cite: 3]
+        window.icardFieldSettings = {
             sh_name: true, sh_post: true, sh_mob: true, sh_email: true,
             sh_dist: true, sh_mandal: true, sh_workplace: true, sh_dob: true,
             sh_bg: true, sh_join: true, sh_sevarth: true, sh_aadhaar: true
         };
 
         // ==========================================================
-        // 1. MEMBER LOGIN ENABLE/DISABLE & CREDENTIALS EMAIL/PDF ENGINE
-        // ==========================================================
-        window.toggleMemberLoginStatus = async function(memberId, currentStatus) {
-            let newStatus = !currentStatus;
-            let m = window.membersData.find(x => x.id === memberId);
-            let nameStr = m ? m.name : memberId;
-
-            Swal.fire({title: 'स्टेटस बदलत आहे...', didOpen: () => Swal.showLoading()});
-            try {
-                await updateDoc(doc(db, "members", memberId), { loginEnabled: newStatus });
-                await window.logAdminActivity(`Member Login ${newStatus ? 'Enabled' : 'Disabled'} for: ${nameStr}`);
-                Swal.fire('यशस्वी', `सदस्य लॉगिन ${newStatus ? 'चालू (Active)' : 'बंद (Disabled)'} करण्यात आले!`, 'success');
-                loadData();
-            } catch(e) { Swal.fire('Error', e.message, 'error'); }
-        };
-
-        window.openSendCredentialsModal = async function(memberId) {
-            let m = window.membersData.find(x => x.id === memberId);
-            if(!m) return;
-
-            const { value: formValues } = await Swal.fire({
-                title: `🔐 पासवर्ड बदला व क्रेडेंशियल्स पाठवा`,
-                html: `
-                    <div style="text-align:left; font-size:0.9rem;">
-                        <p><b>सदस्य:</b> ${m.name}</p>
-                        <p><b>ईमेल:</b> ${m.email || 'उपलब्ध नाही'}</p>
-                        <p><b>मोबाईल:</b> ${m.mobile || '-'}</p>
-                        <hr style="margin:10px 0;">
-                        <label><b>नवीन पासवर्ड प्रविष्ट करा:</b></label>
-                        <input id="cred_new_pass" class="swal2-input" value="${m.pass || 'Xray@2026'}" placeholder="नवीन पासवर्ड">
-                    </div>
-                `,
-                focusConfirm: false,
-                showCancelButton: true,
-                confirmButtonText: 'ईमेल व PDF पाठवा',
-                cancelButtonText: 'रद्द करा',
-                preConfirm: () => {
-                    let p = document.getElementById('cred_new_pass').value.trim();
-                    if(!p) { Swal.showValidationMessage('पासवर्ड रिकामा असू शकत नाही.'); return false; }
-                    return { pass: p };
-                }
-            });
-
-            if (formValues) {
-                let newPass = formValues.pass;
-                await updateDoc(doc(db, "members", memberId), { pass: newPass });
-                await window.logAdminActivity(`Updated Password & Sent Credentials for: ${m.name}`);
-
-                // Generate Official Printable PDF Body for Credentials
-                let credHtml = `
-                    <div style="padding:30px; font-family:'Mukta',sans-serif; border:3px solid #0B3D91; border-radius:12px;">
-                        <h2 style="color:#0B3D91; text-align:center;">क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना महाराष्ट्र राज्य</h2>
-                        <h3 style="text-align:center;">अधिकृत सदस्य लॉगिन क्रेडेंशियल्स</h3>
-                        <hr>
-                        <p style="font-size:1.1rem;"><b>आदरणीय सभासद,</b> ${m.name}</p>
-                        <p>आपल्या संघटनेच्या अधिकृत पोर्टलवर लॉगिन करण्यासाठी खालील माहिती वापरावी:</p>
-                        <div style="background:#f0f4f8; padding:15px; border-radius:8px; font-size:1rem; margin:15px 0;">
-                            <p><b>लॉगिन ईमेल / आयडी:</b> ${m.email || m.mobile}</p>
-                            <p><b>पासवर्ड:</b> ${newPass}</p>
-                            <p><b>पोर्टल लिंक:</b> https://xrayunionmah.web.app</p>
-                        </div>
-                        <p style="color:#854d0e; font-size:0.85rem;"><b>सूचना:</b> सुरक्षेच्या कारणास्तव आपला पासवर्ड कोणासही शेअर करू नये.</p>
-                    </div>
-                `;
-
-                let win = window.open('', '_blank');
-                win.document.write(`<html><head><title>Credentials_${m.name}</title></head><body>${credHtml}</body></html>`);
-                setTimeout(() => win.print(), 400);
-
-                if(m.email) {
-                    let subject = encodeURIComponent("क्ष-किरण वैज्ञानिक अधिकारी संघटना - लॉगिन क्रेडेंशियल्स");
-                    let body = encodeURIComponent(`नमस्कार ${m.name},\n\nआपला संघटना लॉगिन पासवर्ड: ${newPass}\nवेबसाईट: https://xrayunionmah.web.app\n\nधन्यवाद!`);
-                    window.location.href = `mailto:${m.email}?subject=${subject}&body=${body}`;
-                }
-            }
-        };
-
-        // ==========================================================
-        // 2. ENFORCED COLUMN & FILTER VISIBILITY RULES ENGINE
-        // ==========================================================
-        window.applyColumnVisibilityRules = function() {
-            let showMob = document.getElementById('col_show_mobile')?.checked ?? true;
-            let showSev = document.getElementById('col_show_sevarth')?.checked ?? true;
-            let showCat = document.getElementById('col_show_category')?.checked ?? true;
-            let showJoin = document.getElementById('col_show_joindate')?.checked ?? true;
-            let showTrans = document.getElementById('col_show_transfers')?.checked ?? true;
-
-            // Save Settings to Firestore
-            setDoc(doc(db, "settings", "column_visibility"), {
-                showMobile: showMob, showSevarth: showSev, showCategory: showCat,
-                showJoinDate: showJoin, showTransfers: showTrans
-            });
-
-            window.renderOtherStaff();
-            window.renderMembers();
-        };
-
-        // ==========================================================
-        // 3. MEETING CALENDAR DASHBOARD WIDGET & POPUP NOTIFICATIONS
-        // ==========================================================
-        window.renderDashboardMeetingCalendar = async function() {
-            try {
-                let snap = await getDocs(query(collection(db, "meeting_calendar"), orderBy("createdAt", "desc")));
-                let meetings = [];
-                snap.forEach(d => meetings.push({ id: d.id, ...d.data() }));
-
-                let upcomingBox = document.getElementById('dashboard_upcoming_meetings_box');
-                if(!upcomingBox) {
-                    upcomingBox = document.createElement('div');
-                    upcomingBox.id = 'dashboard_upcoming_meetings_box';
-                    let dashPanel = document.getElementById('tab-dash');
-                    if(dashPanel) dashPanel.insertBefore(upcomingBox, dashPanel.firstChild);
-                }
-
-                if (meetings.length > 0) {
-                    let latestMeet = meetings[0];
-                    upcomingBox.innerHTML = `
-                        <div style="background: linear-gradient(135deg, #1e293b, #0B3D91); color:white; padding:15px 20px; border-radius:12px; margin-bottom:20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-                            <div>
-                                <span class="badge bg-warning"><i class="fa fa-bell"></i> आगामी बैठक सूचना</span>
-                                <h3 style="margin:5px 0; font-size:1.2rem;">${latestMeet.title}</h3>
-                                <p style="font-size:0.88rem; opacity:0.9;"><i class="fa fa-clock"></i> दिनांक व वेळ: ${new Date(latestMeet.datetime).toLocaleString('mr-IN')}</p>
-                            </div>
-                            <button class="btn-action bg-success" onclick="openTab('tab-assoc-hub')" style="padding:10px 18px; font-size:0.95rem;"><i class="fa fa-video"></i> मीटिंग जॉईन करा / अटेंडन्स</button>
-                        </div>
-                    `;
-
-                    // Check for Active Online Meeting Banner Link
-                    let meetSnap = await getDocs(collection(db, "settings"));
-                    meetSnap.forEach(d => {
-                        if(d.id === "online_meeting" && d.data().active) {
-                            Swal.fire({
-                                title: '🎥 ऑनलाईन मीटिंग सुरू आहे!',
-                                text: latestMeet.title,
-                                icon: 'info',
-                                showCancelButton: true,
-                                confirmButtonText: 'मीटिंग जॉईन करा',
-                                cancelButtonText: 'नंतर'
-                            }).then((res) => {
-                                if(res.isConfirmed) window.open(d.data().link, '_blank');
-                            });
-                        }
-                    });
-                }
-            } catch(e) { console.error(e); }
-        };
-
-        // ==========================================================
-        // 4. MEMBER LOGIN MANAGEMENT & TABS REORDERING
-        // ==========================================================
-        window.memberTabsList = [
-            { id: "m_profile", name: "👤 माझे प्रोफाईल & आई-कार्ड", order: 1 },
-            { id: "m_folders", name: "📁 संघटना फोल्डर्स & परिपत्रके", order: 2 },
-            { id: "m_template", name: "✍️ ऑटो-लेटर जनरेटर", order: 3 },
-            { id: "m_grievance", name: "📑 माझी तक्रार नोंदवा", order: 4 },
-            { id: "m_poll", name: "🗳️ ऑनलाईन पोल मत नोंदवा", order: 5 },
-            { id: "m_chat", name: "💬 Live Chat थेट संवाद", order: 6 }
-        ];
-
-        window.moveMemberTabOrder = async function(index, direction) {
-            let targetIndex = direction === 'up' ? index - 1 : index + 1;
-            if(targetIndex < 0 || targetIndex >= window.memberTabsList.length) return;
-
-            let temp = window.memberTabsList[index];
-            window.memberTabsList[index] = window.memberTabsList[targetIndex];
-            window.memberTabsList[targetIndex] = temp;
-
-            await setDoc(doc(db, "settings", "member_tabs_order"), { tabs: window.memberTabsList });
-            window.renderMemberTabsOrder();
-        };
-
-        window.renderMemberTabsOrder = async function() {
-            let snap = await getDocs(collection(db, "settings"));
-            snap.forEach(d => {
-                if(d.id === "member_tabs_order" && d.data().tabs) {
-                    window.memberTabsList = d.data().tabs;
-                }
-            });
-
-            let tbody = document.getElementById('memberTabsOrderTableBody');
-            if(!tbody) return;
-
-            tbody.innerHTML = window.memberTabsList.map((t, i) => `
-                <tr>
-                    <td><b>${t.name}</b></td>
-                    <td><span class="badge bg-primary">स्थान: ${i+1}</span></td>
-                    <td class="no-print">
-                        <button class="btn-order" onclick="moveMemberTabOrder(${i}, 'up')"><i class="fa fa-arrow-up"></i> वर</button>
-                        <button class="btn-order" onclick="moveMemberTabOrder(${i}, 'down')"><i class="fa fa-arrow-down"></i> खाली</button>
-                    </td>
-                </tr>
-            `).join('');
-        };
-
-        // ==========================================================
-        // 5. INDEX PAGE EDITABLE CONTENT & TABS ENGINE
-        // ==========================================================
-        window.editIndexTabTitle = async function(id, oldTitle) {
-            const { value: newTitle } = await Swal.fire({
-                title: 'टॅबचे नाव बदला', input: 'text', inputValue: oldTitle, showCancelButton: true
-            });
-            if(newTitle) {
-                await updateDoc(doc(db, "index_tabs", id), { title: newTitle });
-                window.renderIndexMgmt();
-            }
-        };
-
-        window.renderIndexMgmt = async function() {
-            let snap = await getDocs(query(collection(db, "index_tabs"), orderBy("order", "asc")));
-            let list = []; snap.forEach(d => list.push({id: d.id, ...d.data()}));
-
-            let tbody = document.getElementById('indexMgmtTableBody'); if(!tbody) return;
-            tbody.innerHTML = list.map((x, i) => `
-                <tr>
-                    <td>${i+1}</td>
-                    <td><b>${x.title}</b></td>
-                    <td>${x.fileUrl ? `<a href="${x.fileUrl}" target="_blank" class="badge bg-success">पहा / फाईल</a>` : 'नाही'}</td>
-                    <td><small>${x.date||'-'}</small></td>
-                    <td class="no-print">
-                        <button class="btn-action bg-primary" onclick="editIndexTabTitle('${x.id}', '${x.title.replace(/'/g, "\\'")}')"><i class="fa fa-pen"></i> एडिट</button>
-                        <button class="btn-action bg-danger" onclick="deleteIndexTab('${x.id}')"><i class="fa fa-trash"></i></button>
-                    </td>
-                </tr>
-            `).join('') || '<tr><td colspan="5" style="text-align:center;">टॅब्स उपलब्ध नाहीत.</td></tr>';
-        };
-
-        // ==========================================================
-        // 6. TEMPLATE BUILDER FULL PLACEHOLDER ENGINE ({नाव}, {पद}, {स्थान})
-        // ==========================================================
-        window.renderTemplateBuilderList = () => {
-            let tbody = document.getElementById('templateBuilderListBody'); if(!tbody) return;
-
-            tbody.innerHTML = window.templateBuilderData.map((t) => `
-                <tr>
-                    <td><input type="checkbox" class="tb-chk" value="${t.id}"></td>
-                    <td><small>${new Date(t.createdAt||Date.now()).toLocaleDateString('mr-IN')}</small></td>
-                    <td><b>${t.title}</b></td>
-                    <td>${t.memberName || 'ॲडमिन / सिस्टीम'}</td>
-                    <td><span class="badge bg-info">${t.source || 'Auto'}</span></td>
-                    <td class="no-print">
-                        <button class="btn-action bg-info" onclick="previewTBLetter('${t.id}')"><i class="fa fa-eye"></i> प्रिव्ह्यू</button>
-                        <button class="btn-action bg-primary" onclick="downloadPDFTBLetter('${t.id}')"><i class="fa fa-file-pdf"></i> A4 PDF</button>
-                        <button class="btn-action bg-danger" onclick="deleteTBLetter('${t.id}')"><i class="fa fa-trash"></i></button>
-                    </td>
-                </tr>
-            `).join('') || '<tr><td colspan="6" style="text-align:center;">टेम्प्लेट फॉरमॅट्स उपलब्ध नाहीत.</td></tr>';
-        };
-
-        window.previewTBLetter = (id) => {
-            let item = window.templateBuilderData.find(x => x.id === id); if(!item) return;
-            
-            // Dynamic Placeholder Replacement Logic
-            let sampleName = currentLoggedInAdminName;
-            let samplePost = currentLoggedInAdminDesignation;
-            let sampleWork = "जिल्हा रुग्णालय, लातूर";
-
-            let processedBody = item.body
-                .replace(/{नाव}/g, sampleName)
-                .replace(/{पद}/g, samplePost)
-                .replace(/{स्थान}/g, sampleWork)
-                .replace(/{रुग्णालय}/g, sampleWork)
-                .replace(/{दिनांक}/g, new Date().toLocaleDateString('mr-IN'));
-
-            let previewWin = window.open('', '_blank');
-            previewWin.document.write(`
-                <html><head><title>Letter Preview</title><style>body{font-family:'Mukta',sans-serif; background:#525659; display:flex; justify-content:center; padding:20px;}</style></head>
-                <body>
-                    <div style="width:210mm; min-height:297mm; background:#fff; padding:${item.topMargin||120}mm ${item.rightMargin||20}mm ${item.bottomMargin||20}mm ${item.leftMargin||20}mm; box-sizing:border-box;">
-                        <h3 style="text-align:center; text-decoration:underline;">${item.subject||'अर्ज'}</h3>
-                        <div style="font-size:15px; line-height:1.8; text-align:justify; white-space:pre-wrap; margin-top:20px;">${processedBody}</div>
-                    </div>
-                </body></html>
-            `);
-        };
-
-        // ==========================================================
-        // 7. REALTIME LIVE CHAT UNREAD BADGE & CHAT ROOM INITIALIZER
-        // ==========================================================
-        window.initLiveChatEngine = () => {
-            const chatQ = query(collection(db, "chat_messages"), orderBy("timestamp", "asc"));
-            onSnapshot(chatQ, (snapshot) => {
-                window.chatMessagesData = [];
-                snapshot.forEach(d => window.chatMessagesData.push({ id: d.id, ...d.data() }));
-
-                let badge = document.getElementById('chatUnreadCount');
-                if(badge) badge.innerText = window.chatMessagesData.length;
-
-                window.renderChatMessages();
-                window.renderChatUsersList();
-            });
-        };
-
-        window.renderChatUsersList = () => {
-            let uList = document.getElementById('chatUserList'); if(!uList) return;
-            let html = window.membersData.slice(0, 15).map(m => `
-                <div style="padding:8px; border-bottom:1px solid #eee; cursor:pointer; font-size:0.85rem;" onclick="switchChatRoom('${m.name.replace(/'/g, "\\'")}')">
-                    <b>${m.name}</b><br><small style="color:gray;">${m.district||'-'}</small>
-                </div>
-            `).join('');
-            uList.innerHTML = html;
-        };
-
-        // AUTO-TRIGGER DASHBOARD CALENDAR WIDGET ON LOAD
-        setTimeout(() => {
-            window.renderDashboardMeetingCalendar();
-        }, 1000);
-
-        // ==========================================================
-        // UI UTILITIES & NAVIGATION
+        // 1. LOGIN & NAVIGATION FUNCTIONS (EXPLICITLY BOUND TO WINDOW)
         // ==========================================================
         window.navigateToMainIndex = function() {
             window.location.href = "index.html";
         };
 
+        window.loginAdmin = async function() { 
+            let e = document.getElementById('adminEmail').value.trim(); 
+            let p = document.getElementById('adminPass').value.trim();
+            if(!e || !p) return Swal.fire('माहिती अपूर्ण', 'कृपया ईमेल व पासवर्ड दोन्ही टाका.', 'warning'); 
+            Swal.fire({title: 'लॉगिन करत आहे...', allowOutsideClick: false, didOpen: () => Swal.showLoading()});
+            try { 
+                await setPersistence(auth, browserSessionPersistence); 
+                await signInWithEmailAndPassword(auth, e, p); 
+                Swal.close(); 
+            } catch(err) { 
+                Swal.close(); 
+                Swal.fire('लॉगिन अयशस्वी', 'चुकीचा ईमेल आयडी किंवा पासवर्ड!', 'error'); 
+            } 
+        };
+
+        window.logoutAdmin = function() {
+            signOut(auth);
+        };
+
+        window.forgotPassword = async function() {
+            let email = document.getElementById('adminEmail').value.trim();
+            if(!email) return Swal.fire('माहिती अपूर्ण', 'कृपया पासवर्ड रिसेट करण्यासाठी ईमेल आयडी टाका.', 'warning');
+            try { 
+                await sendPasswordResetEmail(auth, email); 
+                Swal.fire('पासवर्ड रिसेट लिंक पाठवली!', 'कृपया तुमच्या ई-मेल वरील इनबॉक्स किंवा स्पॅम फोल्डर तपासा.', 'success'); 
+            } catch(e) { 
+                Swal.fire('एरर', e.message, 'error'); 
+            }
+        };
+
+        // ==========================================================
+        // UI UTILITIES & TAB NAVIGATION
+        // ==========================================================
         window.populateMandals = function() {
             let options = '<option value="All">सर्व मंडळे</option>';
             let optionsForm = '<option value="">मंडळ निवडा</option>';
@@ -2355,7 +2081,7 @@
         };
 
         // ==========================================================
-        // AUTHENTICATION & LOGIN ENGINE
+        // AUTHENTICATION LISTENER
         // ==========================================================
         onAuthStateChanged(auth, async (user) => { 
             if (user) { 
@@ -2409,7 +2135,7 @@
 
                 document.getElementById('login-screen').style.display = 'none'; 
                 document.getElementById('app-content').style.display = 'block'; 
-                document.getElementById('floatingLiveChatWidget').style.display = 'block';
+                if(document.getElementById('floatingLiveChatWidget')) document.getElementById('floatingLiveChatWidget').style.display = 'block';
                 
                 document.getElementById('login_user_name').innerText = currentLoggedInAdminName;
                 document.getElementById('login_user_role').innerText = `(${currentLoggedInAdminDesignation})`;
@@ -2429,14 +2155,14 @@
                 applyActionPermissions();
                 populateMandals(); 
                 await loadData(); 
-                await logAdminActivity(`लॉगिन यशस्वी: ${currentLoggedInAdminName} (${currentLoggedInAdminDesignation})`);
+                await window.logAdminActivity(`लॉगिन यशस्वी: ${currentLoggedInAdminName} (${currentLoggedInAdminDesignation})`);
                 
-                checkAndShowPopupNotice();
+                window.checkAndShowPopupNotice();
             } 
             else { 
                 document.getElementById('login-screen').style.display = 'flex'; 
                 document.getElementById('app-content').style.display = 'none'; 
-                document.getElementById('floatingLiveChatWidget').style.display = 'none';
+                if(document.getElementById('floatingLiveChatWidget')) document.getElementById('floatingLiveChatWidget').style.display = 'none';
             } 
         }); 
 
@@ -2448,23 +2174,6 @@
             if(document.getElementById('btn_mem_dup')) document.getElementById('btn_mem_dup').style.display = hasPerm('member_edit') ? 'inline-flex' : 'none';
             if(document.getElementById('btn_mem_del')) document.getElementById('btn_mem_del').style.display = hasPerm('member_delete') ? 'inline-flex' : 'none';
         }
-
-        window.loginAdmin = async () => { 
-            let e = document.getElementById('adminEmail').value.trim(); 
-            let p = document.getElementById('adminPass').value.trim();
-            if(!e || !p) return Swal.fire('माहिती अपूर्ण', 'कृपया ईमेल व पासवर्ड दोन्ही टाका.', 'warning'); 
-            Swal.fire({title: 'लॉगिन करत आहे...', allowOutsideClick: false, didOpen: () => Swal.showLoading()});
-            try { 
-                await setPersistence(auth, browserSessionPersistence); 
-                await signInWithEmailAndPassword(auth, e, p); 
-                Swal.close(); 
-            } catch(err) { 
-                Swal.close(); 
-                Swal.fire('लॉगिन अयशस्वी', 'चुकीचा ईमेल आयडी किंवा पासवर्ड!', 'error'); 
-            } 
-        };
-
-        window.logoutAdmin = () => signOut(auth);
 
         // ==========================================================
         // DUAL ACTIVITY LOGS & AUTO-PURGE (120 DAYS)
@@ -2680,44 +2389,83 @@
         }
 
         // ==========================================================
-        // DASHBOARD MAP & CHART ENGINE
+        // MEMBER LOGIN ENABLE/DISABLE & CREDENTIALS EMAIL/PDF ENGINE
         // ==========================================================
-        window.renderDashboard = function() {
-            let mandalStat = {}; let distStat = {};
-            let allowedMandals = subAdminAccessRegion === "All" ? Object.keys(mandalData) : [subAdminAccessRegion];
-            
-            allowedMandals.forEach(m => { mandalStat[m] = 0; mandalData[m].forEach(d => distStat[d] = 0); });
-            window.membersData.forEach(m => {
-                if(m.isMember!==false && m.status === 'Approved') {
-                    if(subAdminAccessRegion === "All" || m.mandal === subAdminAccessRegion) {
-                        if(m.mandal && mandalStat[m.mandal] !== undefined) mandalStat[m.mandal]++;
-                        if(m.district && distStat[m.district] !== undefined) distStat[m.district]++;
-                    }
+        window.toggleMemberLoginStatus = async function(memberId, currentStatus) {
+            let newStatus = !currentStatus;
+            let m = window.membersData.find(x => x.id === memberId);
+            let nameStr = m ? m.name : memberId;
+
+            Swal.fire({title: 'स्टेटस बदलत आहे...', didOpen: () => Swal.showLoading()});
+            try {
+                await updateDoc(doc(db, "members", memberId), { loginEnabled: newStatus });
+                await window.logAdminActivity(`Member Login ${newStatus ? 'Enabled' : 'Disabled'} for: ${nameStr}`);
+                Swal.fire('यशस्वी', `सदस्य लॉगिन ${newStatus ? 'चालू (Active)' : 'बंद (Disabled)'} करण्यात आले!`, 'success');
+                loadData();
+            } catch(e) { Swal.fire('Error', e.message, 'error'); }
+        };
+
+        window.openSendCredentialsModal = async function(memberId) {
+            let m = window.membersData.find(x => x.id === memberId);
+            if(!m) return;
+
+            const { value: formValues } = await Swal.fire({
+                title: `🔐 पासवर्ड बदला व क्रेडेंशियल्स पाठवा`,
+                html: `
+                    <div style="text-align:left; font-size:0.9rem;">
+                        <p><b>सदस्य:</b> ${m.name}</p>
+                        <p><b>ईमेल:</b> ${m.email || 'उपलब्ध नाही'}</p>
+                        <p><b>मोबाईल:</b> ${m.mobile || '-'}</p>
+                        <hr style="margin:10px 0;">
+                        <label><b>नवीन पासवर्ड प्रविष्ट करा:</b></label>
+                        <input id="cred_new_pass" class="swal2-input" value="${m.pass || 'Xray@2026'}" placeholder="नवीन पासवर्ड">
+                    </div>
+                `,
+                focusConfirm: false,
+                showCancelButton: true,
+                confirmButtonText: 'ईमेल व PDF पाठवा',
+                cancelButtonText: 'रद्द करा',
+                preConfirm: () => {
+                    let p = document.getElementById('cred_new_pass').value.trim();
+                    if(!p) { Swal.showValidationMessage('पासवर्ड रिकामा असू शकत नाही.'); return false; }
+                    return { pass: p };
                 }
             });
 
-            const colors = {"पुणे मंडळ":"#f59e0b", "नागपूर मंडळ":"#3b82f6", "नाशिक मंडळ":"#10b981", "अकोला मंडळ":"#ef4444", "कोल्हापूर मंडळ":"#8b5cf6", "छत्रपती संभाजीनगर मंडळ":"#ec4899", "लातूर मंडळ":"#f97316", "ठाणे मंडळ":"#0ea5e9"};
-            
-            let mapHtml = '';
-            allowedMandals.forEach(m => {
-                let distHtml = mandalData[m].map(d => `<span class="dist-badge">${d} <span class="dist-count">${distStat[d]||0}</span></span>`).join('');
-                mapHtml += `<div class="mandal-card" style="background:${colors[m]};"><h3>${m}</h3><h2>${mandalStat[m]||0}</h2><div>${distHtml}</div></div>`;
-            });
-            if(document.getElementById('mandalMapGrid')) document.getElementById('mandalMapGrid').innerHTML = mapHtml;
+            if (formValues) {
+                let newPass = formValues.pass;
+                await updateDoc(doc(db, "members", memberId), { pass: newPass });
+                await window.logAdminActivity(`Updated Password & Sent Credentials for: ${m.name}`);
 
-            try {
-                if(window.mandalChartInstance) { window.mandalChartInstance.destroy(); }
-                const ctx = document.getElementById('mandalPieChart').getContext('2d');
-                window.mandalChartInstance = new Chart(ctx, {
-                    type: 'pie',
-                    data: {
-                        labels: allowedMandals,
-                        datasets: [{ data: allowedMandals.map(m => mandalStat[m] || 0), backgroundColor: allowedMandals.map(m => colors[m] || '#3b82f6') }]
-                    },
-                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
-                });
-            } catch(err) { console.error("Chart Error:", err); }
-        };// ==========================================================
+                let credHtml = `
+                    <div style="padding:30px; font-family:'Mukta',sans-serif; border:3px solid #0B3D91; border-radius:12px;">
+                        <h2 style="color:#0B3D91; text-align:center;">क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना महाराष्ट्र राज्य</h2>
+                        <h3 style="text-align:center;">अधिकृत सदस्य लॉगिन क्रेडेंशियल्स</h3>
+                        <hr>
+                        <p style="font-size:1.1rem;"><b>आदरणीय सभासद,</b> ${m.name}</p>
+                        <p>आपल्या संघटनेच्या अधिकृत पोर्टलवर लॉगिन करण्यासाठी खालील माहिती वापरावी:</p>
+                        <div style="background:#f0f4f8; padding:15px; border-radius:8px; font-size:1rem; margin:15px 0;">
+                            <p><b>लॉगिन ईमेल / आयडी:</b> ${m.email || m.mobile}</p>
+                            <p><b>पासवर्ड:</b> ${newPass}</p>
+                            <p><b>पोर्टल लिंक:</b> https://xrayunionmah.web.app</p>
+                        </div>
+                        <p style="color:#854d0e; font-size:0.85rem;"><b>सूचना:</b> सुरक्षेच्या कारणास्तव आपला पासवर्ड कोणासही शेअर करू नये.</p>
+                    </div>
+                `;
+
+                let win = window.open('', '_blank');
+                win.document.write(`<html><head><title>Credentials_${m.name}</title></head><body>${credHtml}</body></html>`);
+                setTimeout(() => win.print(), 400);
+
+                if(m.email) {
+                    let subject = encodeURIComponent("क्ष-किरण वैज्ञानिक अधिकारी संघटना - लॉगिन क्रेडेंशियल्स");
+                    let body = encodeURIComponent(`नमस्कार ${m.name},\n\nआपला संघटना लॉगिन पासवर्ड: ${newPass}\nवेबसाईट: https://xrayunionmah.web.app\n\nधन्यवाद!`);
+                    window.location.href = `mailto:${m.email}?subject=${subject}&body=${body}`;
+                }
+            }
+        };
+
+        // ==========================================================
         // CLOUDINARY UPLOAD & FILE CONTROL UTILITIES
         // ==========================================================
         window.uploadToCloudinary = async (file) => {
@@ -2941,6 +2689,7 @@
                     <td class="no-print" style="white-space:nowrap;">
                         <button class="btn-action bg-info" onclick="viewProfileModal('${m.id}')"><i class="fa fa-eye"></i></button>
                         <button class="btn-action bg-wa" onclick="window.open('https://wa.me/91${m.mobile}', '_blank')"><i class="fa fa-whatsapp"></i></button>
+                        <button class="btn-action bg-warning" onclick="openSendCredentialsModal('${m.id}')" title="क्रेडेंशियल्स पाठवा"><i class="fa fa-key"></i></button>
                         ${editBtn}
                         ${delBtn}
                     </td>
@@ -3093,7 +2842,7 @@
         };
 
         // ==========================================================
-        // STATE EMPLOYEES EXCEL FORMAT DOWNLOAD, MULTI-DELETE & PDF EXPORT
+        // STATE EMPLOYEES DATABASE WITH DOB & INTER-MANDAL TRANSFERS
         // ==========================================================
         window.downloadSampleEmployeeExcel = function() {
             let sampleData = [
@@ -3103,6 +2852,7 @@
                     "पद": "क्ष-किरण वैज्ञानिक अधिकारी (गट-क)",
                     "प्रवर्ग": "खुला",
                     "मोबाईल": "9876543210",
+                    "जन्मतारीख": "1990-05-20",
                     "सध्या कार्यरत ठिकाण": "उपजिल्हा रुग्णालय, उदगीर",
                     "बदलीने पदस्थापना": "जिल्हा रुग्णालय, लातूर",
                     "पुन्हा कार्यरत ठिकाण": "उपजिल्हा रुग्णालय, उदगीर",
@@ -3205,6 +2955,7 @@
             let statFil = document.getElementById('empStatusFilter')?.value || 'All';
 
             let showMob = document.getElementById('col_show_mobile')?.checked ?? true;
+            let showDob = document.getElementById('col_show_dob')?.checked ?? true;
 
             let fil = window.otherStaffData.filter(e => {
                 if (subAdminAccessRegion !== "All" && e.mandal !== subAdminAccessRegion) return false;
@@ -3227,6 +2978,7 @@
                     <td><b>${s.name}</b><br><small style="color:gray;">${s.post || '-'}</small></td>
                     <td><span class="badge bg-info">${s.category||'-'}</span></td>
                     <td>${showMob ? (s.mobile||'-') : '🔒 लपवले'}</td>
+                    <td>${showDob ? (s.dob||'-') : '🔒 लपवले'}</td>
                     <td><b>${s.workplace || '-'}</b></td>
                     <td><small style="color:blue;">${s.transferPosting || '-'}</small></td>
                     <td><small style="color:green;">${s.rejoinedWorkplace || '-'}</small></td>
@@ -3240,7 +2992,7 @@
                         <button class="btn-action bg-danger" onclick="deleteOtherStaff('${s.id}')"><i class="fa fa-trash"></i></button>
                     </td>
                 </tr>
-            `).join('') || '<tr><td colspan="13" style="text-align:center;">सध्या एकही कर्मचारी उपलब्ध नाही.</td></tr>';
+            `).join('') || '<tr><td colspan="14" style="text-align:center;">सध्या एकही कर्मचारी उपलब्ध नाही.</td></tr>';
         };
 
         window.deleteOtherStaff = async (id) => {
@@ -3266,6 +3018,7 @@
                     let obj = {
                         name: r['नाव'] || r['Name'] || '', post: r['पद'] || r['Post'] || '',
                         category: r['प्रवर्ग'] || r['Category'] || '', mobile: String(r['मोबाईल'] || r['Mobile'] || ''),
+                        dob: r['जन्मतारीख'] || r['DOB'] || '',
                         workplace: r['सध्या कार्यरत ठिकाण'] || r['Workplace'] || '', district: r['जिल्हा'] || r['District'] || '',
                         mandal: r['मंडळ'] || r['Mandal'] || '', joinDate: r['रुजू दिनांक'] || r['Join Date'] || '',
                         remarks: r['अभिप्राय'] || r['शेरा'] || '', empStatus: 'Active'
@@ -3281,7 +3034,7 @@
         window.exportToExcel = () => {
             let data = window.otherStaffData.map((e, i) => ({
                 "अ.क्र.": i + 1, "नाव": e.name || "", "पद": e.post || "", "प्रवर्ग": e.category || "",
-                "मोबाईल": e.mobile || "", "सध्या कार्यरत ठिकाण": e.workplace || "", "बदलीने पदस्थापना": e.transferPosting || "",
+                "मोबाईल": e.mobile || "", "जन्मतारीख": e.dob || "", "सध्या कार्यरत ठिकाण": e.workplace || "", "बदलीने पदस्थापना": e.transferPosting || "",
                 "पुन्हा कार्यरत ठिकाण": e.rejoinedWorkplace || "", "जिल्हा": e.district || "", "मंडळ": e.mandal || "", "रुजू दिनांक": e.joinDate || "", "शेरा": e.remarks || ""
             }));
             let ws = XLSX.utils.json_to_sheet(data);
@@ -3564,7 +3317,9 @@
             let element = printArea.firstElementChild;
             let opt = { margin: 0, filename: `Template_Letter_${id}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
             html2pdf().set(opt).from(element).save().then(()=>{ printArea.style.display = 'none'; });
-        };// ==========================================================
+        };
+
+        // ==========================================================
         // DYNAMIC POLL SYSTEM LOGIC
         // ==========================================================
         window.togglePollOnOff = (status) => {
