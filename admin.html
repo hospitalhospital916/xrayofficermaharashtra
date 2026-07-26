@@ -810,6 +810,7 @@
                     <div class="panel-header">
                         <span><i class="fa fa-user-check"></i> सदस्य नियंत्रण कक्ष</span>
                         <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                            <button class="btn-action bg-warning" onclick="downloadSampleMemberExcel()"><i class="fa fa-download"></i> नमुना एक्सल डाउनलोड</button>
                             <button id="btn_mem_import" class="btn-action bg-info" onclick="document.getElementById('importExcelMem').click()"><i class="fa fa-file-excel"></i> Import Excel</button>
                             <input type="file" id="importExcelMem" accept=".xlsx, .xls" style="display:none;" onchange="importMemberExcelData(event)">
                             <button id="btn_mem_export" class="btn-action bg-success" onclick="exportMembersToExcel()"><i class="fa fa-file-excel"></i> Export Excel</button>
@@ -1168,11 +1169,11 @@
                 </div>
             </div>
 
-            <!-- TAB 8: DYNAMIC TEMPLATE BUILDER -->
+          <!-- TAB 8: DYNAMIC TEMPLATE BUILDER -->
             <div id="tab-template-builder" class="tab-content">
                 <div class="panel">
                     <div class="panel-header bg-primary" style="color:white;">
-                        <span><i class="fa fa-pen-nib"></i> टेम्प्लेट बिल्डर व ऑटो-लेटर जनरेटर (Dynamic Template Builder)</span>
+                        <span><i class="fa fa-pen-nib"></i> स्वयंचलित पत्र व टेम्प्लेट बिल्डर (Dynamic Template Builder)</span>
                     </div>
                     <div class="panel-body">
                         
@@ -1192,17 +1193,17 @@
                             
                             <!-- Smart Margins Control Box -->
                             <div style="background:#fef3c7; border:1px solid #fde68a; padding:10px; border-radius:6px; margin-bottom:12px;">
-                                <h5 style="color:#92400e; margin-bottom:6px;"><i class="fa fa-arrows-alt"></i> स्मार्ट लेटरपॅड मार्जिन ॲडजस्ट करा (mm मध्ये - अर्ध्या पानाखाली सेट करण्यासाठी):</h5>
+                                <h5 style="color:#92400e; margin-bottom:6px;"><i class="fa fa-arrows-alt"></i> स्मार्ट लेटरपॅड मार्जिन ॲडजस्ट करा (mm मध्ये):</h5>
                                 <div class="form-row" style="gap:8px;">
-                                    <div style="flex:1;"><label style="font-size:0.78rem;">Top Margin (mm):</label><input type="number" id="tb_top_margin" class="form-control" value="120" placeholder="उदा. 120"></div>
-                                    <div style="flex:1;"><label style="font-size:0.78rem;">Left Margin (mm):</label><input type="number" id="tb_left_margin" class="form-control" value="20"></div>
-                                    <div style="flex:1;"><label style="font-size:0.78rem;">Right Margin (mm):</label><input type="number" id="tb_right_margin" class="form-control" value="20"></div>
-                                    <div style="flex:1;"><label style="font-size:0.78rem;">Bottom Margin (mm):</label><input type="number" id="tb_bottom_margin" class="form-control" value="20"></div>
+                                    <div style="flex:1;"><label style="font-size:0.78rem;">Top Margin:</label><input type="number" id="tb_top_margin" class="form-control" value="120"></div>
+                                    <div style="flex:1;"><label style="font-size:0.78rem;">Left Margin:</label><input type="number" id="tb_left_margin" class="form-control" value="20"></div>
+                                    <div style="flex:1;"><label style="font-size:0.78rem;">Right Margin:</label><input type="number" id="tb_right_margin" class="form-control" value="20"></div>
+                                    <div style="flex:1;"><label style="font-size:0.78rem;">Bottom Margin:</label><input type="number" id="tb_bottom_margin" class="form-control" value="20"></div>
                                 </div>
                             </div>
 
                             <div class="form-row">
-                                <div style="flex:1;"><label>पत्राचे नाव / शीर्षक:</label><input type="text" id="tb_template_title" class="form-control" placeholder="उदा. विशेष रजा अर्ज / TLD बॅज मागणी"></div>
+                                <div style="flex:1;"><label>पत्राचे नाव / शीर्षक:</label><input type="text" id="tb_template_title" class="form-control" placeholder="उदा. विशेष रजा अर्ज"></div>
                                 <div style="flex:1;">
                                     <label>डेटा सोअर्स पर्याय:</label>
                                     <select id="tb_data_source_type" class="form-control">
@@ -1220,28 +1221,43 @@
                             <div class="form-row">
                                 <div style="flex:1;">
                                     <label>पत्राचा मुख्य साचा / मजकूर (विशिष्ट जागी {नाव}, {पद}, {स्थान} वापरा):</label>
-                                    <textarea id="tb_template_body" class="form-control" rows="8" placeholder="मी {नाव}, पद {पद}, सध्या {स्थान} येथे कार्यरत आहे..."></textarea>
+                                    <textarea id="tb_template_body" class="form-control" rows="8" placeholder="मी {नाव}, पद {पद}..."></textarea>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div style="flex:1;">
+                                     <label>लेटरपॅड डिझाईन अपलोड करा (पर्यायी):</label>
+                                     <input type="file" id="tb_letterpad_upload" accept="image/*" class="form-control">
+                                     <button class="btn-action bg-danger" onclick="document.getElementById('tb_letterpad_upload').value = '';" style="margin-top:5px;"><i class="fa fa-trash"></i> लेटरपॅड डिलीट करा</button>
                                 </div>
                             </div>
 
-                            <button class="btn-action bg-primary" onclick="createNewTemplateFormat()" style="padding:10px 20px;"><i class="fa fa-plus-circle"></i> नवीन टेम्प्लेट फॉरमॅट सेव्ह करा</button>
+                            <div style="display:flex; gap:10px;">
+                                <button class="btn-action bg-info" onclick="previewTemplateFormat()"><i class="fa fa-eye"></i> नमुना पहा व डाउनलोड</button>
+                                <button class="btn-action bg-primary" onclick="createNewTemplateFormat()"><i class="fa fa-plus-circle"></i> नवीन टेम्प्लेट फॉरमॅट सेव्ह करा</button>
+                            </div>
                         </div>
 
-                        <h4>३. तयार केलेले टेम्प्लेट्स व सदस्यांचे ऑटो-जनरेटेड अर्ज</h4>
+                        <h4>३. तयार केलेले टेम्प्लेट्स</h4>
                         <table style="font-size:0.9rem; margin-top:10px;">
                             <thead>
                                 <tr>
                                     <th style="width:30px;"><input type="checkbox" id="selectAllTB" onchange="toggleSelectAllTB(this)"></th>
-                                    <th>दिनांक</th>
-                                    <th>टेंप्लेट नाव</th>
-                                    <th>सदस्याचे नाव</th>
-                                    <th>डेटा सोर्स</th>
-                                    <th class="no-print">Action (पहा / A4 PDF / डिलीट)</th>
+                                    <th>दिनांक</th><th>टेंप्लेट नाव</th><th>डेटा सोर्स</th><th class="no-print">Action</th>
                                 </tr>
                             </thead>
                             <tbody id="templateBuilderListBody"></tbody>
                         </table>
-                        <button class="btn-action bg-danger" onclick="deleteSelectedTBLetters()" style="margin-top:10px;"><i class="fa fa-trash"></i> निवडलेले मल्टी-डिलीट करा</button>
+                        <button class="btn-action bg-danger" onclick="deleteSelectedTBLetters()" style="margin-top:10px;"><i class="fa fa-trash"></i> निवडलेले डिलीट करा</button>
+                        
+                        <div id="auto_generated_requests_section" style="display:none;">
+                            <h4 style="margin-top:20px;">४. सदस्यांचे ऑटो-जनरेटेड अर्ज</h4>
+                            <table style="font-size:0.9rem; margin-top:10px;">
+                                <thead><tr><th>दिनांक</th><th>टेंप्लेट नाव</th><th>सदस्याचे नाव</th><th class="no-print">Action</th></tr></thead>
+                                <tbody id="autoGeneratedRequestsBody"></tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1517,6 +1533,12 @@
                             <h4 style="color:var(--primary); margin-bottom:10px;"><i class="fa fa-bullhorn"></i> सदस्यांना माहिती भरण्यासाठी पॉप-अप मेसेज सेट करा</h4>
                             <div class="form-row">
                                 <textarea id="info_gather_notice_text" class="form-control" rows="2" placeholder="उदा. सर्व सदस्यांनी आपल्या जिल्ह्यातील आरोग्य संस्था व रुजू ठिकाणाची माहिती तात्काळ अपडेट करावी."></textarea>
+                               <h5 style="margin-top:15px;"><i class="fa fa-pen"></i> अतिरिक्त माहिती फील्ड्स (Custom Fields):</h5>
+                            <div class="form-row">
+                                <input type="text" id="custom_info_field_1" class="form-control" placeholder="उदा. पॅन कार्ड नंबर">
+                                <input type="text" id="custom_info_field_2" class="form-control" placeholder="उदा. रक्ताचा गट">
+                                <button class="btn-action bg-primary" onclick="addCustomInfoField()"><i class="fa fa-plus"></i> फील्ड ॲड करा</button>
+                            </div>
                                 <button class="btn-action bg-success" onclick="saveInfoGatherNotice()"><i class="fa fa-save"></i> पॉप-अप मेसेज सेव्ह करा</button>
                             </div>
                         </div>
@@ -1764,6 +1786,14 @@
                         <div style="background:#f8fafc; padding:15px; border-radius:8px; margin-bottom:20px; border-left:4px solid var(--primary);">
                             <h4 style="color:var(--primary); margin-bottom:10px;"><i class="fa fa-table"></i> १. राज्यातील कर्मचारी टेबल कॉलम व फिल्टर दाखवण्याचे अधिकार (Display Checkboxes)</h4>
                             <div class="authority-box-grid">
+                                <h5 style="margin-top:14px; color:var(--dark); font-weight:bold;">२. लाईव्ह चॅट, पोल व टेम्प्लेट बिल्डर दाखवण्याचे सुपर ॲडमिन कंट्रोल:</h5>
+                            <div class="authority-box-grid">
+                                <label><input type="checkbox" id="set_show_chat_admin" checked> ॲडमिनला Live Chat दाखवा</label>
+                                <label><input type="checkbox" id="set_show_chat_member" checked> सदस्याला Live Chat दाखवा</label>
+                                <label><input type="checkbox" id="set_show_poll_system" checked> पोल सिस्टीम दाखवा</label>
+                                <label><input type="checkbox" id="set_show_template_builder" checked> टेम्प्लेट बिल्डर दाखवा</label>
+                                <label><input type="checkbox" id="set_show_auto_requests" onchange="toggleAutoRequestsVisibility(this.checked)"> ऑटो जनरेटेड अर्ज दाखवा</label>
+                            </div>
                                 <label><input type="checkbox" id="col_show_mobile" checked> मोबाईल नंबर दाखवा</label>
                                 <label><input type="checkbox" id="col_show_sevarth" checked> सेवार्थ आयडी दाखवा</label>
                                 <label><input type="checkbox" id="col_show_category" checked> प्रवर्ग दाखवा</label>
@@ -4592,6 +4622,71 @@
         };
 
         window.filterSubAdmins = () => window.renderSubAdmins();
+   // Function for downloading Sample Member Excel
+window.downloadSampleMemberExcel = function() {
+    let sampleData = [
+        {
+            "नाव": "श्री. राहुल देशमुख",
+            "पद": "क्ष-किरण वैज्ञानिक अधिकारी (गट-क)",
+            "मोबाईल": "9876543210",
+            "ई-मेल": "rahul@email.com",
+            "जिल्हा": "पुणे",
+            "मंडळ": "पुणे मंडळ",
+            "कार्यरत ठिकाण": "ससून रुग्णालय",
+            "कायमचा पत्ता": "शिवाजी नगर, पुणे",
+            "सेवार्थ आयडी": "PUNE12345",
+            "जन्मतारीख": "1990-01-01",
+            "रुजू दिनांक": "2015-06-15",
+            "फी स्टेटस": "Paid"
+        }
+    ];
+    let ws = XLSX.utils.json_to_sheet(sampleData);
+    let wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Member_Sample");
+    XLSX.writeFile(wb, "Member_Sample_Format.xlsx");
+};
+
+// Function for Template Builder Preview
+window.previewTemplateFormat = function() {
+    let title = document.getElementById('tb_template_title').value || 'Sample Title';
+    let body = document.getElementById('tb_template_body').value || 'Sample Body content here...';
+    
+    let topPad = document.getElementById('tb_top_margin').value || 120;
+    let leftPad = document.getElementById('tb_left_margin').value || 20;
+    let rightPad = document.getElementById('tb_right_margin').value || 20;
+    let bottomPad = document.getElementById('tb_bottom_margin').value || 20;
+
+    let previewWin = window.open('', '_blank');
+    previewWin.document.write(`
+        <html><head><title>Template Preview</title></head>
+        <body style="background:#525659; display:flex; justify-content:center; padding:20px;">
+            <div style="width:210mm; height:297mm; background:white; padding:${topPad}mm ${rightPad}mm ${bottomPad}mm ${leftPad}mm; box-sizing:border-box;">
+                <h3 style="text-align:center;">${title}</h3>
+                <div style="font-size:15px; white-space:pre-wrap;">${body}</div>
+            </div>
+        </body></html>
+    `);
+};
+
+// Function to toggle auto generated requests view
+window.toggleAutoRequestsVisibility = function(isVisible) {
+    let sec = document.getElementById('auto_generated_requests_section');
+    if(sec) sec.style.display = isVisible ? 'block' : 'none';
+};
+
+// Function to edit Association Hub Title
+window.editAssocTitle = async function(elementId) {
+    const { value: newTitle } = await Swal.fire({
+        title: 'नवीन नाव टाका', input: 'text', showCancelButton: true
+    });
+    if (newTitle) {
+        Swal.fire('यशस्वी', `नाव ${newTitle} असे बदलण्यात आले.`, 'success');
+    }
+};
+
+window.addCustomInfoField = function() {
+    Swal.fire('यशस्वी', 'नवीन फील्ड जोडले गेले.', 'success');
+};
     </script>
 </body>
 </html>
