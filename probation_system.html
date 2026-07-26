@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>परिविक्षाधीन कालावधी प्रस्ताव व तपासणी सूची जनरेटर</title>
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #0B3D91;
+            --primary-dark: #07275e;
+            --danger: #dc2626;
+            --dark: #1e293b;
+            --light-bg: #f8fafc;
+        }
+
+        * { box-sizing: border-box; font-family: 'Mukta', sans-serif; margin: 0; padding: 0; }
+        body { background-color: var(--light-bg); color: #333; padding: 20px; }
+
+        .container { max-width: 1050px; margin: 0 auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        .page-header { text-align: center; color: var(--primary); border-bottom: 3px solid var(--primary); padding-bottom: 10px; margin-bottom: 20px; }
+
+        /* Form Grid */
+        .form-section { background: #f1f5f9; padding: 20px; border-radius: 8px; margin-bottom: 25px; border: 1px solid #cbd5e1; }
+        .section-title { font-size: 1.1rem; font-weight: 800; color: var(--primary); margin-bottom: 15px; border-bottom: 2px dashed #cbd5e1; padding-bottom: 5px; }
+
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group.full { grid-column: 1 / -1; }
+
+        label { font-weight: 700; font-size: 0.9rem; color: var(--dark); margin-bottom: 3px; }
+        input, select, textarea { padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; background: white; }
+
+        /* Letterhead Upload & Controls */
+        .upload-box { background: white; padding: 15px; border: 2px dashed var(--primary); border-radius: 8px; text-align: center; }
+        .btn-delete-lh { background: var(--danger); color: white; border: none; padding: 6px 12px; border-radius: 4px; font-weight: 700; cursor: pointer; margin-top: 8px; display: none; }
+
+        /* Margin Control Box */
+        .margin-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+
+        /* Buttons */
+        .btn-generate { background: var(--primary); color: white; border: none; padding: 12px 20px; font-size: 1.1rem; font-weight: 800; border-radius: 6px; cursor: pointer; width: 100%; margin-top: 15px; }
+        .btn-generate:hover { background: var(--primary-dark); }
+
+        /* Printable Area */
+        .print-page { background: white; border: 1px solid #ccc; padding: 20mm; margin-top: 20px; min-height: 297mm; position: relative; box-sizing: border-box; }
+        .letterhead-container { text-align: center; margin-bottom: 15px; }
+        .letterhead-container img { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+
+        /* Document Formats */
+        .doc-title { text-align: center; font-weight: 800; font-size: 1.3rem; text-decoration: underline; margin-bottom: 15px; }
+        .doc-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .doc-table th, .doc-table td { border: 1px solid #000; padding: 6px 8px; font-size: 0.92rem; vertical-align: top; }
+        .doc-table td:nth-child(1) { width: 6%; text-align: center; font-weight: bold; }
+        .doc-table td:nth-child(3) { width: 15%; text-align: center; font-weight: bold; }
+
+        .sig-box-container { display: flex; justify-content: space-between; margin-top: 40px; }
+        .sig-box { text-align: center; width: 45%; }
+
+        /* Print Media Rules */
+        @media print {
+            body { background: white; padding: 0; margin: 0; }
+            .no-print { display: none !important; }
+            .container { max-width: 100%; padding: 0; box-shadow: none; }
+            .print-page { border: none; margin: 0; width: 100%; }
+            @page { size: A4; margin: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <div class="page-header no-print">
+        <h2><i class="fa fa-print"></i> परिविक्षाधीन कालावधी प्रस्ताव व तपासणी सूची जनरेटर</h2>
+        <p>महाराष्ट्र शासन - सार्वजनिक आरोग्य विभाग व इतर सर्व शासकीय कार्यालयांसाठी</p>
+    </div>
+
+    <!-- FORM CONTROLS (NO PRINT) -->
+    <div class="no-print">
+        
+        <!-- 1. दस्तऐवज प्रकार व लेटरपॅड -->
+        <div class="form-section">
+            <div class="section-title"><i class="fa fa-cog"></i> १. दस्तऐवज प्रकार व लेटरपॅड पर्याय</div>
+            <div class="form-grid">
+                
+                <div class="form-group">
+                    <label>कागदपत्र फॉरमॅट निवडा:</label>
+                    <select id="docMode" onchange="renderSelectedDocument()">
+                        <option value="checklist">१. तपासणी सूची (२१ मुद्दे - Checklist)</option>
+                        <option value="office_letter">२. कार्यालयीन शिफारस / कव्हरिंग पत्र (Office Letter)</option>
+                        <option value="employee_app">३. कर्मचाऱ्याचा वैयक्तिक विनंती अर्ज (Personal Application)</option>
+                    </select>
+                </div>
+
+                <div class="form-group full">
+                    <label>कार्यालयीन लेटरपॅड प्रतिमा (Letterhead Image) अपलोड करा (ऐच्छिक):</label>
+                    <div class="upload-box">
+                        <input type="file" id="lhInput" accept="image/*" onchange="handleLhUpload(event)">
+                        <p style="font-size:0.85rem; color:gray; margin-top:5px;">टीप: एकदा अपलोड केल्यावर ते कागदपत्रावर वरच्या बाजूला दिसेल. बदलण्यासाठी डिलीट करा.</p>
+                        <button type="button" class="btn-delete-lh" id="btnDeleteLh" onclick="deleteLh()"><i class="fa fa-trash"></i> लेटरपॅड हटवा (Delete)</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- 2. प्रिंट मार्जिन सेटिंग्ज -->
+        <div class="form-section">
+            <div class="section-title"><i class="fa fa-arrows-alt"></i> २. प्रिंट मार्जिन सेटिंग्ज (Millimeters - mm मध्ये)</div>
+            <p style="font-size: 0.85rem; color:#64748b; margin-bottom: 10px;">जर तुम्ही प्री-प्रिंटेड कागदावर प्रिंट करत असाल तर वरची मार्जिन (Top Margin) वाढवून मजकूर खाली सरकवू शकता.</p>
+            <div class="margin-grid">
+                <div class="form-group"><label>Top Margin (mm):</label><input type="number" id="mTop" value="15" onchange="applyMargins()"></div>
+                <div class="form-group"><label>Bottom Margin (mm):</label><input type="number" id="mBottom" value="15" onchange="applyMargins()"></div>
+                <div class="form-group"><label>Left Margin (mm):</label><input type="number" id="mLeft" value="15" onchange="applyMargins()"></div>
+                <div class="form-group"><label>Right Margin (mm):</label><input type="number" id="mRight" value="15" onchange="applyMargins()"></div>
+            </div>
+        </div>
+
+        <!-- 3. कर्मचारी व कार्यालयीन माहिती -->
+        <div class="form-section">
+            <div class="section-title"><i class="fa fa-user"></i> ३. कर्मचारी व कार्यालयाचा तपशील</div>
+            <div class="form-grid">
+                <div class="form-group"><label>कर्मचाऱ्याचे संपूर्ण नाव:</label><input type="text" id="empName" value="श्री. महेश शिवदास हंगे" oninput="renderSelectedDocument()"></div>
+                <div class="form-group"><label>पदनाम:</label><input type="text" id="empDesig" value="क्ष-किरण वैज्ञानिक अधिकारी" oninput="renderSelectedDocument()"></div>
+                <div class="form-group"><label>वेतन संरचना (Pay Scale):</label><input type="text" id="empPay" value="S-13 : 35400-112400" oninput="renderSelectedDocument()"></div>
+                <div class="form-group"><label>कार्यालयाचे नाव:</label><input type="text" id="empOffice" value="ग्रामीण रुग्णालय धानोरा, जि. गडचिरोली" oninput="renderSelectedDocument()"></div>
+                <div class="form-group"><label>जावक क्रमांक (Outward No.):</label><input type="text" id="outNo" value="ग्रारुधा/आस्था/582/2024" oninput="renderSelectedDocument()"></div>
+                <div class="form-group"><label>दिनांक:</label><input type="date" id="docDate" oninput="renderSelectedDocument()"></div>
+                <div class="form-group"><label>सेवेत रुजू दिनांक:</label><input type="date" id="joinDate" oninput="renderSelectedDocument()"></div>
+                <div class="form-group"><label>परिविक्षा कालावधी पूर्ण दिनांक:</label><input type="date" id="probEndDate" oninput="renderSelectedDocument()"></div>
+                <div class="form-group full"><label>प्रति (कोणाकडे सादर करायचे):</label><input type="text" id="recipient" value="मा. उपसंचालक, आरोग्य सेवा, नागपूर मंडळ, नागपूर" oninput="renderSelectedDocument()"></div>
+            </div>
+        </div>
+
+        <button class="btn-generate" onclick="window.print()"><i class="fa fa-print"></i> प्रिंट काढा / PDF सेव्ह करा</button>
+    </div>
+
+    <!-- PRINTABLE AREA (DYNAMICALLY RENDERED) -->
+    <div class="print-page" id="printablePage">
+        
+        <!-- Letterhead Header (Image Displayed if Uploaded) -->
+        <div class="letterhead-container" id="lhDisplay" style="display: none;">
+            <img id="lhImgPreview" src="" alt="Office Letterhead">
+        </div>
+
+        <!-- Dynamic Output Content -->
+        <div id="documentContent"></div>
+
+    </div>
+
+</div>
+
+<script>
+    // आजची तारीख डिफॉल्ट सेट करणे
+    document.getElementById('docDate').valueAsDate = new Date();
+
+    // 1. LETTERHEAD UPLOAD & DELETE LOGIC
+    let uploadedLhBase64 = null;
+
+    function handleLhUpload(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                uploadedLhBase64 = e.target.result;
+                document.getElementById('lhImgPreview').src = uploadedLhBase64;
+                document.getElementById('lhDisplay').style.display = 'block';
+                document.getElementById('btnDeleteLh').style.display = 'inline-block';
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function deleteLh() {
+        uploadedLhBase64 = null;
+        document.getElementById('lhInput').value = '';
+        document.getElementById('lhImgPreview').src = '';
+        document.getElementById('lhDisplay').style.display = 'none';
+        document.getElementById('btnDeleteLh').style.display = 'none';
+    }
+
+    // 2. DYNAMIC MARGIN ADJUSTMENT
+    function applyMargins() {
+        const page = document.getElementById('printablePage');
+        const top = document.getElementById('mTop').value || 15;
+        const bottom = document.getElementById('mBottom').value || 15;
+        const left = document.getElementById('mLeft').value || 15;
+        const right = document.getElementById('mRight').value || 15;
+
+        page.style.paddingTop = top + 'mm';
+        page.style.paddingBottom = bottom + 'mm';
+        page.style.paddingLeft = left + 'mm';
+        page.style.paddingRight = right + 'mm';
+    }
+
+    // Date Formatter
+    function getFormattedDate(dateId) {
+        const val = document.getElementById(dateId).value;
+        if (!val) return "............";
+        const [y, m, d] = val.split('-');
+        return `${d}/${m}/${y}`;
+    }
+
+    // 3. RENDER DOCUMENTS
+    function renderSelectedDocument() {
+        applyMargins();
+        const mode = document.getElementById('docMode').value;
+        const name = document.getElementById('empName').value || "..................";
+        const desig = document.getElementById('empDesig').value || "..................";
+        const pay = document.getElementById('empPay').value || "..................";
+        const office = document.getElementById('empOffice').value || "..................";
+        const outNo = document.getElementById('outNo').value || "..................";
+        const date = getFormattedDate('docDate');
+        const joinDate = getFormattedDate('joinDate');
+        const probEndDate = getFormattedDate('probEndDate');
+        const recipient = document.getElementById('recipient').value || "..................";
+
+        const contentDiv = document.getElementById('documentContent');
+
+        if (mode === 'checklist') {
+            // FORMAT 1: CHECKLIST (21 POINTS FROM IMAGE)
+            contentDiv.innerHTML = `
+                <div class="doc-title">तपासणी सूची<br><span style="font-size:1rem; font-weight:normal;">(परिविक्षाधीन कालावधी समाप्त करण्याबाबत)</span></div>
+                
+                <p style="font-size:1rem; margin-bottom:12px;">
+                    <strong>कर्मचाऱ्याचे नाव:</strong> ${name} &nbsp;&nbsp;&nbsp;&nbsp; <strong>पदनाम:</strong> ${desig}<br>
+                    <strong>कार्यालयाचे नाव:</strong> ${office}
+                </p>
+
+                <table class="doc-table">
+                    <thead>
+                        <tr>
+                            <th>अ.क्र.</th>
+                            <th>बाब / घटक</th>
+                            <th>आहे / नाही</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>१</td><td>परिविक्षा कालावधी समाप्त करण्याबाबत संबंधित कर्मचाऱ्याचा विनंती अर्ज</td><td>जोडले आहे</td></tr>
+                        <tr><td>२</td><td>परिविक्षा कालावधीकरीता १ ते १८ मुद्द्यांबाबतचे विवरणपत्र</td><td>जोडले आहे</td></tr>
+                        <tr><td>३</td><td>कर्मचाऱ्याचे यापुढे शासन सेवेत राहण्यास इच्छुक असल्याबाबतचे संमतीपत्र</td><td>जोडले आहे</td></tr>
+                        <tr><td>४</td><td>मुख्यालयात वास्तव्याने राहात असल्याबाबतचे प्रमाणपत्र</td><td>जोडले आहे</td></tr>
+                        <tr><td>५</td><td>परिविक्षा कालावधीमध्ये कर्मचाऱ्याने उपभोगलेल्या रजेबाबत प्रमाणपत्र</td><td>जोडले आहे</td></tr>
+                        <tr><td>६</td><td>ना-तक्रार / ना-चौकशी प्रमाणपत्र</td><td>जोडले आहे</td></tr>
+                        <tr><td>७</td><td>संबंधित कर्मचारी हा नेमणूक आदेशातील सर्व अटी व शर्तीची पूर्तता करतो किंवा कसे? या बाबत कार्यालय प्रमुखाचे प्रमाणपत्र.</td><td>जोडले आहे</td></tr>
+                        <tr><td>८</td><td>कामाचा विशेष अहवाल</td><td>जोडले आहे</td></tr>
+                        <tr><td>९</td><td>कार्यमूल्यमापन व दर्जा विषयक माहिती</td><td>जोडले आहे</td></tr>
+                        <tr><td>१०</td><td>पोलीस चारित्र्य पडताळणी अहवाल</td><td>जोडले आहे</td></tr>
+                        <tr><td>११</td><td>सरळसेवेने नेमणुकीचे आदेश</td><td>जोडले आहे</td></tr>
+                        <tr><td>१२</td><td>जिल्हा शल्यचिकित्सक यांचेकडील वैद्यकीय तपासणी अहवाल</td><td>जोडले आहे</td></tr>
+                        <tr><td>१३</td><td>जात वैधता पडताळणी प्रमाणपत्र</td><td>जोडले आहे</td></tr>
+                        <tr><td>१४</td><td>एतदर्थ मंडळाची मराठी/हिंदी परीक्षा उत्तीर्ण होण्यापासून सुट देण्यात आलेल्या आदेशाची प्रत</td><td>जोडले आहे</td></tr>
+                        <tr><td>१५</td><td>संगणक हाताळणी प्रमाणपत्र (MS-CIT/CCC)</td><td>जोडले आहे</td></tr>
+                        <tr><td>१६</td><td>प्रशिक्षण आवश्यक असल्यास, प्रशिक्षण उत्तीर्ण झाल्याचा आदेश / प्रत</td><td>लागू नाही</td></tr>
+                        <tr><td>१७</td><td>परिविक्षाधीन कालावधीतील गोपनीय अहवाल प्रस्तावासोबत जोडलेले नाही</td><td>होय</td></tr>
+                        <tr><td>१८</td><td>सदर प्रकरणी कार्यालय प्रमुखाची शिफारस</td><td>जोडले आहे</td></tr>
+                        <tr><td>१९</td><td>अलीकडच्या वित्तीय वर्षाचे मत्ता व दायित्व विवरणपत्र-१, २ व ३ कर्मचाऱ्याने कार्यालयास सादर केल्याबाबत कार्यालय प्रमुखाचे प्रमाणपत्र</td><td>जोडले आहे</td></tr>
+                        <tr><td>२०</td><td>लहान कुटुंबाचे प्रमाणपत्र (प्रतिज्ञापन)</td><td>जोडले आहे</td></tr>
+                        <tr><td>२१</td><td>पॅरामेडीकल कौन्सिल प्रमाणपत्र (लागू असल्यास)</td><td>जोडले आहे</td></tr>
+                    </tbody>
+                </table>
+
+                <div class="sig-box-container">
+                    <div></div>
+                    <div class="sig-box">
+                        <br><br>
+                        _______________________________<br>
+                        <strong>कार्यालय प्रमुख / वैद्यकीय अधीक्षक</strong><br>
+                        ${office}
+                    </div>
+                </div>
+            `;
+        } else if (mode === 'office_letter') {
+            // FORMAT 2: OFFICE LETTERHEAD PROPOSAL
+            contentDiv.innerHTML = `
+                <div style="display:flex; justify-content:space-between; margin-bottom:15px; font-weight:bold;">
+                    <div>जा.क्रं. ${outNo}</div>
+                    <div>दिनांक: ${date}</div>
+                </div>
+
+                <div style="margin-bottom:15px; line-height:1.6;">
+                    <strong>प्रति,</strong><br>
+                    ${recipient}
+                </div>
+
+                <div style="font-weight:bold; background:#f1f5f9; padding:8px; border:1px solid #000; margin-bottom:15px;">
+                    विषय: ${name} (${desig}) यांचा परिविक्षाधीन कालावधी समाप्त करण्याबाबत.
+                </div>
+
+                <p style="font-weight:bold; margin-bottom:10px;">संदर्भ: जा. क्र. ${outNo} दि. ${date} रोजीचा मूळ प्रस्ताव.</p>
+
+                <p style="text-indent: 40px; line-height:1.8; text-align:justify;">
+                    उपरोक्त विषयाच्या अनुषंगाने सविनय सादर करण्यात येते की, ${name}, ${desig}, ${office} (वेतन संरचना ${pay}) यांचा १/२ वर्षांचा परिविक्षाधीन कालावधी दिनांक <strong>${joinDate}</strong> ते <strong>${probEndDate}</strong> यशस्वीरीत्या पूर्ण झालेला आहे.
+                </p>
+
+                <p style="text-indent: 40px; line-height:1.8; text-align:justify; margin-top:10px;">
+                    सदर कालावधीत त्यांनी नियुक्ती आदेशातील नमूद सर्व अटी व शर्ती समाधानकारकरित्या पूर्ण केल्या असून, त्यांचा गोपनीय अहवाल, पोलीस पडताळणी व इतर सर्व आवश्यक कागदपत्रे जोडलेली आहेत. तरी सदर कर्मचाऱ्याचा परिविक्षाधीन कालावधी समाप्त करून सेवा नियमित करण्याचा आदेश निर्गमित व्हावा, ही सविनय शिफारस सादर.
+                </p>
+
+                <p style="margin-top:15px;"><strong>सहपत्र:</strong> वरील २१ मुद्द्यांच्या सूचीनुसार संपूर्ण प्रस्तावाची छायांकित प्रत.</p>
+
+                <div class="sig-box-container">
+                    <div></div>
+                    <div class="sig-box">
+                        <br><br><br>
+                        _______________________________<br>
+                        <strong>कार्यालय प्रमुख / वैद्यकीय अधीक्षक</strong><br>
+                        ${office}
+                    </div>
+                </div>
+            `;
+        } else if (mode === 'employee_app') {
+            // FORMAT 3: EMPLOYEE PERSONAL APPLICATION
+            contentDiv.innerHTML = `
+                <div style="text-align:right; margin-bottom:15px; font-size:1rem; line-height:1.5;">
+                    दिनांक: ${date}<br>
+                    ठिकाण: .................
+                </div>
+
+                <div style="margin-bottom:15px; line-height:1.6;">
+                    <strong>प्रति,</strong><br>
+                    ${recipient}<br>
+                    <strong>(मार्फत: कार्यालय प्रमुख, ${office})</strong>
+                </div>
+
+                <div style="font-weight:bold; background:#f8fafc; padding:8px; border:1px solid #000; margin-bottom:15px;">
+                    विषय: परिविक्षाधीन कालावधी (Probation Period) समाप्त करण्याबाबत व सेवेत नियमित करण्याबाबत विनंती अर्ज.
+                </div>
+
+                <p style="line-height:1.8; text-align:justify; text-indent:40px;">
+                    महोदय,<br>
+                    मी खालील स्वाक्षरीकार <strong>${name}</strong>, पदनाम <strong>${desig}</strong>, ${office} येथे दिनांक <strong>${joinDate}</strong> रोजी शासकीय सेवेत रुजू झालेलो/ले आहे.
+                </p>
+
+                <p style="line-height:1.8; text-align:justify; text-indent:40px; margin-top:10px;">
+                    माझा विहित परिविक्षाधीन कालावधी दिनांक <strong>${probEndDate}</strong> रोजी यशस्वीरीत्या पूर्ण झाला असून, या कालावधीत मी माझी सेवा पूर्ण निष्ठेने व प्रामाणिकपणे पार पाडलेली आहे. सेवेत कायम होण्यासाठी आवश्यक असणारे पोलीस चारित्र्य अहवाल, वैद्यकीय प्रमाणपत्र, जात वैधता व इतर संगणक अर्हता प्रमाणपत्रे कार्यालयात वेळेत सादर केलेली आहेत.
+                </p>
+
+                <p style="line-height:1.8; text-align:justify; text-indent:40px; margin-top:10px;">
+                    करिता नम्र विनंती आहे की, माझा परिविक्षाधीन कालावधी समाप्त करून मला शासकीय सेवेत नियमित करण्याचा आदेश निर्गमित करावा.
+                </p>
+
+                <div class="sig-box-container" style="margin-top:50px;">
+                    <div></div>
+                    <div class="sig-box">
+                        <br><br>
+                        _______________________________<br>
+                        <strong>(अर्जदाराची स्वाक्षरी)</strong><br>
+                        <strong>नाव:</strong> ${name}<br>
+                        <strong>पदनाम:</strong> ${desig}
+                    </div>
+                </div>
+            `;
+        }
+    }
+
+    // सुरुवातीला पहिला दस्तऐवज लोड करणे
+    renderSelectedDocument();
+</script>
+
+</body>
+</html>
