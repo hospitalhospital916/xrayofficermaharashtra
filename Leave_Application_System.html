@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>शासकीय रजा अर्ज ऑटो-जनरेटर | महाराष्ट्र शासन</title>
+    <!-- Fonts & FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #0B3D91;
+            --primary-dark: #07275e;
+            --secondary: #f39c12;
+            --dark: #1e293b;
+            --light-bg: #f8fafc;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Mukta', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: #333;
+            padding: 20px;
+        }
+
+        .main-container {
+            max-width: 950px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .header-title {
+            text-align: center;
+            color: var(--primary);
+            border-bottom: 3px solid var(--secondary);
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+        }
+
+        .header-title h2 { font-weight: 800; font-size: 1.8rem; }
+        .header-title p { color: #64748b; font-weight: 600; font-size: 1rem; }
+
+        /* Form Grid Layout */
+        .form-card {
+            background: #f1f5f9;
+            padding: 22px;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            margin-bottom: 30px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--dark);
+            margin-bottom: 4px;
+        }
+
+        input, select, textarea {
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            background: white;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(11,61,145,0.2);
+        }
+
+        .btn-submit {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px 25px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-submit:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Printable Official Government Format */
+        .print-area {
+            background: white;
+            padding: 30px;
+            border: 2px solid #000;
+        }
+
+        .gov-header {
+            text-align: center;
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+
+        .gov-header h3 { font-size: 1.4rem; text-decoration: underline; }
+        .gov-header p { font-size: 1rem; margin-top: 4px; }
+
+        .recipient-box {
+            font-size: 1.05rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .subject-box {
+            font-weight: 800;
+            font-size: 1.05rem;
+            background: #f8fafc;
+            padding: 8px;
+            border-top: 1px solid #000;
+            border-bottom: 1px solid #000;
+            margin-bottom: 20px;
+        }
+
+        .leave-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .leave-table th, .leave-table td {
+            border: 1px solid #000;
+            padding: 8px 10px;
+            font-size: 0.98rem;
+            vertical-align: top;
+        }
+
+        .leave-table td:nth-child(1) { width: 8%; text-align: center; font-weight: bold; }
+        .leave-table td:nth-child(2) { width: 42%; font-weight: bold; }
+
+        .sig-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            font-size: 1rem;
+        }
+
+        .sig-box {
+            text-align: center;
+            width: 45%;
+        }
+
+        .section-divider {
+            border-top: 2px dashed #000;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .section-title-tag {
+            text-align: center;
+            font-weight: 800;
+            font-size: 1.1rem;
+            text-decoration: underline;
+            margin-bottom: 15px;
+        }
+
+        /* Print Media CSS Rules */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+                margin: 0;
+            }
+
+            .no-print, .form-card, .header-title {
+                display: none !important;
+            }
+
+            .main-container {
+                box-shadow: none;
+                padding: 0;
+                max-width: 100%;
+            }
+
+            .print-area {
+                border: none;
+                padding: 0;
+            }
+
+            .page-break {
+                page-break-before: always;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-container">
+    
+    <!-- Title -->
+    <div class="header-title no-print">
+        <h2><i class="fa fa-file-signature"></i> महाराष्ट्र शासन - सर्वंकष रजा अर्ज प्रणाली</h2>
+        <p>महाराष्ट्र नागरी सेवा (रजा) नियम, १९८१ अंतर्गत ऑटो-जनरेटेड रजा अर्ज</p>
+    </div>
+
+    <!-- Interactive Input Form -->
+    <div class="form-card no-print">
+        <div class="form-grid">
+            
+            <!-- कोणाला अर्ज द्यायचा आहे? (Recipient Dropdown) -->
+            <div class="form-group">
+                <label>१. अर्ज कोणाला सादर करायचा आहे? (प्रति):</label>
+                <select id="recipientType" onchange="toggleCustomRecipient()">
+                    <option value="मा. जिल्हा शल्यचिकित्सक, सामान्य रुग्णालय">मा. जिल्हा शल्यचिकित्सक, सामान्य रुग्णालय</option>
+                    <option value="मा. वैद्यकीय अधीक्षक, उपजिल्हा / ग्रामीण रुग्णालय">मा. वैद्यकीय अधीक्षक, उपजिल्हा / ग्रामीण रुग्णालय</option>
+                    <option value="मा. जिल्हा आरोग्य अधिकारी, जिल्हा परिषद">मा. जिल्हा आरोग्य अधिकारी, जिल्हा परिषद</option>
+                    <option value="मा. सहसंचालक, आरोग्य सेवा, मुंबई/पुणे">मा. सहसंचालक, आरोग्य सेवा</option>
+                    <option value="custom">इतर (स्वतः टाईप करा)</option>
+                </select>
+            </div>
+
+            <!-- Custom Recipient Input -->
+            <div class="form-group" id="customRecipientDiv" style="display: none;">
+                <label>अधिकाऱ्याचे नाव / पद व पत्ता प्रविष्ट करा:</label>
+                <input type="text" id="customRecipient" placeholder="उदा. मा. तालुका वैद्यकीय अधिकारी, अकोला">
+            </div>
+
+            <!-- रजेचा प्रकार -->
+            <div class="form-group">
+                <label>२. रजेचा प्रकार निवडा:</label>
+                <select id="leaveType" onchange="updateLeaveSubject()">
+                    <option value="अर्जित रजा (Earned Leave)">अर्जित रजा (Earned Leave)</option>
+                    <option value="नैमित्तिक रजा (Casual Leave)">नैमित्तिक रजा (Casual Leave)</option>
+                    <option value="परावर्तित रजा / वैद्यकीय रजा (Commuted / Medical Leave)">परावर्तित रजा / वैद्यकीय रजा (Commuted Leave)</option>
+                    <option value="अर्ध्या वेतनाची रजा (Half Pay Leave)">अर्ध्या वेतनाची रजा (Half Pay Leave)</option>
+                    <option value="पितृत्व रजा (Paternity Leave)">पितृत्व रजा (Paternity Leave)</option>
+                    <option value="मातृत्व रजा (Maternity Leave)">मातृत्व रजा (Maternity Leave)</option>
+                </select>
+            </div>
+
+            <!-- कर्मचाऱ्याचे नाव -->
+            <div class="form-group">
+                <label>३. कर्मचाऱ्याचे संपूर्ण नाव:</label>
+                <input type="text" id="empName" placeholder="उदा. श्री. किरण रवींद्रराव वरगणे">
+            </div>
+
+            <!-- पदनाम -->
+            <div class="form-group">
+                <label>४. पदनाम (Designation):</label>
+                <input type="text" id="empDesig" value="क्ष-किरण वैज्ञानिक अधिकारी" placeholder="उदा. क्ष-किरण वैज्ञानिक अधिकारी">
+            </div>
+
+            <!-- कार्यालय / रुग्णालय -->
+            <div class="form-group">
+                <label>५. पदस्थापना कार्यालय / रुग्णालय:</label>
+                <input type="text" id="empOffice" placeholder="उदा. उपजिल्हा रुग्णालय, फलटण, जि. सातारा">
+            </div>
+
+            <!-- वेतनश्रेणी -->
+            <div class="form-group">
+                <label>६. वेतनश्रेणी / पे मॅट्रिक्स लेव्हल:</label>
+                <input type="text" id="empPay" placeholder="उदा. S-13 (रु. 35400 - 112400)">
+            </div>
+
+            <!-- रजेचा कालावधी (पासून) -->
+            <div class="form-group">
+                <label>७. रजा कालावधी (पासून):</label>
+                <input type="date" id="startDate" onchange="calculateDays()">
+            </div>
+
+            <!-- रजेचा कालावधी (पर्यंत) -->
+            <div class="form-group">
+                <label>८. रजा कालावधी (पर्यंत):</label>
+                <input type="date" id="endDate" onchange="calculateDays()">
+            </div>
+
+            <!-- एकूण दिवस -->
+            <div class="form-group">
+                <label>९. एकूण रजेचे दिवस:</label>
+                <input type="number" id="totalDays" readonly placeholder="ऑटो-कॅल्क्युलेट होईल">
+            </div>
+
+            <!-- मुख्यालय सोडण्याची परवानगी -->
+            <div class="form-group">
+                <label>१०. मुख्यालय सोडण्याची परवानगी हवी आहे का?</label>
+                <select id="hqPermission">
+                    <option value="नाही">नाही</option>
+                    <option value="होय">होय</option>
+                </select>
+            </div>
+
+            <!-- रजेचे कारण -->
+            <div class="form-group full-width">
+                <label>११. रजेचे कारण:</label>
+                <input type="text" id="leaveReason" placeholder="उदा. वैयक्तिक/घरगुती कामास्तव / आजारपणाच्या उपचारासाठी">
+            </div>
+
+            <!-- पत्ता व संपर्क -->
+            <div class="form-group full-width">
+                <label>१२. रजेच्या कालावधीत राहण्याचा पत्ता व मोबाईल क्रमांक:</label>
+                <textarea id="leaveAddress" rows="2" placeholder="संपूर्ण पत्ता आणि १० अंकी मोबाईल नंबर"></textarea>
+            </div>
+
+        </div>
+
+        <button class="btn-submit" onclick="generateAndPrint()">
+            <i class="fa fa-print"></i> अर्ज जनरेट करा व प्रिंट काढा (PDF)
+        </button>
+    </div>
+
+    <!-- Official Printable Format -->
+    <div class="print-area" id="printableArea">
+        
+        <div class="gov-header">
+            <h3>महाराष्ट्र नागरी सेवा (रजा) नियम, १९८१</h3>
+            <p><strong>नमूना - १</strong><br>(नियम १९ व २० पहा)</p>
+            <p style="text-decoration: underline; margin-top: 5px;"><strong>रजेचा किंवा रजा वाढवून मिळण्याचा अर्ज</strong></p>
+        </div>
+
+        <!-- Recipient Header -->
+        <div class="recipient-box">
+            <strong>प्रति,</strong><br>
+            <span id="outRecipient">मा. जिल्हा शल्यचिकित्सक, सामान्य रुग्णालय</span><br>
+            <span id="outOfficeLocation">....................................................................</span>
+        </div>
+
+        <!-- Subject Line -->
+        <div class="subject-box">
+            विषय: <span id="outSubject">अर्जित रजा</span> मंजूर मिळण्याबाबत अर्ज.
+        </div>
+
+        <!-- Main Form Table (Part 1) -->
+        <table class="leave-table">
+            <tr>
+                <td>१</td>
+                <td>अर्जदाराचे संपूर्ण नाव</td>
+                <td><span id="outName">................................................................</span></td>
+            </tr>
+            <tr>
+                <td>२</td>
+                <td>पदनाम (Designation)</td>
+                <td><span id="outDesig">................................................................</span></td>
+            </tr>
+            <tr>
+                <td>३</td>
+                <td>कार्यालय / विभागाचे नाव</td>
+                <td><span id="outOffice">................................................................</span></td>
+            </tr>
+            <tr>
+                <td>४</td>
+                <td>वेतन / वेतनश्रेणी</td>
+                <td><span id="outPay">................................................................</span></td>
+            </tr>
+            <tr>
+                <td>५</td>
+                <td>मागणी केलेल्या रजेचा प्रकार व कालावधी</td>
+                <td>
+                    <strong>रजेचा प्रकार:</strong> <span id="outType">अर्जित रजा</span><br>
+                    <strong>कालावधी:</strong> दिनांक <span id="outStartDate">DD/MM/YYYY</span> पासून दिनांक <span id="outEndDate">DD/MM/YYYY</span> पर्यंत<br>
+                    <strong>एकूण दिवस:</strong> <span id="outTotalDays">0</span> दिवस.
+                </td>
+            </tr>
+            <tr>
+                <td>६</td>
+                <td>रजेचे कारण</td>
+                <td><span id="outReason">................................................................</span></td>
+            </tr>
+            <tr>
+                <td>७</td>
+                <td>रजेला जोडून येणाऱ्या सार्वजनिक सुट्ट्या (असल्यास)</td>
+                <td>निदर्शन नियमानुसार जोडण्यात याव्यात.</td>
+            </tr>
+            <tr>
+                <td>८</td>
+                <td>मुख्यालय सोडण्याची परवानगी आवश्यक आहे का?</td>
+                <td><span id="outHq">नाही</span></td>
+            </tr>
+            <tr>
+                <td>९</td>
+                <td>रजेच्या कालावधीतील पत्ता व मोबाईल क्रमांक</td>
+                <td><span id="outAddress">................................................................</span></td>
+            </tr>
+        </table>
+
+        <!-- Signature Part 1 -->
+        <div class="sig-container">
+            <div>
+                दिनांक: <span id="outDate"></span><br>
+                ठिकाण: .........................
+            </div>
+            <div class="sig-box">
+                <br><br>
+                ______________________________<br>
+                <strong>(अर्जदाराची स्वाक्षरी)</strong><br>
+                <span id="outSignName">.........................................</span>
+            </div>
+        </div>
+
+        <!-- PART 2: Verification Report -->
+        <div class="section-divider"></div>
+        <div class="section-title-tag">भाग २ - सेवा पडताळणी व रजा अहवाल (कार्यालयीन वापर)</div>
+        
+        <p style="font-size: 0.98rem; line-line: 1.6;">
+            प्रमाणित करण्यात येते की, श्री/श्रीमती <strong><span id="outName2">.........................................</span></strong>, पदनाम <strong><span id="outDesig2">.........................................</span></strong> यांच्या खाती दिनांक <span id="outStartDate2">............</span> रोजी <strong><span id="outTotalDays2">0</span></strong> दिवसांची <span id="outType2">अर्जित रजा</span> शिल्लक आहे. महाराष्ट्र नागरी सेवा (रजा) नियम, १९८१ मधील तरतुदीनुसार सदर रजा अनुज्ञेय आहे.
+        </p>
+
+        <div class="sig-container">
+            <div class="sig-box">
+                <br><br>
+                ______________________________<br>
+                <strong>रजा लिपीक / आस्थापना सहाय्यक</strong>
+            </div>
+            <div class="sig-box">
+                <br><br>
+                ______________________________<br>
+                <strong>पुनर्विलोकन अधिकारी / प्रशासकीय अधिकारी</strong>
+            </div>
+        </div>
+
+        <!-- PART 3: Sanction Order -->
+        <div class="section-divider"></div>
+        <div class="section-title-tag">भाग ३ - रजा मंजुरी आदेश</div>
+
+        <p style="font-size: 0.98rem; line-height: 1.6;">
+            श्री/श्रीमती <strong><span id="outName3">.........................................</span></strong>, पदनाम <strong><span id="outDesig3">.........................................</span></strong> यांना दिनांक <strong><span id="outStartDate3">............</span></strong> ते दिनांक <strong><span id="outEndDate3">............</span></strong> पर्यंत एकूण <strong><span id="outTotalDays3">0</span></strong> दिवसांची <strong><span id="outType3">अर्जित रजा</span></strong> मंजूर करण्यात येत आहे.
+            <br><br>
+            सदर रजा संपल्यानंतर त्यांनी दिनांक .................... रोजी पूर्ववत आपल्या शासकीय सेवेत रुजू व्हावे.
+        </p>
+
+        <div class="sig-container" style="margin-top: 50px;">
+            <div>
+                जावक क्रमांक: .......................................<br>
+                दिनांक: .............................................
+            </div>
+            <div class="sig-box">
+                <br><br>
+                ______________________________<br>
+                <strong>सक्षम प्राधिकारी / कार्यालय प्रमुख</strong><br>
+                (शिक्का व स्वाक्षरी)
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // आजची तारीख सेट करणे
+    document.getElementById('outDate').innerText = new Date().toLocaleDateString('mr-IN');
+
+    // Recipient Toggle
+    function toggleCustomRecipient() {
+        const sel = document.getElementById('recipientType').value;
+        const customDiv = document.getElementById('customRecipientDiv');
+        if (sel === 'custom') {
+            customDiv.style.display = 'flex';
+        } else {
+            customDiv.style.display = 'none';
+        }
+    }
+
+    // Days Calculation
+    function calculateDays() {
+        const start = new Date(document.getElementById('startDate').value);
+        const end = new Date(document.getElementById('endDate').value);
+
+        if (start && end && end >= start) {
+            const diff = Math.abs(end - start);
+            const days = Math.ceil(diff / (1000 * 60 * 60 * 24)) + 1;
+            document.getElementById('totalDays').value = days;
+        } else {
+            document.getElementById('totalDays').value = 0;
+        }
+    }
+
+    // Generate and Trigger Print
+    function generateAndPrint() {
+        // Fetch Recipient
+        let recipient = document.getElementById('recipientType').value;
+        if (recipient === 'custom') {
+            recipient = document.getElementById('customRecipient').value || "...................................................";
+        }
+
+        const leaveType = document.getElementById('leaveType').value;
+        const name = document.getElementById('empName').value || "...................................................";
+        const desig = document.getElementById('empDesig').value || "...................................................";
+        const office = document.getElementById('empOffice').value || "...................................................";
+        const pay = document.getElementById('empPay').value || "...................................................";
+        const startDate = document.getElementById('startDate').value;
+        const endDate = document.getElementById('endDate').value;
+        const totalDays = document.getElementById('totalDays').value || "0";
+        const reason = document.getElementById('leaveReason').value || "...................................................";
+        const address = document.getElementById('leaveAddress').value || "...................................................";
+        const hq = document.getElementById('hqPermission').value;
+
+        // Date Formatter
+        const formatDate = (dateStr) => {
+            if (!dateStr) return "............";
+            const [y, m, d] = dateStr.split('-');
+            return `${d}/${m}/${y}`;
+        };
+
+        // Populate to Print Elements
+        document.getElementById('outRecipient').innerText = recipient;
+        document.getElementById('outOfficeLocation').innerText = office;
+        document.getElementById('outSubject').innerText = leaveType;
+        document.getElementById('outType').innerText = leaveType;
+        document.getElementById('outType2').innerText = leaveType;
+        document.getElementById('outType3').innerText = leaveType;
+
+        document.getElementById('outName').innerText = name;
+        document.getElementById('outName2').innerText = name;
+        document.getElementById('outName3').innerText = name;
+        document.getElementById('outSignName').innerText = name;
+
+        document.getElementById('outDesig').innerText = desig;
+        document.getElementById('outDesig2').innerText = desig;
+        document.getElementById('outDesig3').innerText = desig;
+
+        document.getElementById('outOffice').innerText = office;
+        document.getElementById('outPay').innerText = pay;
+
+        document.getElementById('outStartDate').innerText = formatDate(startDate);
+        document.getElementById('outStartDate2').innerText = formatDate(startDate);
+        document.getElementById('outStartDate3').innerText = formatDate(startDate);
+
+        document.getElementById('outEndDate').innerText = formatDate(endDate);
+        document.getElementById('outEndDate3').innerText = formatDate(endDate);
+
+        document.getElementById('outTotalDays').innerText = totalDays;
+        document.getElementById('outTotalDays2').innerText = totalDays;
+        document.getElementById('outTotalDays3').innerText = totalDays;
+
+        document.getElementById('outReason').innerText = reason;
+        document.getElementById('outAddress').innerText = address;
+        document.getElementById('outHq').innerText = hq;
+
+        // Trigger Browser Print Dialogue
+        window.print();
+    }
+</script>
+
+</body>
+</html>
