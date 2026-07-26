@@ -758,52 +758,30 @@
         </div>
 
         <div class="container">
-            <!-- TAB 1: DASHBOARD -->
-            <div id="tab-dash" class="tab-content active">
-                <div class="dash-cards-grid">
-                    <div class="dash-card-mini" style="border-left-color: var(--primary);"><h3>एकूण सदस्य</h3><h2 id="cnt-all">0</h2></div>
-                    <div class="dash-card-mini" style="border-left-color: var(--success);"><h3>मान्य (Approved)</h3><h2 id="cnt-approved">0</h2></div>
-                    <div class="dash-card-mini" style="border-left-color: var(--danger);" onclick="openPendingRequests()"><h3>प्रलंबित अर्ज (Pending)</h3><h2 id="cnt-pending">0</h2></div>
-                    <div class="dash-card-mini" style="border-left-color: var(--warning);"><h3>फी भरलेले</h3><h2 id="cnt-paid">0</h2></div>
-                </div>
+           <!-- TAB 1: DASHBOARD -->
+<div id="tab-dash" class="tab-content active">
+    <div class="dash-cards-grid">
+        <div class="dash-card-mini" style="border-left-color: var(--primary);"><h3>एकूण सदस्य</h3><h2 id="cnt-all">0</h2></div>
+        <div class="dash-card-mini" style="border-left-color: var(--success);"><h3>मान्य (Approved)</h3><h2 id="cnt-approved">0</h2></div>
+        <div class="dash-card-mini" style="border-left-color: var(--danger);" onclick="openPendingRequests()"><h3>प्रलंबित अर्ज (Pending)</h3><h2 id="cnt-pending">0</h2></div>
+        <div class="dash-card-mini" style="border-left-color: var(--warning);"><h3>फी भरलेले</h3><h2 id="cnt-paid">0</h2></div>
+    </div>
 
-                <!-- Custom Service Buttons (Matching Provided Image) -->
-                <h3 style="color:var(--primary); margin-bottom:12px; font-weight:800;"><i class="fa fa-wrench"></i> सदस्यांसाठी सेवा व quick ॲक्सेस कप्पे</h3>
-                <div class="icon-service-grid">
-                    <div class="icon-service-card" onclick="openTab('tab-template-builder')">
-                        <i class="fa fa-file-signature"></i>
-                        <h4>ऑनलाइन रजा अर्ज / पत्र</h4>
-                    </div>
-                    <div class="icon-service-card" onclick="openTab('tab-members')">
-                        <i class="fa fa-user-lock"></i>
-                        <h4>मंजूर सदस्यांसाठी प्रवेश</h4>
-                    </div>
-                    <div class="icon-service-card" onclick="openTab('tab-grievances')">
-                        <i class="fa fa-bullhorn"></i>
-                        <h4>तक्रार निवारण केंद्र</h4>
-                    </div>
-                    <div class="icon-service-card" onclick="openTab('tab-letterpad')">
-                        <i class="fa fa-radiation border"></i>
-                        <h4>TLD बॅज पत्र व शासकीय अर्ज</h4>
-                    </div>
-                </div>
-
-                <div class="map-pie-grid">
-                    <div class="panel" style="margin-bottom:0;">
-                        <div class="panel-header h-primary"><span><i class="fa fa-map-marked-alt"></i> आरोग्य विभागाची मंडळे व जिल्हे</span></div>
-                        <div class="panel-body" style="padding:0; background: #f8fafc; border-radius: 0 0 12px 12px;">
-                            <div id="mandalMapGrid" class="mandal-map-grid"></div>
-                        </div>
-                    </div>
-                    <div class="panel" style="margin-bottom:0;">
-                        <div class="panel-header h-warning"><span><i class="fa fa-chart-pie"></i> मंडळनिहाय मान्य सदस्य</span></div>
-                        <div class="panel-body" style="height:350px; display:flex; justify-content:center; align-items:center;">
-                            <canvas id="mandalPieChart"></canvas>
-                        </div>
-                    </div>
-                </div>
+    <div class="map-pie-grid">
+        <div class="panel" style="margin-bottom:0;">
+            <div class="panel-header h-primary"><span><i class="fa fa-map-marked-alt"></i> आरोग्य विभागाची मंडळे व जिल्हे</span></div>
+            <div class="panel-body" style="padding:0; background: #f8fafc; border-radius: 0 0 12px 12px;">
+                <div id="mandalMapGrid" class="mandal-map-grid"></div>
             </div>
-
+        </div>
+        <div class="panel" style="margin-bottom:0;">
+            <div class="panel-header h-warning"><span><i class="fa fa-chart-pie"></i> मंडळनिहाय मान्य सदस्य</span></div>
+            <div class="panel-body" style="height:350px; display:flex; justify-content:center; align-items:center;">
+                <canvas id="mandalPieChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
             <!-- TAB 2: MEMBERS CONTROL -->
             <div id="tab-members" class="tab-content">
                 <div class="panel">
@@ -4687,6 +4665,42 @@ window.editAssocTitle = async function(elementId) {
 window.addCustomInfoField = function() {
     Swal.fire('यशस्वी', 'नवीन फील्ड जोडले गेले.', 'success');
 };
-    </script>
+  // Dashboard Map & Chart Initialization
+window.renderDashboard = function() {
+    let mandalStat = {}; let distStat = {};
+    let allowedMandals = subAdminAccessRegion === "All" ? Object.keys(mandalData) : [subAdminAccessRegion];
+    
+    allowedMandals.forEach(m => { mandalStat[m] = 0; mandalData[m].forEach(d => distStat[d] = 0); });
+    membersData.forEach(m => {
+        if(m.isMember!==false && m.status === 'Approved') {
+            if(subAdminAccessRegion === "All" || m.mandal === subAdminAccessRegion) {
+                if(m.mandal && mandalStat[m.mandal] !== undefined) mandalStat[m.mandal]++;
+                if(m.district && distStat[m.district] !== undefined) distStat[m.district]++;
+            }
+        }
+    });
+
+    const colors = {"पुणे मंडळ":"#f59e0b", "नागपूर मंडळ":"#3b82f6", "नाशिक मंडळ":"#10b981", "अकोला मंडळ":"#ef4444", "कोल्हापूर मंडळ":"#8b5cf6", "छत्रपती संभाजीनगर मंडळ":"#ec4899", "लातूर मंडळ":"#f97316", "ठाणे मंडळ":"#0ea5e9"};
+    
+    let mapHtml = '';
+    allowedMandals.forEach(m => {
+        let distHtml = mandalData[m].map(d => `<span class="dist-badge">${d} <span class="dist-count">${distStat[d]||0}</span></span>`).join('');
+        mapHtml += `<div class="mandal-card" style="background:${colors[m]};"><h3>${m}</h3><h2>${mandalStat[m]||0}</h2><div>${distHtml}</div></div>`;
+    });
+    if(document.getElementById('mandalMapGrid')) document.getElementById('mandalMapGrid').innerHTML = mapHtml;
+
+    try {
+        if(window.mandalChartInstance) { window.mandalChartInstance.destroy(); }
+        const ctx = document.getElementById('mandalPieChart').getContext('2d');
+        window.mandalChartInstance = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: allowedMandals,
+                datasets: [{ data: allowedMandals.map(m => mandalStat[m] || 0), backgroundColor: allowedMandals.map(m => colors[m] || '#3b82f6') }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+        });
+    } catch(err) { console.error(err); }
+};  </script>
 </body>
 </html>
