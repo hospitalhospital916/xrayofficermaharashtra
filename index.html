@@ -3,166 +3,460 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना, महाराष्ट्र राज्य</title>
     
-    <!-- Google Fonts -->
+    <!-- SEO आणि सोशल मीडिया मेटा टॅग्स -->
+    <title>क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना, महाराष्ट्र राज्य</title>
+    <meta name="description" content="क्ष-किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य ही राज्यातील सर्व क्ष-किरण वैज्ञानिक अधिकाऱ्यांच्या न्याय-हक्कांसाठी समर्पित अधिकृत संघटना आहे.">
+    <meta name="keywords" content="X-ray officer union Maharashtra, क्ष किरण वैज्ञानिक अधिकारी संघटना, X-ray scientific officer, radiography union, Maharashtra health workers">
+    <meta property="og:title" content="क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना">
+    <meta property="og:description" content="राज्यातील सर्व क्ष-किरण वैज्ञानिक अधिकाऱ्यांच्या न्याय-हक्कांसाठी समर्पित अधिकृत संघटना.">
+    <meta property="og:type" content="website">
+
+    <!-- Fonts & FontAwesome Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         :root {
             --primary: #0B3D91;
-            --secondary: #FFD700;
+            --primary-dark: #07275e;
+            --secondary: #f39c12;
+            --gold: #FFD700;
+            --danger: #ef4444;
+            --success: #10b981;
             --dark: #1e293b;
-            --bg-color: #f4f7f6;
+            --light-bg: #f0f4f8;
             --white: #ffffff;
+            --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            --hover-shadow: 0 15px 35px rgba(11, 61, 145, 0.18);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mukta', sans-serif; }
-        body { background-color: var(--bg-color); color: #333; overflow-x: hidden; line-height: 1.6; }
+        body { background-color: var(--light-bg); color: var(--dark); line-height: 1.6; overflow-x: hidden; }
 
-        /* --- HEADER --- */
-        header { text-align: center; padding: 25px 15px; background: var(--white); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .logo-img { max-width: 90px; height: auto; margin-bottom: 10px; }
-        header h1 { font-size: 1.6rem; color: var(--primary); font-weight: 800; line-height: 1.3; }
+        /* --- TOP INFORMATION BAR --- */
+        .top-bar { background: var(--dark); color: #cbd5e1; padding: 6px 20px; font-size: 0.85rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+        .top-bar-left span { margin-right: 15px; font-weight: 600; }
+        .top-bar-left i { color: var(--gold); margin-right: 5px; }
+        .top-bar-right a { color: #fff; text-decoration: none; margin-left: 12px; transition: 0.3s; }
+        .top-bar-right a:hover { color: var(--gold); }
 
-        /* --- NAVIGATION BAR --- */
-        nav { background: var(--primary); padding: 15px 5px; display: flex; flex-direction: column; gap: 12px; }
-        .nav-line { display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; }
-        nav a { color: var(--white); text-decoration: none; font-size: 0.95rem; font-weight: 700; white-space: nowrap; transition: 0.3s;}
-        nav a:hover { color: var(--secondary); }
-        .nav-highlight { color: var(--secondary) !important; font-size: 1rem; }
-
-        /* --- MARQUEE --- */
-        .ticker-wrap { background: var(--primary); border: 2px solid var(--secondary); margin: 15px auto; max-width: 1200px; padding: 10px; border-radius: 5px; width: 95%; display: flex; align-items: center;}
-        #news-ticker { font-weight: bold; color: var(--secondary); font-size: 1.05rem; }
-
-        /* --- TWO CARDS GRID --- */
-        .two-cards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 95%; max-width: 1200px; margin: 0 auto 20px auto; }
+        /* --- HEADER & LOGO BANNER --- */
+        header { background: var(--white); padding: 15px 25px; display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid var(--secondary); box-shadow: 0 4px 15px rgba(0,0,0,0.05); flex-wrap: wrap; gap: 15px; }
+        .header-brand { display: flex; align-items: center; gap: 18px; }
+        .logo-img { height: 85px; width: auto; max-width: 95px; object-fit: contain; }
+        .header-text h1 { color: var(--primary); font-size: 1.7rem; font-weight: 800; line-height: 1.25; }
+        .header-text p { color: var(--secondary); font-weight: 800; font-size: 1.05rem; }
+        .header-text small { color: #64748b; font-size: 0.88rem; font-weight: 600; display: block; }
         
-        /* About Card */
-        .card-about { background: white; padding: 20px 15px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); border-top: 4px solid var(--secondary); width: 95%; max-width: 1200px; margin: 0 auto 20px auto; }
-        .card-about h3 { color: var(--dark); font-size: 1.3rem; margin-bottom: 10px; line-height: 1.3; }
-        .card-about p { font-size: 1rem; color: #555; }
+        .header-actions { display: flex; gap: 10px; align-items: center; }
+        .btn-header { padding: 8px 16px; border-radius: 20px; font-weight: 800; font-size: 0.9rem; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: all 0.3s ease; }
+        .btn-reg { background: var(--gold); color: var(--dark); border: 2px solid var(--gold); }
+        .btn-reg:hover { background: var(--white); color: var(--primary); }
+        .btn-log { background: var(--primary); color: var(--white); }
+        .btn-log:hover { background: var(--primary-dark); }
 
-        /* --- FOLDERS (GR & Notices) --- */
-        .card-folder { background: white; padding: 20px 15px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); border-top: 4px solid var(--primary); }
-        .folder-title { color: var(--dark); font-size: 1.25rem; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px; display: flex; align-items: center; gap: 8px; }
-        .doc-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #eee; gap: 10px; }
-        .doc-item:last-child { border-bottom: none; padding-bottom: 0; }
-        .doc-info { display: flex; flex-direction: column; flex: 1; }
-        .doc-title { font-weight: 700; color: var(--dark); font-size: 0.95rem; line-height: 1.3; margin-bottom: 3px; }
-        .doc-date { font-size: 0.8rem; color: #888; font-weight: bold; }
-        .doc-download { background: var(--primary); color: white; padding: 6px 12px; border-radius: 6px; text-decoration: none; font-size: 0.85rem; font-weight: bold; transition: 0.3s; white-space: nowrap; display: inline-flex; align-items: center; gap: 5px; }
-        .doc-download:hover { background: var(--secondary); color: var(--dark); }
-
-        /* --- CONTACT CARD --- */
-        .full-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); width: 95%; max-width: 1200px; margin: 0 auto 20px auto; border-top: 5px solid var(--primary); }
-        .contact-card { text-align: center; }
-        .contact-card h2 { color: var(--primary); font-size: 1.5rem; margin-bottom: 5px; }
+        /* --- STICKY NAVIGATION BAR --- */
+        nav { background: var(--primary); padding: 0 20px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+        .nav-container { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .nav-links { display: flex; flex-wrap: wrap; list-style: none; gap: 5px; }
+        .nav-links a { color: var(--white); text-decoration: none; font-size: 0.98rem; font-weight: 700; padding: 14px 15px; display: inline-flex; align-items: center; gap: 6px; transition: 0.3s; border-bottom: 3px solid transparent; }
+        .nav-links a:hover, .nav-links a.active { background: rgba(255, 255, 255, 0.12); color: var(--gold); border-bottom-color: var(--gold); }
         
-        /* --- FOOTER --- */
-        footer { background: #0B2240; color: white; text-align: center; padding: 25px 15px; margin-top: 30px; }
-        .admin-link { color: #aaa; font-size: 13px; text-decoration: underline; margin-top: 15px; display: inline-block;}
+        .mobile-menu-toggle { display: none; background: none; border: none; color: white; font-size: 1.6rem; cursor: pointer; padding: 10px; }
 
-        /* --- DESKTOP VIEW IMPROVEMENTS --- */
-        @media (min-width: 992px) {
-            nav { flex-direction: row; justify-content: center; align-items: center; gap: 20px; padding: 15px; }
-            .nav-line { gap: 25px; }
-            nav a { font-size: 1.05rem; }
-            header h1 { font-size: 2rem; }
-            body { font-size: 1.05rem; }
-        }
+        /* --- MARQUEE TICKER --- */
+        .ticker-wrap { background: var(--primary-dark); border-bottom: 2px solid var(--secondary); color: var(--gold); padding: 10px 20px; font-size: 1.05rem; font-weight: 700; display: flex; align-items: center; }
+        .ticker-badge { background: var(--danger); color: white; padding: 3px 12px; border-radius: 12px; font-size: 0.85rem; margin-right: 15px; white-space: nowrap; font-weight: 800; animation: pulse 1.5s infinite; }
+        #news-ticker { font-weight: 700; color: var(--gold); font-size: 1.05rem; }
 
-        /* Mobile Adjustments */
-        @media (max-width: 768px) {
-            .two-cards-grid { grid-template-columns: 1fr; }
-        }
-        @media (max-width: 400px) {
-            .nav-line { gap: 10px; }
-            nav a { font-size: 0.85rem; }
+        /* --- HERO BANNER --- */
+        .hero { background: linear-gradient(rgba(11, 61, 145, 0.88), rgba(7, 39, 94, 0.92)), url('https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80') center/cover; padding: 70px 20px; text-align: center; color: white; position: relative; }
+        .hero-content { max-width: 900px; margin: 0 auto; }
+        .hero h2 { font-size: 2.4rem; font-weight: 800; margin-bottom: 15px; text-shadow: 2px 2px 8px rgba(0,0,0,0.6); }
+        .hero p { font-size: 1.25rem; margin-bottom: 30px; opacity: 0.95; line-height: 1.6; }
+        .hero-btn-group { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
+        .hero-btn { padding: 12px 28px; border-radius: 30px; font-size: 1.1rem; font-weight: 800; text-decoration: none; transition: all 0.3s ease; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .hero-btn-primary { background: var(--secondary); color: var(--dark); }
+        .hero-btn-primary:hover { transform: translateY(-3px); background: var(--gold); box-shadow: 0 8px 20px rgba(0,0,0,0.4); }
+        .hero-btn-secondary { background: transparent; color: white; border: 2px solid white; }
+        .hero-btn-secondary:hover { background: white; color: var(--primary); }
+
+        /* --- QUICK SERVICE CARDS --- */
+        .quick-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; max-width: 1300px; margin: -40px auto 40px auto; padding: 0 20px; position: relative; z-index: 100; }
+        .quick-card { background: white; padding: 22px 18px; border-radius: 12px; text-align: center; box-shadow: var(--card-shadow); border-top: 5px solid var(--primary); transition: 0.3s; cursor: pointer; text-decoration: none; color: var(--dark); }
+        .quick-card:hover { transform: translateY(-8px); box-shadow: var(--hover-shadow); border-top-color: var(--secondary); }
+        .quick-card i { font-size: 2.2rem; color: var(--primary); margin-bottom: 12px; display: block; }
+        .quick-card h4 { font-size: 1.1rem; font-weight: 800; margin-bottom: 5px; color: var(--primary); }
+        .quick-card p { font-size: 0.85rem; color: #64748b; }
+
+        /* --- LAYOUT CONTAINER & SECTIONS --- */
+        .main-container { max-width: 1300px; margin: 0 auto; padding: 0 20px; }
+        .section-header { text-align: center; margin: 45px 0 25px 0; }
+        .section-header h2 { font-size: 2rem; color: var(--primary); font-weight: 800; position: relative; display: inline-block; }
+        .section-header h2::after { content: ''; width: 60%; height: 4px; background: var(--secondary); display: block; margin: 8px auto 0 auto; border-radius: 2px; }
+        .section-header p { color: #64748b; font-weight: 600; margin-top: 5px; }
+
+        /* --- ABOUT CARD --- */
+        .about-card { background: white; padding: 35px; border-radius: 16px; box-shadow: var(--card-shadow); border-left: 6px solid var(--primary); margin-bottom: 40px; }
+        .about-card h3 { color: var(--primary); font-size: 1.6rem; margin-bottom: 12px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
+        .about-card p { font-size: 1.1rem; color: #475569; line-height: 1.8; text-align: justify; }
+
+        /* --- DYNAMIC FOLDERS & GR SECTION --- */
+        .folders-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 25px; margin-bottom: 40px; }
+        .folder-box { background: white; border-radius: 14px; box-shadow: var(--card-shadow); border-top: 5px solid var(--primary); overflow: hidden; }
+        .folder-header { background: #f8fafc; padding: 15px 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
+        .folder-header h3 { font-size: 1.2rem; color: var(--primary); font-weight: 800; display: flex; align-items: center; gap: 8px; }
+        .folder-content { padding: 15px 20px; max-height: 380px; overflow-y: auto; }
+        
+        .doc-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f5f9; gap: 10px; }
+        .doc-item:last-child { border-bottom: none; }
+        .doc-title { font-weight: 700; color: var(--dark); font-size: 0.95rem; display: block; margin-bottom: 2px; }
+        .doc-date { font-size: 0.78rem; color: #94a3b8; font-weight: 600; }
+        .btn-download { background: var(--primary); color: white; padding: 6px 14px; border-radius: 6px; text-decoration: none; font-size: 0.82rem; font-weight: 700; transition: 0.2s; white-space: nowrap; display: inline-flex; align-items: center; gap: 5px; }
+        .btn-download:hover { background: var(--secondary); color: var(--dark); }
+
+        /* --- DYNAMIC TABS CONTAINER (ADMIN INDEX MANAGEMENT) --- */
+        .dynamic-tabs-container { margin-bottom: 40px; }
+        .tab-buttons-bar { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; border-bottom: 2px solid #cbd5e1; margin-bottom: 20px; }
+        .tab-btn-idx { padding: 10px 20px; background: #e2e8f0; color: var(--dark); border: none; border-radius: 8px; font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: 0.3s; white-space: nowrap; }
+        .tab-btn-idx.active { background: var(--primary); color: white; }
+
+        /* --- COMMITTEE (OFFICE BEARERS) CARDS --- */
+        .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 25px; margin-bottom: 40px; }
+        .team-card { background: white; padding: 25px 20px; border-radius: 14px; text-align: center; box-shadow: var(--card-shadow); border-bottom: 5px solid var(--primary); transition: 0.3s; }
+        .team-card:hover { transform: translateY(-8px); box-shadow: var(--hover-shadow); border-bottom-color: var(--secondary); }
+        .team-photo { width: 110px; height: 110px; border-radius: 50%; object-fit: cover; border: 4px solid #f1f5f9; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 12px; }
+        .team-name { font-size: 1.2rem; color: var(--primary); font-weight: 800; margin-bottom: 4px; }
+        .team-post { font-size: 1rem; color: var(--danger); font-weight: 700; margin-bottom: 6px; }
+        .team-badge { background: #f1f5f9; color: #475569; font-size: 0.82rem; font-weight: 600; padding: 3px 12px; border-radius: 15px; display: inline-block; margin-bottom: 8px; }
+        .team-phone { font-size: 0.95rem; color: #334155; font-weight: 700; }
+
+        /* --- GALLERY SECTION --- */
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 40px; }
+        .gallery-card { background: white; border-radius: 10px; overflow: hidden; box-shadow: var(--card-shadow); transition: 0.3s; }
+        .gallery-card:hover { transform: scale(1.03); }
+        .gallery-card img { width: 100%; height: 160px; object-fit: cover; }
+        .gallery-title { padding: 10px 12px; font-size: 0.88rem; font-weight: 700; color: var(--dark); text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        /* --- CONTACT & FOOTER --- */
+        .contact-card { background: white; padding: 35px; border-radius: 16px; box-shadow: var(--card-shadow); border-top: 5px solid var(--primary); text-align: center; margin-bottom: 40px; }
+        .contact-card h2 { color: var(--primary); font-size: 1.8rem; font-weight: 800; margin-bottom: 15px; }
+
+        footer { background: #071938; color: white; padding: 35px 20px 20px 20px; text-align: center; }
+        .footer-address { font-size: 0.95rem; color: #cbd5e1; max-width: 650px; margin: 0 auto 15px auto; line-height: 1.6; }
+        .social-links a { color: white; font-size: 1.4rem; margin: 0 10px; transition: 0.3s; }
+        .social-links a:hover { color: var(--gold); }
+        .admin-login-link { color: #94a3b8; font-size: 0.82rem; text-decoration: underline; margin-top: 15px; display: inline-block; transition: 0.3s; }
+        .admin-login-link:hover { color: white; }
+
+        /* --- FLOATING LIVE CHAT BUTTON --- */
+        #floatingLiveChatWidget { position: fixed; bottom: 25px; right: 20px; z-index: 9990; display: flex; align-items: center; gap: 8px; cursor: pointer; }
+        .chat-pill-label { background: linear-gradient(135deg, #0B3D91, #07275e); color: #ffffff; padding: 6px 12px; border-radius: 20px; font-size: 0.82rem; font-weight: 800; box-shadow: 0 6px 18px rgba(11, 61, 145, 0.35); border: 1.5px solid #f39c12; }
+        .chat-floating-btn { width: 58px; height: 58px; background: linear-gradient(135deg, #0B3D91, #25D366); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.7rem; box-shadow: 0 8px 25px rgba(37, 211, 102, 0.5); border: 3px solid #ffffff; }
+
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+
+        /* --- RESPONSIVE MEDIA QUERIES --- */
+        @media (max-width: 992px) {
+            header { text-align: center; justify-content: center; }
+            .header-brand { flex-direction: column; text-align: center; }
+            .header-text h1 { font-size: 1.4rem; }
+            .hero h2 { font-size: 1.8rem; }
+            .hero p { font-size: 1.05rem; }
+            .mobile-menu-toggle { display: block; }
+            .nav-links { display: none; width: 100%; flex-direction: column; gap: 0; padding: 10px 0; }
+            .nav-links.show { display: flex; }
+            .nav-links a { width: 100%; padding: 10px 15px; border-bottom: 1px solid rgba(255,255,255,0.1); }
         }
     </style>
 </head>
 <body>
 
+    <!-- Top Info Header -->
+    <div class="top-bar">
+        <div class="top-bar-left">
+            <span><i class="fa fa-hospital"></i> सार्वजनिक आरोग्य विभाग, महाराष्ट्र शासन</span>
+            <span><i class="fa fa-envelope"></i> xsounion@gmail.com</span>
+        </div>
+        <div class="top-bar-right">
+            <a href="member-login.html"><i class="fa fa-user-check"></i> सदस्यांसाठी प्रवेश</a>
+            <a href="admin.html"><i class="fa fa-shield-alt"></i> ॲडमिन</a>
+        </div>
+    </div>
+
+    <!-- Header Logo Banner -->
     <header>
-        <img src="logo.png" alt="Logo" class="logo-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/4006/4006511.png'">
-        <h1>क्ष किरण वैज्ञानिक अधिकारी (गट-क)<br>कर्मचारी संघटना, महाराष्ट्र राज्य</h1>
+        <div class="header-brand">
+            <img src="logo.png" alt="Logo" class="logo-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/4006/4006511.png'">
+            <div class="header-text">
+                <h1>क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना</h1>
+                <p>महाराष्ट्र राज्य</p>
+                <small>नोंदणीकृत अधिकृत कर्मचारी संघटना</small>
+            </div>
+        </div>
+        <div class="header-actions">
+            <a href="registration.html" class="btn-header btn-reg"><i class="fa fa-user-plus"></i> नवीन नोंदणी</a>
+            <a href="member-login.html" class="btn-header btn-log"><i class="fa fa-sign-in-alt"></i> सदस्य लॉगिन</a>
+        </div>
     </header>
 
+    <!-- Sticky Navigation Menu -->
     <nav>
-        <div class="nav-line">
-            <a href="index.html">🏠 मुख्यपृष्ठ</a>
-            <a href="#about">ℹ️ संघटनाबद्दल</a>
-            <a href="gr.html">📄 GR / परिपत्रके</a>
-            <a href="gallery.html">🖼️ गॅलरी</a>
-        </div>
-        <div class="nav-line">
-            <a href="officer.html">👥 पदाधिकारी</a>
-            <a href="#contact">📞 संपर्क</a>
-            <a href="services.html">🛠️ सदस्यांसाठी सेवा</a>
-        </div>
-        <div class="nav-line">
-            <a href="registration.html" class="nav-highlight">📢 सदस्य नोंदणी</a>
-            <a href="member-login.html">👤 सदस्य लॉगिन</a>
-        </div>
-        <div class="nav-line">
-            <a href="admin.html">🛡️ ॲडमिन</a>
+        <div class="nav-container">
+            <button class="mobile-menu-toggle" onclick="toggleMobileMenu()"><i class="fa fa-bars"></i> मेनू</button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html" class="active"><i class="fa fa-home"></i> मुख्यपृष्ठ</a></li>
+                <li><a href="#about"><i class="fa fa-info-circle"></i> संघटनाबद्दल</a></li>
+                <li><a href="#folders"><i class="fa fa-folder-open"></i> परिपत्रके व GR</a></li>
+                <li><a href="#committee"><i class="fa fa-users"></i> पदाधिकारी</a></li>
+                <li><a href="#gallery"><i class="fa fa-image"></i> गॅलरी</a></li>
+                <li><a href="services.html"><i class="fa fa-tools"></i> ऑनलाइन सेवा</a></li>
+                <li><a href="#contact"><i class="fa fa-address-book"></i> संपर्क</a></li>
+                <li><a href="registration.html" style="color:var(--gold);"><i class="fa fa-user-plus"></i> सदस्य नोंदणी</a></li>
+                <li><a href="member-login.html"><i class="fa fa-key"></i> सदस्य लॉगिन</a></li>
+                <li><a href="admin.html" style="color:#fca5a5;"><i class="fa fa-shield-alt"></i> ॲडमिन</a></li>
+            </ul>
         </div>
     </nav>
 
+    <!-- Scrolling Live Announcement Marquee -->
     <div class="ticker-wrap">
+        <span class="ticker-badge"><i class="fa fa-bell"></i> ताज्या घडामोडी</span>
         <marquee id="news-ticker" behavior="scroll" direction="left" scrollamount="6">
             राज्यातील सर्व क्ष-किरण वैज्ञानिक अधिकाऱ्यांनी आपली ऑनलाईन सदस्य नोंदणी लवकरात लवकर पूर्ण करावी. • माहिती लोड होत आहे...
         </marquee>
     </div>
 
-    <!-- About Section -->
-    <div id="about" class="card-about">
-        <h3><i class="fa fa-info-circle" style="color:var(--primary);"></i> संघटनाबद्दल</h3>
-        <p>क्ष-किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य ही राज्यातील सर्व क्ष-किरण वैज्ञानिक अधिकाऱ्यांच्या न्याय-हक्कांसाठी समर्पित संघटना आहे.</p>
+    <!-- Hero Banner Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h2>न्याय, हक्क आणि प्रगतीसाठी एकजूट!</h2>
+            <p>राज्यातील सर्व क्ष-किरण वैज्ञानिक अधिकाऱ्यांच्या प्रश्नांना वाचा फोडणारी आणि त्यांचे हक्क मिळवून देणारी अधिकृत राज्यस्तरीय संघटना.</p>
+            <div class="hero-btn-group">
+                <a href="registration.html" class="hero-btn hero-btn-primary"><i class="fa fa-user-plus"></i> आजच सदस्य नोंदणी करा</a>
+                <a href="member-login.html" class="hero-btn hero-btn-secondary"><i class="fa fa-id-card"></i> डिजिटल आय-कार्ड / पावती मिळवा</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Action Service Cards -->
+    <div class="quick-grid">
+        <a href="member-login.html" class="quick-card">
+            <i class="fa fa-id-card"></i>
+            <h4>डिजिटल आय-कार्ड</h4>
+            <p>अधिकृत सदस्य ओळखपत्र डाऊनलोड करा</p>
+        </a>
+        <a href="member-login.html" class="quick-card">
+            <i class="fa fa-receipt"></i>
+            <h4>ई-पावती</h4>
+            <p>वार्षिक नोंदणी शुल्काची पावती काढा</p>
+        </a>
+        <a href="member-login.html" class="quick-card">
+            <i class="fa fa-file-signature"></i>
+            <h4>ऑनलाइन अर्ज जनरेटर</h4>
+            <p>वैद्यकीय व विशेष रजा अर्ज ऑटो तयार करा</p>
+        </a>
+        <a href="member-login.html" class="quick-card">
+            <i class="fa fa-file-invoice"></i>
+            <h4>तक्रार निवारण</h4>
+            <p>सेवाविषयक अडचणी नोंदवा व ट्रॅक करा</p>
+        </a>
     </div>
 
-    <!-- Document Folders Grid -->
-    <div class="two-cards-grid">
-        <!-- Folder 1: शासकीय परिपत्रक -->
-        <div class="card-folder" id="folder1">
-            <h3 class="folder-title"><i class="fa fa-folder-open" style="color:var(--secondary);"></i> शासकीय परिपत्रके</h3>
-            <div id="folder1-docs" class="folder-docs">
-                <p style="color: gray; font-size: 0.9rem;">माहिती लोड होत आहे...</p>
+    <!-- Main Body Container Starts -->
+    <div class="main-container">
+
+        <!-- About Section -->
+        <section id="about" class="about-card">
+            <h3><i class="fa fa-shield-alt"></i> संघटनाबद्दल</h3>
+            <p>
+                <b>क्ष-किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य</b> ही सार्वजनिक आरोग्य विभाग, महाराष्ट्र शासनांतर्गत कार्यरत सर्व क्ष-किरण वैज्ञानिक अधिकाऱ्यांची (गट-क) अधिकृत शासनमान्य संघटना आहे. राज्यातील आरोग्य संस्थांमध्ये सेवा बजावणाऱ्या अधिकारी व कर्मचाऱ्यांच्या सेवाविषयक अडचणी, पदोन्नती, TLD बॅज सुरक्षा, वेतन त्रुटी आणि बदली विषयीच्या न्याय्य हक्कांसाठी ही संघटना सतत तत्परतेने कार्य करते.
+            </p>
+        </section><!-- Dynamic Document Folders Section (Synced with Firebase) -->
+        <div class="section-header" id="folders">
+            <h2><i class="fa fa-folder-open"></i> परिपत्रके, नोटीस व शासकीय GR</h2>
+            <p>ॲडमिन पॅनेलवरून अपडेट केलेले सर्व अधिकृत दस्तऐवज</p>
+        </div>
+
+        <!-- Static / Standard Folders Grid -->
+        <div class="folders-grid">
+            <!-- Folder 1: शासकीय परिपत्रके -->
+            <div class="folder-box">
+                <div class="folder-header">
+                    <h3><i class="fa fa-file-pdf" style="color:var(--danger);"></i> शासकीय परिपत्रके (GR)</h3>
+                    <span class="badge bg-primary">Folder 1</span>
+                </div>
+                <div class="folder-content" id="folder1-docs">
+                    <p style="color: gray; text-align: center; padding: 15px;">माहिती लोड होत आहे...</p>
+                </div>
+            </div>
+
+            <!-- Folder 2: महत्त्वाच्या नोटीस -->
+            <div class="folder-box">
+                <div class="folder-header">
+                    <h3><i class="fa fa-bullhorn" style="color:var(--secondary);"></i> महत्त्वाच्या नोटीस व पत्रे</h3>
+                    <span class="badge bg-success">Folder 2</span>
+                </div>
+                <div class="folder-content" id="folder2-docs">
+                    <p style="color: gray; text-align: center; padding: 15px;">माहिती लोड होत आहे...</p>
+                </div>
             </div>
         </div>
 
-        <!-- Folder 2: महत्त्वाच्या नोटीस -->
-        <div class="card-folder" id="folder2">
-            <h3 class="folder-title"><i class="fa fa-folder-open" style="color:var(--secondary);"></i> महत्त्वाच्या नोटीस</h3>
-            <div id="folder2-docs" class="folder-docs">
-                <p style="color: gray; font-size: 0.9rem;">माहिती लोड होत आहे...</p>
+        <!-- Dynamic Index Management Tabs (Uploaded by Admin Panel) -->
+        <div class="dynamic-tabs-container" id="adminIndexTabsSection" style="display:none;">
+            <h3 style="color:var(--primary); font-size:1.3rem; font-weight:800; margin-bottom:12px;">
+                <i class="fa fa-cogs"></i> विशेष टॅब व दस्तऐवज (Admin Dynamic Tabs)
+            </h3>
+            <div class="tab-buttons-bar" id="dynamicTabsButtons"></div>
+            <div id="dynamicTabContentBox" class="about-card" style="margin-bottom:0; padding:20px;"></div>
+        </div>
+
+        <!-- Executive Committee / Office Bearers Section -->
+        <div class="section-header" id="committee">
+            <h2><i class="fa fa-users"></i> आमची राज्यस्तरीय कार्यकारिणी</h2>
+            <p>क्ष-किरण वैज्ञानिक अधिकारी संघटना महाराष्ट्र राज्य - अधिकृत पदाधिकारी</p>
+        </div>
+
+        <div class="team-grid" id="stateCommitteeGrid">
+            <!-- Default Static Team Members (Dynamically expanded via Firebase) -->
+            <div class="team-card">
+                <img src="patil_sir.jpg" alt="अध्यक्ष" class="team-photo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
+                <h3 class="team-name">श्री रविंद्र मल्हारी पाटील</h3>
+                <p class="team-post">राज्य अध्यक्ष</p>
+                <span class="team-badge"><i class="fa fa-map-marker-alt"></i> सातारा</span>
+                <p class="team-phone"><i class="fa fa-phone-alt"></i> ९७६३१९२४४९</p>
             </div>
+
+            <div class="team-card">
+                <img src="chunarkar_sir.jpg" alt="उपाध्यक्ष" class="team-photo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
+                <h3 class="team-name">श्री कोमल विठ्ठलराव चुनारकर</h3>
+                <p class="team-post">राज्य उपाध्यक्ष</p>
+                <span class="team-badge"><i class="fa fa-map-marker-alt"></i> गडचिरोली</span>
+                <p class="team-phone"><i class="fa fa-phone-alt"></i> ८२७५७५००२०</p>
+            </div>
+
+            <div class="team-card">
+                <img src="deshmukh_sir.jpg" alt="उपाध्यक्ष" class="team-photo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
+                <h3 class="team-name">श्री संतोषकुमार हसनराव देशमुख</h3>
+                <p class="team-post">राज्य उपाध्यक्ष</p>
+                <span class="team-badge"><i class="fa fa-map-marker-alt"></i> सिंदखेडराजा</span>
+                <p class="team-phone"><i class="fa fa-phone-alt"></i> ९४२३४२६८५६</p>
+            </div>
+
+            <div class="team-card">
+                <img src="giri_sir.jpg" alt="कोषाध्यक्ष" class="team-photo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
+                <h3 class="team-name">श्री संतोष सुभाषराव गिरी</h3>
+                <p class="team-post">राज्य कोषाध्यक्ष</p>
+                <span class="team-badge"><i class="fa fa-map-marker-alt"></i> छ. संभाजी नगर</span>
+                <p class="team-phone"><i class="fa fa-phone-alt"></i> ९४०३६८८८६३</p>
+            </div>
+
+            <div class="team-card">
+                <img src="kayande_sir.jpg" alt="सहकोषाध्यक्ष" class="team-photo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
+                <h3 class="team-name">श्री विशाल गणेश कायंदे</h3>
+                <p class="team-post">सहकोषाध्यक्ष</p>
+                <span class="team-badge"><i class="fa fa-map-marker-alt"></i> गडचिरोली</span>
+                <p class="team-phone"><i class="fa fa-phone-alt"></i> ९५०३८८६४४१</p>
+            </div>
+
+            <div class="team-card">
+                <img src="varagane_sir.jpg" alt="प्रमुख कार्यवाह" class="team-photo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
+                <h3 class="team-name">श्री किरण रवींद्रराव वरगणे</h3>
+                <p class="team-post">प्रमुख कार्यवाह</p>
+                <span class="team-badge"><i class="fa fa-map-marker-alt"></i> नाशिक</span>
+                <p class="team-phone"><i class="fa fa-phone-alt"></i> ९५९५७४२८८९</p>
+            </div>
+
+            <div class="team-card">
+                <img src="giram_sir.jpg" alt="कार्यवाह" class="team-photo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
+                <h3 class="team-name">श्री संजय विठ्ठल गिराम</h3>
+                <p class="team-post">राज्य कार्यवाह</p>
+                <span class="team-badge"><i class="fa fa-map-marker-alt"></i> लातूर</span>
+                <p class="team-phone"><i class="fa fa-phone-alt"></i> ९०२१०४८५८६</p>
+            </div>
+
+            <div class="team-card">
+                <img src="pavhane_sir.jpg" alt="समन्वयक" class="team-photo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
+                <h3 class="team-name">श्री शंकर संतोष पव्हाणे</h3>
+                <p class="team-post" style="color:#10b981;">डेटाबेस समन्वयक</p>
+                <span class="team-badge"><i class="fa fa-map-marker-alt"></i> बुलढाणा</span>
+                <p class="team-phone"><i class="fa fa-phone-alt"></i> ९७६६७५५८९५</p>
+            </div>
+
+            <div class="team-card">
+                <img src="hange_sir.jpg" alt="वेबसाईट व्यवस्थापन" class="team-photo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
+                <h3 class="team-name">श्री महेश शिवदास हंगे</h3>
+                <p class="team-post" style="color:#10b981;">वेबसाईट निर्मिती व व्यवस्थापन</p>
+                <span class="team-badge"><i class="fa fa-map-marker-alt"></i> गडचिरोली</span>
+                <p class="team-phone"><i class="fa fa-phone-alt"></i> ९६२३७९०९१६</p>
+            </div>
+        </div>
+
+        <!-- Live Photo Gallery Section -->
+        <div class="section-header" id="gallery">
+            <h2><i class="fa fa-images"></i> छायाचित्र गॅलरी</h2>
+            <p>संघटनेचे उपक्रम, स्नेहसंमेलने व बैठकांची क्षणचित्रे</p>
+        </div>
+
+        <div class="gallery-grid" id="mainGalleryGrid">
+            <p style="text-align:center; color:gray; grid-column:1/-1;">गॅलरी फोटो लोड होत आहेत...</p>
+        </div>
+
+        <!-- Contact Section -->
+        <section id="contact" class="contact-card">
+            <h2><i class="fa fa-address-book"></i> संपर्क कार्यालय</h2>
+            <p style="font-weight: 800; color: var(--dark); font-size:1.15rem; margin-bottom: 10px;">
+                क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना, महाराष्ट्र राज्य
+            </p>
+            <p style="font-size:1.05rem;"><b>राज्य अध्यक्ष:</b> श्री रविंद्र मल्हारी पाटील</p>
+            <p style="margin-top: 6px;"><i class="fa fa-map-marker-alt" style="color:var(--danger);"></i> <b>मुख्यालय:</b> क्ष-किरण विभाग, उपजिल्हा रुग्णालय फलटण, जिल्हा सातारा. ४१५५२३</p>
+            <p style="margin-top: 6px;"><i class="fa fa-envelope" style="color:var(--primary);"></i> <b>ईमेल:</b> <a href="mailto:xsounion@gmail.com" style="color: var(--primary); text-decoration: none; font-weight: bold;">xsounion@gmail.com</a></p>
+        </section>
+
+    </div> <!-- Main Container Ends -->
+
+    <!-- Floating Live Chat Launcher Widget -->
+    <div id="floatingLiveChatWidget" onclick="window.location.href='member-login.html'" title="💬 Live Chat (संवाद साधा)">
+        <div class="chat-pill-label">
+            <i class="fa-solid fa-bolt" style="color: #f39c12;"></i> चॅट करा
+        </div>
+        <div class="chat-floating-btn">
+            <i class="fa-solid fa-comments"></i>
         </div>
     </div>
 
-    <!-- Contact Section -->
-    <div id="contact" class="full-card contact-card">
-        <h2><i class="fa fa-address-book"></i> संपर्क कार्यालय</h2>
-        <p style="font-weight: bold; color: var(--dark); margin-bottom: 15px;">क्ष-किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य</p>
-        <p><b>अध्यक्ष:</b> श्री रविंद्र मल्हारी पाटील</p>
-        <p style="margin-top: 8px;"><i class="fa fa-map-marker-alt"></i> उपजिल्हा रुग्णालय फलटण, जिल्हा सातारा.</p>
-        <p style="margin-top: 8px;"><i class="fa fa-envelope"></i> <a href="mailto:xsounion@gmail.com" style="color: var(--primary); text-decoration: none; font-weight: bold;">xsounion@gmail.com</a></p>
-    </div>
-
+    <!-- Footer -->
     <footer>
-        <p>© २०२६ क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना, महाराष्ट्र राज्य.</p>
-        <p style="margin-top: 5px; font-size: 12px; color: #ccc;">सर्व हक्क सुरक्षित.</p>
-        <a href="admin.html" class="admin-link">Admin Login</a>
+        <div class="footer-address">
+            <p><i class="fa fa-hospital"></i> <b>मुख्यालय:</b> क्ष-किरण वैज्ञानिक अधिकारी संघटना, उपजिल्हा रुग्णालय फलटण, सातारा.</p>
+        </div>
+        <div class="social-links">
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-whatsapp"></i></a>
+            <a href="#"><i class="fab fa-telegram"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+        </div>
+        <p style="margin-top:12px;">© २०२६ क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना, महाराष्ट्र राज्य.</p>
+        <p style="margin-top: 4px; font-size: 0.8rem; color: #94a3b8;">सर्व हक्क सुरक्षित. | Developed by IT Cell, X-Ray Union</p>
+        <a href="admin.html" class="admin-login-link"><i class="fa fa-lock"></i> Admin Login</a>
     </footer>
 
-    <!-- Firebase Script & Logic -->
+    <!-- JavaScript Mobile Navigation Toggle -->
+    <script>
+        function toggleMobileMenu() {
+            var links = document.getElementById('navLinks');
+            links.classList.toggle('show');
+        }
+    </script>
+
+    <!-- FIREBASE MODULE SCRIPT (v10.12.5 Realtime Sync Engine) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-        import { getFirestore, doc, collection, onSnapshot, query } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+        import { getFirestore, doc, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
+        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk",
             authDomain: "xrayunionmah.firebaseapp.com",
@@ -176,8 +470,8 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // 1. Marquee Update
-        onSnapshot(doc(db, "settings", "marquee"), (snap) => {
+        // 1. Scrolling Ticker / Marquee Realtime Listener
+        onSnapshot(doc(db, "settings", "scrolling_notice"), (snap) => {
             const ticker = document.getElementById("news-ticker");
             if (snap.exists() && snap.data().text) {
                 ticker.innerText = snap.data().text;
@@ -186,49 +480,105 @@
             }
         });
 
-        // 2. Fetch and Segregate Folders (GR & Notices)
-        const q = query(collection(db, "notices")); 
-        onSnapshot(q, (snapshot) => {
+        // 2. Fetch Notices & GR Documents (Folder 1 & Folder 2 Segregation)
+        onSnapshot(collection(db, "notices"), (snapshot) => {
             let folder1HTML = '';
             let folder2HTML = '';
             let f1Count = 0;
             let f2Count = 0;
 
             let docsArr = [];
-            snapshot.forEach(d => docsArr.push(d.data()));
-            
-            // Reverse to show latest first
+            snapshot.forEach(d => docsArr.push({ id: d.id, ...d.data() }));
+
             docsArr.reverse().forEach((n) => {
-                // Determine target folder dynamically based on Admin Panel's saved values
                 let values = Object.values(n);
                 let isFolder1 = values.includes('folder1') || values.includes('शासकीय परिपत्रके');
                 let isFolder2 = values.includes('folder2') || values.includes('महत्त्वाच्या नोटीस');
-                
-                // Fallback: If no folder specified, push to folder2
-                if(!isFolder1 && !isFolder2) {
-                    isFolder2 = true; 
-                }
 
-                let docUrl = n.url || n.fileUrl || n.pdfUrl || n.link || '#';
-                let title = n.title || n.name || 'Document';
+                if (!isFolder1 && !isFolder2) { isFolder2 = true; }
+
+                let docUrl = n.url || n.fileUrl || n.link || '#';
+                let title = n.name || n.title || 'Document';
                 let date = n.date || '';
 
-                let htmlContent = `
+                let itemHtml = `
                     <div class="doc-item">
-                        <div class="doc-info">
+                        <div>
                             <span class="doc-title">${title}</span>
                             <span class="doc-date">${date}</span>
                         </div>
-                        <a href="${docUrl}" target="_blank" class="doc-download"><i class="fa fa-file-pdf"></i> पाहा</a>
+                        <a href="${docUrl}" target="_blank" class="btn-download"><i class="fa fa-file-pdf"></i> पाहा</a>
                     </div>
                 `;
 
-                if (isFolder1) { folder1HTML += htmlContent; f1Count++; }
-                else { folder2HTML += htmlContent; f2Count++; }
+                if (isFolder1) { folder1HTML += itemHtml; f1Count++; }
+                else { folder2HTML += itemHtml; f2Count++; }
             });
 
-            document.getElementById('folder1-docs').innerHTML = f1Count ? folder1HTML : '<p style="color: gray; font-size: 0.9rem;">सध्या कोणतेही परिपत्रक उपलब्ध नाही.</p>';
-            document.getElementById('folder2-docs').innerHTML = f2Count ? folder2HTML : '<p style="color: gray; font-size: 0.9rem;">सध्या कोणतीही नोटीस उपलब्ध नाही.</p>';
+            document.getElementById('folder1-docs').innerHTML = f1Count ? folder1HTML : '<p style="color: gray; font-size: 0.9rem; text-align:center;">सध्या कोणतेही परिपत्रक उपलब्ध नाही.</p>';
+            document.getElementById('folder2-docs').innerHTML = f2Count ? folder2HTML : '<p style="color: gray; font-size: 0.9rem; text-align:center;">सध्या कोणतीही नोटीस उपलब्ध नाही.</p>';
+        });
+
+        // 3. Dynamic Index Management Tabs (Uploaded via Admin Panel - tab-index-mgmt)
+        const indexTabsQuery = query(collection(db, "index_tabs"), orderBy("order", "asc"));
+        onSnapshot(indexTabsQuery, (snapshot) => {
+            let tabsList = [];
+            snapshot.forEach(d => tabsList.push({ id: d.id, ...d.data() }));
+
+            let secBox = document.getElementById('adminIndexTabsSection');
+            let btnBar = document.getElementById('dynamicTabsButtons');
+            let contentBox = document.getElementById('dynamicTabContentBox');
+
+            if (tabsList.length > 0) {
+                secBox.style.display = 'block';
+                btnBar.innerHTML = tabsList.map((t, idx) => `
+                    <button class="tab-btn-idx ${idx === 0 ? 'active' : ''}" onclick="showDynamicIndexTabContent('${t.id}')">${t.title}</button>
+                `).join('');
+
+                window.dynamicTabsGlobalList = tabsList;
+                window.showDynamicIndexTabContent(tabsList[0].id);
+            } else {
+                secBox.style.display = 'none';
+            }
+        });
+
+        window.showDynamicIndexTabContent = function(tabId) {
+            let t = (window.dynamicTabsGlobalList || []).find(x => x.id === tabId);
+            let contentBox = document.getElementById('dynamicTabContentBox');
+            if (!t || !contentBox) return;
+
+            document.querySelectorAll('.tab-btn-idx').forEach(b => {
+                if(b.innerText === t.title) b.classList.add('active');
+                else b.classList.remove('active');
+            });
+
+            contentBox.innerHTML = `
+                <h3 style="color:var(--primary); font-size:1.3rem; margin-bottom:10px;">${t.title}</h3>
+                <p style="color:#64748b; font-size:0.88rem; margin-bottom:15px;">प्रसिद्धी दिनांक: ${t.date || '-'}</p>
+                ${t.fileUrl ? `<a href="${t.fileUrl}" target="_blank" class="btn-download" style="padding:10px 18px; font-size:0.95rem;"><i class="fa fa-download"></i> फाईल / PDF डाऊनलोड करा</a>` : '<p style="color:gray;">या टॅबसाठी फाईल संलग्न केलेली नाही.</p>'}
+            `;
+        };
+
+        // 4. Live Photo Gallery Fetch (From Admin Panel - tab-gallery)
+        const galleryQuery = query(collection(db, "gallery"), orderBy("order", "asc"));
+        onSnapshot(galleryQuery, (snapshot) => {
+            let photos = [];
+            snapshot.forEach(d => {
+                let data = d.data();
+                if (data.showIndex !== false) photos.push({ id: d.id, ...data });
+            });
+
+            let grid = document.getElementById('mainGalleryGrid');
+            if (photos.length > 0) {
+                grid.innerHTML = photos.map(g => `
+                    <div class="gallery-card">
+                        <img src="${g.url}" alt="${g.title||'Gallery Photo'}" onerror="this.src='https://via.placeholder.com/300x200?text=Photo'">
+                        <div class="gallery-title">${g.title || 'संघटना फोटो'}</div>
+                    </div>
+                `).join('');
+            } else {
+                grid.innerHTML = '<p style="text-align:center; color:gray; grid-column:1/-1;">सध्या गॅलरीमध्ये फोटो उपलब्ध नाहीत.</p>';
+            }
         });
     </script>
 </body>
