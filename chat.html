@@ -443,12 +443,27 @@
     const db = firebase.firestore();
     const auth = firebase.auth();
 
-    /* =======================================================
-       २. ऑथेन्टिकेशन व सुरुवातीचे लोडर्स
+   /* =======================================================
+       २. ऑथेन्टिकेशन व सुरुवातीचे लोडर्स (दुरुस्त केलेला भाग)
        ======================================================= */
     window.onload = () => {
+        // १. आधी चॅटच्या लिंक (URL) मध्ये सदस्याचे नाव आले आहे का ते तपासा
+        const urlParams = new URLSearchParams(window.location.search);
+        const hasUrlParams = urlParams.has('name');
+
+        if (hasUrlParams) {
+            // जर मुख्य डॅशबोर्डवरून सदस्याची माहिती आली असेल तर ती सेट करा
+            currentUser = urlParams.get('name'); 
+            currentUserMobile = urlParams.get('mobile') || "९८xxxxxx००";
+            currentUserPost = urlParams.get('post') || "क्ष-किरण वैज्ञानिक अधिकारी (गट-क)";
+            currentUserOffice = urlParams.get('office') || urlParams.get('district') || "आरोग्य विभाग, महाराष्ट्र";
+            currentUserPhoto = urlParams.get('photo') || "1001264489.png";
+            currentRole = "member"; // भूमिका सक्तीने 'सभासद/सदस्य' राहील
+        }
+
         auth.onAuthStateChanged(async (user) => {
-            if (user) {
+            // जर युजरने स्वतंत्रपणे 'ॲडमिन' बटणावर क्लिक करून लॉगिन केले असेल आणि डॅशबोर्डवरून आलेला नसेल तरच ॲडमिन दाखवा
+            if (user && !hasUrlParams) {
                 if (user.email === SUPER_ADMIN_EMAIL) {
                     currentRole = "super_admin";
                     currentUser = "महेश हांगे";
@@ -459,14 +474,13 @@
                         currentRole = "sub_admin";
                         let subData = snap.docs[0].data();
                         currentUser = `${subData.name || 'सब-ॲडमिन'}`;
-                    } else {
-                        currentRole = "super_admin"; 
+                        currentUserPost = "सब-ॲडमिन";
                     }
                 }
                 document.getElementById("loginBtnHead").innerHTML = '<i class="fa-solid fa-power-off"></i> लॉगआउट';
                 document.getElementById("loginBtnHead").onclick = performAdminLogout;
             } else {
-                currentRole = "member";
+                if (!hasUrlParams) currentRole = "member";
                 document.getElementById("loginBtnHead").innerHTML = '<i class="fa-solid fa-lock"></i> ॲडमिन';
                 document.getElementById("loginBtnHead").onclick = openLoginModal;
             }
