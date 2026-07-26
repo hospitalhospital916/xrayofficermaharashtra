@@ -38,7 +38,10 @@
         .top-bar { background: var(--dark); color: #cbd5e1; padding: 6px 25px; font-size: 0.85rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
         .top-bar-left span { margin-right: 20px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
         .top-bar-left i { color: var(--gold); }
-
+        <!-- Manifest Link -->
+<link rel="manifest" href="manifest.json">
+<!-- Theme Color for Mobile Browser Header -->
+<meta name="theme-color" content="#0B3D91">
         /* --- HEADER BANNER & PERFECT LOGO/TITLE ALIGNMENT --- */
         header { background: var(--white); padding: 18px 30px; display: flex; align-items: center; justify-content: space-between; border-bottom: 4px solid var(--secondary); box-shadow: 0 4px 15px rgba(0,0,0,0.05); flex-wrap: wrap; gap: 20px; }
         .header-brand { display: flex; align-items: center; gap: 20px; }
@@ -525,7 +528,15 @@
             } else {
                 grid.innerHTML = '<p style="text-align:center; color:gray; grid-column:1/-1;">सध्या गॅलरीमध्ये फोटो उपलब्ध नाहीत.</p>';
             }
-        });
-    </script>
+        });<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .then((reg) => console.log('Service Worker Registered!', reg))
+        .catch((err) => console.log('Service Worker Error:', err));
+    });
+  }
+</script>
+    
 </body>
 </html>
