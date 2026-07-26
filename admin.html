@@ -1696,7 +1696,7 @@
         </div>
         <div class="panel-body" style="padding:0; height:82vh;">
             <!--Source 1 मधील चॅट फाईल iframe द्वारे येथे लोड केली आहे -->
-            <iframe src="chat.html" style="width:100%; height:100%; border:none; border-radius:0 0 12px 12px;"></iframe>
+           <iframe id="adminChatIframe" src="chat.html" style="width:100%; height:100%; border:none; border-radius:0 0 12px 12px;"></iframe>
         </div>
     </div>
 </div>
@@ -3741,10 +3741,15 @@
         // ==========================================================
         // REALTIME LIVE CHAT ENGINE (WHATSAPP STYLE)
         // ==========================================================
-    window.initLiveChatEngine = () => {
-    const chatFrame = document.querySelector('#tab-chat iframe');
+window.initLiveChatEngine = () => {
+    const chatFrame = document.getElementById('adminChatIframe') || document.querySelector('#tab-chat iframe');
     if (chatFrame) {
-        chatFrame.src = chatFrame.src; // चॅट विंडो रिफ्रेश / सिंक करण्यासाठी
+        let adminName = currentLoggedInAdminName || "ॲडमिन अधिकारी";
+        let adminPost = currentLoggedInAdminDesignation || "संघटना अधिकारी";
+        let adminOffice = subAdminAccessRegion || "राज्य मुख्यालय";
+
+        // 👑 ॲडमिनचे नाव, पद व जिल्हा चॅट सिस्टीमकडे पाठवणे
+        chatFrame.src = `chat.html?name=${encodeURIComponent(adminName)}&post=${encodeURIComponent(adminPost)}&office=${encodeURIComponent(adminOffice)}&role=admin`;
     }
 };
 
