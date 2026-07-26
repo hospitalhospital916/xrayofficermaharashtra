@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>लहान कुटुंबाचे प्रतिज्ञापत्र जनरेटर</title>
+    <style>
+        body {
+            font-family: 'Arial', 'Mangal', sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #1a5276;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        input[type="text"], input[type="number"], input[type="date"], textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        .btn-btn {
+            background-color: #27ae60;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            font-weight: bold;
+        }
+        .btn-btn:hover {
+            background-color: #219150;
+        }
+        
+        /* प्रमाणपत्र स्टाईल */
+        #certificate {
+            display: none;
+            background: #ffffff;
+            padding: 40px;
+            border: 2px solid #000;
+            margin-top: 20px;
+            line-height: 1.8;
+            font-size: 16px;
+        }
+        .cert-header {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 25px;
+        }
+        .cert-title {
+            font-size: 20px;
+            text-decoration: underline;
+            margin-bottom: 5px;
+        }
+        .rule-text {
+            font-size: 14px;
+            font-weight: normal;
+        }
+        .cert-body {
+            text-align: justify;
+        }
+        .highlight {
+            font-weight: bold;
+            text-decoration: underline;
+            padding: 0 5px;
+        }
+        .footer-table {
+            width: 100%;
+            margin-top: 40px;
+        }
+        .print-btn {
+            background-color: #2980b9;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 15px;
+        }
+
+        /* प्रिंट मीडिया क्वेरी - फक्त प्रमाणपत्र प्रिंट होईल */
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            #certificate {
+                display: block !important;
+                border: none;
+                padding: 0;
+                margin: 0;
+            }
+            body {
+                background: white;
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container no-print">
+    <h2>लहान कुटुंबाचे प्रतिज्ञापत्र जनरेटर</h2>
+    <form id="declarationForm">
+        <div class="form-group">
+            <label>अर्जदाराचे पूर्ण नाव:</label>
+            <input type="text" id="fullName" placeholder="उदा. रमेश मारुती पाटील" required>
+        </div>
+        <div class="form-group">
+            <label>वडिलांचे / पतीचे नाव:</label>
+            <input type="text" id="parentName" placeholder="उदा. मारुती लहानू पाटील" required>
+        </div>
+        <div class="form-group">
+            <label>वय (वर्षे):</label>
+            <input type="number" id="age" placeholder="उदा. ३०" required>
+        </div>
+        <div class="form-group">
+            <label>पूर्ण पत्ता:</label>
+            <textarea id="address" rows="2" placeholder="उदा. मु.पो. तालुका, जिल्हा..." required></textarea>
+        </div>
+        <div class="form-group">
+            <label>अर्ज केलेल्या पदाचे नाव / कामाचा तपशील:</label>
+            <input type="text" id="postName" placeholder="उदा. लिपिक-टंकलेखक / कंत्राट" required>
+        </div>
+        <div class="form-group">
+            <label>हयात असलेल्या मुलांची एकूण संख्या:</label>
+            <input type="number" id="childrenCount" min="0" placeholder="उदा. २" required>
+        </div>
+        <div class="form-group">
+            <label>मुलांचा तपशील (नाव आणि जन्मतारीख):</label>
+            <textarea id="childrenDetails" rows="3" placeholder="१) नाव - जन्मतारीख&#10;२) नाव - जन्मतारीख"></textarea>
+        </div>
+        <div class="form-group">
+            <label>ठिकाण:</label>
+            <input type="text" id="place" value="मुंबई" required>
+        </div>
+        <div class="form-group">
+            <label>दिनांक:</label>
+            <input type="date" id="date" required>
+        </div>
+
+        <button type="button" class="btn-btn" onclick="generateCertificate()">प्रतिज्ञापत्र जनरेट करा</button>
+    </form>
+</div>
+
+<!-- जनरेट होणारे प्रतिज्ञापत्र -->
+<div id="certificate">
+    <div class="cert-header">
+        <div class="cert-title">प्रतिज्ञापत्र (नमुना - क)</div>
+        <div class="rule-text">(नियम ४ पहा)</div>
+        <div class="rule-text"><strong>महाराष्ट्र नागरी सेवा (लहान कुटुंबाचे प्रतिज्ञापत्र) नियम, २००५</strong></div>
+        <div class="rule-text">(शासन निर्णय, सामान्य प्रशासन विभाग, क्र. एसआरव्ही-२०००/प्र.क्र.१७/२०००/१२, दिनांक २८ मार्च २००५)</div>
+    </div>
+
+    <div class="cert-body">
+        <p>
+            मी श्री. / श्रीमती / कुमारी <span class="highlight" id="outFullName"></span>, 
+            श्री. <span class="highlight" id="outParentName"></span> यांचा / यांची मुलगा / मुलगी / पत्नी, 
+            वय <span class="highlight" id="outAge"></span> वर्षे, 
+            राहणार <span class="highlight" id="outAddress"></span>, 
+            याद्वारे पुढीलप्रमाणे प्रतिज्ञापूर्वक घोषित करतो / करते की :-
+        </p>
+
+        <p>
+            १. मी <span class="highlight" id="outPostName"></span> या पदासाठी / कामासाठी अर्ज सादर केलेला आहे.
+        </p>
+
+        <p>
+            २. आज रोजी मला <span class="highlight" id="outChildrenCount"></span> हयात मुले आहेत.
+        </p>
+
+        <p>
+            ३. त्यापैकी दिनांक २८ मार्च २००५ नंतर जन्माला आलेल्या मुलांची संख्या <span class="highlight" id="outPost2005Count"></span> आहे. (असल्यास त्यांचा जन्मतारीख निहाय तपशील):<br>
+            <span style="white-space: pre-line; font-weight: bold;" id="outChildrenDetails"></span>
+        </p>
+
+        <p>
+            ४. दिनांक २८ मार्च २००५ नंतर जन्माला आलेल्या मुलांमुळे हयात असलेल्या मुलांची संख्या दोनपेक्षा अधिक झालेली आहे / नाही.
+        </p>
+
+        <p>
+            ५. मी याची नोंद घेतो / घेते की, या प्रतिज्ञापत्रातील माहिती ही माझ्या ज्ञानानुसार आणि विश्वासानुसार खरी व बरोबर आहे. यात काहीही चुकीचे किंवा असत्य आढळल्यास, मी शासकीय सेवेसाठी / लाभासाठी अयोग्य ठरेल आणि त्यास मी स्वतः जबाबदार राहीन.
+        </p>
+    </div>
+
+    <table class="footer-table">
+        <tr>
+            <td style="width: 50%;">
+                ठिकाण: <span id="outPlace"></span><br>
+                दिनांक: <span id="outDate"></span>
+            </td>
+            <td style="width: 50%; text-align: right;">
+                <br><br>
+                ________________________<br>
+                <strong>(अर्जदाराची स्वाक्षरी व नाव)</strong>
+            </td>
+        </tr>
+    </table>
+
+    <div class="no-print" style="margin-top: 30px; text-align: center;">
+        <button class="print-btn" onclick="window.print()">प्रिंट करा / PDF सेव्ह करा</button>
+    </div>
+</div>
+
+<script>
+    // आजची तारीख बाय-डिफॉल्ट सेट करण्यासाठी
+    document.getElementById('date').valueAsDate = new Date();
+
+    function generateCertificate() {
+        // इनपुट व्हॅल्यू मिळवणे
+        const fullName = document.getElementById('fullName').value;
+        const parentName = document.getElementById('parentName').value;
+        const age = document.getElementById('age').value;
+        const address = document.getElementById('address').value;
+        const postName = document.getElementById('postName').value;
+        const childrenCount = document.getElementById('childrenCount').value;
+        const childrenDetails = document.getElementById('childrenDetails').value;
+        const place = document.getElementById('place').value;
+        const dateInput = document.getElementById('date').value;
+
+        // फॉर्म व्हॅलिडेशन
+        if (!fullName || !parentName || !age || !address || !postName || childrenCount === "") {
+            alert("कृपया सर्व आवश्यक माहिती भरा.");
+            return;
+        }
+
+        // तारखेचा फॉरमॅट बदलणे (DD/MM/YYYY)
+        const dateObj = new Date(dateInput);
+        const formattedDate = `${String(dateObj.getDate()).padStart(2, '0')}/${String(dateObj.getMonth() + 1).padStart(2, '0')}/${dateObj.getFullYear()}`;
+
+        // प्रतिज्ञापत्रात डेटा सेट करणे
+        document.getElementById('outFullName').innerText = fullName;
+        document.getElementById('outParentName').innerText = parentName;
+        document.getElementById('outAge').innerText = age;
+        document.getElementById('outAddress').innerText = address;
+        document.getElementById('outPostName').innerText = postName;
+        document.getElementById('outChildrenCount').innerText = childrenCount;
+        
+        // जर मुले २ पेक्षा जास्त असतील किंवा details असतील तर
+        document.getElementById('outChildrenDetails').innerText = childrenDetails ? childrenDetails : 'निरंक';
+        
+        // २८ मार्च २००५ नंतरच्या मुलांचा अंदाज / मॅप (तपशील असला तर)
+        document.getElementById('outPost2005Count').innerText = childrenCount > 0 ? childrenCount : 'शून्य';
+
+        document.getElementById('outPlace').innerText = place;
+        document.getElementById('outDate').innerText = formattedDate;
+
+        // प्रतिज्ञापत्र दाखवणे
+        document.getElementById('certificate').style.display = 'block';
+        
+        // सर्टिफिकेटकडे स्क्रोल करणे
+        document.getElementById('certificate').scrollIntoView({ behavior: 'smooth' });
+    }
+</script>
+
+</body>
+</html>
