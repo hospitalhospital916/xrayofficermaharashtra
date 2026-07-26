@@ -59,17 +59,17 @@
         .nav-profile { display: flex; align-items: center; gap: 12px; }
         .btn-logout { background: var(--danger); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 0.8rem; }
 
-        /* SPECIAL CHAT-ACTIVE MODE STYLES (Full Screen Mobile Friendly Chat View) */
+        /* SPECIAL CHAT-ACTIVE MODE STYLES */
         body.chat-active .navbar { padding: 5px 12px !important; }
         body.chat-active .navbar-brand img { width: 32px !important; height: 32px !important; }
         body.chat-active .navbar h2 { font-size: 0.82rem !important; }
         body.chat-active .navbar small { display: none !important; }
         body.chat-active .ticker-wrap { display: none !important; }
-        body.chat-active .chat-floating-btn { display: none !important; } /* Hides float btn in chat */
+        body.chat-active .chat-floating-btn { display: none !important; }
         body.chat-active .container { margin: 0 !important; padding: 0 !important; max-width: 100% !important; }
         body.chat-active #tab-chat .panel { border: none !important; border-radius: 0 !important; box-shadow: none !important; margin-bottom: 0 !important; }
         body.chat-active #tab-chat .panel-header { display: none !important; }
-        body.chat-active #tab-chat .panel-body { height: calc(100vh - 100px) !important; min-height: calc(100vh - 100px) !important; padding: 0 !important; }
+        body.chat-active #tab-chat .panel-body { height: calc(100vh - 60px) !important; min-height: calc(100vh - 60px) !important; padding: 0 !important; }
 
         /* Scrolling Ticker */
         .ticker-wrap { background: var(--primary); border-bottom: 2px solid var(--secondary); color: #fff; padding: 6px 15px; font-weight: 600; font-size: 0.88rem; }
@@ -98,7 +98,7 @@
 
         /* Auto Forms Cards Grid */
         .forms-cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 15px; }
-        .auto-form-card { background: #fff; border: 1px solid #e2e8f0; border-top: 4px solid var(--primary); border-radius: 12px; padding: 16px; transition: all 0.3s ease; display: flex; flex-col; justify-content: space-between; text-decoration: none; color: inherit; }
+        .auto-form-card { background: #fff; border: 1px solid #e2e8f0; border-top: 4px solid var(--primary); border-radius: 12px; padding: 16px; transition: all 0.3s ease; display: flex; flex-direction: column; justify-content: space-between; text-decoration: none; color: inherit; }
         .auto-form-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(11, 61, 145, 0.12); border-top-color: var(--secondary); }
         .auto-form-icon { width: 45px; height: 48px; border-radius: 10px; background: #eff6ff; color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 10px; }
         .auto-form-card h4 { font-size: 1rem; font-weight: 800; color: var(--primary); margin-bottom: 4px; }
@@ -188,7 +188,7 @@
                 <label>मोबाईल नंबर:</label>
                 <div class="login-input-wrapper">
                     <span>+91</span>
-                    <input type="tel" id="loginMobileNumber" placeholder="९८७६५४३२१०" maxlength="10">
+                    <input type="tel" id="loginMobileNumber" placeholder="९८७६५४३२१०" maxlength="10" onkeydown="if(event.key === 'Enter') document.getElementById('loginPassword').focus();">
                 </div>
             </div>
 
@@ -196,15 +196,20 @@
                 <label>पासवर्ड (Password):</label>
                 <div class="login-input-wrapper">
                     <i class="fa fa-lock icon-left"></i>
-                    <input type="password" id="loginPassword" class="no-prefix" placeholder="पासवर्ड टाका">
+                    <input type="password" id="loginPassword" class="no-prefix" placeholder="पासवर्ड टाका" onkeydown="if(event.key === 'Enter') loginMemberWithMobileAndPassword();">
                 </div>
             </div>
 
             <button type="button" onclick="loginMemberWithMobileAndPassword()"><i class="fa fa-sign-in-alt me-1"></i> सुरक्षित लॉगिन करा</button>
             
-            <p style="margin-top: 18px; font-size: 0.85rem; color: var(--primary); cursor: pointer; font-weight: bold; text-decoration: underline;" onclick="window.location.href='index.html'">
-                <i class="fa fa-home"></i> मुख्य वेबसाईटवर जा (Main Index)
-            </p>
+            <div style="margin-top: 18px; display: flex; flex-direction: column; gap: 8px;">
+                <a href="member-registration.html" style="font-size: 0.88rem; color: #0284c7; font-weight: bold; text-decoration: none; background: #e0f2fe; padding: 8px; border-radius: 6px; border: 1px solid #bae6fd;">
+                    <i class="fa fa-user-plus"></i> नवीन सदस्य नोंदणी करा
+                </a>
+                <a href="index.html" style="font-size: 0.85rem; color: var(--primary); font-weight: bold; text-decoration: underline;">
+                    <i class="fa fa-home"></i> मुख्य वेबसाईटवर जा (Main Index)
+                </a>
+            </div>
         </div>
     </div>
 
@@ -293,7 +298,6 @@
                         </p>
 
                         <div class="forms-cards-grid">
-                            <!-- 1. Leave Application System -->
                             <a href="Leave_Application_System.html" class="auto-form-card">
                                 <div>
                                     <div class="auto-form-icon" style="color:#2563eb; background:#eff6ff;"><i class="fa fa-calendar-minus"></i></div>
@@ -303,7 +307,6 @@
                                 <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#2563eb;">उघडा <i class="fa fa-arrow-right"></i></div>
                             </a>
 
-                            <!-- 2. Service and Confirmation Forms -->
                             <a href="Service_and_Confirmation_Forms.html" class="auto-form-card">
                                 <div>
                                     <div class="auto-form-icon" style="color:#059669; background:#ecfdf5;"><i class="fa fa-user-check"></i></div>
@@ -313,7 +316,6 @@
                                 <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#059669;">उघडा <i class="fa fa-arrow-right"></i></div>
                             </a>
 
-                            <!-- 3. Probation System -->
                             <a href="probation_system.html" class="auto-form-card">
                                 <div>
                                     <div class="auto-form-icon" style="color:#7c3aed; background:#f5f3ff;"><i class="fa fa-user-clock"></i></div>
@@ -323,7 +325,6 @@
                                 <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#7c3aed;">उघडा <i class="fa fa-arrow-right"></i></div>
                             </a>
 
-                            <!-- 4. Small Family Affidavit -->
                             <a href="small_family.html" class="auto-form-card">
                                 <div>
                                     <div class="auto-form-icon" style="color:#d97706; background:#fffbeb;"><i class="fa fa-users-between-lines"></i></div>
@@ -333,7 +334,6 @@
                                 <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#d97706;">उघडा <i class="fa fa-arrow-right"></i></div>
                             </a>
 
-                            <!-- 5. Asset Declaration Form -->
                             <a href="asset-form.html" class="auto-form-card">
                                 <div>
                                     <div class="auto-form-icon" style="color:#0891b2; background:#ecfeff;"><i class="fa fa-building-columns"></i></div>
@@ -343,7 +343,6 @@
                                 <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#0891b2;">उघडा <i class="fa fa-arrow-right"></i></div>
                             </a>
 
-                            <!-- 6. Financial Claims -->
                             <a href="financial-claims.html" class="auto-form-card">
                                 <div>
                                     <div class="auto-form-icon" style="color:#16a34a; background:#f0fdf4;"><i class="fa fa-file-invoice-dollar"></i></div>
@@ -353,7 +352,6 @@
                                 <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#16a34a;">उघडा <i class="fa fa-arrow-right"></i></div>
                             </a>
 
-                            <!-- 7. Legal Forms & Drafts -->
                             <a href="ligal_forms.html" class="auto-form-card">
                                 <div>
                                     <div class="auto-form-icon" style="color:#e11d48; background:#fff1f2;"><i class="fa fa-scale-balanced"></i></div>
@@ -363,7 +361,6 @@
                                 <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#e11d48;">उघडा <i class="fa fa-arrow-right"></i></div>
                             </a>
 
-                            <!-- 8. TLD Badge Generator -->
                             <a href="tld-generator.html" class="auto-form-card">
                                 <div>
                                     <div class="auto-form-icon" style="color:#9333ea; background:#faf5ff;"><i class="fa fa-radiation"></i></div>
@@ -373,7 +370,6 @@
                                 <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#9333ea;">उघडा <i class="fa fa-arrow-right"></i></div>
                             </a>
 
-                            <!-- 9. Government Resolutions (GR) -->
                             <a href="gr.html" class="auto-form-card">
                                 <div>
                                     <div class="auto-form-icon" style="color:#dc2626; background:#fef2f2;"><i class="fa fa-file-pdf"></i></div>
@@ -383,7 +379,6 @@
                                 <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#dc2626;">उघडा <i class="fa fa-arrow-right"></i></div>
                             </a>
 
-                            <!-- 10. Documents Library -->
                             <a href="documents.html" class="auto-form-card">
                                 <div>
                                     <div class="auto-form-icon" style="color:#0284c7; background:#f0f9ff;"><i class="fa fa-folder-open"></i></div>
@@ -393,7 +388,6 @@
                                 <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#0284c7;">उघडा <i class="fa fa-arrow-right"></i></div>
                             </a>
 
-                            <!-- 11. Maharashtra Center Map -->
                             <a href="map.html" class="auto-form-card">
                                 <div>
                                     <div class="auto-form-icon" style="color:#ea580c; background:#fff7ed;"><i class="fa fa-map-location-dot"></i></div>
@@ -403,7 +397,6 @@
                                 <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#ea580c;">उघडा <i class="fa fa-arrow-right"></i></div>
                             </a>
 
-                            <!-- 12. Gallery -->
                             <a href="gallery.html" class="auto-form-card">
                                 <div>
                                     <div class="auto-form-icon" style="color:#db2777; background:#fdf2f8;"><i class="fa fa-images"></i></div>
@@ -682,7 +675,7 @@
                 </div>
             </div>
 
-            <!-- TAB 10: LIVE CHAT SECTION (Clean Full-Screen Chat View) -->
+            <!-- TAB 10: LIVE CHAT SECTION -->
             <div id="tab-chat" class="tab-content">
                 <div class="panel" style="margin-bottom:0;">
                     <div class="panel-header bg-success" style="color:white; padding:8px 12px; font-size:0.9rem;">
@@ -749,6 +742,21 @@
         window.grievancesList = [];
         window.tbTemplatesList = [];
 
+        // 🟢 AUTO-LOGIN CHECK (पेज रिफ्रेश केल्यावर सेशन ऑटो-लोड होईल)
+        window.addEventListener('DOMContentLoaded', () => {
+            let savedSession = localStorage.getItem("memberSession");
+            if(savedSession) {
+                try {
+                    window.currentMember = JSON.parse(savedSession);
+                    document.getElementById('loginOverlay').style.display = 'none';
+                    document.getElementById('appContent').style.display = 'block';
+                    window.initMemberDashboard();
+                } catch(e) {
+                    localStorage.removeItem("memberSession");
+                }
+            }
+        });
+
         // Tab Navigation with Auto Compact Layout for Chat & Floating Button Toggle
         window.openTab = function(tabId, btn) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
@@ -762,17 +770,16 @@
 
             // If Live Chat is active, apply full screen mobile layout and hide float btn
             if(tabId === 'tab-chat') {
-    document.body.classList.add('chat-active');
-    if(floatBtn) floatBtn.style.display = 'none';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+                document.body.classList.add('chat-active');
+                if(floatBtn) floatBtn.style.display = 'none';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    // 🟢 सदस्याचे नाव, मोबाईल, पद व जिल्हा चॅट सिस्टीमकडे पाठवणे
-    let m = window.currentMember;
-    let chatIframe = document.getElementById('memberChatIframe');
-    if (m && chatIframe) {
-        chatIframe.src = `chat.html?name=${encodeURIComponent(m.name || 'सदस्य')}&mobile=${encodeURIComponent(m.mobile || '')}&post=${encodeURIComponent(m.designation || 'गट-क सदस्य')}&office=${encodeURIComponent(m.district || m.mandal || 'महाराष्ट्र')}&role=member`;
-    }
-} else {
+                let m = window.currentMember;
+                let chatIframe = document.getElementById('memberChatIframe');
+                if (m && chatIframe) {
+                    chatIframe.src = `chat.html?name=${encodeURIComponent(m.name || 'सदस्य')}&mobile=${encodeURIComponent(m.mobile || '')}&post=${encodeURIComponent(m.designation || 'गट-क सदस्य')}&office=${encodeURIComponent(m.district || m.mandal || 'महाराष्ट्र')}&role=member`;
+                }
+            } else {
                 document.body.classList.remove('chat-active');
                 if(floatBtn) floatBtn.style.display = 'flex';
             }
@@ -786,7 +793,7 @@
             if(el) el.style.display = 'none';
         };
 
-        // Mobile & Password Login
+        // Mobile & Password Login Handler (लॅग-मुक्त आणि परिपूर्ण)
         window.loginMemberWithMobileAndPassword = async function() {
             let mobileInput = document.getElementById('loginMobileNumber').value.trim();
             let passwordInput = document.getElementById('loginPassword').value.trim();
@@ -802,6 +809,7 @@
             Swal.fire({ title: 'माहिती पडताळत आहे...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
 
             try {
+                // String व Number दोन्ही प्रकारच्या मोबाईल नंबर मॅचिंगसाठी क्वेरी
                 const q1 = query(collection(db, "members"), where("mobile", "==", mobileInput));
                 let snap = await getDocs(q1);
 
@@ -817,17 +825,30 @@
 
                 let mData = { id: snap.docs[0].id, ...snap.docs[0].data() };
 
-                if(mData.password && mData.password !== passwordInput) {
+                // पासवर्ड फील्ड नाव 'password' किंवा 'pass' दोन्ही तपासणे
+                let userPass = mData.password || mData.pass;
+                if(userPass && userPass !== passwordInput) {
                     Swal.close();
                     return Swal.fire('चुकीचा पासवर्ड', 'प्रविष्ट केलेला पासवर्ड चुकीचा आहे. कृपया पुन्हा प्रयत्न करा.', 'error');
                 }
 
-                if(mData.loginEnabled === false) {
+                if(mData.loginEnabled === false || mData.loginDisabled === true) {
                     Swal.close();
-                    return Swal.fire('लॉगिन बंद आहे', 'तुमचे लॉगिन ॲडमिनद्वारे तात्पुरते बंद करण्यात आले आहे.', 'error');
+                    return Swal.fire('लॉगिन बंद आहे', 'तुमचे लॉगिन ॲडमिनद्वारे बंद करण्यात आले आहे.', 'error');
                 }
 
+                if(mData.status === 'Pending') {
+                    Swal.close();
+                    return Swal.fire('प्रलंबित नोंदणी', 'तुमचा अर्ज अद्याप ॲडमिन मंजुरीच्या प्रतिक्षेत आहे.', 'warning');
+                }
+
+                // सुरक्षिततेसाठी लोकल स्टोरेजमध्ये सेव्ह करताना पासवर्ड काढून टाकणे
+                delete mData.password;
+                delete mData.pass;
+
                 window.currentMember = mData;
+                localStorage.setItem("memberSession", JSON.stringify(mData));
+
                 Swal.close();
 
                 document.getElementById('loginOverlay').style.display = 'none';
@@ -840,7 +861,9 @@
             }
         };
 
+        // 🟢 सुरक्षित लॉगआउट
         window.logoutMember = function() {
+            localStorage.removeItem("memberSession");
             window.currentMember = null;
             document.body.classList.remove('chat-active');
             document.getElementById('appContent').style.display = 'none';
@@ -856,7 +879,7 @@
             if(!m) return;
 
             document.getElementById('mem_nav_name').innerText = m.name || 'सदस्य';
-            document.getElementById('mem_nav_status').innerText = `${m.district || '-'} (${m.status || 'Pending'})`;
+            document.getElementById('mem_nav_status').innerText = `${m.district || '-'} (${m.status || 'Approved'})`;
             document.getElementById('mem_nav_status').style.color = m.status === 'Approved' ? 'var(--success)' : 'var(--danger)';
 
             onSnapshot(doc(db, "settings", "scrolling_notice"), (snap) => {
@@ -897,7 +920,7 @@
             mSnap.forEach(d => window.allMembers.push({id: d.id, ...d.data()}));
 
             let m = window.currentMember;
-            document.getElementById('st_approval_status').innerText = m.status || 'Pending';
+            document.getElementById('st_approval_status').innerText = m.status || 'Approved';
             document.getElementById('st_approval_status').style.color = m.status === 'Approved' ? 'var(--success)' : 'var(--danger)';
 
             document.getElementById('st_fee_status').innerText = m.feeStatus || 'Unpaid';
@@ -983,9 +1006,9 @@
                 document.getElementById('receiptUnpaidNotice').style.display = 'none';
                 document.getElementById('officialReceiptWrapper').style.display = 'block';
 
-                document.getElementById('rc_no').innerText = `REC-2026-${m.id.substring(0,5).toUpperCase()}`;
+                document.getElementById('rc_no').innerText = `REC-2026-${(m.id||'100').substring(0,5).toUpperCase()}`;
                 document.getElementById('rc_date').innerText = new Date().toLocaleDateString('mr-IN');
-                document.getElementById('rc_sevarth').innerText = m.sevarthId || m.id.substring(0,8).toUpperCase();
+                document.getElementById('rc_sevarth').innerText = m.sevarthId || (m.id||'100').substring(0,8).toUpperCase();
                 document.getElementById('rc_name').innerText = m.name || '-';
                 document.getElementById('rc_post').innerText = m.designation || 'X-Ray Officer';
                 document.getElementById('rc_workplace').innerText = m.workplace || '-';
