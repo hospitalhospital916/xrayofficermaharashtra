@@ -730,7 +730,29 @@
         <span class="chat-unread-badge" id="chatUnreadCount">LIVE</span>
     </div>
 </div>
+<!-- APP CONTENT START & NAVBAR -->
+    <div id="app-content" style="display: none;">
+        <div class="navbar">
+            <div style="display:flex; align-items:center; gap:12px;">
+                <span id="header_logo_box">
+                    <i class="fa fa-shield-alt" style="font-size:2rem; color:var(--primary);"></i>
+                </span>
+                <h2>क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना महाराष्ट्र राज्य</h2>
+            </div>
+            <div style="display:flex; align-items:center; gap:15px;">
+                <span id="pending_requests_badge" class="badge bg-danger" style="cursor:pointer; font-size:0.9rem; padding:8px 12px;" onclick="openPendingRequests()">
+                    <i class="fa fa-user-clock"></i> प्रलंबित अर्ज: <b id="pending_cnt">0</b>
+                </span>
+                
+                <div style="text-align:right;">
+                    <span id="login_user_name" style="font-weight:bold; color:var(--primary); display:block; font-size:0.95rem;"></span>
+                    <span id="login_user_role" style="font-weight:bold; color:var(--success); font-size:0.8rem;"></span>
+                    <span id="login_user_region" style="font-size:0.8rem; color:var(--danger); font-weight:bold;"></span>
+                </div>
 
+                <button class="btn-logout" onclick="logoutAdmin()"><i class="fa fa-power-off"></i> लॉगआउट</button>
+            </div>
+        </div>
         <!-- NAVIGATION TAB MENU (ALL 22 TABS) -->
         <div class="tab-menu" id="mainTabMenu">
             <button class="tab-btn active" onclick="openTab('tab-dash')" data-perm="dashboard"><i class="fa fa-chart-pie"></i> डॅशबोर्ड</button>
@@ -2415,12 +2437,11 @@
                     }
                 }
             });
-            document.getElementById('cnt-all').innerText = total; 
-            document.getElementById('cnt-approved').innerText = apprv; 
-            document.getElementById('cnt-pending').innerText = pend; 
-            document.getElementById('pending_cnt').innerText = pend;
-            document.getElementById('cnt-paid').innerText = paid;
-            
+          if(document.getElementById('cnt-all')) document.getElementById('cnt-all').innerText = total; 
+  if(document.getElementById('cnt-approved')) document.getElementById('cnt-approved').innerText = apprv; 
+  if(document.getElementById('cnt-pending')) document.getElementById('cnt-pending').innerText = pend; 
+  if(document.getElementById('pending_cnt')) document.getElementById('pending_cnt').innerText = pend;
+  if(document.getElementById('cnt-paid')) document.getElementById('cnt-paid').innerText = paid;
             window.renderMembers(); 
             window.renderOtherStaff(); 
             window.renderDashboard(); 
@@ -4671,7 +4692,7 @@ window.renderDashboard = function() {
     let allowedMandals = subAdminAccessRegion === "All" ? Object.keys(mandalData) : [subAdminAccessRegion];
     
     allowedMandals.forEach(m => { mandalStat[m] = 0; mandalData[m].forEach(d => distStat[d] = 0); });
-    membersData.forEach(m => {
+    (window.membersData || []).forEach(m => {
         if(m.isMember!==false && m.status === 'Approved') {
             if(subAdminAccessRegion === "All" || m.mandal === subAdminAccessRegion) {
                 if(m.mandal && mandalStat[m.mandal] !== undefined) mandalStat[m.mandal]++;
