@@ -762,10 +762,17 @@
 
             // If Live Chat is active, apply full screen mobile layout and hide float btn
             if(tabId === 'tab-chat') {
-                document.body.classList.add('chat-active');
-                if(floatBtn) floatBtn.style.display = 'none';
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            } else {
+    document.body.classList.add('chat-active');
+    if(floatBtn) floatBtn.style.display = 'none';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // 🟢 सदस्याचे नाव, मोबाईल, पद व जिल्हा चॅट सिस्टीमकडे पाठवणे
+    let m = window.currentMember;
+    let chatIframe = document.getElementById('memberChatIframe');
+    if (m && chatIframe) {
+        chatIframe.src = `chat.html?name=${encodeURIComponent(m.name || 'सदस्य')}&mobile=${encodeURIComponent(m.mobile || '')}&post=${encodeURIComponent(m.designation || 'गट-क सदस्य')}&office=${encodeURIComponent(m.district || m.mandal || 'महाराष्ट्र')}&role=member`;
+    }
+} else {
                 document.body.classList.remove('chat-active');
                 if(floatBtn) floatBtn.style.display = 'flex';
             }
