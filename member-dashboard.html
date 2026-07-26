@@ -94,12 +94,17 @@
         }
         .chat-floating-btn:hover { transform: scale(1.1); }
 
-        /* I-Card Design Styles */
+        /* Multi I-Card Admin Layouts Support */
         .icard-card-box { width: 320px; height: 490px; border-radius: 12px; background: #fff; position: relative; overflow: hidden; padding: 0; text-align: center; margin: 10px auto; box-shadow: 0 5px 15px rgba(0,0,0,0.15); border: 2px solid var(--primary); }
-        .icard-head { background: #0B3D91; color: white; padding: 12px 10px; }
+        .icard-design-1 { border-color: #0B3D91; }
+        .icard-design-1 .icard-head { background: #0B3D91; color: white; padding: 12px 10px; }
+        .icard-design-2 { border-color: #f39c12; background: linear-gradient(180deg, #ffffff 60%, #fffbebe6); }
+        .icard-design-2 .icard-head { background: linear-gradient(135deg, #0B3D91, #3b82f6); color: white; padding: 12px 10px; }
+        .icard-design-3 { border-color: #1e293b; }
+        .icard-design-3 .icard-head { background: #1e293b; color: #f39c12; padding: 12px 10px; }
         .icard-img-main { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--secondary); object-fit: cover; margin: 10px auto; }
+        .icard-img-main.square-photo { border-radius: 8px !important; }
         .icard-info-list { text-align: left; font-size: 0.83rem; padding: 0 15px; line-height: 1.5; color: #333; }
-        
         .qr-code-img { width: 70px; height: 70px; border: 1px solid #ccc; padding: 2px; border-radius: 6px; }
 
         @media print {
@@ -132,7 +137,8 @@
                 <i class="fa fa-id-card-clip" style="font-size:2rem; color:var(--primary);"></i>
                 <h2>क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना महाराष्ट्र राज्य</h2>
             </div>
-            <div style="display:flex; align-items:center; gap:15px;">
+            <div style="display:flex; align-items:center; gap:12px;">
+                <button class="btn-action bg-warning" onclick="openChangePasswordModal()"><i class="fa fa-key"></i> पासवर्ड बदला</button>
                 <div style="text-align:right;">
                     <span id="member_display_name" style="font-weight:bold; color:var(--primary); display:block; font-size:1rem;">-</span>
                     <span id="member_display_district" style="font-size:0.8rem; color:gray;">-</span>
@@ -181,7 +187,10 @@
                 <div class="panel">
                     <div class="panel-header bg-primary" style="color:white;">
                         <span><i class="fa fa-user-circle"></i> माझी वैयक्तिक व सेवा विषयक माहिती</span>
-                        <button class="btn-action bg-warning" onclick="openTab('tab-info-gather')"><i class="fa fa-pen"></i> माहिती अपडेट करा</button>
+                        <div>
+                            <button class="btn-action bg-warning" onclick="openChangePasswordModal()"><i class="fa fa-key"></i> माझा पासवर्ड बदला</button>
+                            <button class="btn-action bg-info" onclick="openTab('tab-info-gather')"><i class="fa fa-pen"></i> माहिती अपडेट करा</button>
+                        </div>
                     </div>
                     <div class="panel-body">
                         <div style="display:flex; gap:20px; flex-wrap:wrap; align-items:center;">
@@ -197,16 +206,17 @@
                 </div>
             </div>
 
-            <!-- TAB 2: MY DIGITAL I-CARD WITH QR CODE -->
+            <!-- TAB 2: MY DIGITAL I-CARD (ADMIN CONTROLLED DESIGN) -->
             <div id="tab-icard" class="tab-content">
                 <div class="panel">
                     <div class="panel-header">
-                        <span><i class="fa fa-id-card"></i> माझे अधिकृत ओळखपत्र (Digital I-Card)</span>
+                        <span><i class="fa fa-id-card"></i> माझे अधिकृत ओळखपत्र (Admin Standard Design)</span>
                         <button class="btn-action bg-primary no-print" onclick="window.print()"><i class="fa fa-print"></i> आय-कार्ड प्रिंट करा</button>
                     </div>
                     <div class="panel-body" style="text-align:center;">
                         
-                        <div id="icardRenderArea" class="icard-card-box">
+                        <!-- Dynamic Container Managed by Admin Config -->
+                        <div id="adminICardBox" class="icard-card-box icard-design-1">
                             <div class="icard-head">
                                 <h4 style="margin:0; font-size:0.85rem;">क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना</h4>
                                 <small style="font-size:0.68rem;">महाराष्ट्र राज्य - अधिकृत ओळखपत्र</small>
@@ -217,15 +227,16 @@
                             <p id="icard_post" style="font-weight:bold; font-size:0.8rem; color:#666;">-</p>
                             
                             <div class="icard-info-list" style="margin-top:8px;">
-                                <p><b>मोबाईल:</b> <span id="icard_mob">-</span></p>
-                                <p><b>जिल्हा:</b> <span id="icard_dist">-</span></p>
-                                <p><b>रुग्णालय:</b> <span id="icard_work">-</span></p>
-                                <p><b>सेवार्थ ID:</b> <span id="icard_sevarth">-</span></p>
+                                <p id="ic_row_mob"><b>मोबाईल:</b> <span id="icard_mob">-</span></p>
+                                <p id="ic_row_dist"><b>जिल्हा:</b> <span id="icard_dist">-</span></p>
+                                <p id="ic_row_work"><b>रुग्णालय:</b> <span id="icard_work">-</span></p>
+                                <p id="ic_row_sevarth"><b>सेवार्थ ID:</b> <span id="icard_sevarth">-</span></p>
                             </div>
 
-                            <div style="margin-top:10px; display:flex; justify-content:space-around; align-items:center; padding:0 15px;">
-                                <div>
-                                    <!-- Dynamic QR Code Generation -->
+                            <p id="icard_president_note_area" style="font-size:0.68rem; color:#854d0e; margin-top:5px;"><b>टीप:</b> सदर ओळखपत्र संघटनेचे अधिकृत सभासदत्व दर्शवते.</p>
+
+                            <div style="margin-top:8px; display:flex; justify-content:space-around; align-items:center; padding:0 15px;">
+                                <div id="icard_qr_section">
                                     <img id="icard_qrcode" src="" class="qr-code-img" alt="QR Code">
                                     <div style="font-size:0.65rem; color:gray;">डिजिटल व्हेरीफाईड</div>
                                 </div>
@@ -262,7 +273,7 @@
                 <div class="panel">
                     <div class="panel-header bg-warning">
                         <span><i class="fa fa-receipt"></i> माझी वार्षिक शुल्क पावती (Fee E-Receipt)</span>
-                        <button class="btn-action bg-primary no-print" onclick="printReceipt()"><i class="fa fa-print"></i> पावती प्रिंट / PDF डाउनलोड</button>
+                        <button class="btn-action bg-primary no-print" onclick="window.print()"><i class="fa fa-print"></i> पावती प्रिंट / PDF डाउनलोड</button>
                     </div>
                     <div class="panel-body">
                         
@@ -461,7 +472,7 @@
     <!-- FIREBASE & CORE JS APPLICATION ENGINE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, updateDoc, doc, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, updateDoc, doc, query, where } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
         
         // FIREBASE CONFIG
         const firebaseConfig = { 
@@ -476,7 +487,6 @@
         window.membersList = [];
         window.pollsList = [];
         window.grievancesList = [];
-        window.templatesList = [];
 
         // ==========================================================
         // LOGIN & AUTHENTICATION
@@ -538,6 +548,58 @@
         });
 
         // ==========================================================
+        // PASSWORD CHANGE WITH MEMBER ACTIVITY LOG
+        // ==========================================================
+        window.openChangePasswordModal = async function() {
+            if(!currentMember) return;
+
+            const { value: formValues } = await Swal.fire({
+                title: '🔐 माझा पासवर्ड बदला',
+                html: `
+                    <div style="text-align:left; font-size:0.95rem;">
+                        <label><b>नवीन पासवर्ड टाका:</b></label>
+                        <input type="password" id="mem_new_pass" class="swal2-input" placeholder="नवीन पासवर्ड">
+                        <label><b>नवीन पासवर्ड पुन्हा टाका:</b></label>
+                        <input type="password" id="mem_confirm_pass" class="swal2-input" placeholder="पासवर्ड कन्फर्म करा">
+                    </div>
+                `,
+                focusConfirm: false,
+                showCancelButton: true,
+                confirmButtonText: 'पासवर्ड अपडेट करा',
+                cancelButtonText: 'रद्द करा',
+                preConfirm: () => {
+                    let p1 = document.getElementById('mem_new_pass').value.trim();
+                    let p2 = document.getElementById('mem_confirm_pass').value.trim();
+                    if(!p1 || !p2) { Swal.showValidationMessage('कृपया दोन्ही फील्ड्स भरा.'); return false; }
+                    if(p1 !== p2) { Swal.showValidationMessage('दोन्ही पासवर्ड जुळत नाहीत!'); return false; }
+                    if(p1.length < 6) { Swal.showValidationMessage('पासवर्ड किमान ६ अक्षरांचा असावा.'); return false; }
+                    return { newPass: p1 };
+                }
+            });
+
+            if (formValues) {
+                Swal.fire({title: 'पासवर्ड अपडेट होत आहे...', didOpen: () => Swal.showLoading()});
+                try {
+                    // Update password in Firestore members collection
+                    await updateDoc(doc(db, "members", currentMember.id), { pass: formValues.newPass });
+                    currentMember.pass = formValues.newPass;
+
+                    // Log activity in member_logs for Admin visibility
+                    await addDoc(collection(db, "member_logs"), {
+                        memberName: `${currentMember.name} (${currentMember.mobile||'-'})`,
+                        action: `पासवर्ड यशस्वीरित्या बदलला (Password Changed)`,
+                        timestamp: Date.now(),
+                        dateString: new Date().toLocaleString('mr-IN')
+                    });
+
+                    Swal.fire('यशस्वी!', 'तुमचा पासवर्ड बदलला गेला आहे आणि ॲडमिन लॉगमध्ये नोंद झाली आहे.', 'success');
+                } catch(e) {
+                    Swal.fire('एरर', e.message, 'error');
+                }
+            }
+        };
+
+        // ==========================================================
         // TAB NAVIGATION
         // ==========================================================
         window.openTab = function(tabId) {
@@ -552,7 +614,7 @@
         };
 
         // ==========================================================
-        // DATA LOAD & UI BINDING
+        // MASTER DATA LOADER & ADMIN I-CARD CONFIG SYNC
         // ==========================================================
         async function loadMemberData() {
             if(!currentMember) return;
@@ -578,18 +640,6 @@
             document.getElementById('info_joindate').innerText = currentMember.joinDate || '-';
             document.getElementById('info_bloodgroup').innerText = currentMember.bloodGroup || '-';
 
-            // I-CARD DATA BINDING & QR CODE GENERATION
-            document.getElementById('icard_name').innerText = currentMember.name || '-';
-            document.getElementById('icard_post').innerText = currentMember.designation || 'X-Ray Officer';
-            document.getElementById('icard_mob').innerText = currentMember.mobile || '-';
-            document.getElementById('icard_dist').innerText = `${currentMember.district||'-'} (${currentMember.mandal||'-'})`;
-            document.getElementById('icard_work').innerText = currentMember.workplace || '-';
-            document.getElementById('icard_sevarth').innerText = currentMember.sevarthId || '-';
-            
-            // Dynamic QR Code API integration
-            let qrData = encodeURIComponent(`MemberID:${currentMember.id}|Name:${currentMember.name}|Sevarth:${currentMember.sevarthId||''}`);
-            document.getElementById('icard_qrcode').src = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${qrData}`;
-
             // FEE RECEIPT DATA
             document.getElementById('rec_no').innerText = `REC-2026-${currentMember.id.substring(0,4).toUpperCase()}`;
             document.getElementById('rec_date').innerText = new Date().toLocaleDateString('mr-IN');
@@ -600,11 +650,68 @@
             document.getElementById('rec_amt').innerText = `₹ ${currentMember.feeAmount || 500}/-`;
             document.getElementById('rec_utr').innerText = currentMember.utr || 'N/A';
 
+            // Fetch Admin Controlled I-Card Settings and Render Uniform I-Card
+            await loadAdminICardSettings();
+
             // Load Other Dynamic Collections
             loadTemplates();
             loadPolls();
             loadGrievances();
             loadFilesAndNotices();
+        }
+
+        // ==========================================================
+        // ADMIN CONTROLLED I-CARD & QR CODE RENDERING ENGINE
+        // ==========================================================
+        async function loadAdminICardSettings() {
+            let adminDesignStyle = "1";
+            let isSquarePhoto = false;
+            let showPresidentNote = true;
+            let showQRCode = true;
+
+            try {
+                // Fetch settings configured by Admin in Firestore
+                const setSnap = await getDocs(collection(db, "settings"));
+                setSnap.forEach(d => {
+                    if(d.id === "icard_config") {
+                        let data = d.data();
+                        adminDesignStyle = data.designStyle || "1";
+                        isSquarePhoto = data.squarePhoto || false;
+                        showPresidentNote = data.showPresidentNote !== false;
+                        showQRCode = data.showQRCode !== false;
+                    }
+                });
+            } catch(e) { console.error("I-Card Config Fetch Error:", e); }
+
+            // Apply Admin Selected Design Style & Classes
+            let cardBox = document.getElementById('adminICardBox');
+            cardBox.className = `icard-card-box icard-design-${adminDesignStyle}`;
+
+            // Apply Photo Shape
+            let photoImg = document.getElementById('icard_photo');
+            if(isSquarePhoto) photoImg.classList.add('square-photo');
+            else photoImg.classList.remove('square-photo');
+
+            // Set Member Data
+            document.getElementById('icard_name').innerText = currentMember.name || '-';
+            document.getElementById('icard_post').innerText = currentMember.designation || 'X-Ray Officer';
+            document.getElementById('icard_mob').innerText = currentMember.mobile || '-';
+            document.getElementById('icard_dist').innerText = `${currentMember.district||'-'} (${currentMember.mandal||'-'})`;
+            document.getElementById('icard_work').innerText = currentMember.workplace || '-';
+            document.getElementById('icard_sevarth').innerText = currentMember.sevarthId || '-';
+
+            // Show/Hide President Note based on Admin Control
+            document.getElementById('icard_president_note_area').style.display = showPresidentNote ? 'block' : 'none';
+
+            // Show/Hide QR Code based on Admin Control
+            let qrSec = document.getElementById('icard_qr_section');
+            if(showQRCode) {
+                qrSec.style.display = 'block';
+                let qrData = encodeURIComponent(`MemberID:${currentMember.id}|Name:${currentMember.name}|Sevarth:${currentMember.sevarthId||''}`);
+                document.getElementById('icard_qrcode').src = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${qrData}`;
+            } else {
+                qrSec.style.display = 'none';
+            }
         }
 
         // ==========================================================
@@ -685,6 +792,15 @@
             await updateDoc(doc(db, "polls", pollId), {
                 options: newOptions, votesTotal: (targetPoll.votesTotal||0)+1, voterIds: newVoters
             });
+
+            // Log activity
+            await addDoc(collection(db, "member_logs"), {
+                memberName: `${currentMember.name}`,
+                action: `पोलमध्ये मत नोंदवले: ${targetPoll.question}`,
+                timestamp: Date.now(),
+                dateString: new Date().toLocaleString('mr-IN')
+            });
+
             Swal.fire('धन्यवाद!', 'आपले मत नोंदवले गेले.', 'success');
             loadPolls();
         };
@@ -707,6 +823,14 @@
                 status: 'Pending',
                 date: new Date().toLocaleDateString('mr-IN'),
                 timestamp: Date.now()
+            });
+
+            // Log activity
+            await addDoc(collection(db, "member_logs"), {
+                memberName: `${currentMember.name}`,
+                action: `नवीन तक्रार दाखल केली: ${sub}`,
+                timestamp: Date.now(),
+                dateString: new Date().toLocaleString('mr-IN')
             });
 
             Swal.fire('यशस्वी', 'आपली तक्रार ॲडमिनकडे दाखल झाली!', 'success');
@@ -786,10 +910,6 @@
             });
             document.getElementById('noticesContainer').innerHTML = nHtml || '<p>नोटीस उपलब्ध नाही.</p>';
         }
-
-        window.printReceipt = () => {
-            window.print();
-        };
 
     </script>
 </body>
