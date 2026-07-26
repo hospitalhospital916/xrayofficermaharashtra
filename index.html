@@ -184,10 +184,11 @@
                 <small>सार्वजनिक आरोग्य विभागातील अधिकृत शासनमान्य संघटना</small>
             </div>
         </div>
-        <div class="header-actions">
-            <a href="registration.html" class="btn-header btn-reg"><i class="fa fa-user-plus"></i> नवीन सदस्य नोंदणी</a>
-            <a href="member-login.html" class="btn-header btn-log"><i class="fa fa-sign-in-alt"></i> सदस्य लॉगिन</a>
-        </div>
+       <div class="header-actions">
+    <button id="installAppBtn" class="btn-header" style="display: none; background: #10b981; color: white; border: 2px solid #10b981; cursor: pointer;"><i class="fa fa-download"></i> ॲप इन्स्टॉल करा</button>
+    <a href="registration.html" class="btn-header btn-reg"><i class="fa fa-user-plus"></i> नवीन सदस्य नोंदणी</a>
+    <a href="member-login.html" class="btn-header btn-log"><i class="fa fa-sign-in-alt"></i> सदस्य लॉगिन</a>
+</div>
     </header>
 
     <!-- Sticky Navigation Menu -->
@@ -542,6 +543,32 @@
         });
       }
     </script>
-    
+   <!-- PWA Install Button Script -->
+    <script>
+        let deferredPrompt;
+        const installAppBtn = document.getElementById('installAppBtn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // ब्राउझरचा मूळ प्रॉम्ट थांबवा
+            e.preventDefault();
+            deferredPrompt = e;
+            // आपले 'ॲप इन्स्टॉल करा' बटण दाखवा
+            installAppBtn.style.display = 'inline-flex';
+        });
+
+        installAppBtn.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                // इन्स्टॉल बॉक्स दाखवा
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    console.log('User accepted the install prompt');
+                }
+                deferredPrompt = null;
+                // इन्स्टॉल झाल्यावर बटण लपवा
+                installAppBtn.style.display = 'none';
+            }
+        });
+    </script> 
 </body>
 </html>
