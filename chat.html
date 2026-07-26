@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>राज्यस्तरीय चॅट नियंत्रण कक्ष | क्ष-किरण वैज्ञानिक अधिकारी संघटना</title>
+    <title>चॅट सिस्टिम | क्ष-किरण वैज्ञानिक अधिकारी संघटना</title>
   
     <!-- EXTERNAL LIBRARIES -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -35,68 +35,63 @@
             .chat-container { height: 96vh; border-radius: 18px; overflow: hidden; border: 2px solid #94a3b8; }
         }
 
-        /* १. संघटनेची मुख्य ओळख पट्टी (Header Strip) */
-        .org-header { background: linear-gradient(135deg, var(--primary-dark), var(--primary)); color: white; padding: 10px 14px; display: flex; flex-direction: column; gap: 6px; z-index: 10; border-bottom: 3px solid var(--secondary); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+        /* १. मोबाईल व संगणकासाठी अत्यंत संक्षिप्त (Compact) हेडर */
+        .org-header { background: linear-gradient(135deg, var(--primary-dark), var(--primary)); color: white; padding: 8px 12px; display: flex; flex-direction: column; gap: 5px; z-index: 10; border-bottom: 3px solid var(--secondary); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
         .top-brand { display: flex; justify-content: space-between; align-items: center; }
-        .org-title { font-size: 0.98rem; font-weight: 800; display: flex; align-items: center; gap: 8px; line-height: 1.2; }
-        .org-title i { font-size: 1.4rem; color: var(--secondary); }
+        .org-title { font-size: 0.92rem; font-weight: 800; display: flex; align-items: center; gap: 6px; line-height: 1.2; }
+        .org-title i { font-size: 1.2rem; color: var(--secondary); }
 
-        .role-badge { background: rgba(255,255,255,0.22); font-size: 0.68rem; padding: 2px 7px; border-radius: 10px; font-weight: 700; color: #fef08a; margin-left: 4px; }
+        .role-badge { background: rgba(255,255,255,0.22); font-size: 0.65rem; padding: 1px 6px; border-radius: 10px; font-weight: 700; color: #fef08a; margin-left: 4px; }
 
-        .admin-btn { background: var(--secondary); color: var(--primary-dark); border: none; padding: 5px 11px; border-radius: 15px; cursor: pointer; font-size: 0.78rem; font-weight: 800; display: flex; align-items: center; gap: 4px; transition: 0.3s; }
+        .admin-btn { background: var(--secondary); color: var(--primary-dark); border: none; padding: 4px 10px; border-radius: 12px; cursor: pointer; font-size: 0.75rem; font-weight: 800; display: flex; align-items: center; gap: 4px; transition: 0.3s; }
         .admin-btn:hover { background: #e08e0b; }
-        .login-btn-head { background: #ffffff; color: var(--primary); border: none; padding: 4px 10px; border-radius: 12px; font-weight: 800; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; gap: 4px; }
+        .login-btn-head { background: #ffffff; color: var(--primary); border: none; padding: 4px 10px; border-radius: 12px; font-weight: 800; font-size: 0.72rem; cursor: pointer; display: flex; align-items: center; gap: 4px; }
 
         /* सर्च बार व टॅब्स */
-        .search-tab-row { display: flex; flex-direction: column; gap: 5px; }
-        .search-box { width: 100%; display: flex; align-items: center; background: rgba(255, 255, 255, 0.18); border-radius: 18px; padding: 2px 10px; border: 1px solid rgba(255,255,255,0.25); }
-        .search-box input { border: none; background: transparent; outline: none; color: white; width: 100%; padding: 3px; font-size: 0.85rem; }
+        .search-tab-row { display: flex; flex-direction: column; gap: 4px; }
+        .search-box { width: 100%; display: flex; align-items: center; background: rgba(255, 255, 255, 0.18); border-radius: 16px; padding: 2px 8px; border: 1px solid rgba(255,255,255,0.25); }
+        .search-box input { border: none; background: transparent; outline: none; color: white; width: 100%; padding: 2px 4px; font-size: 0.82rem; }
         .search-box input::placeholder { color: #e2e8f0; }
 
-        .tabs { display: flex; gap: 5px; }
-        .tabs button { flex: 1; background: rgba(255,255,255,0.2); border: none; color: white; font-size: 0.78rem; font-weight: 700; padding: 5px 8px; border-radius: 8px; cursor: pointer; position: relative; }
+        .tabs { display: none; gap: 5px; }
+        .tabs button { flex: 1; background: rgba(255,255,255,0.2); border: none; color: white; font-size: 0.78rem; font-weight: 700; padding: 5px 8px; border-radius: 8px; cursor: pointer; }
         .tabs button.active { background: #ffffff; color: var(--primary); font-weight: 800; }
-        
-        .badge-count { position: absolute; top: -5px; right: -5px; background: var(--danger); color: white; font-size: 0.65rem; padding: 1px 6px; border-radius: 10px; font-weight: 800; display: none; }
 
-        /* २. PDF / गूगल ड्राईव्ह बॅनर */
-        .pdf-drive-banner { background: linear-gradient(90deg, #fffbe3, #ffeed0); border-bottom: 1px solid #fcd34d; padding: 6px 12px; display: flex; justify-content: space-between; align-items: center; font-size: 0.82rem; color: #854d0e; font-weight: 700; }
-        .pdf-drive-link { background: var(--primary); color: white; text-decoration: none; padding: 4px 10px; border-radius: 5px; font-size: 0.75rem; display: inline-flex; align-items: center; gap: 5px; font-weight: 800; }
-
-        /* ३. 💬 चॅट बॉक्स (वॉटरमार्क लोगो) */
+        /* २. 💬 चॅट बॉक्स (वॉटरमार्कसह) */
         .chat-box { 
             flex: 1; 
-            padding: 15px; 
+            padding: 12px; 
             overflow-y: auto; 
             background-color: var(--bg-chat); 
             display: flex; 
             flex-direction: column; 
-            gap: 12px; 
+            gap: 10px; 
             position: relative;
             scroll-behavior: smooth;
         }
 
+        /* फिकट वॉटरमार्क लोगो */
         .chat-box::before {
             content: "";
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            background-image: url('1001264489.png');
+            background-image: url('1001264489.png'); 
             background-repeat: no-repeat;
             background-position: center;
-            background-size: 320px;
-            opacity: 0.08;
+            background-size: 280px; 
+            opacity: 0.06; 
             pointer-events: none;
             z-index: 0;
         }
 
         /* मेसेज फुगे */
-        .message-wrapper { display: flex; align-items: flex-start; gap: 8px; max-width: 85%; position: relative; z-index: 1; }
+        .message-wrapper { display: flex; align-items: flex-start; gap: 8px; max-width: 88%; position: relative; z-index: 1; }
         .message-wrapper.my-msg-wrapper { align-self: flex-end; flex-direction: row-reverse; }
 
-        .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 800; flex-shrink: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.15); overflow: hidden; border: 2px solid white; }
+        .avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 800; flex-shrink: 0; box-shadow: 0 2px 4px rgba(0,0,0,0.12); overflow: hidden; border: 2px solid white; }
         .avatar img { width: 100%; height: 100%; object-fit: cover; }
 
-        .message { padding: 8px 12px; border-radius: 12px; background: #ffffff; position: relative; box-shadow: 0 3px 6px rgba(0,0,0,0.06); font-size: 0.92rem; line-height: 1.4; border-top-left-radius: 0; word-break: break-word; color: var(--text-dark); border: 1px solid #e2e8f0; }
+        .message { padding: 8px 12px; border-radius: 12px; background: #ffffff; position: relative; box-shadow: 0 2px 5px rgba(0,0,0,0.06); font-size: 0.9rem; line-height: 1.35; border-top-left-radius: 0; word-break: break-word; color: var(--text-dark); border: 1px solid #e2e8f0; }
         .message-wrapper.my-msg-wrapper .message { background: var(--my-msg); border-top-left-radius: 12px; border-top-right-radius: 0; border: 1px solid #bce3a6; }
         
         .msg-user { font-size: 0.75rem; font-weight: 800; color: var(--primary); margin-bottom: 2px; display: flex; justify-content: space-between; gap: 8px; }
@@ -104,56 +99,57 @@
         
         .msg-time-row { display: flex; justify-content: flex-end; align-items: center; gap: 6px; margin-top: 4px; }
         .msg-time { font-size: 0.62rem; color: #64748b; font-weight: 700; }
-        .seen-badge { cursor: pointer; color: #0284c7; font-size: 0.7rem; font-weight: 800; background: rgba(59, 130, 246, 0.1); padding: 1px 5px; border-radius: 8px; transition: 0.2s; }
-        .seen-badge:hover { background: rgba(59, 130, 246, 0.25); color: #0369a1; }
+        .seen-badge { cursor: pointer; color: #0284c7; font-size: 0.68rem; font-weight: 800; background: rgba(59, 130, 246, 0.1); padding: 1px 5px; border-radius: 8px; transition: 0.2s; }
+        .seen-badge:hover { background: rgba(59, 130, 246, 0.25); }
         
-        .msg-image-box { position: relative; margin-top: 5px; }
-        .msg-image { max-width: 100%; border-radius: 8px; cursor: pointer; border: 1px solid #cbd5e1; max-height: 250px; object-fit: cover; display: block; }
-        .img-download-btn { display: inline-flex; align-items: center; gap: 4px; background: rgba(11, 61, 145, 0.9); color: white; border: none; padding: 4px 10px; border-radius: 6px; font-size: 0.72rem; font-weight: 700; margin-top: 5px; text-decoration: none; }
+        /* फोटो आणि पीडीएफ स्टाइलिंग */
+        .msg-image-box { position: relative; margin-top: 4px; }
+        .msg-image { max-width: 100%; border-radius: 8px; cursor: pointer; border: 1px solid #cbd5e1; max-height: 240px; object-fit: cover; display: block; }
+        .img-download-btn { display: inline-flex; align-items: center; gap: 4px; background: var(--primary); color: white; border: none; padding: 4px 8px; border-radius: 6px; font-size: 0.72rem; font-weight: 700; margin-top: 4px; text-decoration: none; }
+
+        .pdf-card { margin-top: 4px; background: #fff1f2; border: 1px solid #fecdd3; padding: 8px; border-radius: 8px; display: flex; align-items: center; gap: 8px; }
+        .pdf-card i { font-size: 2rem; color: #ef4444; }
+        .pdf-card-info { flex: 1; overflow: hidden; }
+        .pdf-card-name { font-size: 0.82rem; color: #881337; font-weight: 700; display: block; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
 
         .delete-btn { position: absolute; top: -6px; right: -6px; background: var(--danger); color: white; border: none; border-radius: 50%; width: 20px; height: 20px; cursor: pointer; font-size: 0.65rem; display: none; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
         .message:hover .delete-btn { display: flex; }
 
-        /* ४. इनपुट एरिया */
-        .input-area { display: flex; padding: 8px 12px; background: #f0f4f8; align-items: center; gap: 8px; border-top: 1px solid #cbd5e1; z-index: 2; transition: 0.3s; }
-        .file-label { cursor: pointer; font-size: 1.25rem; color: #475569; padding: 2px; display: flex; align-items: center; transition: 0.3s; }
+        /* ३. इनपुट एरिया */
+        .input-area { display: flex; padding: 8px 10px; background: #f0f4f8; align-items: center; gap: 8px; border-top: 1px solid #cbd5e1; z-index: 2; }
+        .file-label { cursor: pointer; font-size: 1.2rem; color: #475569; padding: 2px; display: flex; align-items: center; transition: 0.3s; }
         .file-label:hover { color: var(--primary); }
         #fileInput { display: none; }
         
-        .input-area input[type="text"] { flex: 1; padding: 9px 14px; border-radius: 20px; border: 1px solid #cbd5e1; outline: none; font-size: 0.9rem; background: #ffffff; transition: 0.3s; }
-        
-        .send-btn { background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-weight: 800; font-size: 0.85rem; display: flex; align-items: center; gap: 5px; transition: 0.3s; }
+        .input-area input[type="text"] { flex: 1; padding: 8px 12px; border-radius: 20px; border: 1px solid #cbd5e1; outline: none; font-size: 0.88rem; background: #ffffff; }
+        .send-btn { background: var(--primary); color: white; border: none; padding: 8px 14px; border-radius: 20px; cursor: pointer; font-weight: 800; font-size: 0.82rem; display: flex; align-items: center; gap: 4px; transition: 0.3s; }
 
-        #loader { display: none; background: #fef08a; color: #854d0e; padding: 6px; text-align: center; font-size: 0.82rem; font-weight: bold; border-bottom: 1px solid #fde047; }
+        #loader { display: none; background: #fef08a; color: #854d0e; padding: 5px; text-align: center; font-size: 0.8rem; font-weight: bold; border-bottom: 1px solid #fde047; }
 
         /* मोडल्स */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.65); justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(2px); }
-        .modal-content { background: white; padding: 18px; border-radius: 14px; width: 92%; max-width: 550px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); max-height: 90vh; overflow-y: auto; }
-        .modal-header { font-size: 1rem; font-weight: 800; margin-bottom: 12px; color: var(--primary); display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 6px; }
+        .modal-content { background: white; padding: 16px; border-radius: 14px; width: 92%; max-width: 550px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); max-height: 90vh; overflow-y: auto; }
+        .modal-header { font-size: 0.95rem; font-weight: 800; margin-bottom: 10px; color: var(--primary); display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 5px; }
         
-        .setting-section { margin-bottom: 12px; background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0; }
-        .setting-title { font-weight: 800; font-size: 0.82rem; color: var(--primary); margin-bottom: 6px; text-transform: uppercase; display: flex; align-items: center; gap: 5px; }
-        .setting-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 0.85rem; font-weight: 600; }
-        .setting-item input[type="text"], .setting-item select { padding: 5px 8px; border-radius: 5px; border: 1px solid #cbd5e1; outline: none; font-size: 0.82rem; }
-        .close-modal { cursor: pointer; font-size: 1.2rem; border: none; background: none; color: #64748b; }
+        .setting-section { margin-bottom: 10px; background: #f8fafc; padding: 8px; border-radius: 8px; border: 1px solid #e2e8f0; }
+        .setting-title { font-weight: 800; font-size: 0.8rem; color: var(--primary); margin-bottom: 5px; text-transform: uppercase; display: flex; align-items: center; gap: 5px; }
+        .setting-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-size: 0.82rem; font-weight: 600; }
+        .setting-item input[type="text"], .setting-item select { padding: 4px 6px; border-radius: 5px; border: 1px solid #cbd5e1; outline: none; font-size: 0.8rem; }
+        .close-modal { cursor: pointer; font-size: 1.1rem; border: none; background: none; color: #64748b; }
         
-        .btn-danger { background: var(--danger); color: white; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-weight: 800; font-size: 0.82rem; width: 100%; margin-top: 4px; }
-        .btn-warning { background: var(--secondary); color: var(--primary-dark); border: none; padding: 6px 8px; border-radius: 6px; cursor: pointer; font-weight: 800; font-size: 0.78rem; }
-        .btn-primary-sm { background: var(--primary); color: white; border: none; padding: 7px 12px; border-radius: 6px; font-size: 0.82rem; font-weight: 700; cursor: pointer; }
+        .btn-danger { background: var(--danger); color: white; border: none; padding: 7px 10px; border-radius: 6px; cursor: pointer; font-weight: 800; font-size: 0.8rem; width: 100%; margin-top: 4px; }
+        .btn-warning { background: var(--secondary); color: var(--primary-dark); border: none; padding: 5px 8px; border-radius: 6px; cursor: pointer; font-weight: 800; font-size: 0.75rem; }
+        .btn-primary-sm { background: var(--primary); color: white; border: none; padding: 6px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 700; cursor: pointer; }
         
-        .manual-clean-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 6px; }
-        .perm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; background: #ffffff; padding: 8px; border-radius: 6px; border: 1px solid #cbd5e1; margin-top: 6px; }
-        .perm-grid label { font-size: 0.78rem; font-weight: 600; display: flex; align-items: center; gap: 5px; cursor: pointer; }
+        .manual-clean-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 5px; }
+        .perm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; background: #ffffff; padding: 6px; border-radius: 6px; border: 1px solid #cbd5e1; margin-top: 5px; }
+        .perm-grid label { font-size: 0.75rem; font-weight: 600; display: flex; align-items: center; gap: 4px; cursor: pointer; }
 
         @media (max-width: 768px) {
             body { padding: 0; }
             .chat-container { height: 100vh; border-radius: 0; border: none; }
-            .org-header { padding: 7px 10px; gap: 4px; }
-            .org-title { font-size: 0.85rem; gap: 5px; }
-            .role-badge { font-size: 0.62rem; padding: 1px 5px; }
-            .admin-btn, .login-btn-head { padding: 3px 8px; font-size: 0.72rem; }
-            .pdf-drive-banner { font-size: 0.75rem; padding: 5px 10px; }
-            .pdf-drive-link { padding: 3px 8px; font-size: 0.7rem; }
+            .org-header { padding: 6px 8px; }
+            .org-title { font-size: 0.82rem; }
         }
     </style>
 </head>
@@ -161,13 +157,14 @@
 
 <div class="chat-container">
     
+    <!-- १. मुख्य कॉम्पॅक्ट हेडर पट्टी -->
     <div class="org-header">
         <div class="top-brand">
             <div class="org-title">
                 <i class="fa-solid fa-shield-halved"></i>
                 <div>
-                    <span>क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना महाराष्ट्र राज्य</span>
-                    <span class="role-badge" id="userRoleBadge">सदस्य (Member)</span>
+                    <span>क्ष-किरण वैज्ञानिक अधिकारी संघटना महाराष्ट्र राज्य</span>
+                    <span class="role-badge" id="userRoleBadge">सदस्य</span>
                 </div>
             </div>
             <div style="display:flex; gap:5px; align-items:center;">
@@ -181,40 +178,28 @@
         <div class="search-tab-row">
             <div class="search-box">
                 <i class="fa-solid fa-magnifying-glass" style="color:#e2e8f0; font-size:0.75rem; margin-right:4px;"></i>
-                <input type="text" id="searchInput" placeholder="मेसेज, नाव किंवा मोबाईल शोधा..." oninput="filterMessages()">
+                <input type="text" id="searchInput" placeholder="मेसेज, नाव किंवा फाईल शोधा..." oninput="filterMessages()">
             </div>
 
-            <!-- टॅब नेव्हिगेशन -->
-            <div class="tabs" id="tabsContainer" style="display:flex;">
-                <button id="tab-all" class="active" onclick="switchRoom('GroupAll')">
-                    👥 सदस्य + ॲडमिन चॅट <span id="badge-all" class="badge-count">0</span>
-                </button>
-                <button id="tab-admin" onclick="switchRoom('admin_chat')" style="display:none;">
-                    🔒 ॲडमिन प्रायव्हेट चॅट <span id="badge-admin" class="badge-count">0</span>
-                </button>
+            <!-- नवीन टॅब्स नावे: सदस्य + पदाधिकारी आणि पदाधिकारी चॅट -->
+            <div class="tabs" id="tabsContainer">
+                <button id="tab-all" class="active" onclick="switchRoom('GroupAll')">👥 सदस्य + पदाधिकारी</button>
+                <button id="tab-admin" onclick="switchRoom('admin_chat')">🔒 पदाधिकारी चॅट</button>
             </div>
         </div>
     </div>
 
-    <!-- PDF व ड्राईव्ह लिंक -->
-    <div class="pdf-drive-banner" id="pdfDriveBanner">
-        <span>📄 शासकीय परिपत्रके व अधिकृत फाईल्स:</span>
-        <a href="https://drive.google.com" id="pdfDriveLinkBtn" target="_blank" class="pdf-drive-link">
-            <i class="fa-solid fa-folder-open"></i> ड्राईव्ह उघडा
-        </a>
-    </div>
-
     <div id="loader"><i class="fa-solid fa-spinner fa-spin"></i> फाईल अपलोड होत आहे... कृपया वाट पहा...</div>
     
-    <!-- चॅट बॉक्स -->
+    <!-- २. चॅट मेसेज विंडो -->
     <div class="chat-box" id="chatBox"></div>
 
-    <!-- इनपुट बॉक्स -->
+    <!-- ३. इनपुट पट्टी (PDF व इमेज सपोर्ट) -->
     <div class="input-area" id="inputAreaBox">
-        <label for="fileInput" class="file-label" id="fileInputLabel" title="फोटो किंवा PDF फाईल जोडा">
+        <label for="fileInput" class="file-label" id="fileInputLabel" title="फोटो किंवा PDF फाईल पाठवा">
             <i class="fa-solid fa-paperclip"></i>
         </label>
-        <input type="file" id="fileInput" accept="image/*,.pdf" onchange="handleFileUpload(event)">
+        <input type="file" id="fileInput" accept="image/*,.pdf,application/pdf" onchange="handleFileUpload(event)">
         
         <input type="text" id="msgInput" placeholder="येथे मेसेज टाईप करा..." autocomplete="off" onkeypress="handleEnter(event)">
         <button class="send-btn" id="sendMsgBtn" onclick="sendTextMessage()">
@@ -225,20 +210,20 @@
 
 <!-- ॲडमिन लॉगिन मोडल -->
 <div class="modal" id="loginModal">
-    <div class="modal-content" style="max-width: 400px; text-align: center;">
+    <div class="modal-content" style="max-width: 380px; text-align: center;">
         <div class="modal-header">
-            <span>🔐 ॲडमिन सुरक्षा लॉगिन</span>
+            <span>🔐 ॲडमिन लॉगिन</span>
             <button class="close-modal" onclick="closeModal('loginModal')">✖</button>
         </div>
         <div style="padding: 10px 0;">
-            <input type="email" id="loginEmail" placeholder="नोंदणीकृत ई-मेल ID" style="width:100%; padding:9px; margin-bottom:10px; border:1px solid #cbd5e1; border-radius:8px;">
-            <input type="password" id="loginPass" placeholder="पासवर्ड" style="width:100%; padding:9px; margin-bottom:15px; border:1px solid #cbd5e1; border-radius:8px;">
-            <button class="btn-primary-sm" onclick="performAdminLogin()" style="width:100%; padding:10px; font-size:0.95rem;"><i class="fa-solid fa-right-to-bracket"></i> लॉगिन करा</button>
+            <input type="email" id="loginEmail" placeholder="नोंदणीकृत ई-मेल ID" style="width:100%; padding:8px; margin-bottom:8px; border:1px solid #cbd5e1; border-radius:6px;">
+            <input type="password" id="loginPass" placeholder="पासवर्ड" style="width:100%; padding:8px; margin-bottom:12px; border:1px solid #cbd5e1; border-radius:6px;">
+            <button class="btn-primary-sm" onclick="performAdminLogin()" style="width:100%; padding:8px;"><i class="fa-solid fa-right-to-bracket"></i> लॉगिन करा</button>
         </div>
     </div>
 </div>
 
-<!-- ॲडमिन कंट्रोल पॅनेल (मागील सर्व फंक्शन्ससह) -->
+<!-- ॲडमिन कंट्रोल पॅनेल (सुपर ॲडमिन व सब-ॲडमिन नियंत्रणे) -->
 <div class="modal" id="adminModal">
     <div class="modal-content">
         <div class="modal-header">
@@ -248,39 +233,20 @@
         
         <div class="setting-section" id="sec_super_admin_panel" style="background:#f0f9ff; border-color:#0284c7; display:none;">
             <div class="setting-title" style="color:#0369a1;"><i class="fa-solid fa-user-shield"></i> 👑 सब-ॲडमिन टिक-बॉक्स परवानग्या</div>
-            <p style="font-size:0.75rem; color:#475569; margin-bottom:6px;">सब-ॲडमिनला कोणते अधिकार द्यायचे ते निवडा:</p>
+            <p style="font-size:0.72rem; color:#475569; margin-bottom:4px;">सब-ॲडमिनला कोणते अधिकार द्यायचे ते निवडा:</p>
 
             <div class="perm-grid">
-                <label><input type="checkbox" id="perm_drive_link" checked> 📁 PDF/ड्राईव्ह लिंक बदलणे</label>
-                <label><input type="checkbox" id="perm_profile_settings" checked> 👤 सदस्य नाव, मोबाईल व DP</label>
-                <label><input type="checkbox" id="perm_download_option" checked> ⬇️ फोटो डाऊनलोड पर्याय</label>
+                <label><input type="checkbox" id="perm_profile_settings" checked> 👤 सदस्य नाव व मोबाईल</label>
+                <label><input type="checkbox" id="perm_download_option" checked> ⬇️ डाऊनलोड परवानगी</label>
                 <label><input type="checkbox" id="perm_member_delete" checked> 🛡️ मेसेज डिलीट परवानगी</label>
                 <label><input type="checkbox" id="perm_auto_delete"> ⏳ ऑटो-डिलीट सेट करा</label>
                 <label><input type="checkbox" id="perm_manual_clean"> 🧹 मॅन्युअल क्लिनअप</label>
                 <label><input type="checkbox" id="perm_clear_room"> ⚠️ पूर्ण रूम क्लियर करणे</label>
             </div>
 
-            <button class="btn-primary-sm" onclick="saveSubAdminPermissions()" style="width:100%; margin-top:8px;">
+            <button class="btn-primary-sm" onclick="saveSubAdminPermissions()" style="width:100%; margin-top:6px;">
                 <i class="fa-solid fa-save"></i> परवानग्या सेव्ह करा
             </button>
-        </div>
-
-        <div class="setting-section" id="sec_drive_link" style="background:#fffbe3; border-color:#fcd34d;">
-            <div class="setting-title" style="color:#b45309;"><i class="fa-solid fa-folder-open"></i> 📁 PDF व गूगल ड्राईव्ह लिंक</div>
-            <div class="setting-item" style="flex-direction:column; align-items:flex-start; gap:4px;">
-                <span style="font-size:0.78rem;">गूगल ड्राईव्ह किंवा टेलिग्राम URL:</span>
-                <input type="text" id="driveUrlInput" placeholder="https://drive.google.com/..." style="width:100%;">
-                <button class="btn-warning" onclick="saveDriveUrl()" style="margin-top:4px; width:100%;">लिंक सेव्ह करा</button>
-            </div>
-        </div>
-
-        <div class="setting-section" id="sec_telegram_channel">
-            <div class="setting-title" style="color:#0284c7;"><i class="fa-brands fa-telegram"></i> 🤖 Telegram Channel / Chat ID</div>
-            <div class="setting-item" style="flex-direction:column; align-items:flex-start; gap:4px;">
-                <span style="font-size:0.78rem;">PDF सेव्ह करण्यासाठी टेलिग्राम चॅनेल ID / Username:</span>
-                <input type="text" id="telegramChannelInput" placeholder="@xrayunion_pdf_storage किंवा Numeric ID" style="width:100%;">
-                <button class="btn-primary-sm" onclick="saveTelegramChannel()" style="margin-top:4px; width:100%;">चॅनेल ID सेव्ह करा</button>
-            </div>
         </div>
 
         <div class="setting-section" id="sec_profile_settings">
@@ -296,9 +262,9 @@
         </div>
 
         <div class="setting-section" id="sec_download_option">
-            <div class="setting-title"><i class="fa-solid fa-download"></i> ⬇️ फोटो डाऊनलोड बटण</div>
+            <div class="setting-title"><i class="fa-solid fa-download"></i> ⬇️ फोटो/PDF डाऊनलोड बटण</div>
             <div class="setting-item">
-                <span>चॅटमधील फोटोवर डाऊनलोड बटण दाखवा:</span>
+                <span>चॅटमधील फोटो व फाईल्सवर डाऊनलोड पर्याय दाखवा:</span>
                 <input type="checkbox" id="toggleEnableDownload" onchange="updateSettings()">
             </div>
         </div>
@@ -340,7 +306,7 @@
     </div>
 </div>
 
-<!-- Firebase SDK -->
+<!-- FIREBASE SDKs -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
@@ -356,18 +322,16 @@
     const SUPER_ADMIN_EMAIL = "hangemahesh498@gmail.com";
     const TELEGRAM_BOT_TOKEN = "8598859316:AAHzoROJMwIFlm30XO3DxHJdk3kkjv6uS5c";
 
-    // 🔄 सदस्यांची युझर माहिती (डॅशबोर्ड किंवा आयफ्रेम Parent वरून ऑटोमॅटिक डिटेक्ट होईल)
     const urlParams = new URLSearchParams(window.location.search);
-    let currentUser = urlParams.get('name') || (window.parent && window.parent.currentMember ? window.parent.currentMember.name : "सदस्य"); 
-    let currentUserMobile = urlParams.get('mobile') || (window.parent && window.parent.currentMember ? window.parent.currentMember.mobile : "९८xxxxxx००");
-    let currentUserPost = urlParams.get('post') || (window.parent && window.parent.currentMember ? window.parent.currentMember.designation : "क्ष-किरण अधिकारी");
-    let currentUserPhoto = urlParams.get('photo') || (window.parent && window.parent.currentMember ? window.parent.currentMember.photoUrl : "1001264489.png");
+    let currentUser = urlParams.get('name') || "वैज्ञानिक अधिकारी"; 
+    let currentUserMobile = urlParams.get('mobile') || "98xxxxxx00";
+    let currentUserPost = urlParams.get('post') || "गट-क सदस्य";
+    let currentUserPhoto = urlParams.get('photo') || "1001264489.png"; 
     
     let currentRole = "member"; 
     let currentRoom = "GroupAll"; 
     let unsubscribe = null;
     let allLoadedMessages = [];
-    let unreadCounts = { GroupAll: 0, admin_chat: 0 };
 
     let appSettings = {
         allowMemberDelete: true,
@@ -375,9 +339,8 @@
         showMobilePost: true,
         enableDownload: true,
         autoDeleteDays: 0,
-        pdfDriveUrl: "https://drive.google.com",
         telegramChannelId: "@xrayunion_pdf_storage",
-        subAdminPerms: { perm_drive_link: true, perm_profile_settings: true, perm_download_option: true, perm_member_delete: true, perm_auto_delete: false, perm_manual_clean: false, perm_clear_room: false }
+        subAdminPerms: { perm_profile_settings: true, perm_download_option: true, perm_member_delete: true, perm_auto_delete: false, perm_manual_clean: false, perm_clear_room: false }
     };
 
     firebase.initializeApp(firebaseConfig);
@@ -408,40 +371,27 @@
                 document.getElementById("loginBtnHead").onclick = openLoginModal;
             }
 
-            // सदस्यासाठी चॅट नेहमी खुली राहील
-            enableInputArea();
             setupRoleUI();
             listenToSettings();
             loadMessages(currentRoom);
-            setupGlobalNotifications();
         });
     };
 
-    function enableInputArea() {
-        const msgInput = document.getElementById("msgInput");
-        msgInput.disabled = false;
-        msgInput.placeholder = "येथे मेसेज टाईप करा...";
-        document.getElementById("sendMsgBtn").disabled = false;
-        document.getElementById("fileInputLabel").style.opacity = "1";
-        document.getElementById("fileInputLabel").style.pointerEvents = "auto";
-    }
-
     function setupRoleUI() {
         const badge = document.getElementById("userRoleBadge");
-        
         if (currentRole === "super_admin") {
             badge.innerText = "👑 सुपर ॲडमिन";
-            document.getElementById("tab-admin").style.display = "inline-block";
+            document.getElementById("tabsContainer").style.display = "flex";
             document.getElementById("adminControls").style.display = "block";
             document.getElementById("sec_super_admin_panel").style.display = "block";
         } else if (currentRole === "sub_admin") {
             badge.innerText = "⚙️ सब-ॲडमिन";
-            document.getElementById("tab-admin").style.display = "inline-block";
+            document.getElementById("tabsContainer").style.display = "flex";
             document.getElementById("adminControls").style.display = "block";
             document.getElementById("sec_super_admin_panel").style.display = "none";
         } else {
-            badge.innerText = "👤 सदस्य (Member)";
-            document.getElementById("tab-admin").style.display = "none";
+            badge.innerText = "👤 सदस्य";
+            document.getElementById("tabsContainer").style.display = "none";
             document.getElementById("adminControls").style.display = "none";
             document.getElementById("sec_super_admin_panel").style.display = "none";
         }
@@ -449,7 +399,6 @@
 
     function applySubAdminPermissions() {
         if (currentRole === "super_admin") {
-            document.getElementById("sec_drive_link").style.display = "block";
             document.getElementById("sec_profile_settings").style.display = "block";
             document.getElementById("sec_download_option").style.display = "block";
             document.getElementById("sec_member_delete").style.display = "block";
@@ -458,7 +407,6 @@
             document.getElementById("sec_clear_room").style.display = "block";
         } else if (currentRole === "sub_admin") {
             const perms = appSettings.subAdminPerms || {};
-            document.getElementById("sec_drive_link").style.display = perms.perm_drive_link ? "block" : "none";
             document.getElementById("sec_profile_settings").style.display = perms.perm_profile_settings ? "block" : "none";
             document.getElementById("sec_download_option").style.display = perms.perm_download_option ? "block" : "none";
             document.getElementById("sec_member_delete").style.display = perms.perm_member_delete ? "block" : "none";
@@ -478,17 +426,8 @@
                 document.getElementById("toggleShowMobilePost").checked = appSettings.showMobilePost || false;
                 document.getElementById("toggleEnableDownload").checked = appSettings.enableDownload || false;
                 document.getElementById("autoDeleteSelect").value = appSettings.autoDeleteDays || 0;
-                
-                let driveUrl = appSettings.pdfDriveUrl || "https://drive.google.com";
-                document.getElementById("driveUrlInput").value = driveUrl;
-                document.getElementById("pdfDriveLinkBtn").href = driveUrl;
-
-                if (document.getElementById("telegramChannelInput")) {
-                    document.getElementById("telegramChannelInput").value = appSettings.telegramChannelId || "@xrayunion_pdf_storage";
-                }
 
                 if (appSettings.subAdminPerms) {
-                    document.getElementById("perm_drive_link").checked = appSettings.subAdminPerms.perm_drive_link || false;
                     document.getElementById("perm_profile_settings").checked = appSettings.subAdminPerms.perm_profile_settings || false;
                     document.getElementById("perm_download_option").checked = appSettings.subAdminPerms.perm_download_option || false;
                     document.getElementById("perm_member_delete").checked = appSettings.subAdminPerms.perm_member_delete || false;
@@ -527,7 +466,9 @@
 
     function performAdminLogout() {
         auth.signOut().then(() => {
-            window.location.reload(); 
+            Swal.fire('लॉगआउट झाले', 'आपण लॉगआउट झाला आहात.', 'info').then(() => {
+                window.location.href = window.location.pathname; 
+            });
         });
     }
 
@@ -538,8 +479,6 @@
         if(room === "GroupAll") document.getElementById("tab-all").classList.add("active");
         if(room === "admin_chat") document.getElementById("tab-admin").classList.add("active");
 
-        unreadCounts[room] = 0;
-        updateBadgeUI();
         loadMessages(room);
     }
 
@@ -556,44 +495,11 @@
                 });
                 renderMessages(allLoadedMessages);
                 markUnreadMessagesAsSeen();
-            }, (error) => {
-                console.error("Firestore Listen Error:", error);
             });
-    }
-
-    function setupGlobalNotifications() {
-        db.collection("chat_messages").onSnapshot((snapshot) => {
-            snapshot.docChanges().forEach((change) => {
-                if (change.type === "added") {
-                    let msgData = change.doc.data();
-                    let msgRoom = msgData.room || "GroupAll";
-                    
-                    if (msgRoom !== currentRoom && msgData.senderName !== currentUser) {
-                        unreadCounts[msgRoom] = (unreadCounts[msgRoom] || 0) + 1;
-                        updateBadgeUI();
-                    }
-                }
-            });
-        });
-    }
-
-    function updateBadgeUI() {
-        for (let room in unreadCounts) {
-            let badgeId = room === "GroupAll" ? "badge-all" : "badge-admin";
-            let badgeEl = document.getElementById(badgeId);
-            if (badgeEl) {
-                if (unreadCounts[room] > 0) {
-                    badgeEl.innerText = unreadCounts[room];
-                    badgeEl.style.display = "inline-block";
-                } else {
-                    badgeEl.style.display = "none";
-                }
-            }
-        }
     }
 
     function markUnreadMessagesAsSeen() {
-        if (!currentUser) return;
+        if (!currentUser || currentUser === "वैज्ञानिक अधिकारी") return;
         const nowTime = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
 
         allLoadedMessages.forEach((msg) => {
@@ -619,15 +525,15 @@
             return;
         }
 
-        let listHtml = `<div style="max-height: 250px; overflow-y: auto; text-align: left; font-size: 0.88rem;">`;
+        let listHtml = `<div style="max-height: 220px; overflow-y: auto; text-align: left; font-size: 0.85rem;">`;
         readList.forEach((r, idx) => {
             listHtml += `
-                <div style="padding: 6px 10px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
+                <div style="padding: 5px 8px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
                     <div>
                         <b style="color: #0B3D91;">${idx + 1}. ${r.name}</b>
                         <small style="color: #64748b; display: block;">(${r.role || 'सदस्य'})</small>
                     </div>
-                    <span style="font-size: 0.72rem; background: #e0f2fe; color: #0369a1; padding: 2px 6px; border-radius: 6px; font-weight: 700;">
+                    <span style="font-size: 0.7rem; background: #e0f2fe; color: #0369a1; padding: 1px 5px; border-radius: 6px; font-weight: 700;">
                         🕒 ${r.time || ''}
                     </span>
                 </div>
@@ -635,11 +541,11 @@
         });
         listHtml += `</div>`;
 
-       Swal.fire({
-            title: `👁️ हा मेसेज पाहणारे सदस्य (${readList.length})`,
+        Swal.fire({
+            title: `👁️ पाहणारे सदस्य (${readList.length})`,
             html: listHtml,
             showCloseButton: true,
-            confirmButtonText: 'ओके (OK)',
+            confirmButtonText: 'ओके',
             confirmButtonColor: '#0B3D91'
         });
     }
@@ -649,7 +555,7 @@
         chatBox.innerHTML = "";
 
         messages.forEach((data) => {
-            const userName = data.senderName || data.user || "सदस्य";
+            const userName = data.senderName || data.user || "वैज्ञानिक अधिकारी";
             const userPost = data.senderRole || data.userPost || "गट-क सदस्य";
             const isMyMsg = (userName === currentUser || data.user === currentUser);
             
@@ -659,7 +565,11 @@
             if (appSettings.showProfilePhotos) {
                 const avatar = document.createElement("div");
                 avatar.className = "avatar";
-                avatar.innerHTML = `<img src="${data.userPhoto || '1001264489.png'}" alt="DP" onerror="this.src='1001264489.png'">`;
+                if (data.userPhoto) {
+                    avatar.innerHTML = `<img src="${data.userPhoto}" alt="DP" onerror="this.src='1001264489.png'">`;
+                } else {
+                    avatar.innerText = userName ? userName.charAt(0).toUpperCase() : "U";
+                }
                 wrapper.appendChild(avatar);
             }
 
@@ -680,15 +590,15 @@
                     </div>
                 `;
             } else if (data.type === "pdf") {
-                const pdfFileName = data.fileName || "शासकीय परिपत्रक / फाईल";
+                const pdfFileName = data.fileName || "PDF दस्तऐवज";
+                let pdfDownloadBtn = appSettings.enableDownload ? `<a href="${msgText}" target="_blank" download="${pdfFileName}" class="img-download-btn" style="background:#ef4444;"><i class="fa-solid fa-file-arrow-down"></i> PDF डाऊनलोड / उघडा</a>` : `<a href="${msgText}" target="_blank" class="img-download-btn" style="background:#ef4444;"><i class="fa-solid fa-eye"></i> PDF पहा</a>`;
+                
                 contentHtml += `
-                    <div style="margin-top:6px; background:#fff1f2; border:1px solid #fecdd3; padding:10px; border-radius:10px; display:flex; align-items:center; gap:10px;">
-                        <i class="fa-solid fa-file-pdf" style="font-size:2.2rem; color:#ef4444;"></i>
-                        <div style="flex:1; overflow:hidden;">
-                            <b style="font-size:0.85rem; color:#881337; display:block; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;">${pdfFileName}</b>
-                            <a href="${msgText}" target="_blank" class="img-download-btn" style="background:#ef4444; margin-top:5px; text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
-                                <i class="fa-solid fa-file-arrow-down"></i> PDF उघडा / डाऊनलोड
-                            </a>
+                    <div class="pdf-card">
+                        <i class="fa-solid fa-file-pdf"></i>
+                        <div class="pdf-card-info">
+                            <b class="pdf-card-name">${pdfFileName}</b>
+                            ${pdfDownloadBtn}
                         </div>
                     </div>
                 `;
@@ -773,17 +683,11 @@
                 time: timeStr,
                 readBy: [{ name: currentUser, role: currentUserPost, time: timeStr }],
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            })
-            .then(() => {
-                input.value = ""; 
-            })
-            .catch((error) => {
-                console.error("Error sending message:", error);
-                Swal.fire('त्रुटी', 'मेसेज पाठवता आला नाही: ' + error.message, 'error');
-            });
+            }).then(() => { input.value = ""; });
         }
     }
 
+    /* PDF Telegram Storage Upload Function */
     async function uploadPdfToTelegram(file) {
         const channelTarget = appSettings.telegramChannelId || "@xrayunion_pdf_storage";
         const formData = new FormData();
@@ -806,9 +710,10 @@
                 return `https://api.telegram.org/file/bot${TELEGRAM_BOT_TOKEN}/${pathData.result.file_path}`;
             }
         }
-        throw new Error(data.description || "टेलिग्रामवर फाईल अपलोड होऊ शकली नाही.");
+        throw new Error(data.description || "PDF अपलोड अयशस्वी.");
     }
 
+    /* Image & PDF File Upload Handler */
     async function handleFileUpload(event) {
         const file = event.target.files[0];
         if (!file) return;
@@ -891,7 +796,6 @@
     function saveSubAdminPermissions() {
         if (currentRole !== "super_admin") return;
         const subAdminPerms = {
-            perm_drive_link: document.getElementById("perm_drive_link").checked,
             perm_profile_settings: document.getElementById("perm_profile_settings").checked,
             perm_download_option: document.getElementById("perm_download_option").checked,
             perm_member_delete: document.getElementById("perm_member_delete").checked,
@@ -914,22 +818,6 @@
         db.collection("settings").doc("config").set({
             allowMemberDelete: allowDelete, showProfilePhotos: showPhotos, showMobilePost: showMob, enableDownload: enableDl, autoDeleteDays: autoDays
         }, { merge: true });
-    }
-
-    function saveDriveUrl() {
-        const url = document.getElementById("driveUrlInput").value.trim();
-        if(url) {
-            db.collection("settings").doc("config").set({ pdfDriveUrl: url }, { merge: true });
-            Swal.fire('सेव्ह झाले!', 'गूगल ड्राईव्ह / टेलिग्राम लिंक सेव्ह झाली.', 'success');
-        }
-    }
-
-    function saveTelegramChannel() {
-        const chId = document.getElementById("telegramChannelInput").value.trim();
-        if(chId) {
-            db.collection("settings").doc("config").set({ telegramChannelId: chId }, { merge: true });
-            Swal.fire('सेव्ह झाले!', 'टेलिग्राम चॅनेल ID सेव्ह झाला.', 'success');
-        }
     }
 
     function performAutoDeleteCheck(days) {
