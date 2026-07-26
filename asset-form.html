@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>मत्ता व दायित्व विवरणपत्र (वार्षिक)</title>
+    <style>
+        body {
+            font-family: 'Arial', 'Mangal', sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        h2, h3 {
+            text-align: center;
+            color: #1a5276;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 25px;
+        }
+
+        .form-section {
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            background-color: #fafafa;
+        }
+
+        .form-section h4 {
+            margin-top: 0;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 13px;
+        }
+
+        input[type="text"], input[type="number"], input[type="date"], select, textarea {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        .dynamic-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+        }
+
+        .dynamic-table th, .dynamic-table td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .dynamic-table th {
+            background-color: #eaeaea;
+            font-size: 13px;
+        }
+
+        .btn-add {
+            background-color: #3498db;
+            color: white;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        .btn-remove {
+            background-color: #e74c3c;
+            color: white;
+            padding: 4px 8px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .btn-submit {
+            background-color: #27ae60;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        .btn-submit:hover {
+            background-color: #219150;
+        }
+
+        /* जनरेट होणारे विवरणपत्र (Print Ready Layout) */
+        #reportOutput {
+            display: none;
+            background: #ffffff;
+            padding: 40px;
+            border: 2px solid #000;
+            margin: 20px auto;
+            max-width: 900px;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .report-header {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .report-header h3 {
+            margin: 5px 0;
+            color: #000;
+            text-decoration: underline;
+        }
+
+        .report-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            margin-bottom: 20px;
+        }
+
+        .report-table th, .report-table td {
+            border: 1px solid #000;
+            padding: 6px 8px;
+            font-size: 13px;
+        }
+
+        .report-table th {
+            background-color: #f2f2f2;
+            text-align: center;
+        }
+
+        .declaration-box {
+            margin-top: 25px;
+            text-align: justify;
+        }
+
+        .footer-table {
+            width: 100%;
+            margin-top: 40px;
+        }
+
+        .print-btn {
+            background-color: #2980b9;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        /* प्रिंट मीडिया सेटिंग्ज */
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            #reportOutput {
+                display: block !important;
+                border: none;
+                padding: 0;
+                margin: 0;
+                width: 100%;
+            }
+            body {
+                background: white;
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container no-print">
+    <h2>मत्ता व दायित्व विवरणपत्र जनरेटर</h2>
+    <div class="subtitle">महाराष्ट्र नागरी सेवा (वर्तणूक) नियम, १९७९ च्या नियम १९ अन्वये वार्षिक विवरणपत्र</div>
+
+    <form id="assetsForm">
+        <!-- वैयक्तिक माहिती -->
+        <div class="form-section">
+            <h4>१. कर्मचाऱ्याची वैयक्तिक माहिती</h4>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>कर्मचाऱ्याचे पूर्ण नाव:</label>
+                    <input type="text" id="empName" placeholder="उदा. विजय रामराव जोशी" required>
+                </div>
+                <div class="form-group">
+                    <label>पदनाम (Designation):</label>
+                    <input type="text" id="designation" placeholder="उदा. वरिष्ठ लिपिक / गट विकास अधिकारी" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>कार्यालय / विभागाचे नाव:</label>
+                    <input type="text" id="office" placeholder="उदा. जिल्हा परिषद, नाशिक" required>
+                </div>
+                <div class="form-group">
+                    <label>सध्याचे मूळ वेतन व वेतन श्रेणी:</label>
+                    <input type="text" id="payScale" placeholder="उदा. S-13 (₹३५,४०० - १,१२,४००)" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>विवरणपत्राची तारीख (स्थिती):</label>
+                    <input type="text" id="asOnDate" placeholder="उदा. ३१ मार्च २०२६ रोजी असलेली स्थिती" required>
+                </div>
+            </div>
+        </div>
+
+        <!-- स्थावर मत्ता (अचल संपत्ती) -->
+        <div class="form-section">
+            <h4>२. स्थावर मत्ता (अचल संपत्ती) - जमीन, घर, इमारत इत्यादी.</h4>
+            <table class="dynamic-table" id="immovableTable">
+                <thead>
+                    <tr>
+                        <th>मालमत्तेचे वर्णन व पत्ता</th>
+                        <th>कोणाच्या नावे आहे व नाते</th>
+                        <th>संपादन पद्धत (खरेदी/वारसा)</th>
+                        <th>अंदाजे मूल्य (₹)</th>
+                        <th>कार्रवाई</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="text" class="imm-desc" placeholder="उदा. फ्लॅट, नाशिक"></td>
+                        <td><input type="text" class="imm-owner" placeholder="उदा. स्वतः / पत्नी"></td>
+                        <td><input type="text" class="imm-mode" placeholder="उदा. बँक कर्जाद्वारे खरेदी"></td>
+                        <td><input type="number" class="imm-val" placeholder="4000000"></td>
+                        <td><button type="button" class="btn-remove" onclick="removeRow(this)">रद्द करा</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <button type="button" class="btn-add" onclick="addImmovableRow()">+ नवीन स्थावर मत्ता जोडा</button>
+        </div>
+
+        <!-- जंगम मत्ता (चल संपत्ती) -->
+        <div class="form-section">
+            <h4>३. जंगम मत्ता (चल संपत्ती) - रोख, बँका, सोने, वाहने, शेअर इत्यादी.</h4>
+            <table class="dynamic-table" id="movableTable">
+                <thead>
+                    <tr>
+                        <th>तपशील (बँक/सोने/वाहन/शेअर्स)</th>
+                        <th>कोणाच्या नावे आहे</th>
+                        <th>रक्कम / अंदाजे मूल्य (₹)</th>
+                        <th>कार्रवाई</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="text" class="mov-desc" placeholder="उदा. एस.बी.आय. फिक्स डिपॉझिट"></td>
+                        <td><input type="text" class="mov-owner" placeholder="उदा. स्वतः"></td>
+                        <td><input type="number" class="mov-val" placeholder="100000"></td>
+                        <td><button type="button" class="btn-remove" onclick="removeRow(this)">रद्द करा</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <button type="button" class="btn-add" onclick="addMovableRow()">+ नवीन जंगम मत्ता जोडा</button>
+        </div>
+
+        <!-- दायित्व व देणी (कर्ज) -->
+        <div class="form-section">
+            <h4>४. दायित्व (कर्ज व देणी)</h4>
+            <table class="dynamic-table" id="liabilityTable">
+                <thead>
+                    <tr>
+                        <th>कर्ज घेतलेली संस्था / व्यक्ती</th>
+                        <th>कर्जाचा उद्देश</th>
+                        <th>एकूण घेतलेले कर्ज (₹)</th>
+                        <th>सध्या बाकी असलेली रक्कम (₹)</th>
+                        <th>कार्रवाई</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="text" class="lia-bank" placeholder="उदा. स्टेट बँक ऑफ इंडिया"></td>
+                        <td><input type="text" class="lia-purpose" placeholder="उदा. गृहकर्ज"></td>
+                        <td><input type="number" class="lia-total" placeholder="3000000"></td>
+                        <td><input type="number" class="lia-pending" placeholder="2200000"></td>
+                        <td><button type="button" class="btn-remove" onclick="removeRow(this)">रद्द करा</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <button type="button" class="btn-add" onclick="addLiabilityRow()">+ नवीन कर्ज/दायित्व जोडा</button>
+        </div>
+
+        <div class="form-section">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>ठिकाण:</label>
+                    <input type="text" id="place" value="नाशिक" required>
+                </div>
+                <div class="form-group">
+                    <label>सादर केल्याचा दिनांक:</label>
+                    <input type="date" id="submitDate" required>
+                </div>
+            </div>
+        </div>
+
+        <button type="button" class="btn-submit" onclick="generateReport()">विवरणपत्र जनरेट करा</button>
+    </form>
+</div>
+
+<!-- जनरेट होणारे अंतिम विवरणपत्र (Official Print Format) -->
+<div id="reportOutput">
+    <div class="report-header">
+        <h3>विवरणपत्र (Statement of Assets and Liabilities)</h3>
+        <div style="font-size: 13px; margin-top: 5px;">
+            [ महाराष्ट्र नागरी सेवा (वर्तणूक) नियम, १९७९ मधील नियम १९(१) अन्वये शासकीय कर्मचाऱ्याने दरवर्षी सादर करावयाचे अचल व चल संपत्ती व दायित्वाचे विवरणपत्र ]
+        </div>
+        <div style="margin-top: 8px; font-weight: normal; font-size: 14px;">
+            <strong>कालावधी/स्थिती:</strong> <span id="outAsOnDate"></span>
+        </div>
+    </div>
+
+    <!-- कर्मचाऱ्याची माहिती -->
+    <table class="report-table">
+        <tr>
+            <td style="width: 25%; font-weight: bold;">कर्मचाऱ्याचे नाव:</td>
+            <td style="width: 25%;" id="outEmpName"></td>
+            <td style="width: 25%; font-weight: bold;">पदनाम:</td>
+            <td style="width: 25%;" id="outDesignation"></td>
+        </tr>
+        <tr>
+            <td style="font-weight: bold;">कार्यालय/विभाग:</td>
+            <td id="outOffice"></td>
+            <td style="font-weight: bold;">मूळ वेतन व श्रेणी:</td>
+            <td id="outPayScale"></td>
+        </tr>
+    </table>
+
+    <!-- स्थावर मत्ता टेबल -->
+    <strong>१. अचल संपत्ती (स्थावर मत्ता - जमीन, घर, इमारत इत्यादी):</strong>
+    <table class="report-table" id="outImmTable">
+        <thead>
+            <tr>
+                <th style="width: 8%;">अ.क्र.</th>
+                <th>मालमत्तेचे वर्णन व पत्ता</th>
+                <th>कोणाच्या नावे आहे व नाते</th>
+                <th>संपादन पद्धत (खरेदी/वारसा)</th>
+                <th>अंदाजे मूल्य (₹)</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <!-- जंगम मत्ता टेबल -->
+    <strong>२. चल संपत्ती (जंगम मत्ता - बँक शिल्लक, रोख, दागिने, वाहने, शेअर्स इत्यादी):</strong>
+    <table class="report-table" id="outMovTable">
+        <thead>
+            <tr>
+                <th style="width: 8%;">अ.क्र.</th>
+                <th>तपशील</th>
+                <th>कोणाच्या नावे आहे</th>
+                <th>रक्कम / अंदाजे मूल्य (₹)</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <!-- दायित्व टेबल -->
+    <strong>३. दायित्व व देणी (बँक कर्जे, उचल इत्यादी):</strong>
+    <table class="report-table" id="outLiaTable">
+        <thead>
+            <tr>
+                <th style="width: 8%;">अ.क्र.</th>
+                <th>कर्ज घेतलेली संस्था / व्यक्ती</th>
+                <th>उद्देश</th>
+                <th>एकूण मंजूर कर्ज (₹)</th>
+                <th>बाकी असलेली रक्कम (₹)</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <!-- वचननामा / घोषणापत्र -->
+    <div class="declaration-box">
+        <strong>प्रतिज्ञापत्र / घोषणा:</strong><br>
+        मी याद्वारे घोषित करतो/करते की, वर दिलेली माहिती माझ्या ज्ञानानुसार आणि विश्वासानुसार अगदी खरी आणि पूर्ण आहे. मी महाराष्ट्र नागरी सेवा (वर्तणूक) नियम, १९७९ च्या नियम १९ मधील तरतुदींनुसार माझ्या आणि माझ्या कुटुंबाच्या नावावर असणाऱ्या सर्व अचल, चल संपत्ती व दायित्वाचा पूर्ण तपशील यात दिलेला आहे.
+    </div>
+
+    <table class="footer-table">
+        <tr>
+            <td style="width: 50%;">
+                ठिकाण: <span id="outPlace"></span><br>
+                दिनांक: <span id="outSubmitDate"></span>
+            </td>
+            <td style="width: 50%; text-align: right;">
+                <br><br>
+                ________________________<br>
+                <strong>(कर्मचाऱ्याची स्वाक्षरी व नाव)</strong><br>
+                <span id="outSignDesig"></span>
+            </td>
+        </tr>
+    </table>
+
+    <div class="no-print" style="margin-top: 30px; text-align: center;">
+        <button class="print-btn" onclick="window.print()">विवरणपत्र प्रिंट करा / PDF सेव्ह करा</button>
+    </div>
+</div>
+
+<script>
+    // आजची तारीख सेट करणे
+    document.getElementById('submitDate').valueAsDate = new Date();
+
+    // स्थावर मत्ता row ॲड करणे
+    function addImmovableRow() {
+        const tbody = document.querySelectorAll('#immovableTable tbody')[0];
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td><input type="text" class="imm-desc" placeholder="उदा. जमीन/घर"></td>
+            <td><input type="text" class="imm-owner" placeholder="उदा. स्वतः"></td>
+            <td><input type="text" class="imm-mode" placeholder="उदा. खरेदी"></td>
+            <td><input type="number" class="imm-val" placeholder="रक्कम"></td>
+            <td><button type="button" class="btn-remove" onclick="removeRow(this)">रद्द करा</button></td>
+        `;
+        tbody.appendChild(tr);
+    }
+
+    // जंगम मत्ता row ॲड करणे
+    function addMovableRow() {
+        const tbody = document.querySelectorAll('#movableTable tbody')[0];
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td><input type="text" class="mov-desc" placeholder="उदा. एफ.डी. / सोनं"></td>
+            <td><input type="text" class="mov-owner" placeholder="उदा. पत्नी"></td>
+            <td><input type="number" class="mov-val" placeholder="रक्कम"></td>
+            <td><button type="button" class="btn-remove" onclick="removeRow(this)">रद्द करा</button></td>
+        `;
+        tbody.appendChild(tr);
+    }
+
+    // दायित्व row ॲड करणे
+    function addLiabilityRow() {
+        const tbody = document.querySelectorAll('#liabilityTable tbody')[0];
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td><input type="text" class="lia-bank" placeholder="उदा. बँक नाव"></td>
+            <td><input type="text" class="lia-purpose" placeholder="उदा. कर्ज उद्देश"></td>
+            <td><input type="number" class="lia-total" placeholder="एकूण कर्ज"></td>
+            <td><input type="number" class="lia-pending" placeholder="बाकी कर्ज"></td>
+            <td><button type="button" class="btn-remove" onclick="removeRow(this)">रद्द करा</button></td>
+        `;
+        tbody.appendChild(tr);
+    }
+
+    // Row डिलीट करणे
+    function removeRow(btn) {
+        const row = btn.parentNode.parentNode;
+        row.parentNode.removeChild(row);
+    }
+
+    // तारीख फॉरमॅट करणारी फंक्शन
+    function formatDate(dateStr) {
+        if(!dateStr) return '';
+        const d = new Date(dateStr);
+        return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
+    }
+
+    // अंतिम रिपोर्ट जनरेट करणे
+    function generateReport() {
+        const empName = document.getElementById('empName').value;
+        const designation = document.getElementById('designation').value;
+        const office = document.getElementById('office').value;
+        const payScale = document.getElementById('payScale').value;
+        const asOnDate = document.getElementById('asOnDate').value;
+        const place = document.getElementById('place').value;
+        const submitDate = document.getElementById('submitDate').value;
+
+        if (!empName || !designation || !asOnDate) {
+            alert('कृपया कर्मचाऱ्याचे नाव, पद आणि विवरणपत्राची तारीख भरा.');
+            return;
+        }
+
+        // बेसिक माहिती भरू
+        document.getElementById('outEmpName').innerText = empName;
+        document.getElementById('outDesignation').innerText = designation;
+        document.getElementById('outOffice').innerText = office;
+        document.getElementById('outPayScale').innerText = payScale;
+        document.getElementById('outAsOnDate').innerText = asOnDate;
+        document.getElementById('outPlace').innerText = place;
+        document.getElementById('outSubmitDate').innerText = formatDate(submitDate);
+        document.getElementById('outSignDesig').innerText = designation;
+
+        // १. स्थावर मत्ता डेटा टेबल भरणे
+        const immRows = document.querySelectorAll('#immovableTable tbody tr');
+        const outImmTbody = document.querySelector('#outImmTable tbody');
+        outImmTbody.innerHTML = '';
+        let immIndex = 1;
+        let totalImmVal = 0;
+
+        immRows.forEach(row => {
+            const desc = row.querySelector('.imm-desc').value;
+            const owner = row.querySelector('.imm-owner').value;
+            const mode = row.querySelector('.imm-mode').value;
+            const val = parseFloat(row.querySelector('.imm-val').value) || 0;
+
+            if (desc) {
+                totalImmVal += val;
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="text-align:center;">${immIndex++}</td>
+                    <td>${desc}</td>
+                    <td>${owner}</td>
+                    <td>${mode}</td>
+                    <td style="text-align:right;">${val.toLocaleString('en-IN')}</td>
+                `;
+                outImmTbody.appendChild(tr);
+            }
+        });
+        if (immIndex === 1) {
+            outImmTbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">निरंक (काहीही नाही)</td></tr>';
+        } else {
+            outImmTbody.innerHTML += `<tr><td colspan="4" style="text-align:right; font-weight:bold;">एकूण अचल संपत्ती मूल्य:</td><td style="text-align:right; font-weight:bold;">₹ ${totalImmVal.toLocaleString('en-IN')}</td></tr>`;
+        }
+
+        // २. जंगम मत्ता डेटा टेबल भरणे
+        const movRows = document.querySelectorAll('#movableTable tbody tr');
+        const outMovTbody = document.querySelector('#outMovTable tbody');
+        outMovTbody.innerHTML = '';
+        let movIndex = 1;
+        let totalMovVal = 0;
+
+        movRows.forEach(row => {
+            const desc = row.querySelector('.mov-desc').value;
+            const owner = row.querySelector('.mov-owner').value;
+            const val = parseFloat(row.querySelector('.mov-val').value) || 0;
+
+            if (desc) {
+                totalMovVal += val;
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="text-align:center;">${movIndex++}</td>
+                    <td>${desc}</td>
+                    <td>${owner}</td>
+                    <td style="text-align:right;">${val.toLocaleString('en-IN')}</td>
+                `;
+                outMovTbody.appendChild(tr);
+            }
+        });
+        if (movIndex === 1) {
+            outMovTbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">निरंक (काहीही नाही)</td></tr>';
+        } else {
+            outMovTbody.innerHTML += `<tr><td colspan="3" style="text-align:right; font-weight:bold;">एकूण चल संपत्ती मूल्य:</td><td style="text-align:right; font-weight:bold;">₹ ${totalMovVal.toLocaleString('en-IN')}</td></tr>`;
+        }
+
+        // ३. दायित्व डेटा टेबल भरणे
+        const liaRows = document.querySelectorAll('#liabilityTable tbody tr');
+        const outLiaTbody = document.querySelector('#outLiaTable tbody');
+        outLiaTbody.innerHTML = '';
+        let liaIndex = 1;
+        let totalLiaPending = 0;
+
+        liaRows.forEach(row => {
+            const bank = row.querySelector('.lia-bank').value;
+            const purpose = row.querySelector('.lia-purpose').value;
+            const total = parseFloat(row.querySelector('.lia-total').value) || 0;
+            const pending = parseFloat(row.querySelector('.lia-pending').value) || 0;
+
+            if (bank) {
+                totalLiaPending += pending;
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="text-align:center;">${liaIndex++}</td>
+                    <td>${bank}</td>
+                    <td>${purpose}</td>
+                    <td style="text-align:right;">${total.toLocaleString('en-IN')}</td>
+                    <td style="text-align:right;">${pending.toLocaleString('en-IN')}</td>
+                `;
+                outLiaTbody.appendChild(tr);
+            }
+        });
+        if (liaIndex === 1) {
+            outLiaTbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">निरंक (काहीही कर्ज/दायित्व नाही)</td></tr>';
+        } else {
+            outLiaTbody.innerHTML += `<tr><td colspan="4" style="text-align:right; font-weight:bold;">एकूण बाकी देणी / कर्ज:</td><td style="text-align:right; font-weight:bold;">₹ ${totalLiaPending.toLocaleString('en-IN')}</td></tr>`;
+        }
+
+        // स्क्रीनवर जनरेट केलेला रिपोर्ट दाखवणे
+        document.getElementById('reportOutput').style.display = 'block';
+        document.getElementById('reportOutput').scrollIntoView({ behavior: 'smooth' });
+    }
+</script>
+
+</body>
+</html>
