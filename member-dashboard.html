@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>सदस्य पोर्टल | क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना महाराष्ट्र राज्य</title>
     
-    <!-- Google Fonts & External Libraries -->
+    <!-- External Libraries & Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -28,54 +28,61 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mukta', sans-serif; }
         body { background-color: var(--bg-light); color: var(--dark); overflow-x: hidden; }
 
-        /* Login Screen */
+        /* Login Overlay Styling */
         #loginOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, var(--dark), var(--primary)); display: flex; justify-content: center; align-items: center; z-index: 10000; padding: 15px; }
         .login-card { background: white; padding: 35px 25px; border-radius: 16px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); width: 100%; max-width: 420px; text-align: center; }
-        .login-card h2 { color: var(--primary); font-weight: 800; margin-bottom: 10px; font-size: 1.5rem; }
+        .login-card img.login-logo { width: 85px; height: 85px; border-radius: 50%; object-fit: contain; margin: 0 auto 12px; border: 3px solid var(--secondary); padding: 4px; background: #fff; }
+        .login-card h2 { color: var(--primary); font-weight: 800; margin-bottom: 5px; font-size: 1.4rem; }
         .login-input-box { position: relative; margin: 15px 0; text-align: left; }
         .login-input-box label { font-size: 0.85rem; font-weight: bold; color: var(--dark); display: block; margin-bottom: 5px; }
         .login-input-wrapper { position: relative; }
         .login-input-wrapper span { position: absolute; left: 15px; top: 12px; font-weight: bold; color: var(--primary); font-size: 1.1rem; }
-        .login-input-wrapper input { width: 100%; padding: 12px 15px 12px 55px; border: 2px solid #cbd5e1; border-radius: 8px; font-size: 1.15rem; font-weight: bold; outline: none; letter-spacing: 1px; }
+        .login-input-wrapper input { width: 100%; padding: 12px 15px 12px 55px; border: 2px solid #cbd5e1; border-radius: 8px; font-size: 1.1rem; font-weight: bold; outline: none; }
         .login-input-wrapper input.no-prefix { padding-left: 45px; }
         .login-input-wrapper i.icon-left { position: absolute; left: 15px; top: 14px; font-weight: bold; color: var(--primary); font-size: 1.1rem; }
         .login-input-wrapper input:focus { border-color: var(--primary); }
-        .login-card button { width: 100%; padding: 12px; background: linear-gradient(90deg, var(--secondary), #f1c40f); color: var(--dark); border: none; border-radius: 8px; font-size: 1.15rem; font-weight: 800; cursor: pointer; transition: 0.3s; margin-top: 10px; }
+        .login-card button { width: 100%; padding: 12px; background: linear-gradient(90deg, var(--secondary), #f1c40f); color: var(--dark); border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 800; cursor: pointer; transition: 0.3s; margin-top: 10px; }
         .login-card button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(243,156,18,0.4); }
 
-        /* Modals & Overlays */
+        /* Custom Modals */
         .custom-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 10005; padding: 15px; }
-        .custom-modal { background: white; width: 100%; max-width: 750px; max-height: 90vh; border-radius: 12px; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .custom-modal { background: white; width: 100%; max-width: 600px; max-height: 90vh; border-radius: 12px; overflow-y: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         .custom-modal-header { background: var(--primary); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10; }
         .custom-modal-body { padding: 20px; }
 
         /* Navigation Header */
-        .navbar { background: var(--white); padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid var(--secondary); box-shadow: 0 4px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; flex-wrap: wrap; gap: 8px; transition: all 0.3s ease; }
+        .navbar { background: var(--white); padding: 10px 18px; display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid var(--secondary); box-shadow: 0 4px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; flex-wrap: wrap; gap: 8px; transition: all 0.3s ease; }
         .navbar-brand { display: flex; align-items: center; gap: 10px; }
-        .navbar-brand i { font-size: 1.5rem !important; transition: font-size 0.3s ease; }
-        .navbar h2 { color: var(--primary); font-weight: 800; font-size: 1rem; line-height: 1.1; margin: 0; transition: font-size 0.3s ease; }
-        .navbar small { font-size: 0.72rem; }
-        .nav-profile { display: flex; align-items: center; gap: 10px; }
-        .btn-logout { background: var(--danger); color: white; border: none; padding: 5px 10px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 0.78rem; }
+        .navbar-brand img { width: 48px; height: 48px; border-radius: 50%; object-fit: contain; border: 2px solid var(--primary); padding: 2px; transition: all 0.3s ease; }
+        .navbar h2 { color: var(--primary); font-weight: 800; font-size: 1rem; line-height: 1.2; margin: 0; transition: font-size 0.3s ease; }
+        .navbar small { font-size: 0.75rem; color: #64748b; font-weight: 600; display: block; }
+        .nav-profile { display: flex; align-items: center; gap: 12px; }
+        .btn-logout { background: var(--danger); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 0.8rem; }
 
-        /* Compact Navbar Mode for Chat */
-        body.chat-active .navbar { padding: 6px 12px; }
-        body.chat-active .navbar h2 { font-size: 0.85rem; }
-        body.chat-active .navbar-brand i { font-size: 1.2rem !important; }
+        /* SPECIAL CHAT-ACTIVE MODE STYLES (Full Screen Mobile Friendly Chat View) */
+        body.chat-active .navbar { padding: 5px 12px !important; }
+        body.chat-active .navbar-brand img { width: 32px !important; height: 32px !important; }
+        body.chat-active .navbar h2 { font-size: 0.82rem !important; }
+        body.chat-active .navbar small { display: none !important; }
         body.chat-active .ticker-wrap { display: none !important; }
+        body.chat-active .chat-floating-btn { display: none !important; } /* Hides float btn in chat */
+        body.chat-active .container { margin: 0 !important; padding: 0 !important; max-width: 100% !important; }
+        body.chat-active #tab-chat .panel { border: none !important; border-radius: 0 !important; box-shadow: none !important; margin-bottom: 0 !important; }
+        body.chat-active #tab-chat .panel-header { display: none !important; }
+        body.chat-active #tab-chat .panel-body { height: calc(100vh - 100px) !important; min-height: calc(100vh - 100px) !important; padding: 0 !important; }
 
-        /* Ticker Marquee */
+        /* Scrolling Ticker */
         .ticker-wrap { background: var(--primary); border-bottom: 2px solid var(--secondary); color: #fff; padding: 6px 15px; font-weight: 600; font-size: 0.88rem; }
 
-        /* Tab Navigation Bar */
-        .tab-menu { display: flex; gap: 6px; overflow-x: auto; background: #07275e; padding: 8px 12px; white-space: nowrap; position: sticky; top: 57px; z-index: 999; }
+        /* Navigation Menu Tabs */
+        .tab-menu { display: flex; gap: 6px; overflow-x: auto; background: #07275e; padding: 8px 12px; white-space: nowrap; position: sticky; top: 62px; z-index: 999; }
         .tab-menu::-webkit-scrollbar { height: 4px; }
         .tab-menu::-webkit-scrollbar-thumb { background: var(--secondary); border-radius: 10px; }
-        .tab-btn { padding: 6px 12px; border: none; background: rgba(255,255,255,0.12); color: white; font-size: 0.82rem; font-weight: 700; cursor: pointer; border-radius: 8px; transition: 0.3s; display: inline-flex; align-items: center; gap: 6px; }
+        .tab-btn { padding: 7px 14px; border: none; background: rgba(255,255,255,0.12); color: white; font-size: 0.85rem; font-weight: 700; cursor: pointer; border-radius: 8px; transition: 0.3s; display: inline-flex; align-items: center; gap: 6px; }
         .tab-btn:hover { background: rgba(255,255,255,0.25); }
         .tab-btn.active { background: var(--secondary); color: var(--dark); }
 
-        /* Layout & Panels */
+        /* Main Container & Panels */
         .container { max-width: 1450px; margin: 15px auto; padding: 0 12px; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
@@ -83,11 +90,19 @@
         .panel-header { padding: 12px 16px; font-size: 1rem; font-weight: 800; background: #f8fafc; border-bottom: 1px solid #e2e8f0; border-top: 5px solid var(--primary); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
         .panel-body { padding: 15px; overflow-x: auto; }
 
-        /* Dashboard Mini Cards */
+        /* Dashboard Mini Stat Cards */
         .dash-cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 15px; }
         .dash-card-mini { background: #fff; border: 1px solid #e2e8f0; border-left: 5px solid var(--primary); padding: 12px 15px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); text-align: center; }
-        .dash-card-mini h3 { font-size: 0.85rem; color: #64748b; margin-bottom: 4px; }
-        .dash-card-mini h2 { font-size: 1.35rem; color: var(--dark); font-weight: 800; }
+        .dash-card-mini h3 { font-size: 0.82rem; color: #64748b; margin-bottom: 4px; font-weight: 700; }
+        .dash-card-mini h2 { font-size: 1.3rem; color: var(--dark); font-weight: 800; }
+
+        /* Auto Forms Cards Grid */
+        .forms-cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 15px; }
+        .auto-form-card { background: #fff; border: 1px solid #e2e8f0; border-top: 4px solid var(--primary); border-radius: 12px; padding: 16px; transition: all 0.3s ease; display: flex; flex-col; justify-content: space-between; text-decoration: none; color: inherit; }
+        .auto-form-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(11, 61, 145, 0.12); border-top-color: var(--secondary); }
+        .auto-form-icon { width: 45px; height: 48px; border-radius: 10px; background: #eff6ff; color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 10px; }
+        .auto-form-card h4 { font-size: 1rem; font-weight: 800; color: var(--primary); margin-bottom: 4px; }
+        .auto-form-card p { font-size: 0.8rem; color: #64748b; line-height: 1.4; }
 
         /* Mandal Map & Pie Chart Grid */
         .map-pie-grid { display: grid; grid-template-columns: 2.3fr 1fr; gap: 15px; margin-bottom: 15px; }
@@ -108,7 +123,7 @@
         .badge { padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; color: #fff; display: inline-block; }
         .bg-success { background: var(--success); } .bg-warning { background: var(--secondary); color: #000; } .bg-danger { background: var(--danger); } .bg-primary { background: var(--primary); } .bg-info { background: var(--info); } .bg-purple { background: var(--purple); }
 
-        /* Forms & Buttons */
+        /* Buttons & Controls */
         .btn-action { background: var(--primary); color: white; border: none; padding: 8px 14px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 6px; font-size: 0.85rem; }
         .btn-action:hover { opacity: 0.9; transform: translateY(-1px); }
         .form-control { width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem; outline: none; }
@@ -116,23 +131,24 @@
         .form-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; align-items: center; }
         .form-row > div { flex: 1; min-width: 180px; }
 
-        /* Template Builder Card Grid */
+        /* Template Cards */
         .template-cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-top: 15px; }
         .template-item-card { background: #fff; border: 1px solid #cbd5e1; border-top: 4px solid var(--primary); border-radius: 10px; padding: 15px; box-shadow: 0 3px 10px rgba(0,0,0,0.05); transition: 0.2s; }
         .template-item-card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(11,61,145,0.12); }
         .template-badge-num { background: var(--secondary); color: var(--dark); font-weight: 800; padding: 2px 8px; border-radius: 6px; font-size: 0.8rem; float: right; }
 
-        /* Official Admin-Approved I-Card Box */
-        .icard-card-box { width: 310px; height: 480px; border-radius: 12px; background: #fff; position: relative; overflow: hidden; padding: 0; text-align: center; margin: 10px auto; box-shadow: 0 8px 25px rgba(0,0,0,0.15); border: 2px solid var(--primary); }
+        /* Official Member Digital I-Card */
+        .icard-card-box { width: 310px; height: 485px; border-radius: 12px; background: #fff; position: relative; overflow: hidden; padding: 0; text-align: center; margin: 10px auto; box-shadow: 0 8px 25px rgba(0,0,0,0.15); border: 2px solid var(--primary); }
         .icard-head { background: var(--primary); color: white; padding: 12px 10px; }
-        .icard-img-main { width: 100px; height: 100px; border-radius: 50%; border: 3px solid var(--secondary); object-fit: cover; margin: 12px auto 6px; background: #eee; }
+        .icard-img-main { width: 95px; height: 95px; border-radius: 50%; border: 3px solid var(--secondary); object-fit: cover; margin: 10px auto 6px; background: #eee; }
         .icard-info-list { text-align: left; font-size: 0.82rem; padding: 0 15px; line-height: 1.45; color: #333; }
 
-        /* Official Admin System Receipt Display Box */
+        /* Official E-Receipt Box */
         .receipt-box { width: 100%; max-width: 720px; margin: 0 auto; padding: 20px; border: 3px double var(--primary); border-radius: 10px; background: #ffffff; position: relative; }
 
-        /* Floating Chat Widget */
-        .chat-floating-btn { position: fixed; bottom: 20px; right: 20px; width: 55px; height: 55px; background: linear-gradient(135deg, #0B3D91, #25D366); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.6rem; box-shadow: 0 8px 25px rgba(37, 211, 102, 0.5); cursor: pointer; border: 3px solid #ffffff; z-index: 9999; }
+        /* Floating Live Chat Widget Button */
+        .chat-floating-btn { position: fixed; bottom: 20px; right: 20px; width: 55px; height: 55px; background: linear-gradient(135deg, #0B3D91, #25D366); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.6rem; box-shadow: 0 8px 25px rgba(37, 211, 102, 0.5); cursor: pointer; border: 3px solid #ffffff; z-index: 9999; transition: transform 0.2s; }
+        .chat-floating-btn:hover { transform: scale(1.08); }
 
         @media print {
             .no-print, .navbar, .tab-menu, .ticker-wrap, .chat-floating-btn { display: none !important; }
@@ -143,7 +159,7 @@
 </head>
 <body>
 
-    <!-- 1. POPUP NOTICE MODAL (Triggered by Admin Setting) -->
+    <!-- 1. POPUP NOTICE MODAL -->
     <div id="memberLoginPopupModal" class="custom-modal-overlay">
         <div class="custom-modal" style="max-width:550px; text-align:center;">
             <div class="custom-modal-header bg-primary">
@@ -152,7 +168,7 @@
             </div>
             <div class="custom-modal-body">
                 <div id="popup_notice_content_area" style="font-size:1.05rem; color:#1e293b; line-height:1.6; margin:15px 0; font-weight:600;">
-                    संघटनेच्या सर्व सदस्यांसाठी महत्त्वाची सूचना.
+                    संगटनेच्या सर्व सदस्यांसाठी महत्त्वाची सूचना.
                 </div>
                 <button class="btn-action bg-success" onclick="closeModal('memberLoginPopupModal')" style="width:100%; justify-content:center; padding:10px; font-size:1rem; margin-top:10px;">
                     <i class="fa fa-check-circle"></i> समजले (OK)
@@ -161,10 +177,10 @@
         </div>
     </div>
 
-    <!-- 2. MEMBER LOGIN OVERLAY (Mobile & Password Login) -->
+    <!-- 2. MEMBER LOGIN OVERLAY -->
     <div id="loginOverlay">
         <div class="login-card">
-            <i class="fa fa-shield-alt" style="font-size: 3rem; color: var(--primary); margin-bottom: 8px;"></i>
+            <img src="logo.png" alt="Association Logo" class="login-logo" onerror="this.src='loghho.png'">
             <h2>सदस्य लॉगिन PORTAL</h2>
             <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 15px;">मोबाईल नंबर आणि पासवर्ड द्वारे लॉगिन करा</p>
             
@@ -180,7 +196,7 @@
                 <label>पासवर्ड (Password):</label>
                 <div class="login-input-wrapper">
                     <i class="fa fa-lock icon-left"></i>
-                    <input type="password" id="loginPassword" class="no-prefix" placeholder="तथा पासवर्ड प्रविष्ट करा">
+                    <input type="password" id="loginPassword" class="no-prefix" placeholder="पासवर्ड टाका">
                 </div>
             </div>
 
@@ -192,16 +208,16 @@
         </div>
     </div>
 
-    <!-- 3. MAIN APP CONTENT -->
+    <!-- 3. MAIN APP DASHBOARD CONTENT -->
     <div id="appContent" style="display: none;">
         
-        <!-- Navigation Header -->
+        <!-- Navbar -->
         <nav class="navbar">
             <div class="navbar-brand">
-                <i class="fa fa-shield-alt" style="font-size:1.8rem; color:var(--primary);"></i>
+                <img src="logo.png" alt="Logo" onerror="this.src='loghho.png'">
                 <div>
-                    <h2>क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना</h2>
-                    <small style="color:gray; font-weight:bold;">महाराष्ट्र राज्य - अधिकृत सदस्य पोर्टल</small>
+                    <h2>क्ष-किरण वैज्ञानिक अधिकारी संघटना</h2>
+                    <small>महाराष्ट्र राज्य - अधिकृत सदस्य पोर्टल</small>
                 </div>
             </div>
             <div class="nav-profile no-print">
@@ -222,7 +238,8 @@
 
         <!-- Tab Navigation Bar -->
         <div class="tab-menu no-print">
-            <button class="tab-btn active" onclick="openTab('tab-dash', this)"><i class="fa fa-chart-pie"></i> माझा डॅशबोर्ड</button>
+            <button class="tab-btn active" onclick="openTab('tab-dash', this)"><i class="fa fa-chart-pie"></i> डॅशबोर्ड</button>
+            <button class="tab-btn" onclick="openTab('tab-auto-forms', this)"><i class="fa fa-file-signature"></i> स्वयंचलित अर्ज प्रणाली</button>
             <button class="tab-btn" onclick="openTab('tab-icard', this)"><i class="fa fa-id-card"></i> डिजिटल आय-कार्ड</button>
             <button class="tab-btn" onclick="openTab('tab-receipt', this)"><i class="fa fa-receipt"></i> माझी ई-पावती</button>
             <button class="tab-btn" id="btn_tab_tb" onclick="openTab('tab-templates', this)"><i class="fa fa-pen-nib"></i> पत्र / अर्ज जनरेटर</button>
@@ -230,7 +247,7 @@
             <button class="tab-btn" onclick="openTab('tab-info-gather', this)"><i class="fa fa-clipboard-list"></i> माहिती द्या (फॉर्म)</button>
             <button class="tab-btn" onclick="openTab('tab-employees', this)"><i class="fa fa-users"></i> राज्यातील कर्मचारी</button>
             <button class="tab-btn" onclick="openTab('tab-documents', this)"><i class="fa fa-folder-open"></i> परिपत्रके व फोल्डर्स</button>
-            <button class="tab-btn" onclick="openTab('tab-chat', this)"><i class="fa fa-comments"></i> Live Chat</button>
+            <button class="tab-btn" id="btn_tab_chat" onclick="openTab('tab-chat', this)"><i class="fa fa-comments"></i> Live Chat</button>
             <button class="tab-btn" onclick="openTab('tab-polls', this)"><i class="fa fa-vote-yea"></i> मतदान व पोल</button>
         </div>
 
@@ -264,18 +281,154 @@
 
             </div>
 
-            <!-- TAB 2: ADMIN-APPROVED DIGITAL I-CARD -->
+            <!-- TAB 2: REPOSITORY AUTO-GENERATED FORMS & SYSTEMS -->
+            <div id="tab-auto-forms" class="tab-content">
+                <div class="panel">
+                    <div class="panel-header bg-primary" style="color:white;">
+                        <span><i class="fa fa-file-signature"></i> रिपॉझिटरीमधील ऑटो-जनरेटेड शासकीय अर्ज प्रणाली</span>
+                    </div>
+                    <div class="panel-body">
+                        <p style="color:#64748b; font-weight:bold; margin-bottom:15px; font-size:0.9rem;">
+                            <i class="fa fa-info-circle" style="color:var(--info);"></i> खालील सर्व अर्ज फॉर्म्स तुमच्या रिपॉझिटरीमध्ये लिंक केलेले आहेत. संबंधित अर्जावर क्लिक करून थेट अर्ज तयार करा:
+                        </p>
+
+                        <div class="forms-cards-grid">
+                            <!-- 1. Leave Application System -->
+                            <a href="Leave_Application_System.html" class="auto-form-card">
+                                <div>
+                                    <div class="auto-form-icon" style="color:#2563eb; background:#eff6ff;"><i class="fa fa-calendar-minus"></i></div>
+                                    <h4>रजा अर्ज प्रणाली</h4>
+                                    <p>अर्जित रजा, नैमित्तिक रजा व वैद्यकीय रजेसाठी ऑटो-जनरेटेड अर्ज तयार करा.</p>
+                                </div>
+                                <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#2563eb;">उघडा <i class="fa fa-arrow-right"></i></div>
+                            </a>
+
+                            <!-- 2. Service and Confirmation Forms -->
+                            <a href="Service_and_Confirmation_Forms.html" class="auto-form-card">
+                                <div>
+                                    <div class="auto-form-icon" style="color:#059669; background:#ecfdf5;"><i class="fa fa-user-check"></i></div>
+                                    <h4>सेवा व स्थिरीकरण अर्ज</h4>
+                                    <p>सेवा पुस्तिकेत नोंद, सेवेचे स्थिरीकरण (Confirmation) व पडताळणी फॉर्म्स.</p>
+                                </div>
+                                <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#059669;">उघडा <i class="fa fa-arrow-right"></i></div>
+                            </a>
+
+                            <!-- 3. Probation System -->
+                            <a href="probation_system.html" class="auto-form-card">
+                                <div>
+                                    <div class="auto-form-icon" style="color:#7c3aed; background:#f5f3ff;"><i class="fa fa-user-clock"></i></div>
+                                    <h4>परिवीक्षाधीन कालावधी प्रणाली</h4>
+                                    <p>प्रोबेशन कालावधी यशस्वीरीत्या पूर्ण केल्याबाबतचा अधिकृत अर्ज व ट्रॅकिंग.</p>
+                                </div>
+                                <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#7c3aed;">उघडा <i class="fa fa-arrow-right"></i></div>
+                            </a>
+
+                            <!-- 4. Small Family Affidavit -->
+                            <a href="small_family.html" class="auto-form-card">
+                                <div>
+                                    <div class="auto-form-icon" style="color:#d97706; background:#fffbeb;"><i class="fa fa-users-between-lines"></i></div>
+                                    <h4>लहान कुटुंबाचे प्रतिज्ञापत्र</h4>
+                                    <p>शासकीय नियमांनुसार नमुना 'क' लहान कुटुंबाचे स्वयंघोषणापत्र जनरेटर.</p>
+                                </div>
+                                <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#d97706;">उघडा <i class="fa fa-arrow-right"></i></div>
+                            </a>
+
+                            <!-- 5. Asset Declaration Form -->
+                            <a href="asset-form.html" class="auto-form-card">
+                                <div>
+                                    <div class="auto-form-icon" style="color:#0891b2; background:#ecfeff;"><i class="fa fa-building-columns"></i></div>
+                                    <h4>मालमत्ता व दायित्व अर्ज</h4>
+                                    <p>वार्षिक स्थावर व जंगम मालमत्ता विवरणपत्र (Asset Declaration) जनरेटर.</p>
+                                </div>
+                                <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#0891b2;">उघडा <i class="fa fa-arrow-right"></i></div>
+                            </a>
+
+                            <!-- 6. Financial Claims -->
+                            <a href="financial-claims.html" class="auto-form-card">
+                                <div>
+                                    <div class="auto-form-icon" style="color:#16a34a; background:#f0fdf4;"><i class="fa fa-file-invoice-dollar"></i></div>
+                                    <h4>आर्थिक दावे व भत्ते</h4>
+                                    <p>वैद्यकीय बिल प्रतिपूर्ती, प्रवास भत्ता (TA/DA) व रेडिएशन भत्ता दावे.</p>
+                                </div>
+                                <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#16a34a;">उघडा <i class="fa fa-arrow-right"></i></div>
+                            </a>
+
+                            <!-- 7. Legal Forms & Drafts -->
+                            <a href="ligal_forms.html" class="auto-form-card">
+                                <div>
+                                    <div class="auto-form-icon" style="color:#e11d48; background:#fff1f2;"><i class="fa fa-scale-balanced"></i></div>
+                                    <h4>कायदेशीर फॉर्म व मसुदे</h4>
+                                    <p>कायदेशीर मागण्या, प्रशासकीय निवेदने व असोसिएशन कायदेशीर मसुदे.</p>
+                                </div>
+                                <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#e11d48;">उघडा <i class="fa fa-arrow-right"></i></div>
+                            </a>
+
+                            <!-- 8. TLD Badge Generator -->
+                            <a href="tld-generator.html" class="auto-form-card">
+                                <div>
+                                    <div class="auto-form-icon" style="color:#9333ea; background:#faf5ff;"><i class="fa fa-radiation"></i></div>
+                                    <h4>TLD बॅज डोजिमीटर जनरेटर</h4>
+                                    <p>रेडिएशन डोस ट्रॅकिंग व नवीन TLD बॅज मागणी/बदली अर्ज ऑटो-जनरेटर.</p>
+                                </div>
+                                <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#9333ea;">उघडा <i class="fa fa-arrow-right"></i></div>
+                            </a>
+
+                            <!-- 9. Government Resolutions (GR) -->
+                            <a href="gr.html" class="auto-form-card">
+                                <div>
+                                    <div class="auto-form-icon" style="color:#dc2626; background:#fef2f2;"><i class="fa fa-file-pdf"></i></div>
+                                    <h4>शासकीय निर्णय (G.R.) संग्रह</h4>
+                                    <p>आरोग्य विभागाचे महत्त्वपूर्ण शासन निर्णय, परिपत्रके व सेवा नियम.</p>
+                                </div>
+                                <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#dc2626;">उघडा <i class="fa fa-arrow-right"></i></div>
+                            </a>
+
+                            <!-- 10. Documents Library -->
+                            <a href="documents.html" class="auto-form-card">
+                                <div>
+                                    <div class="auto-form-icon" style="color:#0284c7; background:#f0f9ff;"><i class="fa fa-folder-open"></i></div>
+                                    <h4>कागदपत्रे व दस्तऐवज</h4>
+                                    <p>AERB गाईडलाईन्स, तांत्रिक नियमावली व संघटनेची सर्व दस्तऐवज लायब्ररी.</p>
+                                </div>
+                                <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#0284c7;">उघडा <i class="fa fa-arrow-right"></i></div>
+                            </a>
+
+                            <!-- 11. Maharashtra Center Map -->
+                            <a href="map.html" class="auto-form-card">
+                                <div>
+                                    <div class="auto-form-icon" style="color:#ea580c; background:#fff7ed;"><i class="fa fa-map-location-dot"></i></div>
+                                    <h4>महाराष्ट्रातील एक्स-रे सेंटर्स मॅप</h4>
+                                    <p>महाराष्ट्रातील सर्व शासकीय रुग्णालये व एक्स-रे सेंटर्सचे लोकेशन.</p>
+                                </div>
+                                <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#ea580c;">उघडा <i class="fa fa-arrow-right"></i></div>
+                            </a>
+
+                            <!-- 12. Gallery -->
+                            <a href="gallery.html" class="auto-form-card">
+                                <div>
+                                    <div class="auto-form-icon" style="color:#db2777; background:#fdf2f8;"><i class="fa fa-images"></i></div>
+                                    <h4>फोटो गॅलरी व उपक्रम</h4>
+                                    <p>असोसिएशनचे स्नेहसंमेलन, बैठका, आंदोलने व उपक्रमांची छायाचित्रे.</p>
+                                </div>
+                                <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#db2777;">उघडा <i class="fa fa-arrow-right"></i></div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: DIGITAL I-CARD -->
             <div id="tab-icard" class="tab-content">
                 <div class="panel">
                     <div class="panel-header bg-primary" style="color:white; border-top:none;">
                         <span><i class="fa fa-id-badge"></i> ॲडमिन स्वीकृत डिजिटल आय-कार्ड (Official Member I-Card)</span>
-                        <button class="btn-action bg-warning" style="color:black;" onclick="window.print()"><i class="fa fa-print"></i> डिजिटल आय-कार्ड प्रिंट करा</button>
+                        <button class="btn-action bg-warning" style="color:black;" onclick="window.print()"><i class="fa fa-print"></i> प्रिन्ट करा</button>
                     </div>
                     <div class="panel-body" style="background:#f8fafc; display:flex; justify-content:center; padding: 25px 10px;">
                         
                         <div class="icard-card-box" id="officialICardBox">
                             <div class="icard-head">
-                                <h4 style="margin:0; font-size:0.85rem;">क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना</h4>
+                                <h4 style="margin:0; font-size:0.85rem;">क्ष-किरण वैज्ञानिक अधिकारी कर्मचारी संघटना</h4>
                                 <small style="font-size:0.68rem;">महाराष्ट्र राज्य - अधिकृत ओळखपत्र</small>
                             </div>
                             <img id="ic_photo" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="icard-img-main">
@@ -300,27 +453,27 @@
                 </div>
             </div>
 
-            <!-- TAB 3: OFFICIAL APPROVED E-RECEIPT -->
+            <!-- TAB 4: OFFICIAL E-RECEIPT -->
             <div id="tab-receipt" class="tab-content">
                 <div class="panel">
                     <div class="panel-header bg-warning">
                         <span><i class="fa fa-receipt"></i> अधिकृत ई-पावती (Approved Electronic Receipt)</span>
-                        <button class="btn-action bg-primary" onclick="window.print()"><i class="fa fa-print"></i> ई-पावती डाऊनलोड / प्रिंट करा</button>
+                        <button class="btn-action bg-primary" onclick="window.print()"><i class="fa fa-print"></i> ई-पावती प्रिंट करा</button>
                     </div>
                     <div class="panel-body" style="background:#f8fafc; padding:20px;">
                         
                         <div id="receiptUnpaidNotice" style="display:none; text-align:center; padding:40px;">
                             <i class="fa fa-clock fa-3x" style="margin-bottom:15px; color:var(--secondary);"></i>
                             <h3 style="color:var(--dark);">आपली पावती प्रलंबित (Unpaid / Pending) आहे.</h3>
-                            <p style="color:gray; margin-top:5px;">ॲडमिनने आपले शुल्क (Fee Status: Paid) डाऊनलोड / निश्चित केल्यानंतर येथे अधिकृत ई-पावती उपलब्ध होईल.</p>
+                            <p style="color:gray; margin-top:5px;">ॲडमिनने आपले शुल्क (Fee Status: Paid) निश्चित केल्यानंतर येथे अधिकृत ई-पावती उपलब्ध होईल.</p>
                         </div>
 
                         <div id="officialReceiptWrapper" style="display:none;">
                             <div class="receipt-box">
                                 <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2.5px solid var(--primary); padding-bottom: 10px; margin-bottom: 12px;">
-                                    <div style="width:70px;"><i class="fa fa-shield-alt" style="font-size:2.8rem; color:var(--primary);"></i></div>
+                                    <div style="width:70px;"><img src="logo.png" style="width:60px; height:60px;" onerror="this.src='loghho.png'"></div>
                                     <div style="text-align: center; flex:1;">
-                                        <h2 style="color: var(--primary); font-size: 1.3rem; margin: 0; font-weight:800;">क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना महाराष्ट्र राज्य</h2>
+                                        <h2 style="color: var(--primary); font-size: 1.25rem; margin: 0; font-weight:800;">क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना महाराष्ट्र राज्य</h2>
                                         <span style="background: var(--primary); color: #fff; padding: 2px 14px; border-radius: 12px; font-size: 0.78rem; font-weight:bold;">E-RECEIPT / इलेक्ट्रॉनिक पावती</span>
                                     </div>
                                     <div style="width:70px;"><img id="rc_qr_img" src="" style="width: 65px; height: 65px; border:1px solid #cbd5e1; padding:2px;"></div>
@@ -361,11 +514,11 @@
                 </div>
             </div>
 
-            <!-- TAB 4: TEMPLATE BUILDER & AUTO LETTER GENERATOR -->
+            <!-- TAB 5: TEMPLATE BUILDER & AUTO LETTER GENERATOR -->
             <div id="tab-templates" class="tab-content">
                 <div class="panel">
                     <div class="panel-header bg-primary" style="color:white;">
-                        <span><i class="fa fa-pen-nib"></i> स्वयंचलित शासकीय अर्ज व पत्र जनरेटर (Template Builder)</span>
+                        <span><i class="fa fa-pen-nib"></i> स्वयंचलित शासकीय पत्र जनरेटर (Dynamic Letters)</span>
                     </div>
                     <div class="panel-body">
                         <p style="color:var(--dark); font-weight:bold; margin-bottom:12px;">
@@ -379,11 +532,11 @@
                 </div>
             </div>
 
-            <!-- TAB 5: GRIEVANCE REDRESSAL SYSTEM -->
+            <!-- TAB 6: GRIEVANCE REDRESSAL SYSTEM -->
             <div id="tab-grievances" class="tab-content">
                 <div class="panel">
                     <div class="panel-header bg-danger" style="color:white;">
-                        <span><i class="fa fa-file-invoice"></i> तक्रार निवारण केंद्र (Submit & Track Grievance)</span>
+                        <span><i class="fa fa-file-invoice"></i> तक्रार निवारण केंद्र (Grievance Portal)</span>
                     </div>
                     <div class="panel-body">
                         
@@ -415,7 +568,7 @@
                             </form>
                         </div>
 
-                        <h4 style="color:var(--primary); margin-bottom:10px;"><i class="fa fa-history"></i> माझ्या सबमिट केलेल्या तक्रारींचा मागोवा (Track Status)</h4>
+                        <h4 style="color:var(--primary); margin-bottom:10px;"><i class="fa fa-history"></i> माझ्या सबमिट केलेल्या तक्रारींचा मागोवा</h4>
                         <table>
                             <thead>
                                 <tr>
@@ -437,7 +590,7 @@
                 </div>
             </div>
 
-            <!-- TAB 6: INFORMATION GATHERING SYSTEM -->
+            <!-- TAB 7: INFORMATION GATHERING SYSTEM -->
             <div id="tab-info-gather" class="tab-content">
                 <div class="panel">
                     <div class="panel-header bg-purple" style="color:white;">
@@ -480,7 +633,7 @@
                 </div>
             </div>
 
-            <!-- TAB 7: STATE EMPLOYEE DIRECTORY -->
+            <!-- TAB 8: STATE EMPLOYEE DIRECTORY -->
             <div id="tab-employees" class="tab-content">
                 <div class="panel">
                     <div class="panel-header">
@@ -508,12 +661,11 @@
                 </div>
             </div>
 
-            <!-- TAB 8: DOCUMENTS & FOLDERS -->
+            <!-- TAB 9: DOCUMENTS & FOLDERS -->
             <div id="tab-documents" class="tab-content">
                 <div class="panel">
                     <div class="panel-header"><span><i class="fa fa-folder-open"></i> परिपत्रके, फोल्डर्स व शासकीय GR</span></div>
                     <div class="panel-body">
-                        
                         <h4 style="color:var(--primary); margin-bottom:12px;">सदस्यांसाठी फोल्डर्स (Member Folders)</h4>
                         <div id="foldersContainer" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:12px; margin-bottom:20px;"></div>
 
@@ -526,24 +678,23 @@
                                 <tr><td colspan="4" style="text-align:center;">फाईल्स उपलब्ध नाहीत.</td></tr>
                             </tbody>
                         </table>
-
                     </div>
                 </div>
             </div>
 
-            <!-- TAB 10: LIVE CHAT SECTION -->
+            <!-- TAB 10: LIVE CHAT SECTION (Clean Full-Screen Chat View) -->
             <div id="tab-chat" class="tab-content">
                 <div class="panel" style="margin-bottom:0;">
                     <div class="panel-header bg-success" style="color:white; padding:8px 12px; font-size:0.9rem;">
                         <span><i class="fa fa-comments"></i> राज्यस्तरीय लाईव्ह चॅट (Live Chat System)</span>
                     </div>
-                    <div class="panel-body" style="padding:0; height: calc(100vh - 150px); min-height: 450px;">
-                        <iframe src="chat.html" style="width:100%; height:100%; border:none; border-radius:0 0 12px 12px;"></iframe>
+                    <div class="panel-body" style="padding:0; height: calc(100vh - 120px); min-height: 480px;">
+                        <iframe src="chat.html" style="width:100%; height:100%; border:none;"></iframe>
                     </div>
                 </div>
             </div>
 
-            <!-- TAB 9: VOTING & POLL SYSTEM -->
+            <!-- TAB 11: VOTING & POLL SYSTEM -->
             <div id="tab-polls" class="tab-content">
                 <div class="panel">
                     <div class="panel-header bg-purple" style="color:white;">
@@ -563,12 +714,12 @@
     <!-- PRINT LETTER TEMPLATE RENDER CONTAINER -->
     <div id="printLetterArea" style="display:none;"></div>
 
-    <!-- Floating Chat Widget -->
-    <div class="chat-floating-btn" title="Live Chat" onclick="openTab('tab-chat', document.querySelector('.tab-menu').children[8])">
+    <!-- Floating Live Chat Widget Button -->
+    <div class="chat-floating-btn" id="chatFloatingBtn" title="Live Chat" onclick="openTab('tab-chat', document.getElementById('btn_tab_chat'))">
         <i class="fa fa-comments"></i>
     </div>
 
-    <!-- FIREBASE JS ENGINE -->
+    <!-- FIREBASE JS ENGINE & SCRIPT -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, doc, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
@@ -598,7 +749,7 @@
         window.grievancesList = [];
         window.tbTemplatesList = [];
 
-        // Tab Navigation Global with Auto Compact Layout for Chat
+        // Tab Navigation with Auto Compact Layout for Chat & Floating Button Toggle
         window.openTab = function(tabId, btn) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
@@ -607,12 +758,16 @@
             if(target) target.classList.add('active');
             if(btn) btn.classList.add('active');
 
-            // Toggle compact view class on body if Chat tab is active
+            let floatBtn = document.getElementById('chatFloatingBtn');
+
+            // If Live Chat is active, apply full screen mobile layout and hide float btn
             if(tabId === 'tab-chat') {
                 document.body.classList.add('chat-active');
+                if(floatBtn) floatBtn.style.display = 'none';
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             } else {
                 document.body.classList.remove('chat-active');
+                if(floatBtn) floatBtn.style.display = 'flex';
             }
 
             if(tabId === 'tab-dash') window.renderDashboardChartsAndMap();
@@ -624,7 +779,7 @@
             if(el) el.style.display = 'none';
         };
 
-        // Mobile & Password Login Handler
+        // Mobile & Password Login
         window.loginMemberWithMobileAndPassword = async function() {
             let mobileInput = document.getElementById('loginMobileNumber').value.trim();
             let passwordInput = document.getElementById('loginPassword').value.trim();
@@ -684,6 +839,8 @@
             document.getElementById('appContent').style.display = 'none';
             document.getElementById('loginOverlay').style.display = 'flex';
             document.getElementById('loginPassword').value = '';
+            let floatBtn = document.getElementById('chatFloatingBtn');
+            if(floatBtn) floatBtn.style.display = 'flex';
         };
 
         // Master Init
@@ -714,7 +871,7 @@
             window.loadTemplatesAndAutoLetters();
         };
 
-        // Popup Notice Checking
+        // Popup Notice
         window.checkAndShowPopupNotice = async function() {
             let pSnap = await getDocs(collection(db, "settings"));
             pSnap.forEach(d => {
