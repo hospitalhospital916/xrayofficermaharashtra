@@ -26,7 +26,6 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mukta', sans-serif; }
         
-        /* १. संपूर्ण स्क्रीन फिट (No Unnecessary Scrolling) */
         html, body { height: 100%; width: 100%; overflow: hidden; background-color: #cbd5e1; }
         body { display: flex; justify-content: center; align-items: center; }
 
@@ -37,7 +36,7 @@
             display: flex; 
             flex-direction: column; 
             height: 100vh; 
-            height: 100dvh; /* Dynamic Mobile Viewport Height Fix */
+            height: 100dvh; 
             position: relative; 
             box-shadow: 0 12px 35px rgba(0,0,0,0.3); 
         }
@@ -47,7 +46,6 @@
             .chat-container { height: 96vh; border-radius: 18px; overflow: hidden; border: 2px solid #94a3b8; }
         }
 
-        /* २. कॉम्पॅक्ट संघटना हेडर (Compact Header) */
         .org-header { 
             background: linear-gradient(135deg, var(--primary-dark), var(--primary)); 
             color: white; 
@@ -68,7 +66,6 @@
         .admin-btn { background: var(--secondary); color: var(--primary-dark); border: none; padding: 4px 10px; border-radius: 12px; cursor: pointer; font-size: 0.75rem; font-weight: 800; display: flex; align-items: center; gap: 4px; }
         .login-btn-head { background: #ffffff; color: var(--primary); border: none; padding: 4px 10px; border-radius: 12px; font-weight: 800; font-size: 0.72rem; cursor: pointer; display: flex; align-items: center; gap: 4px; }
 
-        /* सर्च बार व टॅब्स */
         .search-tab-row { display: flex; flex-direction: column; gap: 4px; }
         .search-box { width: 100%; display: flex; align-items: center; background: rgba(255, 255, 255, 0.18); border-radius: 16px; padding: 2px 8px; border: 1px solid rgba(255,255,255,0.25); }
         .search-box input { border: none; background: transparent; outline: none; color: white; width: 100%; padding: 3px 6px; font-size: 0.82rem; }
@@ -78,7 +75,6 @@
         .tabs button { flex: 1; background: rgba(255,255,255,0.2); border: none; color: white; font-size: 0.78rem; font-weight: 700; padding: 4px 8px; border-radius: 8px; cursor: pointer; }
         .tabs button.active { background: #ffffff; color: var(--primary); font-weight: 800; }
 
-        /* ३. 💬 मध्यवर्ती चॅट बॉक्स (Scrollable) */
         .chat-box { 
             flex: 1; 
             padding: 12px; 
@@ -104,7 +100,6 @@
             z-index: 0;
         }
 
-        /* फ्लोटिंग अनरीड (Pending) बटण */
         .fab-unread {
             position: absolute;
             bottom: 65px;
@@ -135,7 +130,6 @@
             border: 2px solid white;
         }
 
-        /* मेसेज फुगे (Message Bubbles) */
         .message-wrapper { display: flex; align-items: flex-start; gap: 8px; max-width: 88%; position: relative; z-index: 1; }
         .message-wrapper.my-msg-wrapper { align-self: flex-end; flex-direction: row-reverse; }
 
@@ -151,7 +145,6 @@
         .msg-time-row { display: flex; justify-content: flex-end; align-items: center; gap: 6px; margin-top: 4px; }
         .msg-time { font-size: 0.62rem; color: #64748b; font-weight: 700; }
         
-        /* टिक क्लिक करण्यायोग्य देखावा (Clickable Seen Badge) */
         .seen-badge { cursor: pointer; color: #0284c7; font-size: 0.68rem; font-weight: 800; background: rgba(59, 130, 246, 0.12); padding: 1px 6px; border-radius: 8px; transition: 0.2s; border: 1px solid rgba(59, 130, 246, 0.2); }
         .seen-badge:hover { background: #0284c7; color: white; }
         
@@ -167,7 +160,6 @@
         .delete-btn { position: absolute; top: -6px; right: -6px; background: var(--danger); color: white; border: none; border-radius: 50%; width: 20px; height: 20px; cursor: pointer; font-size: 0.65rem; display: none; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
         .message:hover .delete-btn { display: flex; }
 
-        /* ४. तळाशी असणारी स्थिर इनपुट पट्टी (Fixed Bottom Input Bar) */
         .input-area { 
             display: flex; 
             padding: 8px 10px; 
@@ -188,7 +180,6 @@
 
         #loader { display: none; background: #fef08a; color: #854d0e; padding: 5px; text-align: center; font-size: 0.8rem; font-weight: bold; border-bottom: 1px solid #fde047; flex-shrink: 0; }
 
-        /* ५. मोडल्स (Modals & Dialogs) */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.65); justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(2px); }
         .modal-content { background: white; padding: 16px; border-radius: 14px; width: 92%; max-width: 520px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); max-height: 88vh; overflow-y: auto; }
         .modal-header { font-size: 0.98rem; font-weight: 800; margin-bottom: 10px; color: var(--primary); display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 6px; }
@@ -206,7 +197,6 @@
         .perm-grid label { font-size: 0.78rem; font-weight: 600; display: flex; align-items: center; gap: 5px; cursor: pointer; }
         .perm-grid input[type="checkbox"] { accent-color: var(--primary); width: 15px; height: 15px; }
 
-        /* सीन सदस्यांची यादी (Seen Members List) */
         .seen-list-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 4px; border-bottom: 1px solid #f1f5f9; font-size: 0.82rem; }
         .seen-user-name { font-weight: 800; color: var(--primary); }
         .seen-user-role { font-size: 0.7rem; color: #64748b; display: block; }
@@ -224,7 +214,6 @@
 
 <div class="chat-container">
     
-    <!-- १. संघटना कॉम्पॅक्ट हेडर -->
     <div class="org-header">
         <div class="top-brand">
             <div class="org-title">
@@ -257,16 +246,13 @@
 
     <div id="loader"><i class="fa-solid fa-spinner fa-spin"></i> फाईल अपलोड होत आहे... कृपया वाट पहा...</div>
     
-    <!-- २. चॅट मेसेज बॉक्स -->
     <div class="chat-box" id="chatBox" onscroll="handleChatScroll()"></div>
 
-    <!-- फ्लोटिंग अनरीड (Pending) बटण -->
     <button class="fab-unread" id="fabUnread" onclick="scrollToBottomAndRead()">
         <i class="fa-solid fa-chevron-down"></i>
         <span class="fab-badge" id="unreadBadge">0</span>
     </button>
 
-    <!-- ३. तळाशी असलेली परिपूर्ण इनपुट पट्टी (Send Button Fixed) -->
     <div class="input-area" id="inputAreaBox">
         <label for="fileInput" class="file-label" id="fileInputLabel" title="फोटो किंवा PDF फाईल पाठवा">
             <i class="fa-solid fa-paperclip"></i>
@@ -280,11 +266,6 @@
     </div>
 </div>
 
-<!-- ========================================================
-     ४. मोडल्स (Login, Admin Settings, Seen Status List)
-     ======================================================== -->
-
-<!-- लॉगिन मोडल -->
 <div class="modal" id="loginModal">
     <div class="modal-content" style="max-width: 380px; text-align: center;">
         <div class="modal-header">
@@ -299,7 +280,6 @@
     </div>
 </div>
 
-<!-- ॲडमिन कंट्रोल पॅनेल मोडल -->
 <div class="modal" id="adminModal">
     <div class="modal-content">
         <div class="modal-header">
@@ -433,39 +413,44 @@
     const auth = firebase.auth();
 
     /* =======================================================
-       २. ऑथेन्टिकेशन व सुरुवातीचे लोडर्स (ॲडमिन नाव दुरुस्त लॉजिक)
+       २. ऑथेन्टिकेशन (मेंबर व ॲडमिन दोन्हीची अचूक नावे ओळखणे)
        ======================================================= */
     window.onload = () => {
-        // १. आधी चॅटच्या लिंक (URL) मधील युजर डेटा तपासा
         const urlParams = new URLSearchParams(window.location.search);
         const hasUrlParams = urlParams.has('name');
 
         if (hasUrlParams) {
             currentUser = urlParams.get('name'); 
             currentUserMobile = urlParams.get('mobile') || "९८xxxxxx००";
-            currentUserPost = urlParams.get('post') || "क्ष-किरण वैज्ञानिक अधिकारी (गट-क)";
-            currentUserOffice = urlParams.get('office') || urlParams.get('district') || "आरोग्य विभाग, महाराष्ट्र";
+            currentUserPost = urlParams.get('post') || "गट-क सदस्य";
+            currentUserOffice = urlParams.get('office') || urlParams.get('district') || "आरोग्य विभाग";
             currentUserPhoto = urlParams.get('photo') || "1001264489.png";
-            currentRole = "member";
+            
+            // डॅशबोर्डवरून आलेला रोल (admin की member)
+            let passedRole = urlParams.get('role');
+            if (passedRole === 'admin') {
+                currentRole = "sub_admin";
+            } else {
+                currentRole = "member";
+            }
         }
 
         auth.onAuthStateChanged(async (user) => {
-            // जर युजरने स्वतंत्रपणे 'ॲडमिन' बटणावर क्लिक करून लॉगिन केले असेल तरच ॲडमिन डेटा लावा
             if (user && !hasUrlParams) {
                 if (user.email === SUPER_ADMIN_EMAIL) {
                     currentRole = "super_admin";
-                    currentUser = "महेश हांगे (सुपर ॲडमिन)";
-                    currentUserPost = "मुख्य प्रशासक / राज्य मुख्यालय";
-                    currentUserOffice = "राज्य कार्यकारी समिती";
+                    currentUser = "महेश हांगे";
+                    currentUserPost = "सुपर ॲडमिन";
+                    currentUserOffice = "राज्य मुख्यालय";
                 } else {
                     const snap = await db.collection("admins").where("email", "==", user.email).get();
                     if (!snap.empty) {
                         currentRole = "sub_admin";
                         let subData = snap.docs[0].data();
-                        currentUser = `${subData.name || 'ॲडमिन'} (सब-ॲडमिन)`;
+                        currentUser = `${subData.name || 'ॲडमिन'}`;
                         currentUserPost = subData.post || "सब-ॲडमिन";
                         currentUserMobile = subData.mobile || "";
-                        currentUserOffice = subData.office || subData.district || "जिल्हा प्रशासन";
+                        currentUserOffice = subData.office || subData.district || "जिल्हा कार्यालय";
                     } else {
                         currentRole = "super_admin";
                         currentUser = "ॲडमिन अधिकारी";
@@ -642,6 +627,9 @@
         });
     }
 
+    /* =======================================================
+       ३. मेसेज रेंडर लॉजिक (ॲडमिन vs मेंबर बॅजसह नाव दाखवणे)
+       ======================================================= */
     function renderMessages(messages) {
         const chatBox = document.getElementById("chatBox");
         chatBox.innerHTML = "";
@@ -651,11 +639,14 @@
             const userPost = data.senderRole || data.userPost || "गट-क सदस्य";
             const userMobile = data.userMobile || "";
             const userOffice = data.userOffice || "";
+            const senderType = data.senderType || (data.senderRole && data.senderRole.includes('ॲडमिन') ? 'admin' : 'member');
+            
             const isMyMsg = (userName === currentUser || data.user === currentUser);
             
             const wrapper = document.createElement("div");
             wrapper.className = `message-wrapper ${isMyMsg ? "my-msg-wrapper" : ""}`;
 
+            // १. सदस्य DP
             if (appSettings.showProfilePhotos) {
                 const avatar = document.createElement("div");
                 avatar.className = "avatar";
@@ -670,12 +661,20 @@
             const msgDiv = document.createElement("div");
             msgDiv.className = "message";
 
+            // 👑 ॲडमिन की 👤 सभासद बॅज
+            let roleBadgeHtml = '';
+            if (senderType === 'admin') {
+                roleBadgeHtml = `<span style="background:#fef08a; color:#854d0e; font-size:0.65rem; padding:1px 6px; border-radius:10px; font-weight:800; border:1px solid #fde047;">👑 ॲडमिन</span>`;
+            } else {
+                roleBadgeHtml = `<span style="background:#e0f2fe; color:#0369a1; font-size:0.65rem; padding:1px 6px; border-radius:10px; font-weight:800; border:1px solid #bae6fd;">👤 सभासद</span>`;
+            }
+
             let subDetails = [];
             if (appSettings.showMobile && userMobile) subDetails.push(`<i class="fa-solid fa-phone"></i> ${userMobile}`);
             if (appSettings.showOffice && userOffice) subDetails.push(`<i class="fa-solid fa-location-dot"></i> ${userOffice}`);
             
             let subDetailsHtml = subDetails.length > 0 ? `<span class="msg-subinfo">${subDetails.join(' | ')}</span>` : `<span class="msg-subinfo">(${userPost})</span>`;
-            let nameHeader = appSettings.showNamePost ? `<div class="msg-user-title"><span>${userName}</span></div>` : '';
+            let nameHeader = appSettings.showNamePost ? `<div class="msg-user-title"><span>${userName}</span> ${roleBadgeHtml}</div>` : '';
 
             let contentHtml = `${nameHeader}${subDetailsHtml}`;
 
@@ -761,12 +760,16 @@
 
     function handleEnter(e) { if(e.key === 'Enter') sendTextMessage(); }
 
+    /* =======================================================
+       ४. मेसेज पाठवणे (senderType : admin / member साठवणे)
+       ======================================================= */
     function sendTextMessage() {
         const input = document.getElementById("msgInput");
         const text = input.value.trim();
         if (text) {
             const now = new Date();
             const timeStr = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            const isTypeAdmin = (currentRole === "super_admin" || currentRole === "sub_admin");
 
             db.collection("chat_messages").add({
                 room: currentRoom,
@@ -777,6 +780,7 @@
                 userMobile: currentUserMobile,
                 userOffice: currentUserOffice,
                 userPhoto: currentUserPhoto,
+                senderType: isTypeAdmin ? "admin" : "member",
                 text: text,
                 message: text,
                 type: "text",
@@ -817,6 +821,7 @@
         try {
             const now = new Date();
             const timeStr = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            const isTypeAdmin = (currentRole === "super_admin" || currentRole === "sub_admin");
 
             if (file.type.startsWith("image/")) {
                 const formData = new FormData();
@@ -826,13 +831,13 @@
                 
                 if(data.success) {
                     await db.collection("chat_messages").add({
-                        room: currentRoom, senderName: currentUser, user: currentUser, senderRole: currentUserPost, userPost: currentUserPost, userMobile: currentUserMobile, userOffice: currentUserOffice, userPhoto: currentUserPhoto, text: data.data.url, message: data.data.url, type: "image", time: timeStr, readBy: [{ name: currentUser, role: currentUserPost, office: currentUserOffice, time: timeStr }], timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                        room: currentRoom, senderName: currentUser, user: currentUser, senderRole: currentUserPost, userPost: currentUserPost, userMobile: currentUserMobile, userOffice: currentUserOffice, userPhoto: currentUserPhoto, senderType: isTypeAdmin ? "admin" : "member", text: data.data.url, message: data.data.url, type: "image", time: timeStr, readBy: [{ name: currentUser, role: currentUserPost, office: currentUserOffice, time: timeStr }], timestamp: firebase.firestore.FieldValue.serverTimestamp()
                     });
                 }
             } else if (file.type === "application/pdf" || file.name.endsWith(".pdf")) {
                 const telegramPdfUrl = await uploadPdfToTelegram(file);
                 await db.collection("chat_messages").add({
-                    room: currentRoom, senderName: currentUser, user: currentUser, senderRole: currentUserPost, userPost: currentUserPost, userMobile: currentUserMobile, userOffice: currentUserOffice, userPhoto: currentUserPhoto, text: telegramPdfUrl, message: telegramPdfUrl, fileName: file.name, type: "pdf", time: timeStr, readBy: [{ name: currentUser, role: currentUserPost, office: currentUserOffice, time: timeStr }], timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    room: currentRoom, senderName: currentUser, user: currentUser, senderRole: currentUserPost, userPost: currentUserPost, userMobile: currentUserMobile, userOffice: currentUserOffice, userPhoto: currentUserPhoto, senderType: isTypeAdmin ? "admin" : "member", text: telegramPdfUrl, message: telegramPdfUrl, fileName: file.name, type: "pdf", time: timeStr, readBy: [{ name: currentUser, role: currentUserPost, office: currentUserOffice, time: timeStr }], timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 Swal.fire('यशस्वी', 'PDF फाईल पाठवली गेली!', 'success');
             }
