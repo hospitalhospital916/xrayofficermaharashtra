@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>आरोग्य विभाग - आर्थिक व भत्ते दावे पोर्टल्स</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Arial', 'Mangal', sans-serif;
+            background-color: #eef2f5;
+            margin: 0;
+            padding: 15px;
+            color: #2c3e50;
+        }
+
+        .main-card {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .header-banner {
+            background: linear-gradient(135deg, #005c97, #363795);
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .header-banner h2 { margin: 0; font-size: 22px; }
+        .header-banner p { margin: 5px 0 0 0; font-size: 14px; opacity: 0.9; }
+
+        /* टॅब मेनू */
+        .tab-menu {
+            display: flex;
+            background-color: #1a252f;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            background-color: inherit;
+            color: #bdc3c7;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 18px;
+            font-size: 14px;
+            font-weight: bold;
+            white-space: nowrap;
+            transition: 0.3s;
+        }
+
+        .tab-btn:hover { color: #fff; background-color: #34495e; }
+        .tab-btn.active { color: #fff; background-color: #27ae60; border-bottom: 3px solid #f1c40f; }
+
+        .tab-content { display: none; padding: 25px; }
+        .tab-content.active { display: block; }
+
+        /* फॉर्म लेआउट */
+        .form-section {
+            border: 1px solid #e0e0e0;
+            background: #fafafa;
+            padding: 18px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        .form-section h4 {
+            margin-top: 0;
+            color: #1a5276;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 6px;
+            font-size: 15px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+        }
+
+        .form-group { margin-bottom: 10px; }
+        label { display: block; font-weight: bold; font-size: 13px; margin-bottom: 5px; }
+        input, select, textarea {
+            width: 100%;
+            padding: 9px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .btn-gen {
+            background-color: #27ae60;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .btn-gen:hover { background-color: #219150; }
+
+        .btn-add { background: #2980b9; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; margin-top: 5px; }
+        .btn-del { background: #c0392b; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; }
+
+        /* प्रिंट फॉरमॅट्स */
+        .print-area {
+            display: none;
+            background: #fff;
+            padding: 35px;
+            border: 2px solid #000;
+            margin-top: 25px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .cert-header { text-align: center; margin-bottom: 20px; }
+        .cert-header h3 { margin: 5px 0; font-size: 18px; text-decoration: underline; }
+        .cert-header p { margin: 2px 0; font-size: 12px; }
+
+        .print-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        .print-table th, .print-table td {
+            border: 1px solid #000;
+            padding: 6px;
+            font-size: 12px;
+            text-align: left;
+        }
+        .print-table th { background: #f2f2f2; text-align: center; }
+
+        .footer-grid {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+        }
+
+        /* प्रिंट मीडिया क्वेरी */
+        @media print {
+            .no-print, .main-card, .tab-menu { display: none !important; }
+            .print-area { display: block !important; border: none; padding: 0; margin: 0; width: 100%; }
+            body { background: white; padding: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-card no-print">
+    <div class="header-banner">
+        <h2>सार्वजनिक आरोग्य विभाग - महाराष्ट्र शासन</h2>
+        <p>आर्थिक, भत्ते व प्रतिपूर्ती दाव्यांचे ऑटो-जनरेटर पोर्टल</p>
+    </div>
+
+    <!-- टॅब्स -->
+    <div class="tab-menu">
+        <button class="tab-btn active" onclick="openTab(event, 'tab1')">१. प्रवास भत्ता (TA/DA)</button>
+        <button class="tab-btn" onclick="openTab(event, 'tab2')">२. वैद्यकीय बिल दावा</button>
+        <button class="tab-btn" onclick="openTab(event, 'tab3')">३. GPF/NPS अग्रीम</button>
+        <button class="tab-btn" onclick="openTab(event, 'tab4')">४. गट विमा (GIS)</button>
+        <button class="tab-btn" onclick="openTab(event, 'tab5')">५. आश्वासित प्रगति (ACPS)</button>
+    </div>
+
+    <!-- TAB 1: TA / DA BILL -->
+    <div id="tab1" class="tab-content active">
+        <h3>प्रवास भत्ता व दैनिक भत्ता देयक (TA / DA Claim)</h3>
+        <p style="font-size: 12px; color: #666;">महाराष्ट्र नागरी सेवा (प्रवास भत्ता) नियम, १९८१ नुसार</p>
+        
+        <div class="form-section">
+            <h4>कर्मचारी व कार्यालय तपशील</h4>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>कर्मचाऱ्याचे नाव:</label>
+                    <input type="text" id="t1_name" placeholder="उदा. डॉ. सचिन पांडुरंग पाटील">
+                </div>
+                <div class="form-group">
+                    <label>पदनाम (आरोग्य विभाग):</label>
+                    <input type="text" id="t1_desig" placeholder="उदा. वैद्यकीय अधिकारी / आरोग्य सेवक">
+                </div>
+                <div class="form-group">
+                    <label>रुग्णालय/कार्यालय:</label>
+                    <input type="text" id="t1_office" placeholder="उदा. प्राथमिक आरोग्य केंद्र, त्र्यंबकेश्वर">
+                </div>
+                <div class="form-group">
+                    <label>मूळ वेतन व पे लेव्हल:</label>
+                    <input type="text" id="t1_pay" placeholder="उदा. S-15: ₹56,100">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h4>प्रवासाचा उद्देश व तपशील</h4>
+            <div class="form-group">
+                <label>प्रवासाचे कारण (उदा. शासकीय बैठक/लसीकरण मोहीम/प्रशिक्षण):</label>
+                <input type="text" id="t1_reason" placeholder="उदा. जिल्हास्तरीय आरोग्य आढावा बैठक">
+            </div>
+            <table class="print-table" id="t1_table">
+                <thead>
+                    <tr>
+                        <th>प्रस्थान (ठिकाण व वेळ)</th>
+                        <th>आगमन (ठिकाण व वेळ)</th>
+                        <th>प्रवास वाहन/मार्ग</th>
+                        <th>अंदाजे अंतर (कि.मी.)</th>
+                        <th>तिकीट/प्रवास खर्च (₹)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="text" class="t1_from" placeholder="प्रा.आ.केंद्र, 10/08/26 AM"></td>
+                        <td><input type="text" class="t1_to" placeholder="जि.रु. नाशिक, 10/08/26 PM"></td>
+                        <td><input type="text" class="t1_mode" placeholder="उदा. बस / निमसरकारी वाहन"></td>
+                        <td><input type="number" class="t1_km" placeholder="45"></td>
+                        <td><input type="number" class="t1_fare" placeholder="120"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <button class="btn-add" onclick="addTaRow()">+ प्रवास फेरी जोडा</button>
+        </div>
+
+        <button class="btn-gen" onclick="generateTA()">प्रवास भत्ता बिल जनरेट करा</button>
+    </div>
+
+    <!-- TAB 2: MEDICAL REIMBURSEMENT -->
+    <div id="tab2" class="tab-content">
+        <h3>वैद्यकीय खर्च प्रतिपूर्ती अर्ज (Medical Reimbursement Claim)</h3>
+        <p style="font-size: 12px; color: #666;">महाराष्ट्र नागरी सेवा (वैद्यकीय परिचर्या) नियम, १९६१ नुसार</p>
+
+        <div class="form-section">
+            <h4>वैयक्तिक व रुग्णाची माहिती</h4>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>कर्मचाऱ्याचे नाव:</label>
+                    <input type="text" id="t2_emp" placeholder="उदा. स्वाती रमेश देशपांडे">
+                </div>
+                <div class="form-group">
+                    <label>पद व रुग्णालय:</label>
+                    <input type="text" id="t2_desig" placeholder="उदा. अधिपरिचारिका, ग्रामीण रुग्णालय">
+                </div>
+                <div class="form-group">
+                    <label>रुग्णाचे नाव व नाते:</label>
+                    <input type="text" id="t2_patient" placeholder="उदा. मुलगा - आरव देशपांडे">
+                </div>
+                <div class="form-group">
+                    <label>उपचार घेतलेले रुग्णालय:</label>
+                    <input type="text" id="t2_hosp" placeholder="उदा. सुश्रुत हॉस्पिटल (संलग्न/खाजगी)">
+                </div>
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>दाखल दिनांक:</label>
+                    <input type="date" id="t2_adm">
+                </div>
+                <div class="form-group">
+                    <label>डिस्चार्ज दिनांक:</label>
+                    <input type="date" id="t2_dis">
+                </div>
+                <div class="form-group">
+                    <label>आचाराचा/आजाराचा प्रकार:</label>
+                    <input type="text" id="t2_disease" placeholder="उदा. ॲपेन्डिसाइटिस शस्त्रक्रिया">
+                </div>
+                <div class="form-group">
+                    <label>दावा केलेली एकूण रक्कम (₹):</label>
+                    <input type="number" id="t2_amount" placeholder="उदा. 45000">
+                </div>
+            </div>
+        </div>
+
+        <button class="btn-gen" onclick="generateMedical()">वैद्यकीय बिल अर्ज जनरेट करा</button>
+    </div>
+
+    <!-- TAB 3: GPF / NPS ADVANCE -->
+    <div id="tab3" class="tab-content">
+        <h3>भविष्य निर्वाह निधी (GPF) / NPS अग्रीम अर्ज</h3>
+        <p style="font-size: 12px; color: #666;">महाराष्ट्र सामान्य भविष्य निर्वाह निधी नियम व NPS तरतुदीनुसार</p>
+
+        <div class="form-section">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>अर्जदाराचे नाव:</label>
+                    <input type="text" id="t3_name">
+                </div>
+                <div class="form-group">
+                    <label>पद व आस्थापना:</label>
+                    <input type="text" id="t3_desig" placeholder="उदा. औषध निर्माण अधिकारी">
+                </div>
+                <div class="form-group">
+                    <label>GPF / PRAN खाते क्रमांक:</label>
+                    <input type="text" id="t3_acc" placeholder="उदा. MH/PH/12345">
+                </div>
+                <div class="form-group">
+                    <label>मागणी प्रकार:</label>
+                    <select id="t3_type">
+                        <option value="परतावा अग्रीम (Refundable Advance)">परतावा अग्रीम (Refundable)</option>
+                        <option value="अ-परतावा अग्रीम (Non-Refundable)">अ-परतावा अग्रीम (Non-Refundable)</option>
+                        <option value="NPS ७५% आंशिक परतावा">NPS ७५% आंशिक परतावा</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>मागणी केलेली रक्कम (₹):</label>
+                    <input type="number" id="t3_req_amt">
+                </div>
+                <div class="form-group">
+                    <label>अग्रीमचे कारण:</label>
+                    <input type="text" id="t3_reason" placeholder="उदा. पाल्याचे शिक्षण / घरदुरुस्ती / उपचार">
+                </div>
+                <div class="form-group">
+                    <label>खात्यात जमा अंदाजे रक्कम (₹):</label>
+                    <input type="number" id="t3_bal">
+                </div>
+            </div>
+        </div>
+
+        <button class="btn-gen" onclick="generateGPF()">GPF/NPS अर्ज जनरेट करा</button>
+    </div>
+
+    <!-- TAB 4: GIS CLAIM -->
+    <div id="tab4" class="tab-content">
+        <h3>राज्य शासकीय गट विमा योजना (GIS Claim / Nomination)</h3>
+        <p style="font-size: 12px; color: #666;">महाराष्ट्र राज्य शासकीय कर्मचारी गट विमा योजना, १९८२</p>
+
+        <div class="form-section">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>कर्मचाऱ्याचे नाव:</label>
+                    <input type="text" id="t4_name">
+                </div>
+                <div class="form-group">
+                    <label>पदनाम:</label>
+                    <input type="text" id="t4_desig" placeholder="उदा. आरोग्य सहाय्यक">
+                </div>
+                <div class="form-group">
+                    <label>गट विमा वर्ग (Group):</label>
+                    <select id="t4_group">
+                        <option value="गट 'अ' (Group A)">गट 'अ' (Group A)</option>
+                        <option value="गट 'ब' (Group B)">गट 'ब' (Group B)</option>
+                        <option value="गट 'क' (Group C)">गट 'क' (Group C)</option>
+                        <option value="गट 'ड' (Group D)">गट 'ड' (Group D)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>दाव्याचे कारण:</label>
+                    <select id="t4_reason">
+                        <option value="सेवानिवृत्ती (Retirement)">सेवानिवृत्ती (Retirement)</option>
+                        <option value="राजीनामा (Resignation)">राजीनामा (Resignation)</option>
+                        <option value="सेवेदरम्यान मृत्यू (Death in Service)">सेवेदरम्यान मृत्यू (Death in Service)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>वारसदार/नॉमिनीचे नाव (मृत्यू दाव्यासाठी):</label>
+                    <input type="text" id="t4_nominee" placeholder="स्वतः असल्यास 'स्वतः' लिहा">
+                </div>
+                <div class="form-group">
+                    <label>नाते:</label>
+                    <input type="text" id="t4_relation" placeholder="उदा. स्वतः / पत्नी">
+                </div>
+            </div>
+        </div>
+
+        <button class="btn-gen" onclick="generateGIS()">गट विमा अर्ज जनरेट करा</button>
+    </div>
+
+    <!-- TAB 5: ACPS PROPOSAL -->
+    <div id="tab5" class="tab-content">
+        <h3>आश्वासित प्रगति योजना प्रस्ताव (10/20/30 Years ACPS Proposal)</h3>
+        <p style="font-size: 12px; color: #666;">वित्त विभाग शासन निर्णय वेतप्र-२०१९/प्र.क्र.८/सेवा-३ (७ वा वेतन आयोग)</p>
+
+        <div class="form-section">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>कर्मचाऱ्याचे नाव:</label>
+                    <input type="text" id="t5_name">
+                </div>
+                <div class="form-group">
+                    <label>सध्याचे पद व रुग्णालय:</label>
+                    <input type="text" id="t5_desig" placeholder="उदा. आरोग्य सेवक, प्रा.आ.केंद्र">
+                </div>
+                <div class="form-group">
+                    <label>प्रथम शासकीय सेवेत रुजू दिनांक:</label>
+                    <input type="date" id="t5_joindate">
+                </div>
+                <div class="form-group">
+                    <label>प्रस्तावाचा टप्पा:</label>
+                    <select id="t5_stage">
+                        <option value="१० वर्षे पहिली कालबद्ध पदोन्नती">१० वर्षे (पहिली कालबद्ध)</option>
+                        <option value="२० वर्षे दुसरी कालबद्ध पदोन्नती">२० वर्षे (दुसरी कालबद्ध)</option>
+                        <option value="३० वर्षे तिसरी कालबद्ध पदोन्नती">३० वर्षे (तिसरी कालबद्ध)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>सध्याचे वेतन मॅट्रिक्स लेव्हल:</label>
+                    <input type="text" id="t5_cur_level" placeholder="उदा. S-8 (₹25500-81100)">
+                </div>
+                <div class="form-group">
+                    <label>प्रस्तावित वरिष्ठ वेतन श्रेणी लेव्हल:</label>
+                    <input type="text" id="t5_prop_level" placeholder="उदा. S-10 (₹29200-92300)">
+                </div>
+                <div class="form-group">
+                    <label>१०/२०/३० वर्षे सेवा पूर्ण दिनांक:</label>
+                    <input type="date" id="t5_compdate">
+                </div>
+            </div>
+        </div>
+
+        <button class="btn-gen" onclick="generateACPS()">आश्वासित प्रगति प्रस्ताव जनरेट करा</button>
+    </div>
+</div>
+
+<!-- जनरेट होणारा प्रिंट लेआउट -->
+<div id="printDocument" class="print-area">
+    <!-- JAVASCRIPT द्वारे dynamic कंटेंट इथे येईल -->
+</div>
+
+<script>
+    // टॅब बदलणे
+    function openTab(evt, tabId) {
+        let contents = document.getElementsByClassName("tab-content");
+        for (let i = 0; i < contents.length; i++) {
+            contents[i].classList.remove("active");
+        }
+        let buttons = document.getElementsByClassName("tab-btn");
+        for (let i = 0; i < buttons.length; i++) {
+            buttons[i].classList.remove("active");
+        }
+        document.getElementById(tabId).classList.add("active");
+        evt.currentTarget.classList.add("active");
+    }
+
+    // TA Row जोडणे
+    function addTaRow() {
+        let tbody = document.querySelector("#t1_table tbody");
+        let tr = document.createElement("tr");
+        tr.innerHTML = `
+            <td><input type="text" class="t1_from"></td>
+            <td><input type="text" class="t1_to"></td>
+            <td><input type="text" class="t1_mode"></td>
+            <td><input type="number" class="t1_km"></td>
+            <td><input type="number" class="t1_fare"></td>
+        `;
+        tbody.appendChild(tr);
+    }
+
+    // १. TA/DA GENERATE
+    function generateTA() {
+        let name = document.getElementById("t1_name").value;
+        let desig = document.getElementById("t1_desig").value;
+        let office = document.getElementById("t1_office").value;
+        let pay = document.getElementById("t1_pay").value;
+        let reason = document.getElementById("t1_reason").value;
+
+        if(!name) { alert("कृपया नाव भरा"); return; }
+
+        let rowsHTML = "";
+        let totalFare = 0;
+        let rows = document.querySelectorAll("#t1_table tbody tr");
+        rows.forEach((r, idx) => {
+            let from = r.querySelector(".t1_from").value;
+            let to = r.querySelector(".t1_to").value;
+            let mode = r.querySelector(".t1_mode").value;
+            let km = r.querySelector(".t1_km").value;
+            let fare = parseFloat(r.querySelector(".t1_fare").value) || 0;
+            totalFare += fare;
+
+            rowsHTML += `<tr>
+                <td style="text-align:center;">${idx+1}</td>
+                <td>${from}</td>
+                <td>${to}</td>
+                <td>${mode}</td>
+                <td style="text-align:center;">${km}</td>
+                <td style="text-align:right;">₹ ${fare}</td>
+            </tr>`;
+        });
+
+        let doc = document.getElementById("printDocument");
+        doc.innerHTML = `
+            <div class="cert-header">
+                <h3>प्रवास भत्ता बिल (Traveling Allowance Bill)</h3>
+                <p><strong>महाराष्ट्र नागरी सेवा (प्रवास भत्ता) नियम, १९८१</strong></p>
+                <p>सार्वजनिक आरोग्य विभाग - आरोग्य सेवा</p>
+            </div>
+            <p><strong>कर्मचाऱ्याचे नाव:</strong> ${name} | <strong>पद:</strong> ${desig}</p>
+            <p><strong>कार्यालय/रुग्णालय:</strong> ${office} | <strong>वेतन श्रेणी:</strong> ${pay}</p>
+            <p><strong>प्रवासाचे प्रयोजन:</strong> ${reason}</p>
+            
+            <table class="print-table">
+                <thead>
+                    <tr>
+                        <th>अ.क्र.</th>
+                        <th>प्रस्थान (स्थान व वेळ)</th>
+                        <th>आगमन (स्थान व वेळ)</th>
+                        <th>प्रवास साधन</th>
+                        <th>अंतर (KM)</th>
+                        <th>दावा केलेली रक्कम</th>
+                    </tr>
+                </thead>
+                <tbody>${rowsHTML}</tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="5" style="text-align:right; font-weight:bold;">एकूण देयक रक्कम:</td>
+                        <td style="text-align:right; font-weight:bold;">₹ ${totalFare}</td>
+                    </tr>
+                </tfoot>
+            </table>
+
+            <p style="margin-top:20px;">मी प्रतिज्ञापूर्वक घोषित करतो की, वरील प्रवास शासकीय कामासाठीच करण्यात आला असून यापूर्वी या प्रवासाचा कोणताही भत्ता घेतलेला नाही.</p>
+            
+            <div class="footer-grid">
+                <div>दिनांक: ________________</div>
+                <div style="text-align:right;">(अर्जदाराची स्वाक्षरी व पदनाम)</div>
+            </div>
+            <br><hr><br>
+            <p style="text-align:center;"><strong>(कार्यालयीन मंजुरी आदेश)</strong><br>श्री/श्रीमती ______________________ यांचे वरील प्रवास भत्ता बिल नियमानुसार तपासले असून ₹ __________ स्वीकृत करण्यात येत आहे.</p>
+            <div class="footer-grid" style="margin-top:30px;">
+                <div>आस्थापना लिपिक</div>
+                <div>नियंत्रण अधिकारी / वैद्यकीय अधीक्षक</div>
+            </div>
+            <div class="no-print" style="text-align:center; margin-top:20px;">
+                <button onclick="window.print()" style="padding:10px 20px; background:#2980b9; color:white; border:none; border-radius:4px; cursor:pointer;">बिल प्रिंट करा / PDF सेव्ह करा</button>
+            </div>
+        `;
+        doc.style.display = "block";
+        doc.scrollIntoView({behavior: 'smooth'});
+    }
+
+    // २. MEDICAL GENERATE
+    function generateMedical() {
+        let emp = document.getElementById("t2_emp").value;
+        let desig = document.getElementById("t2_desig").value;
+        let patient = document.getElementById("t2_patient").value;
+        let hosp = document.getElementById("t2_hosp").value;
+        let adm = document.getElementById("t2_adm").value;
+        let dis = document.getElementById("t2_dis").value;
+        let disease = document.getElementById("t2_disease").value;
+        let amount = document.getElementById("t2_amount").value;
+
+        let doc = document.getElementById("printDocument");
+        doc.innerHTML = `
+            <div class="cert-header">
+                <h3>वैद्यकीय खर्च प्रतिपूर्ती अर्ज (Medical Reimbursement Form)</h3>
+                <p><strong>महाराष्ट्र नागरी सेवा (वैद्यकीय परिचर्या) नियम, १९६१</strong></p>
+            </div>
+            <p>प्रति,<br>मा. नियंत्रण अधिकारी / कार्यालय प्रमुख,<br>सार्वजनिक आरोग्य विभाग, महाराष्ट्र शासन.</p>
+            <p><strong>विषय:</strong> वैद्यकीय उपचाराच्या खर्चाची प्रतिपूर्ती मिळण्याबाबत अर्ज.</p>
+            <p>महोदय,</p>
+            <p>मी खालील स्वाक्षरी करणारा <strong>${emp}</strong>, पद: <strong>${desig}</strong> याद्वारे अर्ज करतो की, माझे कौटुंबिक सदस्य <strong>${patient}</strong> यांच्यावर <strong>${hosp}</strong> येथे दिनांक <strong>${adm}</strong> ते <strong>${dis}</strong> या कालावधीत <strong>${disease}</strong> या आजारावर उपचार करण्यात आले.</p>
+            <p>सदरील उपचारासाठी मला एकूण <strong>₹ ${amount}/-</strong> इतका खर्च आला असून त्यासंबंधीची मूळ डिस्चार्ज कार्ड, औषध बिले व एसेन्शियल सर्टिफिकेट (Essentiality Certificate) सोबत जोडलेले आहेत.</p>
+            <p>तरी कृपया म.ना.से. (वैद्यकीय परिचर्या) नियमांनुसार सदरील रक्कमेची प्रतिपूर्ती मंजूर व्हावी ही विनंती.</p>
+            
+            <div class="footer-grid" style="margin-top:50px;">
+                <div>ठिकाण: _____________<br>दिनांक: _____________</div>
+                <div style="text-align:right;">आपला/आपली नम्र,<br><br><strong>(${emp})</strong><br>${desig}</div>
+            </div>
+            <div class="no-print" style="text-align:center; margin-top:20px;">
+                <button onclick="window.print()" style="padding:10px 20px; background:#2980b9; color:white; border:none; border-radius:4px; cursor:pointer;">अर्ज प्रिंट करा</button>
+            </div>
+        `;
+        doc.style.display = "block";
+        doc.scrollIntoView({behavior: 'smooth'});
+    }
+
+    // ३. GPF GENERATE
+    function generateGPF() {
+        let name = document.getElementById("t3_name").value;
+        let desig = document.getElementById("t3_desig").value;
+        let acc = document.getElementById("t3_acc").value;
+        let type = document.getElementById("t3_type").value;
+        let req_amt = document.getElementById("t3_req_amt").value;
+        let reason = document.getElementById("t3_reason").value;
+
+        let doc = document.getElementById("printDocument");
+        doc.innerHTML = `
+            <div class="cert-header">
+                <h3>भविष्य निर्वाह निधी (GPF) / NPS रक्कम अग्रीम अर्ज</h3>
+                <p><strong>महाराष्ट्र सामान्य भविष्य निर्वाह निधी नियमावली</strong></p>
+            </div>
+            <p><strong>कर्मचाऱ्याचे नाव:</strong> ${name}</p>
+            <p><strong>पद व कार्यालय:</strong> ${desig}</p>
+            <p><strong>GPF / PRAN खाते क्रमांक:</strong> ${acc}</p>
+            <p><strong>मागणी केलेला अग्रीम प्रकार:</strong> ${type}</p>
+            <p><strong>मागणी केलेली रक्कम:</strong> ₹ ${req_amt}/-</p>
+            <p><strong>अग्रीम मागणीचे कारण:</strong> ${reason}</p>
+            <br>
+            <p>मी याद्वारे वचन देतो की, मंजूर करण्यात आलेली रक्कम ज्या कारणासाठी मागितली आहे त्याच कारणासाठी वापरली जाईल.</p>
+            <div class="footer-grid" style="margin-top:40px;">
+                <div>दिनांक: ____________</div>
+                <div style="text-align:right;">(कर्मचाऱ्याची स्वाक्षरी)</div>
+            </div>
+            <div class="no-print" style="text-align:center; margin-top:20px;">
+                <button onclick="window.print()" style="padding:10px 20px; background:#2980b9; color:white; border:none; border-radius:4px; cursor:pointer;">अर्ज प्रिंट करा</button>
+            </div>
+        `;
+        doc.style.display = "block";
+        doc.scrollIntoView({behavior: 'smooth'});
+    }
+
+    // ४. GIS GENERATE
+    function generateGIS() {
+        let name = document.getElementById("t4_name").value;
+        let desig = document.getElementById("t4_desig").value;
+        let group = document.getElementById("t4_group").value;
+        let reason = document.getElementById("t4_reason").value;
+        let nominee = document.getElementById("t4_nominee").value;
+
+        let doc = document.getElementById("printDocument");
+        doc.innerHTML = `
+            <div class="cert-header">
+                <h3>राज्य शासकीय कर्मचारी गट विमा योजना (GIS) दावा अर्ज</h3>
+                <p><strong>(महाराष्ट्र राज्य शासकीय कर्मचारी गट विमा योजना, १९८२ - नमुना ३)</strong></p>
+            </div>
+            <p>मी <strong>${name}</strong>, पद: <strong>${desig}</strong>, गट: <strong>${group}</strong> याद्वारे <strong>${reason}</strong> प्रसंगी गट विमा योजनेअंतर्गत माझ्या जमा असलेल्या निधीची/दाव्याची रक्कम मिळण्यासाठी सादर करत आहे.</p>
+            <p><strong>वारसदार/लाभार्थीचे नाव:</strong> ${nominee}</p>
+            <br>
+            <div class="footer-grid" style="margin-top:50px;">
+                <div>ठिकाण: ____________<br>दिनांक: ____________</div>
+                <div style="text-align:right;">(अर्जदाराची स्वाक्षरी)</div>
+            </div>
+            <div class="no-print" style="text-align:center; margin-top:20px;">
+                <button onclick="window.print()" style="padding:10px 20px; background:#2980b9; color:white; border:none; border-radius:4px; cursor:pointer;">अर्ज प्रिंट करा</button>
+            </div>
+        `;
+        doc.style.display = "block";
+        doc.scrollIntoView({behavior: 'smooth'});
+    }
+
+    // ५. ACPS GENERATE
+    function generateACPS() {
+        let name = document.getElementById("t5_name").value;
+        let desig = document.getElementById("t5_desig").value;
+        let joindate = document.getElementById("t5_joindate").value;
+        let stage = document.getElementById("t5_stage").value;
+        let cur = document.getElementById("t5_cur_level").value;
+        let prop = document.getElementById("t5_prop_level").value;
+        let compdate = document.getElementById("t5_compdate").value;
+
+        let doc = document.getElementById("printDocument");
+        doc.innerHTML = `
+            <div class="cert-header">
+                <h3>सुधारित सेवाअंतर्गत आश्वासित प्रगति योजना (ACPS) प्रस्ताव</h3>
+                <p><strong>(७ वा वेतन आयोग कालबद्ध पदोन्नती / वरिष्ठ वेतनश्रेणी प्रस्ताव)</strong></p>
+                <p>वित्त विभाग शासन निर्णय वेतप्र-२०१९/प्र.क्र.८/सेवा-३</p>
+            </div>
+            <p><strong>१. कर्मचाऱ्याचे पूर्ण नाव:</strong> ${name}</p>
+            <p><strong>२. सध्याचे पद व रुग्णालय:</strong> ${desig}</p>
+            <p><strong>३. प्रथम सेवेत रुजू झालेला दिनांक:</strong> ${joindate}</p>
+            <p><strong>४. प्रस्तावाचा टप्पा:</strong> ${stage}</p>
+            <p><strong>५. अहर्ताकारी सेवा पूर्ण झालेला दिनांक:</strong> ${compdate}</p>
+            <p><strong>६. सध्याची वेतन श्रेणी:</strong> ${cur}</p>
+            <p><strong>७. प्रस्तावित वरिष्ठ वेतन श्रेणी:</strong> ${prop}</p>
+            
+            <div style="border:1px solid #000; padding:10px; margin-top:15px;">
+                <strong>कार्यालयीन प्रमाणपत्र:</strong><br>
+                प्रमाणित करण्यात येते की, संबंधित कर्मचाऱ्याची मागील ५ वर्षांची गोपनीयता अहवाल (CR) 'सकारात्मक' आहेत. कर्मचाऱ्याविरुद्ध कोणतीही विभागीय चौकशी अथवा न्यायालयीन प्रकरण प्रलंबित नाही.
+            </div>
+
+            <div class="footer-grid" style="margin-top:40px;">
+                <div>दिनांक: ____________</div>
+                <div style="text-align:right;">कार्यालय प्रमुख / जिल्हा शल्यचिकित्सक / DHO<br>सार्वजनिक आरोग्य विभाग</div>
+            </div>
+            <div class="no-print" style="text-align:center; margin-top:20px;">
+                <button onclick="window.print()" style="padding:10px 20px; background:#2980b9; color:white; border:none; border-radius:4px; cursor:pointer;">प्रस्ताव प्रिंट करा</button>
+            </div>
+        `;
+        doc.style.display = "block";
+        doc.scrollIntoView({behavior: 'smooth'});
+    }
+</script>
+
+</body>
+</html>
