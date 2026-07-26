@@ -25,171 +25,163 @@
             --danger: #ef4444;
             --success: #10b981;
             --dark: #1e293b;
-            --light-bg: #f0f4f8;
+            --light-bg: #f8fafc;
             --white: #ffffff;
-            --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-            --hover-shadow: 0 15px 35px rgba(11, 61, 145, 0.18);
+            --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+            --hover-shadow: 0 15px 35px rgba(11, 61, 145, 0.15);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mukta', sans-serif; }
         body { background-color: var(--light-bg); color: var(--dark); line-height: 1.6; overflow-x: hidden; }
 
-        /* --- TOP INFORMATION BAR --- */
-        .top-bar { background: var(--dark); color: #cbd5e1; padding: 6px 20px; font-size: 0.85rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
-        .top-bar-left span { margin-right: 15px; font-weight: 600; }
-        .top-bar-left i { color: var(--gold); margin-right: 5px; }
-        .top-bar-right a { color: #fff; text-decoration: none; margin-left: 12px; transition: 0.3s; font-weight: 700; }
-        .top-bar-right a:hover { color: var(--gold); }
+        /* --- TOP INFO BAR --- */
+        .top-bar { background: var(--dark); color: #cbd5e1; padding: 6px 25px; font-size: 0.85rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+        .top-bar-left span { margin-right: 20px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
+        .top-bar-left i { color: var(--gold); }
 
-        /* --- HEADER & LOGO BANNER --- */
-        header { background: var(--white); padding: 15px 25px; display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid var(--secondary); box-shadow: 0 4px 15px rgba(0,0,0,0.05); flex-wrap: wrap; gap: 15px; }
-        .header-brand { display: flex; align-items: center; gap: 18px; }
-        .logo-img { height: 85px; width: auto; max-width: 95px; object-fit: contain; }
-        .header-text h1 { color: var(--primary); font-size: 1.7rem; font-weight: 800; line-height: 1.25; }
-        .header-text p { color: var(--secondary); font-weight: 800; font-size: 1.05rem; }
-        .header-text small { color: #64748b; font-size: 0.88rem; font-weight: 600; display: block; }
+        /* --- HEADER BANNER & PERFECT LOGO/TITLE ALIGNMENT --- */
+        header { background: var(--white); padding: 18px 30px; display: flex; align-items: center; justify-content: space-between; border-bottom: 4px solid var(--secondary); box-shadow: 0 4px 15px rgba(0,0,0,0.05); flex-wrap: wrap; gap: 20px; }
+        .header-brand { display: flex; align-items: center; gap: 20px; }
+        .logo-img { height: 90px; width: auto; max-width: 100px; object-fit: contain; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.1)); }
         
-        .header-actions { display: flex; gap: 10px; align-items: center; }
-        .btn-header { padding: 8px 16px; border-radius: 20px; font-weight: 800; font-size: 0.9rem; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: all 0.3s ease; }
+        .header-title-box h1 { color: var(--primary); font-size: 1.75rem; font-weight: 800; line-height: 1.2; letter-spacing: -0.2px; }
+        .header-title-box .state-badge { display: inline-block; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: var(--gold); font-weight: 800; font-size: 1.1rem; padding: 2px 14px; border-radius: 6px; margin-top: 5px; box-shadow: 0 2px 6px rgba(11,61,145,0.2); }
+        .header-title-box small { color: #64748b; font-size: 0.88rem; font-weight: 600; display: block; margin-top: 3px; }
+        
+        /* Clean Header Buttons */
+        .header-actions { display: flex; gap: 12px; align-items: center; }
+        .btn-header { padding: 10px 20px; border-radius: 25px; font-weight: 800; font-size: 0.95rem; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(0,0,0,0.08); }
         .btn-reg { background: var(--gold); color: var(--dark); border: 2px solid var(--gold); }
-        .btn-reg:hover { background: var(--white); color: var(--primary); }
-        .btn-log { background: var(--primary); color: var(--white); }
-        .btn-log:hover { background: var(--primary-dark); }
+        .btn-reg:hover { background: var(--white); color: var(--primary); transform: translateY(-2px); }
+        .btn-log { background: var(--primary); color: var(--white); border: 2px solid var(--primary); }
+        .btn-log:hover { background: var(--primary-dark); transform: translateY(-2px); }
 
-        /* --- STICKY NAVIGATION BAR --- */
-        nav { background: var(--primary); padding: 0 20px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+        /* --- NAVIGATION BAR --- */
+        nav { background: var(--primary); padding: 0 20px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.18); }
         .nav-container { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-        .nav-links { display: flex; flex-wrap: wrap; list-style: none; gap: 5px; }
-        .nav-links a { color: var(--white); text-decoration: none; font-size: 0.98rem; font-weight: 700; padding: 14px 15px; display: inline-flex; align-items: center; gap: 6px; transition: 0.3s; border-bottom: 3px solid transparent; }
-        .nav-links a:hover, .nav-links a.active { background: rgba(255, 255, 255, 0.12); color: var(--gold); border-bottom-color: var(--gold); }
+        .nav-links { display: flex; flex-wrap: wrap; list-style: none; gap: 4px; }
+        .nav-links a { color: var(--white); text-decoration: none; font-size: 1rem; font-weight: 700; padding: 14px 18px; display: inline-flex; align-items: center; gap: 8px; transition: 0.3s; border-bottom: 3px solid transparent; }
+        .nav-links a:hover, .nav-links a.active { background: rgba(255, 255, 255, 0.15); color: var(--gold); border-bottom-color: var(--gold); }
         
-        .mobile-menu-toggle { display: none; background: none; border: none; color: white; font-size: 1.6rem; cursor: pointer; padding: 10px; }
+        .mobile-menu-toggle { display: none; background: none; border: none; color: white; font-size: 1.6rem; cursor: pointer; padding: 12px; }
 
         /* --- MARQUEE TICKER --- */
-        .ticker-wrap { background: var(--primary-dark); border-bottom: 2px solid var(--secondary); color: var(--gold); padding: 10px 20px; font-size: 1.05rem; font-weight: 700; display: flex; align-items: center; }
-        .ticker-badge { background: var(--danger); color: white; padding: 3px 12px; border-radius: 12px; font-size: 0.85rem; margin-right: 15px; white-space: nowrap; font-weight: 800; animation: pulse 1.5s infinite; }
+        .ticker-wrap { background: #071e3d; border-bottom: 2px solid var(--secondary); color: var(--gold); padding: 10px 20px; font-size: 1.05rem; font-weight: 700; display: flex; align-items: center; }
+        .ticker-badge { background: var(--danger); color: white; padding: 3px 12px; border-radius: 12px; font-size: 0.85rem; margin-right: 15px; white-space: nowrap; font-weight: 800; }
         #news-ticker { font-weight: 700; color: var(--gold); font-size: 1.05rem; }
 
         /* --- HERO BANNER --- */
-        .hero { background: linear-gradient(rgba(11, 61, 145, 0.88), rgba(7, 39, 94, 0.92)), url('https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80') center/cover; padding: 70px 20px; text-align: center; color: white; position: relative; }
+        .hero { background: linear-gradient(rgba(11, 61, 145, 0.9), rgba(7, 39, 94, 0.92)), url('https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80') center/cover; padding: 80px 20px; text-align: center; color: white; }
         .hero-content { max-width: 900px; margin: 0 auto; }
-        .hero h2 { font-size: 2.4rem; font-weight: 800; margin-bottom: 15px; text-shadow: 2px 2px 8px rgba(0,0,0,0.6); }
-        .hero p { font-size: 1.25rem; margin-bottom: 30px; opacity: 0.95; line-height: 1.6; }
-        .hero-btn-group { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
-        .hero-btn { padding: 12px 28px; border-radius: 30px; font-size: 1.1rem; font-weight: 800; text-decoration: none; transition: all 0.3s ease; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .hero h2 { font-size: 2.5rem; font-weight: 800; margin-bottom: 15px; text-shadow: 2px 2px 8px rgba(0,0,0,0.6); }
+        .hero p { font-size: 1.3rem; margin-bottom: 35px; opacity: 0.95; line-height: 1.6; }
+        .hero-btn-group { display: flex; gap: 18px; justify-content: center; flex-wrap: wrap; }
+        .hero-btn { padding: 14px 32px; border-radius: 30px; font-size: 1.15rem; font-weight: 800; text-decoration: none; transition: all 0.3s ease; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
         .hero-btn-primary { background: var(--secondary); color: var(--dark); }
-        .hero-btn-primary:hover { transform: translateY(-3px); background: var(--gold); box-shadow: 0 8px 20px rgba(0,0,0,0.4); }
+        .hero-btn-primary:hover { transform: translateY(-3px); background: var(--gold); box-shadow: 0 8px 25px rgba(0,0,0,0.4); }
         .hero-btn-secondary { background: transparent; color: white; border: 2px solid white; }
         .hero-btn-secondary:hover { background: white; color: var(--primary); }
 
-        /* --- QUICK SERVICE CARDS --- */
-        .quick-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; max-width: 1300px; margin: -40px auto 40px auto; padding: 0 20px; position: relative; z-index: 100; }
-        .quick-card { background: white; padding: 22px 18px; border-radius: 12px; text-align: center; box-shadow: var(--card-shadow); border-top: 5px solid var(--primary); transition: 0.3s; cursor: pointer; text-decoration: none; color: var(--dark); }
-        .quick-card:hover { transform: translateY(-8px); box-shadow: var(--hover-shadow); border-top-color: var(--secondary); }
-        .quick-card i { font-size: 2.2rem; color: var(--primary); margin-bottom: 12px; display: block; }
-        .quick-card h4 { font-size: 1.1rem; font-weight: 800; margin-bottom: 5px; color: var(--primary); }
-        .quick-card p { font-size: 0.85rem; color: #64748b; }
-
-        /* --- LAYOUT CONTAINER & SECTIONS --- */
-        .main-container { max-width: 1300px; margin: 0 auto; padding: 0 20px; }
+        /* --- MAIN CONTENT & SECTIONS --- */
+        .main-container { max-width: 1350px; margin: 40px auto; padding: 0 20px; }
         .section-header { text-align: center; margin: 45px 0 25px 0; }
-        .section-header h2 { font-size: 2rem; color: var(--primary); font-weight: 800; position: relative; display: inline-block; }
+        .section-header h2 { font-size: 2.1rem; color: var(--primary); font-weight: 800; position: relative; display: inline-block; }
         .section-header h2::after { content: ''; width: 60%; height: 4px; background: var(--secondary); display: block; margin: 8px auto 0 auto; border-radius: 2px; }
-        .section-header p { color: #64748b; font-weight: 600; margin-top: 5px; }
+        .section-header p { color: #64748b; font-weight: 600; margin-top: 5px; font-size: 1.05rem; }
 
         /* --- ABOUT CARD --- */
-        .about-card { background: white; padding: 35px; border-radius: 16px; box-shadow: var(--card-shadow); border-left: 6px solid var(--primary); margin-bottom: 40px; }
-        .about-card h3 { color: var(--primary); font-size: 1.6rem; margin-bottom: 12px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
-        .about-card p { font-size: 1.1rem; color: #475569; line-height: 1.8; text-align: justify; }
+        .about-card { background: white; padding: 40px; border-radius: 16px; box-shadow: var(--card-shadow); border-left: 6px solid var(--primary); margin-bottom: 40px; }
+        .about-card h3 { color: var(--primary); font-size: 1.65rem; margin-bottom: 15px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
+        .about-card p { font-size: 1.15rem; color: #475569; line-height: 1.8; text-align: justify; }
 
         /* --- DYNAMIC FOLDERS & GR SECTION --- */
-        .folders-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 25px; margin-bottom: 40px; }
+        .folders-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 25px; margin-bottom: 40px; }
         .folder-box { background: white; border-radius: 14px; box-shadow: var(--card-shadow); border-top: 5px solid var(--primary); overflow: hidden; }
-        .folder-header { background: #f8fafc; padding: 15px 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
-        .folder-header h3 { font-size: 1.2rem; color: var(--primary); font-weight: 800; display: flex; align-items: center; gap: 8px; }
-        .folder-content { padding: 15px 20px; max-height: 380px; overflow-y: auto; }
+        .folder-header { background: #f1f5f9; padding: 16px 22px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
+        .folder-header h3 { font-size: 1.25rem; color: var(--primary); font-weight: 800; display: flex; align-items: center; gap: 10px; }
+        .folder-content { padding: 18px 22px; max-height: 380px; overflow-y: auto; }
         
         .doc-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f1f5f9; gap: 10px; }
         .doc-item:last-child { border-bottom: none; }
-        .doc-title { font-weight: 700; color: var(--dark); font-size: 0.95rem; display: block; margin-bottom: 2px; }
-        .doc-date { font-size: 0.78rem; color: #94a3b8; font-weight: 600; }
-        .btn-download { background: var(--primary); color: white; padding: 6px 14px; border-radius: 6px; text-decoration: none; font-size: 0.82rem; font-weight: 700; transition: 0.2s; white-space: nowrap; display: inline-flex; align-items: center; gap: 5px; }
+        .doc-title { font-weight: 700; color: var(--dark); font-size: 0.98rem; display: block; margin-bottom: 3px; }
+        .doc-date { font-size: 0.8rem; color: #94a3b8; font-weight: 600; }
+        .btn-download { background: var(--primary); color: white; padding: 6px 14px; border-radius: 6px; text-decoration: none; font-size: 0.85rem; font-weight: 700; transition: 0.2s; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; }
         .btn-download:hover { background: var(--secondary); color: var(--dark); }
 
         /* --- DYNAMIC TABS CONTAINER (ADMIN INDEX MANAGEMENT) --- */
         .dynamic-tabs-container { margin-bottom: 40px; }
         .tab-buttons-bar { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; border-bottom: 2px solid #cbd5e1; margin-bottom: 20px; }
-        .tab-btn-idx { padding: 10px 20px; background: #e2e8f0; color: var(--dark); border: none; border-radius: 8px; font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: 0.3s; white-space: nowrap; }
+        .tab-btn-idx { padding: 10px 22px; background: #e2e8f0; color: var(--dark); border: none; border-radius: 8px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: 0.3s; white-space: nowrap; }
         .tab-btn-idx.active { background: var(--primary); color: white; }
 
-        /* --- COMMITTEE (OFFICE BEARERS) CARDS --- */
+        /* --- COMMITTEE CARDS --- */
         .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 25px; margin-bottom: 40px; }
         .team-card { background: white; padding: 25px 20px; border-radius: 14px; text-align: center; box-shadow: var(--card-shadow); border-bottom: 5px solid var(--primary); transition: 0.3s; }
         .team-card:hover { transform: translateY(-8px); box-shadow: var(--hover-shadow); border-bottom-color: var(--secondary); }
         .team-photo { width: 110px; height: 110px; border-radius: 50%; object-fit: cover; border: 4px solid #f1f5f9; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 12px; }
-        .team-name { font-size: 1.2rem; color: var(--primary); font-weight: 800; margin-bottom: 4px; }
-        .team-post { font-size: 1rem; color: var(--danger); font-weight: 700; margin-bottom: 6px; }
-        .team-badge { background: #f1f5f9; color: #475569; font-size: 0.82rem; font-weight: 600; padding: 3px 12px; border-radius: 15px; display: inline-block; margin-bottom: 8px; }
-        .team-phone { font-size: 0.95rem; color: #334155; font-weight: 700; }
+        .team-name { font-size: 1.25rem; color: var(--primary); font-weight: 800; margin-bottom: 4px; }
+        .team-post { font-size: 1.05rem; color: var(--danger); font-weight: 700; margin-bottom: 6px; }
+        .team-badge { background: #f1f5f9; color: #475569; font-size: 0.85rem; font-weight: 600; padding: 3px 14px; border-radius: 15px; display: inline-block; margin-bottom: 8px; }
+        .team-phone { font-size: 0.98rem; color: #334155; font-weight: 700; }
 
         /* --- GALLERY SECTION --- */
-        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 40px; }
-        .gallery-card { background: white; border-radius: 10px; overflow: hidden; box-shadow: var(--card-shadow); transition: 0.3s; }
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px; margin-bottom: 40px; }
+        .gallery-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: var(--card-shadow); transition: 0.3s; }
         .gallery-card:hover { transform: scale(1.03); }
-        .gallery-card img { width: 100%; height: 160px; object-fit: cover; }
-        .gallery-title { padding: 10px 12px; font-size: 0.88rem; font-weight: 700; color: var(--dark); text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .gallery-card img { width: 100%; height: 170px; object-fit: cover; }
+        .gallery-title { padding: 12px; font-size: 0.9rem; font-weight: 700; color: var(--dark); text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
         /* --- CONTACT & FOOTER --- */
-        .contact-card { background: white; padding: 35px; border-radius: 16px; box-shadow: var(--card-shadow); border-top: 5px solid var(--primary); text-align: center; margin-bottom: 40px; }
-        .contact-card h2 { color: var(--primary); font-size: 1.8rem; font-weight: 800; margin-bottom: 15px; }
+        .contact-card { background: white; padding: 40px; border-radius: 16px; box-shadow: var(--card-shadow); border-top: 5px solid var(--primary); text-align: center; margin-bottom: 40px; }
+        .contact-card h2 { color: var(--primary); font-size: 1.9rem; font-weight: 800; margin-bottom: 15px; }
 
-        footer { background: #071938; color: white; padding: 35px 20px 20px 20px; text-align: center; }
-        .footer-address { font-size: 0.95rem; color: #cbd5e1; max-width: 650px; margin: 0 auto 15px auto; line-height: 1.6; }
-        .social-links a { color: white; font-size: 1.4rem; margin: 0 10px; transition: 0.3s; }
+        footer { background: #071938; color: white; padding: 40px 20px 20px 20px; text-align: center; }
+        .footer-address { font-size: 0.98rem; color: #cbd5e1; max-width: 700px; margin: 0 auto 20px auto; line-height: 1.6; }
+        .social-links a { color: white; font-size: 1.5rem; margin: 0 12px; transition: 0.3s; }
         .social-links a:hover { color: var(--gold); }
-        .admin-login-link { color: #94a3b8; font-size: 0.82rem; text-decoration: underline; margin-top: 15px; display: inline-block; transition: 0.3s; }
-        .admin-login-link:hover { color: white; }
+        
+        .admin-login-link { color: #64748b; font-size: 0.8rem; text-decoration: underline; margin-top: 20px; display: inline-block; transition: 0.3s; }
+        .admin-login-link:hover { color: #cbd5e1; }
 
-         /* --- RESPONSIVE MEDIA QUERIES --- */
+        /* --- RESPONSIVE MEDIA QUERIES --- */
         @media (max-width: 992px) {
             header { text-align: center; justify-content: center; }
-            .header-brand { flex-direction: column; text-align: center; }
-            .header-text h1 { font-size: 1.4rem; }
-            .hero h2 { font-size: 1.8rem; }
-            .hero p { font-size: 1.05rem; }
+            .header-brand { flex-direction: column; text-align: center; gap: 10px; }
+            .header-title-box h1 { font-size: 1.45rem; }
+            .hero h2 { font-size: 1.85rem; }
+            .hero p { font-size: 1.1rem; }
             .mobile-menu-toggle { display: block; }
             .nav-links { display: none; width: 100%; flex-direction: column; gap: 0; padding: 10px 0; }
             .nav-links.show { display: flex; }
-            .nav-links a { width: 100%; padding: 10px 15px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+            .nav-links a { width: 100%; padding: 12px 15px; border-bottom: 1px solid rgba(255,255,255,0.1); }
         }
     </style>
 </head>
 <body>
 
-    <!-- Top Info Header -->
+    <!-- Top Info Bar -->
     <div class="top-bar">
         <div class="top-bar-left">
             <span><i class="fa fa-hospital"></i> सार्वजनिक आरोग्य विभाग, महाराष्ट्र शासन</span>
             <span><i class="fa fa-envelope"></i> xsounion@gmail.com</span>
         </div>
         <div class="top-bar-right">
-            <a href="member-login.html"><i class="fa fa-user-check"></i> सदस्यांसाठी प्रवेश</a>
-            <a href="admin.html"><i class="fa fa-shield-alt"></i> ॲडमिन</a>
+            <span><i class="fa fa-phone-alt"></i> राज्य हेल्पलाईन उपलब्ध</span>
         </div>
     </div>
 
-    <!-- Header Logo Banner -->
+    <!-- Header Banner -->
     <header>
         <div class="header-brand">
             <img src="logo.png" alt="Logo" class="logo-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/4006/4006511.png'">
-            <div class="header-text">
+            <div class="header-title-box">
                 <h1>क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना</h1>
-                <p>महाराष्ट्र राज्य</p>
-                <small>सार्वजनिक आरोग्य विभाग, महाराष्ट्र शासन अंतर्गत नोंदणीकृत अधिकृत संघटना</small>
+                <span class="state-badge">महाराष्ट्र राज्य</span>
+                <small>सार्वजनिक आरोग्य विभागातील अधिकृत शासनमान्य संघटना</small>
             </div>
         </div>
         <div class="header-actions">
-            <a href="registration.html" class="btn-header btn-reg"><i class="fa fa-user-plus"></i> नवीन नोंदणी</a>
+            <a href="registration.html" class="btn-header btn-reg"><i class="fa fa-user-plus"></i> नवीन सदस्य नोंदणी</a>
             <a href="member-login.html" class="btn-header btn-log"><i class="fa fa-sign-in-alt"></i> सदस्य लॉगिन</a>
         </div>
     </header>
@@ -206,14 +198,11 @@
                 <li><a href="#gallery"><i class="fa fa-image"></i> गॅलरी</a></li>
                 <li><a href="services.html"><i class="fa fa-tools"></i> ऑनलाइन सेवा</a></li>
                 <li><a href="#contact"><i class="fa fa-address-book"></i> संपर्क</a></li>
-                <li><a href="registration.html" style="color:var(--gold);"><i class="fa fa-user-plus"></i> सदस्य नोंदणी</a></li>
-                <li><a href="member-login.html"><i class="fa fa-key"></i> सदस्य लॉगिन</a></li>
-                <li><a href="admin.html" style="color:#fca5a5;"><i class="fa fa-shield-alt"></i> ॲडमिन</a></li>
             </ul>
         </div>
     </nav>
 
-    <!-- Scrolling Live Announcement Marquee -->
+    <!-- Marquee Ticker -->
     <div class="ticker-wrap">
         <span class="ticker-badge"><i class="fa fa-bell"></i> ताज्या घडामोडी</span>
         <marquee id="news-ticker" behavior="scroll" direction="left" scrollamount="6">
@@ -225,39 +214,15 @@
     <section class="hero">
         <div class="hero-content">
             <h2>न्याय, हक्क आणि प्रगतीसाठी एकजूट!</h2>
-            <p>राज्यातील सर्व क्ष-किरण वैज्ञानिक अधिकाऱ्यांच्या प्रश्नांना वाचा फोडणारी आणि त्यांचे हक्क मिळवून देणारी अधिकृत राज्यस्तरीय संघटना.</p>
+            <p>राज्यातील सर्व क्ष-किरण वैज्ञानिक अधिकाऱ्यांच्या प्रश्नांना वाचा फोडणारी आणि न्याय्य हक्क मिळवून देणारी अधिकृत राज्यस्तरीय संघटना.</p>
             <div class="hero-btn-group">
                 <a href="registration.html" class="hero-btn hero-btn-primary"><i class="fa fa-user-plus"></i> आजच सदस्य नोंदणी करा</a>
-                <a href="member-login.html" class="hero-btn hero-btn-secondary"><i class="fa fa-id-card"></i> डिजिटल आय-कार्ड / पावती मिळवा</a>
+                <a href="member-login.html" class="hero-btn hero-btn-secondary"><i class="fa fa-sign-in-alt"></i> सदस्य लॉगिन दालन</a>
             </div>
         </div>
     </section>
 
-    <!-- Quick Action Service Cards -->
-    <div class="quick-grid">
-        <a href="member-login.html" class="quick-card">
-            <i class="fa fa-id-card"></i>
-            <h4>डिजिटल आय-कार्ड</h4>
-            <p>अधिकृत सदस्य ओळखपत्र डाऊनलोड करा</p>
-        </a>
-        <a href="member-login.html" class="quick-card">
-            <i class="fa fa-receipt"></i>
-            <h4>ई-पावती</h4>
-            <p>वार्षिक नोंदणी शुल्काची पावती काढा</p>
-        </a>
-        <a href="member-login.html" class="quick-card">
-            <i class="fa fa-file-signature"></i>
-            <h4>ऑनलाइन अर्ज जनरेटर</h4>
-            <p>वैद्यकीय व विशेष रजा अर्ज ऑटो तयार करा</p>
-        </a>
-        <a href="member-login.html" class="quick-card">
-            <i class="fa fa-file-invoice"></i>
-            <h4>तक्रार निवारण</h4>
-            <p>सेवाविषयक अडचणी नोंदवा व ट्रॅक करा</p>
-        </a>
-    </div>
-
-    <!-- Main Body Container Starts -->
+    <!-- Main Container Starts -->
     <div class="main-container">
 
         <!-- About Section -->
@@ -268,13 +233,12 @@
             </p>
         </section>
 
-        <!-- Dynamic Document Folders Section (Synced with Firebase) -->
+        <!-- Dynamic Document Folders Section -->
         <div class="section-header" id="folders">
             <h2><i class="fa fa-folder-open"></i> परिपत्रके, नोटीस व शासकीय GR</h2>
             <p>ॲडमिन पॅनेलवरून अपडेट केलेले सर्व अधिकृत दस्तऐवज</p>
         </div>
 
-        <!-- Static / Standard Folders Grid -->
         <div class="folders-grid">
             <!-- Folder 1: शासकीय परिपत्रके -->
             <div class="folder-box">
@@ -308,14 +272,13 @@
             <div id="dynamicTabContentBox" class="about-card" style="margin-bottom:0; padding:20px;"></div>
         </div>
 
-        <!-- Executive Committee / Office Bearers Section -->
+        <!-- Executive Committee Section -->
         <div class="section-header" id="committee">
             <h2><i class="fa fa-users"></i> आमची राज्यस्तरीय कार्यकारिणी</h2>
             <p>क्ष-किरण वैज्ञानिक अधिकारी संघटना महाराष्ट्र राज्य - अधिकृत पदाधिकारी</p>
         </div>
 
         <div class="team-grid" id="stateCommitteeGrid">
-            <!-- Default Static Team Members (Dynamically expanded via Firebase) -->
             <div class="team-card">
                 <img src="patil_sir.jpg" alt="अध्यक्ष" class="team-photo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
                 <h3 class="team-name">श्री रविंद्र मल्हारी पाटील</h3>
@@ -412,16 +375,6 @@
 
     </div> <!-- Main Container Ends -->
 
-    <!-- Floating Live Chat Launcher Widget -->
-    <div id="floatingLiveChatWidget" onclick="window.location.href='member-login.html'" title="💬 Live Chat (संवाद साधा)">
-        <div class="chat-pill-label">
-            <i class="fa-solid fa-bolt" style="color: #f39c12;"></i> चॅट करा
-        </div>
-        <div class="chat-floating-btn">
-            <i class="fa-solid fa-comments"></i>
-        </div>
-    </div>
-
     <!-- Footer -->
     <footer>
         <div class="footer-address">
@@ -434,7 +387,7 @@
             <a href="#"><i class="fab fa-youtube"></i></a>
         </div>
         <p style="margin-top:12px;">© २०२६ क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना, महाराष्ट्र राज्य.</p>
-        <p style="margin-top: 4px; font-size: 0.8rem; color: #94a3b8;">सर्व हक्क सुरक्षित. | Developed by IT Cell, X-Ray Union</p>
+        <p style="margin-top: 4px; font-size: 0.82rem; color: #94a3b8;">सर्व हक्क सुरक्षित. | Developed by IT Cell, X-Ray Union</p>
         <a href="admin.html" class="admin-login-link"><i class="fa fa-lock"></i> Admin Login</a>
     </footer>
 
@@ -451,7 +404,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
         import { getFirestore, doc, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk",
             authDomain: "xrayunionmah.firebaseapp.com",
