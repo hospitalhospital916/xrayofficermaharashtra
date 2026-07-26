@@ -91,7 +91,6 @@
             scroll-behavior: smooth;
         }
 
-        /* वॉटरमार्क (Optional) */
         .chat-box::before {
             content: "";
             position: absolute;
@@ -308,7 +307,6 @@
             <button class="close-modal" onclick="closeModal('adminModal')">✖</button>
         </div>
         
-        <!-- १. सुपर ॲडमिन परवानग्या -->
         <div class="setting-section" id="sec_super_admin_panel" style="background:#f0f9ff; border-color:#0284c7; display:none;">
             <div class="setting-title" style="color:#0369a1;"><i class="fa-solid fa-user-shield"></i> 👑 सब-ॲडमिन टिक-बॉक्स परवानग्या</div>
             <p style="font-size:0.72rem; color:#475569; margin-bottom:4px;">सब-ॲडमिनला कोणते अधिकार द्यायचे ते निवडा:</p>
@@ -327,7 +325,6 @@
             </button>
         </div>
 
-        <!-- २. सदस्य नाव, मोबाईल व ठिकाण प्रदर्शन सेटिंग्ज -->
         <div class="setting-section" id="sec_profile_settings">
             <div class="setting-title"><i class="fa-solid fa-id-card"></i> 👤 सदस्य माहिती प्रदर्शन सेटिंग्ज</div>
             
@@ -344,12 +341,11 @@
                 <input type="checkbox" id="toggleShowMobile" onchange="updateSettings()">
             </div>
             <div class="setting-item">
-                <span>कार्यालयाचे ठिकाण / जिल्हा दाखवा:</span>
+                <span>कार्यालय / जिल्हा दाखवा:</span>
                 <input type="checkbox" id="toggleShowOffice" onchange="updateSettings()">
             </div>
         </div>
 
-        <!-- ३. फोटो/PDF डाऊनलोड पर्याय -->
         <div class="setting-section" id="sec_download_option">
             <div class="setting-title"><i class="fa-solid fa-download"></i> ⬇️ फाईल डाऊनलोड बटण</div>
             <div class="setting-item">
@@ -358,7 +354,6 @@
             </div>
         </div>
 
-        <!-- ४. मेसेज डिलीट परवानग्या -->
         <div class="setting-section" id="sec_member_delete">
             <div class="setting-title"><i class="fa-solid fa-shield"></i> 🛡️ मेसेज डिलीट परवानग्या</div>
             <div class="setting-item">
@@ -367,14 +362,12 @@
             </div>
         </div>
 
-        <!-- ५. पूर्ण रूम रिकामी करणे -->
         <div id="sec_clear_room">
             <button class="btn-danger" onclick="deleteAllMessages()">⚠️ संपूर्ण चालू चॅट रूम रिकामी करा</button>
         </div>
     </div>
 </div>
 
-<!-- सीन (Seen List) मोडल - टिक वर क्लिक केल्यावर दिसणारे सदस्य -->
 <div class="modal" id="seenModal">
     <div class="modal-content" style="max-width: 420px;">
         <div class="modal-header">
@@ -382,7 +375,6 @@
             <button class="close-modal" onclick="closeModal('seenModal')">✖</button>
         </div>
         <div id="seenListBody" style="max-height: 350px; overflow-y: auto;">
-            <!-- Dynamic seen list inserted here -->
         </div>
     </div>
 </div>
@@ -406,13 +398,11 @@
     const SUPER_ADMIN_EMAIL = "hangemahesh498@gmail.com";
     const TELEGRAM_BOT_TOKEN = "8598859316:AAHzoROJMwIFlm30XO3DxHJdk3kkjv6uS5c";
 
-    // URL मधील युजर डेटा डिटेक्ट करणे (URL parameters)
-    const urlParams = new URLSearchParams(window.location.search);
-    let currentUser = urlParams.get('name') || "वैज्ञानिक अधिकारी"; 
-    let currentUserMobile = urlParams.get('mobile') || "९८xxxxxx००";
-    let currentUserPost = urlParams.get('post') || "क्ष-किरण वैज्ञानिक अधिकारी (गट-क)";
-    let currentUserOffice = urlParams.get('office') || urlParams.get('district') || "आरोग्य विभाग, महाराष्ट्र";
-    let currentUserPhoto = urlParams.get('photo') || "1001264489.png"; 
+    let currentUser = "वैज्ञानिक अधिकारी"; 
+    let currentUserMobile = "९८xxxxxx००";
+    let currentUserPost = "क्ष-किरण वैज्ञानिक अधिकारी (गट-क)";
+    let currentUserOffice = "आरोग्य विभाग, महाराष्ट्र";
+    let currentUserPhoto = "1001264489.png"; 
     
     let currentRole = "member"; 
     let currentRoom = "GroupAll"; 
@@ -420,7 +410,6 @@
     let allLoadedMessages = [];
     let isUserAtBottom = true;
 
-    // ॲडमिन सेटिंग्ज डिफॉल्ट ऑब्जेक्ट
     let appSettings = {
         allowMemberDelete: true,
         showProfilePhotos: true,
@@ -443,38 +432,43 @@
     const db = firebase.firestore();
     const auth = firebase.auth();
 
-   /* =======================================================
-       २. ऑथेन्टिकेशन व सुरुवातीचे लोडर्स (दुरुस्त केलेला भाग)
+    /* =======================================================
+       २. ऑथेन्टिकेशन व सुरुवातीचे लोडर्स (ॲडमिन नाव दुरुस्त लॉजिक)
        ======================================================= */
     window.onload = () => {
-        // १. आधी चॅटच्या लिंक (URL) मध्ये सदस्याचे नाव आले आहे का ते तपासा
+        // १. आधी चॅटच्या लिंक (URL) मधील युजर डेटा तपासा
         const urlParams = new URLSearchParams(window.location.search);
         const hasUrlParams = urlParams.has('name');
 
         if (hasUrlParams) {
-            // जर मुख्य डॅशबोर्डवरून सदस्याची माहिती आली असेल तर ती सेट करा
             currentUser = urlParams.get('name'); 
             currentUserMobile = urlParams.get('mobile') || "९८xxxxxx००";
             currentUserPost = urlParams.get('post') || "क्ष-किरण वैज्ञानिक अधिकारी (गट-क)";
             currentUserOffice = urlParams.get('office') || urlParams.get('district') || "आरोग्य विभाग, महाराष्ट्र";
             currentUserPhoto = urlParams.get('photo') || "1001264489.png";
-            currentRole = "member"; // भूमिका सक्तीने 'सभासद/सदस्य' राहील
+            currentRole = "member";
         }
 
         auth.onAuthStateChanged(async (user) => {
-            // जर युजरने स्वतंत्रपणे 'ॲडमिन' बटणावर क्लिक करून लॉगिन केले असेल आणि डॅशबोर्डवरून आलेला नसेल तरच ॲडमिन दाखवा
+            // जर युजरने स्वतंत्रपणे 'ॲडमिन' बटणावर क्लिक करून लॉगिन केले असेल तरच ॲडमिन डेटा लावा
             if (user && !hasUrlParams) {
                 if (user.email === SUPER_ADMIN_EMAIL) {
                     currentRole = "super_admin";
-                    currentUser = "महेश हांगे";
-                    currentUserPost = "सुपर ॲडमिन";
+                    currentUser = "महेश हांगे (सुपर ॲडमिन)";
+                    currentUserPost = "मुख्य प्रशासक / राज्य मुख्यालय";
+                    currentUserOffice = "राज्य कार्यकारी समिती";
                 } else {
                     const snap = await db.collection("admins").where("email", "==", user.email).get();
                     if (!snap.empty) {
                         currentRole = "sub_admin";
                         let subData = snap.docs[0].data();
-                        currentUser = `${subData.name || 'सब-ॲडमिन'}`;
-                        currentUserPost = "सब-ॲडमिन";
+                        currentUser = `${subData.name || 'ॲडमिन'} (सब-ॲडमिन)`;
+                        currentUserPost = subData.post || "सब-ॲडमिन";
+                        currentUserMobile = subData.mobile || "";
+                        currentUserOffice = subData.office || subData.district || "जिल्हा प्रशासन";
+                    } else {
+                        currentRole = "super_admin";
+                        currentUser = "ॲडमिन अधिकारी";
                     }
                 }
                 document.getElementById("loginBtnHead").innerHTML = '<i class="fa-solid fa-power-off"></i> लॉगआउट';
@@ -553,9 +547,6 @@
         }
     }
 
-    /* =======================================================
-       ३. अनरीड बॅज व ऑटो-स्क्रोल लॉजिक
-       ======================================================= */
     function handleChatScroll() {
         const chatBox = document.getElementById("chatBox");
         const distanceToBottom = chatBox.scrollHeight - chatBox.scrollTop - chatBox.clientHeight;
@@ -596,9 +587,6 @@
         updateUnreadBadge(0);
     }
 
-    /* =======================================================
-       ४. चॅट मेसेज लोड व रेंडर करणे (Dynamic Member Display)
-       ======================================================= */
     function switchRoom(room) {
         currentRoom = room;
         document.getElementById("tab-all").classList.remove("active");
@@ -668,7 +656,6 @@
             const wrapper = document.createElement("div");
             wrapper.className = `message-wrapper ${isMyMsg ? "my-msg-wrapper" : ""}`;
 
-            // १. सदस्य DP
             if (appSettings.showProfilePhotos) {
                 const avatar = document.createElement("div");
                 avatar.className = "avatar";
@@ -683,7 +670,6 @@
             const msgDiv = document.createElement("div");
             msgDiv.className = "message";
 
-            // २. सभासदाचे नाव, मोबाईल व कार्यालयाचे ठिकाण (ॲडमिन सेटिंगनुसार)
             let subDetails = [];
             if (appSettings.showMobile && userMobile) subDetails.push(`<i class="fa-solid fa-phone"></i> ${userMobile}`);
             if (appSettings.showOffice && userOffice) subDetails.push(`<i class="fa-solid fa-location-dot"></i> ${userOffice}`);
@@ -695,7 +681,6 @@
 
             const msgText = data.text || data.message || "";
 
-            // ३. मेसेज प्रकार (टेक्स्ट / इमेज / PDF)
             if (data.type === "image") {
                 let downloadBtnHtml = appSettings.enableDownload ? `<a href="${msgText}" target="_blank" download="Photo_${Date.now()}.jpg" class="img-download-btn"><i class="fa-solid fa-download"></i> डाऊनलोड</a>` : '';
                 contentHtml += `<div class="msg-image-box"><img src="${msgText}" class="msg-image" alt="Photo" onclick="viewFullImage('${msgText}')">${downloadBtnHtml}</div>`;
@@ -707,14 +692,12 @@
                 contentHtml += `<div style="margin-top:4px;">${msgText}</div>`;
             }
 
-            // ४. टाइमस्टॅम्प आणि '✓✓ Seen' बटण
             const timeStr = data.time || (data.timestamp ? new Date(data.timestamp.toDate()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '');
             const seenCount = (data.readBy || []).length;
             const seenBadgeHtml = `<span class="seen-badge" onclick="showSeenListModal('${data.id}')" title="मेसेज पाहणारे सदस्य तपासा">✓✓ ${seenCount}</span>`;
 
             contentHtml += `<div class="msg-time-row">${seenBadgeHtml}<span class="msg-time">${timeStr}</span></div>`;
 
-            // ५. मेसेज डिलीट बटण
             const isAnAdmin = (currentRole === "super_admin" || currentRole === "sub_admin");
             if (isAnAdmin || (appSettings.allowMemberDelete && isMyMsg)) {
                 contentHtml += `<button class="delete-btn" onclick="deleteSingleMessage('${data.id}')">✖</button>`;
@@ -730,9 +713,6 @@
         }
     }
 
-    /* =======================================================
-       ५. '✓✓ Seen' टिक वर क्लिक केल्यावर दिसणारे मोडल (Seen List)
-       ======================================================= */
     function showSeenListModal(docId) {
         const msgDoc = allLoadedMessages.find(m => m.id === docId);
         if (!msgDoc) return;
@@ -779,9 +759,6 @@
         renderMessages(filtered);
     }
 
-    /* =======================================================
-       ६. मेसेज व फाईल पाठवणे (Telegram & ImgBB Integration)
-       ======================================================= */
     function handleEnter(e) { if(e.key === 'Enter') sendTextMessage(); }
 
     function sendTextMessage() {
@@ -868,9 +845,6 @@
         scrollToBottomAndRead();
     }
 
-    /* =======================================================
-       ७. ऑथेन्टिकेशन व ॲडमिन सेटिंग्ज फंक्शन्स
-       ======================================================= */
     function openLoginModal() { document.getElementById("loginModal").style.display = "flex"; }
     function openAdminSettings() { document.getElementById("adminModal").style.display = "flex"; }
     function closeModal(id) { document.getElementById(id).style.display = "none"; }
