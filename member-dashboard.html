@@ -207,6 +207,7 @@
             <button class="tab-btn" onclick="openTab('tab-info-gather', this)"><i class="fa fa-clipboard-list"></i> माहिती द्या (फॉर्म)</button>
             <button class="tab-btn" onclick="openTab('tab-employees', this)"><i class="fa fa-users"></i> राज्यातील कर्मचारी</button>
             <button class="tab-btn" onclick="openTab('tab-documents', this)"><i class="fa fa-folder-open"></i> परिपत्रके व फोल्डर्स</button>
+            <button class="tab-btn" onclick="openTab('tab-chat', this)"><i class="fa fa-comments"></i> Live Chat</button>
             <button class="tab-btn" onclick="openTab('tab-polls', this)"><i class="fa fa-vote-yea"></i> मतदान व पोल</button>
         </div>
 
@@ -505,7 +506,17 @@
 
                     </div>
                 </div>
-            </div>
+            </div><!-- TAB 10: LIVE CHAT SECTION -->
+<div id="tab-chat" class="tab-content">
+    <div class="panel">
+        <div class="panel-header bg-success" style="color:white;">
+            <span><i class="fa fa-comments"></i> राज्यस्तरीय लाईव्ह चॅट (Live Chat System)</span>
+        </div>
+        <div class="panel-body" style="padding:0; height:80vh;">
+            <iframe src="chat.html" style="width:100%; height:100%; border:none; border-radius:0 0 12px 12px;"></iframe>
+        </div>
+    </div>
+</div>
 
             <!-- TAB 9: VOTING & POLL SYSTEM -->
             <div id="tab-polls" class="tab-content">
@@ -527,10 +538,10 @@
     <!-- PRINT LETTER TEMPLATE RENDER CONTAINER -->
     <div id="printLetterArea" style="display:none;"></div>
 
-    <!-- Floating Chat Widget -->
-    <div class="chat-floating-btn" title="Live Chat" onclick="openTab('tab-chat', null)">
-        <i class="fa fa-comments"></i>
-    </div>
+   <!-- Floating Chat Widget -->
+<div class="chat-floating-btn" title="Live Chat" onclick="openTab('tab-chat', null)">
+    <i class="fa fa-comments"></i>
+</div>
 
     <!-- FIREBASE JS ENGINE -->
     <script type="module">
