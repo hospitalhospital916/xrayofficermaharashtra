@@ -2,268 +2,939 @@
 <html lang="mr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>चॅट प्रणाली - क्ष-किरण वैज्ञानिक अधिकारी संघटना</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>राज्यस्तरीय चॅट रूम | क्ष-किरण वैज्ञानिक अधिकारी संघटना</title>
+  
+    <!-- EXTERNAL LIBRARIES -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <style>
-        /* चॅट स्क्रीनसाठी क्लीन लेआउट */
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #e5ddd5;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
+        :root { 
+            --primary: #0B3D91; 
+            --primary-dark: #07275e; 
+            --secondary: #f39c12; 
+            --bg-chat: #f8fafc; 
+            --white: #ffffff; 
+            --text-dark: #1e293b; 
+            --danger: #ef4444; 
+            --success: #10b981; 
+            --my-msg: #dcf8c6;
+            --info: #3b82f6;
         }
 
-        /* १. व्हॉट्सॲपसारखा कॉम्पॅक्ट हेडर */
-        .chat-header {
-            background-color: #075e54;
-            color: white;
-            padding: 10px 15px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            z-index: 1000;
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mukta', sans-serif; }
+        
+        /* १. संपूर्ण स्क्रीन फिट (No Unnecessary Scrolling) */
+        html, body { height: 100%; width: 100%; overflow: hidden; background-color: #cbd5e1; }
+        body { display: flex; justify-content: center; align-items: center; }
+
+        .chat-container { 
+            width: 100%; 
+            max-width: 900px; 
+            background: #ffffff; 
+            display: flex; 
+            flex-direction: column; 
+            height: 100vh; 
+            height: 100dvh; /* Dynamic Mobile Viewport Height Fix */
+            position: relative; 
+            box-shadow: 0 12px 35px rgba(0,0,0,0.3); 
+        }
+        
+        @media (min-width: 768px) {
+            body { padding: 10px; }
+            .chat-container { height: 96vh; border-radius: 18px; overflow: hidden; border: 2px solid #94a3b8; }
         }
 
-        .chat-header-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
+        /* २. कॉम्पॅक्ट संघटना हेडर (Compact Header) */
+        .org-header { 
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary)); 
+            color: white; 
+            padding: 8px 12px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 5px; 
+            z-index: 10; 
+            border-bottom: 3px solid var(--secondary); 
+            flex-shrink: 0;
         }
+        .top-brand { display: flex; justify-content: space-between; align-items: center; }
+        .org-title { font-size: 0.95rem; font-weight: 800; display: flex; align-items: center; gap: 6px; line-height: 1.2; }
+        .org-title i { font-size: 1.2rem; color: var(--secondary); }
 
-        .chat-header-info img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid white;
-        }
+        .role-badge { background: rgba(255,255,255,0.22); font-size: 0.65rem; padding: 1px 6px; border-radius: 10px; font-weight: 700; color: #fef08a; margin-left: 4px; }
 
-        .user-title {
-            font-size: 16px;
-            font-weight: bold;
-            margin: 0;
-        }
+        .admin-btn { background: var(--secondary); color: var(--primary-dark); border: none; padding: 4px 10px; border-radius: 12px; cursor: pointer; font-size: 0.75rem; font-weight: 800; display: flex; align-items: center; gap: 4px; }
+        .login-btn-head { background: #ffffff; color: var(--primary); border: none; padding: 4px 10px; border-radius: 12px; font-weight: 800; font-size: 0.72rem; cursor: pointer; display: flex; align-items: center; gap: 4px; }
 
-        .user-sub {
-            font-size: 11px;
-            opacity: 0.8;
-            margin: 0;
-        }
+        /* सर्च बार व टॅब्स */
+        .search-tab-row { display: flex; flex-direction: column; gap: 4px; }
+        .search-box { width: 100%; display: flex; align-items: center; background: rgba(255, 255, 255, 0.18); border-radius: 16px; padding: 2px 8px; border: 1px solid rgba(255,255,255,0.25); }
+        .search-box input { border: none; background: transparent; outline: none; color: white; width: 100%; padding: 3px 6px; font-size: 0.82rem; }
+        .search-box input::placeholder { color: #e2e8f0; }
 
-        /* २. मेसेजेस स्क्रोलिंग एरिया */
-        .chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
+        .tabs { display: none; gap: 5px; }
+        .tabs button { flex: 1; background: rgba(255,255,255,0.2); border: none; color: white; font-size: 0.78rem; font-weight: 700; padding: 4px 8px; border-radius: 8px; cursor: pointer; }
+        .tabs button.active { background: #ffffff; color: var(--primary); font-weight: 800; }
 
-        .message-bubble {
-            max-width: 80%;
-            background-color: white;
-            padding: 10px 12px;
-            border-radius: 12px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+        /* ३. 💬 मध्यवर्ती चॅट बॉक्स (Scrollable) */
+        .chat-box { 
+            flex: 1; 
+            padding: 12px; 
+            overflow-y: auto; 
+            background-color: var(--bg-chat); 
+            display: flex; 
+            flex-direction: column; 
+            gap: 10px; 
             position: relative;
+            scroll-behavior: smooth;
         }
 
-        .message-bubble.sent {
-            align-self: flex-end;
-            background-color: #dcf8c6;
+        /* वॉटरमार्क (Optional) */
+        .chat-box::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url('1001264489.png'); 
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 260px; 
+            opacity: 0.05; 
+            pointer-events: none;
+            z-index: 0;
         }
 
-        .message-bubble.received {
-            align-self: flex-start;
-            background-color: white;
-        }
-
-        /* सदस्याचे नाव, फोटो, मोबाईल, कार्यक्षेत्र कार्ड */
-        .sender-card {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 6px;
-            margin-bottom: 6px;
-        }
-
-        .sender-card img {
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .sender-details {
-            font-size: 12px;
-        }
-
-        .sender-name {
-            font-weight: bold;
-            color: #075e54;
-        }
-
-        .sender-meta {
-            color: #666;
-            font-size: 10px;
-        }
-
-        .msg-time {
-            font-size: 10px;
-            color: #999;
-            float: right;
-            margin-top: 5px;
-        }
-
-        /* सीन स्टेटस (कोणी कोणी पाहिले) */
-        .seen-by-badge {
-            font-size: 11px;
-            color: #0275d8;
-            cursor: pointer;
-            margin-top: 4px;
-            display: inline-block;
-        }
-
-        /* ३. बॉटम इनपुट बार (पाठवा बटण - स्क्रीनच्या खाली फिक्स) */
-        .chat-input-bar {
-            background-color: #f0f0f0;
-            padding: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            position: sticky;
-            bottom: 0;
-            border-top: 1px solid #ccc;
-        }
-
-        .chat-input-bar input {
-            flex: 1;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 25px;
-            outline: none;
-            font-size: 14px;
-        }
-
-        .send-btn {
-            background-color: #075e54;
+        /* फ्लोटिंग अनरीड (Pending) बटण */
+        .fab-unread {
+            position: absolute;
+            bottom: 65px;
+            right: 18px;
+            background: var(--primary);
             color: white;
-            border: none;
+            border: 2px solid white;
             width: 42px;
             height: 42px;
             border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-        }
-
-        /* पपअप बॉक्स (Seen By) */
-        .modal {
             display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5);
-            justify-content: center;
             align-items: center;
-            z-index: 2000;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            cursor: pointer;
+            z-index: 90;
+        }
+        .fab-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--danger);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 800;
+            padding: 2px 6px;
+            border-radius: 10px;
+            border: 2px solid white;
         }
 
-        .modal-content {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            width: 80%;
-            max-width: 320px;
+        /* मेसेज फुगे (Message Bubbles) */
+        .message-wrapper { display: flex; align-items: flex-start; gap: 8px; max-width: 88%; position: relative; z-index: 1; }
+        .message-wrapper.my-msg-wrapper { align-self: flex-end; flex-direction: row-reverse; }
+
+        .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 800; flex-shrink: 0; overflow: hidden; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.12); }
+        .avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+        .message { padding: 8px 12px; border-radius: 12px; background: #ffffff; position: relative; box-shadow: 0 2px 5px rgba(0,0,0,0.06); font-size: 0.9rem; line-height: 1.35; border-top-left-radius: 0; word-break: break-word; color: var(--text-dark); border: 1px solid #e2e8f0; }
+        .message-wrapper.my-msg-wrapper .message { background: var(--my-msg); border-top-left-radius: 12px; border-top-right-radius: 0; border: 1px solid #bce3a6; }
+        
+        .msg-user-title { font-size: 0.78rem; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 6px; }
+        .msg-subinfo { font-size: 0.68rem; color: #475569; font-weight: 600; display: block; margin-top: 1px; }
+        
+        .msg-time-row { display: flex; justify-content: flex-end; align-items: center; gap: 6px; margin-top: 4px; }
+        .msg-time { font-size: 0.62rem; color: #64748b; font-weight: 700; }
+        
+        /* टिक क्लिक करण्यायोग्य देखावा (Clickable Seen Badge) */
+        .seen-badge { cursor: pointer; color: #0284c7; font-size: 0.68rem; font-weight: 800; background: rgba(59, 130, 246, 0.12); padding: 1px 6px; border-radius: 8px; transition: 0.2s; border: 1px solid rgba(59, 130, 246, 0.2); }
+        .seen-badge:hover { background: #0284c7; color: white; }
+        
+        .msg-image-box { position: relative; margin-top: 4px; }
+        .msg-image { max-width: 100%; border-radius: 8px; cursor: pointer; border: 1px solid #cbd5e1; max-height: 240px; object-fit: cover; display: block; }
+        .img-download-btn { display: inline-flex; align-items: center; gap: 4px; background: var(--primary); color: white; border: none; padding: 4px 8px; border-radius: 6px; font-size: 0.72rem; font-weight: 700; margin-top: 4px; text-decoration: none; }
+
+        .pdf-card { margin-top: 4px; background: #fff1f2; border: 1px solid #fecdd3; padding: 8px; border-radius: 8px; display: flex; align-items: center; gap: 8px; }
+        .pdf-card i { font-size: 1.8rem; color: #ef4444; }
+        .pdf-card-info { flex: 1; overflow: hidden; }
+        .pdf-card-name { font-size: 0.8rem; color: #881337; font-weight: 700; display: block; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
+
+        .delete-btn { position: absolute; top: -6px; right: -6px; background: var(--danger); color: white; border: none; border-radius: 50%; width: 20px; height: 20px; cursor: pointer; font-size: 0.65rem; display: none; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .message:hover .delete-btn { display: flex; }
+
+        /* ४. तळाशी असणारी स्थिर इनपुट पट्टी (Fixed Bottom Input Bar) */
+        .input-area { 
+            display: flex; 
+            padding: 8px 10px; 
+            background: #f0f4f8; 
+            align-items: center; 
+            gap: 8px; 
+            border-top: 1px solid #cbd5e1; 
+            z-index: 20; 
+            flex-shrink: 0; 
+        }
+        .file-label { cursor: pointer; font-size: 1.25rem; color: #475569; padding: 2px; display: flex; align-items: center; transition: 0.3s; }
+        .file-label:hover { color: var(--primary); }
+        #fileInput { display: none; }
+        
+        .input-area input[type="text"] { flex: 1; padding: 9px 14px; border-radius: 20px; border: 1px solid #cbd5e1; outline: none; font-size: 0.9rem; background: #ffffff; }
+        .send-btn { background: var(--primary); color: white; border: none; padding: 9px 16px; border-radius: 20px; cursor: pointer; font-weight: 800; font-size: 0.85rem; display: flex; align-items: center; gap: 5px; transition: 0.3s; flex-shrink: 0; }
+        .send-btn:hover { background: var(--primary-dark); }
+
+        #loader { display: none; background: #fef08a; color: #854d0e; padding: 5px; text-align: center; font-size: 0.8rem; font-weight: bold; border-bottom: 1px solid #fde047; flex-shrink: 0; }
+
+        /* ५. मोडल्स (Modals & Dialogs) */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.65); justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(2px); }
+        .modal-content { background: white; padding: 16px; border-radius: 14px; width: 92%; max-width: 520px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); max-height: 88vh; overflow-y: auto; }
+        .modal-header { font-size: 0.98rem; font-weight: 800; margin-bottom: 10px; color: var(--primary); display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 6px; }
+        
+        .setting-section { margin-bottom: 10px; background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0; }
+        .setting-title { font-weight: 800; font-size: 0.82rem; color: var(--primary); margin-bottom: 6px; text-transform: uppercase; display: flex; align-items: center; gap: 5px; }
+        .setting-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-size: 0.83rem; font-weight: 600; }
+        .close-modal { cursor: pointer; font-size: 1.1rem; border: none; background: none; color: #64748b; }
+        
+        .btn-danger { background: var(--danger); color: white; border: none; padding: 8px 10px; border-radius: 6px; cursor: pointer; font-weight: 800; font-size: 0.8rem; width: 100%; margin-top: 4px; }
+        .btn-warning { background: var(--secondary); color: var(--primary-dark); border: none; padding: 5px 8px; border-radius: 6px; cursor: pointer; font-weight: 800; font-size: 0.75rem; }
+        .btn-primary-sm { background: var(--primary); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 700; cursor: pointer; }
+        
+        .perm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; background: #ffffff; padding: 8px; border-radius: 6px; border: 1px solid #cbd5e1; margin-top: 5px; }
+        .perm-grid label { font-size: 0.78rem; font-weight: 600; display: flex; align-items: center; gap: 5px; cursor: pointer; }
+        .perm-grid input[type="checkbox"] { accent-color: var(--primary); width: 15px; height: 15px; }
+
+        /* सीन सदस्यांची यादी (Seen Members List) */
+        .seen-list-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 4px; border-bottom: 1px solid #f1f5f9; font-size: 0.82rem; }
+        .seen-user-name { font-weight: 800; color: var(--primary); }
+        .seen-user-role { font-size: 0.7rem; color: #64748b; display: block; }
+        .seen-time-tag { font-size: 0.7rem; color: #0284c7; font-weight: 700; background: #e0f2fe; padding: 2px 6px; border-radius: 6px; }
+
+        @media (max-width: 768px) {
+            body { padding: 0; }
+            .chat-container { height: 100vh; height: 100dvh; border-radius: 0; border: none; }
+            .org-header { padding: 6px 8px; }
+            .org-title { font-size: 0.82rem; }
         }
     </style>
 </head>
 <body>
 
-    <!-- १. सुटसुटीत टॉप हेडर -->
-    <div class="chat-header">
-        <div class="chat-header-info">
-            <a href="index.html" style="color: white; text-decoration: none;"><i class="fas fa-arrow-left"></i></a>
-            <img src="logo.png" alt="संघटना लोगो">
-            <div>
-                <p class="user-title">क्ष-किरण अधिकारी राज्य संघटना</p>
-                <p class="user-sub">सदस्य चॅट ग्रुप</p>
-            </div>
-        </div>
-        <a href="login.html" style="color: white; font-size: 12px; text-decoration: none;"><i class="fas fa-sign-out-alt"></i> बाहेर पडा</a>
-    </div>
-
-    <!-- २. चॅट मेसेजेस एरिया -->
-    <div class="chat-messages" id="chatContainer">
-        
-        <!-- उदाहरण: समोरच्या सदस्याचा मेसेज -->
-        <div class="message-bubble received">
-            <div class="sender-card">
-                <img src="hange_sir.jpg" alt="फोटो">
-                <div class="sender-details">
-                    <div class="sender-name">महेश शिवदास हांगे (सुपर ॲडमिन)</div>
-                    <div class="sender-meta">📞 98xxxxxx00 | 📍 गडचिरोली</div>
+<div class="chat-container">
+    
+    <!-- १. संघटना कॉम्पॅक्ट हेडर -->
+    <div class="org-header">
+        <div class="top-brand">
+            <div class="org-title">
+                <i class="fa-solid fa-shield-halved"></i>
+                <div>
+                    <span>क्ष-किरण वैज्ञानिक अधिकारी संघटना राज्य</span>
+                    <span class="role-badge" id="userRoleBadge">सदस्य</span>
                 </div>
             </div>
-            <div>सर्व सदस्यांनी नवीन नोंदणी लवकरात लवकर पूर्ण करावी.</div>
-            <span class="msg-time">10:30 AM</span>
-            <br>
-            <span class="seen-by-badge" onclick="showSeenUsers()"><i class="fas fa-eye"></i> २ सदस्यांनी पाहिले</span>
+            <div style="display:flex; gap:5px; align-items:center;">
+                <div id="adminControls" style="display:none;">
+                    <button class="admin-btn" onclick="openAdminSettings()"><i class="fa-solid fa-gear"></i> सेटिंग्ज</button>
+                </div>
+                <button class="login-btn-head" id="loginBtnHead" onclick="openLoginModal()"><i class="fa-solid fa-lock"></i> ॲडमिन</button>
+            </div>
         </div>
 
-    </div>
+        <div class="search-tab-row">
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass" style="color:#e2e8f0; font-size:0.75rem; margin-right:4px;"></i>
+                <input type="text" id="searchInput" placeholder="मेसेज, नाव किंवा फाईल शोधा..." oninput="filterMessages()">
+            </div>
 
-    <!-- ३. तळाशी फिक्स असलेला इनपुट बार (Send Button) -->
-    <div class="chat-input-bar">
-        <input type="text" id="msgInput" placeholder="मेसेज टाईप करा...">
-        <button class="send-btn" onclick="sendMessage()"><i class="fas fa-paperplane"></i>➤</button>
-    </div>
-
-    <!-- सीन युझर्स पॉपअप -->
-    <div class="modal" id="seenModal">
-        <div class="modal-content">
-            <h3>हा मेसेज यांनी पाहिला:</h3>
-            <ul style="padding-left: 20px; font-size: 14px;">
-                <li>महेश हांगे (10:32 AM)</li>
-                <li>किरण वैज्ञानिक (10:35 AM)</li>
-            </ul>
-            <button onclick="closeSeenModal()" style="margin-top:10px; padding: 5px 15px;">बंद करा</button>
+            <div class="tabs" id="tabsContainer">
+                <button id="tab-all" class="active" onclick="switchRoom('GroupAll')">👥 सर्व सदस्य चॅट</button>
+                <button id="tab-admin" onclick="switchRoom('admin_chat')">🔒 पदाधिकारी चॅट</button>
+            </div>
         </div>
     </div>
 
-    <script>
-        function sendMessage() {
-            var input = document.getElementById("msgInput");
-            if(input.value.trim() !== "") {
-                var container = document.getElementById("chatContainer");
-                var msgHtml = `
-                    <div class="message-bubble sent">
-                        <div>${input.value}</div>
-                        <span class="msg-time">आत्ताच</span>
-                    </div>
-                `;
-                container.innerHTML += msgHtml;
-                input.value = "";
-                container.scrollTop = container.scrollHeight;
+    <div id="loader"><i class="fa-solid fa-spinner fa-spin"></i> फाईल अपलोड होत आहे... कृपया वाट पहा...</div>
+    
+    <!-- २. चॅट मेसेज बॉक्स -->
+    <div class="chat-box" id="chatBox" onscroll="handleChatScroll()"></div>
+
+    <!-- फ्लोटिंग अनरीड (Pending) बटण -->
+    <button class="fab-unread" id="fabUnread" onclick="scrollToBottomAndRead()">
+        <i class="fa-solid fa-chevron-down"></i>
+        <span class="fab-badge" id="unreadBadge">0</span>
+    </button>
+
+    <!-- ३. तळाशी असलेली परिपूर्ण इनपुट पट्टी (Send Button Fixed) -->
+    <div class="input-area" id="inputAreaBox">
+        <label for="fileInput" class="file-label" id="fileInputLabel" title="फोटो किंवा PDF फाईल पाठवा">
+            <i class="fa-solid fa-paperclip"></i>
+        </label>
+        <input type="file" id="fileInput" accept="image/*,.pdf,application/pdf" onchange="handleFileUpload(event)">
+        
+        <input type="text" id="msgInput" placeholder="येथे मेसेज टाईप करा..." autocomplete="off" onkeypress="handleEnter(event)">
+        <button class="send-btn" id="sendMsgBtn" onclick="sendTextMessage()">
+            <span>पाठवा</span> <i class="fa-solid fa-paper-plane"></i>
+        </button>
+    </div>
+</div>
+
+<!-- ========================================================
+     ४. मोडल्स (Login, Admin Settings, Seen Status List)
+     ======================================================== -->
+
+<!-- लॉगिन मोडल -->
+<div class="modal" id="loginModal">
+    <div class="modal-content" style="max-width: 380px; text-align: center;">
+        <div class="modal-header">
+            <span>🔐 ॲडमिन सुरक्षित लॉगिन</span>
+            <button class="close-modal" onclick="closeModal('loginModal')">✖</button>
+        </div>
+        <div style="padding: 10px 0;">
+            <input type="email" id="loginEmail" placeholder="नोंदणीकृत ई-मेल ID" style="width:100%; padding:8px; margin-bottom:8px; border:1px solid #cbd5e1; border-radius:6px;">
+            <input type="password" id="loginPass" placeholder="पासवर्ड" style="width:100%; padding:8px; margin-bottom:12px; border:1px solid #cbd5e1; border-radius:6px;">
+            <button class="btn-primary-sm" onclick="performAdminLogin()" style="width:100%; padding:8px;"><i class="fa-solid fa-right-to-bracket"></i> लॉगिन करा</button>
+        </div>
+    </div>
+</div>
+
+<!-- ॲडमिन कंट्रोल पॅनेल मोडल -->
+<div class="modal" id="adminModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <span>⚙️ ॲडमिन कंट्रोल पॅनेल (माहिती व अधिकार)</span>
+            <button class="close-modal" onclick="closeModal('adminModal')">✖</button>
+        </div>
+        
+        <!-- १. सुपर ॲडमिन परवानग्या -->
+        <div class="setting-section" id="sec_super_admin_panel" style="background:#f0f9ff; border-color:#0284c7; display:none;">
+            <div class="setting-title" style="color:#0369a1;"><i class="fa-solid fa-user-shield"></i> 👑 सब-ॲडमिन टिक-बॉक्स परवानग्या</div>
+            <p style="font-size:0.72rem; color:#475569; margin-bottom:4px;">सब-ॲडमिनला कोणते अधिकार द्यायचे ते निवडा:</p>
+
+            <div class="perm-grid">
+                <label><input type="checkbox" id="perm_profile_settings" checked> 👤 सदस्याचे नाव व पद</label>
+                <label><input type="checkbox" id="perm_mobile_settings" checked> 📞 सदस्याचा मोबाईल नंबर</label>
+                <label><input type="checkbox" id="perm_office_settings" checked> 📍 कार्यालयाचे ठिकाण/जिल्हा</label>
+                <label><input type="checkbox" id="perm_download_option" checked> ⬇️ डाऊनलोड परवानगी</label>
+                <label><input type="checkbox" id="perm_member_delete" checked> 🛡️ मेसेज डिलीट परवानगी</label>
+                <label><input type="checkbox" id="perm_clear_room"> ⚠️ पूर्ण रूम क्लियर करणे</label>
+            </div>
+
+            <button class="btn-primary-sm" onclick="saveSubAdminPermissions()" style="width:100%; margin-top:6px;">
+                <i class="fa-solid fa-save"></i> परवानग्या सेव्ह करा
+            </button>
+        </div>
+
+        <!-- २. सदस्य नाव, मोबाईल व ठिकाण प्रदर्शन सेटिंग्ज -->
+        <div class="setting-section" id="sec_profile_settings">
+            <div class="setting-title"><i class="fa-solid fa-id-card"></i> 👤 सदस्य माहिती प्रदर्शन सेटिंग्ज</div>
+            
+            <div class="setting-item">
+                <span>सदस्यांचे प्रोफाइल फोटो (DP) दाखवा:</span>
+                <input type="checkbox" id="toggleProfilePhotos" onchange="updateSettings()">
+            </div>
+            <div class="setting-item">
+                <span>सदस्याचे नाव व संवर्ग पद दाखवा:</span>
+                <input type="checkbox" id="toggleShowNamePost" onchange="updateSettings()">
+            </div>
+            <div class="setting-item">
+                <span>सदस्याचा मोबाईल नंबर दाखवा:</span>
+                <input type="checkbox" id="toggleShowMobile" onchange="updateSettings()">
+            </div>
+            <div class="setting-item">
+                <span>कार्यालयाचे ठिकाण / जिल्हा दाखवा:</span>
+                <input type="checkbox" id="toggleShowOffice" onchange="updateSettings()">
+            </div>
+        </div>
+
+        <!-- ३. फोटो/PDF डाऊनलोड पर्याय -->
+        <div class="setting-section" id="sec_download_option">
+            <div class="setting-title"><i class="fa-solid fa-download"></i> ⬇️ फाईल डाऊनलोड बटण</div>
+            <div class="setting-item">
+                <span>चॅटमधील फोटो व PDF वर डाऊनलोड बटण दाखवा:</span>
+                <input type="checkbox" id="toggleEnableDownload" onchange="updateSettings()">
+            </div>
+        </div>
+
+        <!-- ४. मेसेज डिलीट परवानग्या -->
+        <div class="setting-section" id="sec_member_delete">
+            <div class="setting-title"><i class="fa-solid fa-shield"></i> 🛡️ मेसेज डिलीट परवानग्या</div>
+            <div class="setting-item">
+                <span>सदस्यांना स्वतःचे मेसेज डिलीट करू द्या:</span>
+                <input type="checkbox" id="toggleMemberDelete" onchange="updateSettings()">
+            </div>
+        </div>
+
+        <!-- ५. पूर्ण रूम रिकामी करणे -->
+        <div id="sec_clear_room">
+            <button class="btn-danger" onclick="deleteAllMessages()">⚠️ संपूर्ण चालू चॅट रूम रिकामी करा</button>
+        </div>
+    </div>
+</div>
+
+<!-- सीन (Seen List) मोडल - टिक वर क्लिक केल्यावर दिसणारे सदस्य -->
+<div class="modal" id="seenModal">
+    <div class="modal-content" style="max-width: 420px;">
+        <div class="modal-header">
+            <span>👁️ मेसेज पाहणारे सदस्य (Seen List)</span>
+            <button class="close-modal" onclick="closeModal('seenModal')">✖</button>
+        </div>
+        <div id="seenListBody" style="max-height: 350px; overflow-y: auto;">
+            <!-- Dynamic seen list inserted here -->
+        </div>
+    </div>
+</div>
+
+<!-- FIREBASE SDKs -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
+<script>
+    /* =======================================================
+       १. फायरबेस व API कॉन्फिगरेशन
+       ======================================================= */
+    const firebaseConfig = { 
+        apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk", 
+        authDomain: "xrayunionmah.firebaseapp.com", 
+        projectId: "xrayunionmah" 
+    };
+
+    const IMGBB_API_KEY = "9ebc935a853cef7cef4ab67692b3048a";
+    const SUPER_ADMIN_EMAIL = "hangemahesh498@gmail.com";
+    const TELEGRAM_BOT_TOKEN = "8598859316:AAHzoROJMwIFlm30XO3DxHJdk3kkjv6uS5c";
+
+    // URL मधील युजर डेटा डिटेक्ट करणे (URL parameters)
+    const urlParams = new URLSearchParams(window.location.search);
+    let currentUser = urlParams.get('name') || "वैज्ञानिक अधिकारी"; 
+    let currentUserMobile = urlParams.get('mobile') || "९८xxxxxx००";
+    let currentUserPost = urlParams.get('post') || "क्ष-किरण वैज्ञानिक अधिकारी (गट-क)";
+    let currentUserOffice = urlParams.get('office') || urlParams.get('district') || "आरोग्य विभाग, महाराष्ट्र";
+    let currentUserPhoto = urlParams.get('photo') || "1001264489.png"; 
+    
+    let currentRole = "member"; 
+    let currentRoom = "GroupAll"; 
+    let unsubscribe = null;
+    let allLoadedMessages = [];
+    let isUserAtBottom = true;
+
+    // ॲडमिन सेटिंग्ज डिफॉल्ट ऑब्जेक्ट
+    let appSettings = {
+        allowMemberDelete: true,
+        showProfilePhotos: true,
+        showNamePost: true,
+        showMobile: true,
+        showOffice: true,
+        enableDownload: true,
+        telegramChannelId: "@xrayunion_pdf_storage",
+        subAdminPerms: { 
+            perm_profile_settings: true, 
+            perm_mobile_settings: true, 
+            perm_office_settings: true, 
+            perm_download_option: true, 
+            perm_member_delete: true, 
+            perm_clear_room: false 
+        }
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const auth = firebase.auth();
+
+    /* =======================================================
+       २. ऑथेन्टिकेशन व सुरुवातीचे लोडर्स
+       ======================================================= */
+    window.onload = () => {
+        auth.onAuthStateChanged(async (user) => {
+            if (user) {
+                if (user.email === SUPER_ADMIN_EMAIL) {
+                    currentRole = "super_admin";
+                    currentUser = "महेश हांगे";
+                    currentUserPost = "सुपर ॲडमिन";
+                } else {
+                    const snap = await db.collection("admins").where("email", "==", user.email).get();
+                    if (!snap.empty) {
+                        currentRole = "sub_admin";
+                        let subData = snap.docs[0].data();
+                        currentUser = `${subData.name || 'सब-ॲडमिन'}`;
+                    } else {
+                        currentRole = "super_admin"; 
+                    }
+                }
+                document.getElementById("loginBtnHead").innerHTML = '<i class="fa-solid fa-power-off"></i> लॉगआउट';
+                document.getElementById("loginBtnHead").onclick = performAdminLogout;
+            } else {
+                currentRole = "member";
+                document.getElementById("loginBtnHead").innerHTML = '<i class="fa-solid fa-lock"></i> ॲडमिन';
+                document.getElementById("loginBtnHead").onclick = openLoginModal;
             }
+
+            setupRoleUI();
+            listenToSettings();
+            loadMessages(currentRoom);
+        });
+    };
+
+    function setupRoleUI() {
+        const badge = document.getElementById("userRoleBadge");
+        if (currentRole === "super_admin") {
+            badge.innerText = "👑 सुपर ॲडमिन";
+            document.getElementById("tabsContainer").style.display = "flex";
+            document.getElementById("adminControls").style.display = "block";
+            document.getElementById("sec_super_admin_panel").style.display = "block";
+        } else if (currentRole === "sub_admin") {
+            badge.innerText = "⚙️ सब-ॲडमिन";
+            document.getElementById("tabsContainer").style.display = "flex";
+            document.getElementById("adminControls").style.display = "block";
+            document.getElementById("sec_super_admin_panel").style.display = "none";
+        } else {
+            badge.innerText = "👤 सभासद (Member)";
+            document.getElementById("tabsContainer").style.display = "none";
+            document.getElementById("adminControls").style.display = "none";
+            document.getElementById("sec_super_admin_panel").style.display = "none";
+        }
+    }
+
+    function listenToSettings() {
+        db.collection("settings").doc("config").onSnapshot((doc) => {
+            if (doc.exists) {
+                appSettings = doc.data();
+                
+                document.getElementById("toggleMemberDelete").checked = appSettings.allowMemberDelete ?? true;
+                document.getElementById("toggleProfilePhotos").checked = appSettings.showProfilePhotos ?? true;
+                document.getElementById("toggleShowNamePost").checked = appSettings.showNamePost ?? true;
+                document.getElementById("toggleShowMobile").checked = appSettings.showMobile ?? true;
+                document.getElementById("toggleShowOffice").checked = appSettings.showOffice ?? true;
+                document.getElementById("toggleEnableDownload").checked = appSettings.enableDownload ?? true;
+
+                if (appSettings.subAdminPerms) {
+                    document.getElementById("perm_profile_settings").checked = appSettings.subAdminPerms.perm_profile_settings ?? true;
+                    document.getElementById("perm_mobile_settings").checked = appSettings.subAdminPerms.perm_mobile_settings ?? true;
+                    document.getElementById("perm_office_settings").checked = appSettings.subAdminPerms.perm_office_settings ?? true;
+                    document.getElementById("perm_download_option").checked = appSettings.subAdminPerms.perm_download_option ?? true;
+                    document.getElementById("perm_member_delete").checked = appSettings.subAdminPerms.perm_member_delete ?? true;
+                    document.getElementById("perm_clear_room").checked = appSettings.subAdminPerms.perm_clear_room ?? false;
+                }
+
+                applySubAdminPermissions();
+                renderMessages(allLoadedMessages);
+            }
+        });
+    }
+
+    function applySubAdminPermissions() {
+        if (currentRole === "super_admin") {
+            document.getElementById("sec_profile_settings").style.display = "block";
+            document.getElementById("sec_download_option").style.display = "block";
+            document.getElementById("sec_member_delete").style.display = "block";
+            document.getElementById("sec_clear_room").style.display = "block";
+        } else if (currentRole === "sub_admin") {
+            const perms = appSettings.subAdminPerms || {};
+            document.getElementById("sec_profile_settings").style.display = perms.perm_profile_settings ? "block" : "none";
+            document.getElementById("sec_download_option").style.display = perms.perm_download_option ? "block" : "none";
+            document.getElementById("sec_member_delete").style.display = perms.perm_member_delete ? "block" : "none";
+            document.getElementById("sec_clear_room").style.display = perms.perm_clear_room ? "block" : "none";
+        }
+    }
+
+    /* =======================================================
+       ३. अनरीड बॅज व ऑटो-स्क्रोल लॉजिक
+       ======================================================= */
+    function handleChatScroll() {
+        const chatBox = document.getElementById("chatBox");
+        const distanceToBottom = chatBox.scrollHeight - chatBox.scrollTop - chatBox.clientHeight;
+        isUserAtBottom = distanceToBottom < 70;
+
+        if (isUserAtBottom) {
+            markUnreadMessagesAsSeen();
+            updateUnreadBadge(0);
+        }
+    }
+
+    function calculateUnreadCount() {
+        if (!currentUser) return 0;
+        let count = 0;
+        allLoadedMessages.forEach((msg) => {
+            const readList = msg.readBy || [];
+            const alreadyRead = readList.some(r => r.name === currentUser);
+            if (!alreadyRead) count++;
+        });
+        return count;
+    }
+
+    function updateUnreadBadge(unreadCount) {
+        const fab = document.getElementById("fabUnread");
+        const badge = document.getElementById("unreadBadge");
+        if (unreadCount > 0 && !isUserAtBottom) {
+            badge.innerText = unreadCount;
+            fab.style.display = "flex";
+        } else {
+            fab.style.display = "none";
+        }
+    }
+
+    function scrollToBottomAndRead() {
+        const chatBox = document.getElementById("chatBox");
+        chatBox.scrollTop = chatBox.scrollHeight;
+        markUnreadMessagesAsSeen();
+        updateUnreadBadge(0);
+    }
+
+    /* =======================================================
+       ४. चॅट मेसेज लोड व रेंडर करणे (Dynamic Member Display)
+       ======================================================= */
+    function switchRoom(room) {
+        currentRoom = room;
+        document.getElementById("tab-all").classList.remove("active");
+        document.getElementById("tab-admin").classList.remove("active");
+        if(room === "GroupAll") document.getElementById("tab-all").classList.add("active");
+        if(room === "admin_chat") document.getElementById("tab-admin").classList.add("active");
+
+        loadMessages(room);
+    }
+
+    function loadMessages(room) {
+        if (unsubscribe) unsubscribe();
+
+        unsubscribe = db.collection("chat_messages")
+            .where("room", "==", room)
+            .orderBy("timestamp")
+            .onSnapshot((snapshot) => {
+                allLoadedMessages = [];
+                snapshot.forEach((doc) => {
+                    allLoadedMessages.push({ id: doc.id, ...doc.data() });
+                });
+                
+                renderMessages(allLoadedMessages);
+
+                const unread = calculateUnreadCount();
+                updateUnreadBadge(unread);
+
+                if (isUserAtBottom) {
+                    markUnreadMessagesAsSeen();
+                }
+            });
+    }
+
+    function markUnreadMessagesAsSeen() {
+        if (!currentUser) return;
+        const nowTime = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+        allLoadedMessages.forEach((msg) => {
+            const readList = msg.readBy || [];
+            const alreadyRead = readList.some(r => r.name === currentUser);
+
+            if (!alreadyRead) {
+                const updatedReadBy = [...readList, { 
+                    name: currentUser, 
+                    role: currentUserPost, 
+                    office: currentUserOffice,
+                    time: nowTime 
+                }];
+                db.collection("chat_messages").doc(msg.id).update({
+                    readBy: updatedReadBy
+                }).catch(err => console.log("Seen update error:", err));
+            }
+        });
+    }
+
+    function renderMessages(messages) {
+        const chatBox = document.getElementById("chatBox");
+        chatBox.innerHTML = "";
+
+        messages.forEach((data) => {
+            const userName = data.senderName || data.user || "वैज्ञानिक अधिकारी";
+            const userPost = data.senderRole || data.userPost || "गट-क सदस्य";
+            const userMobile = data.userMobile || "";
+            const userOffice = data.userOffice || "";
+            const isMyMsg = (userName === currentUser || data.user === currentUser);
+            
+            const wrapper = document.createElement("div");
+            wrapper.className = `message-wrapper ${isMyMsg ? "my-msg-wrapper" : ""}`;
+
+            // १. सदस्य DP
+            if (appSettings.showProfilePhotos) {
+                const avatar = document.createElement("div");
+                avatar.className = "avatar";
+                if (data.userPhoto) {
+                    avatar.innerHTML = `<img src="${data.userPhoto}" alt="DP" onerror="this.src='1001264489.png'">`;
+                } else {
+                    avatar.innerText = userName ? userName.charAt(0).toUpperCase() : "U";
+                }
+                wrapper.appendChild(avatar);
+            }
+
+            const msgDiv = document.createElement("div");
+            msgDiv.className = "message";
+
+            // २. सभासदाचे नाव, मोबाईल व कार्यालयाचे ठिकाण (ॲडमिन सेटिंगनुसार)
+            let subDetails = [];
+            if (appSettings.showMobile && userMobile) subDetails.push(`<i class="fa-solid fa-phone"></i> ${userMobile}`);
+            if (appSettings.showOffice && userOffice) subDetails.push(`<i class="fa-solid fa-location-dot"></i> ${userOffice}`);
+            
+            let subDetailsHtml = subDetails.length > 0 ? `<span class="msg-subinfo">${subDetails.join(' | ')}</span>` : `<span class="msg-subinfo">(${userPost})</span>`;
+            let nameHeader = appSettings.showNamePost ? `<div class="msg-user-title"><span>${userName}</span></div>` : '';
+
+            let contentHtml = `${nameHeader}${subDetailsHtml}`;
+
+            const msgText = data.text || data.message || "";
+
+            // ३. मेसेज प्रकार (टेक्स्ट / इमेज / PDF)
+            if (data.type === "image") {
+                let downloadBtnHtml = appSettings.enableDownload ? `<a href="${msgText}" target="_blank" download="Photo_${Date.now()}.jpg" class="img-download-btn"><i class="fa-solid fa-download"></i> डाऊनलोड</a>` : '';
+                contentHtml += `<div class="msg-image-box"><img src="${msgText}" class="msg-image" alt="Photo" onclick="viewFullImage('${msgText}')">${downloadBtnHtml}</div>`;
+            } else if (data.type === "pdf") {
+                const pdfFileName = data.fileName || "PDF दस्तऐवज";
+                let pdfDownloadBtn = appSettings.enableDownload ? `<a href="${msgText}" target="_blank" download="${pdfFileName}" class="img-download-btn" style="background:#ef4444;"><i class="fa-solid fa-file-arrow-down"></i> डाऊनलोड PDF</a>` : `<a href="${msgText}" target="_blank" class="img-download-btn" style="background:#ef4444;"><i class="fa-solid fa-eye"></i> पहा</a>`;
+                contentHtml += `<div class="pdf-card"><i class="fa-solid fa-file-pdf"></i><div class="pdf-card-info"><b class="pdf-card-name">${pdfFileName}</b>${pdfDownloadBtn}</div></div>`;
+            } else {
+                contentHtml += `<div style="margin-top:4px;">${msgText}</div>`;
+            }
+
+            // ४. टाइमस्टॅम्प आणि '✓✓ Seen' बटण
+            const timeStr = data.time || (data.timestamp ? new Date(data.timestamp.toDate()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '');
+            const seenCount = (data.readBy || []).length;
+            const seenBadgeHtml = `<span class="seen-badge" onclick="showSeenListModal('${data.id}')" title="मेसेज पाहणारे सदस्य तपासा">✓✓ ${seenCount}</span>`;
+
+            contentHtml += `<div class="msg-time-row">${seenBadgeHtml}<span class="msg-time">${timeStr}</span></div>`;
+
+            // ५. मेसेज डिलीट बटण
+            const isAnAdmin = (currentRole === "super_admin" || currentRole === "sub_admin");
+            if (isAnAdmin || (appSettings.allowMemberDelete && isMyMsg)) {
+                contentHtml += `<button class="delete-btn" onclick="deleteSingleMessage('${data.id}')">✖</button>`;
+            }
+
+            msgDiv.innerHTML = contentHtml;
+            wrapper.appendChild(msgDiv);
+            chatBox.appendChild(wrapper);
+        });
+
+        if (isUserAtBottom) {
+            setTimeout(() => { chatBox.scrollTop = chatBox.scrollHeight; }, 100);
+        }
+    }
+
+    /* =======================================================
+       ५. '✓✓ Seen' टिक वर क्लिक केल्यावर दिसणारे मोडल (Seen List)
+       ======================================================= */
+    function showSeenListModal(docId) {
+        const msgDoc = allLoadedMessages.find(m => m.id === docId);
+        if (!msgDoc) return;
+
+        const readList = msgDoc.readBy || [];
+        const container = document.getElementById("seenListBody");
+        container.innerHTML = "";
+
+        if (readList.length === 0) {
+            container.innerHTML = `<p style="text-align:center; color:#64748b; font-size:0.85rem; padding:15px;">हा मेसेज अद्याप कोणीही पाहिला नाही.</p>`;
+        } else {
+            readList.forEach((u) => {
+                const item = document.createElement("div");
+                item.className = "seen-list-item";
+                item.innerHTML = `
+                    <div>
+                        <span class="seen-user-name">${u.name}</span>
+                        <span class="seen-user-role">${u.role || 'गट-क सदस्य'} ${u.office ? ' • ' + u.office : ''}</span>
+                    </div>
+                    <span class="seen-time-tag"><i class="fa-solid fa-check-double"></i> ${u.time || 'पाहिले'}</span>
+                `;
+                container.appendChild(item);
+            });
         }
 
-        function showSeenUsers() {
-            document.getElementById("seenModal").style.display = "flex";
+        document.getElementById("seenModal").style.display = "flex";
+    }
+
+    function viewFullImage(url) {
+        Swal.fire({ imageUrl: url, showCloseButton: true, confirmButtonText: 'डाऊनलोड', confirmButtonColor: '#0B3D91' }).then((res) => {
+            if (res.isConfirmed) window.open(url, '_blank');
+        });
+    }
+
+    function filterMessages() {
+        const query = document.getElementById("searchInput").value.toLowerCase();
+        const filtered = allLoadedMessages.filter(m => {
+            const txt = (m.text || m.message || '').toLowerCase();
+            const usr = (m.senderName || m.user || '').toLowerCase();
+            const mob = m.userMobile || '';
+            const off = (m.userOffice || '').toLowerCase();
+            return txt.includes(query) || usr.includes(query) || mob.includes(query) || off.includes(query);
+        });
+        renderMessages(filtered);
+    }
+
+    /* =======================================================
+       ६. मेसेज व फाईल पाठवणे (Telegram & ImgBB Integration)
+       ======================================================= */
+    function handleEnter(e) { if(e.key === 'Enter') sendTextMessage(); }
+
+    function sendTextMessage() {
+        const input = document.getElementById("msgInput");
+        const text = input.value.trim();
+        if (text) {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+            db.collection("chat_messages").add({
+                room: currentRoom,
+                senderName: currentUser,
+                user: currentUser,
+                senderRole: currentUserPost,
+                userPost: currentUserPost,
+                userMobile: currentUserMobile,
+                userOffice: currentUserOffice,
+                userPhoto: currentUserPhoto,
+                text: text,
+                message: text,
+                type: "text",
+                time: timeStr,
+                readBy: [{ name: currentUser, role: currentUserPost, office: currentUserOffice, time: timeStr }],
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            }).then(() => { 
+                input.value = ""; 
+                scrollToBottomAndRead();
+            });
+        }
+    }
+
+    async function uploadPdfToTelegram(file) {
+        const channelTarget = appSettings.telegramChannelId || "@xrayunion_pdf_storage";
+        const formData = new FormData();
+        formData.append("chat_id", channelTarget);
+        formData.append("document", file);
+
+        const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument`, { method: "POST", body: formData });
+        const data = await response.json();
+
+        if (data.ok) {
+            const fileId = data.result.document.file_id;
+            const pathRes = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getFile?file_id=${fileId}`);
+            const pathData = await pathRes.json();
+            if (pathData.ok) return `https://api.telegram.org/file/bot${TELEGRAM_BOT_TOKEN}/${pathData.result.file_path}`;
+        }
+        throw new Error(data.description || "अपलोड अयशस्वी.");
+    }
+
+    async function handleFileUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        document.getElementById("loader").style.display = "block"; 
+
+        try {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+            if (file.type.startsWith("image/")) {
+                const formData = new FormData();
+                formData.append("image", file);
+                const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method: "POST", body: formData });
+                const data = await response.json();
+                
+                if(data.success) {
+                    await db.collection("chat_messages").add({
+                        room: currentRoom, senderName: currentUser, user: currentUser, senderRole: currentUserPost, userPost: currentUserPost, userMobile: currentUserMobile, userOffice: currentUserOffice, userPhoto: currentUserPhoto, text: data.data.url, message: data.data.url, type: "image", time: timeStr, readBy: [{ name: currentUser, role: currentUserPost, office: currentUserOffice, time: timeStr }], timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                }
+            } else if (file.type === "application/pdf" || file.name.endsWith(".pdf")) {
+                const telegramPdfUrl = await uploadPdfToTelegram(file);
+                await db.collection("chat_messages").add({
+                    room: currentRoom, senderName: currentUser, user: currentUser, senderRole: currentUserPost, userPost: currentUserPost, userMobile: currentUserMobile, userOffice: currentUserOffice, userPhoto: currentUserPhoto, text: telegramPdfUrl, message: telegramPdfUrl, fileName: file.name, type: "pdf", time: timeStr, readBy: [{ name: currentUser, role: currentUserPost, office: currentUserOffice, time: timeStr }], timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                Swal.fire('यशस्वी', 'PDF फाईल पाठवली गेली!', 'success');
+            }
+        } catch (error) {
+            Swal.fire('त्रुटी', error.message, 'error');
         }
 
-        function closeSeenModal() {
-            document.getElementById("seenModal").style.display = "none";
+        document.getElementById("loader").style.display = "none";
+        document.getElementById("fileInput").value = ""; 
+        scrollToBottomAndRead();
+    }
+
+    /* =======================================================
+       ७. ऑथेन्टिकेशन व ॲडमिन सेटिंग्ज फंक्शन्स
+       ======================================================= */
+    function openLoginModal() { document.getElementById("loginModal").style.display = "flex"; }
+    function openAdminSettings() { document.getElementById("adminModal").style.display = "flex"; }
+    function closeModal(id) { document.getElementById(id).style.display = "none"; }
+
+    async function performAdminLogin() {
+        let e = document.getElementById("loginEmail").value.trim();
+        let p = document.getElementById("loginPass").value.trim();
+        if(!e || !p) return Swal.fire('अपूर्ण माहिती', 'कृपया ईमेल व पासवर्ड भरून प्रयत्न करा.', 'warning');
+
+        try {
+            await auth.signInWithEmailAndPassword(e, p);
+            closeModal("loginModal");
+            Swal.fire('लॉगिन यशस्वी!', 'आपले स्वागत आहे.', 'success');
+        } catch(err) {
+            Swal.fire('लॉगिन अयशस्वी', 'चुकीचा ईमेल आयडी किंवा पासवर्ड!', 'error');
         }
-    </script>
+    }
+
+    function performAdminLogout() {
+        auth.signOut().then(() => {
+            Swal.fire('लॉगआउट झाले', 'आपण यशस्वीरीत्या लॉगआउट झाला आहात.', 'info').then(() => {
+                window.location.href = window.location.pathname; 
+            });
+        });
+    }
+
+    function saveSubAdminPermissions() {
+        if (currentRole !== "super_admin") return;
+        const subAdminPerms = {
+            perm_profile_settings: document.getElementById("perm_profile_settings").checked,
+            perm_mobile_settings: document.getElementById("perm_mobile_settings").checked,
+            perm_office_settings: document.getElementById("perm_office_settings").checked,
+            perm_download_option: document.getElementById("perm_download_option").checked,
+            perm_member_delete: document.getElementById("perm_member_delete").checked,
+            perm_clear_room: document.getElementById("perm_clear_room").checked
+        };
+        db.collection("settings").doc("config").set({ subAdminPerms: subAdminPerms }, { merge: true }).then(() => Swal.fire('सेव्ह झाले!', 'परवानग्या अपडेट झाल्या.', 'success'));
+    }
+
+    function updateSettings() {
+        db.collection("settings").doc("config").set({
+            allowMemberDelete: document.getElementById("toggleMemberDelete").checked,
+            showProfilePhotos: document.getElementById("toggleProfilePhotos").checked,
+            showNamePost: document.getElementById("toggleShowNamePost").checked,
+            showMobile: document.getElementById("toggleShowMobile").checked,
+            showOffice: document.getElementById("toggleShowOffice").checked,
+            enableDownload: document.getElementById("toggleEnableDownload").checked
+        }, { merge: true });
+    }
+
+    function deleteSingleMessage(docId) { 
+        if(confirm("हा मेसेज डिलीट करायचा आहे का?")) db.collection("chat_messages").doc(docId).delete(); 
+    }
+
+    function deleteAllMessages() {
+        Swal.fire({
+            title: '⚠️ सावधान!',
+            text: 'तुम्हाला खरोखर संपूर्ण चालू चॅट रूम मधील मेसेज डिलीट करायचे आहेत का?',
+            icon: 'error',
+            showCancelButton: true,
+            confirmButtonText: 'होय, सर्व डिलीट करा',
+            cancelButtonText: 'रद्द करा'
+        }).then((res) => {
+            if (res.isConfirmed) {
+                db.collection("chat_messages").where("room", "==", currentRoom).get()
+                .then((querySnapshot) => {
+                    const batch = db.batch();
+                    querySnapshot.forEach((doc) => batch.delete(doc.ref));
+                    return batch.commit();
+                })
+                .then(() => {
+                    Swal.fire('रिकामी झाली!', 'संपूर्ण चॅट रूम रिकामी करण्यात आली.', 'success');
+                    closeModal("adminModal");
+                });
+            }
+        });
+    }
+</script>
+
 </body>
 </html>
