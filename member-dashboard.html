@@ -32,11 +32,15 @@
         #loginOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, var(--dark), var(--primary)); display: flex; justify-content: center; align-items: center; z-index: 10000; padding: 15px; }
         .login-card { background: white; padding: 35px 25px; border-radius: 16px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); width: 100%; max-width: 420px; text-align: center; }
         .login-card h2 { color: var(--primary); font-weight: 800; margin-bottom: 10px; font-size: 1.5rem; }
-        .login-input-box { position: relative; margin: 20px 0 15px; }
-        .login-input-box span { position: absolute; left: 15px; top: 12px; font-weight: bold; color: var(--primary); font-size: 1.1rem; }
-        .login-input-box input { width: 100%; padding: 12px 15px 12px 55px; border: 2px solid #cbd5e1; border-radius: 8px; font-size: 1.15rem; font-weight: bold; outline: none; letter-spacing: 1px; }
-        .login-input-box input:focus { border-color: var(--primary); }
-        .login-card button { width: 100%; padding: 12px; background: linear-gradient(90deg, var(--secondary), #f1c40f); color: var(--dark); border: none; border-radius: 8px; font-size: 1.15rem; font-weight: 800; cursor: pointer; transition: 0.3s; }
+        .login-input-box { position: relative; margin: 15px 0; text-align: left; }
+        .login-input-box label { font-size: 0.85rem; font-weight: bold; color: var(--dark); display: block; margin-bottom: 5px; }
+        .login-input-wrapper { position: relative; }
+        .login-input-wrapper span { position: absolute; left: 15px; top: 12px; font-weight: bold; color: var(--primary); font-size: 1.1rem; }
+        .login-input-wrapper input { width: 100%; padding: 12px 15px 12px 55px; border: 2px solid #cbd5e1; border-radius: 8px; font-size: 1.15rem; font-weight: bold; outline: none; letter-spacing: 1px; }
+        .login-input-wrapper input.no-prefix { padding-left: 45px; }
+        .login-input-wrapper i.icon-left { position: absolute; left: 15px; top: 14px; font-weight: bold; color: var(--primary); font-size: 1.1rem; }
+        .login-input-wrapper input:focus { border-color: var(--primary); }
+        .login-card button { width: 100%; padding: 12px; background: linear-gradient(90deg, var(--secondary), #f1c40f); color: var(--dark); border: none; border-radius: 8px; font-size: 1.15rem; font-weight: 800; cursor: pointer; transition: 0.3s; margin-top: 10px; }
         .login-card button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(243,156,18,0.4); }
 
         /* Modals & Overlays */
@@ -149,19 +153,30 @@
         </div>
     </div>
 
-    <!-- 2. MEMBER LOGIN OVERLAY (Mobile Direct Login) -->
+    <!-- 2. MEMBER LOGIN OVERLAY (Mobile & Password Login) -->
     <div id="loginOverlay">
         <div class="login-card">
-            <i class="fa fa-mobile-alt" style="font-size: 3.2rem; color: var(--primary); margin-bottom: 10px;"></i>
+            <i class="fa fa-shield-alt" style="font-size: 3rem; color: var(--primary); margin-bottom: 8px;"></i>
             <h2>सदस्य लॉगिन PORTAL</h2>
-            <p style="font-size: 0.88rem; color: #64748b;">आपला १० अंकी नोंदणीकृत मोबाईल नंबर प्रविष्ट करा</p>
+            <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 15px;">मोबाईल नंबर आणि पासवर्ड द्वारे लॉगिन करा</p>
             
             <div class="login-input-box">
-                <span>+91</span>
-                <input type="tel" id="loginMobileNumber" placeholder="९८७६५४३२१०" maxlength="10">
+                <label>मोबाईल नंबर:</label>
+                <div class="login-input-wrapper">
+                    <span>+91</span>
+                    <input type="tel" id="loginMobileNumber" placeholder="९८७६५४३२१०" maxlength="10">
+                </div>
             </div>
 
-            <button type="button" onclick="loginMemberWithMobile()"><i class="fa fa-sign-in-alt me-1"></i> थेट लॉगिन करा</button>
+            <div class="login-input-box">
+                <label>पासवर्ड (Password):</label>
+                <div class="login-input-wrapper">
+                    <i class="fa fa-lock icon-left"></i>
+                    <input type="password" id="loginPassword" class="no-prefix" placeholder="तथा पासवर्ड प्रविष्ट करा">
+                </div>
+            </div>
+
+            <button type="button" onclick="loginMemberWithMobileAndPassword()"><i class="fa fa-sign-in-alt me-1"></i> सुरक्षित लॉगिन करा</button>
             
             <p style="margin-top: 18px; font-size: 0.85rem; color: var(--primary); cursor: pointer; font-weight: bold; text-decoration: underline;" onclick="window.location.href='index.html'">
                 <i class="fa fa-home"></i> मुख्य वेबसाईटवर जा (Main Index)
@@ -213,7 +228,7 @@
 
         <div class="container">
 
-            <!-- TAB 1: DASHBOARD OVERVIEW (With Admin-Style Mandal Map Cards & Pie Chart) -->
+            <!-- TAB 1: DASHBOARD OVERVIEW -->
             <div id="tab-dash" class="tab-content active">
                 
                 <div class="dash-cards-grid">
@@ -287,7 +302,7 @@
                     <div class="panel-body" style="background:#f8fafc; padding:20px;">
                         
                         <div id="receiptUnpaidNotice" style="display:none; text-align:center; padding:40px;">
-                            <i class="fa fa-clock fa-3x style='color:var(--secondary)'" style="margin-bottom:15px; color:var(--secondary);"></i>
+                            <i class="fa fa-clock fa-3x" style="margin-bottom:15px; color:var(--secondary);"></i>
                             <h3 style="color:var(--dark);">आपली पावती प्रलंबित (Unpaid / Pending) आहे.</h3>
                             <p style="color:gray; margin-top:5px;">ॲडमिनने आपले शुल्क (Fee Status: Paid) डाऊनलोड / निश्चित केल्यानंतर येथे अधिकृत ई-पावती उपलब्ध होईल.</p>
                         </div>
@@ -506,17 +521,19 @@
 
                     </div>
                 </div>
-            </div><!-- TAB 10: LIVE CHAT SECTION -->
-<div id="tab-chat" class="tab-content">
-    <div class="panel">
-        <div class="panel-header bg-success" style="color:white;">
-            <span><i class="fa fa-comments"></i> राज्यस्तरीय लाईव्ह चॅट (Live Chat System)</span>
-        </div>
-        <div class="panel-body" style="padding:0; height:80vh;">
-            <iframe src="chat.html" style="width:100%; height:100%; border:none; border-radius:0 0 12px 12px;"></iframe>
-        </div>
-    </div>
-</div>
+            </div>
+
+            <!-- TAB 10: LIVE CHAT SECTION -->
+            <div id="tab-chat" class="tab-content">
+                <div class="panel">
+                    <div class="panel-header bg-success" style="color:white;">
+                        <span><i class="fa fa-comments"></i> राज्यस्तरीय लाईव्ह चॅट (Live Chat System)</span>
+                    </div>
+                    <div class="panel-body" style="padding:0; height:80vh;">
+                        <iframe src="chat.html" style="width:100%; height:100%; border:none; border-radius:0 0 12px 12px;"></iframe>
+                    </div>
+                </div>
+            </div>
 
             <!-- TAB 9: VOTING & POLL SYSTEM -->
             <div id="tab-polls" class="tab-content">
@@ -538,10 +555,10 @@
     <!-- PRINT LETTER TEMPLATE RENDER CONTAINER -->
     <div id="printLetterArea" style="display:none;"></div>
 
-   <!-- Floating Chat Widget -->
-<div class="chat-floating-btn" title="Live Chat" onclick="openTab('tab-chat', null)">
-    <i class="fa fa-comments"></i>
-</div>
+    <!-- Floating Chat Widget -->
+    <div class="chat-floating-btn" title="Live Chat" onclick="openTab('tab-chat', null)">
+        <i class="fa fa-comments"></i>
+    </div>
 
     <!-- FIREBASE JS ENGINE -->
     <script type="module">
@@ -590,15 +607,20 @@
             if(el) el.style.display = 'none';
         };
 
-        // Mobile Login Handler
-        window.loginMemberWithMobile = async function() {
+        // Mobile & Password Login Handler
+        window.loginMemberWithMobileAndPassword = async function() {
             let mobileInput = document.getElementById('loginMobileNumber').value.trim();
+            let passwordInput = document.getElementById('loginPassword').value.trim();
 
             if(!mobileInput || mobileInput.length !== 10 || isNaN(mobileInput)) {
                 return Swal.fire('चुकीचा मोबाईल नंबर', 'कृपया आपला १० अंकी वैध मोबाईल नंबर टाका.', 'warning');
             }
 
-            Swal.fire({ title: 'मोबाईल नंबर पडताळत आहे...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+            if(!passwordInput) {
+                return Swal.fire('पासवर्ड आवश्यक आहे', 'कृपया तुमचा पासवर्ड प्रविष्ट करा.', 'warning');
+            }
+
+            Swal.fire({ title: 'माहिती पडताळत आहे...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
 
             try {
                 const q1 = query(collection(db, "members"), where("mobile", "==", mobileInput));
@@ -615,6 +637,12 @@
                 }
 
                 let mData = { id: snap.docs[0].id, ...snap.docs[0].data() };
+
+                // Password Verification (If password field exists in database, verify it. Otherwise fallback or check password field)
+                if(mData.password && mData.password !== passwordInput) {
+                    Swal.close();
+                    return Swal.fire('चुकीचा पासवर्ड', 'प्रविष्ट केलेला पासवर्ड चुकीचा आहे. कृपया पुन्हा प्रयत्न करा.', 'error');
+                }
 
                 if(mData.loginEnabled === false) {
                     Swal.close();
@@ -638,6 +666,7 @@
             window.currentMember = null;
             document.getElementById('appContent').style.display = 'none';
             document.getElementById('loginOverlay').style.display = 'flex';
+            document.getElementById('loginPassword').value = '';
         };
 
         // Master Init
