@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>परिवीक्षाधीन कालावधी समाप्ती प्रस्ताव व सर्व प्रमाणपत्र जनरेटर</title>
+    <title>परिवीक्षाधीन कालावधी समाप्ती प्रस्ताव व प्रमाणपत्र जनरेटर</title>
     
     <!-- Google Fonts & Tailwind CSS -->
     <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -89,12 +89,12 @@
                 <i class="fa-solid fa-file-circle-check text-3xl text-amber-400"></i>
                 <div>
                     <h1 class="text-xl font-bold">परिवीक्षाधीन कालावधी समाप्ती प्रस्ताव प्रणाली</h1>
-                    <p class="text-xs text-indigo-200">महाराष्ट्र शासन - सार्वजनिक आरोग्य विभाग | परिपूर्ण प्रस्ताव व प्रमाणपत्रे</p>
+                    <p class="text-xs text-indigo-200">महाराष्ट्र शासन - सार्वजनिक आरोग्य विभाग | पूर्णतः सानुकूल (Fully Editable)</p>
                 </div>
             </div>
             <div class="flex items-center gap-3">
                 <button onclick="window.print()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg font-bold text-sm transition flex items-center gap-2 shadow">
-                    <i class="fa-solid fa-print"></i> निवडलेले प्रिन्ट करा
+                    <i class="fa-solid fa-print"></i> प्रिन्ट करा
                 </button>
                 <button onclick="downloadPDF()" class="bg-amber-500 hover:bg-amber-600 text-slate-950 px-4 py-2 rounded-lg font-bold text-sm transition flex items-center gap-2 shadow">
                     <i class="fa-solid fa-file-pdf"></i> PDF डाऊनलोड करा
@@ -111,16 +111,16 @@
             
             <div class="border-b pb-3">
                 <h2 class="text-lg font-bold text-indigo-900 flex items-center gap-2">
-                    <i class="fa-solid fa-sliders text-indigo-600"></i> माहिती व प्रमाणपत्र निवड
+                    <i class="fa-solid fa-pen-to-square text-indigo-600"></i> माहिती व पर्याय संपादन
                 </h2>
-                <p class="text-xs text-slate-500">माहिती भरा व खालील ज्या प्रमाणपत्रांवर टिक कराल तेच जनरेट होतील.</p>
+                <p class="text-xs text-slate-500">खालील सर्व माहिती व कागदपत्रांची नावे तुमच्या गरजेनुसार एडिट करा.</p>
             </div>
 
             <div class="space-y-4">
 
                 <!-- 1. Head of Office & Office Details -->
                 <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
-                    <h3 class="font-bold text-sm text-slate-700 border-b pb-1"><i class="fa-solid fa-hospital text-indigo-600 ml-1"></i> १. कार्यालय व नियंत्रण अधिकारी</h3>
+                    <h3 class="font-bold text-sm text-slate-700 border-b pb-1"><i class="fa-solid fa-hospital text-indigo-600 ml-1"></i> १. कार्यालय, ठिकाण व संदर्भ माहिती</h3>
                     
                     <div>
                         <label class="block text-xs font-semibold text-slate-600">कार्यालय प्रमुख / नियंत्रण अधिकारी पदनाम:</label>
@@ -135,11 +135,11 @@
                     </div>
 
                     <div>
-                        <label class="block text-xs font-semibold text-slate-600">कार्यालायाचे / रुग्णालयाचे नाव:</label>
+                        <label class="block text-xs font-semibold text-slate-600">कार्यालयाचे / रुग्णालयाचे नाव:</label>
                         <input type="text" id="officeName" value="ग्रामीण रुग्णालय, अ ब क" oninput="updateAll()" class="w-full mt-1 p-2 text-sm border rounded-lg">
                     </div>
 
-                    <div class="grid grid-cols-2 gap-2">
+                    <div class="grid grid-cols-3 gap-2">
                         <div>
                             <label class="block text-xs font-semibold text-slate-600">तालुका:</label>
                             <input type="text" id="officeTaluka" value="बीड" oninput="updateAll()" class="w-full mt-1 p-2 text-sm border rounded-lg">
@@ -147,6 +147,10 @@
                         <div>
                             <label class="block text-xs font-semibold text-slate-600">जिल्हा:</label>
                             <input type="text" id="officeDistrict" value="बीड" oninput="updateAll()" class="w-full mt-1 p-2 text-sm border rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600">ठिकाण (Place):</label>
+                            <input type="text" id="placeLocation" value="बीड" oninput="updateAll()" class="w-full mt-1 p-2 text-sm border rounded-lg font-bold text-indigo-900">
                         </div>
                     </div>
 
@@ -163,6 +167,19 @@
                         <div>
                             <label class="block text-xs font-semibold text-slate-600">प्रस्ताव दिनांक:</label>
                             <input type="text" id="proposalDate" value="२६/०७/२०२६" oninput="updateAll()" class="w-full mt-1 p-2 text-sm border rounded-lg">
+                        </div>
+                    </div>
+
+                    <!-- Dynamic References Section -->
+                    <div class="border-t pt-2 space-y-2">
+                        <div class="flex justify-between items-center">
+                            <label class="block text-xs font-bold text-slate-700">प्रस्तावातील संदर्भ (References):</label>
+                            <button type="button" onclick="addReferenceInput()" class="text-xs bg-indigo-100 hover:bg-indigo-200 text-indigo-800 px-2 py-1 rounded font-bold">
+                                <i class="fa-solid fa-plus"></i> संदर्भ जोडा
+                            </button>
+                        </div>
+                        <div id="referencesContainer" class="space-y-2">
+                            <!-- Dynamic reference inputs rendered here -->
                         </div>
                     </div>
                 </div>
@@ -198,14 +215,23 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-2">
+                    <!-- Joining & Probation Date & Sessions -->
+                    <div class="grid grid-cols-2 gap-2 bg-indigo-50/50 p-2 rounded-lg border border-indigo-100">
                         <div>
-                            <label class="block text-xs font-semibold text-slate-600">रुजू दिनांक (मध्यान्हपूर्व):</label>
-                            <input type="text" id="empJoinDate" value="०३/०६/२०२४" oninput="updateAll()" class="w-full mt-1 p-2 text-sm border rounded-lg">
+                            <label class="block text-xs font-semibold text-slate-600">रुजू दिनांक:</label>
+                            <input type="text" id="empJoinDate" value="०३/०६/२०२४" oninput="updateAll()" class="w-full mt-1 p-1.5 text-sm border rounded-lg">
+                            <select id="empJoinSession" onchange="updateAll()" class="w-full mt-1 p-1 text-xs border rounded bg-white">
+                                <option value="मध्यान्हपूर्व">मध्यान्हपूर्व (FN)</option>
+                                <option value="मध्यान्होत्तर">मध्यान्होत्तर (AN)</option>
+                            </select>
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-600">प्रोबेशन पूर्ण दिनांक:</label>
-                            <input type="text" id="empProbationEndDate" value="०२/०६/२०२५" oninput="updateAll()" class="w-full mt-1 p-2 text-sm border rounded-lg">
+                            <input type="text" id="empProbationEndDate" value="०२/०६/२०२५" oninput="updateAll()" class="w-full mt-1 p-1.5 text-sm border rounded-lg">
+                            <select id="empProbEndSession" onchange="updateAll()" class="w-full mt-1 p-1 text-xs border rounded bg-white">
+                                <option value="मध्यान्हानंतर">मध्यान्हानंतर (AN)</option>
+                                <option value="मध्यान्हपूर्व">मध्यान्हपूर्व (FN)</option>
+                            </select>
                         </div>
                     </div>
 
@@ -217,6 +243,23 @@
                         <div>
                             <label class="block text-xs font-semibold text-slate-600">खेळाडू/समांतर आरक्षण प्रकार:</label>
                             <input type="text" id="empCategory" value="सर्वसाधारण / लागू नाही" oninput="updateAll()" class="w-full mt-1 p-2 text-sm border rounded-lg">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600">संगणक व टायपिंग अहर्ता (Computer/Typing Details):</label>
+                        <input type="text" id="empComputerTyping" value="MS-CIT, CCC, मराठी ३० शब्द/मि., इंग्रजी ४० शब्द/मि." oninput="updateAll()" class="w-full mt-1 p-2 text-sm border rounded-lg">
+                    </div>
+
+                    <!-- Children details -->
+                    <div class="grid grid-cols-2 gap-2 bg-amber-50/50 p-2 rounded-lg border border-amber-100">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600">एकूण अपत्ये संख्या:</label>
+                            <input type="text" id="empTotalChildren" value="०१ (एक)" oninput="updateAll()" class="w-full mt-1 p-1.5 text-sm border rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600">२८ मार्च २००५ नंतरची अपत्ये:</label>
+                            <input type="text" id="empPost2005Children" value="०० (शून्य)" oninput="updateAll()" class="w-full mt-1 p-1.5 text-sm border rounded-lg">
                         </div>
                     </div>
 
@@ -244,9 +287,8 @@
                     </div>
 
                     <div class="border-t border-indigo-200 pt-2">
-                        <label class="block text-xs font-semibold text-slate-700">नवीन लेटरहेड / इमेज अपलोड करा:</label>
+                        <label class="block text-xs font-semibold text-slate-700">नवीन लेटरहेड / लोगो इमेज अपलोड करा:</label>
                         <input type="file" id="letterheadFileInput" accept="image/*" onchange="uploadLogo(event)" class="w-full text-xs mt-1 bg-white p-1 rounded border">
-                        <p class="text-[10px] text-slate-500 mt-1">टीप: नवीन लेटरहेड अपलोड करण्यापूर्वी जुने हटवण्यासाठी खालील बटण वापरा.</p>
                         <button type="button" id="btnDeleteLogo" onclick="deleteLogo()" class="hidden mt-2 bg-rose-600 hover:bg-rose-700 text-white text-xs px-3 py-1.5 rounded font-bold transition flex items-center gap-1">
                             <i class="fa-solid fa-trash"></i> सध्याचे लेटरहेड डिलीट करा
                         </button>
@@ -255,15 +297,19 @@
 
                 <!-- 4. Checklist & Dynamic Certificate Generation Panel -->
                 <div class="bg-amber-50 p-4 rounded-xl border border-amber-200 space-y-3">
-                    <h3 class="font-bold text-sm text-amber-900 border-b border-amber-200 pb-1 flex justify-between items-center">
-                        <span><i class="fa-solid fa-list-check text-amber-700 ml-1"></i> ४. तपासणी सूची व प्रमाणपत्र निवड</span>
-                        <span class="text-[10px] bg-amber-200 text-amber-900 px-2 py-0.5 rounded font-normal">टिक करा = प्रिंट मध्ये येईल</span>
-                    </h3>
+                    <div class="flex justify-between items-center border-b border-amber-200 pb-1">
+                        <h3 class="font-bold text-sm text-amber-900">
+                            <i class="fa-solid fa-list-check text-amber-700 ml-1"></i> ४. तपासणी सूची व रो (Rows)
+                        </h3>
+                        <button type="button" onclick="addNewChecklistRow()" class="bg-amber-600 hover:bg-amber-700 text-white text-xs px-2.5 py-1 rounded font-bold shadow transition flex items-center gap-1">
+                            <i class="fa-solid fa-plus"></i> नवीन रो जोडा
+                        </button>
+                    </div>
                     
-                    <p class="text-xs text-slate-600">खालील चेकबॉक्स वर टिक करून कोणते प्रमाणपत्र जनरेट/प्रिंट करायचे ते ठरवा व त्याचे स्टेटस बदला:</p>
+                    <p class="text-[11px] text-slate-600">कागदपत्राचे नाव पेनसारखे थेट एडिट करा, स्टेटस बदला व हवे असल्यास नवीन रो वाढवा:</p>
 
                     <div id="checklistControls" class="space-y-2 max-h-96 overflow-y-auto pr-1 text-xs">
-                        <!-- Dynamic items generated by JS -->
+                        <!-- Dynamic items rendered by JS -->
                     </div>
                 </div>
 
@@ -296,18 +342,17 @@
                     विषय: परिवीक्षाधीन कालावधी समाप्ती व नियुक्ती नियमित करण्याबाबतचा प्रस्ताव.
                 </div>
 
-                <div class="text-xs my-2 font-semibold">
-                    संदर्भ: १) सामान्य प्रशासन विभाग, शासन परिपत्रक क्र. स्थाप्रप-१४१४/(प्र.क्र. ७३/१४)/१३-अ, दिनांक ११ सप्टेंबर २०१४.<br>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;२) नियुक्ती आदेश जा.क्र. तांत्रिक-आस्था/नियुक्ती/२०२४, दिनांक ०२/०६/२०२४.
+                <div class="text-xs my-2 font-semibold space-y-1" id="lbl_references_doc">
+                    <!-- References will render here dynamically -->
                 </div>
 
                 <p class="mt-4 text-justify">महोदय / महोदया,</p>
                 <p class="indent-8 text-justify mt-2">
-                    उपरोक्त विषयाच्या अनुषंगाने सविनय प्रस्ताव सादर करण्यात येतो की, <span class="lbl_office_full">ग्रामीण रुग्णालय अ ब क</span> येथे कार्यरत असणारे <span class="font-bold lbl_emp_name">श्री. रमेश प्रकाश पाटील</span> (<span class="lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, <span class="lbl_emp_cadre">गट-क</span>, वेतन रचना <span class="lbl_emp_payscale">S-13 : ३५४००-११२४००</span>) यांना १ वर्षाचा परिवीक्षाधीन कालावधी म्हणून तात्पुरत्या स्वरूपात नेमणूक करण्यात आली होती. त्यानुसार सदर कर्मचारी दिनांक <span class="font-bold lbl_emp_joindate">०३/०६/२०२४</span> ला मध्यान्हपूर्व रुजू झाले होते.
+                    उपरोक्त विषयाच्या अनुषंगाने सविनय प्रस्ताव सादर करण्यात येतो की, <span class="lbl_office_full">ग्रामीण रुग्णालय अ ब क</span> येथे कार्यरत असणारे <span class="font-bold lbl_emp_name">श्री. रमेश प्रकाश पाटील</span> (<span class="lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, <span class="lbl_emp_cadre">गट-क</span>, वेतन रचना <span class="lbl_emp_payscale">S-13 : ३५४००-११२४००</span>) यांना १ वर्षाचा परिवीक्षाधीन कालावधी म्हणून तात्पुरत्या स्वरूपात नेमणूक करण्यात आली होती. त्यानुसार सदर कर्मचारी दिनांक <span class="font-bold lbl_emp_joindate">०३/०६/२०२४</span> ला <span class="font-bold lbl_emp_joinsession">मध्यान्हपूर्व</span> वेळेत रुजू झाले होते.
                 </p>
 
                 <p class="indent-8 text-justify mt-3">
-                    सदर कर्मचाऱ्याचा १ वर्षाचा परिवीक्षाधीन कालावधी दिनांक <span class="font-bold lbl_emp_probend">०२/०६/२०२५</span> ला मध्यान्हानंतर यशस्वीरीत्या पूर्ण झाला आहे. या कालावधीत त्यांनी नियुक्ती आदेशातील नमूद सर्व अटी व शर्ती समाधानकारकरित्या पूर्ण केल्या आहेत.
+                    सदर कर्मचाऱ्याचा १ वर्षाचा परिवीक्षाधीन कालावधी दिनांक <span class="font-bold lbl_emp_probend">०२/०६/२०२५</span> ला <span class="font-bold lbl_emp_probendsession">मध्यान्हानंतर</span> यशस्वीरीत्या पूर्ण झाला आहे. या कालावधीत त्यांनी नियुक्ती आदेशातील नमूद सर्व अटी व शर्ती समाधानकारकरित्या पूर्ण केल्या आहेत.
                 </p>
 
                 <p class="indent-8 text-justify mt-3">
@@ -316,6 +361,7 @@
 
                 <div class="mt-16 flex justify-between items-end">
                     <div class="text-xs font-semibold">
+                        ठिकाण: <span class="lbl_place font-bold">बीड</span><br>
                         सहपत्र: तपासणी सूचीनुसार सर्व जोडपत्रे.
                     </div>
                     <div class="text-center font-bold">
@@ -350,10 +396,16 @@
                     </tbody>
                 </table>
 
-                <div class="mt-12 text-right font-bold">
-                    <br><br>
-                    <p class="lbl_sign_head">वैद्यकीय अधीक्षक</p>
-                    <p class="text-xs font-normal lbl_sign_office">ग्रामीण रुग्णालय, अ ब क</p>
+                <div class="mt-12 flex justify-between items-end">
+                    <div class="text-xs font-semibold">
+                        ठिकाण: <span class="lbl_place font-bold">बीड</span><br>
+                        दिनांक: <span class="lbl_prop_date">२६/०७/२०२६</span>
+                    </div>
+                    <div class="text-center font-bold">
+                        <br><br>
+                        <p class="lbl_sign_head">वैद्यकीय अधीक्षक</p>
+                        <p class="text-xs font-normal lbl_sign_office">ग्रामीण रुग्णालय, अ ब क</p>
+                    </div>
                 </div>
             </div>
 
@@ -378,7 +430,7 @@
 
                 <div class="mt-28 flex justify-between items-end">
                     <div class="text-xs font-semibold">
-                        ठिकाण: <span class="lbl_office_taluka">बीड</span><br>
+                        ठिकाण: <span class="lbl_place font-bold">बीड</span><br>
                         दिनांक: <span class="lbl_prop_date">२६/०७/२०२६</span>
                     </div>
                     <div class="text-center font-bold">
@@ -439,7 +491,7 @@
 
                 <div class="mt-20 flex justify-between items-end">
                     <div class="text-xs font-semibold">
-                        ठिकाण: <span class="lbl_office_taluka">बीड</span><br>
+                        ठिकाण: <span class="lbl_place font-bold">बीड</span><br>
                         दिनांक: <span class="lbl_prop_date">२६/०७/२०२६</span>
                     </div>
                     <div class="text-center font-bold">
@@ -471,7 +523,7 @@
 
                 <div class="mt-28 flex justify-between items-end">
                     <div class="text-xs font-semibold">
-                        ठिकाण: <span class="lbl_office_taluka">बीड</span><br>
+                        ठिकाण: <span class="lbl_place font-bold">बीड</span><br>
                         दिनांक: <span class="lbl_prop_date">२६/०७/२०२६</span>
                     </div>
                     <div class="text-center font-bold">
@@ -503,7 +555,7 @@
 
                 <div class="mt-28 flex justify-between items-end">
                     <div class="text-xs font-semibold">
-                        ठिकाण: <span class="lbl_office_taluka">बीड</span><br>
+                        ठिकाण: <span class="lbl_place font-bold">बीड</span><br>
                         दिनांक: <span class="lbl_prop_date">२६/०७/२०२६</span>
                     </div>
                     <div class="text-center font-bold">
@@ -514,7 +566,7 @@
                 </div>
             </div>
 
-            <!-- DOC 7: संगणक अभ्यासक्रम उत्तीर्ण प्रमाणपत्र -->
+            <!-- DOC 7: संगणक व टायपिंग अभ्यासक्रम उत्तीर्ण प्रमाणपत्र -->
             <div class="a4-page text-slate-900 text-sm leading-relaxed doc-container" id="doc_computer">
                 <div class="office-header-content text-center mb-4">
                     <h2 class="text-base font-bold uppercase lbl_office_header">कार्यालय, वैद्यकीय अधीक्षक, ग्रामीण रुग्णालय, अ ब क</h2>
@@ -522,20 +574,20 @@
                 </div>
 
                 <div class="text-center font-bold text-base my-6 underline">
-                    संगणक अर्हता उत्तीर्ण प्रमाणपत्र
+                    संगणक व टायपिंग अर्हता उत्तीर्ण प्रमाणपत्र
                 </div>
 
                 <p class="indent-8 text-justify mt-6 leading-loose text-base">
-                    प्रमाणित करण्यात येते की, <span class="font-bold text-lg lbl_emp_name">श्री. रमेश प्रकाश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यालय: <span class="font-bold lbl_office_full">ग्रामीण रुग्णालय अ ब क</span> यांनी शासन मान्य संगणक अहर्तेचे (CCC / MS-CIT) विहित प्रमाणपत्र या कार्यालयाकडे सादर केलेले असून त्याची नोंद मूळ सेवापुस्तकात घेण्यात आली आहे.
+                    प्रमाणित करण्यात येते की, <span class="font-bold text-lg lbl_emp_name">श्री. रमेश प्रकाश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यालय: <span class="font-bold lbl_office_full">ग्रामीण रुग्णालय अ ब क</span> यांनी शासन मान्य संगणक व टायपिंग अहर्तेचे (<span class="font-bold text-indigo-900 lbl_emp_computer_typing">MS-CIT, CCC, मराठी ३०, इंग्रजी ४०</span>) विहित प्रमाणपत्र या कार्यालयाकडे सादर केलेले असून त्याची नोंद मूळ सेवापुस्तकात घेण्यात आली आहे.
                 </p>
 
                 <p class="mt-6 text-justify">
-                    करिता संगणक परीक्षा उत्तीर्णबाबतचे प्रमाणपत्र देण्यात येत आहे.
+                    करिता संगणक व टायपिंग परीक्षा उत्तीर्णबाबतचे प्रमाणपत्र देण्यात येत आहे.
                 </p>
 
                 <div class="mt-28 flex justify-between items-end">
                     <div class="text-xs font-semibold">
-                        ठिकाण: <span class="lbl_office_taluka">बीड</span><br>
+                        ठिकाण: <span class="lbl_place font-bold">बीड</span><br>
                         दिनांक: <span class="lbl_prop_date">२६/०७/२०२६</span>
                     </div>
                     <div class="text-center font-bold">
@@ -564,7 +616,7 @@
                         मी <span class="font-bold lbl_office_full">ग्रामीण रुग्णालय अ ब क</span> येथे <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span> या पदावर कार्यरत आहे.
                     </li>
                     <li>
-                        आज रोजी मला <span class="font-bold border-b border-black px-4">०१</span> (एक) अपत्ये आहेत. त्यापैकी दिनांक २८ मार्च २००५ नंतर जन्माला आलेल्या मुलांची संख्या <span class="font-bold border-b border-black px-4">००</span> आहे.
+                        आज रोजी मला <span class="font-bold border-b border-black px-4 lbl_emp_total_children">०१ (एक)</span> अपत्ये आहेत. त्यापैकी दिनांक २८ मार्च २००५ नंतर जन्माला आलेल्या मुलांची संख्या <span class="font-bold border-b border-black px-4 lbl_emp_post2005_children">०० (शून्य)</span> आहे.
                     </li>
                     <li>
                         दिनांक २८ मार्च २००५ नंतर जन्माला आलेल्या मुलांची संख्या दोनपेक्षा अधिक असेल तर मी या पदासाठी / सेवेसाठी अपात्र ठरेल याची मला जाणीव आहे.
@@ -573,7 +625,7 @@
 
                 <div class="mt-24 flex justify-between items-end">
                     <div class="text-xs">
-                        स्थान: <span class="lbl_office_taluka">बीड</span><br>
+                        ठिकाण: <span class="lbl_place font-bold">बीड</span><br>
                         दिनांक: <span class="lbl_prop_date">२६/०७/२०२६</span>
                     </div>
                     <div class="text-center font-bold">
@@ -605,7 +657,7 @@
 
                 <div class="mt-28 flex justify-between items-end">
                     <div class="text-xs font-semibold">
-                        ठिकाण: <span class="lbl_office_taluka">बीड</span><br>
+                        ठिकाण: <span class="lbl_place font-bold">बीड</span><br>
                         दिनांक: <span class="lbl_prop_date">२६/०७/२०२६</span>
                     </div>
                     <div class="text-center font-bold">
@@ -637,7 +689,7 @@
 
                 <div class="mt-28 flex justify-between items-end">
                     <div class="text-xs font-semibold">
-                        ठिकाण: <span class="lbl_office_taluka">बीड</span><br>
+                        ठिकाण: <span class="lbl_place font-bold">बीड</span><br>
                         दिनांक: <span class="lbl_prop_date">२६/०७/२०२६</span>
                     </div>
                     <div class="text-center font-bold">
@@ -669,7 +721,7 @@
 
                 <div class="mt-28 flex justify-between items-end">
                     <div class="text-xs font-semibold">
-                        ठिकाण: <span class="lbl_office_taluka">बीड</span><br>
+                        ठिकाण: <span class="lbl_place font-bold">बीड</span><br>
                         दिनांक: <span class="lbl_prop_date">२६/०७/२०२६</span>
                     </div>
                     <div class="text-center font-bold">
@@ -701,7 +753,7 @@
 
                 <div class="mt-28 flex justify-between items-end">
                     <div class="text-xs font-semibold">
-                        ठिकाण: <span class="lbl_office_taluka">बीड</span><br>
+                        ठिकाण: <span class="lbl_place font-bold">बीड</span><br>
                         दिनांक: <span class="lbl_prop_date">२६/०७/२०२६</span>
                     </div>
                     <div class="text-center font-bold">
@@ -733,7 +785,7 @@
 
                 <div class="mt-28 flex justify-between items-end">
                     <div class="text-xs font-semibold">
-                        ठिकाण: <span class="lbl_office_taluka">बीड</span><br>
+                        ठिकाण: <span class="lbl_place font-bold">बीड</span><br>
                         दिनांक: <span class="lbl_prop_date">२६/०७/२०२६</span>
                     </div>
                     <div class="text-center font-bold">
@@ -765,7 +817,7 @@
 
                 <div class="mt-28 flex justify-between items-end">
                     <div class="text-xs font-semibold">
-                        ठिकाण: <span class="lbl_office_taluka">बीड</span><br>
+                        ठिकाण: <span class="lbl_place font-bold">बीड</span><br>
                         दिनांक: <span class="lbl_prop_date">२६/०७/२०२६</span>
                     </div>
                     <div class="text-center font-bold">
@@ -797,7 +849,7 @@
 
                 <div class="mt-28 flex justify-between items-end">
                     <div class="text-xs font-semibold">
-                        ठिकाण: <span class="lbl_office_taluka">बीड</span><br>
+                        ठिकाण: <span class="lbl_place font-bold">बीड</span><br>
                         दिनांक: <span class="lbl_prop_date">२६/०७/२०२६</span>
                     </div>
                     <div class="text-center font-bold">
@@ -813,53 +865,115 @@
 
     <!-- JavaScript Core System Engine -->
     <script>
-        // Master List of Documents/Certificates in System
-        const documentsConfig = [
-            { id: 'doc_proposal', name: '१. मुख्य प्रस्ताव व शिफारस जावक पत्र', fixed: true, defaultStatus: 'जोडले आहे' },
-            { id: 'doc_checklist', name: '२. कागदपत्रांची पडताळणी सूची (Checklist)', fixed: true, defaultStatus: 'जोडले आहे' },
-            { id: 'doc_leave', name: '३. परिवीक्षाधीन कालावधीतील रजेचे प्रमाणपत्र', defaultStatus: 'जोडले आहे' },
-            { id: 'doc_work_report', name: '४. कामाचा विशेष मूल्यमापन अहवाल', defaultStatus: 'जोडले आहे' },
-            { id: 'doc_no_inquiry', name: '५. ना-चौकशी तथा ना-तक्रार प्रमाणपत्र', defaultStatus: 'जोडले आहे' },
-            { id: 'doc_language', name: '६. मराठी व हिंदी भाषा परीक्षा उत्तीर्ण/सूट प्रमाणपत्र', defaultStatus: 'जोडले आहे' },
-            { id: 'doc_computer', name: '७. संगणक अर्हता (MS-CIT/CCC) प्रमाणपत्र', defaultStatus: 'जोडले आहे' },
-            { id: 'doc_small_family_decl', name: '८. लहान कुटुंबाचे प्रतिज्ञापत्र (नमुना-अ)', defaultStatus: 'जोडले आहे' },
-            { id: 'doc_small_family_cert', name: '९. लहान कुटुंबाचे कार्यालयीन प्रमाणपत्र', defaultStatus: 'जोडले आहे' },
-            { id: 'doc_property', name: '१०. मत्ता व दायित्व विवरणपत्र प्रमाणपत्र', defaultStatus: 'जोडले आहे' },
-            { id: 'doc_education_dob', name: '११. शैक्षणिक अर्हता व जन्मदिनांक पडताळणी प्रमाणपत्र', defaultStatus: 'जोडले आहे' },
-            { id: 'doc_sports_reservation', name: '१२. खेळ / समांतर आरक्षण पडताळणी प्रमाणपत्र', defaultStatus: 'जोडले आहे' },
-            { id: 'doc_terms_conditions', name: '१३. नेमणूक अटी व शर्ती पूर्तता प्रमाणपत्र', defaultStatus: 'जोडले आहे' },
-            { id: 'doc_headquarter', name: '१४. मुख्यालयात वास्तव्य प्रमाणपत्र', defaultStatus: 'जोडले आहे' },
-            { id: 'doc_recommendation', name: '१५. कार्यालय प्रमुखाचा शिफारस अभिप्राय', defaultStatus: 'जोडले आहे' }
+        // Master Dynamic References Array
+        let referencesList = [
+            "सामान्य प्रशासन विभाग, शासन परिपत्रक क्र. स्थाप्रप-१४१४/(प्र.क्र. ७३/१४)/१३-अ, दिनांक ११ सप्टेंबर २०१४.",
+            "नियुक्ती आदेश जा.क्र. तांत्रिक-आस्था/नियुक्ती/२०२४, दिनांक ०२/०६/२०२४."
         ];
 
-        // Store selected document states
-        let docState = {};
+        // Master List of Documents/Certificates
+        let checklistItems = [
+            { id: 'doc_proposal', name: '१. मुख्य प्रस्ताव व शिफारस जावक पत्र', fixed: true, status: 'जोडले आहे', enabled: true },
+            { id: 'doc_checklist', name: '२. कागदपत्रांची पडताळणी सूची (Checklist)', fixed: true, status: 'जोडले आहे', enabled: true },
+            { id: 'doc_leave', name: '३. परिवीक्षाधीन कालावधीतील रजेचे प्रमाणपत्र', status: 'जोडले आहे', enabled: true },
+            { id: 'doc_work_report', name: '४. कामाचा विशेष मूल्यमापन अहवाल', status: 'जोडले आहे', enabled: true },
+            { id: 'doc_no_inquiry', name: '५. ना-चौकशी तथा ना-तक्रार प्रमाणपत्र', status: 'जोडले आहे', enabled: true },
+            { id: 'doc_language', name: '६. मराठी व हिंदी भाषा परीक्षा उत्तीर्ण/सूट प्रमाणपत्र', status: 'जोडले आहे', enabled: true },
+            { id: 'doc_computer', name: '७. संगणक व टायपिंग अर्हता उत्तीर्ण प्रमाणपत्र', status: 'जोडले आहे', enabled: true },
+            { id: 'doc_small_family_decl', name: '८. लहान कुटुंबाचे प्रतिज्ञापत्र (नमुना-अ)', status: 'जोडले आहे', enabled: true },
+            { id: 'doc_small_family_cert', name: '९. लहान कुटुंबाचे कार्यालयीन प्रमाणपत्र', status: 'जोडले आहे', enabled: true },
+            { id: 'doc_property', name: '१०. मत्ता व दायित्व विवरणपत्र प्रमाणपत्र', status: 'जोडले आहे', enabled: true },
+            { id: 'doc_education_dob', name: '११. शैक्षणिक अर्हता व जन्मदिनांक पडताळणी प्रमाणपत्र', status: 'जोडले आहे', enabled: true },
+            { id: 'doc_sports_reservation', name: '१२. खेळ / समांतर आरक्षण पडताळणी प्रमाणपत्र', status: 'जोडले आहे', enabled: true },
+            { id: 'doc_terms_conditions', name: '१३. नेमणूक अटी व शर्ती पूर्तता प्रमाणपत्र', status: 'जोडले आहे', enabled: true },
+            { id: 'doc_headquarter', name: '१४. मुख्यालयात वास्तव्य प्रमाणपत्र', status: 'जोडले आहे', enabled: true },
+            { id: 'doc_recommendation', name: '१५. कार्यालय प्रमुखाचा शिफारस अभिप्राय', status: 'जोडले आहे', enabled: true }
+        ];
 
-        function initChecklistControls() {
+        // --- References Functions ---
+        function renderReferencesInputs() {
+            const container = document.getElementById('referencesContainer');
+            container.innerHTML = '';
+
+            referencesList.forEach((ref, index) => {
+                const div = document.createElement('div');
+                div.className = 'flex items-center gap-1';
+                div.innerHTML = `
+                    <span class="text-xs font-bold text-slate-500 w-5">${index + 1})</span>
+                    <input type="text" value="${ref}" oninput="updateReferenceText(${index}, this.value)" class="w-full p-1.5 text-xs border rounded bg-white">
+                    <button type="button" onclick="removeReferenceInput(${index})" class="text-rose-600 hover:text-rose-800 p-1 text-xs">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                `;
+                container.appendChild(div);
+            });
+
+            renderReferencesInDoc();
+        }
+
+        function addReferenceInput() {
+            referencesList.push("नवीन संदर्भ टाका...");
+            renderReferencesInputs();
+        }
+
+        function removeReferenceInput(index) {
+            referencesList.splice(index, 1);
+            renderReferencesInputs();
+        }
+
+        function updateReferenceText(index, value) {
+            referencesList[index] = value;
+            renderReferencesInDoc();
+        }
+
+        function renderReferencesInDoc() {
+            const docContainer = document.getElementById('lbl_references_doc');
+            if (!docContainer) return;
+
+            if (referencesList.length === 0) {
+                docContainer.innerHTML = '';
+                return;
+            }
+
+            let html = '<span class="font-bold">संदर्भ:</span> ';
+            referencesList.forEach((ref, idx) => {
+                if (idx === 0) {
+                    html += `१) ${ref}<br>`;
+                } else {
+                    html += `&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${idx + 1}) ${ref}<br>`;
+                }
+            });
+            docContainer.innerHTML = html;
+        }
+
+        // --- Checklist Dynamic Controls & Tables ---
+        function renderChecklistControls() {
             const container = document.getElementById('checklistControls');
             container.innerHTML = '';
 
-            documentsConfig.forEach((doc, index) => {
-                docState[doc.id] = {
-                    enabled: true,
-                    status: doc.defaultStatus
-                };
-
+            checklistItems.forEach((item, index) => {
                 const div = document.createElement('div');
-                div.className = 'flex items-center justify-between bg-white p-2 rounded border border-slate-200 gap-2';
+                div.className = 'flex items-center justify-between bg-white p-2 rounded border border-slate-200 gap-2 shadow-sm';
 
                 div.innerHTML = `
-                    <div class="flex items-center gap-2 overflow-hidden">
-                        <input type="checkbox" id="chk_${doc.id}" ${doc.enabled ? 'checked' : ''} 
-                            onchange="toggleDocVisibility('${doc.id}', this.checked)" class="h-4 w-4 text-indigo-600 rounded">
-                        <label for="chk_${doc.id}" class="truncate text-xs font-semibold cursor-pointer text-slate-800">${doc.name}</label>
+                    <div class="flex items-center gap-2 flex-grow overflow-hidden">
+                        ${item.id ? `<input type="checkbox" ${item.enabled ? 'checked' : ''} onchange="toggleDocVisibility('${item.id}', this.checked, ${index})" class="h-4 w-4 text-indigo-600 rounded">` : '<span class="w-4"></span>'}
+                        <div class="flex items-center gap-1 w-full">
+                            <i class="fa-solid fa-pen text-[10px] text-slate-400"></i>
+                            <input type="text" value="${item.name}" oninput="updateItemName(${index}, this.value)" class="w-full text-xs font-semibold text-slate-800 border-b border-transparent hover:border-slate-300 focus:border-indigo-500 focus:outline-none bg-transparent px-1">
+                        </div>
                     </div>
-                    <div>
-                        <select onchange="updateDocStatus('${doc.id}', this.value)" class="text-[11px] border p-1 rounded bg-slate-50 font-semibold">
-                            <option value="जोडले आहे" ${doc.defaultStatus === 'जोडले आहे' ? 'selected' : ''}>जोडले आहे</option>
-                            <option value="जोडले नाही" ${doc.defaultStatus === 'जोडले नाही' ? 'selected' : ''}>जोडले नाही</option>
-                            <option value="लागू नाही" ${doc.defaultStatus === 'लागू नाही' ? 'selected' : ''}>लागू नाही</option>
+                    <div class="flex items-center gap-1">
+                        <select onchange="updateItemStatus(${index}, this.value)" class="text-[11px] border p-1 rounded bg-slate-50 font-semibold">
+                            <option value="जोडले आहे" ${item.status === 'जोडले आहे' ? 'selected' : ''}>जोडले आहे</option>
+                            <option value="जोडले नाही" ${item.status === 'जोडले नाही' ? 'selected' : ''}>जोडले नाही</option>
+                            <option value="लागू नाही" ${item.status === 'लागू नाही' ? 'selected' : ''}>लागू नाही</option>
                         </select>
+                        ${!item.fixed ? `
+                            <button type="button" onclick="deleteChecklistRow(${index})" class="text-rose-500 hover:text-rose-700 p-1">
+                                <i class="fa-solid fa-xmark text-sm"></i>
+                            </button>
+                        ` : ''}
                     </div>
                 `;
                 container.appendChild(div);
@@ -868,13 +982,22 @@
             renderChecklistTable();
         }
 
-        function toggleDocVisibility(docId, isChecked) {
-            if(!docState[docId]) docState[docId] = {};
-            docState[docId].enabled = isChecked;
+        function updateItemName(index, val) {
+            checklistItems[index].name = val;
+            renderChecklistTable();
+        }
+
+        function updateItemStatus(index, val) {
+            checklistItems[index].status = val;
+            renderChecklistTable();
+        }
+
+        function toggleDocVisibility(docId, isChecked, index) {
+            checklistItems[index].enabled = isChecked;
 
             const el = document.getElementById(docId);
-            if(el) {
-                if(isChecked) {
+            if (el) {
+                if (isChecked) {
                     el.classList.remove('hidden-doc');
                 } else {
                     el.classList.add('hidden-doc');
@@ -883,37 +1006,47 @@
             renderChecklistTable();
         }
 
-        function updateDocStatus(docId, value) {
-            if(!docState[docId]) docState[docId] = {};
-            docState[docId].status = value;
-            renderChecklistTable();
+        function addNewChecklistRow() {
+            const nextNo = checklistItems.length + 1;
+            checklistItems.push({
+                id: null, // Custom extra row
+                name: `${nextNo}. सानुकूल कागदपत्राचे नाव`,
+                status: 'जोडले आहे',
+                enabled: true,
+                fixed: false
+            });
+            renderChecklistControls();
+        }
+
+        function deleteChecklistRow(index) {
+            checklistItems.splice(index, 1);
+            renderChecklistControls();
         }
 
         function renderChecklistTable() {
             const tbody = document.getElementById('checklistTableBody');
+            if(!tbody) return;
             tbody.innerHTML = '';
 
-            let count = 1;
-            documentsConfig.forEach(doc => {
-                const state = docState[doc.id] || { enabled: true, status: 'जोडले आहे' };
-                
+            checklistItems.forEach((item, index) => {
                 const tr = document.createElement('tr');
-                let statusColor = 'text-emerald-700';
-                if(state.status === 'लागू नाही') statusColor = 'text-slate-500 italic';
-                if(state.status === 'जोडले नाही') statusColor = 'text-rose-600 font-bold';
+                let statusColor = 'text-emerald-700 font-semibold';
+                if (item.status === 'लागू नाही') statusColor = 'text-slate-500 italic';
+                if (item.status === 'जोडले नाही') statusColor = 'text-rose-600 font-bold';
 
                 tr.innerHTML = `
-                    <td class="p-2 text-center">${count++}</td>
-                    <td class="p-2 font-medium">${doc.name}</td>
-                    <td class="p-2 text-center font-semibold ${statusColor}">${state.status}</td>
+                    <td class="p-2 text-center font-bold">${index + 1}</td>
+                    <td class="p-2 font-medium">${item.name}</td>
+                    <td class="p-2 text-center ${statusColor}">${item.status}</td>
                 `;
                 tbody.appendChild(tr);
             });
         }
 
+        // --- Head Designation Changes ---
         function handleHeadDesignationChange(val) {
             const customInput = document.getElementById('customHeadDesignation');
-            if(val === 'custom') {
+            if (val === 'custom') {
                 customInput.classList.remove('hidden');
             } else {
                 customInput.classList.add('hidden');
@@ -923,17 +1056,19 @@
 
         function getHeadDesignation() {
             const sel = document.getElementById('headDesignationSelect').value;
-            if(sel === 'custom') {
+            if (sel === 'custom') {
                 return document.getElementById('customHeadDesignation').value || 'कार्यालय प्रमुख';
             }
             return sel;
         }
 
+        // --- Master Update Function ---
         function updateAll() {
             const headDesig = getHeadDesignation();
             const office = document.getElementById('officeName').value || '';
             const taluka = document.getElementById('officeTaluka').value || '';
             const dist = document.getElementById('officeDistrict').value || '';
+            const place = document.getElementById('placeLocation').value || taluka;
             const higherAuth = document.getElementById('higherAuthority').value || '';
             const outward = document.getElementById('outwardNo').value || '';
             const propDate = document.getElementById('proposalDate').value || '';
@@ -946,16 +1081,25 @@
             const empDOB = document.getElementById('empDOB').value || '';
             const empCategory = document.getElementById('empCategory').value || '';
             const empAddress = document.getElementById('empAddress').value || '';
+            
             const empJoin = document.getElementById('empJoinDate').value || '';
+            const empJoinSession = document.getElementById('empJoinSession').value || 'मध्यान्हपूर्व';
+            
             const empProbEnd = document.getElementById('empProbationEndDate').value || '';
+            const empProbEndSession = document.getElementById('empProbEndSession').value || 'मध्यान्हानंतर';
+
+            const empComputerTyping = document.getElementById('empComputerTyping').value || '';
+            const empTotalChildren = document.getElementById('empTotalChildren').value || '';
+            const empPost2005Children = document.getElementById('empPost2005Children').value || '';
 
             const officeFull = `${office}, ता. ${taluka}, जि. ${dist}`;
             const headerTitle = `कार्यालय, ${headDesig}, ${office}`;
 
-            // Update Labels in Documents
+            // Update Labels across all documents
             document.querySelectorAll('.lbl_office_header').forEach(el => el.innerText = headerTitle);
             document.querySelectorAll('.lbl_sign_head').forEach(el => el.innerText = headDesig);
             document.querySelectorAll('.lbl_sign_office').forEach(el => el.innerText = `${office}, जि. ${dist}`);
+            document.querySelectorAll('.lbl_place').forEach(el => el.innerText = place);
 
             document.querySelectorAll('.lbl_emp_name').forEach(el => el.innerText = empName);
             document.querySelectorAll('.lbl_emp_post').forEach(el => el.innerText = empPost);
@@ -965,20 +1109,28 @@
             document.querySelectorAll('.lbl_emp_dob').forEach(el => el.innerText = empDOB);
             document.querySelectorAll('.lbl_emp_category').forEach(el => el.innerText = empCategory);
             document.querySelectorAll('.lbl_emp_address').forEach(el => el.innerText = empAddress);
+            
             document.querySelectorAll('.lbl_emp_joindate').forEach(el => el.innerText = empJoin);
+            document.querySelectorAll('.lbl_emp_joinsession').forEach(el => el.innerText = empJoinSession);
+            
             document.querySelectorAll('.lbl_emp_probend').forEach(el => el.innerText = empProbEnd);
+            document.querySelectorAll('.lbl_emp_probendsession').forEach(el => el.innerText = empProbEndSession);
+
+            document.querySelectorAll('.lbl_emp_computer_typing').forEach(el => el.innerText = empComputerTyping);
+            document.querySelectorAll('.lbl_emp_total_children').forEach(el => el.innerText = empTotalChildren);
+            document.querySelectorAll('.lbl_emp_post2005_children').forEach(el => el.innerText = empPost2005Children);
 
             document.querySelectorAll('.lbl_office_full').forEach(el => el.innerText = officeFull);
-            document.querySelectorAll('.lbl_office_taluka').forEach(el => el.innerText = taluka);
             document.querySelectorAll('.lbl_outward').forEach(el => el.innerText = outward);
             document.querySelectorAll('.lbl_prop_date').forEach(el => el.innerText = propDate);
 
             const lblHigher = document.getElementById('lbl_higher_auth');
-            if(lblHigher) lblHigher.innerText = higherAuth;
+            if (lblHigher) lblHigher.innerText = higherAuth;
             
             document.querySelectorAll('.lbl_office_sub').forEach(el => el.innerText = `जिल्हा: ${dist} | पिन कोड: ४३११२२`);
         }
 
+        // --- Letterhead Customization ---
         function toggleLetterheadDisplay() {
             const isChecked = document.getElementById('toggleLetterhead').checked;
             document.querySelectorAll('.office-header-content').forEach(el => {
@@ -994,7 +1146,6 @@
             });
         }
 
-        // Upload & Delete Letterhead System
         let currentLogoSrc = null;
 
         function uploadLogo(event) {
@@ -1015,16 +1166,16 @@
             document.getElementById('letterheadFileInput').value = '';
             document.querySelectorAll('.office-header-content').forEach(el => {
                 const img = el.querySelector('.uploaded-logo-img');
-                if(img) img.remove();
+                if (img) img.remove();
             });
             document.getElementById('btnDeleteLogo').classList.add('hidden');
         }
 
         function applyLogoToDocuments() {
-            if(!currentLogoSrc) return;
+            if (!currentLogoSrc) return;
             document.querySelectorAll('.office-header-content').forEach(el => {
                 let img = el.querySelector('.uploaded-logo-img');
-                if(!img) {
+                if (!img) {
                     img = document.createElement('img');
                     img.className = 'uploaded-logo-img mx-auto max-h-24 mb-2 object-contain';
                     el.prepend(img);
@@ -1033,7 +1184,7 @@
             });
         }
 
-        // PDF Generation Function
+        // --- PDF Generation ---
         function downloadPDF() {
             const element = document.getElementById('printableArea');
             const empName = document.getElementById('empName').value || 'Employee';
@@ -1052,9 +1203,10 @@
             html2pdf().set(opt).from(element).save();
         }
 
-        // Initialize on Load
+        // Initialize Everything on Load
         window.onload = function() {
-            initChecklistControls();
+            renderReferencesInputs();
+            renderChecklistControls();
             updateAll();
         };
     </script>
