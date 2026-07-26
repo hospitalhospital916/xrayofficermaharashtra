@@ -38,7 +38,7 @@
         .top-bar { background: var(--dark); color: #cbd5e1; padding: 6px 20px; font-size: 0.85rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
         .top-bar-left span { margin-right: 15px; font-weight: 600; }
         .top-bar-left i { color: var(--gold); margin-right: 5px; }
-        .top-bar-right a { color: #fff; text-decoration: none; margin-left: 12px; transition: 0.3s; }
+        .top-bar-right a { color: #fff; text-decoration: none; margin-left: 12px; transition: 0.3s; font-weight: 700; }
         .top-bar-right a:hover { color: var(--gold); }
 
         /* --- HEADER & LOGO BANNER --- */
@@ -150,14 +150,7 @@
         .admin-login-link { color: #94a3b8; font-size: 0.82rem; text-decoration: underline; margin-top: 15px; display: inline-block; transition: 0.3s; }
         .admin-login-link:hover { color: white; }
 
-        /* --- FLOATING LIVE CHAT BUTTON --- */
-        #floatingLiveChatWidget { position: fixed; bottom: 25px; right: 20px; z-index: 9990; display: flex; align-items: center; gap: 8px; cursor: pointer; }
-        .chat-pill-label { background: linear-gradient(135deg, #0B3D91, #07275e); color: #ffffff; padding: 6px 12px; border-radius: 20px; font-size: 0.82rem; font-weight: 800; box-shadow: 0 6px 18px rgba(11, 61, 145, 0.35); border: 1.5px solid #f39c12; }
-        .chat-floating-btn { width: 58px; height: 58px; background: linear-gradient(135deg, #0B3D91, #25D366); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.7rem; box-shadow: 0 8px 25px rgba(37, 211, 102, 0.5); border: 3px solid #ffffff; }
-
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
-
-        /* --- RESPONSIVE MEDIA QUERIES --- */
+         /* --- RESPONSIVE MEDIA QUERIES --- */
         @media (max-width: 992px) {
             header { text-align: center; justify-content: center; }
             .header-brand { flex-direction: column; text-align: center; }
@@ -192,7 +185,7 @@
             <div class="header-text">
                 <h1>क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना</h1>
                 <p>महाराष्ट्र राज्य</p>
-                <small>नोंदणीकृत अधिकृत कर्मचारी संघटना</small>
+                <small>सार्वजनिक आरोग्य विभाग, महाराष्ट्र शासन अंतर्गत नोंदणीकृत अधिकृत संघटना</small>
             </div>
         </div>
         <div class="header-actions">
@@ -273,7 +266,9 @@
             <p>
                 <b>क्ष-किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य</b> ही सार्वजनिक आरोग्य विभाग, महाराष्ट्र शासनांतर्गत कार्यरत सर्व क्ष-किरण वैज्ञानिक अधिकाऱ्यांची (गट-क) अधिकृत शासनमान्य संघटना आहे. राज्यातील आरोग्य संस्थांमध्ये सेवा बजावणाऱ्या अधिकारी व कर्मचाऱ्यांच्या सेवाविषयक अडचणी, पदोन्नती, TLD बॅज सुरक्षा, वेतन त्रुटी आणि बदली विषयीच्या न्याय्य हक्कांसाठी ही संघटना सतत तत्परतेने कार्य करते.
             </p>
-        </section><!-- Dynamic Document Folders Section (Synced with Firebase) -->
+        </section>
+
+        <!-- Dynamic Document Folders Section (Synced with Firebase) -->
         <div class="section-header" id="folders">
             <h2><i class="fa fa-folder-open"></i> परिपत्रके, नोटीस व शासकीय GR</h2>
             <p>ॲडमिन पॅनेलवरून अपडेट केलेले सर्व अधिकृत दस्तऐवज</p>
@@ -527,7 +522,6 @@
 
             let secBox = document.getElementById('adminIndexTabsSection');
             let btnBar = document.getElementById('dynamicTabsButtons');
-            let contentBox = document.getElementById('dynamicTabContentBox');
 
             if (tabsList.length > 0) {
                 secBox.style.display = 'block';
