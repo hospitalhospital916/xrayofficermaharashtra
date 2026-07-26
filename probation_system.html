@@ -3,363 +3,857 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>परिविक्षाधीन कालावधी प्रस्ताव व तपासणी सूची जनरेटर</title>
-    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <title>परिवीक्षाधीन कालावधी समाप्ती प्रस्ताव व प्रमाणपत्र जनरेटर</title>
+    
+    <!-- Google Fonts & Tailwind CSS -->
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- html2pdf.js for PDF Export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
-        :root {
-            --primary: #0B3D91;
-            --primary-dark: #07275e;
-            --danger: #dc2626;
-            --dark: #1e293b;
-            --light-bg: #f8fafc;
+        body {
+            font-family: 'Mukta', sans-serif;
+            background-color: #f1f5f9;
+            color: #1e293b;
         }
 
-        * { box-sizing: border-box; font-family: 'Mukta', sans-serif; margin: 0; padding: 0; }
-        body { background-color: var(--light-bg); color: #333; padding: 20px; }
+        /* Printable A4 Page Design */
+        .a4-page {
+            width: 210mm;
+            min-height: 297mm;
+            padding: 15mm 20mm 20mm 20mm;
+            margin: 15px auto;
+            background: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            position: relative;
+            box-sizing: border-box;
+            page-break-after: always;
+            word-wrap: break-word;
+        }
 
-        .container { max-width: 1050px; margin: 0 auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
-        .page-header { text-align: center; color: var(--primary); border-bottom: 3px solid var(--primary); padding-bottom: 10px; margin-bottom: 20px; }
+        .office-header {
+            border-bottom: 2px solid #000;
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
 
-        /* Form Grid */
-        .form-section { background: #f1f5f9; padding: 20px; border-radius: 8px; margin-bottom: 25px; border: 1px solid #cbd5e1; }
-        .section-title { font-size: 1.1rem; font-weight: 800; color: var(--primary); margin-bottom: 15px; border-bottom: 2px dashed #cbd5e1; padding-bottom: 5px; }
-
-        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
-        .form-group { display: flex; flex-direction: column; }
-        .form-group.full { grid-column: 1 / -1; }
-
-        label { font-weight: 700; font-size: 0.9rem; color: var(--dark); margin-bottom: 3px; }
-        input, select, textarea { padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; background: white; }
-
-        /* Letterhead Upload & Controls */
-        .upload-box { background: white; padding: 15px; border: 2px dashed var(--primary); border-radius: 8px; text-align: center; }
-        .btn-delete-lh { background: var(--danger); color: white; border: none; padding: 6px 12px; border-radius: 4px; font-weight: 700; cursor: pointer; margin-top: 8px; display: none; }
-
-        /* Margin Control Box */
-        .margin-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-
-        /* Buttons */
-        .btn-generate { background: var(--primary); color: white; border: none; padding: 12px 20px; font-size: 1.1rem; font-weight: 800; border-radius: 6px; cursor: pointer; width: 100%; margin-top: 15px; }
-        .btn-generate:hover { background: var(--primary-dark); }
-
-        /* Printable Area */
-        .print-page { background: white; border: 1px solid #ccc; padding: 20mm; margin-top: 20px; min-height: 297mm; position: relative; box-sizing: border-box; }
-        .letterhead-container { text-align: center; margin-bottom: 15px; }
-        .letterhead-container img { max-width: 100%; height: auto; display: block; margin: 0 auto; }
-
-        /* Document Formats */
-        .doc-title { text-align: center; font-weight: 800; font-size: 1.3rem; text-decoration: underline; margin-bottom: 15px; }
-        .doc-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        .doc-table th, .doc-table td { border: 1px solid #000; padding: 6px 8px; font-size: 0.92rem; vertical-align: top; }
-        .doc-table td:nth-child(1) { width: 6%; text-align: center; font-weight: bold; }
-        .doc-table td:nth-child(3) { width: 15%; text-align: center; font-weight: bold; }
-
-        .sig-box-container { display: flex; justify-content: space-between; margin-top: 40px; }
-        .sig-box { text-align: center; width: 45%; }
-
-        /* Print Media Rules */
+        /* Hide elements on Print */
         @media print {
-            body { background: white; padding: 0; margin: 0; }
-            .no-print { display: none !important; }
-            .container { max-width: 100%; padding: 0; box-shadow: none; }
-            .print-page { border: none; margin: 0; width: 100%; }
-            @page { size: A4; margin: 0; }
+            .no-print {
+                display: none !important;
+            }
+            body {
+                background: white !important;
+                padding: 0 !important;
+            }
+            .a4-page {
+                box-shadow: none !important;
+                margin: 0 !important;
+                width: 100% !important;
+                min-height: 100vh !important;
+                padding: var(--print-margin-top, 15mm) 15mm 15mm 15mm !important;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+        }
+
+        .table-bordered, .table-bordered th, .table-bordered td {
+            border: 1px solid #334155;
+            border-collapse: collapse;
         }
     </style>
 </head>
-<body>
+<body class="min-h-screen flex flex-col">
 
-<div class="container">
-    
-    <div class="page-header no-print">
-        <h2><i class="fa fa-print"></i> परिविक्षाधीन कालावधी प्रस्ताव व तपासणी सूची जनरेटर</h2>
-        <p>महाराष्ट्र शासन - सार्वजनिक आरोग्य विभाग व इतर सर्व शासकीय कार्यालयांसाठी</p>
-    </div>
+    <!-- Header Navigation -->
+    <header class="bg-indigo-900 text-white p-4 shadow-md no-print sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center space-x-3 space-x-reverse">
+                <i class="fa-solid fa-file-circle-check text-3xl text-amber-400"></i>
+                <div>
+                    <h1 class="text-xl font-bold">परिवीक्षाधीन कालावधी प्रस्ताव प्रणाली (Probation System)</h1>
+                    <p class="text-xs text-indigo-200">महाराष्ट्र शासन - आरोग्य सेवा विभाग | सर्व अधिकृत प्रस्ताव व प्रमाणपत्रे</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <button onclick="window.print()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg font-bold text-sm transition flex items-center gap-2 shadow">
+                    <i class="fa-solid fa-print"></i> सर्व डॉक्युमेंट्स प्रिंट करा
+                </button>
+                <button onclick="downloadPDF()" class="bg-amber-500 hover:bg-amber-600 text-slate-950 px-4 py-2 rounded-lg font-bold text-sm transition flex items-center gap-2 shadow">
+                    <i class="fa-solid fa-file-pdf"></i> PDF डाऊनलोड करा
+                </button>
+                <a href="member-dashboard.html" class="bg-slate-700 hover:bg-slate-800 text-white px-3 py-2 rounded-lg text-sm transition">
+                    <i class="fa-solid fa-arrow-left"></i> डॅशबोर्ड
+                </a>
+            </div>
+        </div>
+    </header>
 
-    <!-- FORM CONTROLS (NO PRINT) -->
-    <div class="no-print">
-        
-        <!-- 1. दस्तऐवज प्रकार व लेटरपॅड -->
-        <div class="form-section">
-            <div class="section-title"><i class="fa fa-cog"></i> १. दस्तऐवज प्रकार व लेटरपॅड पर्याय</div>
-            <div class="form-grid">
-                
-                <div class="form-group">
-                    <label>कागदपत्र फॉरमॅट निवडा:</label>
-                    <select id="docMode" onchange="renderSelectedDocument()">
-                        <option value="checklist">१. तपासणी सूची (२१ मुद्दे - Checklist)</option>
-                        <option value="office_letter">२. कार्यालयीन शिफारस / कव्हरिंग पत्र (Office Letter)</option>
-                        <option value="employee_app">३. कर्मचाऱ्याचा वैयक्तिक विनंती अर्ज (Personal Application)</option>
-                    </select>
+    <!-- Main Container: Input Form + Live Preview -->
+    <div class="max-w-7xl mx-auto w-full p-4 flex flex-col lg:flex-row gap-6 flex-grow">
+
+        <!-- Left Controls / Input Form Panel -->
+        <div class="w-full lg:w-1/3 bg-white p-5 rounded-2xl shadow-sm border border-slate-200 h-fit no-print space-y-6">
+            
+            <div class="border-b pb-3">
+                <h2 class="text-lg font-bold text-indigo-900 flex items-center gap-2">
+                    <i class="fa-solid fa-sliders text-indigo-600"></i> माहिती व प्रिंट सेटिंग्ज
+                </h2>
+                <p class="text-xs text-slate-500">येथे भरलेली माहिती खालील सर्व प्रमाणपत्रांमध्ये आपोआप अपडेट होईल.</p>
+            </div>
+
+            <!-- Tab Buttons for Form Categories -->
+            <div class="space-y-4">
+
+                <!-- 1. Head of Office & Office Details -->
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+                    <h3 class="font-bold text-sm text-slate-700 border-b pb-1"><i class="fa-solid fa-hospital text-indigo-600 ml-1"></i> १. कार्यालय व नियंत्रण अधिकारी</h3>
+                    
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600">कार्यालय प्रमुख / नियंत्रण अधिकारी पदनाम:</label>
+                        <select id="headDesignationSelect" onchange="handleHeadDesignationChange(this.value)" class="w-full mt-1 p-2 text-sm border rounded-lg focus:ring-2 focus:ring-indigo-500">
+                            <option value="वैद्यकीय अधीक्षक">वैद्यकीय अधीक्षक</option>
+                            <option value="जिल्हा शल्यचिकित्सक">जिल्हा शल्यचिकित्सक</option>
+                            <option value="तालुका वैद्यकीय अधिकारी">तालुका वैद्यकीय अधिकारी</option>
+                            <option value="उपसंचालक, आरोग्य सेवा">उपसंचालक, आरोग्य सेवा</option>
+                            <option value="custom">इतर (टाईप करा)</option>
+                        </select>
+                        <input type="text" id="customHeadDesignation" placeholder="सानुकूल पदनाम टाका" oninput="updateAll()" class="hidden w-full mt-2 p-2 text-sm border rounded-lg">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600">कार्यालयाचे / रुग्णालयाचे नाव:</label>
+                        <input type="text" id="officeName" value="ग्रामीण रुग्णालय, अ ब क" oninput="updateAll()" class="w-full mt-1 p-2 text-sm border rounded-lg">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600">तालुका:</label>
+                            <input type="text" id="officeTaluka" value="तालुका नाव" oninput="updateAll()" class="w-full mt-1 p-2 text-sm border rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600">जिल्हा:</label>
+                            <input type="text" id="officeDistrict" value="अकोला" oninput="updateAll()" class="w-full mt-1 p-2 text-sm border rounded-lg">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600">वरिष्ठ प्राधिकारी (ज्यांना प्रस्ताव पाठवायचा आहे):</label>
+                        <input type="text" id="higherAuthority" value="मा. उपसंचालक, आरोग्य सेवा, नागपूर मंडळ, नागपूर" oninput="updateAll()" class="w-full mt-1 p-2 text-sm border rounded-lg">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600">जावक क्रमांक:</label>
+                            <input type="text" id="outwardNo" value="प्रारुअ/आस्था/९११/२०२६" oninput="updateAll()" class="w-full mt-1 p-2 text-sm border rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600">प्रस्ताव दिनांक:</label>
+                            <input type="text" id="proposalDate" value="२६/०७/२०२६" oninput="updateAll()" class="w-full mt-1 p-2 text-sm border rounded-lg">
+                        </div>
+                    </div>
                 </div>
 
-                <div class="form-group full">
-                    <label>कार्यालयीन लेटरपॅड प्रतिमा (Letterhead Image) अपलोड करा (ऐच्छिक):</label>
-                    <div class="upload-box">
-                        <input type="file" id="lhInput" accept="image/*" onchange="handleLhUpload(event)">
-                        <p style="font-size:0.85rem; color:gray; margin-top:5px;">टीप: एकदा अपलोड केल्यावर ते कागदपत्रावर वरच्या बाजूला दिसेल. बदलण्यासाठी डिलीट करा.</p>
-                        <button type="button" class="btn-delete-lh" id="btnDeleteLh" onclick="deleteLh()"><i class="fa fa-trash"></i> लेटरपॅड हटवा (Delete)</button>
+                <!-- 2. Employee Details -->
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+                    <h3 class="font-bold text-sm text-slate-700 border-b pb-1"><i class="fa-solid fa-user-doctor text-indigo-600 ml-1"></i> २. कर्मचाऱ्याची (अर्जदार) माहिती</h3>
+                    
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600">कर्मचाऱ्याचे संपूर्ण नाव:</label>
+                        <input type="text" id="empName" value="श्री. रमेश प्रकाश पाटील" oninput="updateAll()" class="w-full mt-1 p-2 text-sm border rounded-lg">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600">पदनाम:</label>
+                            <input type="text" id="empPost" value="क्ष-किरण वैज्ञानिक अधिकारी" oninput="updateAll()" class="w-full mt-1 p-2 text-sm border rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600">संवर्ग / वर्ग:</label>
+                            <input type="text" id="empCadre" value="गट-क (वर्ग-३)" oninput="updateAll()" class="w-full mt-1 p-2 text-sm border rounded-lg">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600">वेतनश्रेणी (Pay Matrix):</label>
+                            <input type="text" id="empPayScale" value="S-13 : ३५४००-११२४००" oninput="updateAll()" class="w-full mt-1 p-2 text-sm border rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600">जन्म दिनांक:</label>
+                            <input type="text" id="empDOB" value="१५/०६/१९९५" oninput="updateAll()" class="w-full mt-1 p-2 text-sm border rounded-lg">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600">रुजू दिनांक (मध्यान्हपूर्व):</label>
+                            <input type="text" id="empJoinDate" value="०३/०६/२०२४" oninput="updateAll()" class="w-full mt-1 p-2 text-sm border rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-600">प्रोबेशन पूर्ण दिनांक:</label>
+                            <input type="text" id="empProbationEndDate" value="०२/०६/२०२५" oninput="updateAll()" class="w-full mt-1 p-2 text-sm border rounded-lg">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600">शैक्षणिक अर्हता:</label>
+                        <input type="text" id="empEdu" value="बी.एससी., एम.एससी. (पदव्युत्तर)" oninput="updateAll()" class="w-full mt-1 p-2 text-sm border rounded-lg">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600">मूळ राहण्याचे ठिकाण / पत्ता:</label>
+                        <input type="text" id="empAddress" value="मु.पो. वडगाव, ता. जि. अकोला" oninput="updateAll()" class="w-full mt-1 p-2 text-sm border rounded-lg">
+                    </div>
+                </div>
+
+                <!-- 3. Letterhead & Printing Customization -->
+                <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-200 space-y-3">
+                    <h3 class="font-bold text-sm text-indigo-900 border-b border-indigo-200 pb-1">
+                        <i class="fa-solid fa-print text-indigo-700 ml-1"></i> ३. लेटरहेड व मार्जिन सेटिंग्ज
+                    </h3>
+                    
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-semibold text-slate-700">रेडीमेड लेटरहेड दाखवा?</span>
+                        <input type="checkbox" id="toggleLetterhead" checked onchange="toggleLetterheadDisplay()" class="h-4 w-4 text-indigo-600">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600">वरची मार्जिन (Top Margin - Letterhead साठी):</label>
+                        <input type="range" id="marginTopSlider" min="0" max="60" value="15" oninput="adjustTopMargin(this.value)" class="w-full">
+                        <span class="text-xs text-indigo-700 font-bold" id="marginVal">15 mm</span>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600">ऑफिसचा लोगो / लेटरहेड इमेज अपलोड करा:</label>
+                        <input type="file" accept="image/*" onchange="uploadLogo(event)" class="w-full text-xs mt-1">
                     </div>
                 </div>
 
             </div>
         </div>
 
-        <!-- 2. प्रिंट मार्जिन सेटिंग्ज -->
-        <div class="form-section">
-            <div class="section-title"><i class="fa fa-arrows-alt"></i> २. प्रिंट मार्जिन सेटिंग्ज (Millimeters - mm मध्ये)</div>
-            <p style="font-size: 0.85rem; color:#64748b; margin-bottom: 10px;">जर तुम्ही प्री-प्रिंटेड कागदावर प्रिंट करत असाल तर वरची मार्जिन (Top Margin) वाढवून मजकूर खाली सरकवू शकता.</p>
-            <div class="margin-grid">
-                <div class="form-group"><label>Top Margin (mm):</label><input type="number" id="mTop" value="15" onchange="applyMargins()"></div>
-                <div class="form-group"><label>Bottom Margin (mm):</label><input type="number" id="mBottom" value="15" onchange="applyMargins()"></div>
-                <div class="form-group"><label>Left Margin (mm):</label><input type="number" id="mLeft" value="15" onchange="applyMargins()"></div>
-                <div class="form-group"><label>Right Margin (mm):</label><input type="number" id="mRight" value="15" onchange="applyMargins()"></div>
-            </div>
-        </div>
+        <!-- Right Preview Container (All Generated Documents A4 Format) -->
+        <div class="w-full lg:w-2/3 flex flex-col items-center" id="printableArea">
 
-        <!-- 3. कर्मचारी व कार्यालयीन माहिती -->
-        <div class="form-section">
-            <div class="section-title"><i class="fa fa-user"></i> ३. कर्मचारी व कार्यालयाचा तपशील</div>
-            <div class="form-grid">
-                <div class="form-group"><label>कर्मचाऱ्याचे संपूर्ण नाव:</label><input type="text" id="empName" value="श्री. महेश शिवदास हंगे" oninput="renderSelectedDocument()"></div>
-                <div class="form-group"><label>पदनाम:</label><input type="text" id="empDesig" value="क्ष-किरण वैज्ञानिक अधिकारी" oninput="renderSelectedDocument()"></div>
-                <div class="form-group"><label>वेतन संरचना (Pay Scale):</label><input type="text" id="empPay" value="S-13 : 35400-112400" oninput="renderSelectedDocument()"></div>
-                <div class="form-group"><label>कार्यालयाचे नाव:</label><input type="text" id="empOffice" value="ग्रामीण रुग्णालय धानोरा, जि. गडचिरोली" oninput="renderSelectedDocument()"></div>
-                <div class="form-group"><label>जावक क्रमांक (Outward No.):</label><input type="text" id="outNo" value="ग्रारुधा/आस्था/582/2024" oninput="renderSelectedDocument()"></div>
-                <div class="form-group"><label>दिनांक:</label><input type="date" id="docDate" oninput="renderSelectedDocument()"></div>
-                <div class="form-group"><label>सेवेत रुजू दिनांक:</label><input type="date" id="joinDate" oninput="renderSelectedDocument()"></div>
-                <div class="form-group"><label>परिविक्षा कालावधी पूर्ण दिनांक:</label><input type="date" id="probEndDate" oninput="renderSelectedDocument()"></div>
-                <div class="form-group full"><label>प्रति (कोणाकडे सादर करायचे):</label><input type="text" id="recipient" value="मा. उपसंचालक, आरोग्य सेवा, नागपूर मंडळ, नागपूर" oninput="renderSelectedDocument()"></div>
-            </div>
-        </div>
+            <!-- DOC 1: प्रस्तावाची मुख्य शिफारस नोंद / जावक पत्र -->
+            <div class="a4-page text-slate-900 text-sm leading-relaxed" id="doc1">
+                <div class="office-header-content text-center mb-4">
+                    <h2 class="text-base font-bold uppercase tracking-wide" id="lbl_office_header_1">कार्यालय, वैद्यकीय अधीक्षक, ग्रामीण रुग्णालय, अ ब क</h2>
+                    <p class="text-xs" id="lbl_office_sub_1">जिल्हा: अकोला | पिन कोड: ४४४००१</p>
+                    <p class="text-xs">ई-मेल: hospital.office@maharashtra.gov.in | फोन: ०७२४-२५४०५४</p>
+                    <hr class="border-slate-800 my-2">
+                </div>
 
-        <button class="btn-generate" onclick="window.print()"><i class="fa fa-print"></i> प्रिंट काढा / PDF सेव्ह करा</button>
-    </div>
+                <div class="flex justify-between font-semibold text-xs my-3">
+                    <div>जा.क्र./<span class="lbl_outward">प्रारुअ/आस्था/९११/२०२६</span></div>
+                    <div>दिनांक: <span class="lbl_prop_date">२६/०७/२०२६</span></div>
+                </div>
 
-    <!-- PRINTABLE AREA (DYNAMICALLY RENDERED) -->
-    <div class="print-page" id="printablePage">
-        
-        <!-- Letterhead Header (Image Displayed if Uploaded) -->
-        <div class="letterhead-container" id="lhDisplay" style="display: none;">
-            <img id="lhImgPreview" src="" alt="Office Letterhead">
-        </div>
+                <div class="my-4 space-y-1">
+                    <p class="font-bold">प्रति,</p>
+                    <p class="font-bold ml-4" id="lbl_higher_auth">मा. उपसंचालक, आरोग्य सेवा, नागपूर मंडळ, नागपूर</p>
+                </div>
 
-        <!-- Dynamic Output Content -->
-        <div id="documentContent"></div>
+                <div class="my-4 font-bold text-center bg-slate-100 p-2 rounded border border-slate-300">
+                    विषय: परिवीक्षाधीन कालावधी म्हणून सरळसेवेने तात्पुरत्या स्वरूपात दिलेली नियुक्ती नियमित करण्याबाबत.
+                </div>
 
-    </div>
+                <div class="text-xs my-2 font-semibold">
+                    संदर्भ: १) सामान्य प्रशासन विभाग, शासन परिपत्रक क्र. स्थाप्रप-१४१४/(प्र.क्र. ७३/१४)/१३-अ, दिनांक ११ सप्टेंबर २०१४.<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;२) नियुक्ती आदेश क्र. तांत्रिक-आस्था/नियुक्ती/<span class="lbl_emp_post_code">क्ष-किवैअ</span>/२०२४, दिनांक ०२/०६/२०२४.
+                </div>
 
-</div>
-
-<script>
-    // आजची तारीख डिफॉल्ट सेट करणे
-    document.getElementById('docDate').valueAsDate = new Date();
-
-    // 1. LETTERHEAD UPLOAD & DELETE LOGIC
-    let uploadedLhBase64 = null;
-
-    function handleLhUpload(event) {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                uploadedLhBase64 = e.target.result;
-                document.getElementById('lhImgPreview').src = uploadedLhBase64;
-                document.getElementById('lhDisplay').style.display = 'block';
-                document.getElementById('btnDeleteLh').style.display = 'inline-block';
-            };
-            reader.readAsDataURL(file);
-        }
-    }
-
-    function deleteLh() {
-        uploadedLhBase64 = null;
-        document.getElementById('lhInput').value = '';
-        document.getElementById('lhImgPreview').src = '';
-        document.getElementById('lhDisplay').style.display = 'none';
-        document.getElementById('btnDeleteLh').style.display = 'none';
-    }
-
-    // 2. DYNAMIC MARGIN ADJUSTMENT
-    function applyMargins() {
-        const page = document.getElementById('printablePage');
-        const top = document.getElementById('mTop').value || 15;
-        const bottom = document.getElementById('mBottom').value || 15;
-        const left = document.getElementById('mLeft').value || 15;
-        const right = document.getElementById('mRight').value || 15;
-
-        page.style.paddingTop = top + 'mm';
-        page.style.paddingBottom = bottom + 'mm';
-        page.style.paddingLeft = left + 'mm';
-        page.style.paddingRight = right + 'mm';
-    }
-
-    // Date Formatter
-    function getFormattedDate(dateId) {
-        const val = document.getElementById(dateId).value;
-        if (!val) return "............";
-        const [y, m, d] = val.split('-');
-        return `${d}/${m}/${y}`;
-    }
-
-    // 3. RENDER DOCUMENTS
-    function renderSelectedDocument() {
-        applyMargins();
-        const mode = document.getElementById('docMode').value;
-        const name = document.getElementById('empName').value || "..................";
-        const desig = document.getElementById('empDesig').value || "..................";
-        const pay = document.getElementById('empPay').value || "..................";
-        const office = document.getElementById('empOffice').value || "..................";
-        const outNo = document.getElementById('outNo').value || "..................";
-        const date = getFormattedDate('docDate');
-        const joinDate = getFormattedDate('joinDate');
-        const probEndDate = getFormattedDate('probEndDate');
-        const recipient = document.getElementById('recipient').value || "..................";
-
-        const contentDiv = document.getElementById('documentContent');
-
-        if (mode === 'checklist') {
-            // FORMAT 1: CHECKLIST (21 POINTS FROM IMAGE)
-            contentDiv.innerHTML = `
-                <div class="doc-title">तपासणी सूची<br><span style="font-size:1rem; font-weight:normal;">(परिविक्षाधीन कालावधी समाप्त करण्याबाबत)</span></div>
-                
-                <p style="font-size:1rem; margin-bottom:12px;">
-                    <strong>कर्मचाऱ्याचे नाव:</strong> ${name} &nbsp;&nbsp;&nbsp;&nbsp; <strong>पदनाम:</strong> ${desig}<br>
-                    <strong>कार्यालयाचे नाव:</strong> ${office}
+                <p class="mt-4 text-justify">महोदय / महोदया,</p>
+                <p class="indent-8 text-justify mt-2">
+                    उपरोक्त विषयाच्या अनुषंगाने सविनय प्रस्ताव सादर करण्यात येतो की, <span class="lbl_office_full">ग्रामीण रुग्णालय अ ब क</span> येथे कार्यरत असणारे <span class="font-bold lbl_emp_name">श्री. रमेश प्रकाश पाटील</span> (<span class="lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, <span class="lbl_emp_cadre">गट-क</span>, वेतन संरचना <span class="lbl_emp_payscale">S-13 : ३५४००-११२४००</span>) यांना १ वर्षाचा परिवीक्षाधीन कालावधी म्हणून तात्पुरत्या स्वरूपात नेमणूक करण्यात आली होती. त्यानुसार सदर कर्मचारी दिनांक <span class="font-bold lbl_emp_joindate">०३/०६/२०२४</span> ला मध्यान्हपूर्व रुजू झाले होते.
                 </p>
 
-                <table class="doc-table">
+                <p class="indent-8 text-justify mt-3">
+                    संदर्भ क्र. १ नुसार आणि विषयाच्या अनुषंगाने, सदर कर्मचाऱ्याचा १ वर्षाचा परिवीक्षाधीन कालावधी दिनांक <span class="font-bold lbl_emp_probend">०२/०६/२०२५</span> ला मध्यान्हानंतर यशस्वीरीत्या पूर्ण झाला आहे. या कालावधीत त्यांनी नियुक्ती आदेशातील नमूद सर्व अटी व शर्ती समाधानकारकरित्या पूर्ण केल्या आहेत.
+                </p>
+
+                <p class="indent-8 text-justify mt-3">
+                    त्यामुळे <span class="font-bold lbl_emp_name">श्री. रमेश प्रकाश पाटील</span> यांना देण्यात आलेली तात्पुरत्या स्वरूपातील नेमणूक नियमित करण्याचा (परिवीक्षाधीन कालावधी समाप्त करण्याचा) प्रस्ताव आवश्यक सर्व १८ कागदपत्रांच्या सूचीसह पुढील कार्यवाहीस्तव सविनय शिफारशीसह सादर करण्यात येत आहे.
+                </p>
+
+                <div class="mt-12 flex justify-between items-end">
+                    <div class="text-xs font-semibold">
+                        सहपत्र: सूचीनुसार सर्व आवश्यक कागदपत्रे.
+                    </div>
+                    <div class="text-center font-bold">
+                        <br><br>
+                        <p id="lbl_sign_head_1">वैद्यकीय अधीक्षक</p>
+                        <p class="text-xs font-normal" id="lbl_sign_office_1">ग्रामीण रुग्णालय, अ ब क</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DOC 2: आवश्यक कागदपत्रांची सूची (Checklist) -->
+            <div class="a4-page text-slate-900 text-sm leading-relaxed" id="doc2">
+                <div class="text-center font-bold text-base mb-4 border-b-2 border-slate-800 pb-2">
+                    परिवीक्षाधीन कालावधी समाप्ती प्रस्तावासोबतच्या आवश्यक कागदपत्रांची पडताळणी सूची (Checklist)
+                </div>
+
+                <table class="w-full text-xs table-bordered my-4">
                     <thead>
-                        <tr>
-                            <th>अ.क्र.</th>
-                            <th>बाब / घटक</th>
-                            <th>आहे / नाही</th>
+                        <tr class="bg-slate-200">
+                            <th class="p-2 text-center w-12">अ. क्र.</th>
+                            <th class="p-2 text-left">आवश्यक कागदपत्रांचा तपशील</th>
+                            <th class="p-2 text-center w-32">जोडले आहे / नाही</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr><td>१</td><td>परिविक्षा कालावधी समाप्त करण्याबाबत संबंधित कर्मचाऱ्याचा विनंती अर्ज</td><td>जोडले आहे</td></tr>
-                        <tr><td>२</td><td>परिविक्षा कालावधीकरीता १ ते १८ मुद्द्यांबाबतचे विवरणपत्र</td><td>जोडले आहे</td></tr>
-                        <tr><td>३</td><td>कर्मचाऱ्याचे यापुढे शासन सेवेत राहण्यास इच्छुक असल्याबाबतचे संमतीपत्र</td><td>जोडले आहे</td></tr>
-                        <tr><td>४</td><td>मुख्यालयात वास्तव्याने राहात असल्याबाबतचे प्रमाणपत्र</td><td>जोडले आहे</td></tr>
-                        <tr><td>५</td><td>परिविक्षा कालावधीमध्ये कर्मचाऱ्याने उपभोगलेल्या रजेबाबत प्रमाणपत्र</td><td>जोडले आहे</td></tr>
-                        <tr><td>६</td><td>ना-तक्रार / ना-चौकशी प्रमाणपत्र</td><td>जोडले आहे</td></tr>
-                        <tr><td>७</td><td>संबंधित कर्मचारी हा नेमणूक आदेशातील सर्व अटी व शर्तीची पूर्तता करतो किंवा कसे? या बाबत कार्यालय प्रमुखाचे प्रमाणपत्र.</td><td>जोडले आहे</td></tr>
-                        <tr><td>८</td><td>कामाचा विशेष अहवाल</td><td>जोडले आहे</td></tr>
-                        <tr><td>९</td><td>कार्यमूल्यमापन व दर्जा विषयक माहिती</td><td>जोडले आहे</td></tr>
-                        <tr><td>१०</td><td>पोलीस चारित्र्य पडताळणी अहवाल</td><td>जोडले आहे</td></tr>
-                        <tr><td>११</td><td>सरळसेवेने नेमणुकीचे आदेश</td><td>जोडले आहे</td></tr>
-                        <tr><td>१२</td><td>जिल्हा शल्यचिकित्सक यांचेकडील वैद्यकीय तपासणी अहवाल</td><td>जोडले आहे</td></tr>
-                        <tr><td>१३</td><td>जात वैधता पडताळणी प्रमाणपत्र</td><td>जोडले आहे</td></tr>
-                        <tr><td>१४</td><td>एतदर्थ मंडळाची मराठी/हिंदी परीक्षा उत्तीर्ण होण्यापासून सुट देण्यात आलेल्या आदेशाची प्रत</td><td>जोडले आहे</td></tr>
-                        <tr><td>१५</td><td>संगणक हाताळणी प्रमाणपत्र (MS-CIT/CCC)</td><td>जोडले आहे</td></tr>
-                        <tr><td>१६</td><td>प्रशिक्षण आवश्यक असल्यास, प्रशिक्षण उत्तीर्ण झाल्याचा आदेश / प्रत</td><td>लागू नाही</td></tr>
-                        <tr><td>१७</td><td>परिविक्षाधीन कालावधीतील गोपनीय अहवाल प्रस्तावासोबत जोडलेले नाही</td><td>होय</td></tr>
-                        <tr><td>१८</td><td>सदर प्रकरणी कार्यालय प्रमुखाची शिफारस</td><td>जोडले आहे</td></tr>
-                        <tr><td>१९</td><td>अलीकडच्या वित्तीय वर्षाचे मत्ता व दायित्व विवरणपत्र-१, २ व ३ कर्मचाऱ्याने कार्यालयास सादर केल्याबाबत कार्यालय प्रमुखाचे प्रमाणपत्र</td><td>जोडले आहे</td></tr>
-                        <tr><td>२०</td><td>लहान कुटुंबाचे प्रमाणपत्र (प्रतिज्ञापन)</td><td>जोडले आहे</td></tr>
-                        <tr><td>२१</td><td>पॅरामेडीकल कौन्सिल प्रमाणपत्र (लागू असल्यास)</td><td>जोडले आहे</td></tr>
+                        <tr><td class="p-2 text-center">१</td><td class="p-2">नियुक्ती आदेशाची साक्षांकित प्रत</td><td class="p-2 text-center font-semibold text-emerald-700">जोडले आहे</td></tr>
+                        <tr><td class="p-2 text-center">२</td><td class="p-2">सेवेत रुजू प्रतिनिवेदन व रुजू अहवाल</td><td class="p-2 text-center font-semibold text-emerald-700">जोडले आहे</td></tr>
+                        <tr><td class="p-2 text-center">३</td><td class="p-2">परिवीक्षाधीन कालावधीतील रजेचे प्रमाणपत्र</td><td class="p-2 text-center font-semibold text-emerald-700">जोडले आहे</td></tr>
+                        <tr><td class="p-2 text-center">४</td><td class="p-2">कामाचा विशेष अहवाल</td><td class="p-2 text-center font-semibold text-emerald-700">जोडले आहे</td></tr>
+                        <tr><td class="p-2 text-center">५</td><td class="p-2">परिवीक्षाधीन कालावधीतील गोपनीय अहवाल (CR) / कार्यमूल्यमापन</td><td class="p-2 text-center font-semibold text-emerald-700">जोडले आहे</td></tr>
+                        <tr><td class="p-2 text-center">६</td><td class="p-2">तक्रार, विभागीय चौकशी किंवा न्यायालयीन प्रकरण नसल्याचे प्रमाणपत्र</td><td class="p-2 text-center font-semibold text-emerald-700">जोडले आहे</td></tr>
+                        <tr><td class="p-2 text-center">७</td><td class="p-2">मराठी व हिंदी भाषा परीक्षा उत्तीर्ण/सूट प्रमाणपत्र</td><td class="p-2 text-center font-semibold text-emerald-700">जोडले आहे</td></tr>
+                        <tr><td class="p-2 text-center">८</td><td class="p-2">विहित संगणक अभ्यासक्रम उत्तीर्ण (MS-CIT/CCC) प्रमाणपत्र</td><td class="p-2 text-center font-semibold text-emerald-700">जोडले आहे</td></tr>
+                        <tr><td class="p-2 text-center">९</td><td class="p-2">नाव बदललेले असल्यास शासन राजपत्राची प्रत (Gazette)</td><td class="p-2 text-center italic text-slate-500">लागू नाही</td></tr>
+                        <tr><td class="p-2 text-center">१०</td><td class="p-2">जात प्रमाणपत्र व जात वैधता प्रमाणपत्र प्रत (Caste Validity)</td><td class="p-2 text-center font-semibold text-emerald-700">जोडले आहे</td></tr>
+                        <tr><td class="p-2 text-center">११</td><td class="p-2">नियुक्तीपश्चात दिलेले जिल्हा शल्यचिकित्सक यांचे वैद्यकीय प्रमाणपत्र</td><td class="p-2 text-center font-semibold text-emerald-700">जोडले आहे</td></tr>
+                        <tr><td class="p-2 text-center">१२</td><td class="p-2">पोलीस विभागाकडून प्राप्त चारित्र्य व वर्तणूक पडताळणी अहवाल प्रत</td><td class="p-2 text-center font-semibold text-emerald-700">जोडले आहे</td></tr>
+                        <tr><td class="p-2 text-center">१३</td><td class="p-2">लहान कुटुंबाचे विहित प्रतिज्ञापत्र (नमुना 'अ')</td><td class="p-2 text-center font-semibold text-emerald-700">जोडले आहे</td></tr>
+                        <tr><td class="p-2 text-center">१४</td><td class="p-2">मत्ता व दायित्वाचे विवरणपत्र प्रमाणपत्र</td><td class="p-2 text-center font-semibold text-emerald-700">जोडले आहे</td></tr>
+                        <tr><td class="p-2 text-center">१५</td><td class="p-2">कार्यालय प्रमुखाचा अभिप्राय व शिफारस प्रमाणपत्र</td><td class="p-2 text-center font-semibold text-emerald-700">जोडले आहे</td></tr>
+                        <tr><td class="p-2 text-center">१६</td><td class="p-2">नेमणूक आदेशातील सर्व अटी व शर्ती पूर्ण केल्याचे प्रमाणपत्र</td><td class="p-2 text-center font-semibold text-emerald-700">जोडले आहे</td></tr>
+                        <tr><td class="p-2 text-center">१७</td><td class="p-2">मुख्यालयात प्रत्यक्ष वास्तव्याचे प्रमाणपत्र</td><td class="p-2 text-center font-semibold text-emerald-700">जोडले आहे</td></tr>
+                        <tr><td class="p-2 text-center">१८</td><td class="p-2">खेळाडू / समांतर आरक्षण पडताळणी अहवाल (लागू असल्यास)</td><td class="p-2 text-center font-semibold text-emerald-700">जोडले आहे</td></tr>
                     </tbody>
                 </table>
 
-                <div class="sig-box-container">
-                    <div></div>
-                    <div class="sig-box">
+                <div class="mt-12 text-right font-bold">
+                    <br><br>
+                    <p id="lbl_sign_head_2">वैद्यकीय अधीक्षक</p>
+                    <p class="text-xs font-normal" id="lbl_sign_office_2">ग्रामीण रुग्णालय, अ ब क</p>
+                </div>
+            </div>
+
+            <!-- DOC 3: अर्जदाराचे रुजू प्रतिनिवेदन (Applicant's Joining Application) -->
+            <div class="a4-page text-slate-900 text-sm leading-relaxed" id="doc3">
+                <div class="text-right font-semibold text-xs mb-4">
+                    दिनांक: <span class="lbl_emp_joindate">०३/०६/२०२४</span>
+                </div>
+
+                <div class="space-y-1 my-4">
+                    <p class="font-bold">प्रति,</p>
+                    <p class="font-bold ml-4" id="lbl_to_head_3">मा. वैद्यकीय अधीक्षक,</p>
+                    <p class="ml-4" id="lbl_to_office_3">ग्रामीण रुग्णालय, अ ब क</p>
+                </div>
+
+                <div class="my-4 font-bold text-center bg-slate-50 p-2 border">
+                    विषय: शासनाचे सेवेत मूळ पदावर रुजू करून घेण्याबाबत...
+                </div>
+
+                <div class="text-xs my-2 font-semibold">
+                    संदर्भ: मा. उपसंचालक, आरोग्य सेवा यांचे नियुक्ती आदेश जा.क्र. तांत्रिक-आस्था/२०२४, दिनांक ०२/०६/२०२४.
+                </div>
+
+                <p class="mt-4 indent-8 text-justify">आदरणीय महोदय,</p>
+                <p class="indent-8 text-justify mt-2">
+                    उपरोक्त संदर्भीय आदेशान्वये माझी निवड <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span> (<span class="lbl_emp_cadre">गट-क</span>) या पदावर सरळसेवेने झालेली आहे. त्यानुसार मला <span class="lbl_office_full">ग्रामीण रुग्णालय अ ब क</span> येथे पदस्थापना देण्यात आलेली आहे.
+                </p>
+
+                <p class="indent-8 text-justify mt-3">
+                    मी आज दिनांक <span class="font-bold lbl_emp_joindate">०३/०६/२०२४</span> रोजी मध्यान्हपूर्व वेळेत आपल्या रुग्णालयात <span class="lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span> या पदावर कर्तव्यावर रुजू होत आहे. तरी कृपया मला सेवेत रुजू करून घेण्याची कृपा करावी.
+                </p>
+
+                <div class="mt-20 flex justify-between items-end">
+                    <div class="text-xs">
+                        स्थान: <span class="lbl_office_taluka">अ ब क</span><br>
+                        दिनांक: <span class="lbl_emp_joindate">०३/०६/२०२४</span>
+                    </div>
+                    <div class="text-center font-bold">
+                        आपला नम्र,<br><br><br>
+                        <p class="lbl_emp_name">श्री. रमेश प्रकाश पाटील</p>
+                        <p class="text-xs font-normal lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DOC 4: रजेचे प्रमाणपत्र (Leave Certificate) -->
+            <div class="a4-page text-slate-900 text-sm leading-relaxed" id="doc4">
+                <div class="office-header-content text-center mb-4">
+                    <h2 class="text-base font-bold uppercase" id="lbl_office_header_4">कार्यालय, वैद्यकीय अधीक्षक, ग्रामीण रुग्णालय, अ ब क</h2>
+                    <hr class="border-slate-800 my-2">
+                </div>
+
+                <div class="text-center font-bold text-base my-6 underline">
+                    परिवीक्षाधीन कालावधीतील रजेचे प्रमाणपत्र
+                </div>
+
+                <p class="indent-8 text-justify mt-6 leading-loose text-base">
+                    प्रमाणित करण्यात येते की, <span class="font-bold text-lg lbl_emp_name">श्री. रमेश प्रकाश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यालय: <span class="font-bold lbl_office_full">ग्रामीण रुग्णालय अ ब क, जि. अकोला</span> यांनी त्यांच्या परिवीक्षाधीन कालावधीत (दिनांक <span class="font-bold lbl_emp_joindate">०३/०६/२०२४</span> ते <span class="font-bold lbl_emp_probend">०२/०६/२०२५</span>) अनुज्ञेय किरकोळ रजेव्यतिरिक्त (CL) कोणत्याही प्रकारची असाधारण, वैद्यकीय अथवा इतर दीर्घ रजा उपभोगलेली नाही.
+                </p>
+
+                <p class="mt-6 text-justify">
+                    करिता सदरचे प्रमाणपत्र परिवीक्षाधीन कालावधी समाप्ती प्रस्तावासाठी देण्यात येत आहे.
+                </p>
+
+                <div class="mt-24 flex justify-between items-end">
+                    <div class="text-xs font-semibold">
+                        ठिकाण: <span class="lbl_office_taluka">अ ब क</span><br>
+                        दिनांक: <span class="lbl_prop_date">२६/०७/२०२६</span>
+                    </div>
+                    <div class="text-center font-bold">
                         <br><br>
-                        _______________________________<br>
-                        <strong>कार्यालय प्रमुख / वैद्यकीय अधीक्षक</strong><br>
-                        ${office}
+                        <p id="lbl_sign_head_4">वैद्यकीय अधीक्षक</p>
+                        <p class="text-xs font-normal" id="lbl_sign_office_4">ग्रामीण रुग्णालय, अ ब क</p>
                     </div>
                 </div>
-            `;
-        } else if (mode === 'office_letter') {
-            // FORMAT 2: OFFICE LETTERHEAD PROPOSAL
-            contentDiv.innerHTML = `
-                <div style="display:flex; justify-content:space-between; margin-bottom:15px; font-weight:bold;">
-                    <div>जा.क्रं. ${outNo}</div>
-                    <div>दिनांक: ${date}</div>
+            </div>
+
+            <!-- DOC 5: कामाचा विशेष अहवाल (Special Work Report) -->
+            <div class="a4-page text-slate-900 text-sm leading-relaxed" id="doc5">
+                <div class="office-header-content text-center mb-4">
+                    <h2 class="text-base font-bold uppercase" id="lbl_office_header_5">कार्यालय, वैद्यकीय अधीक्षक, ग्रामीण रुग्णालय, अ ब क</h2>
+                    <hr class="border-slate-800 my-2">
                 </div>
 
-                <div style="margin-bottom:15px; line-height:1.6;">
-                    <strong>प्रति,</strong><br>
-                    ${recipient}
+                <div class="text-center font-bold text-base my-4 underline">
+                    कामाचा विशेष अहवाल
                 </div>
 
-                <div style="font-weight:bold; background:#f1f5f9; padding:8px; border:1px solid #000; margin-bottom:15px;">
-                    विषय: ${name} (${desig}) यांचा परिविक्षाधीन कालावधी समाप्त करण्याबाबत.
-                </div>
-
-                <p style="font-weight:bold; margin-bottom:10px;">संदर्भ: जा. क्र. ${outNo} दि. ${date} रोजीचा मूळ प्रस्ताव.</p>
-
-                <p style="text-indent: 40px; line-height:1.8; text-align:justify;">
-                    उपरोक्त विषयाच्या अनुषंगाने सविनय सादर करण्यात येते की, ${name}, ${desig}, ${office} (वेतन संरचना ${pay}) यांचा १/२ वर्षांचा परिविक्षाधीन कालावधी दिनांक <strong>${joinDate}</strong> ते <strong>${probEndDate}</strong> यशस्वीरीत्या पूर्ण झालेला आहे.
+                <p class="text-xs font-semibold text-center mb-4">
+                    (अहवाल कालावधी: दिनांक <span class="lbl_emp_joindate">०३/०६/२०२४</span> ते <span class="lbl_emp_probend">०२/०६/२०२५</span> पर्यंत)
                 </p>
 
-                <p style="text-indent: 40px; line-height:1.8; text-align:justify; margin-top:10px;">
-                    सदर कालावधीत त्यांनी नियुक्ती आदेशातील नमूद सर्व अटी व शर्ती समाधानकारकरित्या पूर्ण केल्या असून, त्यांचा गोपनीय अहवाल, पोलीस पडताळणी व इतर सर्व आवश्यक कागदपत्रे जोडलेली आहेत. तरी सदर कर्मचाऱ्याचा परिविक्षाधीन कालावधी समाप्त करून सेवा नियमित करण्याचा आदेश निर्गमित व्हावा, ही सविनय शिफारस सादर.
+                <table class="w-full table-bordered my-4 text-sm">
+                    <tbody>
+                        <tr>
+                            <td class="p-3 font-bold w-1/3">१) कर्मचाऱ्याचे संपूर्ण नाव :-</td>
+                            <td class="p-3 font-bold text-indigo-900 lbl_emp_name">श्री. रमेश प्रकाश पाटील</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-bold">२) पदनाम व संवर्ग :-</td>
+                            <td class="p-3"><span class="lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span> (<span class="lbl_emp_cadre">गट-क</span>)</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-bold">३) शैक्षणिक अर्हता :-</td>
+                            <td class="p-3 lbl_emp_edu">बी.एससी., एम.एससी. (पदव्युत्तर)</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-bold">४) कामाची गुणवत्ता व स्वरूप :-</td>
+                            <td class="p-3 font-bold text-emerald-800">उत्कृष्ट व वक्तशीर</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-bold">५) वर्तणूक व चारित्र्य :-</td>
+                            <td class="p-3 font-bold text-emerald-800">उत्तम व प्रामाणिक</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3 font-bold">६) सेवेतील तत्परता व क्षमता :-</td>
+                            <td class="p-3 font-bold text-emerald-800">समाधानकारक व कौशल्यात्मक</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p class="indent-8 text-justify mt-4">
+                    सदर कर्मचारी यांनी परिवीक्षाधीन कालावधीत नेमून दिलेली सर्व तांत्रिक व प्रशासकीय कामे अत्यंत जबाबदारीने व निष्ठेने पार पाडली आहेत.
                 </p>
 
-                <p style="margin-top:15px;"><strong>सहपत्र:</strong> वरील २१ मुद्द्यांच्या सूचीनुसार संपूर्ण प्रस्तावाची छायांकित प्रत.</p>
-
-                <div class="sig-box-container">
-                    <div></div>
-                    <div class="sig-box">
-                        <br><br><br>
-                        _______________________________<br>
-                        <strong>कार्यालय प्रमुख / वैद्यकीय अधीक्षक</strong><br>
-                        ${office}
+                <div class="mt-20 flex justify-between items-end">
+                    <div class="text-xs font-semibold">
+                        ठिकाण: <span class="lbl_office_taluka">अ ब क</span><br>
+                        दिनांक: <span class="lbl_prop_date">२६/०७/२०२६</span>
                     </div>
-                </div>
-            `;
-        } else if (mode === 'employee_app') {
-            // FORMAT 3: EMPLOYEE PERSONAL APPLICATION
-            contentDiv.innerHTML = `
-                <div style="text-align:right; margin-bottom:15px; font-size:1rem; line-height:1.5;">
-                    दिनांक: ${date}<br>
-                    ठिकाण: .................
-                </div>
-
-                <div style="margin-bottom:15px; line-height:1.6;">
-                    <strong>प्रति,</strong><br>
-                    ${recipient}<br>
-                    <strong>(मार्फत: कार्यालय प्रमुख, ${office})</strong>
-                </div>
-
-                <div style="font-weight:bold; background:#f8fafc; padding:8px; border:1px solid #000; margin-bottom:15px;">
-                    विषय: परिविक्षाधीन कालावधी (Probation Period) समाप्त करण्याबाबत व सेवेत नियमित करण्याबाबत विनंती अर्ज.
-                </div>
-
-                <p style="line-height:1.8; text-align:justify; text-indent:40px;">
-                    महोदय,<br>
-                    मी खालील स्वाक्षरीकार <strong>${name}</strong>, पदनाम <strong>${desig}</strong>, ${office} येथे दिनांक <strong>${joinDate}</strong> रोजी शासकीय सेवेत रुजू झालेलो/ले आहे.
-                </p>
-
-                <p style="line-height:1.8; text-align:justify; text-indent:40px; margin-top:10px;">
-                    माझा विहित परिविक्षाधीन कालावधी दिनांक <strong>${probEndDate}</strong> रोजी यशस्वीरीत्या पूर्ण झाला असून, या कालावधीत मी माझी सेवा पूर्ण निष्ठेने व प्रामाणिकपणे पार पाडलेली आहे. सेवेत कायम होण्यासाठी आवश्यक असणारे पोलीस चारित्र्य अहवाल, वैद्यकीय प्रमाणपत्र, जात वैधता व इतर संगणक अर्हता प्रमाणपत्रे कार्यालयात वेळेत सादर केलेली आहेत.
-                </p>
-
-                <p style="line-height:1.8; text-align:justify; text-indent:40px; margin-top:10px;">
-                    करिता नम्र विनंती आहे की, माझा परिविक्षाधीन कालावधी समाप्त करून मला शासकीय सेवेत नियमित करण्याचा आदेश निर्गमित करावा.
-                </p>
-
-                <div class="sig-box-container" style="margin-top:50px;">
-                    <div></div>
-                    <div class="sig-box">
+                    <div class="text-center font-bold">
                         <br><br>
-                        _______________________________<br>
-                        <strong>(अर्जदाराची स्वाक्षरी)</strong><br>
-                        <strong>नाव:</strong> ${name}<br>
-                        <strong>पदनाम:</strong> ${desig}
+                        <p id="lbl_sign_head_5">वैद्यकीय अधीक्षक</p>
+                        <p class="text-xs font-normal" id="lbl_sign_office_5">ग्रामीण रुग्णालय, अ ब क</p>
                     </div>
                 </div>
-            `;
+            </div>
+
+            <!-- DOC 6: ना-चौकशी व ना-तครार प्रमाणपत्र -->
+            <div class="a4-page text-slate-900 text-sm leading-relaxed" id="doc6">
+                <div class="office-header-content text-center mb-4">
+                    <h2 class="text-base font-bold uppercase" id="lbl_office_header_6">कार्यालय, वैद्यकीय अधीक्षक, ग्रामीण रुग्णालय, अ ब क</h2>
+                    <hr class="border-slate-800 my-2">
+                </div>
+
+                <div class="text-center font-bold text-base my-6 underline">
+                    ना-चौकशी तथा ना-तक्रार प्रमाणपत्र
+                </div>
+
+                <p class="indent-8 text-justify mt-6 leading-loose text-base">
+                    प्रमाणित करण्यात येते की, <span class="font-bold text-lg lbl_emp_name">श्री. रमेश प्रकाश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यालय: <span class="font-bold lbl_office_full">ग्रामीण रुग्णालय अ ब क, जि. अकोला</span> यांच्याविरुद्ध त्यांच्या परिवीक्षाधीन कालावधीत कोणत्याही प्रकारची तक्रार, विभागीय चौकशी अथवा न्यायालयीन प्रकरण प्रलंबित किंवा प्रस्तावित नाही. तसेच त्यांच्याविरुद्ध कोणतीही गंभीर स्वरूपाची नोंद नाही.
+                </p>
+
+                <p class="mt-6 text-justify">
+                    करिता ना-चौकशी तथा ना-तक्रार प्रमाणपत्र देण्यात येत आहे.
+                </p>
+
+                <div class="mt-28 flex justify-between items-end">
+                    <div class="text-xs font-semibold">
+                        ठिकाण: <span class="lbl_office_taluka">अ ब क</span><br>
+                        दिनांक: <span class="lbl_prop_date">२६/०७/२०२६</span>
+                    </div>
+                    <div class="text-center font-bold">
+                        <br><br>
+                        <p id="lbl_sign_head_6">वैद्यकीय अधीक्षक</p>
+                        <p class="text-xs font-normal" id="lbl_sign_office_6">ग्रामीण रुग्णालय, अ ब क</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DOC 7: संगणक अभ्यासक्रम उत्तीर्ण प्रमाणपत्र -->
+            <div class="a4-page text-slate-900 text-sm leading-relaxed" id="doc7">
+                <div class="office-header-content text-center mb-4">
+                    <h2 class="text-base font-bold uppercase" id="lbl_office_header_7">कार्यालय, वैद्यकीय अधीक्षक, ग्रामीण रुग्णालय, अ ब क</h2>
+                    <hr class="border-slate-800 my-2">
+                </div>
+
+                <div class="text-center font-bold text-base my-6 underline">
+                    संगणक अभ्यासक्रम उत्तीर्ण प्रमाणपत्र
+                </div>
+
+                <p class="indent-8 text-justify mt-6 leading-loose text-base">
+                    प्रमाणित करण्यात येते की, <span class="font-bold text-lg lbl_emp_name">श्री. रमेश प्रकाश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यालय: <span class="font-bold lbl_office_full">ग्रामीण रुग्णालय अ ब क</span> यांनी शासन मान्य संगणक अहर्तेचे (CCC / MS-CIT) विहित प्रमाणपत्र या कार्यालयाकडे सादर केलेले असून त्याची नोंद मूळ सेवापुस्तकात घेण्यात आली आहे.
+                </p>
+
+                <p class="mt-6 text-justify">
+                    करिता संगणक परीक्षा उत्तीर्णबाबतचे प्रमाणपत्र देण्यात येत आहे.
+                </p>
+
+                <div class="mt-28 flex justify-between items-end">
+                    <div class="text-xs font-semibold">
+                        ठिकाण: <span class="lbl_office_taluka">अ ब क</span><br>
+                        दिनांक: <span class="lbl_prop_date">२६/०७/२०२६</span>
+                    </div>
+                    <div class="text-center font-bold">
+                        <br><br>
+                        <p id="lbl_sign_head_7">वैद्यकीय अधीक्षक</p>
+                        <p class="text-xs font-normal" id="lbl_sign_office_7">ग्रामीण रुग्णालय, अ ब क</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DOC 8: लहान कुटुंबाचे प्रतिज्ञापत्र - नमुना 'अ' (Applicant Declaration) -->
+            <div class="a4-page text-slate-900 text-sm leading-relaxed" id="doc8">
+                <div class="text-center font-bold text-base mb-2">
+                    महाराष्ट्र नागरी सेवा (लहान कुटुंबाचे प्रतिज्ञापत्र) नियम, २००५ नुसार
+                </div>
+                <div class="text-center font-bold text-lg underline mb-6">
+                    प्रतिज्ञापत्र (नमुना - अ)
+                </div>
+
+                <p class="indent-8 text-justify leading-loose">
+                    मी <span class="font-bold text-lg lbl_emp_name">श्री. रमेश प्रकाश पाटील</span>, वय: <span class="font-bold">३१ वर्षे</span>, राहणार: <span class="font-bold lbl_emp_address">मु.पो. वडगाव, ता. जि. अकोला</span> याद्वारे पुढीलप्रमाणे घोषित करतो/करते की,-
+                </p>
+
+                <ol class="list-decimal ml-8 my-4 space-y-3 text-justify">
+                    <li>
+                        मी <span class="font-bold lbl_office_full">ग्रामीण रुग्णालय अ ब क</span> येथे <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span> या पदासाठी अर्ज सादर केलेला आहे / कार्यरत आहे.
+                    </li>
+                    <li>
+                        आज रोजी मला <span class="font-bold border-b border-black px-4">०१</span> (एक) अपत्ये आहेत. त्यापैकी दिनांक २८ मार्च २००५ नंतर जन्माला आलेल्या मुलांची संख्या <span class="font-bold border-b border-black px-4">००</span> आहे.
+                    </li>
+                    <li>
+                        दिनांक २८ मार्च २००५ नंतर जन्माला आलेल्या मुलांची संख्या दोनपेक्षा अधिक असेल तर मी या पदासाठी / सेवेसाठी अपात्र ठरेल याची मला जाणीव आहे.
+                    </li>
+                </ol>
+
+                <div class="mt-20 flex justify-between items-end">
+                    <div class="text-xs">
+                        स्थान: <span class="lbl_office_taluka">अ ब क</span><br>
+                        दिनांक: <span class="lbl_prop_date">२६/०७/२०२६</span>
+                    </div>
+                    <div class="text-center font-bold">
+                        प्रतिज्ञापक (स्वाक्षरी),<br><br><br>
+                        <p class="lbl_emp_name">श्री. रमेश प्रकाश पाटील</p>
+                        <p class="text-xs font-normal lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DOC 9: लहान कुटुंबाचे कार्यालयीन प्रमाणपत्र -->
+            <div class="a4-page text-slate-900 text-sm leading-relaxed" id="doc9">
+                <div class="office-header-content text-center mb-4">
+                    <h2 class="text-base font-bold uppercase" id="lbl_office_header_9">कार्यालय, वैद्यकीय अधीक्षक, ग्रामीण रुग्णालय, अ ब क</h2>
+                    <hr class="border-slate-800 my-2">
+                </div>
+
+                <div class="text-center font-bold text-base my-6 underline">
+                    लहान कुटुंबाचे प्रमाणपत्र (कार्यालयीन)
+                </div>
+
+                <p class="indent-8 text-justify mt-6 leading-loose text-base">
+                    प्रमाणित करण्यात येते की, <span class="font-bold text-lg lbl_emp_name">श्री. रमेश प्रकाश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यालय: <span class="font-bold lbl_office_full">ग्रामीण रुग्णालय अ ब क</span> यांनी महाराष्ट्र नागरी सेवा (लहान कुटुंबाचे प्रतिज्ञापत्र) नियम २००५ मधील तरतुदीनुसार लहान कुटुंबाचे विहित नमुन्यातील प्रतिज्ञापत्र (नमुना-अ) सादर केलेले असून ते दप्तरी जतन करण्यात आले आहे.
+                </p>
+
+                <p class="mt-6 text-justify">
+                    करिता हे प्रमाणपत्र निर्गमित करण्यात येत आहे.
+                </p>
+
+                <div class="mt-28 flex justify-between items-end">
+                    <div class="text-xs font-semibold">
+                        ठिकाण: <span class="lbl_office_taluka">अ ब क</span><br>
+                        दिनांक: <span class="lbl_prop_date">२६/०७/२०२६</span>
+                    </div>
+                    <div class="text-center font-bold">
+                        <br><br>
+                        <p id="lbl_sign_head_9">वैद्यकीय अधीक्षक</p>
+                        <p class="text-xs font-normal" id="lbl_sign_office_9">ग्रामीण रुग्णालय, अ ब क</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DOC 10: मत्ता व दायित्व प्रमाणपत्र -->
+            <div class="a4-page text-slate-900 text-sm leading-relaxed" id="doc10">
+                <div class="office-header-content text-center mb-4">
+                    <h2 class="text-base font-bold uppercase" id="lbl_office_header_10">कार्यालय, वैद्यकीय अधीक्षक, ग्रामीण रुग्णालय, अ ब क</h2>
+                    <hr class="border-slate-800 my-2">
+                </div>
+
+                <div class="text-center font-bold text-base my-6 underline">
+                    मत्ता व दायित्व प्रमाणपत्र (Property & Liabilities Cert)
+                </div>
+
+                <p class="indent-8 text-justify mt-6 leading-loose text-base">
+                    प्रमाणित करण्यात येते की, <span class="font-bold text-lg lbl_emp_name">श्री. रमेश प्रकाश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यालय: <span class="font-bold lbl_office_full">ग्रामीण रुग्णालय अ ब क</span> यांनी त्यांच्या सेवेतील परिवीक्षाधीन कालावधीतील तसेच नुकत्याच संपलेल्या आर्थिक वर्षाचे मत्ता व दायित्वांचे (Assets & Liabilities) वार्षिक विवरणपत्र नियमानुसार या कार्यालयास सादर केले आहे.
+                </p>
+
+                <p class="mt-6 text-justify">
+                    करिता मत्ता व दायित्व विवरणपत्र प्राप्त झाल्याचे प्रमाणपत्र देण्यात येत आहे.
+                </p>
+
+                <div class="mt-28 flex justify-between items-end">
+                    <div class="text-xs font-semibold">
+                        ठिकाण: <span class="lbl_office_taluka">अ ब क</span><br>
+                        दिनांक: <span class="lbl_prop_date">२६/०७/२०२६</span>
+                    </div>
+                    <div class="text-center font-bold">
+                        <br><br>
+                        <p id="lbl_sign_head_10">वैद्यकीय अधीक्षक</p>
+                        <p class="text-xs font-normal" id="lbl_sign_office_10">ग्रामीण रुग्णालय, अ ब क</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DOC 11: कार्यालय प्रमुखाचा अभिप्राय व शिफारस प्रमाणपत्र -->
+            <div class="a4-page text-slate-900 text-sm leading-relaxed" id="doc11">
+                <div class="office-header-content text-center mb-4">
+                    <h2 class="text-base font-bold uppercase" id="lbl_office_header_11">कार्यालय, वैद्यकीय अधीक्षक, ग्रामीण रुग्णालय, अ ब क</h2>
+                    <hr class="border-slate-800 my-2">
+                </div>
+
+                <div class="text-center font-bold text-base my-6 underline">
+                    कार्यालय प्रमुखाचा अभिप्राय व शिफारस प्रमाणपत्र
+                </div>
+
+                <p class="indent-8 text-justify mt-6 leading-loose text-base">
+                    प्रमाणित करण्यात येते की, <span class="font-bold text-lg lbl_emp_name">श्री. रमेश प्रकाश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यालय: <span class="font-bold lbl_office_full">ग्रामीण रुग्णालय अ ब क</span> यांनी १ वर्षाच्या परिवीक्षाधीन कालावधीत (दिनांक <span class="lbl_emp_joindate">०३/०६/२०२४</span> ते <span class="lbl_emp_probend">०२/०६/२०२५</span>) आपल्या पदाची कर्तव्ये, कामे व जबाबदाऱ्या अत्यंत उत्कृष्टपणे पार पाडल्या असून त्यांची वर्तणूक समाधानकारक व चांगली आहे.
+                </p>
+
+                <p class="indent-8 text-justify mt-4 text-base font-semibold">
+                    करिता <span class="lbl_emp_name">श्री. रमेश प्रकाश पाटील</span> यांचा परिवीक्षाधीन कालावधी समाप्त करून त्यांची सेवा नियमित करण्याबाबत या कार्यालयाकडून **सकारात्मक शिफारस** करण्यात येत आहे.
+                </p>
+
+                <div class="mt-28 flex justify-between items-end">
+                    <div class="text-xs font-semibold">
+                        ठिकाण: <span class="lbl_office_taluka">अ ब क</span><br>
+                        दिनांक: <span class="lbl_prop_date">२६/०७/२०२६</span>
+                    </div>
+                    <div class="text-center font-bold">
+                        <br><br>
+                        <p id="lbl_sign_head_11">वैद्यकीय अधीक्षक</p>
+                        <p class="text-xs font-normal" id="lbl_sign_office_11">ग्रामीण रुग्णालय, अ ब क</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DOC 12: अटी व शर्ती पूर्तता प्रमाणपत्र -->
+            <div class="a4-page text-slate-900 text-sm leading-relaxed" id="doc12">
+                <div class="office-header-content text-center mb-4">
+                    <h2 class="text-base font-bold uppercase" id="lbl_office_header_12">कार्यालय, वैद्यकीय अधीक्षक, ग्रामीण रुग्णालय, अ ब क</h2>
+                    <hr class="border-slate-800 my-2">
+                </div>
+
+                <div class="text-center font-bold text-base my-6 underline">
+                    नेमणूक आदेशातील अटी व शर्ती पूर्तता प्रमाणपत्र
+                </div>
+
+                <p class="indent-8 text-justify mt-6 leading-loose text-base">
+                    प्रमाणित करण्यात येते की, <span class="font-bold text-lg lbl_emp_name">श्री. रमेश प्रकाश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यालय: <span class="font-bold lbl_office_full">ग्रामीण रुग्णालय अ ब क</span> यांनी त्यांच्या मूल नियुक्ती आदेशातील नमूद केलेल्या सर्व अटी व शर्तींची (वैद्यकीय तपासणी, चारित्र्य अहवाल, शपथपत्र इत्यादी) यशस्वीरीत्या पूर्तता केलेली आहे.
+                </p>
+
+                <p class="mt-6 text-justify">
+                    करिता अटी व शर्ती पूर्ण केल्याबाबतचे प्रमाणपत्र देण्यात येत आहे.
+                </p>
+
+                <div class="mt-28 flex justify-between items-end">
+                    <div class="text-xs font-semibold">
+                        ठिकाण: <span class="lbl_office_taluka">अ ब क</span><br>
+                        दिनांक: <span class="lbl_prop_date">२६/०७/२०२६</span>
+                    </div>
+                    <div class="text-center font-bold">
+                        <br><br>
+                        <p id="lbl_sign_head_12">वैद्यकीय अधीक्षक</p>
+                        <p class="text-xs font-normal" id="lbl_sign_office_12">ग्रामीण रुग्णालय, अ ब क</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DOC 13: मुख्यालयात वास्तव्य प्रमाणपत्र -->
+            <div class="a4-page text-slate-900 text-sm leading-relaxed" id="doc13">
+                <div class="office-header-content text-center mb-4">
+                    <h2 class="text-base font-bold uppercase" id="lbl_office_header_13">कार्यालय, वैद्यकीय अधीक्षक, ग्रामीण रुग्णालय, अ ब क</h2>
+                    <hr class="border-slate-800 my-2">
+                </div>
+
+                <div class="text-center font-bold text-base my-6 underline">
+                    मुख्यालयात वास्तव्य प्रमाणपत्र
+                </div>
+
+                <p class="indent-8 text-justify mt-6 leading-loose text-base">
+                    प्रमाणित करण्यात येते की, <span class="font-bold text-lg lbl_emp_name">श्री. रमेश प्रकाश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यालय: <span class="font-bold lbl_office_full">ग्रामीण रुग्णालय अ ब क</span> हे रुग्णालयाच्या मुख्यालयाच्या ठिकाणी प्रत्यक्ष वास्तव्यास असून आणीबाणीच्या प्रसंगी रुग्णालयात त्वरित सेवेसाठी उपलब्ध राहतात.
+                </p>
+
+                <p class="mt-6 text-justify">
+                    करिता मुख्यालयात वास्तव्याचे प्रमाणपत्र देण्यात येत आहे.
+                </p>
+
+                <div class="mt-28 flex justify-between items-end">
+                    <div class="text-xs font-semibold">
+                        ठिकाण: <span class="lbl_office_taluka">अ ब क</span><br>
+                        दिनांक: <span class="lbl_prop_date">२६/०७/२०२६</span>
+                    </div>
+                    <div class="text-center font-bold">
+                        <br><br>
+                        <p id="lbl_sign_head_13">वैद्यकीय अधीक्षक</p>
+                        <p class="text-xs font-normal" id="lbl_sign_office_13">ग्रामीण रुग्णालय, अ ब क</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- JavaScript Engine -->
+    <script>
+        function handleHeadDesignationChange(val) {
+            const customInput = document.getElementById('customHeadDesignation');
+            if(val === 'custom') {
+                customInput.classList.remove('hidden');
+            } else {
+                customInput.classList.add('hidden');
+            }
+            updateAll();
         }
-    }
 
-    // सुरुवातीला पहिला दस्तऐवज लोड करणे
-    renderSelectedDocument();
-</script>
+        function getHeadDesignation() {
+            const sel = document.getElementById('headDesignationSelect').value;
+            if(sel === 'custom') {
+                return document.getElementById('customHeadDesignation').value || 'कार्यालय प्रमुख';
+            }
+            return sel;
+        }
 
+        function updateAll() {
+            const headDesig = getHeadDesignation();
+            const office = document.getElementById('officeName').value || '';
+            const taluka = document.getElementById('officeTaluka').value || '';
+            const dist = document.getElementById('officeDistrict').value || '';
+            const higherAuth = document.getElementById('higherAuthority').value || '';
+            const outward = document.getElementById('outwardNo').value || '';
+            const propDate = document.getElementById('proposalDate').value || '';
+
+            const empName = document.getElementById('empName').value || '';
+            const empPost = document.getElementById('empPost').value || '';
+            const empCadre = document.getElementById('empCadre').value || '';
+            const empPayScale = document.getElementById('empPayScale').value || '';
+            const empEdu = document.getElementById('empEdu').value || '';
+            const empAddress = document.getElementById('empAddress').value || '';
+            const empJoin = document.getElementById('empJoinDate').value || '';
+            const empProbEnd = document.getElementById('empProbationEndDate').value || '';
+
+            const officeFull = `${office}, ता. ${taluka}, जि. ${dist}`;
+            const headerTitle = `कार्यालय, ${headDesig}, ${office}`;
+
+            // Update Labels in Document 1 to 13
+            document.querySelectorAll('[id^="lbl_office_header_"]').forEach(el => el.innerText = headerTitle);
+            document.querySelectorAll('[id^="lbl_sign_head_"]').forEach(el => el.innerText = headDesig);
+            document.querySelectorAll('[id^="lbl_sign_office_"]').forEach(el => el.innerText = `${office}, जि. ${dist}`);
+
+            document.querySelectorAll('.lbl_emp_name').forEach(el => el.innerText = empName);
+            document.querySelectorAll('.lbl_emp_post').forEach(el => el.innerText = empPost);
+            document.querySelectorAll('.lbl_emp_cadre').forEach(el => el.innerText = empCadre);
+            document.querySelectorAll('.lbl_emp_payscale').forEach(el => el.innerText = empPayScale);
+            document.querySelectorAll('.lbl_emp_edu').forEach(el => el.innerText = empEdu);
+            document.querySelectorAll('.lbl_emp_address').forEach(el => el.innerText = empAddress);
+            document.querySelectorAll('.lbl_emp_joindate').forEach(el => el.innerText = empJoin);
+            document.querySelectorAll('.lbl_emp_probend').forEach(el => el.innerText = empProbEnd);
+
+            document.querySelectorAll('.lbl_office_full').forEach(el => el.innerText = officeFull);
+            document.querySelectorAll('.lbl_office_taluka').forEach(el => el.innerText = taluka);
+            document.querySelectorAll('.lbl_outward').forEach(el => el.innerText = outward);
+            document.querySelectorAll('.lbl_prop_date').forEach(el => el.innerText = propDate);
+
+            document.getElementById('lbl_higher_auth').innerText = higherAuth;
+            document.getElementById('lbl_office_sub_1').innerText = `जिल्हा: ${dist} | पिन कोड: ४४४००१`;
+            
+            document.getElementById('lbl_to_head_3').innerText = `मा. ${headDesig},`;
+            document.getElementById('lbl_to_office_3').innerText = officeFull;
+        }
+
+        function toggleLetterheadDisplay() {
+            const isChecked = document.getElementById('toggleLetterhead').checked;
+            document.querySelectorAll('.office-header-content').forEach(el => {
+                el.style.display = isChecked ? 'block' : 'none';
+            });
+        }
+
+        function adjustTopMargin(val) {
+            document.getElementById('marginVal').innerText = `${val} mm`;
+            document.documentElement.style.setProperty('--print-margin-top', `${val}mm`);
+            document.querySelectorAll('.a4-page').forEach(page => {
+                page.style.paddingTop = `${val}mm`;
+            });
+        }
+
+        function uploadLogo(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.querySelectorAll('.office-header-content').forEach(el => {
+                        let img = el.querySelector('.uploaded-logo');
+                        if(!img) {
+                            img = document.createElement('img');
+                            img.className = 'uploaded-logo mx-auto h-16 mb-2';
+                            el.prepend(img);
+                        }
+                        img.src = e.target.result;
+                    });
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function downloadPDF() {
+            const element = document.getElementById('printableArea');
+            const empName = document.getElementById('empName').value || 'Employee';
+            const opt = {
+                margin: 0,
+                filename: `Probation_Proposal_${empName}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            html2pdf().set(opt).from(element).save();
+        }
+
+        // Initialize Default Values on Load
+        window.onload = function() {
+            updateAll();
+        };
+    </script>
 </body>
 </html>
