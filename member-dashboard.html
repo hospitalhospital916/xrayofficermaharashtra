@@ -1,19 +1,23 @@
 <!DOCTYPE html>
-<html lang="mr">
 <head>
     <meta charset="UTF-8">
-    <!-- डेस्कटॉप व्ह्यू लागू करणारा व्ह्यूपोर्ट -->
     <meta name="viewport" content="width=1280, initial-scale=0.3, minimum-scale=0.25, maximum-scale=3.0, user-scalable=yes">
     <title>सदस्य पोर्टल | क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना महाराष्ट्र राज्य</title>
     
+    <!-- External Libraries (CDN) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
     <script>
-        // PWA मध्ये अचूक स्केल करण्यासाठी
         if (window.innerWidth < 1280) {
             var scale = window.innerWidth / 1280;
             document.querySelector('meta[name="viewport"]').setAttribute('content', 'width=1280, initial-scale=' + scale + ', maximum-scale=3.0, user-scalable=yes');
         }
     </script>
-
+    ...
     <style>
         :root {
             --primary: #0B3D91;
