@@ -13,10 +13,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <script>
-        if (window.innerWidth < 1280) {
-            var scale = window.innerWidth / 1280;
-            document.querySelector('meta[name="viewport"]').setAttribute('content', 'width=1280, initial-scale=' + scale + ', maximum-scale=3.0, user-scalable=yes');
+        function applyDesktopViewport() {
+            if (window.innerWidth < 1280) {
+                var scale = window.innerWidth / 1280;
+                document.querySelector('meta[name="viewport"]').setAttribute('content', 'width=1280, initial-scale=' + scale + ', maximum-scale=3.0, user-scalable=yes');
+            }
         }
+        applyDesktopViewport();
     </script>
 
     <style>
@@ -148,7 +151,7 @@
         .form-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; align-items: center; }
         .form-row > div { flex: 1; min-width: 180px; }
 
-        /* 🚀 अत्यंत मोठा, ३D व आकर्षक चॅट लॉन्चर विजेट CSS */
+        /* 🚀 ३ पट (3X) मोठे, ३D व अत्यंत आकर्षक चॅट लॉन्चर विजेट CSS */
         #floatingLiveChatWidget { 
             position: fixed; 
             bottom: 25px; 
@@ -156,7 +159,7 @@
             z-index: 9990; 
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 15px;
             cursor: pointer;
             transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
@@ -165,81 +168,120 @@
             transform: scale(1.08);
         }
 
-        /* "⚡ Live Chat करा" मोठा व स्पष्ट लेबल */
+        /* "⚡ Live Chat करा" ३ पट मोठा व स्पष्ट लेबल */
         .chat-pill-label {
             background: linear-gradient(135deg, #0B3D91, #07275e);
             color: #ffffff;
-            padding: 10px 18px;
-            border-radius: 30px;
-            font-size: 1.05rem;
+            padding: 16px 28px;
+            border-radius: 45px;
+            font-size: 1.6rem; /* ३ पट मोठा मजकूर */
             font-weight: 800;
-            box-shadow: 0 8px 25px rgba(11, 61, 145, 0.45);
-            border: 2px solid #f39c12;
+            box-shadow: 0 10px 30px rgba(11, 61, 145, 0.5);
+            border: 3px solid #f39c12;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 12px;
             letter-spacing: 0.5px;
             animation: bounceLeft 2s infinite;
         }
 
-        /* ७५px चा अत्यंत मोठा ३D अ‍ॅनिमेटेड आयकॉन */
+        /* 🟢 १८०px चा ३ पट मोठा ३D अ‍ॅनिमेटेड चॅट आयकॉन (Font: 6.5rem) */
         .chat-floating-btn { 
-            width: 75px; 
-            height: 75px; 
+            width: 180px; 
+            height: 180px; 
             background: linear-gradient(135deg, #0B3D91, #25D366); 
             color: white; 
             border-radius: 50%; 
             display: flex; 
             justify-content: center; 
             align-items: center; 
-            font-size: 2.3rem; 
-            box-shadow: 0 10px 30px rgba(37, 211, 102, 0.6); 
+            font-size: 6.5rem; /* ३ पट (3X) मोठा आयकॉन */
+            box-shadow: 0 15px 40px rgba(37, 211, 102, 0.65); 
             position: relative; 
-            border: 4px solid #ffffff;
+            border: 6px solid #ffffff;
             animation: pulseGlow 2s infinite; 
         }
 
-        /* लाल रंगाचा प्रलंबित मेसेज बॅज (Seen झाल्यावर आपोआप लपवला जाईल) */
+        /* चॅट टॅब मधील आयकॉन आकार वाढवला */
+        #btn_tab_chat i {
+            font-size: 1.8rem;
+            margin-right: 4px;
+        }
+
+        /* प्रलंबित मेसेज बॅज (मोठा आकार) */
         .chat-unread-badge { 
             position: absolute; 
-            top: -6px; 
-            right: -6px; 
+            top: -10px; 
+            right: -10px; 
             background: #ef4444; 
             color: white; 
             border-radius: 50%; 
-            width: 28px;
-            height: 28px;
-            font-size: 0.85rem; 
+            width: 48px;
+            height: 48px;
+            font-size: 1.4rem; 
             font-weight: 800; 
-            display: none; /* सुरुवातीला लपवलेला */
+            display: none; 
             justify-content: center; 
             align-items: center; 
-            border: 2px solid white; 
-            box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+            border: 4px solid white; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
             animation: badgePulse 1.5s infinite;
         }
 
         @keyframes pulseGlow {
             0% { box-shadow: 0 0 0 0 rgba(11, 61, 145, 0.8); }
-            70% { box-shadow: 0 0 0 20px rgba(37, 211, 102, 0); }
+            70% { box-shadow: 0 0 0 30px rgba(37, 211, 102, 0); }
             100% { box-shadow: 0 0 0 0 rgba(11, 61, 145, 0); }
         }
 
         @keyframes badgePulse {
             0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.2); }
+            50% { transform: scale(1.25); }
         }
 
         @keyframes bounceLeft {
             0%, 100% { transform: translateX(0); }
-            50% { transform: translateX(-5px); }
+            50% { transform: translateX(-8px); }
         }
 
-        /* चॅट टॅब लेआउट */
-        #tab-chat { height: 82vh; }
+        /* 📱 चॅट लेआउट & मोबाईल व्ह्यू सुधारणा (Send Button कट न होता स्क्रीनवर व्यवस्थित बसण्यासाठी) */
+        #tab-chat { height: 85vh; width: 100%; }
         #tab-chat .panel { height: 100%; border-radius: 12px; overflow: hidden; margin-bottom: 0; border: 1px solid #cbd5e1; }
-        #tab-chat .panel-body { height: 100%; padding: 0; }
-        #memberChatIframe { width: 100%; height: 100%; border: none; }
+        #tab-chat .panel-body { height: 100%; padding: 0; overflow: hidden; }
+        #memberChatIframe { width: 100%; height: 100%; border: none; display: block; }
+
+        /* मोबाईलवर चॅट उघडल्यावर पूर्ण स्क्रीनवर Send बटन नीट दिसण्यासाठी रॅपर */
+        @media screen and (max-width: 768px) {
+            #tab-chat {
+                height: calc(100vh - 100px) !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                width: 100% !important;
+            }
+            #tab-chat .panel {
+                border-radius: 0 !important;
+                height: 100% !important;
+                border: none !important;
+            }
+            #tab-chat .panel-body {
+                height: 100% !important;
+                padding: 0 !important;
+            }
+            #memberChatIframe {
+                width: 100% !important;
+                height: 100% !important;
+            }
+            /* लहान स्क्रीनवर फ्लोटिंग आयकॉन योग्य प्रमाणात अडॅप्ट करणे */
+            .chat-floating-btn {
+                width: 130px;
+                height: 130px;
+                font-size: 4.8rem;
+            }
+            .chat-pill-label {
+                font-size: 1.2rem;
+                padding: 10px 18px;
+            }
+        }
 
         @media print {
             .no-print, .navbar, .tab-menu, .ticker-wrap, #floatingLiveChatWidget { display: none !important; }
@@ -343,7 +385,7 @@
             <button class="tab-btn" onclick="openTab('tab-info-gather', this)"><i class="fa fa-clipboard-list"></i> माहिती द्या (फॉर्म)</button>
             <button class="tab-btn" onclick="openTab('tab-employees', this)"><i class="fa fa-users"></i> राज्यातील कर्मचारी</button>
             <button class="tab-btn" onclick="openTab('tab-documents', this)"><i class="fa fa-folder-open"></i> परिपत्रके व फोल्डर्स</button>
-            <button class="tab-btn" id="btn_tab_chat" onclick="openTab('tab-chat', this)"><i class="fa fa-comments"></i> Live Chat</button>
+            <button class="tab-btn" id="btn_tab_chat" onclick="openTab('tab-chat', this)"><i class="fa-solid fa-comments"></i> Live Chat</button>
             <button class="tab-btn" onclick="openTab('tab-polls', this)"><i class="fa fa-vote-yea"></i> मतदान व पोल</button>
         </div>
 
@@ -802,7 +844,7 @@
     <!-- PRINT LETTER TEMPLATE RENDER CONTAINER -->
     <div id="printLetterArea" style="display:none;"></div>
 
-    <!-- 🚀 FLOATING LIVE CHAT LAUNCHER WIDGET (अत्यंत मोठा व ३D ग्लोईंग आयकॉन) -->
+    <!-- 🚀 FLOATING LIVE CHAT LAUNCHER WIDGET (३ पट मोठा व ३D ग्लोईंग आयकॉन) -->
     <div id="floatingLiveChatWidget" onclick="openTab('tab-chat', document.getElementById('btn_tab_chat'))" title="💬 Live Chat (संवाद साधा)">
         <div class="chat-pill-label">
             <i class="fa-solid fa-bolt" style="color: #f39c12;"></i> Live Chat करा
@@ -881,7 +923,7 @@
             }
         });
 
-        // Tab Navigation & Viewport Management
+        // 📱 Tab Navigation & Responsive Mobile Viewport Management
         window.openTab = function(tabId, btn) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
@@ -892,9 +934,17 @@
 
             let floatWidget = document.getElementById('floatingLiveChatWidget');
 
-            // 🟢 चॅट टॅब उघडल्यावर मेसेज वाचले असे नोंदवून संख्या आपोआप गायब करणे
+            // 🟢 चॅट टॅब उघडल्यावर मोबाईल व्ह्यू आणि Send बटन १००% स्क्रीनवर फिट बसवण्यासाठी dynamic adjustment
             if(tabId === 'tab-chat') {
                 if(floatWidget) floatWidget.style.display = 'none';
+
+                // मोबाईल स्क्रीनवर डेस्कटॉप झूम काढून 1.0 व्ह्युपोर्ट सेट करणे
+                if (window.innerWidth <= 768) {
+                    let vp = document.querySelector('meta[name="viewport"]');
+                    if (vp) {
+                        vp.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+                    }
+                }
 
                 // मेसेज पाहिले म्हणून टाईमस्टॅम्प सेव्ह करणे
                 localStorage.setItem("lastReadChatTime", Date.now());
@@ -914,6 +964,15 @@
                 }
             } else {
                 if(floatWidget) floatWidget.style.display = 'flex';
+
+                // इतर टॅबवर गेल्यावर पूर्ववत 1280px Desktop View लागू करणे
+                if (window.innerWidth < 1280) {
+                    var scale = window.innerWidth / 1280;
+                    let vp = document.querySelector('meta[name="viewport"]');
+                    if (vp) {
+                        vp.setAttribute('content', 'width=1280, initial-scale=' + scale + ', maximum-scale=3.0, user-scalable=yes');
+                    }
+                }
             }
 
             // Log tab viewing
@@ -1071,7 +1130,6 @@
                         let msgTimestamp = data.timestamp ? (data.timestamp.toMillis ? data.timestamp.toMillis() : Date.now()) : Date.now();
                         let senderName = data.senderName || data.user || '';
 
-                        // जर नवीन मेसेज स्वतः पाठवला नसेल आणि तो शेवटच्या पाहिलेल्या वेळेनंतरचा असेल तरच संख्या वाढवा
                         if (msgTimestamp > lastReadTime && senderName !== myName) {
                             unreadCount++;
                         }
@@ -1081,7 +1139,6 @@
                     if (badge) {
                         let isChatActive = document.getElementById('tab-chat')?.classList.contains('active');
                         
-                        // जर मेंबर आधीपासून चॅट टॅबमध्येच असेल, तर संख्या ० ठेवा व लपवा
                         if (isChatActive) {
                             localStorage.setItem("lastReadChatTime", Date.now());
                             badge.style.display = 'none';
