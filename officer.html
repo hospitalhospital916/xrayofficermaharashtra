@@ -3,124 +3,257 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>पदाधिकारी - क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना</title>
+    <title>राज्यस्तरीय कार्यकारिणी पदाधिकारी - क्ष-किरण वैज्ञानिक अधिकारी संघटना</title>
     
-    <!-- Google Fonts -->
+    <!-- Fonts & FontAwesome Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
         :root {
-            --primary: #0B3D91;
-            --secondary: #FFD700;
-            --dark: #1e293b;
-            --bg-color: #f4f7f6;
-            --white: #ffffff;
+            --primary: #0F2C59;
+            --primary-dark: #071938;
+            --secondary: #F86F03;
+            --gold: #FFC436;
+            --danger: #EF4444;
+            --success: #10B981;
+            --dark: #1E293B;
+            --light-bg: #F8FAFC;
+            --white: #FFFFFF;
+            --card-shadow: 0 10px 25px rgba(15, 44, 89, 0.08);
+            --hover-shadow: 0 18px 35px rgba(15, 44, 89, 0.18);
+            --radius: 16px;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mukta', sans-serif; }
-        body { background-color: var(--bg-color); color: #333; overflow-x: hidden; line-height: 1.6; }
+        body { background-color: var(--light-bg); color: var(--dark); line-height: 1.6; }
 
         /* --- HEADER --- */
-        header { text-align: center; padding: 25px 15px; background: var(--white); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .logo-img { max-width: 90px; height: auto; margin-bottom: 10px; }
-        header h1 { font-size: 1.6rem; color: var(--primary); font-weight: 800; line-height: 1.3; }
+        header { 
+            background: var(--white); 
+            padding: 15px 30px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            border-bottom: 4px solid var(--secondary); 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+            flex-wrap: wrap; 
+            gap: 15px; 
+        }
+        .header-brand { display: flex; align-items: center; gap: 15px; }
+        .logo-img { height: 75px; width: auto; object-fit: contain; }
+        .header-title-box h1 { color: var(--primary); font-size: 1.5rem; font-weight: 800; line-height: 1.2; }
+        .header-title-box small { color: #64748B; font-size: 0.88rem; font-weight: 600; display: block; }
 
         /* --- NAVIGATION BAR --- */
-        nav { background: var(--primary); padding: 15px 5px; display: flex; flex-direction: column; gap: 12px; }
-        .nav-line { display: flex; justify-content: center; flex-wrap: wrap; gap: 15px; }
-        nav a { color: var(--white); text-decoration: none; font-size: 0.95rem; font-weight: 700; white-space: nowrap; transition: 0.3s;}
-        nav a:hover { color: var(--secondary); }
-        .nav-highlight { color: var(--secondary) !important; font-size: 1rem; }
+        nav { background: var(--primary); padding: 0 20px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
+        .nav-container { max-width: 1350px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .nav-links { display: flex; list-style: none; gap: 4px; flex-wrap: wrap; }
+        .nav-links a { color: var(--white); text-decoration: none; font-size: 1rem; font-weight: 700; padding: 14px 18px; display: inline-flex; align-items: center; gap: 8px; transition: 0.3s; border-bottom: 4px solid transparent; }
+        .nav-links a:hover, .nav-links a.active { background: rgba(255, 255, 255, 0.12); color: var(--gold); border-bottom-color: var(--gold); }
+        .mobile-menu-toggle { display: none; background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; padding: 12px; }
 
-        /* --- MARQUEE --- */
-        .ticker-wrap { background: var(--primary); border: 2px solid var(--secondary); margin: 15px auto; max-width: 1200px; padding: 10px; border-radius: 5px; width: 95%; display: flex; align-items: center;}
-        #news-ticker { font-weight: bold; color: var(--secondary); font-size: 1.05rem; }
+        /* --- PAGE BANNER --- */
+        .page-banner {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: white;
+            padding: 45px 20px;
+            text-align: center;
+            border-bottom: 3px solid var(--gold);
+        }
+        .page-banner h2 { font-size: 2.2rem; font-weight: 800; color: var(--gold); margin-bottom: 5px; }
+        .page-banner p { font-size: 1.1rem; opacity: 0.9; }
 
-        /* --- COMMITTEE / OFFICERS --- */
-        .committee-section { width: 95%; max-width: 1200px; margin: 30px auto; }
-        .committee-header { text-align: center; color: var(--primary); font-size: 1.8rem; margin-bottom: 5px; }
-        .committee-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-top: 20px; }
-        .officer-card { background: white; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); padding: 20px; text-align: center; border-top: 4px solid var(--secondary); transition: transform 0.3s; }
-        .officer-card:hover { transform: translateY(-5px); box-shadow: 0 6px 15px rgba(0,0,0,0.12); }
-        .officer-card img { width: 130px; height: 160px; border-radius: 12px; object-fit: cover; object-position: top center; border: 3px solid var(--primary); margin-bottom: 15px; background: #eee; padding: 3px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-        .officer-post { color: var(--dark); background: var(--secondary); padding: 4px 12px; border-radius: 20px; display: inline-block; font-weight: 800; font-size: 0.85rem; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .officer-name { font-size: 1.15rem; font-weight: 800; color: var(--primary); margin-bottom: 5px; line-height: 1.3; }
-        .officer-detail { font-size: 0.85rem; color: #555; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        /* --- MAIN CONTAINER & GRID --- */
+        .container { max-width: 1300px; margin: 40px auto; padding: 0 20px; }
 
-        /* --- FOOTER --- */
-        footer { background: #0B2240; color: white; text-align: center; padding: 25px 15px; margin-top: 30px; }
-        .admin-link { color: #aaa; font-size: 13px; text-decoration: underline; margin-top: 15px; display: inline-block;}
-
-        /* --- DESKTOP VIEW IMPROVEMENTS --- */
-        @media (min-width: 992px) {
-            nav { flex-direction: row; justify-content: center; align-items: center; gap: 20px; padding: 15px; }
-            .nav-line { gap: 25px; }
-            nav a { font-size: 1.05rem; }
-            header h1 { font-size: 2rem; }
-            body { font-size: 1.05rem; }
+        /* Perfect Responsive Square Grid Layout */
+        .officer-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); 
+            gap: 28px; 
         }
 
-        /* Mobile Adjustments */
-        @media (max-width: 400px) {
-            .nav-line { gap: 10px; }
-            nav a { font-size: 0.85rem; }
+        /* Square Officer Card Structure */
+        .officer-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            border: 1px solid #E2E8F0;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+            position: relative;
+        }
+        .officer-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--hover-shadow);
+            border-color: var(--secondary);
+        }
+
+        /* Square Photo Frame with Smart Face Detection Alignment */
+        .photo-container {
+            width: 100%;
+            aspect-ratio: 1 / 1; /* पक्का चौकोन फ्रेम */
+            background-color: #E2E8F0;
+            overflow: hidden;
+            position: relative;
+            border-bottom: 4px solid var(--secondary);
+        }
+        
+        .officer-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* फोटो ताणला जाणार नाही */
+            object-position: top center; /* चेहरा/तोंड एकदम व्यवस्थित मध्यभागी आणि वर दिसेल */
+            transition: transform 0.4s ease;
+        }
+        
+        .officer-card:hover .officer-photo {
+            transform: scale(1.04); /* सूक्ष्म झूम इफेक्ट */
+        }
+
+        /* Details Box */
+        .officer-details {
+            padding: 20px 16px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            justify-content: space-between;
+        }
+
+        .officer-name {
+            font-size: 1.3rem;
+            color: var(--primary);
+            font-weight: 800;
+            line-height: 1.3;
+            margin-bottom: 6px;
+        }
+
+        .officer-post {
+            font-size: 1rem;
+            color: var(--secondary);
+            font-weight: 800;
+            background: #FFF5EB;
+            padding: 4px 14px;
+            border-radius: 20px;
+            display: inline-block;
+            align-self: center;
+            margin-bottom: 12px;
+            border: 1px solid #FFEDD5;
+        }
+
+        .officer-info-list {
+            border-top: 1px dashed #E2E8F0;
+            padding-top: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            font-size: 0.95rem;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: #475569;
+            font-weight: 600;
+        }
+
+        .info-item i { color: var(--primary); font-size: 0.9rem; }
+        .info-item a { color: var(--dark); text-decoration: none; font-weight: 700; }
+        .info-item a:hover { color: var(--secondary); }
+
+        /* Loading Spinner */
+        .loading-box {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 50px 20px;
+            color: #64748B;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        /* --- FOOTER --- */
+        footer { background: #071938; color: white; padding: 35px 20px 20px 20px; text-align: center; margin-top: 60px; }
+        footer p { font-size: 0.95rem; color: #CBD5E1; }
+
+        @media (max-width: 768px) {
+            .page-banner h2 { font-size: 1.7rem; }
+            .mobile-menu-toggle { display: block; }
+            .nav-links { display: none; width: 100%; flex-direction: column; }
+            .nav-links.show { display: flex; }
+            .officer-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 18px; }
         }
     </style>
 </head>
 <body>
 
+    <!-- Header -->
     <header>
-        <img src="logo.png" alt="Logo" class="logo-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/4006/4006511.png'">
-        <h1>क्ष किरण वैज्ञानिक अधिकारी (गट-क)<br>कर्मचारी संघटना, महाराष्ट्र राज्य</h1>
+        <div class="header-brand">
+            <img src="logo.png" alt="Logo" class="logo-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/4006/4006511.png'">
+            <div class="header-title-box">
+                <h1>क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना</h1>
+                <small>महाराष्ट्र राज्य - अधिकृत पदाधिकारी दालन</small>
+            </div>
+        </div>
+        <a href="index.html" style="background:var(--primary); color:white; padding:8px 18px; border-radius:20px; text-decoration:none; font-weight:700; font-size:0.9rem;">
+            <i class="fa fa-arrow-left"></i> मुख्यपृष्ठावर जा
+        </a>
     </header>
 
+    <!-- Navigation Bar -->
     <nav>
-        <div class="nav-line">
-            <a href="index.html">🏠 मुख्यपृष्ठ</a>
-            <a href="index.html#about">ℹ️ संघटनाबद्दल</a>
-            <a href="gr.html">📄 GR / परिपत्रके</a>
-            <a href="gallery.html">🖼️ गॅलरी</a>
-        </div>
-        <div class="nav-line">
-            <a href="officer.html" style="color: var(--secondary);">👥 पदाधिकारी</a>
-            <a href="index.html#contact">📞 संपर्क</a>
-            <a href="services.html">🛠️ सदस्यांसाठी सेवा</a>
-        </div>
-        <div class="nav-line">
-            <a href="registration.html" class="nav-highlight">📢 सदस्य नोंदणी</a>
-            <a href="member-login.html">👤 सदस्य लॉगिन</a>
-        </div>
-        <div class="nav-line">
-            <a href="admin.html">🛡️ ॲडमिन</a>
+        <div class="nav-container">
+            <button class="mobile-menu-toggle" onclick="toggleMobileMenu()"><i class="fa fa-bars"></i> मेनू</button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html"><i class="fa fa-home"></i> मुख्यपृष्ठ</a></li>
+                <li><a href="index.html#about"><i class="fa fa-info-circle"></i> संघटनाबद्दल</a></li>
+                <li><a href="index.html#folders"><i class="fa fa-folder-open"></i> परिपत्रके व GR</a></li>
+                <li><a href="officer.html" class="active"><i class="fa fa-users"></i> पदाधिकारी</a></li>
+                <li><a href="index.html#gallery"><i class="fa fa-image"></i> गॅलरी</a></li>
+                <li><a href="services.html"><i class="fa fa-tools"></i> ऑनलाइन सेवा</a></li>
+                <li><a href="index.html#contact"><i class="fa fa-address-book"></i> संपर्क</a></li>
+            </ul>
         </div>
     </nav>
 
-    <div class="ticker-wrap">
-        <marquee id="news-ticker" behavior="scroll" direction="left" scrollamount="6">
-            राज्यातील सर्व क्ष-किरण वैज्ञानिक अधिकाऱ्यांनी आपली ऑनलाईन सदस्य नोंदणी लवकरात लवकर पूर्ण करावी. • माहिती लोड होत आहे...
-        </marquee>
-    </div>
+    <!-- Page Banner -->
+    <section class="page-banner">
+        <h2><i class="fa fa-user-tie"></i> राज्यस्तरीय कार्यकारिणी पदाधिकारी</h2>
+        <p>क्ष-किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र राज्य</p>
+    </section>
 
-    <!-- Office Bearers / पदाधिकारी Section (Linked with Member Database) -->
-    <div class="committee-section" id="officers">
-        <h2 class="committee-header"><i class="fa fa-users-cog"></i> राज्यस्तरीय पदाधिकारी</h2>
-        <p style="text-align: center; color: #666; margin-bottom: 20px;">क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना, महाराष्ट्र राज्य</p>
-        <div id="public-committee-grid" class="committee-grid">
-            <p style="text-align:center; color: gray; width: 100%;">पदाधिकाऱ्यांची माहिती लोड होत आहे...</p>
+    <!-- Main Content Container -->
+    <div class="container">
+        <div class="officer-grid" id="officerGrid">
+            <div class="loading-box">
+                <i class="fa fa-spinner fa-spin" style="font-size:2rem; color:var(--primary);"></i><br><br>
+                पदाधिकाऱ्यांची माहिती लोड होत आहे...
+            </div>
         </div>
     </div>
 
+    <!-- Footer -->
     <footer>
-        <p>© २०२६ क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना, महाराष्ट्र राज्य.</p>
-        <p style="margin-top: 5px; font-size: 12px; color: #ccc;">सर्व हक्क सुरक्षित.</p>
-        <a href="admin.html" class="admin-link">Admin Login</a>
+        <p>© २०२६ क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना, महाराष्ट्र राज्य. सर्व हक्क सुरक्षित.</p>
     </footer>
 
-   <!-- Firebase Script & Logic -->
+    <!-- JavaScript Mobile Toggle -->
+    <script>
+        function toggleMobileMenu() {
+            document.getElementById('navLinks').classList.toggle('show');
+        }
+    </script>
+
+    <!-- FIREBASE REALTIME FETCH SCRIPT -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-        import { getFirestore, doc, collection, onSnapshot, getDocs } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk",
@@ -135,74 +268,70 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Marquee Update
-        onSnapshot(doc(db, "settings", "marquee"), (snap) => {
-            const ticker = document.getElementById("news-ticker");
-            if (snap.exists() && snap.data().text) {
-                ticker.innerText = snap.data().text;
-            } else {
-                ticker.innerText = "राज्यातील सर्व क्ष-किरण वैज्ञानिक अधिकाऱ्यांनी आपली ऑनलाईन सदस्य नोंदणी लवकरात लवकर पूर्ण करावी.";
-            }
+        const defaultAvatar = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
+
+        // Fetch Committee Data
+        const committeeQuery = query(collection(db, "committee"), orderBy("order", "asc"));
+        
+        onSnapshot(committeeQuery, (snapshot) => {
+            let members = [];
+            snapshot.forEach(d => members.push({ id: d.id, ...d.data() }));
+
+            renderOfficers(members);
+        }, (error) => {
+            console.log("Fallback to 'office_bearers' collection...", error);
+            onSnapshot(collection(db, "office_bearers"), (snap) => {
+                let fallbackMembers = [];
+                snap.forEach(d => fallbackMembers.push({ id: d.id, ...d.data() }));
+                renderOfficers(fallbackMembers);
+            });
         });
 
-        // Fetch Office Bearers & Link with Members Database
-        async function loadCommittee() {
-            try {
-                // Fetch Committee List
-                const commSnap = await getDocs(collection(db, "committee"));
-                // Fetch All Members List for Cross-Referencing
-                const memSnap = await getDocs(collection(db, "members"));
-                
-                // Create a quick lookup map for Members Database
-                let membersMap = {};
-                memSnap.forEach(mDoc => {
-                    membersMap[mDoc.id] = mDoc.data();
-                });
+        function renderOfficers(data) {
+            const grid = document.getElementById('officerGrid');
 
-                let commArray = [];
-                commSnap.forEach(doc => {
-                    // ID आणि डेटा दोन्ही एकत्र घेणे जेणेकरून फोटो मॅच होतील
-                    commArray.push({ id: doc.id, ...doc.data() });
-                });
-
-                // ॲडमिन पॅनेलमध्ये ठरवलेल्या क्रमानुसार सॉर्ट करा
-                commArray.sort((a, b) => (a.order || 0) - (b.order || 0));
-
-                let html = '';
-                for (let c of commArray) {
-                    // Search if this officer exists in Member Database using ID matching
-                    let mData = membersMap[c.id] || {};
-                    
-                    // Prioritize Member DB Photo, fallback to Committee Photo, finally Default Placeholder
-                    let photo = mData.photoUrl || c.photoUrl || "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
-                    let name = c.name || mData.name || "Unknown";
-                    let post = c.post || mData.designation || "पदाधिकारी";
-                    let district = mData.district || c.district || "";
-                    let workplace = mData.workplace || c.workplace || "";
-                    let mandal = mData.mandal || c.mandal || "";
-
-                    html += `
-                        <div class="officer-card">
-                            <img src="${photo}" alt="${name}" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
-                            <br>
-                            <div class="officer-post">${post}</div>
-                            <div class="officer-name">${name}</div>
-                            ${workplace ? `<div class="officer-detail"><i class="fa fa-building"></i> ${workplace}</div>` : ''}
-                            ${district ? `<div class="officer-detail"><i class="fa fa-map-marker-alt"></i> ${district}${mandal ? ' (' + mandal + ')' : ''}</div>` : ''}
-                        </div>
-                    `;
-                }
-
-                const committeeGrid = document.getElementById('public-committee-grid');
-                if(committeeGrid) {
-                    committeeGrid.innerHTML = html || '<p style="text-align:center; color:gray; width:100%;">सध्या कोणतेही पदाधिकारी उपलब्ध नाहीत.</p>';
-                }
-            } catch (error) {
-                console.error("Error loading committee data:", error);
-                document.getElementById('public-committee-grid').innerHTML = '<p style="text-align:center; color:red; width:100%;">डेटा लोड करताना तांत्रिक त्रुटी आली.</p>';
+            if (!data || data.length === 0) {
+                grid.innerHTML = '<div class="loading-box">अद्याप कोणतेही पदाधिकारी अपलोड केलेले नाहीत.</div>';
+                return;
             }
-        }
 
-        // Initialize fetching
-        loadCommittee();
+            grid.innerHTML = data.map(m => {
+                let photo = m.photoUrl || m.photo || m.imgUrl || defaultAvatar;
+                let name = m.name || m.title || 'पदाधिकारी';
+                let post = m.post || m.designation || 'पद';
+                let district = m.district || m.location || '';
+                let phone = m.phone || m.mobile || '';
+
+                return `
+                    <div class="officer-card">
+                        <div class="photo-container">
+                            <img src="${photo}" alt="${name}" class="officer-photo" onerror="this.src='${defaultAvatar}'">
+                        </div>
+                        <div class="officer-details">
+                            <div>
+                                <h3 class="officer-name">${name}</h3>
+                                <span class="officer-post">${post}</span>
+                            </div>
+                            
+                            <div class="officer-info-list">
+                                ${district ? `
+                                    <div class="info-item">
+                                        <i class="fa fa-map-marker-alt" style="color:var(--danger);"></i>
+                                        <span>${district}</span>
+                                    </div>
+                                ` : ''}
+                                ${phone ? `
+                                    <div class="info-item">
+                                        <i class="fa fa-phone-alt" style="color:var(--success);"></i>
+                                        <a href="tel:${phone}">${phone}</a>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
     </script>
+</body>
+</html>
