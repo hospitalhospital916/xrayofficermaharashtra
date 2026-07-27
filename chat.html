@@ -26,7 +26,7 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mukta', sans-serif; }
         
-        html, body { height: 100%; width: 100%; overflow: hidden; background-color: #cbd5e1; }
+        html, body { height: 100%; width: 100%; overflow: hidden; background-color: #f1f5f9; }
         body { display: flex; justify-content: center; align-items: center; }
 
         .chat-container { 
@@ -38,7 +38,7 @@
             height: 100vh; 
             height: 100dvh; 
             position: relative; 
-            box-shadow: 0 12px 35px rgba(0,0,0,0.3); 
+            box-shadow: 0 12px 35px rgba(0,0,0,0.15); 
         }
         
         @media (min-width: 768px) {
@@ -49,30 +49,30 @@
         .org-header { 
             background: linear-gradient(135deg, var(--primary-dark), var(--primary)); 
             color: white; 
-            padding: 8px 12px; 
+            padding: 10px 14px; 
             display: flex; 
             flex-direction: column; 
-            gap: 5px; 
+            gap: 6px; 
             z-index: 10; 
             border-bottom: 3px solid var(--secondary); 
             flex-shrink: 0;
         }
         .top-brand { display: flex; justify-content: space-between; align-items: center; }
-        .org-title { font-size: 0.95rem; font-weight: 800; display: flex; align-items: center; gap: 6px; line-height: 1.2; }
-        .org-title i { font-size: 1.2rem; color: var(--secondary); }
+        .org-title { font-size: 1rem; font-weight: 800; display: flex; align-items: center; gap: 8px; line-height: 1.2; }
+        .org-title i { font-size: 1.3rem; color: var(--secondary); }
 
-        .role-badge { background: rgba(255,255,255,0.22); font-size: 0.65rem; padding: 1px 6px; border-radius: 10px; font-weight: 700; color: #fef08a; margin-left: 4px; }
+        .role-badge { background: rgba(255,255,255,0.22); font-size: 0.7rem; padding: 2px 8px; border-radius: 10px; font-weight: 700; color: #fef08a; margin-left: 4px; }
 
-        .admin-btn { background: var(--secondary); color: var(--primary-dark); border: none; padding: 4px 10px; border-radius: 12px; cursor: pointer; font-size: 0.75rem; font-weight: 800; display: flex; align-items: center; gap: 4px; }
-        .login-btn-head { background: #ffffff; color: var(--primary); border: none; padding: 4px 10px; border-radius: 12px; font-weight: 800; font-size: 0.72rem; cursor: pointer; display: flex; align-items: center; gap: 4px; }
+        .admin-btn { background: var(--secondary); color: var(--primary-dark); border: none; padding: 5px 12px; border-radius: 12px; cursor: pointer; font-size: 0.8rem; font-weight: 800; display: flex; align-items: center; gap: 4px; }
+        .login-btn-head { background: #ffffff; color: var(--primary); border: none; padding: 5px 12px; border-radius: 12px; font-weight: 800; font-size: 0.78rem; cursor: pointer; display: flex; align-items: center; gap: 4px; }
 
-        .search-tab-row { display: flex; flex-direction: column; gap: 4px; }
-        .search-box { width: 100%; display: flex; align-items: center; background: rgba(255, 255, 255, 0.18); border-radius: 16px; padding: 2px 8px; border: 1px solid rgba(255,255,255,0.25); }
-        .search-box input { border: none; background: transparent; outline: none; color: white; width: 100%; padding: 3px 6px; font-size: 0.82rem; }
+        .search-tab-row { display: flex; flex-direction: column; gap: 6px; }
+        .search-box { width: 100%; display: flex; align-items: center; background: rgba(255, 255, 255, 0.2); border-radius: 16px; padding: 4px 10px; border: 1px solid rgba(255,255,255,0.3); }
+        .search-box input { border: none; background: transparent; outline: none; color: white; width: 100%; padding: 4px 8px; font-size: 0.9rem; }
         .search-box input::placeholder { color: #e2e8f0; }
 
-        .tabs { display: none; gap: 5px; }
-        .tabs button { flex: 1; background: rgba(255,255,255,0.2); border: none; color: white; font-size: 0.78rem; font-weight: 700; padding: 4px 8px; border-radius: 8px; cursor: pointer; }
+        .tabs { display: none; gap: 6px; }
+        .tabs button { flex: 1; background: rgba(255,255,255,0.2); border: none; color: white; font-size: 0.82rem; font-weight: 700; padding: 6px 10px; border-radius: 8px; cursor: pointer; }
         .tabs button.active { background: #ffffff; color: var(--primary); font-weight: 800; }
 
         .chat-box { 
@@ -82,9 +82,10 @@
             background-color: var(--bg-chat); 
             display: flex; 
             flex-direction: column; 
-            gap: 10px; 
+            gap: 12px; 
             position: relative;
             scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
         }
 
         .chat-box::before {
@@ -94,7 +95,7 @@
             background-image: url('1001264489.png'); 
             background-repeat: no-repeat;
             background-position: center;
-            background-size: 260px; 
+            background-size: 240px; 
             opacity: 0.05; 
             pointer-events: none;
             z-index: 0;
@@ -102,13 +103,13 @@
 
         .fab-unread {
             position: absolute;
-            bottom: 65px;
+            bottom: 70px;
             right: 18px;
             background: var(--primary);
             color: white;
             border: 2px solid white;
-            width: 42px;
-            height: 42px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             display: none;
             align-items: center;
@@ -123,90 +124,97 @@
             right: -5px;
             background: var(--danger);
             color: white;
-            font-size: 0.7rem;
+            font-size: 0.72rem;
             font-weight: 800;
             padding: 2px 6px;
             border-radius: 10px;
             border: 2px solid white;
         }
 
-        .message-wrapper { display: flex; align-items: flex-start; gap: 8px; max-width: 88%; position: relative; z-index: 1; }
+        .message-wrapper { display: flex; align-items: flex-start; gap: 8px; max-width: 90%; position: relative; z-index: 1; }
         .message-wrapper.my-msg-wrapper { align-self: flex-end; flex-direction: row-reverse; }
 
-        .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 800; flex-shrink: 0; overflow: hidden; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.12); }
+        .avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; font-weight: 800; flex-shrink: 0; overflow: hidden; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.12); }
         .avatar img { width: 100%; height: 100%; object-fit: cover; }
 
-        .message { padding: 8px 12px; border-radius: 12px; background: #ffffff; position: relative; box-shadow: 0 2px 5px rgba(0,0,0,0.06); font-size: 0.9rem; line-height: 1.35; border-top-left-radius: 0; word-break: break-word; color: var(--text-dark); border: 1px solid #e2e8f0; }
-        .message-wrapper.my-msg-wrapper .message { background: var(--my-msg); border-top-left-radius: 12px; border-top-right-radius: 0; border: 1px solid #bce3a6; }
+        .message { padding: 9px 13px; border-radius: 14px; background: #ffffff; position: relative; box-shadow: 0 2px 6px rgba(0,0,0,0.06); font-size: 0.95rem; line-height: 1.4; border-top-left-radius: 2px; word-break: break-word; color: var(--text-dark); border: 1px solid #e2e8f0; }
+        .message-wrapper.my-msg-wrapper .message { background: var(--my-msg); border-top-left-radius: 14px; border-top-right-radius: 2px; border: 1px solid #bce3a6; }
         
-        .msg-user-title { font-size: 0.78rem; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 6px; }
-        .msg-subinfo { font-size: 0.68rem; color: #475569; font-weight: 600; display: block; margin-top: 1px; }
+        .msg-user-title { font-size: 0.82rem; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+        .msg-subinfo { font-size: 0.72rem; color: #475569; font-weight: 600; display: block; margin-top: 2px; }
         
-        .msg-time-row { display: flex; justify-content: flex-end; align-items: center; gap: 6px; margin-top: 4px; }
-        .msg-time { font-size: 0.62rem; color: #64748b; font-weight: 700; }
+        .msg-time-row { display: flex; justify-content: flex-end; align-items: center; gap: 6px; margin-top: 5px; }
+        .msg-time { font-size: 0.65rem; color: #64748b; font-weight: 700; }
         
-        .seen-badge { cursor: pointer; color: #0284c7; font-size: 0.68rem; font-weight: 800; background: rgba(59, 130, 246, 0.12); padding: 1px 6px; border-radius: 8px; transition: 0.2s; border: 1px solid rgba(59, 130, 246, 0.2); }
+        .seen-badge { cursor: pointer; color: #0284c7; font-size: 0.7rem; font-weight: 800; background: rgba(59, 130, 246, 0.12); padding: 2px 7px; border-radius: 8px; transition: 0.2s; border: 1px solid rgba(59, 130, 246, 0.2); }
         .seen-badge:hover { background: #0284c7; color: white; }
         
-        .msg-image-box { position: relative; margin-top: 4px; }
-        .msg-image { max-width: 100%; border-radius: 8px; cursor: pointer; border: 1px solid #cbd5e1; max-height: 240px; object-fit: cover; display: block; }
-        .img-download-btn { display: inline-flex; align-items: center; gap: 4px; background: var(--primary); color: white; border: none; padding: 4px 8px; border-radius: 6px; font-size: 0.72rem; font-weight: 700; margin-top: 4px; text-decoration: none; }
+        .msg-image-box { position: relative; margin-top: 6px; }
+        .msg-image { max-width: 100%; border-radius: 10px; cursor: pointer; border: 1px solid #cbd5e1; max-height: 260px; object-fit: cover; display: block; }
+        .img-download-btn { display: inline-flex; align-items: center; gap: 5px; background: var(--primary); color: white; border: none; padding: 5px 10px; border-radius: 6px; font-size: 0.78rem; font-weight: 700; margin-top: 5px; text-decoration: none; }
 
-        .pdf-card { margin-top: 4px; background: #fff1f2; border: 1px solid #fecdd3; padding: 8px; border-radius: 8px; display: flex; align-items: center; gap: 8px; }
-        .pdf-card i { font-size: 1.8rem; color: #ef4444; }
+        .pdf-card { margin-top: 6px; background: #fff1f2; border: 1px solid #fecdd3; padding: 10px; border-radius: 10px; display: flex; align-items: center; gap: 10px; }
+        .pdf-card i { font-size: 2rem; color: #ef4444; }
         .pdf-card-info { flex: 1; overflow: hidden; }
-        .pdf-card-name { font-size: 0.8rem; color: #881337; font-weight: 700; display: block; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
+        .pdf-card-name { font-size: 0.85rem; color: #881337; font-weight: 700; display: block; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
 
-        .delete-btn { position: absolute; top: -6px; right: -6px; background: var(--danger); color: white; border: none; border-radius: 50%; width: 20px; height: 20px; cursor: pointer; font-size: 0.65rem; display: none; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .delete-btn { position: absolute; top: -8px; right: -8px; background: var(--danger); color: white; border: none; border-radius: 50%; width: 22px; height: 22px; cursor: pointer; font-size: 0.7rem; display: none; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.25); }
         .message:hover .delete-btn { display: flex; }
 
         .input-area { 
             display: flex; 
-            padding: 8px 10px; 
-            background: #f0f4f8; 
+            padding: 10px 12px; 
+            background: #ffffff; 
             align-items: center; 
-            gap: 8px; 
+            gap: 10px; 
             border-top: 1px solid #cbd5e1; 
             z-index: 20; 
             flex-shrink: 0; 
+            box-shadow: 0 -3px 10px rgba(0,0,0,0.04);
         }
-        .file-label { cursor: pointer; font-size: 1.25rem; color: #475569; padding: 2px; display: flex; align-items: center; transition: 0.3s; }
+        .file-label { cursor: pointer; font-size: 1.35rem; color: #475569; padding: 4px; display: flex; align-items: center; transition: 0.3s; }
         .file-label:hover { color: var(--primary); }
         #fileInput { display: none; }
         
-        .input-area input[type="text"] { flex: 1; padding: 9px 14px; border-radius: 20px; border: 1px solid #cbd5e1; outline: none; font-size: 0.9rem; background: #ffffff; }
-        .send-btn { background: var(--primary); color: white; border: none; padding: 9px 16px; border-radius: 20px; cursor: pointer; font-weight: 800; font-size: 0.85rem; display: flex; align-items: center; gap: 5px; transition: 0.3s; flex-shrink: 0; }
+        .input-area input[type="text"] { flex: 1; padding: 10px 16px; border-radius: 24px; border: 1.5px solid #cbd5e1; outline: none; font-size: 0.95rem; background: #f8fafc; }
+        .input-area input[type="text"]:focus { border-color: var(--primary); background: #ffffff; }
+        
+        .send-btn { background: var(--primary); color: white; border: none; padding: 10px 18px; border-radius: 24px; cursor: pointer; font-weight: 800; font-size: 0.9rem; display: flex; align-items: center; gap: 6px; transition: 0.3s; flex-shrink: 0; }
         .send-btn:hover { background: var(--primary-dark); }
 
-        #loader { display: none; background: #fef08a; color: #854d0e; padding: 5px; text-align: center; font-size: 0.8rem; font-weight: bold; border-bottom: 1px solid #fde047; flex-shrink: 0; }
+        #loader { display: none; background: #fef08a; color: #854d0e; padding: 6px; text-align: center; font-size: 0.85rem; font-weight: bold; border-bottom: 1px solid #fde047; flex-shrink: 0; }
 
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.65); justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(2px); }
-        .modal-content { background: white; padding: 16px; border-radius: 14px; width: 92%; max-width: 520px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); max-height: 88vh; overflow-y: auto; }
-        .modal-header { font-size: 0.98rem; font-weight: 800; margin-bottom: 10px; color: var(--primary); display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 6px; }
+        .modal-content { background: white; padding: 18px; border-radius: 16px; width: 92%; max-width: 520px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); max-height: 88vh; overflow-y: auto; }
+        .modal-header { font-size: 1.05rem; font-weight: 800; margin-bottom: 12px; color: var(--primary); display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; }
         
-        .setting-section { margin-bottom: 10px; background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0; }
-        .setting-title { font-weight: 800; font-size: 0.82rem; color: var(--primary); margin-bottom: 6px; text-transform: uppercase; display: flex; align-items: center; gap: 5px; }
-        .setting-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-size: 0.83rem; font-weight: 600; }
-        .close-modal { cursor: pointer; font-size: 1.1rem; border: none; background: none; color: #64748b; }
+        .setting-section { margin-bottom: 12px; background: #f8fafc; padding: 12px; border-radius: 10px; border: 1px solid #e2e8f0; }
+        .setting-title { font-weight: 800; font-size: 0.88rem; color: var(--primary); margin-bottom: 8px; text-transform: uppercase; display: flex; align-items: center; gap: 6px; }
+        .setting-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 0.88rem; font-weight: 600; }
+        .close-modal { cursor: pointer; font-size: 1.2rem; border: none; background: none; color: #64748b; }
         
-        .btn-danger { background: var(--danger); color: white; border: none; padding: 8px 10px; border-radius: 6px; cursor: pointer; font-weight: 800; font-size: 0.8rem; width: 100%; margin-top: 4px; }
-        .btn-warning { background: var(--secondary); color: var(--primary-dark); border: none; padding: 5px 8px; border-radius: 6px; cursor: pointer; font-weight: 800; font-size: 0.75rem; }
-        .btn-primary-sm { background: var(--primary); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 700; cursor: pointer; }
+        .btn-danger { background: var(--danger); color: white; border: none; padding: 9px 12px; border-radius: 8px; cursor: pointer; font-weight: 800; font-size: 0.85rem; width: 100%; margin-top: 6px; }
+        .btn-warning { background: var(--secondary); color: var(--primary-dark); border: none; padding: 6px 10px; border-radius: 8px; cursor: pointer; font-weight: 800; font-size: 0.8rem; }
+        .btn-primary-sm { background: var(--primary); color: white; border: none; padding: 8px 14px; border-radius: 8px; font-size: 0.85rem; font-weight: 700; cursor: pointer; }
         
-        .perm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; background: #ffffff; padding: 8px; border-radius: 6px; border: 1px solid #cbd5e1; margin-top: 5px; }
-        .perm-grid label { font-size: 0.78rem; font-weight: 600; display: flex; align-items: center; gap: 5px; cursor: pointer; }
-        .perm-grid input[type="checkbox"] { accent-color: var(--primary); width: 15px; height: 15px; }
+        .perm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; background: #ffffff; padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; margin-top: 6px; }
+        .perm-grid label { font-size: 0.82rem; font-weight: 600; display: flex; align-items: center; gap: 6px; cursor: pointer; }
+        .perm-grid input[type="checkbox"] { accent-color: var(--primary); width: 16px; height: 16px; }
 
-        .seen-list-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 4px; border-bottom: 1px solid #f1f5f9; font-size: 0.82rem; }
+        .seen-list-item { display: flex; align-items: center; justify-content: space-between; padding: 9px 6px; border-bottom: 1px solid #f1f5f9; font-size: 0.88rem; }
         .seen-user-name { font-weight: 800; color: var(--primary); }
-        .seen-user-role { font-size: 0.7rem; color: #64748b; display: block; }
-        .seen-time-tag { font-size: 0.7rem; color: #0284c7; font-weight: 700; background: #e0f2fe; padding: 2px 6px; border-radius: 6px; }
+        .seen-user-role { font-size: 0.75rem; color: #64748b; display: block; }
+        .seen-time-tag { font-size: 0.72rem; color: #0284c7; font-weight: 700; background: #e0f2fe; padding: 3px 8px; border-radius: 6px; }
 
         @media (max-width: 768px) {
-            body { padding: 0; }
+            body { padding: 0; background: white; }
             .chat-container { height: 100vh; height: 100dvh; border-radius: 0; border: none; }
-            .org-header { padding: 6px 8px; }
-            .org-title { font-size: 0.82rem; }
+            .org-header { padding: 8px 10px; }
+            .org-title { font-size: 0.9rem; }
+            .message { font-size: 0.92rem; padding: 8px 11px; }
+            .input-area { padding: 8px 10px; }
+            .send-btn span { display: none; } /* मोबाईलवर फक्त आयकॉन दाखवून जागा वाचवणे */
+            .send-btn { padding: 10px 14px; border-radius: 50%; }
         }
     </style>
 </head>
@@ -223,7 +231,7 @@
                     <span class="role-badge" id="userRoleBadge">सदस्य</span>
                 </div>
             </div>
-            <div style="display:flex; gap:5px; align-items:center;">
+            <div style="display:flex; gap:6px; align-items:center;">
                 <div id="adminControls" style="display:none;">
                     <button class="admin-btn" onclick="openAdminSettings()"><i class="fa-solid fa-gear"></i> सेटिंग्ज</button>
                 </div>
@@ -233,7 +241,7 @@
 
         <div class="search-tab-row">
             <div class="search-box">
-                <i class="fa-solid fa-magnifying-glass" style="color:#e2e8f0; font-size:0.75rem; margin-right:4px;"></i>
+                <i class="fa-solid fa-magnifying-glass" style="color:#e2e8f0; font-size:0.8rem; margin-right:4px;"></i>
                 <input type="text" id="searchInput" placeholder="मेसेज, नाव किंवा फाईल शोधा..." oninput="filterMessages()">
             </div>
 
@@ -273,9 +281,9 @@
             <button class="close-modal" onclick="closeModal('loginModal')">✖</button>
         </div>
         <div style="padding: 10px 0;">
-            <input type="email" id="loginEmail" placeholder="नोंदणीकृत ई-मेल ID" style="width:100%; padding:8px; margin-bottom:8px; border:1px solid #cbd5e1; border-radius:6px;">
-            <input type="password" id="loginPass" placeholder="पासवर्ड" style="width:100%; padding:8px; margin-bottom:12px; border:1px solid #cbd5e1; border-radius:6px;">
-            <button class="btn-primary-sm" onclick="performAdminLogin()" style="width:100%; padding:8px;"><i class="fa-solid fa-right-to-bracket"></i> लॉगिन करा</button>
+            <input type="email" id="loginEmail" placeholder="नोंदणीकृत ई-मेल ID" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #cbd5e1; border-radius:8px;">
+            <input type="password" id="loginPass" placeholder="पासवर्ड" style="width:100%; padding:10px; margin-bottom:14px; border:1px solid #cbd5e1; border-radius:8px;">
+            <button class="btn-primary-sm" onclick="performAdminLogin()" style="width:100%; padding:10px;"><i class="fa-solid fa-right-to-bracket"></i> लॉगिन करा</button>
         </div>
     </div>
 </div>
@@ -289,7 +297,7 @@
         
         <div class="setting-section" id="sec_super_admin_panel" style="background:#f0f9ff; border-color:#0284c7; display:none;">
             <div class="setting-title" style="color:#0369a1;"><i class="fa-solid fa-user-shield"></i> 👑 सब-ॲडमिन टिक-बॉक्स परवानग्या</div>
-            <p style="font-size:0.72rem; color:#475569; margin-bottom:4px;">सब-ॲडमिनला कोणते अधिकार द्यायचे ते निवडा:</p>
+            <p style="font-size:0.75rem; color:#475569; margin-bottom:6px;">सब-ॲडमिनला कोणते अधिकार द्यायचे ते निवडा:</p>
 
             <div class="perm-grid">
                 <label><input type="checkbox" id="perm_profile_settings" checked> 👤 सदस्याचे नाव व पद</label>
@@ -300,7 +308,7 @@
                 <label><input type="checkbox" id="perm_clear_room"> ⚠️ पूर्ण रूम क्लियर करणे</label>
             </div>
 
-            <button class="btn-primary-sm" onclick="saveSubAdminPermissions()" style="width:100%; margin-top:6px;">
+            <button class="btn-primary-sm" onclick="saveSubAdminPermissions()" style="width:100%; margin-top:8px;">
                 <i class="fa-solid fa-save"></i> परवानग्या सेव्ह करा
             </button>
         </div>
@@ -378,10 +386,11 @@
     const SUPER_ADMIN_EMAIL = "hangemahesh498@gmail.com";
     const TELEGRAM_BOT_TOKEN = "8598859316:AAHzoROJMwIFlm30XO3DxHJdk3kkjv6uS5c";
 
-    let currentUser = "वैज्ञानिक अधिकारी"; 
-    let currentUserMobile = "९८xxxxxx००";
-    let currentUserPost = "क्ष-किरण वैज्ञानिक अधिकारी (गट-क)";
-    let currentUserOffice = "आरोग्य विभाग, महाराष्ट्र";
+    // डीफॉल्ट माहिती
+    let currentUser = ""; 
+    let currentUserMobile = "";
+    let currentUserPost = "";
+    let currentUserOffice = "";
     let currentUserPhoto = "1001264489.png"; 
     
     let currentRole = "member"; 
@@ -413,29 +422,57 @@
     const auth = firebase.auth();
 
     /* =======================================================
-       २. ऑथेन्टिकेशन (मेंबर व ॲडमिन दोन्हीची अचूक नावे ओळखणे)
+       २. सदस्याचे मूळ नाव व माहिती सेशन्समधून अचूक मिळवणे (Fix)
        ======================================================= */
-    window.onload = () => {
+    function initUserCredentials() {
         const urlParams = new URLSearchParams(window.location.search);
-        const hasUrlParams = urlParams.has('name');
-
-        if (hasUrlParams) {
-            currentUser = urlParams.get('name'); 
-            currentUserMobile = urlParams.get('mobile') || "९८xxxxxx००";
-            currentUserPost = urlParams.get('post') || "गट-क सदस्य";
-            currentUserOffice = urlParams.get('office') || urlParams.get('district') || "आरोग्य विभाग";
-            currentUserPhoto = urlParams.get('photo') || "1001264489.png";
-            
-            // डॅशबोर्डवरून आलेला रोल (admin की member)
-            let passedRole = urlParams.get('role');
-            if (passedRole === 'admin') {
-                currentRole = "sub_admin";
-            } else {
-                currentRole = "member";
+        let nameParam = urlParams.get('name');
+        
+        // १. लोकल स्टोरेज (memberSession) तपासून मूळ लॉगिन डेटा वाचणे
+        let sessionMember = null;
+        try {
+            const savedSession = localStorage.getItem("memberSession");
+            if (savedSession) {
+                sessionMember = JSON.parse(savedSession);
             }
+        } catch(e) {
+            console.error("Local session parse error:", e);
         }
 
+        // २. जर URL मध्ये नाव असेल तर ते प्राधान्याने घेणे, अन्यथा Session डेटा वापरणे
+        if (nameParam && nameParam.trim() !== "" && nameParam !== "undefined" && nameParam !== "null") {
+            currentUser = nameParam.trim();
+            currentUserMobile = urlParams.get('mobile') || (sessionMember ? sessionMember.mobile : "") || "";
+            currentUserPost = urlParams.get('post') || (sessionMember ? sessionMember.designation : "") || "गट-क सदस्य";
+            currentUserOffice = urlParams.get('office') || urlParams.get('district') || (sessionMember ? (sessionMember.district || sessionMember.workplace) : "") || "महाराष्ट्र";
+            currentUserPhoto = urlParams.get('photo') || (sessionMember ? sessionMember.photoUrl : "") || "1001264489.png";
+        } else if (sessionMember && sessionMember.name) {
+            currentUser = sessionMember.name;
+            currentUserMobile = sessionMember.mobile || "";
+            currentUserPost = sessionMember.designation || "गट-क सदस्य";
+            currentUserOffice = sessionMember.district || sessionMember.workplace || "महाराष्ट्र";
+            currentUserPhoto = sessionMember.photoUrl || "1001264489.png";
+        } else {
+            currentUser = "सदस्य अधिकारी"; // जनरिक नाव ऐवजी स्वच्छ नाव
+        }
+
+        let passedRole = urlParams.get('role');
+        if (passedRole === 'admin') {
+            currentRole = "sub_admin";
+        } else if (passedRole === 'super_admin') {
+            currentRole = "super_admin";
+        } else {
+            currentRole = "member";
+        }
+    }
+
+    window.onload = () => {
+        initUserCredentials();
+
         auth.onAuthStateChanged(async (user) => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const hasUrlParams = urlParams.has('name');
+
             if (user && !hasUrlParams) {
                 if (user.email === SUPER_ADMIN_EMAIL) {
                     currentRole = "super_admin";
@@ -459,7 +496,6 @@
                 document.getElementById("loginBtnHead").innerHTML = '<i class="fa-solid fa-power-off"></i> लॉगआउट';
                 document.getElementById("loginBtnHead").onclick = performAdminLogout;
             } else {
-                if (!hasUrlParams) currentRole = "member";
                 document.getElementById("loginBtnHead").innerHTML = '<i class="fa-solid fa-lock"></i> ॲडमिन';
                 document.getElementById("loginBtnHead").onclick = openLoginModal;
             }
@@ -628,14 +664,14 @@
     }
 
     /* =======================================================
-       ३. मेसेज रेंडर लॉजिक (ॲडमिन vs मेंबर बॅजसह नाव दाखवणे)
+       ३. मेसेज रेंडर लॉजिक (नाव, पद आणि बॅज)
        ======================================================= */
     function renderMessages(messages) {
         const chatBox = document.getElementById("chatBox");
         chatBox.innerHTML = "";
 
         messages.forEach((data) => {
-            const userName = data.senderName || data.user || "वैज्ञानिक अधिकारी";
+            const userName = data.senderName || data.user || "सदस्य";
             const userPost = data.senderRole || data.userPost || "गट-क सदस्य";
             const userMobile = data.userMobile || "";
             const userOffice = data.userOffice || "";
@@ -650,7 +686,7 @@
             if (appSettings.showProfilePhotos) {
                 const avatar = document.createElement("div");
                 avatar.className = "avatar";
-                if (data.userPhoto) {
+                if (data.userPhoto && data.userPhoto !== "1001264489.png") {
                     avatar.innerHTML = `<img src="${data.userPhoto}" alt="DP" onerror="this.src='1001264489.png'">`;
                 } else {
                     avatar.innerText = userName ? userName.charAt(0).toUpperCase() : "U";
@@ -761,12 +797,15 @@
     function handleEnter(e) { if(e.key === 'Enter') sendTextMessage(); }
 
     /* =======================================================
-       ४. मेसेज पाठवणे (senderType : admin / member साठवणे)
+       ४. मेसेज पाठवणे (अचूक नावांसह सेव्ह करणे)
        ======================================================= */
     function sendTextMessage() {
         const input = document.getElementById("msgInput");
         const text = input.value.trim();
         if (text) {
+            // खात्रीशीर नाव तपासणे
+            if(!currentUser || currentUser === "") initUserCredentials();
+
             const now = new Date();
             const timeStr = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
             const isTypeAdmin = (currentRole === "super_admin" || currentRole === "sub_admin");
@@ -815,6 +854,8 @@
     async function handleFileUpload(event) {
         const file = event.target.files[0];
         if (!file) return;
+
+        if(!currentUser || currentUser === "") initUserCredentials();
 
         document.getElementById("loader").style.display = "block"; 
 
