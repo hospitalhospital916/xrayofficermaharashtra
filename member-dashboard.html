@@ -34,7 +34,6 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mukta', sans-serif; }
         
-        /* Layout Desktop View Height Fixes */
         html, body { 
             min-height: 100vh;
             background-color: var(--bg-light); 
@@ -85,18 +84,6 @@
         .tab-btn { padding: 7px 14px; border: none; background: rgba(255,255,255,0.12); color: white; font-size: 0.85rem; font-weight: 700; cursor: pointer; border-radius: 8px; transition: 0.3s; display: inline-flex; align-items: center; gap: 6px; }
         .tab-btn:hover { background: rgba(255,255,255,0.25); }
         .tab-btn.active { background: var(--secondary); color: var(--dark); }
-
-        /* 🚀 SPECIAL CHAT-ACTIVE MODE STYLES (HEADER HIDE & FULLSCREEN HEIGHT FIX) */
-        body.chat-active .navbar { display: none !important; } /* दुहेरी नाव व हेडर लपवून जागा वाचवली */
-        body.chat-active .ticker-wrap { display: none !important; }
-        body.chat-active .chat-floating-btn { display: none !important; }
-        body.chat-active .tab-menu { position: sticky; top: 0; z-index: 10000; padding: 4px 8px; }
-        body.chat-active .container { margin: 0 !important; padding: 0 !important; max-width: 100% !important; height: calc(100vh - 42px) !important; height: calc(100dvh - 42px) !important; }
-        body.chat-active #tab-chat { height: 100% !important; }
-        body.chat-active #tab-chat .panel { border: none !important; border-radius: 0 !important; box-shadow: none !important; margin-bottom: 0 !important; height: 100% !important; display: flex; flex-direction: column; }
-        body.chat-active #tab-chat .panel-header { display: none !important; }
-        body.chat-active #tab-chat .panel-body { height: 100% !important; min-height: 100% !important; padding: 0 !important; overflow: hidden !important; flex: 1; }
-        body.chat-active #memberChatIframe { height: 100% !important; min-height: 100% !important; border: none !important; }
 
         /* App Wrapper & Main Container */
         #appContent {
@@ -161,12 +148,96 @@
         .form-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; align-items: center; }
         .form-row > div { flex: 1; min-width: 180px; }
 
-        /* Floating Live Chat Widget Button */
-        .chat-floating-btn { position: fixed; bottom: 20px; right: 20px; width: 55px; height: 55px; background: linear-gradient(135deg, #0B3D91, #25D366); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.6rem; box-shadow: 0 8px 25px rgba(37, 211, 102, 0.5); cursor: pointer; border: 3px solid #ffffff; z-index: 9999; transition: transform 0.2s; }
-        .chat-floating-btn:hover { transform: scale(1.08); }
+        /* 🚀 आकर्षक ३D ग्लोईंग फ्लोटिंग चॅट विजेट CSS */
+        #floatingLiveChatWidget { 
+            position: fixed; 
+            bottom: 25px; 
+            right: 20px; 
+            z-index: 9990; 
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        /* "चॅट करा" आकर्षक लेबल */
+        .chat-pill-label {
+            background: linear-gradient(135deg, #0B3D91, #07275e);
+            color: #ffffff;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 800;
+            box-shadow: 0 6px 18px rgba(11, 61, 145, 0.35);
+            border: 1.5.px solid #f39c12;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            animation: bounceLeft 2s infinite;
+        }
+
+        /* ३D ग्लोईंग आयकॉन बटण */
+        .chat-floating-btn { 
+            width: 62px; 
+            height: 62px; 
+            background: linear-gradient(135deg, #0B3D91, #25D366); 
+            color: white; 
+            border-radius: 50%; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            font-size: 1.8rem; 
+            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.5); 
+            position: relative; 
+            border: 3px solid #ffffff;
+            animation: pulseGlow 2s infinite; 
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .chat-floating-btn:hover { 
+            transform: scale(1.12) rotate(-6deg); 
+            box-shadow: 0 12px 30px rgba(37, 211, 102, 0.7); 
+        }
+
+        /* पेंडिंग मेसेज लाईव्ह बॅज (Live Badge) */
+        .chat-unread-badge { 
+            position: absolute; 
+            top: -4px; 
+            right: -4px; 
+            background: #ef4444; 
+            color: white; 
+            border-radius: 12px; 
+            padding: 2px 7px; 
+            font-size: 0.72rem; 
+            font-weight: 800; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            border: 2px solid white; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            letter-spacing: 0.5px;
+        }
+
+        /* प्रकाश टाकणारे लाईव्ह अ‍ॅनिमेशन */
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 0 0 rgba(11, 61, 145, 0.7); }
+            70% { box-shadow: 0 0 0 16px rgba(37, 211, 102, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(11, 61, 145, 0); }
+        }
+
+        @keyframes bounceLeft {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(-4px); }
+        }
+
+        /* 🚀 चॅट टॅब लेआउट फिक्स (गायब न होता पूर्ण स्क्रीनवर दिसावे म्हणून) */
+        #tab-chat { height: 82vh; }
+        #tab-chat .panel { height: 100%; border-radius: 12px; overflow: hidden; margin-bottom: 0; border: 1px solid #cbd5e1; }
+        #tab-chat .panel-body { height: 100%; padding: 0; }
+        #memberChatIframe { width: 100%; height: 100%; border: none; }
 
         @media print {
-            .no-print, .navbar, .tab-menu, .ticker-wrap, .chat-floating-btn { display: none !important; }
+            .no-print, .navbar, .tab-menu, .ticker-wrap, #floatingLiveChatWidget { display: none !important; }
             .container, .panel, .panel-body { margin: 0 !important; padding: 0 !important; border: none !important; box-shadow: none !important; }
             #printLetterArea { display: block !important; }
         }
@@ -313,7 +384,7 @@
                         </p>
 
                         <div class="forms-cards-grid">
-                            <a href="Leave_Application_System.html" class="auto-form-card">
+                            <a href="Leave_Application_System.html" class="auto-form-card" onclick="window.logMemberActivity('रजा अर्ज प्रणाली उघडली')">
                                 <div>
                                     <div class="auto-form-icon" style="color:#2563eb; background:#eff6ff;"><i class="fa fa-calendar-minus"></i></div>
                                     <h4>रजा अर्ज प्रणाली</h4>
@@ -322,7 +393,7 @@
                                 <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#2563eb;">उघडा <i class="fa fa-arrow-right"></i></div>
                             </a>
 
-                            <a href="Service_and_Confirmation_Forms.html" class="auto-form-card">
+                            <a href="Service_and_Confirmation_Forms.html" class="auto-form-card" onclick="window.logMemberActivity('सेवा व स्थिरीकरण अर्ज उघडले')">
                                 <div>
                                     <div class="auto-form-icon" style="color:#059669; background:#ecfdf5;"><i class="fa fa-user-check"></i></div>
                                     <h4>सेवा व स्थिरीकरण अर्ज</h4>
@@ -331,7 +402,7 @@
                                 <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#059669;">उघडा <i class="fa fa-arrow-right"></i></div>
                             </a>
 
-                            <a href="probation_system.html" class="auto-form-card">
+                            <a href="probation_system.html" class="auto-form-card" onclick="window.logMemberActivity('परिवीक्षाधीन कालावधी प्रणाली उघडली')">
                                 <div>
                                     <div class="auto-form-icon" style="color:#7c3aed; background:#f5f3ff;"><i class="fa fa-user-clock"></i></div>
                                     <h4>परिवीक्षाधीन कालावधी प्रणाली</h4>
@@ -340,7 +411,7 @@
                                 <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#7c3aed;">उघडा <i class="fa fa-arrow-right"></i></div>
                             </a>
 
-                            <a href="small_family.html" class="auto-form-card">
+                            <a href="small_family.html" class="auto-form-card" onclick="window.logMemberActivity('लहान कुटुंबाचे प्रतिज्ञापत्र उघडले')">
                                 <div>
                                     <div class="auto-form-icon" style="color:#d97706; background:#fffbeb;"><i class="fa fa-users-between-lines"></i></div>
                                     <h4>लहान कुटुंबाचे प्रतिज्ञापत्र</h4>
@@ -349,7 +420,7 @@
                                 <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#d97706;">उघडा <i class="fa fa-arrow-right"></i></div>
                             </a>
 
-                            <a href="asset-form.html" class="auto-form-card">
+                            <a href="asset-form.html" class="auto-form-card" onclick="window.logMemberActivity('मालमत्ता व दायित्व अर्ज उघडला')">
                                 <div>
                                     <div class="auto-form-icon" style="color:#0891b2; background:#ecfeff;"><i class="fa fa-building-columns"></i></div>
                                     <h4>मालमत्ता व दायित्व अर्ज</h4>
@@ -358,7 +429,7 @@
                                 <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#0891b2;">उघडा <i class="fa fa-arrow-right"></i></div>
                             </a>
 
-                            <a href="financial-claims.html" class="auto-form-card">
+                            <a href="financial-claims.html" class="auto-form-card" onclick="window.logMemberActivity('आर्थिक दावे व भत्ते उघडले')">
                                 <div>
                                     <div class="auto-form-icon" style="color:#16a34a; background:#f0fdf4;"><i class="fa fa-file-invoice-dollar"></i></div>
                                     <h4>आर्थिक दावे व भत्ते</h4>
@@ -367,7 +438,7 @@
                                 <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#16a34a;">उघडा <i class="fa fa-arrow-right"></i></div>
                             </a>
 
-                            <a href="ligal_forms.html" class="auto-form-card">
+                            <a href="ligal_forms.html" class="auto-form-card" onclick="window.logMemberActivity('कायदेशीर फॉर्म उघडले')">
                                 <div>
                                     <div class="auto-form-icon" style="color:#e11d48; background:#fff1f2;"><i class="fa fa-scale-balanced"></i></div>
                                     <h4>कायदेशीर फॉर्म व मसुदे</h4>
@@ -376,7 +447,7 @@
                                 <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#e11d48;">उघडा <i class="fa fa-arrow-right"></i></div>
                             </a>
 
-                            <a href="tld-generator.html" class="auto-form-card">
+                            <a href="tld-generator.html" class="auto-form-card" onclick="window.logMemberActivity('TLD बॅज डोजिमीटर जनरेटर उघडला')">
                                 <div>
                                     <div class="auto-form-icon" style="color:#9333ea; background:#faf5ff;"><i class="fa fa-radiation"></i></div>
                                     <h4>TLD बॅज डोजिमीटर जनरेटर</h4>
@@ -385,7 +456,7 @@
                                 <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#9333ea;">उघडा <i class="fa fa-arrow-right"></i></div>
                             </a>
 
-                            <a href="gr.html" class="auto-form-card">
+                            <a href="gr.html" class="auto-form-card" onclick="window.logMemberActivity('शासकीय निर्णय GR संग्रह उघडला')">
                                 <div>
                                     <div class="auto-form-icon" style="color:#dc2626; background:#fef2f2;"><i class="fa fa-file-pdf"></i></div>
                                     <h4>शासकीय निर्णय (G.R.) संग्रह</h4>
@@ -394,7 +465,7 @@
                                 <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#dc2626;">उघडा <i class="fa fa-arrow-right"></i></div>
                             </a>
 
-                            <a href="documents.html" class="auto-form-card">
+                            <a href="documents.html" class="auto-form-card" onclick="window.logMemberActivity('कागदपत्रे व दस्तऐवज उघडले')">
                                 <div>
                                     <div class="auto-form-icon" style="color:#0284c7; background:#f0f9ff;"><i class="fa fa-folder-open"></i></div>
                                     <h4>कागदपत्रे व दस्तऐवज</h4>
@@ -403,7 +474,7 @@
                                 <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#0284c7;">उघडा <i class="fa fa-arrow-right"></i></div>
                             </a>
 
-                            <a href="map.html" class="auto-form-card">
+                            <a href="map.html" class="auto-form-card" onclick="window.logMemberActivity('एक्स-रे सेंटर्स मॅप उघडला')">
                                 <div>
                                     <div class="auto-form-icon" style="color:#ea580c; background:#fff7ed;"><i class="fa fa-map-location-dot"></i></div>
                                     <h4>महाराष्ट्रातील एक्स-रे सेंटर्स मॅप</h4>
@@ -412,7 +483,7 @@
                                 <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#ea580c;">उघडा <i class="fa fa-arrow-right"></i></div>
                             </a>
 
-                            <a href="aantar_mandal_badli_prostav.html" class="auto-form-card">
+                            <a href="aantar_mandal_badli_prostav.html" class="auto-form-card" onclick="window.logMemberActivity('आंतर मंडळ बदली प्रस्ताव जनरेटर उघडला')">
                                 <div>
                                     <div class="auto-form-icon" style="color:#d97706; background:#fffbeb;"><i class="fa fa-file-export"></i></div>
                                     <h4>आंतर मंडळ बदली प्रस्ताव जनरेटर</h4>
@@ -421,7 +492,7 @@
                                 <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#d97706;">उघडा <i class="fa fa-arrow-right"></i></div>
                             </a>
 
-                            <a href="gallery.html" class="auto-form-card">
+                            <a href="gallery.html" class="auto-form-card" onclick="window.logMemberActivity('फोटो गॅलरी उघडली')">
                                 <div>
                                     <div class="auto-form-icon" style="color:#db2777; background:#fdf2f8;"><i class="fa fa-images"></i></div>
                                     <h4>फोटो गॅलरी व उपक्रम</h4>
@@ -439,7 +510,7 @@
                 <div class="panel">
                     <div class="panel-header bg-primary" style="color:white; border-top:none;">
                         <span><i class="fa fa-id-badge"></i> ॲडमिन स्वीकृत डिजिटल आय-कार्ड (Official Member I-Card)</span>
-                        <button class="btn-action bg-warning" style="color:black;" onclick="window.print()"><i class="fa fa-print"></i> प्रिन्ट करा</button>
+                        <button class="btn-action bg-warning" style="color:black;" onclick="window.logMemberActivity('डिजिटल आय-कार्ड प्रिन्ट केले'); window.print();"><i class="fa fa-print"></i> प्रिन्ट करा</button>
                     </div>
                     <div class="panel-body" style="background:#f8fafc; display:flex; justify-content:center; padding: 25px 10px;">
                         <div class="icard-card-box" id="officialICardBox">
@@ -473,7 +544,7 @@
                 <div class="panel">
                     <div class="panel-header bg-warning">
                         <span><i class="fa fa-receipt"></i> अधिकृत ई-पावती (Approved Electronic Receipt)</span>
-                        <button class="btn-action bg-primary" onclick="window.print()"><i class="fa fa-print"></i> ई-पावती प्रिंट करा</button>
+                        <button class="btn-action bg-primary" onclick="window.logMemberActivity('ई-पावती प्रिन्ट केली'); window.print();"><i class="fa fa-print"></i> ई-पावती प्रिंट करा</button>
                     </div>
                     <div class="panel-body" style="background:#f8fafc; padding:20px;">
                         
@@ -697,11 +768,11 @@
                 </div>
             </div>
 
-            <!-- TAB 10: LIVE CHAT SECTION (OPTIMIZED FOR MOBILE/PWA VIEW) -->
+            <!-- TAB 10: LIVE CHAT SECTION -->
             <div id="tab-chat" class="tab-content">
                 <div class="panel" style="margin-bottom:0;">
                     <div class="panel-body" style="padding:0;">
-                        <iframe id="memberChatIframe" src="chat.html" style="width:100%; height:100%; border:none;" title="Live Chat"></iframe>
+                        <iframe id="memberChatIframe" src="chat.html" title="Live Chat"></iframe>
                     </div>
                 </div>
             </div>
@@ -726,9 +797,15 @@
     <!-- PRINT LETTER TEMPLATE RENDER CONTAINER -->
     <div id="printLetterArea" style="display:none;"></div>
 
-    <!-- Floating Live Chat Widget Button -->
-    <div class="chat-floating-btn" id="chatFloatingBtn" title="Live Chat" onclick="openTab('tab-chat', document.getElementById('btn_tab_chat'))">
-        <i class="fa fa-comments"></i>
+    <!-- 🚀 FLOATING LIVE CHAT LAUNCHER WIDGET (नवी डिझाईन व पेंडिंग मेसेज बॅजसह) -->
+    <div id="floatingLiveChatWidget" onclick="openTab('tab-chat', document.getElementById('btn_tab_chat'))" title="💬 Live Chat (संवाद साधा)">
+        <div class="chat-pill-label">
+            <i class="fa-solid fa-bolt" style="color: #f39c12;"></i> चॅट करा
+        </div>
+        <div class="chat-floating-btn">
+            <i class="fa-solid fa-comments"></i>
+            <span class="chat-unread-badge" id="chatUnreadCount">LIVE</span>
+        </div>
     </div>
 
     <!-- FIREBASE JS ENGINE & SCRIPT -->
@@ -761,28 +838,30 @@
         window.grievancesList = [];
         window.tbTemplatesList = [];
 
-        // 🟢 1. MEMBER ACTIVITY LOG HELPER FUNCTION
+        // 🟢 1. MASTER MEMBER ACTIVITY LOG FUNCTION
         window.logMemberActivity = async function(action) {
             let m = window.currentMember;
-            if (!m) return;
+            let memberDisplayName = m ? (m.name || m.memberName || m.fullName || 'सभासद') : 'सभासद';
+            let mobileStr = m ? (m.mobile || '') : '';
+            let fullMemberInfo = mobileStr ? `${memberDisplayName} (${mobileStr})` : memberDisplayName;
 
             try {
                 await addDoc(collection(db, "member_logs"), {
-                    memberId: m.id || '',
-                    memberName: m.name || m.memberName || '',
-                    mobile: m.mobile || '',
-                    district: m.district || '',
-                    mandal: m.mandal || '',
+                    memberId: m ? (m.id || '') : '',
+                    memberName: fullMemberInfo,
+                    mobile: mobileStr,
+                    district: m ? (m.district || '') : '',
+                    mandal: m ? (m.mandal || '') : '',
                     action: action,
                     timestamp: Date.now(),
                     dateString: new Date().toLocaleString('mr-IN')
                 });
             } catch (e) {
-                console.error("Log error:", e);
+                console.error("Member Log Error:", e);
             }
         };
 
-        // AUTO-LOGIN CHECK (पेज रिफ्रेश केल्यावर सेशन ऑटो-लोड होईल)
+        // AUTO-LOGIN CHECK
         window.addEventListener('DOMContentLoaded', () => {
             let savedSession = localStorage.getItem("memberSession");
             if(savedSession) {
@@ -797,7 +876,7 @@
             }
         });
 
-        // Tab Navigation with Auto Viewport Adjustments for Mobile Chat
+        // Tab Navigation & Viewport Management
         window.openTab = function(tabId, btn) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
@@ -806,19 +885,11 @@
             if(target) target.classList.add('active');
             if(btn) btn.classList.add('active');
 
-            let floatBtn = document.getElementById('chatFloatingBtn');
-            let metaViewport = document.querySelector('meta[name="viewport"]');
+            let floatWidget = document.getElementById('floatingLiveChatWidget');
 
+            // 🟢 चॅट टॅब उघडल्यावर फ्लोटिंग बटण लपवा, इतर टॅबवर दाखवा
             if(tabId === 'tab-chat') {
-                document.body.classList.add('chat-active');
-                if(floatBtn) floatBtn.style.display = 'none';
-
-                /* चॅट टॅबवर आल्यावर मोबाईल स्क्रीननुसार रिस्पॉन्सिव्ह व्ह्यू फिक्स */
-                if (metaViewport) {
-                    metaViewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
-                }
-
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                if(floatWidget) floatWidget.style.display = 'none';
 
                 let m = window.currentMember;
                 let chatIframe = document.getElementById('memberChatIframe');
@@ -827,17 +898,25 @@
                     chatIframe.src = `chat.html?name=${encodeURIComponent(mName)}&mobile=${encodeURIComponent(m.mobile || '')}&post=${encodeURIComponent(m.designation || 'गट-क सदस्य')}&office=${encodeURIComponent(m.district || m.mandal || 'महाराष्ट्र')}&photo=${encodeURIComponent(m.photoUrl || '')}&role=member`;
                 }
             } else {
-                document.body.classList.remove('chat-active');
-                if(floatBtn) floatBtn.style.display = 'flex';
-
-                if (window.innerWidth < 1280 && metaViewport) {
-                    var scale = window.innerWidth / 1280;
-                    metaViewport.setAttribute('content', 'width=1280, initial-scale=' + scale + ', maximum-scale=3.0, user-scalable=yes');
-                }
+                if(floatWidget) floatWidget.style.display = 'flex';
             }
 
+            // 🟢 Log tab viewing
             if (window.currentMember) {
-                window.logMemberActivity(`टॅब उघडला: ${tabId}`);
+                let tabNames = {
+                    'tab-dash': 'डॅशबोर्ड',
+                    'tab-auto-forms': 'स्वयंचलित अर्ज प्रणाली',
+                    'tab-icard': 'डिजिटल आय-कार्ड',
+                    'tab-receipt': 'माझी ई-पावती',
+                    'tab-templates': 'पत्र / अर्ज जनरेटर',
+                    'tab-grievances': 'तक्रार निवारण',
+                    'tab-info-gather': 'माहिती द्या फॉर्म',
+                    'tab-employees': 'राज्य कर्मचारी सूची',
+                    'tab-documents': 'परिपत्रके व फोल्डर्स',
+                    'tab-chat': 'Live Chat',
+                    'tab-polls': 'मतदान व पोल'
+                };
+                window.logMemberActivity(`टॅब उघडला: ${tabNames[tabId] || tabId}`);
             }
 
             if(tabId === 'tab-dash') window.renderDashboardChartsAndMap();
@@ -902,6 +981,7 @@
                 window.currentMember = mData;
                 localStorage.setItem("memberSession", JSON.stringify(mData));
 
+                // 🟢 LOG LOGIN EVENT
                 await window.logMemberActivity("पोर्टलवर लॉगिन केले (Logged In)");
 
                 Swal.close();
@@ -916,19 +996,18 @@
             }
         };
 
-        // 🟢 सुरक्षित लॉगआउट
-        window.logoutMember = function() {
+        // 🟢 LOGOUT HANDLER
+        window.logoutMember = async function() {
             if (window.currentMember) {
-                window.logMemberActivity("पोर्टलवरून लॉगआउट केले (Logged Out)");
+                await window.logMemberActivity("पोर्टलवरून लॉगआउट केले (Logged Out)");
             }
             localStorage.removeItem("memberSession");
             window.currentMember = null;
-            document.body.classList.remove('chat-active');
             document.getElementById('appContent').style.display = 'none';
             document.getElementById('loginOverlay').style.display = 'flex';
             document.getElementById('loginPassword').value = '';
-            let floatBtn = document.getElementById('chatFloatingBtn');
-            if(floatBtn) floatBtn.style.display = 'flex';
+            let floatWidget = document.getElementById('floatingLiveChatWidget');
+            if(floatWidget) floatWidget.style.display = 'flex';
         };
 
         // Master Init
@@ -948,6 +1027,9 @@
                 if(snap.exists() && snap.data().text) document.getElementById('infoPromptBox').innerText = snap.data().text;
             });
 
+            // 🟢 LISTEN TO UNREAD CHAT MESSAGES FOR BADGE
+            window.listenToUnreadChatMessages();
+
             window.checkAndShowPopupNotice();
             await window.loadDashboardData();
             window.renderOfficialICard();
@@ -957,6 +1039,23 @@
             window.loadFoldersAndFiles();
             window.loadPolls();
             window.loadTemplatesAndAutoLetters();
+        };
+
+        // 🟢 REAL-TIME UNREAD MESSAGES LISTENER
+        window.listenToUnreadChatMessages = function() {
+            try {
+                onSnapshot(collection(db, "chat_messages"), (snap) => {
+                    let msgCount = snap.docs.length;
+                    let badge = document.getElementById('chatUnreadCount');
+                    if(badge) {
+                        if(msgCount > 0) {
+                            badge.innerText = msgCount > 99 ? '99+' : msgCount;
+                        } else {
+                            badge.innerText = 'LIVE';
+                        }
+                    }
+                });
+            } catch(e) { console.error("Chat count listener error:", e); }
         };
 
         // Popup Notice
@@ -971,7 +1070,7 @@
             });
         };
 
-      // Dashboard Stats, Mandal Cards & Chart
+        // Dashboard Stats, Mandal Cards & Chart
         window.loadDashboardData = async function() {
             let mSnap = await getDocs(collection(db, "members"));
             window.allMembers = [];
@@ -1112,6 +1211,7 @@
             let m = window.currentMember;
             if(!t || !m) return;
 
+            // 🟢 LOG LETTER GENERATION EVENT
             window.logMemberActivity(`पत्र/अर्ज जनरेट केला: ${t.title}`);
 
             let mName = m.name || m.memberName || '___________';
@@ -1164,13 +1264,14 @@
 
             Swal.fire({title: 'तक्रार नोंदवली जात आहे...', didOpen: () => Swal.showLoading()});
 
-           try {
+            try {
                 let inwardNo = `GRI-2026-${Math.floor(100 + Math.random()*900)}`;
                 await addDoc(collection(db, "grievances"), {
                     inwardNo, memberId: m.id, memberName: m.name || m.memberName || '', mobile: m.mobile,
                     subject, category, details, status: 'Pending', remark: '', date: new Date().toLocaleDateString('mr-IN'), timestamp: Date.now()
                 });
 
+                // 🟢 LOG GRIEVANCE EVENT
                 await window.logMemberActivity(`नवीन तक्रार नोंदवली: ${subject}`);
 
                 document.getElementById('grievanceForm').reset();
@@ -1221,11 +1322,12 @@
                     updatedAt: new Date().toLocaleDateString('mr-IN'), timestamp: Date.now()
                 });
 
+                // 🟢 LOG INFO SUBMIT EVENT
                 await window.logMemberActivity("नवीन माहिती सबमिट केली (Info Gathered)");
 
                 document.getElementById('infoSubmitForm').reset();
                 Swal.fire('यशस्वी', 'आपली माहिती ॲडमिनला सबमिट करण्यात आली!', 'success');
-            } catch(err) { Swal.fire('Error', err.message, 'error'); }
+            } catch(err) { Swal.fire('Error', e.message, 'error'); }
         };
 
         // State Employees Directory
@@ -1275,7 +1377,7 @@
                     <td>${i+1}</td>
                     <td><b>${fl.fileName}</b></td>
                     <td><small>${fl.uploadedAt || '-'}</small></td>
-                    <td><button class="btn-action bg-primary" onclick="window.open('${fl.fileUrl}', '_blank')"><i class="fa fa-eye"></i> पहा</button></td>
+                    <td><button class="btn-action bg-primary" onclick="window.logMemberActivity('परिपत्रक फाईल पाहिली: ${fl.fileName.replace(/'/g, "\\'")}'); window.open('${fl.fileUrl}', '_blank')"><i class="fa fa-eye"></i> पहा</button></td>
                 </tr>
             `).join('');
             document.getElementById('memberFilesBody').innerHTML = filesHtml || '<tr><td colspan="4" style="text-align:center;">फाईल्स उपलब्ध नाहीत.</td></tr>';
@@ -1289,7 +1391,7 @@
 
             let html = activePolls.map(p => {
                 let optionsHtml = Object.keys(p.options || {}).map(opt => `
-                    <button class="btn-action bg-primary" style="margin:4px;" onclick="castMemberPollVote('${p.id}', '${opt}')">${opt}</button>
+                    <button class="btn-action bg-primary" style="margin:4px;" onclick="castMemberPollVote('${p.id}', '${opt.replace(/'/g, "\\'")}')">${opt}</button>
                 `).join(' ');
 
                 return `
@@ -1321,6 +1423,7 @@
                 let newOpts = { ...p.options };
                 newOpts[choice] = (newOpts[choice] || 0) + 1;
 
+                // 🟢 LOG POLL VOTE EVENT
                 await window.logMemberActivity(`पोलमध्ये मत दिले: ${p.question} (${choice})`);
 
                 window.loadPolls();
