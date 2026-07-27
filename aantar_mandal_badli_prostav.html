@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>आंतर मंडळ बदली प्रस्ताव प्रणाली</title>
+    <title>आंतर मंडळ बदली प्रस्ताव प्रणाली (सर्वसमावेशक)</title>
     
     <!-- Google Fonts for Marathi Devanagari Rendering -->
     <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@300;400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -23,7 +23,6 @@
             background-color: #f1f5f9;
             color: #0f172a;
             -webkit-font-smoothing: antialiased;
-            text-rendering: optimizeLegibility;
         }
 
         /* Printable A4 Page Design */
@@ -42,10 +41,20 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            justify-between: space-between;
+            justify-content: space-between;
         }
 
-        /* Background Letterhead Image Styling */
+        /* On-Screen Direct Editing Visual Feedback */
+        [contenteditable="true"]:hover {
+            outline: 1px dashed #6366f1;
+            background-color: #f8fafc;
+            cursor: text;
+        }
+        [contenteditable="true"]:focus {
+            outline: 2px solid #4f46e5;
+            background-color: #ffffff;
+        }
+
         .letterhead-bg-img {
             position: absolute;
             top: 0;
@@ -80,11 +89,10 @@
             display: none !important;
         }
 
-        /* Pure Professional Print Formatting (Removes Browser Default Title/Date Headers) */
         @media print {
             @page {
                 size: A4 portrait;
-                margin: 0 !important; /* Hides Browser default header date & title */
+                margin: 0 !important;
             }
             .no-print {
                 display: none !important;
@@ -121,14 +129,14 @@
 </head>
 <body class="min-h-screen flex flex-col">
 
-    <!-- Top Navigation Bar -->
+   <!-- Header Navigation -->
     <header class="bg-slate-900 text-white p-4 shadow-lg no-print sticky top-0 z-50">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex items-center space-x-3 space-x-reverse">
                 <i class="fa-solid fa-file-signature text-3xl text-amber-400"></i>
                 <div>
                     <h1 class="text-xl font-bold">आंतर मंडळ बदली प्रस्ताव प्रणाली (जीआर १५ मे २०१९)</h1>
-                    <p class="text-xs text-slate-300">महाराष्ट्र शासन - सार्वजनिक आरोग्य विभाग | परिपूर्ण प्रस्ताव जनरेटर</p>
+                    <p class="text-xs text-slate-300">महाराष्ट्र शासन - सार्वजनिक आरोग्य विभाग | परिपूर्ण एडिटेबल प्रणाली</p>
                 </div>
             </div>
             <div class="flex items-center gap-3">
@@ -142,17 +150,19 @@
         </div>
     </header>
 
-    <!-- Main Container -->
+    <!-- Main Workspace Container -->
     <div class="max-w-7xl mx-auto w-full p-4 flex flex-col lg:flex-row gap-6 flex-grow">
 
-        <!-- Left Controls / Input Form Panel -->
+        <!-- Left Controls / Edit Panel -->
         <div class="w-full lg:w-5/12 bg-white p-5 rounded-2xl shadow-sm border border-slate-200 h-fit no-print space-y-6">
             
-            <div class="border-b pb-3">
-                <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
-                    <i class="fa-solid fa-pen-to-square text-indigo-600"></i> माहिती संपादन व पर्याय
-                </h2>
-                <p class="text-xs text-slate-500">खालील सर्व माहिती तुमच्या कार्यालयाच्या आवश्यकतेनुसार एडिट करा.</p>
+            <div class="border-b pb-3 flex justify-between items-center">
+                <div>
+                    <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-pen-to-square text-indigo-600"></i> माहिती संपादन व नियंत्रणे
+                    </h2>
+                    <p class="text-xs text-slate-500">फॉर्ममधील माहिती बदला किंवा थेट उजवीकडील पत्रावर क्लिक करून संपादित करा.</p>
+                </div>
             </div>
 
             <div class="space-y-4">
@@ -164,8 +174,8 @@
                     <div>
                         <label class="block text-xs font-semibold text-slate-600">कार्यालय प्रमुख पदनाम:</label>
                         <select id="headDesignationSelect" onchange="handleHeadDesignationChange(this.value)" class="w-full mt-1 p-2 text-sm border rounded-lg focus:ring-2 focus:ring-indigo-500">
-                            <option value="वैद्यकीय अधीक्षक">वैद्यकीय अधीक्षक</option>
                             <option value="जिल्हा शल्यचिकित्सक">जिल्हा शल्यचिकित्सक</option>
+                            <option value="वैद्यकीय अधीक्षक">वैद्यकीय अधीक्षक</option>
                             <option value="जिल्हा आरोग्य अधिकारी">जिल्हा आरोग्य अधिकारी</option>
                             <option value="उपसंचालक, आरोग्य सेवा">उपसंचालक, आरोग्य सेवा</option>
                             <option value="custom">इतर (टाईप करा)</option>
@@ -175,13 +185,13 @@
 
                     <div>
                         <label class="block text-xs font-semibold text-slate-600">कार्यालायाचे / रुग्णालयाचे नाव:</label>
-                        <input type="text" id="officeName" value="ग्रामीण रुग्णालय, धानोरा" oninput="updateAll()" class="w-full mt-1 p-2 text-sm border rounded-lg">
+                        <input type="text" id="officeName" value="जिल्हा रुग्णालय, गडचिरोली" oninput="updateAll()" class="w-full mt-1 p-2 text-sm border rounded-lg">
                     </div>
 
                     <div class="grid grid-cols-3 gap-2">
                         <div>
                             <label class="block text-xs font-semibold text-slate-600">तालुका:</label>
-                            <input type="text" id="officeTaluka" value="धानोरा" oninput="updateAll()" class="w-full mt-1 p-2 text-sm border rounded-lg">
+                            <input type="text" id="officeTaluka" value="गडचिरोली" oninput="updateAll()" class="w-full mt-1 p-2 text-sm border rounded-lg">
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-600">जिल्हा:</label>
@@ -189,7 +199,7 @@
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-600">ठिकाण (Place):</label>
-                            <input type="text" id="placeLocation" value="धानोरा" oninput="updateAll()" class="w-full mt-1 p-2 text-sm border rounded-lg font-bold text-indigo-900">
+                            <input type="text" id="placeLocation" value="गडचिरोली" oninput="updateAll()" class="w-full mt-1 p-2 text-sm border rounded-lg font-bold text-indigo-900">
                         </div>
                     </div>
 
@@ -210,18 +220,18 @@
                     </div>
 
                     <div>
-                        <label class="block text-xs font-semibold text-slate-600">बदली मागणीचे कारण (वैद्यकीय / कौटुंबिक):</label>
+                        <label class="block text-xs font-semibold text-slate-600">बदली मागणीचे कारण:</label>
                         <input type="text" id="transferReason" value="वडील आजारी असणे व कौटुंबिक अडचण" oninput="updateAll()" class="w-full mt-1 p-2 text-sm border rounded-lg">
                     </div>
 
                     <div class="grid grid-cols-2 gap-2">
                         <div>
                             <label class="block text-xs font-semibold text-slate-600">जावक क्रमांक:</label>
-                            <input type="text" id="outwardNo" value="गारुधा/आस्था/बदली/४१२/२०२६" oninput="updateAll()" class="w-full mt-1 p-2 text-sm border rounded-lg">
+                            <input type="text" id="outwardNo" value="जिऋग/आस्था/बदली/५३१/२०२६" oninput="updateAll()" class="w-full mt-1 p-2 text-sm border rounded-lg">
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-600">प्रस्ताव दिनांक:</label>
-                            <input type="text" id="proposalDate" value="०४/०६/२०२६" oninput="updateAll()" class="w-full mt-1 p-2 text-sm border rounded-lg">
+                            <input type="text" id="proposalDate" value="०५/०६/२०२६" oninput="updateAll()" class="w-full mt-1 p-2 text-sm border rounded-lg">
                         </div>
                     </div>
                 </div>
@@ -232,7 +242,7 @@
                     
                     <div>
                         <label class="block text-xs font-semibold text-slate-600">कर्मचाऱ्याचे संपूर्ण नाव:</label>
-                        <input type="text" id="empName" value="श्री. राजेश मारुतीराव देशमुख" oninput="updateAll()" class="w-full mt-1 p-2 text-sm border rounded-lg">
+                        <input type="text" id="empName" value="श्री. महेश शिवदास हंगे" oninput="updateAll()" class="w-full mt-1 p-2 text-sm border rounded-lg font-bold">
                     </div>
 
                     <div class="grid grid-cols-2 gap-2">
@@ -249,7 +259,7 @@
                     <div class="grid grid-cols-2 gap-2">
                         <div>
                             <label class="block text-xs font-semibold text-slate-600">मूळ जातीचा प्रवर्ग:</label>
-                            <input type="text" id="empCasteCategory" value="इ.मा.व. (OBC)" oninput="updateAll()" class="w-full mt-1 p-2 text-sm border rounded-lg">
+                            <input type="text" id="empCasteCategory" value="भज-ड (NT-D)" oninput="updateAll()" class="w-full mt-1 p-2 text-sm border rounded-lg">
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-600">नियुक्ती प्रवर्ग / कोटा:</label>
@@ -275,7 +285,7 @@
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-600">जन्म दिनांक:</label>
-                            <input type="text" id="empDOB" value="१२/०८/१९९३" oninput="updateAll()" class="w-full mt-1 p-2 text-sm border rounded-lg">
+                            <input type="text" id="empDOB" value="११/१०/१९९५" oninput="updateAll()" class="w-full mt-1 p-2 text-sm border rounded-lg">
                         </div>
                     </div>
 
@@ -289,11 +299,11 @@
 
                     <div>
                         <label class="block text-xs font-semibold text-slate-600">मूळ राहण्याचा पत्ता:</label>
-                        <input type="text" id="empAddress" value="मु.पो. लातूर, ता. जि. लातूर" oninput="updateAll()" class="w-full mt-1 p-2 text-sm border rounded-lg">
+                        <input type="text" id="empAddress" value="रा.मु.पो. पाडळी, ता. शिरूर (का.), जि. बीड" oninput="updateAll()" class="w-full mt-1 p-2 text-sm border rounded-lg">
                     </div>
                 </div>
 
-                <!-- 3. Letterhead & Margin Settings (Strict 500KB Limit & Auto-Delete Logic) -->
+                <!-- 3. Letterhead & Margin Settings -->
                 <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-200 space-y-3">
                     <h3 class="font-bold text-sm text-indigo-900 border-b border-indigo-200 pb-1 flex justify-between items-center">
                         <span><i class="fa-solid fa-image text-indigo-700 ml-1"></i> ३. लेटरपॅड व मार्जिन सेटिंग्ज</span>
@@ -306,7 +316,7 @@
 
                     <div>
                         <label class="block text-xs font-semibold text-slate-600">वरची मार्जिन (Top Margin - Slider):</label>
-                        <input type="range" id="marginTopSlider" min="0" max="80" value="18" oninput="adjustTopMargin(this.value)" class="w-full">
+                        <input type="range" id="marginTopSlider" min="0" max="100" value="18" oninput="adjustTopMargin(this.value)" class="w-full">
                         <span class="text-xs text-indigo-700 font-bold" id="marginVal">18 mm</span>
                     </div>
 
@@ -331,16 +341,16 @@
                 <div class="bg-amber-50 p-4 rounded-xl border border-amber-200 space-y-3">
                     <div class="flex justify-between items-center border-b border-amber-200 pb-1">
                         <h3 class="font-bold text-sm text-amber-900">
-                            <i class="fa-solid fa-list-check text-amber-700 ml-1"></i> ४. तपासणी सूची (परिशिष्ट-अ) व रो (Rows)
+                            <i class="fa-solid fa-list-check text-amber-700 ml-1"></i> ४. तपासणी सूची (परिशिष्ट-अ) व कागदपत्रे
                         </h3>
                         <button type="button" onclick="addNewChecklistRow()" class="bg-amber-600 hover:bg-amber-700 text-white text-xs px-2.5 py-1 rounded font-bold shadow transition flex items-center gap-1">
-                            <i class="fa-solid fa-plus"></i> नवीन रो जोडा
+                            <i class="fa-solid fa-plus"></i> नवीन डॉक्युमेंट जोडा
                         </button>
                     </div>
                     
-                    <p class="text-[11px] text-slate-600">कागदपत्रांचे नाव एडिट करा किंवा नवीन रो वाढवा:</p>
+                    <p class="text-[11px] text-slate-600">कागदपत्रांची नावे एडिट करा किंवा नवीन रो जोडा:</p>
 
-                    <div id="checklistControls" class="space-y-2 max-h-80 overflow-y-auto pr-1 text-xs">
+                    <div id="checklistControls" class="space-y-2 max-h-96 overflow-y-auto pr-1 text-xs">
                         <!-- Dynamic items rendered by JS -->
                     </div>
                 </div>
@@ -348,22 +358,22 @@
             </div>
         </div>
 
-        <!-- Right Preview Container (All Generated Documents in A4 Format) -->
+        <!-- Right Preview Container (Editable Generated Documents in A4 Format) -->
         <div class="w-full lg:w-7/12 flex flex-col items-center" id="printableArea">
 
             <!-- DOC 1: प्रस्तावाची मुख्य शिफारस नोंद / जावक पत्र -->
-            <div class="a4-page text-slate-900 text-sm leading-relaxed doc-container" id="doc_proposal">
+            <div class="a4-page text-slate-900 text-sm leading-relaxed doc-container" id="doc_proposal" contenteditable="true">
                 <div class="a4-content">
                     <div class="office-header-content text-center mb-4">
-                        <h2 class="text-base font-bold uppercase tracking-wide lbl_office_header">कार्यालय, वैद्यकीय अधीक्षक, ग्रामीण रुग्णालय, धानोरा</h2>
+                        <h2 class="text-base font-bold uppercase tracking-wide lbl_office_header">कार्यालय, जिल्हा शल्यचिकित्सक, जिल्हा रुग्णालय, गडचिरोली</h2>
                         <p class="text-xs lbl_office_sub">जिल्हा: गडचिरोली | पिन कोड: ४४२६०६</p>
-                        <p class="text-xs">ई-मेल: ruralhospital.office@gmail.com | दूरध्वनी: (०७१३८) २५४०५४</p>
+                        <p class="text-xs">ई-मेल: csgadchiroli@gmail.com | दूरध्वनी: (०७१३८) २५४०५४</p>
                         <hr class="border-slate-800 my-2">
                     </div>
 
                     <div class="flex justify-between font-semibold text-xs my-3">
-                        <div>जा.क्र./<span class="lbl_outward">गारुधा/आस्था/बदली/४१२/२०२६</span></div>
-                        <div>दिनांक: <span class="lbl_prop_date">०४/०६/२०२६</span></div>
+                        <div>जा.क्र./<span class="lbl_outward">जिऋग/आस्था/बदली/५३१/२०२६</span></div>
+                        <div>दिनांक: <span class="lbl_prop_date">०५/०६/२०२६</span></div>
                     </div>
 
                     <div class="my-4 space-y-1">
@@ -372,37 +382,37 @@
                     </div>
 
                     <div class="my-4 font-bold text-center bg-slate-100 p-2 rounded border border-slate-300">
-                        विषय: सामान्य प्रशासन विभाग, शासन निर्णय दि. १५ मे २०१९ नुसार आंतर मंडळ (विभागीय) विनंती बदली प्रस्तावास शिफारस करणेबाबत...<br>
-                        <span class="text-xs font-normal">(कर्मचारी: <span class="font-bold lbl_emp_name">श्री. राजेश मारुतीराव देशमुख</span>, <span class="lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>)</span>
+                        विषय: सामान्य प्रशासन विभाग, शासन निर्णय दि. १५ मे २०१९ नुसार आंतर मंडळ विनंती बदली प्रस्तावास शिफारस करणेबाबत...<br>
+                        <span class="text-xs font-normal">(कर्मचारी: <span class="font-bold lbl_emp_name">श्री. महेश शिवदास हंगे</span>, <span class="lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>)</span>
                     </div>
 
                     <div class="text-xs my-2 font-semibold space-y-1">
                         <p>संदर्भ: १) सामान्य प्रशासन विभाग, शासन निर्णय क्र. एसआरव्ही २०१६/प्र.क्र.५०९/कार्या.१२, दिनांक १५ मे २०१९.</p>
-                        <p class="ml-9">२) संबंधित कर्मचाऱ्याचा बदलीबाबतचा स्वस्वाक्षरीत अर्ज दिनांक <span class="lbl_prop_date">०४/०६/२०२६</span>.</p>
+                        <p class="ml-9">२) संबंधित कर्मचाऱ्याचा बदलीबाबतचा स्वस्वाक्षरीचा अर्ज दिनांक <span class="lbl_prop_date">०५/०६/२०२६</span>.</p>
                     </div>
 
                     <p class="mt-4 text-justify">महोदय,</p>
                     <p class="indent-8 text-justify mt-2">
-                        उपरोक्त विषयान्वये सविनय सादर करण्यात येते की, <span class="lbl_office_full">ग्रामीण रुग्णालय, धानोरा, ता. धानोरा, जि. गडचिरोली</span> या कार्यालयाच्या आस्थापनेवर कार्यरत असणारे <span class="font-bold lbl_emp_name">श्री. राजेश मारुतीराव देशमुख</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span> (<span class="lbl_emp_cadre">गट-क</span>) हे दिनांक <span class="font-bold lbl_emp_joindate">०३/०६/२०२१</span> पासुन नियमीत सेवेत कार्यरत आहेत.
+                        उपरोक्त विषयान्वये सविनय सादर करण्यात येते की, <span class="lbl_office_full">जिल्हा रुग्णालय, गडचिरोली, ता. गडचिरोली, जि. गडचिरोली</span> या कार्यालयाच्या आस्थापनेवर कार्यरत असणारे <span class="font-bold lbl_emp_name">श्री. महेश शिवदास हंगे</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span> (<span class="lbl_emp_cadre">गट-क</span>) हे दिनांक <span class="font-bold lbl_emp_joindate">०३/०६/२०२१</span> पासून नियमित सेवेत कार्यरत आहेत.
                     </p>
 
                     <p class="indent-8 text-justify mt-3">
-                        सदर कर्मचाऱ्याने <span class="font-bold lbl_transfer_reason">वडील आजारी असणे व कौटुंबिक अडचण</span> या कारणास्तव <span class="font-bold lbl_current_circle">नागपूर मंडळ</span> अंतर्गत असलेल्या या कार्यालयातुन <span class="font-bold lbl_target_circle">लातूर मंडळ</span> मध्ये आंतर मंडळ बदली / कायमस्वरूपी समावेशन होण्यासाठी अर्ज सादर केला आहे.
+                        सदर कर्मचाऱ्याने <span class="font-bold lbl_transfer_reason">वडील आजारी असणे व कौटुंबिक अडचण</span> या कारणास्तव <span class="font-bold lbl_current_circle">नागपूर मंडळ</span> अंतर्गत असलेल्या या कार्यालयातून <span class="font-bold lbl_target_circle">लातूर मंडळ</span> मध्ये आंतर मंडळ बदली / कायमस्वरूपी समावेशन होण्यासाठी अर्ज सादर केला आहे.
                     </p>
 
                     <p class="indent-8 text-justify mt-3">
-                        शासन निर्णय दिनांक १५ मे २०१९ मधील तरतुदींनुसार सदर कर्मचाऱ्याची सलग अर्हताकारी ५ वर्षांची सेवा पूर्ण झालेली असून, त्यांच्याकडील मूळ सेवा अभिलेखाची तपासणी करून परिशिष्ट-अ, परिशिष्ट-ब व आवश्यक सर्व परिशिष्ट-क प्रमाणपत्रांसह परिपूर्ण प्रस्ताव ३ प्रतीत पुढील योग्य त्या पुढील कार्यवाहीस्तव सविनय शिफारशीसह सादर करण्यात येत आहे.
+                        शासन निर्णय दिनांक १५ मे २०१९ मधील तरतुदींनुसार सदर कर्मचाऱ्याची सलग अर्हताकारी ५ वर्षांची सेवा पूर्ण झालेली असून, त्यांच्याकडील मूळ सेवा अभिलेखाची तपासणी करून परिशिष्ट-अ, परिशिष्ट-ब व सर्व आवश्यक प्रमाणपत्रांसह परिपूर्ण प्रस्ताव ३ प्रतीत पुढील योग्य त्या कार्यवाहीस्तव सविनय शिफारशीसह सादर करण्यात येत आहे.
                     </p>
 
                     <div class="mt-16 flex justify-between items-end">
                         <div class="text-xs font-semibold">
-                            ठिकाण: <span class="lbl_place font-bold">धानोरा</span><br>
+                            ठिकाण: <span class="lbl_place font-bold">गडचिरोली</span><br>
                             सहपत्र: तपासणी सूचीनुसार जोडपत्रे.
                         </div>
                         <div class="text-center font-bold">
                             <br><br>
-                            <p class="lbl_sign_head">वैद्यकीय अधीक्षक</p>
-                            <p class="text-xs font-normal lbl_sign_office">ग्रामीण रुग्णालय, धानोरा, जि. गडचिरोली</p>
+                            <p class="lbl_sign_head">जिल्हा शल्यचिकित्सक</p>
+                            <p class="text-xs font-normal lbl_sign_office">जिल्हा रुग्णालय, गडचिरोली</p>
                         </div>
                     </div>
                 </div>
@@ -413,8 +423,8 @@
                 </div>
             </div>
 
-            <!-- DOC 2: कर्मचाऱ्याचा विनंती अर्ज -->
-            <div class="a4-page text-slate-900 text-sm leading-relaxed doc-container" id="doc_emp_app">
+           <!-- DOC 2: कर्मचाऱ्याचा विनंती अर्ज -->
+            <div class="a4-page text-slate-900 text-sm leading-relaxed doc-container" id="doc_emp_app" contenteditable="true">
                 <div class="a4-content">
                     <div class="text-center font-bold text-base my-4 underline">
                         आंतर मंडळ बदली मिळण्याबाबत कर्मचाऱ्याचा विनंती अर्ज
@@ -432,7 +442,7 @@
 
                     <p class="mt-4 text-justify">महोदय,</p>
                     <p class="indent-8 text-justify mt-2">
-                        मी खालील स्वाक्षरीकरणार <span class="font-bold lbl_emp_name">श्री. राजेश मारुतीराव देशमुख</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, सध्या <span class="lbl_office_full">ग्रामीण रुग्णालय, धानोरा, जि. गडचिरोली</span> येथे कार्यरत आहे. माझी शासन सेवेतील प्रथम नियुक्ती दिनांक <span class="font-bold lbl_emp_joindate">०३/०६/२०२१</span> रोजी झालेली असून माझी सलग ५ वर्षे सेवा पूर्ण झालेली आहे.
+                        मी खालील स्वाक्षरी करणारा <span class="font-bold lbl_emp_name">श्री. महेश शिवदास हंगे</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, सध्या <span class="lbl_office_full">जिल्हा रुग्णालय, गडचिरोली</span> येथे कार्यरत आहे. माझी शासन सेवेतील प्रथम नियुक्ती दिनांक <span class="font-bold lbl_emp_joindate">०३/०६/२०२१</span> रोजी झालेली असून माझी सलग ५ वर्षे सेवा पूर्ण झालेली आहे.
                     </p>
 
                     <p class="indent-8 text-justify mt-3">
@@ -445,12 +455,12 @@
 
                     <div class="mt-20 flex justify-between items-end">
                         <div class="text-xs">
-                            ठिकाण: <span class="lbl_place font-bold">धानोरा</span><br>
-                            दिनांक: <span class="lbl_prop_date">०४/०६/२०२६</span>
+                            ठिकाण: <span class="lbl_place font-bold">गडचिरोली</span><br>
+                            दिनांक: <span class="lbl_prop_date">०५/०६/२०२६</span>
                         </div>
                         <div class="text-center font-bold">
                             आपला नम्र,<br><br><br>
-                            <p class="lbl_emp_name">श्री. राजेश मारुतीराव देशमुख</p>
+                            <p class="lbl_emp_name">श्री. महेश शिवदास हंगे</p>
                             <p class="text-xs font-normal lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</p>
                         </div>
                     </div>
@@ -463,10 +473,10 @@
             </div>
 
             <!-- DOC 3: परिशिष्ट - अ (तपासणी सूची / Checklist Document) -->
-            <div class="a4-page text-slate-900 text-sm leading-relaxed doc-container" id="doc_checklist">
+            <div class="a4-page text-slate-900 text-sm leading-relaxed doc-container" id="doc_checklist" contenteditable="true">
                 <div class="a4-content">
                     <div class="office-header-content text-center mb-2">
-                        <h2 class="text-base font-bold uppercase tracking-wide lbl_office_header">कार्यालय, वैद्यकीय अधीक्षक, ग्रामीण रुग्णालय, धानोरा</h2>
+                        <h2 class="text-base font-bold uppercase tracking-wide lbl_office_header">कार्यालय, जिल्हा शल्यचिकित्सक, जिल्हा रुग्णालय, गडचिरोली</h2>
                         <hr class="border-slate-800 my-1">
                     </div>
 
@@ -490,13 +500,13 @@
 
                     <div class="mt-6 flex justify-between items-end">
                         <div class="text-xs font-semibold">
-                            ठिकाण: <span class="lbl_place font-bold">धानोरा</span><br>
-                            दिनांक: <span class="lbl_prop_date">०४/०६/२०२६</span>
+                            ठिकाण: <span class="lbl_place font-bold">गडचिरोली</span><br>
+                            दिनांक: <span class="lbl_prop_date">०५/०६/२०२६</span>
                         </div>
                         <div class="text-center font-bold">
                             <br>
-                            <p class="lbl_sign_head">वैद्यकीय अधीक्षक</p>
-                            <p class="text-xs font-normal lbl_sign_office">ग्रामीण रुग्णालय, धानोरा, जि. गडचिरोली</p>
+                            <p class="lbl_sign_head">जिल्हा शल्यचिकित्सक</p>
+                            <p class="text-xs font-normal lbl_sign_office">जिल्हा रुग्णालय, गडचिरोली</p>
                         </div>
                     </div>
                 </div>
@@ -508,7 +518,7 @@
             </div>
 
             <!-- DOC 4: परिशिष्ट - ब (२१ मुद्द्यांचा कर्मचारी सेवा तपशील) -->
-            <div class="a4-page text-slate-900 text-sm leading-relaxed doc-container" id="doc_service_details">
+            <div class="a4-page text-slate-900 text-sm leading-relaxed doc-container" id="doc_service_details" contenteditable="true">
                 <div class="a4-content">
                     <div class="text-center font-bold text-base mb-2">
                         "परिशिष्ट - ब"<br>
@@ -524,10 +534,10 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr><td class="p-1 text-center font-bold">१</td><td class="p-1">कर्मचाऱ्याचे संपूर्ण नाव</td><td class="p-1 font-bold lbl_emp_name">श्री. राजेश मारुतीराव देशमुख</td></tr>
+                            <tr><td class="p-1 text-center font-bold">१</td><td class="p-1">कर्मचाऱ्याचे संपूर्ण नाव</td><td class="p-1 font-bold lbl_emp_name">श्री. महेश शिवदास हंगे</td></tr>
                             <tr><td class="p-1 text-center font-bold">२</td><td class="p-1">पदनाम व संवर्ग</td><td class="p-1"><span class="lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span> (<span class="lbl_emp_cadre">गट-क</span>)</td></tr>
-                            <tr><td class="p-1 text-center font-bold">३</td><td class="p-1">जन्म दिनांक</td><td class="p-1 lbl_emp_dob">१२/०८/१९९३</td></tr>
-                            <tr><td class="p-1 text-center font-bold">४</td><td class="p-1">मूळ जातीचा प्रवर्ग</td><td class="p-1 font-bold lbl_emp_caste_category">इ.मा.व. (OBC)</td></tr>
+                            <tr><td class="p-1 text-center font-bold">३</td><td class="p-1">जन्म दिनांक</td><td class="p-1 lbl_emp_dob">११/१०/१९९५</td></tr>
+                            <tr><td class="p-1 text-center font-bold">४</td><td class="p-1">मूळ जातीचा प्रवर्ग</td><td class="p-1 font-bold lbl_emp_caste_category">भज-ड (NT-D)</td></tr>
                             <tr><td class="p-1 text-center font-bold">५</td><td class="p-1">शासन सेवेत कोणत्या प्रवर्गातून/कोट्यातून नियुक्ती झाली?</td><td class="p-1 font-bold lbl_emp_appoint_category">खुला (सर्वसाधारण) / नामनिर्देशन</td></tr>
                             <tr><td class="p-1 text-center font-bold">६</td><td class="p-1">धारण करीत असलेली शैक्षणिक अर्हता</td><td class="p-1 lbl_emp_edu">बी.एससी., एम.एससी.</td></tr>
                             <tr><td class="p-1 text-center font-bold">७</td><td class="p-1">शासन सेवेत प्रत्यक्ष रुजू दिनांक</td><td class="p-1 font-bold lbl_emp_joindate">०३/०६/२०२१</td></tr>
@@ -536,7 +546,7 @@
                             <tr><td class="p-1 text-center font-bold">१०</td><td class="p-1">परिवीक्षाधीन कालावधी पूर्ण झाला आहे का?</td><td class="p-1 font-bold text-emerald-800">होय</td></tr>
                             <tr><td class="p-1 text-center font-bold">११</td><td class="p-1">मूळ नियुक्तीच्या पदावर स्थायित्वाचे लाभ दिले आहेत का?</td><td class="p-1 font-bold text-emerald-800">होय</td></tr>
                             <tr><td class="p-1 text-center font-bold">१२</td><td class="p-1">मराठी व हिंदी भाषा परीक्षा सूट / उत्तीर्ण?</td><td class="p-1">सूट प्राप्त आहे / उत्तीर्ण</td></tr>
-                            <tr><td class="p-1 text-center font-bold">१३</td><td class="p-1">संगणक अर्हता परीक्षा उत्तीर्ण प्रमाणपत्र सादर केले आहे का?</td><td class="p-1 font-bold text-emerald-800">होय (MS-CIT/CCC)</td></tr>
+                            <tr><td class="p-1 text-center font-bold">१३</td><td class="p-1">संगणक अर्हता परीक्षा उत्तीर्ण प्रमाणपत्र सादर केले आहे का?</td><td class="p-1 font-bold text-emerald-800">होय (MS-CIT / CCC)</td></tr>
                             <tr><td class="p-1 text-center font-bold">१४</td><td class="p-1">अनधिकृत गैरहजेरी / असाधारण रजा / सेवेत खंड आहे का?</td><td class="p-1 font-bold text-emerald-800">नाही</td></tr>
                             <tr><td class="p-1 text-center font-bold">१५</td><td class="p-1">विभागीय चौकशी / न्यायालयीन प्रकरण प्रलंबित आहे का?</td><td class="p-1 font-bold text-emerald-800">नाही</td></tr>
                             <tr><td class="p-1 text-center font-bold">१६</td><td class="p-1">चारित्र्य पडताळणी झाली आहे का?</td><td class="p-1 font-bold text-emerald-800">होय</td></tr>
@@ -549,18 +559,18 @@
                     </table>
 
                     <p class="text-xs text-justify font-semibold mt-2">
-                        प्रमाणित करण्यात येते की, उक्त कोष्टकात अ.क्र. १ ते २१ वर नमूद माहिती <span class="lbl_emp_name">श्री. राजेश मारुतीराव देशमुख</span> यांच्या मूळ सेवा अभिलेखाच्या आधारे तपासणी करून सादर करण्यात आलेली आहे.
+                        प्रमाणित करण्यात येते की, उक्त कोष्टकात अ.क्र. १ ते २१ वर नमूद माहिती <span class="lbl_emp_name">श्री. महेश शिवदास हंगे</span> यांच्या मूळ सेवा अभिलेखाच्या आधारे तपासणी करून सादर करण्यात आलेली आहे.
                     </p>
 
                     <div class="mt-8 flex justify-between items-end">
                         <div class="text-xs font-semibold">
-                            ठिकाण: <span class="lbl_place font-bold">धानोरा</span><br>
-                            दिनांक: <span class="lbl_prop_date">०४/०६/२०२६</span>
+                            ठिकाण: <span class="lbl_place font-bold">गडचिरोली</span><br>
+                            दिनांक: <span class="lbl_prop_date">०५/०६/२०२६</span>
                         </div>
                         <div class="text-center font-bold">
                             <br>
-                            <p class="lbl_sign_head">वैद्यकीय अधीक्षक</p>
-                            <p class="text-xs font-normal lbl_sign_office">ग्रामीण रुग्णालय, धानोरा, जि. गडचिरोली</p>
+                            <p class="lbl_sign_head">जिल्हा शल्यचिकित्सक</p>
+                            <p class="text-xs font-normal lbl_sign_office">जिल्हा रुग्णालय, गडचिरोली</p>
                         </div>
                     </div>
                 </div>
@@ -572,10 +582,10 @@
             </div>
 
             <!-- DOC 5: परिशिष्ट - क (५ वर्षे अर्हताकारी सेवा प्रमाणपत्र) -->
-            <div class="a4-page text-slate-900 text-sm leading-relaxed doc-container" id="doc_appendix_c1">
+            <div class="a4-page text-slate-900 text-sm leading-relaxed doc-container" id="doc_appendix_c1" contenteditable="true">
                 <div class="a4-content">
                     <div class="office-header-content text-center mb-4">
-                        <h2 class="text-base font-bold uppercase lbl_office_header">कार्यालय, वैद्यकीय अधीक्षक, ग्रामीण रुग्णालय, धानोरा</h2>
+                        <h2 class="text-base font-bold uppercase lbl_office_header">कार्यालय, जिल्हा शल्यचिकित्सक, जिल्हा रुग्णालय, गडचिरोली</h2>
                         <hr class="border-slate-800 my-2">
                     </div>
 
@@ -585,7 +595,7 @@
                     </div>
 
                     <p class="indent-8 text-justify mt-6 leading-loose text-base">
-                        प्रमाणित करण्यात येते की, सामान्य प्रशासन विभाग, शासन निर्णय क्र. एसआरव्ही २०१६/प्र.क्र.५०९/कार्या.१२, दिनांक १५ मे २०१९ मधील अ.क्र. २ (१) मधील अटीनुसार <span class="font-bold text-lg lbl_emp_name">श्री. राजेश मारुतीराव देशमुख</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यालय: <span class="font-bold lbl_office_full">ग्रामीण रुग्णालय, धानोरा, ता. धानोरा, जि. गडचिरोली</span> यांची शासन सेवेत रुजू दिनांकापासून (<span class="font-bold lbl_emp_joindate">०३/०६/२०२१</span>) नियमित अर्हताकारी सलग ५ वर्षे सेवा दिनांक <span class="font-bold text-indigo-900 lbl_emp_service_5yr">०२/०६/२०२६</span> रोजी पूर्ण झालेली आहे.
+                        प्रमाणित करण्यात येते की, सामान्य प्रशासन विभाग, शासन निर्णय क्र. एसआरव्ही २०१६/प्र.क्र.५०९/कार्या.१२, दिनांक १५ मे २०१९ मधील अ.क्र. २ (१) मधील अटीनुसार <span class="font-bold text-lg lbl_emp_name">श्री. महेश शिवदास हंगे</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यालय: <span class="font-bold lbl_office_full">जिल्हा रुग्णालय, गडचिरोली, ता. गडचिरोली, जि. गडचिरोली</span> यांची शासन सेवेत रुजू दिनांकापासून (<span class="font-bold lbl_emp_joindate">०३/०६/२०२१</span>) नियमित अर्हताकारी सलग ५ वर्षे सेवा दिनांक <span class="font-bold text-indigo-900 lbl_emp_service_5yr">०२/०६/२०२६</span> रोजी पूर्ण झालेली आहे.
                     </p>
 
                     <p class="mt-6 text-justify">
@@ -594,13 +604,13 @@
 
                     <div class="mt-28 flex justify-between items-end">
                         <div class="text-xs font-semibold">
-                            ठिकाण: <span class="lbl_place font-bold">धानोरा</span><br>
-                            दिनांक: <span class="lbl_prop_date">०४/०६/२०२६</span>
+                            ठिकाण: <span class="lbl_place font-bold">गडचिरोली</span><br>
+                            दिनांक: <span class="lbl_prop_date">०५/०६/२०२६</span>
                         </div>
                         <div class="text-center font-bold">
                             <br><br>
-                            <p class="lbl_sign_head">वैद्यकीय अधीक्षक</p>
-                            <p class="text-xs font-normal lbl_sign_office">ग्रामीण रुग्णालय, धानोरा, जि. गडचिरोली</p>
+                            <p class="lbl_sign_head">जिल्हा शल्यचिकित्सक</p>
+                            <p class="text-xs font-normal lbl_sign_office">जिल्हा रुग्णालय, गडचिरोली</p>
                         </div>
                     </div>
                 </div>
@@ -611,98 +621,18 @@
                 </div>
             </div>
 
-            <!-- DOC 6: परिशिष्ट - क (सेवाप्रवेश नियम अर्हता प्रमाणपत्र) -->
-            <div class="a4-page text-slate-900 text-sm leading-relaxed doc-container" id="doc_appendix_c2">
+            <!-- DOC 6: परिशिष्ट - २ (रू. १००/५० चे परिपूर्ण बंधपत्र / Bond Document) -->
+            <div class="a4-page text-slate-900 text-sm leading-relaxed doc-container" id="doc_bond" contenteditable="true">
                 <div class="a4-content">
-                    <div class="office-header-content text-center mb-4">
-                        <h2 class="text-base font-bold uppercase lbl_office_header">कार्यालय, वैद्यकीय अधीक्षक, ग्रामीण रुग्णालय, धानोरा</h2>
-                        <hr class="border-slate-800 my-2">
-                    </div>
-
-                    <div class="text-center font-bold text-base my-6">
-                        "परिशिष्ट - क"<br>
-                        <span class="underline">सेवाप्रवेश नियमातील अर्हता धारण करत असल्याचे प्रमाणपत्र</span>
-                    </div>
-
-                    <p class="indent-8 text-justify mt-6 leading-loose text-base">
-                        प्रमाणित करण्यात येते की, सामान्य प्रशासन विभाग, शासन निर्णय क्र. एसआरव्ही २०१६/प्र.क्र.५०९/कार्या.१२, दिनांक १५ मे २०१९ मधील अ.क्र. २ (२) मधील अटीनुसार <span class="font-bold text-lg lbl_emp_name">श्री. राजेश मारुतीराव देशमुख</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span> हे या पदाच्या लागू असलेल्या सेवाप्रवेश नियमात अंतर्भूत असलेल्या सर्व शैक्षणिक अर्हता व अटींची पूर्ण पूर्तता करीत आहेत.
-                    </p>
-
-                    <p class="mt-6 text-justify">
-                        सबब सेवाप्रवेश नियम पूर्ततेबाबतचे हे प्रमाणपत्र निर्गमित करण्यात येत आहे.
-                    </p>
-
-                    <div class="mt-28 flex justify-between items-end">
-                        <div class="text-xs font-semibold">
-                            ठिकाण: <span class="lbl_place font-bold">धानोरा</span><br>
-                            दिनांक: <span class="lbl_prop_date">०४/०६/२०२६</span>
-                        </div>
-                        <div class="text-center font-bold">
-                            <br><br>
-                            <p class="lbl_sign_head">वैद्यकीय अधीक्षक</p>
-                            <p class="text-xs font-normal lbl_sign_office">ग्रामीण रुग्णालय, धानोरा, जि. गडचिरोली</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="page-footer-url">
-                    <span>https://xrayunionmah.web.app</span>
-                    <span>सार्वजनिक आरोग्य विभाग - महाराष्ट्र शासन</span>
-                </div>
-            </div>
-
-            <!-- DOC 7: परिशिष्ट - क (गोपनीय अहवाल B/4+ श्रेणी प्रमाणपत्र) -->
-            <div class="a4-page text-slate-900 text-sm leading-relaxed doc-container" id="doc_appendix_c3">
-                <div class="a4-content">
-                    <div class="office-header-content text-center mb-4">
-                        <h2 class="text-base font-bold uppercase lbl_office_header">कार्यालय, वैद्यकीय अधीक्षक, ग्रामीण रुग्णालय, धानोरा</h2>
-                        <hr class="border-slate-800 my-2">
-                    </div>
-
-                    <div class="text-center font-bold text-base my-6">
-                        "परिशिष्ट - क"<br>
-                        <span class="underline">कार्यमूल्यमापन (गोपनीय अहवाल) श्रेणी प्रमाणपत्र</span>
-                    </div>
-
-                    <p class="indent-8 text-justify mt-6 leading-loose text-base">
-                        प्रमाणित करण्यात येते की, सामान्य प्रशासन विभाग, शासन निर्णय क्र. एसआरव्ही २०१६/प्र.क्र.५०९/कार्या.१२, दिनांक १५ मे २०१९ मधील अ.क्र. २ (४) मधील अटीनुसार <span class="font-bold text-lg lbl_emp_name">श्री. राजेश मारुतीराव देशमुख</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span> यांची मूळ संवर्गातील लगतच्या ५ वर्षांची कामगिरी किमान **"ब" (Good)** दर्जाची असून कार्यमूल्यमापन अहवालातील संख्यात्मक गुणांकण ४ पेक्षा कमी नाही.
-                    </p>
-
-                    <p class="mt-6 text-justify">
-                        सबब गोपनीय अहवाल गुणवत्तेबाबतचे प्रमाणपत्र देण्यात येत आहे.
-                    </p>
-
-                    <div class="mt-28 flex justify-between items-end">
-                        <div class="text-xs font-semibold">
-                            ठिकाण: <span class="lbl_place font-bold">धानोरा</span><br>
-                            दिनांक: <span class="lbl_prop_date">०४/०६/२०२६</span>
-                        </div>
-                        <div class="text-center font-bold">
-                            <br><br>
-                            <p class="lbl_sign_head">वैद्यकीय अधीक्षक</p>
-                            <p class="text-xs font-normal lbl_sign_office">ग्रामीण रुग्णालय, धानोरा, जि. गडचिरोली</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="page-footer-url">
-                    <span>https://xrayunionmah.web.app</span>
-                    <span>सार्वजनिक आरोग्य विभाग - महाराष्ट्र शासन</span>
-                </div>
-            </div>
-
-            <!-- DOC 8: परिशिष्ट - २ (रू. ५० चे बंधपत्र / Bond Document) -->
-            <div class="a4-page text-slate-900 text-sm leading-relaxed doc-container" id="doc_bond">
-                <div class="a4-content">
-                    <div class="text-center font-bold text-base mb-2">
-                        शासन निर्णय क्र. एसआरव्ही २०१६/प्र.क्र.५०९/कार्या.१२ दिनांक १५ मे २०१९ मधील अनु. क्र. ९ (४) सोबतचे "परिशिष्ट - २"
+                    <div class="text-center font-bold text-xs mb-1">
+                        सामान्य प्रशासन विभाग, शासन निर्णय क्र. एसआरव्ही २०१६/प्र.क्र.५०९/कार्या.१२ दिनांक १५ मे २०१९ मधील अनु. क्र. ९ (४) अन्वये
                     </div>
                     <div class="text-center font-bold text-lg underline mb-4">
-                        कायमस्वरूपी समावेशनाबाबतचे बंधपत्र
+                        "परिशिष्ट - २" : कायमस्वरूपी समावेशनाबाबतचे बंधपत्र
                     </div>
 
                     <p class="indent-8 text-justify text-sm leading-relaxed">
-                        मी <span class="font-bold text-base lbl_emp_name">श्री. राजेश मारुतीराव देशमुख</span> असे नमूद करतो की, माझी <span class="font-bold lbl_office_full">ग्रामीण रुग्णालय, धानोरा, जि. गडचिरोली</span> या कार्यालयात <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span> या पदावर सरळसेवेने <span class="font-bold lbl_emp_appoint_category">खुला (सर्वसाधारण) / नामनिर्देशन</span> प्रवर्गातून दिनांक <span class="font-bold lbl_emp_joindate">०३/०६/२०२१</span> रोजी नियुक्ती झाली आहे.
+                        मी <span class="font-bold text-base lbl_emp_name">श्री. महेश शिवदास हंगे</span> असे नमूद करतो की, माझी <span class="font-bold lbl_office_full">जिल्हा रुग्णालय, गडचिरोली</span> या कार्यालयात <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span> या पदावर सरळसेवेने <span class="font-bold lbl_emp_appoint_category">खुला (सर्वसाधारण) / नामनिर्देशन</span> प्रवर्गातून दिनांक <span class="font-bold lbl_emp_joindate">०३/०६/२०२१</span> रोजी नियुक्ती झाली आहे.
                     </p>
 
                     <p class="indent-8 text-justify text-sm leading-relaxed mt-2">
@@ -711,9 +641,9 @@
 
                     <p class="font-bold text-xs mt-3 underline">माझ्या विनंतीवरून कायमस्वरूपी समावेशन केल्यास मला खालील अटी व शर्ती मान्य आहेत:</p>
 
-                    <ol class="list-decimal ml-6 text-xs space-y-1.5 my-2 text-justify">
-                        <li>विनंतीवरून कायमस्वरूपी समावेशन हा हक्क नाही.</li>
-                        <li>मी ज्या पदावर समावेशन करण्याची विनंती केली आहे त्या पदाच्या सेवाप्रवेश नियमातील सर्व अर्हता मी धारण करणे आवश्यक आहे.</li>
+                    <ol class="list-decimal ml-6 text-xs space-y-1 my-2 text-justify">
+                        <li>विनंतीवरून कायमस्वरूपी समावेशन हा माझा हक्क असणार नाही.</li>
+                        <li>मी ज्या पदावर समावेशन करण्याची विनंती केली आहे त्या पदाच्या सेवाप्रवेश नियमातील सर्व अर्हता मी धारण करणे आवश्यक राहील.</li>
                         <li>समावेशनानंतरच्या कार्यालयातील त्या पदाच्या नियमानुसार ज्या विभागीय परीक्षा उत्तीर्ण होणे आवश्यक आहे त्या परीक्षा उत्तीर्ण होणे मला बंधनकारक राहील.</li>
                         <li>कायमस्वरूपी समावेशनाचे आदेश निर्गमित झाल्यानंतर मला रुजू होण्यासाठी बदलीसत्ता, प्रवास भत्ता किंवा तत्सम लाभ अनुज्ञेय होणार नाहीत.</li>
                         <li>माझा मूळ कार्यालयातील पदावरील धारणाधिकार (Lien) राहणार नाही.</li>
@@ -723,14 +653,14 @@
                         <li>माझे कायमस्वरूपी समावेशन संपूर्ण सेवाकाळात फक्त एकदाच मान्य करण्यात येईल.</li>
                     </ol>
 
-                    <div class="mt-12 flex justify-between items-end">
+                    <div class="mt-10 flex justify-between items-end">
                         <div class="text-xs font-semibold">
-                            ठिकाण: <span class="lbl_place font-bold">धानोरा</span><br>
-                            दिनांक: <span class="lbl_prop_date">०४/०६/२०२६</span>
+                            ठिकाण: <span class="lbl_place font-bold">गडचिरोली</span><br>
+                            दिनांक: <span class="lbl_prop_date">०५/०६/२०२६</span>
                         </div>
                         <div class="text-center font-bold">
                             बंधपत्र देणारा (स्वाक्षरी),<br><br><br>
-                            <p class="lbl_emp_name">श्री. राजेश मारुतीराव देशमुख</p>
+                            <p class="lbl_emp_name">श्री. महेश शिवदास हंगे</p>
                             <p class="text-xs font-normal lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</p>
                         </div>
                     </div>
@@ -742,29 +672,171 @@
                 </div>
             </div>
 
-            <!-- DOC 9: शून्य सेवा ज्येष्ठता (Zero Seniority) हमीपत्र -->
-            <div class="a4-page text-slate-900 text-sm leading-relaxed doc-container" id="doc_zero_seniority">
+            <!-- DOC 7: ना-विभागीय चौकशी व न्यायालयीन प्रकरण प्रलंबित नसल्याचे प्रमाणपत्र -->
+            <div class="a4-page text-slate-900 text-sm leading-relaxed doc-container" id="doc_no_inquiry" contenteditable="true">
+                <div class="a4-content">
+                    <div class="office-header-content text-center mb-4">
+                        <h2 class="text-base font-bold uppercase lbl_office_header">कार्यालय, जिल्हा शल्यचिकित्सक, जिल्हा रुग्णालय, गडचिरोली</h2>
+                        <hr class="border-slate-800 my-2">
+                    </div>
+
+                    <div class="text-center font-bold text-base my-6 underline">
+                        ना-विभागीय चौकशी / न्यायालयीन प्रकरण प्रलंबित नसल्याचे प्रमाणपत्र
+                    </div>
+
+                    <p class="indent-8 text-justify mt-6 leading-loose text-base">
+                        प्रमाणित करण्यात येते की, <span class="font-bold text-lg lbl_emp_name">श्री. महेश शिवदास हंगे</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, हे <span class="lbl_office_full">जिल्हा रुग्णालय, गडचिरोली</span> येथे नियमित सेवेत कार्यरत आहेत.
+                    </p>
+
+                    <p class="indent-8 text-justify mt-4 leading-loose text-base">
+                        त्यांच्या सेवा अभिलेखाची पडताळणी केली असता, त्यांच्याविरुद्ध कोणतीही विभागीय चौकशी प्रलंबित अथवा प्रस्तावित नाही, तसेच कोणतेही न्यायालयीन प्रकरण चालू नाही. सदर प्रमाणपत्र त्यांच्या आंतर मंडळ विनंती बदली प्रस्तावासोबत जोडण्यासाठी देण्यात येत आहे.
+                    </p>
+
+                    <div class="mt-28 flex justify-between items-end">
+                        <div class="text-xs font-semibold">
+                            ठिकाण: <span class="lbl_place font-bold">गडचिरोली</span><br>
+                            दिनांक: <span class="lbl_prop_date">०५/०६/२०२६</span>
+                        </div>
+                        <div class="text-center font-bold">
+                            <br><br>
+                            <p class="lbl_sign_head">जिल्हा शल्यचिकित्सक</p>
+                            <p class="text-xs font-normal lbl_sign_office">जिल्हा रुग्णालय, गडचिरोली</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="page-footer-url">
+                    <span>https://xrayunionmah.web.app</span>
+                    <span>सार्वजनिक आरोग्य विभाग - महाराष्ट्र शासन</span>
+                </div>
+            </div>
+
+            <!-- DOC 8: अनधिकृत गैरहजर नसल्याचे प्रमाणपत्र -->
+            <div class="a4-page text-slate-900 text-sm leading-relaxed doc-container" id="doc_no_absence" contenteditable="true">
+                <div class="a4-content">
+                    <div class="office-header-content text-center mb-4">
+                        <h2 class="text-base font-bold uppercase lbl_office_header">कार्यालय, जिल्हा शल्यचिकित्सक, जिल्हा रुग्णालय, गडचिरोली</h2>
+                        <hr class="border-slate-800 my-2">
+                    </div>
+
+                    <div class="text-center font-bold text-base my-6 underline">
+                        अनधिकृत गैरहजेरी / असाधारण रजा / सेवेत खंड नसल्याचे प्रमाणपत्र
+                    </div>
+
+                    <p class="indent-8 text-justify mt-6 leading-loose text-base">
+                        प्रमाणित करण्यात येते की, <span class="font-bold text-lg lbl_emp_name">श्री. महेश शिवदास हंगे</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यरत: <span class="lbl_office_full">जिल्हा रुग्णालय, गडचिरोली</span> यांच्या सेवा अभिलेखाची तपासणी केली असता, त्यांनी त्यांच्या सेवाकाळात कोणतीही अनधिकृत गैरहजेरी केलेली नाही, सेवेत कोणताही खंड पडलेला नाही तसेच असाधारण रजा (Extra Ordinary Leave) उपभोगलेली नाही.
+                    </p>
+
+                    <div class="mt-28 flex justify-between items-end">
+                        <div class="text-xs font-semibold">
+                            ठिकाण: <span class="lbl_place font-bold">गडचिरोली</span><br>
+                            दिनांक: <span class="lbl_prop_date">०५/०६/२०२६</span>
+                        </div>
+                        <div class="text-center font-bold">
+                            <br><br>
+                            <p class="lbl_sign_head">जिल्हा शल्यचिकित्सक</p>
+                            <p class="text-xs font-normal lbl_sign_office">जिल्हा रुग्णालय, गडचिरोली</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="page-footer-url">
+                    <span>https://xrayunionmah.web.app</span>
+                    <span>सार्वजनिक आरोग्य विभाग - महाराष्ट्र शासन</span>
+                </div>
+            </div>
+
+            <!-- DOC 9: कायमस्वरूपी समावेशनाचा लाभ यापूर्वी घेतलेला नसल्याचे प्रमाणपत्र -->
+            <div class="a4-page text-slate-900 text-sm leading-relaxed doc-container" id="doc_first_transfer" contenteditable="true">
+                <div class="a4-content">
+                    <div class="office-header-content text-center mb-4">
+                        <h2 class="text-base font-bold uppercase lbl_office_header">कार्यालय, जिल्हा शल्यचिकित्सक, जिल्हा रुग्णालय, गडचिरोली</h2>
+                        <hr class="border-slate-800 my-2">
+                    </div>
+
+                    <div class="text-center font-bold text-base my-6 underline">
+                        कायमस्वरूपी समावेशनाचा लाभ यापूर्वी न घेतलेले प्रमाणपत्र
+                    </div>
+
+                    <p class="indent-8 text-justify mt-6 leading-loose text-base">
+                        प्रमाणित करण्यात येते की, <span class="font-bold text-lg lbl_emp_name">श्री. महेश शिवदास हंगे</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, यांनी त्यांच्या संपूर्ण शासकीय सेवाकाळात यापूर्वी कर्मचाऱ्यांच्या विनंतीवरून करण्यात येणाऱ्या कायमस्वरूपी समावेशनाचा (आंतर मंडळ बदली) लाभ एकदाही घेतलेला नाही असे मूळ सेवापुस्तकातील नोंदींवरून दिसून येते.
+                    </p>
+
+                    <div class="mt-28 flex justify-between items-end">
+                        <div class="text-xs font-semibold">
+                            ठिकाण: <span class="lbl_place font-bold">गडचिरोली</span><br>
+                            दिनांक: <span class="lbl_prop_date">०५/०६/२०२६</span>
+                        </div>
+                        <div class="text-center font-bold">
+                            <br><br>
+                            <p class="lbl_sign_head">जिल्हा शल्यचिकित्सक</p>
+                            <p class="text-xs font-normal lbl_sign_office">जिल्हा रुग्णालय, गडचिरोली</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="page-footer-url">
+                    <span>https://xrayunionmah.web.app</span>
+                    <span>सार्वजनिक आरोग्य विभाग - महाराष्ट्र शासन</span>
+                </div>
+            </div>
+
+            <!-- DOC 10: ना-देय प्रमाणपत्र (No Dues Certificate) -->
+            <div class="a4-page text-slate-900 text-sm leading-relaxed doc-container" id="doc_no_dues" contenteditable="true">
+                <div class="a4-content">
+                    <div class="office-header-content text-center mb-4">
+                        <h2 class="text-base font-bold uppercase lbl_office_header">कार्यालय, जिल्हा शल्यचिकित्सक, जिल्हा रुग्णालय, गडचिरोली</h2>
+                        <hr class="border-slate-800 my-2">
+                    </div>
+
+                    <div class="text-center font-bold text-base my-6 underline">
+                        ना-देय प्रमाणपत्र (No Dues Certificate)
+                    </div>
+
+                    <p class="indent-8 text-justify mt-6 leading-loose text-base">
+                        प्रमाणित करण्यात येते की, <span class="font-bold text-lg lbl_emp_name">श्री. महेश शिवदास हंगे</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यरत: <span class="lbl_office_full">जिल्हा रुग्णालय, गडचिरोली</span> यांच्याकडे या कार्यालयाचे कोणतेही शासकीय देयक, आगाऊ रक्कम, साहित्य, साधने किंवा उपकरणे प्रलंबित नाहीत. त्यामुळे त्यांना हे ना-देय प्रमाणपत्र निर्गमित करण्यात येत आहे.
+                    </p>
+
+                    <div class="mt-28 flex justify-between items-end">
+                        <div class="text-xs font-semibold">
+                            ठिकाण: <span class="lbl_place font-bold">गडचिरोली</span><br>
+                            दिनांक: <span class="lbl_prop_date">०५/०६/२०२६</span>
+                        </div>
+                        <div class="text-center font-bold">
+                            <br><br>
+                            <p class="lbl_sign_head">जिल्हा शल्यचिकित्सक</p>
+                            <p class="text-xs font-normal lbl_sign_office">जिल्हा रुग्णालय, गडचिरोली</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="page-footer-url">
+                    <span>https://xrayunionmah.web.app</span>
+                </div>
+            </div>
+<!-- DOC 11: शून्य सेवा ज्येष्ठता (Zero Seniority) हमीपत्र -->
+            <div class="a4-page text-slate-900 text-sm leading-relaxed doc-container" id="doc_zero_seniority" contenteditable="true">
                 <div class="a4-content">
                     <div class="text-center font-bold text-base my-6 underline">
                         शून्य सेवा ज्येष्ठता (Zero Seniority) व स्वखर्च स्वीकारल्याबाबत हमीपत्र
                     </div>
 
                     <p class="indent-8 text-justify mt-6 leading-loose text-base">
-                        मी <span class="font-bold text-lg lbl_emp_name">श्री. राजेश मारुतीराव देशमुख</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यरत: <span class="font-bold lbl_office_full">ग्रामीण रुग्णालय, धानोरा, जि. गडचिरोली</span> याद्वारे लिखित हमीपत्र देतो की, माझी विनंती आंतर मंडळ बदली मंजूर झाल्यास <span class="font-bold lbl_target_circle">लातूर मंडळ</span> च्या आस्थापनेवर जाण्यास मी पूर्णतः तयार आहे.
+                        मी <span class="font-bold text-lg lbl_emp_name">श्री. महेश शिवदास हंगे</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यरत: <span class="font-bold lbl_office_full">जिल्हा रुग्णालय, गडचिरोली</span> याद्वारे लिखित हमीपत्र देतो की, माझी विनंती आंतर मंडळ बदली मंजूर झाल्यास <span class="font-bold lbl_target_circle">लातूर मंडळ</span> च्या आस्थापनेवर जाण्यास मी पूर्णतः तयार आहे.
                     </p>
 
                     <p class="indent-8 text-justify mt-4 leading-loose text-base">
-                        सदर विनंती बदलीमुळे लागू होणारी **शून्य सेवा ज्येष्ठता (Zero Seniority)** स्वीकारण्यास माझी पूर्ण संमती असून, नवीन मंडळात मी माझ्या अगोदर नियुक्त झालेल्या सर्व कर्मचाऱ्यांना कनिष्ठ राहील. या संदर्भात भविष्यात कोणताही न्यायालयीन अथवा प्रशासकीय दावा मी करणार नाही. तसेच सदर बदलीस मला कोणताही प्रवास भत्ता वा बदली अनुदान अनुज्ञेय असणार नाही व मी स्वखर्चाने रुजू होईन.
+                        सदर विनंती बदलीमुळे लागू होणारी **शून्य सेवा ज्येष्ठता (Zero Seniority)** स्वीकारण्यास माझी पूर्ण संमती असून, नवीन मंडळात मी माझ्या अगोदर नियुक्त झालेल्या सर्व कर्मचाऱ्यांना कनिष्ठ राहील. तसेच या बदलीस मला कोणताही प्रवास भत्ता वा बदली अनुदान अनुज्ञेय असणार नाही व मी स्वखर्चाने रुजू होईन.
                     </p>
 
                     <div class="mt-28 flex justify-between items-end">
                         <div class="text-xs font-semibold">
-                            ठिकाण: <span class="lbl_place font-bold">धानोरा</span><br>
-                            दिनांक: <span class="lbl_prop_date">०४/०६/२०२६</span>
+                            ठिकाण: <span class="lbl_place font-bold">गडचिरोली</span><br>
+                            दिनांक: <span class="lbl_prop_date">०५/०६/२०२६</span>
                         </div>
                         <div class="text-center font-bold">
                             हमीपत्र देणारा (स्वाक्षरी),<br><br><br>
-                            <p class="lbl_emp_name">श्री. राजेश मारुतीराव देशमुख</p>
+                            <p class="lbl_emp_name">श्री. महेश शिवदास हंगे</p>
                             <p class="text-xs font-normal lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</p>
                         </div>
                     </div>
@@ -776,15 +848,15 @@
                 </div>
             </div>
 
-            <!-- DOC 10: धारणाधिकार (Lien) समाप्ती हमीपत्र -->
-            <div class="a4-page text-slate-900 text-sm leading-relaxed doc-container" id="doc_lien_relinquish">
+            <!-- DOC 12: धारणाधिकार (Lien) समाप्ती हमीपत्र -->
+            <div class="a4-page text-slate-900 text-sm leading-relaxed doc-container" id="doc_lien_relinquish" contenteditable="true">
                 <div class="a4-content">
                     <div class="text-center font-bold text-base my-6 underline">
                         मूळ कार्यालयातील धारणाधिकार (Lien) संपुष्टात आल्याबाबत हमीपत्र
                     </div>
 
                     <p class="indent-8 text-justify mt-6 leading-loose text-base">
-                        मी <span class="font-bold text-lg lbl_emp_name">श्री. राजेश मारुतीराव देशमुख</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span> याद्वारे प्रमाणित करतो की, माझ्या आंतर मंडळ कायमस्वरूपी समावेशनाबाबत सक्षम प्राधिकाऱ्याकडून आदेश निर्गमित झाल्यानंतर माझा मूळ कार्यालयातील (<span class="lbl_office_full">ग्रामीण रुग्णालय, धानोरा</span>) पदावरील कोणताही धारणाधिकार (Lien) राहणार नाही याची मला पूर्ण जाणीव आहे.
+                        मी <span class="font-bold text-lg lbl_emp_name">श्री. महेश शिवदास हंगे</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span> याद्वारे प्रमाणित करतो की, माझ्या आंतर मंडळ कायमस्वरूपी समावेशनाबाबत सक्षम प्राधिकाऱ्याकडून आदेश निर्गमित झाल्यानंतर माझा मूळ कार्यालयातील (<span class="lbl_office_full">जिल्हा रुग्णालय, गडचिरोली</span>) पदावरील कोणताही धारणाधिकार (Lien) राहणार नाही याची मला पूर्ण जाणीव आहे.
                     </p>
 
                     <p class="indent-8 text-justify mt-4 leading-loose text-base">
@@ -793,12 +865,12 @@
 
                     <div class="mt-28 flex justify-between items-end">
                         <div class="text-xs font-semibold">
-                            ठिकाण: <span class="lbl_place font-bold">धानोरा</span><br>
-                            दिनांक: <span class="lbl_prop_date">०४/०६/२०२६</span>
+                            ठिकाण: <span class="lbl_place font-bold">गडचिरोली</span><br>
+                            दिनांक: <span class="lbl_prop_date">०५/०६/२०२६</span>
                         </div>
                         <div class="text-center font-bold">
                             हमीपत्र देणारा (स्वाक्षरी),<br><br><br>
-                            <p class="lbl_emp_name">श्री. राजेश मारुतीराव देशमुख</p>
+                            <p class="lbl_emp_name">श्री. महेश शिवदास हंगे</p>
                             <p class="text-xs font-normal lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</p>
                         </div>
                     </div>
@@ -810,17 +882,14 @@
                 </div>
             </div>
 
+            <!-- Dynamic Custom Generated Documents Container -->
+            <div id="dynamicDocsContainer" class="w-full"></div>
+
         </div>
     </div>
 
-    <!-- JavaScript Core Logic Engine -->
+    <!-- JavaScript Core Engine -->
     <script>
-        // Master Dynamic References
-        let referencesList = [
-            "सामान्य प्रशासन विभाग, शासन निर्णय क्र. एसआरव्ही २०१६/प्र.क्र.५०९/कार्या.१२, दिनांक १५ मे २०१९.",
-            "नियुक्ती आदेश जा.क्र. तांत्रिक-आस्था/नियुक्ती/२०२१, दिनांक ०२/०६/२०२१."
-        ];
-
         // Master Checklist Items (Parishisht-A)
         let checklistItems = [
             { id: 'doc_proposal', name: '१. मुख्य शिफारस जावक पत्र', fixed: true, status: 'जोडले आहे', enabled: true },
@@ -828,14 +897,16 @@
             { id: 'doc_checklist', name: '३. परिशिष्ट - अ (पडताळणी सूची)', fixed: true, status: 'जोडले आहे', enabled: true },
             { id: 'doc_service_details', name: '४. परिशिष्ट - ब (कर्मचारी सेवा तपशील कोष्टक)', fixed: true, status: 'जोडले आहे', enabled: true },
             { id: 'doc_appendix_c1', name: '५. परिशिष्ट - क (५ वर्षे अर्हताकारी सेवा प्रमाणपत्र)', status: 'जोडले आहे', enabled: true },
-            { id: 'doc_appendix_c2', name: '६. परिशिष्ट - क (सेवाप्रवेश नियम अर्हता प्रमाणपत्र)', status: 'जोडले आहे', enabled: true },
-            { id: 'doc_appendix_c3', name: '७. परिशिष्ट - क (गोपनीय अहवाल श्रेणी प्रमाणपत्र)', status: 'जोडले आहे', enabled: true },
-            { id: 'doc_bond', name: '८. परिशिष्ट - २ (विहित ५० रू. बंधपत्र)', status: 'जोडले आहे', enabled: true },
-            { id: 'doc_zero_seniority', name: '९. शून्य सेवा ज्येष्ठता व स्वखर्च हमीपत्र', status: 'जोडले आहे', enabled: true },
-            { id: 'doc_lien_relinquish', name: '१०. धारणाधिकार (Lien) समाप्ती हमीपत्र', status: 'जोडले आहे', enabled: true }
+            { id: 'doc_bond', name: '६. परिशिष्ट - २ (विहित रु. १००/५० चे बंधपत्र)', status: 'जोडले आहे', enabled: true },
+            { id: 'doc_no_inquiry', name: '७. ना-विभागीय चौकशी / न्यायालयीन प्रकरण नसल्याचे प्रमाणपत्र', status: 'जोडले आहे', enabled: true },
+            { id: 'doc_no_absence', name: '८. अनधिकृत गैरहजेरी व सेवेत खंड नसल्याचे प्रमाणपत्र', status: 'जोडले आहे', enabled: true },
+            { id: 'doc_first_transfer', name: '९. यापूर्वी कायमस्वरूपी समावेशनाचा लाभ न घेतल्याचे प्रमाणपत्र', status: 'जोडले आहे', enabled: true },
+            { id: 'doc_no_dues', name: '१०. ना-देय प्रमाणपत्र (No Dues Certificate)', status: 'जोडले आहे', enabled: true },
+            { id: 'doc_zero_seniority', name: '११. शून्य सेवा ज्येष्ठता व स्वखर्च हमीपत्र', status: 'जोडले आहे', enabled: true },
+            { id: 'doc_lien_relinquish', name: '१२. धारणाधिकार (Lien) समाप्ती हमीपत्र', status: 'जोडले आहे', enabled: true }
         ];
 
-        // --- Checklist Controls ---
+        // --- Checklist Controls Rendering ---
         function renderChecklistControls() {
             const container = document.getElementById('checklistControls');
             container.innerHTML = '';
@@ -893,17 +964,73 @@
 
         function addNewChecklistRow() {
             const nextNo = checklistItems.length + 1;
-            checklistItems.push({
-                id: null,
-                name: `${nextNo}. सानुकूल कागदपत्र प्रमाणपत्र`,
+            const customDocId = `doc_custom_${Date.now()}`;
+            
+            const newItem = {
+                id: customDocId,
+                name: `${nextNo}. सानुकूल जोडपत्र / प्रमाणपत्र`,
                 status: 'जोडले आहे',
                 enabled: true,
-                fixed: false
-            });
+                fixed: false,
+                isCustomDoc: true
+            };
+            
+            checklistItems.push(newItem);
+            createCustomDocPage(newItem);
             renderChecklistControls();
         }
 
+        function createCustomDocPage(item) {
+            const container = document.getElementById('dynamicDocsContainer');
+            const pageDiv = document.createElement('div');
+            pageDiv.className = 'a4-page text-slate-900 text-sm leading-relaxed doc-container';
+            pageDiv.id = item.id;
+            pageDiv.setAttribute('contenteditable', 'true');
+
+            pageDiv.innerHTML = `
+                <div class="a4-content">
+                    <div class="office-header-content text-center mb-4">
+                        <h2 class="text-base font-bold uppercase lbl_office_header">कार्यालय, जिल्हा शल्यचिकित्सक, जिल्हा रुग्णालय, गडचिरोली</h2>
+                        <hr class="border-slate-800 my-2">
+                    </div>
+
+                    <div class="text-center font-bold text-base my-6 underline">
+                        ${item.name}
+                    </div>
+
+                    <p class="indent-8 text-justify mt-6 leading-loose text-base">
+                        प्रमाणित करण्यात येते की, <span class="font-bold text-lg lbl_emp_name">श्री. महेश शिवदास हंगे</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यालय: <span class="font-bold lbl_office_full">जिल्हा रुग्णालय, गडचिरोली</span> यांच्या सेवा अभिलेखाची पडताळणी केली असता... (येथे तुमचा मजकूर टाईप करा).
+                    </p>
+
+                    <div class="mt-32 flex justify-between items-end">
+                        <div class="text-xs font-semibold">
+                            ठिकाण: <span class="lbl_place font-bold">गडचिरोली</span><br>
+                            दिनांक: <span class="lbl_prop_date">०५/०६/२०२६</span>
+                        </div>
+                        <div class="text-center font-bold">
+                            <br><br>
+                            <p class="lbl_sign_head">जिल्हा शल्यचिकित्सक</p>
+                            <p class="text-xs font-normal lbl_sign_office">जिल्हा रुग्णालय, गडचिरोली</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="page-footer-url">
+                    <span>https://xrayunionmah.web.app</span>
+                    <span>सार्वजनिक आरोग्य विभाग - महाराष्ट्र शासन</span>
+                </div>
+            `;
+
+            container.appendChild(pageDiv);
+            updateAll();
+        }
+
         function deleteChecklistRow(index) {
+            const item = checklistItems[index];
+            if (item.id) {
+                const el = document.getElementById(item.id);
+                if (el) el.remove();
+            }
             checklistItems.splice(index, 1);
             renderChecklistControls();
         }
@@ -947,13 +1074,13 @@
             return sel;
         }
 
-        // --- Master Update Function ---
+        // --- Master Dynamic Update Function ---
         function updateAll() {
             const headDesig = getHeadDesignation();
             const office = document.getElementById('officeName').value || '';
             const taluka = document.getElementById('officeTaluka').value || '';
             const dist = document.getElementById('officeDistrict').value || '';
-            const place = document.getElementById('placeLocation').value || taluka;
+            const place = document.getElementById('placeLocation').value || taluka || dist;
             const currentCircle = document.getElementById('currentCircle').value || '';
             const targetCircle = document.getElementById('targetCircle').value || '';
             const higherAuth = document.getElementById('higherAuthority').value || '';
@@ -976,7 +1103,6 @@
             const officeFull = `${office}, ता. ${taluka}, जि. ${dist}`;
             const headerTitle = `कार्यालय, ${headDesig}, ${office}`;
 
-            // Update Labels
             document.querySelectorAll('.lbl_office_header').forEach(el => el.innerText = headerTitle);
             document.querySelectorAll('.lbl_sign_head').forEach(el => el.innerText = headDesig);
             document.querySelectorAll('.lbl_sign_office').forEach(el => el.innerText = `${office}, जि. ${dist}`);
@@ -1008,7 +1134,7 @@
             document.querySelectorAll('.lbl_office_sub').forEach(el => el.innerText = `जिल्हा: ${dist} | पिन कोड: ४४२६०६`);
         }
 
-        // --- Strict 500KB Letterhead Upload & 7-Days Auto-Delete Storage ---
+        // --- Letterhead Upload & Margin Control ---
         const LOGO_STORAGE_KEY = 'interboard_letterhead_bg';
         const LOGO_TIME_KEY = 'interboard_letterhead_timestamp';
         let currentLogoSrc = null;
@@ -1021,7 +1147,6 @@
                 const now = new Date().getTime();
                 const diffDays = (now - parseInt(savedTime)) / (1000 * 60 * 60 * 24);
                 
-                // If more than 7 days, auto-delete to save space!
                 if (diffDays >= 7) {
                     deleteLogo();
                 } else {
@@ -1048,9 +1173,8 @@
             const file = event.target.files[0];
             if (!file) return;
 
-            // Strict File Size Limit: Max 500 KB (500 * 1024 Bytes)
             if (file.size > 500 * 1024) {
-                alert("⚠️ त्रुटी: फोटोची साईज ५०० KB पेक्षा जास्त आहे! कृपया ५०० KB पेक्षा कमी साईजचा फोटो अपलोड करा.");
+                alert("⚠️ त्रुटी: फोटोची साईज ५०० KB पेक्षा जास्त आहे! कृपया लहान फोटो वापरा.");
                 event.target.value = '';
                 return;
             }
@@ -1058,8 +1182,6 @@
             const reader = new FileReader();
             reader.onload = function(e) {
                 currentLogoSrc = e.target.result;
-                
-                // Save to localStorage with current timestamp
                 try {
                     localStorage.setItem(LOGO_STORAGE_KEY, currentLogoSrc);
                     localStorage.setItem(LOGO_TIME_KEY, new Date().getTime().toString());
@@ -1078,7 +1200,7 @@
             fileInput.disabled = true;
             document.getElementById('uploadContainer').classList.add('bg-slate-100', 'cursor-not-allowed');
             document.getElementById('btnDeleteLogo').classList.remove('hidden');
-            document.getElementById('uploadStatusMsg').innerHTML = '<span class="text-emerald-700 font-bold"><i class="fa-solid fa-circle-check"></i> लेटरपॅड जोडले आहे. (नवीन टाकण्यासाठी आधीचे डिलीट करा)</span>';
+            document.getElementById('uploadStatusMsg').innerHTML = '<span class="text-emerald-700 font-bold"><i class="fa-solid fa-circle-check"></i> लेटरपॅड जोडले आहे.</span>';
         }
 
         function deleteLogo() {
@@ -1111,7 +1233,7 @@
             });
         }
 
-        // --- High Quality PDF Export System ---
+        // --- High Quality PDF Export ---
         function downloadPDF() {
             const element = document.getElementById('printableArea');
             const empName = document.getElementById('empName').value || 'Employee';
@@ -1135,7 +1257,7 @@
             html2pdf().set(opt).from(element).save();
         }
 
-        // Initialize on Page Load
+        // Initialize on Load
         window.onload = function() {
             renderChecklistControls();
             updateAll();
