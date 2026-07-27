@@ -1,8 +1,22 @@
 <!DOCTYPE html>
 <html lang="mr">
 <head>
+    <script>
+    // PWA व मोबाईलमध्ये सक्तीने १२८०px डेस्कटॉप व्ह्यू लागू करण्यासाठी
+    function forceDesktopView() {
+        var viewport = document.querySelector('meta[name="viewport"]');
+        if (viewport) {
+            var screenWidth = window.screen.width;
+            var targetWidth = 1280; // डेस्कटॉपची रुंदी
+            var scale = screenWidth / targetWidth;
+            viewport.setAttribute('content', 'width=' + targetWidth + ', initial-scale=' + scale + ', maximum-scale=3.0, user-scalable=yes');
+        }
+    }
+    window.addEventListener('DOMContentLoaded', forceDesktopView);
+</script>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- डेस्कटॉप व्ह्यू (Force Desktop View) साठी बदललेला टॅग -->
+<meta name="viewport" content="width=1280, initial-scale=0.3, minimum-scale=0.25, maximum-scale=3.0, user-scalable=yes">
     <title>सदस्य पोर्टल | क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना महाराष्ट्र राज्य</title>
     
     <!-- External Libraries & Google Fonts -->
