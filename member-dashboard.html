@@ -17,7 +17,7 @@
             document.querySelector('meta[name="viewport"]').setAttribute('content', 'width=1280, initial-scale=' + scale + ', maximum-scale=3.0, user-scalable=yes');
         }
     </script>
-    ...
+
     <style>
         :root {
             --primary: #0B3D91;
@@ -748,7 +748,29 @@
         window.grievancesList = [];
         window.tbTemplatesList = [];
 
-        // 🟢 AUTO-LOGIN CHECK (पेज रिफ्रेश केल्यावर सेशन ऑटो-लोड होईल)
+        // 🟢 1. MEMBER ACTIVITY LOG HELPER FUNCTION (Firebase v10)
+        window.logMemberActivity = async function(action) {
+            let m = window.currentMember;
+            if (!m) return;
+
+            try {
+                await addDoc(collection(db, "member_logs"), {
+                    memberId: m.id || '',
+                    memberName: m.name || '',
+                    mobile: m.mobile || '',
+                    district: m.district || '',
+                    mandal: m.mandal || '',
+                    action: action,
+                    timestamp: Date.now(),
+                    dateString: new Date().toLocaleString('mr-IN')
+                });
+                console.log("Activity Logged:", action);
+            } catch (e) {
+                console.error("Log error:", e);
+            }
+        };
+
+        // AUTO-LOGIN CHECK (पेज रिफ्रेश केल्यावर सेशन ऑटो-लोड होईल)
         window.addEventListener('DOMContentLoaded', () => {
             let savedSession = localStorage.getItem("memberSession");
             if(savedSession) {
@@ -763,7 +785,7 @@
             }
         });
 
-        // Tab Navigation with Auto Compact Layout for Chat & Floating Button Toggle
+        // Tab Navigation with Auto Compact Layout for Chat & Activity Logging
         window.openTab = function(tabId, btn) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
@@ -774,7 +796,6 @@
 
             let floatBtn = document.getElementById('chatFloatingBtn');
 
-            // If Live Chat is active, apply full screen mobile layout and hide float btn
             if(tabId === 'tab-chat') {
                 document.body.classList.add('chat-active');
                 if(floatBtn) floatBtn.style.display = 'none';
@@ -790,6 +811,11 @@
                 if(floatBtn) floatBtn.style.display = 'flex';
             }
 
+            // 🟢 Log Tab Navigation
+            if (window.currentMember) {
+                window.logMemberActivity(`टॅब उघडला: ${tabId}`);
+            }
+
             if(tabId === 'tab-dash') window.renderDashboardChartsAndMap();
             if(tabId === 'tab-templates') window.loadTemplatesAndAutoLetters();
         };
@@ -799,7 +825,7 @@
             if(el) el.style.display = 'none';
         };
 
-        // Mobile & Password Login Handler (लॅग-मुक्त आणि परिपूर्ण)
+        // Mobile & Password Login Handler
         window.loginMemberWithMobileAndPassword = async function() {
             let mobileInput = document.getElementById('loginMobileNumber').value.trim();
             let passwordInput = document.getElementById('loginPassword').value.trim();
@@ -815,7 +841,6 @@
             Swal.fire({ title: 'माहिती पडताळत आहे...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
 
             try {
-                // String व Number दोन्ही प्रकारच्या मोबाईल नंबर मॅचिंगसाठी क्वेरी
                 const q1 = query(collection(db, "members"), where("mobile", "==", mobileInput));
                 let snap = await getDocs(q1);
 
@@ -831,7 +856,6 @@
 
                 let mData = { id: snap.docs[0].id, ...snap.docs[0].data() };
 
-                // पासवर्ड फील्ड नाव 'password' किंवा 'pass' दोन्ही तपासणे
                 let userPass = mData.password || mData.pass;
                 if(userPass && userPass !== passwordInput) {
                     Swal.close();
@@ -848,12 +872,14 @@
                     return Swal.fire('प्रलंबित नोंदणी', 'तुमचा अर्ज अद्याप ॲडमिन मंजुरीच्या प्रतिक्षेत आहे.', 'warning');
                 }
 
-                // सुरक्षिततेसाठी लोकल स्टोरेजमध्ये सेव्ह करताना पासवर्ड काढून टाकणे
                 delete mData.password;
                 delete mData.pass;
 
                 window.currentMember = mData;
                 localStorage.setItem("memberSession", JSON.stringify(mData));
+
+                // 🟢 Log Login Activity
+                await window.logMemberActivity("पोर्टलवर लॉगिन केले (Logged In)");
 
                 Swal.close();
 
@@ -869,6 +895,9 @@
 
         // 🟢 सुरक्षित लॉगआउट
         window.logoutMember = function() {
+            if (window.currentMember) {
+                window.logMemberActivity("पोर्टलवरून लॉगआउट केले (Logged Out)");
+            }
             localStorage.removeItem("memberSession");
             window.currentMember = null;
             document.body.classList.remove('chat-active');
@@ -1060,6 +1089,9 @@
             let m = window.currentMember;
             if(!t || !m) return;
 
+            // 🟢 Log Letter Generation
+            window.logMemberActivity(`पत्र/अर्ज जनरेट केला: ${t.title}`);
+
             let filledBody = (t.body || '')
                 .replace(/{नाव}/g, m.name || '___________')
                 .replace(/{पद}/g, m.designation || 'X-Ray Officer')
@@ -1116,6 +1148,9 @@
                     subject, category, details, status: 'Pending', remark: '', date: new Date().toLocaleDateString('mr-IN'), timestamp: Date.now()
                 });
 
+                // 🟢 Log Grievance Activity
+                await window.logMemberActivity(`नवीन तक्रार नोंदवली: ${subject}`);
+
                 document.getElementById('grievanceForm').reset();
                 Swal.fire('यशस्वी', `आपली तक्रार आवक क्र. ${inwardNo} सह नोंदवली गेली!`, 'success');
             } catch(err) { Swal.fire('Error', err.message, 'error'); }
@@ -1163,6 +1198,9 @@
                     institutesCount: inst, xrayOfficersCount: xray, joiningPlace: joinPlace, transferDetails: transfer,
                     updatedAt: new Date().toLocaleDateString('mr-IN'), timestamp: Date.now()
                 });
+
+                // 🟢 Log Info Gathered Activity
+                await window.logMemberActivity("नवीन माहिती सबमिट केली (Info Gathered)");
 
                 document.getElementById('infoSubmitForm').reset();
                 Swal.fire('यशस्वी', 'आपली माहिती ॲडमिनला सबमिट करण्यात आली!', 'success');
@@ -1262,9 +1300,8 @@
                 let newOpts = { ...p.options };
                 newOpts[choice] = (newOpts[choice] || 0) + 1;
 
-                await addDoc(collection(db, "member_logs"), {
-                    memberName: m.name, action: `Voted in poll: ${p.question}`, timestamp: Date.now(), dateString: new Date().toLocaleString('mr-IN')
-                });
+                // 🟢 Log Poll Vote Activity
+                await window.logMemberActivity(`पोलमध्ये मत दिले: ${p.question} (${choice})`);
 
                 window.loadPolls();
                 Swal.fire('धन्यवाद!', 'तुमचे मत यशस्वीरित्या नोंदवले गेले.', 'success');
@@ -1272,4 +1309,4 @@
         };
     </script>
 </body>
-</html>
+</html>vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
