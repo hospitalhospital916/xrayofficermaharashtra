@@ -28,6 +28,7 @@
         :root {
             --primary: #0B3D91;
             --secondary: #f39c12;
+            --gold: #FFC436;
             --success: #10b981;
             --danger: #ef4444;
             --info: #3b82f6;
@@ -65,16 +66,31 @@
         .login-card button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(243,156,18,0.4); }
 
         /* Custom Modals */
-        .custom-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 10005; padding: 15px; }
-        .custom-modal { background: white; width: 100%; max-width: 800px; max-height: 90vh; border-radius: 14px; overflow-y: auto; box-shadow: 0 15px 35px rgba(0,0,0,0.3); }
+        .custom-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.65); display: none; justify-content: center; align-items: center; z-index: 10005; padding: 15px; }
+        .custom-modal { background: white; width: 100%; max-width: 900px; max-height: 92vh; border-radius: 14px; overflow-y: auto; box-shadow: 0 15px 35px rgba(0,0,0,0.3); }
         .custom-modal-header { background: var(--primary); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10; }
         .custom-modal-body { padding: 20px; }
 
+        /* Section Titles in Modal */
+        .modal-section-title {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--primary);
+            background: #E0F2FE;
+            padding: 6px 12px;
+            border-radius: 6px;
+            margin: 15px 0 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-left: 4px solid var(--info);
+        }
+
         /* Navigation Header */
-        .navbar { background: var(--white); padding: 10px 18px; display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid var(--secondary); box-shadow: 0 4px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; flex-wrap: wrap; gap: 8px; transition: all 0.3s ease; }
+        .navbar { background: var(--white); padding: 10px 18px; display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid var(--secondary); box-shadow: 0 4px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; flex-wrap: wrap; gap: 8px; }
         .navbar-brand { display: flex; align-items: center; gap: 10px; }
-        .navbar-brand img { width: 48px; height: 48px; border-radius: 50%; object-fit: contain; border: 2px solid var(--primary); padding: 2px; transition: all 0.3s ease; }
-        .navbar h2 { color: var(--primary); font-weight: 800; font-size: 1rem; line-height: 1.2; margin: 0; transition: font-size 0.3s ease; }
+        .navbar-brand img { width: 48px; height: 48px; border-radius: 50%; object-fit: contain; border: 2px solid var(--primary); padding: 2px; }
+        .navbar h2 { color: var(--primary); font-weight: 800; font-size: 1rem; line-height: 1.2; margin: 0; }
         .navbar small { font-size: 0.75rem; color: #64748b; font-weight: 600; display: block; }
         .nav-profile { display: flex; align-items: center; gap: 12px; }
         .btn-logout { background: var(--danger); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 0.8rem; }
@@ -90,29 +106,16 @@
         .tab-btn:hover { background: rgba(255,255,255,0.25); }
         .tab-btn.active { background: var(--secondary); color: var(--dark); }
 
-        /* App Wrapper & Main Container */
-        #appContent {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-        }
-
-        .container { 
-            max-width: 1450px; 
-            width: 100%;
-            margin: 15px auto; 
-            padding: 0 12px; 
-            flex: 1;
-        }
-
+        /* Main Container */
+        #appContent { min-height: 100vh; display: flex; flex-direction: column; width: 100%; }
+        .container { max-width: 1450px; width: 100%; margin: 15px auto; padding: 0 12px; flex: 1; }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
         .panel { background: var(--white); border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-bottom: 20px; border: 1px solid #e2e8f0; overflow: hidden; }
         .panel-header { padding: 12px 16px; font-size: 1rem; font-weight: 800; background: #f8fafc; border-bottom: 1px solid #e2e8f0; border-top: 5px solid var(--primary); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
         .panel-body { padding: 15px; overflow-x: auto; }
 
-        /* 🌟 १. 'माझी माहिती' (Hero Profile View - Top Position) */
+        /* 🌟 'माझी माहिती' (Hero Profile View - Top Position) */
         .member-profile-hero {
             background: linear-gradient(135deg, #ffffff 0%, #f0f4f8 100%);
             border: 2px solid var(--primary);
@@ -181,6 +184,28 @@
             font-weight: 700;
         }
 
+        /* 🌟 पिवळ्या रंगाचे एडिट बटण CSS (Yellow Highlight) */
+        .btn-edit-profile-gold {
+            background: linear-gradient(135deg, #FFC436, #f39c12) !important;
+            color: #071938 !important;
+            font-weight: 800 !important;
+            border: 2px solid #d97706 !important;
+            font-size: 0.95rem !important;
+            padding: 8px 18px !important;
+            border-radius: 8px !important;
+            box-shadow: 0 4px 12px rgba(243, 156, 18, 0.35) !important;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+        .btn-edit-profile-gold:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(243, 156, 18, 0.5) !important;
+            background: linear-gradient(135deg, #f1c40f, #e67e22) !important;
+        }
+
         /* Mini Stats */
         .dash-cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 15px; }
         .dash-card-mini { background: #fff; border: 1px solid #e2e8f0; border-left: 5px solid var(--primary); padding: 12px 15px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); text-align: center; }
@@ -206,6 +231,14 @@
         .dist-badge { display: inline-flex; justify-content: space-between; align-items: center; width: 100%; background: rgba(0,0,0,0.25); font-size: 0.68rem; padding: 3px 6px; margin: 2px 0; border-radius: 4px; font-weight: 600; }
         .dist-badge .dist-count { background: #fff; color: #000; padding: 1px 5px; border-radius: 10px; font-weight: 800; font-size: 0.62rem; }
 
+        /* Controls */
+        .btn-action { background: var(--primary); color: white; border: none; padding: 8px 14px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 6px; font-size: 0.85rem; }
+        .btn-action:hover { opacity: 0.9; transform: translateY(-1px); }
+        .form-control { width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem; outline: none; }
+        .form-control:focus { border-color: var(--primary); }
+        .form-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; align-items: center; }
+        .form-row > div { flex: 1; min-width: 180px; }
+
         /* Tables & Badges */
         table { width: 100%; border-collapse: collapse; min-width: 700px; background: white; }
         th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #e2e8f0; vertical-align: middle; font-size: 0.88rem; }
@@ -214,15 +247,7 @@
         .badge { padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; color: #fff; display: inline-block; }
         .bg-success { background: var(--success); } .bg-warning { background: var(--secondary); color: #000; } .bg-danger { background: var(--danger); } .bg-primary { background: var(--primary); } .bg-info { background: var(--info); } .bg-purple { background: var(--purple); }
 
-        /* Buttons & Controls */
-        .btn-action { background: var(--primary); color: white; border: none; padding: 8px 14px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 6px; font-size: 0.85rem; }
-        .btn-action:hover { opacity: 0.9; transform: translateY(-1px); }
-        .form-control { width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem; outline: none; }
-        .form-control:focus { border-color: var(--primary); }
-        .form-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; align-items: center; }
-        .form-row > div { flex: 1; min-width: 180px; }
-
-        /* 🚀 चॅट लॉन्चर विजेत - सुटसुटीत व स्पष्ट कलर्स (Contrast High-Visibility) */
+        /* 🚀 फ्लोटिंग चॅट बटण CSS */
         #floatingLiveChatWidget { 
             position: fixed; 
             bottom: 35px; 
@@ -230,37 +255,36 @@
             z-index: 9990; 
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
             cursor: pointer;
             transition: transform 0.3s ease;
         }
-
         #floatingLiveChatWidget:hover { transform: scale(1.08); }
 
         .chat-pill-label {
             background: linear-gradient(135deg, #1e293b, #0B3D91);
             color: #ffffff;
-            padding: 12px 24px;
+            padding: 10px 20px;
             border-radius: 30px;
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-weight: 800;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
             border: 2px solid #f39c12;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .chat-floating-btn { 
-            width: 70px; 
-            height: 70px; 
+            width: 65px; 
+            height: 65px; 
             background: linear-gradient(135deg, #f39c12, #d97706); 
             color: white; 
             border-radius: 50%; 
             display: flex; 
             justify-content: center; 
             align-items: center; 
-            font-size: 2.2rem; 
+            font-size: 2rem; 
             box-shadow: 0 10px 25px rgba(243, 156, 18, 0.5); 
             position: relative; 
             border: 3.5px solid #ffffff;
@@ -283,7 +307,39 @@
             border: 2px solid white; 
         }
 
-        /* चॅट मोड फिटिंग */
+        /* 🌟 चॅट मधील पिवळी नेव्हिगेशन पट्टी (Chat Header Yellow Strip) */
+        .chat-top-nav-bar { display: none; }
+        
+        body.chat-active-mode .chat-top-nav-bar { 
+            display: flex !important; 
+            align-items: center; 
+            justify-content: space-between; 
+            background: linear-gradient(135deg, #FFC436, #f39c12) !important; 
+            color: #071938 !important; 
+            padding: 12px 20px !important; 
+            border-bottom: 3.5px solid var(--primary) !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15) !important;
+            z-index: 10; 
+        }
+
+        .btn-chat-back-main {
+            background: var(--primary) !important;
+            color: #ffffff !important;
+            font-weight: 800 !important;
+            border: none !important;
+            padding: 8px 18px !important;
+            border-radius: 8px !important;
+            font-size: 0.92rem !important;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 10px rgba(11, 61, 145, 0.3) !important;
+        }
+        .btn-chat-back-main:hover {
+            background: #07275e !important;
+        }
+
         #tab-chat { height: 85vh; width: 100%; }
         #tab-chat .panel { height: 100%; border-radius: 12px; overflow: hidden; margin-bottom: 0; border: 1px solid #cbd5e1; }
         #tab-chat .panel-body { height: 100%; padding: 0; overflow: hidden; }
@@ -298,9 +354,6 @@
 
         body.chat-active-mode #tab-chat .panel { height: 100% !important; border: none !important; border-radius: 0 !important; margin: 0 !important; box-shadow: none !important; }
         body.chat-active-mode #tab-chat .panel-body { flex: 1 !important; height: 100% !important; padding: 0 !important; }
-
-        .chat-top-nav-bar { display: none; }
-        body.chat-active-mode .chat-top-nav-bar { display: flex !important; align-items: center; justify-content: space-between; background: var(--primary); color: white; padding: 10px 15px; z-index: 10; }
 
         .icard-card-box { width: 320px; height: 490px; border-radius: 12px; background: #fff; position: relative; overflow: hidden; padding: 0; text-align: center; margin: 10px auto; box-shadow: 0 5px 15px rgba(0,0,0,0.15); border: 2px solid var(--primary); }
         .icard-head { background: var(--primary); color: white; padding: 12px 10px; }
@@ -326,7 +379,7 @@
             </div>
             <div class="custom-modal-body">
                 <div id="popup_notice_content_area" style="font-size:1.05rem; color:#1e293b; line-height:1.6; margin:15px 0; font-weight:600;">
-                    संगटनेच्या सर्व सदस्यांसाठी महत्त्वाची सूचना.
+                    संघटनेच्या सर्व सदस्यांसाठी महत्त्वाची सूचना.
                 </div>
                 <button class="btn-action bg-success" onclick="closeModal('memberLoginPopupModal')" style="width:100%; justify-content:center; padding:10px; font-size:1rem; margin-top:10px;">
                     <i class="fa fa-check-circle"></i> समजले (OK)
@@ -371,22 +424,110 @@
         </div>
     </div>
 
-    <!-- 3. PROFILE EDIT MODAL (फक्त 'एडिट' बटणावर क्लिक केल्यावर उघडणार: Rule Delete First -> Upload -> Approval Pending) -->
+    <!-- 3. FULL PROFILE EDIT MODAL (सर्व २०+ नोंदणी फिल्ड्स - एकही फील्ड compulsory नाही) -->
     <div id="profileEditModal" class="custom-modal-overlay">
         <div class="custom-modal">
-            <div class="custom-modal-header">
-                <h3><i class="fa fa-user-edit"></i> माझी प्रोफाईल माहिती एडिट करा</h3>
+            <div class="custom-modal-header bg-primary">
+                <h3><i class="fa fa-user-edit"></i> माझी संपूर्ण प्रोफाईल माहिती एडिट करा</h3>
                 <button onclick="closeModal('profileEditModal')" style="background:transparent; border:none; color:white; font-size:1.5rem; cursor:pointer;">&times;</button>
             </div>
             <div class="custom-modal-body">
                 <div style="background:#fffbeb; border:1px solid #fde68a; color:#92400e; padding:10px; border-radius:8px; font-size:0.85rem; margin-bottom:15px; font-weight:bold;">
-                    <i class="fa fa-exclamation-triangle"></i> नियम: नवीन फोटो किंवा कागदपत्र जोडण्यापूर्वी जुनी फाईल डिलीट करणे आवश्यक आहे. प्रोफाईल बदलल्यास ते ॲडमिनकडे मंजुरीसाठी (Approval Pending) पाठवले जाईल.
+                    <i class="fa fa-exclamation-triangle"></i> नियम: नवीन फोटो किंवा कागदपत्र जोडण्यापूर्वी जुनी फाईल डिलीट करणे आवश्यक आहे. येथे बदललेली सर्व माहिती ॲडमिनच्या मंजुरीसाठी (Approval Pending) पाठवली जाईल.
                 </div>
 
                 <form id="memberSelfEditForm" onsubmit="submitProfileEditForApproval(event)">
+                    
+                    <!-- १. वैयक्तिक माहिती -->
+                    <div class="modal-section-title"><i class="fa fa-user"></i> १. वैयक्तिक माहिती</div>
                     <div class="form-row">
-                        <div>
-                            <label style="color:var(--primary); font-weight:bold;"><i class="fa fa-camera"></i> प्रोफाईल फोटो (Max 400 KB)</label>
+                        <div style="flex:1.5;"><label>पूर्ण नाव (Full Name):</label><input type="text" id="self_name" class="form-control" placeholder="पूर्ण नाव"></div>
+                        <div style="flex:1;"><label>जन्मतारीख (DOB):</label><input type="date" id="self_dob" class="form-control"></div>
+                        <div style="flex:1;">
+                            <label>प्रवर्ग (Category):</label>
+                            <select id="self_category" class="form-control">
+                                <option value="">प्रवर्ग निवडा</option>
+                                <option value="खुला">खुला (OPEN)</option>
+                                <option value="अ.जा.">अ.जा. (SC)</option>
+                                <option value="अ.ज.">अ.ज. (ST)</option>
+                                <option value="वि.जा.-अ">वि.जा.-अ (VJ-A)</option>
+                                <option value="भ.ज.-ब">भ.ज.-ब (NT-B)</option>
+                                <option value="भ.ज.-क">भ.ज.-क (NT-C)</option>
+                                <option value="भ.ज.-ड">भ.ज.-ड (NT-D)</option>
+                                <option value="वि.मा.प्र.">वि.मा.प्र. (SBC)</option>
+                                <option value="इ.मा.व.">इ.मा.व. (OBC)</option>
+                                <option value="EWS">EWS</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div style="flex:1;"><label>रक्तगट (Blood Group):</label><input type="text" id="self_bloodGroup" class="form-control" placeholder="उदा. O+, B+"></div>
+                        <div style="flex:1.5;"><label>आधार क्रमांक (Aadhaar No):</label><input type="text" id="self_aadhaar" class="form-control" placeholder="१२ अंकी आधार क्रमांक" maxlength="12"></div>
+                    </div>
+
+                    <!-- २. नोकरी व पदस्थापना माहिती -->
+                    <div class="modal-section-title"><i class="fa fa-briefcase"></i> २. नोकरी व पदस्थापना माहिती</div>
+                    <div class="form-row">
+                        <div style="flex:1;"><label>सेवार्थ आयडी (Sevarth ID):</label><input type="text" id="self_sevarth" class="form-control" placeholder="उदा. LATX8001"></div>
+                        <div style="flex:1;">
+                            <label>पद / हुद्दा (Designation):</label>
+                            <select id="self_post" class="form-control">
+                                <option value="">पद निवडा</option>
+                                <option value="क्ष-किरण वैज्ञानिक अधिकारी">क्ष-किरण वैज्ञानिक अधिकारी</option>
+                                <option value="ज्येष्ठ क्ष-किरण वैज्ञानिक अधिकारी">ज्येष्ठ क्ष-किरण वैज्ञानिक अधिकारी</option>
+                                <option value="इतर">इतर</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div style="flex:1;">
+                            <label>आरोग्य मंडळ (Mandal):</label>
+                            <select id="self_mandal" class="form-control" onchange="populateSelfEditDistricts()">
+                                <option value="">मंडळ निवडा</option>
+                                <option value="पुणे मंडळ">पुणे मंडळ</option>
+                                <option value="नागपूर मंडळ">नागपूर मंडळ</option>
+                                <option value="नाशिक मंडळ">नाशिक मंडळ</option>
+                                <option value="अकोला मंडळ">अकोला मंडळ</option>
+                                <option value="कोल्हापूर मंडळ">कोल्हापूर मंडळ</option>
+                                <option value="छत्रपती संभाजीनगर मंडळ">छत्रपती संभाजीनगर मंडळ</option>
+                                <option value="लातूर मंडळ">लातूर मंडळ</option>
+                                <option value="ठाणे मंडळ">ठाणे मंडळ</option>
+                            </select>
+                        </div>
+                        <div style="flex:1;">
+                            <label>जिल्हा (District):</label>
+                            <select id="self_district" class="form-control">
+                                <option value="">प्रथम मंडळ निवडा</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div style="flex:1.5;"><label>सध्या कार्यरत रुग्णालय / संस्था:</label><input type="text" id="self_workplace" class="form-control" placeholder="उदा. जि.रु. लातूर"></div>
+                        <div style="flex:1;"><label>रुजू दिनांक (Join Date):</label><input type="date" id="self_joinDate" class="form-control"></div>
+                        <div style="flex:1;"><label>सेवानिवृत्ती दिनांक:</label><input type="date" id="self_retireDate" class="form-control"></div>
+                    </div>
+
+                    <!-- ३. संपर्क व पत्ता -->
+                    <div class="modal-section-title"><i class="fa fa-address-book"></i> ३. संपर्क व पत्ता</div>
+                    <div class="form-row">
+                        <div style="flex:1;"><label>मोबाईल नंबर:</label><input type="tel" id="self_mobile" class="form-control" readonly style="background:#e2e8f0;"></div>
+                        <div style="flex:1.5;"><label>ई-मेल आयडी (Email ID):</label><input type="email" id="self_email" class="form-control" placeholder="example@gmail.com"></div>
+                    </div>
+
+                    <div class="form-row">
+                        <div style="flex:1.5;"><label>कायमचा पत्ता (Permanent Address):</label><input type="text" id="self_address" class="form-control" placeholder="गल्ली/रस्ता, तालुका व जिल्हा"></div>
+                        <div style="flex:1.5;"><label>विशेष शेरा / अभिप्राय (Remarks):</label><input type="text" id="self_remarks" class="form-control" placeholder="उदा. प्रकल्पग्रस्त / अनुकंपा"></div>
+                    </div>
+
+                    <!-- ४. दस्तऐवज व PDF अपलोड कप्पे (Slots) -->
+                    <div class="modal-section-title"><i class="fa fa-folder-open"></i> ४. दस्तऐवज व PDF अपलोड कप्पे (Max 400 KB)</div>
+                    <div class="form-row">
+                        <!-- कप्पा १: प्रोफाइल फोटो -->
+                        <div style="flex:1;">
+                            <label style="color:var(--primary); font-weight:bold;"><i class="fa fa-camera"></i> १. प्रोफाईल फोटो</label>
                             <div id="self_upload_box_photo">
                                 <input type="file" id="self_photo" accept="image/*" class="form-control" onchange="checkFileSize(this, 400)">
                             </div>
@@ -397,8 +538,9 @@
                             <input type="hidden" id="self_existing_photo_url">
                         </div>
 
-                        <div>
-                            <label style="color:var(--danger); font-weight:bold;"><i class="fa fa-file-pdf"></i> मुख्य कागदपत्र (Max 400 KB)</label>
+                        <!-- कप्पा २: नियुक्ती आदेश -->
+                        <div style="flex:1;">
+                            <label style="color:var(--danger); font-weight:bold;"><i class="fa fa-file-pdf"></i> २. नियुक्ती/शासकीय आदेश</label>
                             <div id="self_upload_box_doc">
                                 <input type="file" id="self_document" accept="image/*,.pdf" class="form-control" onchange="checkFileSize(this, 400)">
                             </div>
@@ -408,32 +550,28 @@
                             </div>
                             <input type="hidden" id="self_existing_doc_url">
                         </div>
+
+                        <!-- कप्पा ३: आधार / इतर कागदपत्रे -->
+                        <div style="flex:1;">
+                            <label style="color:var(--info); font-weight:bold;"><i class="fa fa-id-card"></i> ३. आधार / इतर कागदपत्रे</label>
+                            <div id="self_upload_box_other">
+                                <input type="file" id="self_other_document" accept="image/*,.pdf" class="form-control" onchange="checkFileSize(this, 400)">
+                            </div>
+                            <div id="self_existing_box_other" style="display:none; align-items:center; justify-content:space-between; padding:8px; border:1px solid #cbd5e1; border-radius:6px; background:#f8fafc;">
+                                <a id="self_link_other" href="#" target="_blank" class="badge bg-success" style="text-decoration:none;"><i class="fa fa-eye"></i> फाईल पहा</a>
+                                <button type="button" class="btn-action bg-danger" onclick="removeMemberExistingFile('other')"><i class="fa fa-trash"></i> डिलीट करा व नवीन जोडा</button>
+                            </div>
+                            <input type="hidden" id="self_existing_other_url">
+                        </div>
                     </div>
 
+                    <!-- ५. लॉगिन पासवर्ड -->
+                    <div class="modal-section-title"><i class="fa fa-lock"></i> ५. नवीन पासवर्ड बदलावा (पर्यायी)</div>
                     <div class="form-row">
-                        <div style="flex:1.5;"><label>पूर्ण नाव:</label><input type="text" id="self_name" class="form-control" required></div>
-                        <div style="flex:1;"><label>पद / हुद्दा:</label><input type="text" id="self_post" class="form-control" required></div>
-                        <div style="flex:1;"><label>मोबाईल क्रमांक:</label><input type="tel" id="self_mobile" class="form-control" readonly style="background:#e2e8f0;"></div>
+                        <div style="flex:1;"><label>नवीन पासवर्ड:</label><input type="text" id="self_pass" class="form-control" placeholder="नवीन पासवर्ड टाका (बदलायचा असल्यास)"></div>
                     </div>
 
-                    <div class="form-row">
-                        <div><label>ई-मेल आयडी:</label><input type="email" id="self_email" class="form-control"></div>
-                        <div><label>सेवार्थ आयडी:</label><input type="text" id="self_sevarth" class="form-control"></div>
-                        <div><label>आधार क्रमांक:</label><input type="text" id="self_aadhaar" class="form-control"></div>
-                    </div>
-
-                    <div class="form-row">
-                        <div><label>जन्मतारीख:</label><input type="date" id="self_dob" class="form-control"></div>
-                        <div><label>रुजू दिनांक:</label><input type="date" id="self_joinDate" class="form-control"></div>
-                        <div><label>रक्तगट:</label><input type="text" id="self_bloodGroup" class="form-control" placeholder="उदा. O+"></div>
-                    </div>
-
-                    <div class="form-row">
-                        <div style="flex:1;"><label>कार्यरत रुग्णालय / संस्था:</label><input type="text" id="self_workplace" class="form-control" required></div>
-                        <div style="flex:1;"><label>कायमचा पत्ता:</label><input type="text" id="self_address" class="form-control"></div>
-                    </div>
-
-                    <button type="submit" class="btn-action bg-success" style="width:100%; justify-content:center; padding:12px; margin-top:15px; font-size:1.1rem;">
+                    <button type="submit" class="btn-action bg-success" style="width:100%; justify-content:center; padding:12px; margin-top:20px; font-size:1.1rem;">
                         <i class="fa fa-paper-plane"></i> बदल ॲडमिन मंजुरीसाठी पाठवा
                     </button>
                 </form>
@@ -489,11 +627,11 @@
             <!-- TAB 1: DASHBOARD OVERVIEW (#1 Position: 'माझी माहिती' + आरोग्य मंडळे व जिल्हे) -->
             <div id="tab-dash" class="tab-content active">
                 
-                <!-- 🌟 १. 'माझी माहिती' (सुरवातीला उघडल्यावर फक्त सर्व माहिती दिसेल, फॉर्म नाही) -->
+                <!-- 🌟 १. 'माझी माहिती' (पिवळ्या रंगाचे आकर्षक प्रोफाईल एडिट बटण) -->
                 <div class="member-profile-hero">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:2px solid var(--primary); padding-bottom:8px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:2px solid var(--primary); padding-bottom:8px; flex-wrap:wrap; gap:10px;">
                         <h3 style="color:var(--primary); font-weight:800; font-size:1.2rem;"><i class="fa fa-id-card-clip"></i> माझी नोंदणीकृत माहिती</h3>
-                        <button class="btn-action bg-warning" style="color:#000;" onclick="openSelfEditModal()"><i class="fa fa-user-edit"></i> ✏️ प्रोफाईल एडिट करा</button>
+                        <button class="btn-edit-profile-gold" onclick="openSelfEditModal()"><i class="fa fa-user-edit"></i> ✏️ प्रोफाईल एडिट करा</button>
                     </div>
 
                     <div class="profile-hero-grid">
@@ -507,6 +645,7 @@
                             <div class="info-item"><b>पद / हुद्दा</b><span id="pf_hero_post">-</span></div>
                             <div class="info-item"><b>मोबाईल नंबर</b><span id="pf_hero_mobile">-</span></div>
                             <div class="info-item"><b>ई-मेल आयडी</b><span id="pf_hero_email">-</span></div>
+                            <div class="info-item"><b>प्रवर्ग (Category)</b><span id="pf_hero_category">-</span></div>
                             <div class="info-item"><b>जिल्हा व मंडळ</b><span id="pf_hero_dist_mandal">-</span></div>
                             <div class="info-item"><b>सध्या कार्यरत रुग्णालय</b><span id="pf_hero_workplace">-</span></div>
                             <div class="info-item"><b>सेवार्थ आयडी</b><span id="pf_hero_sevarth">-</span></div>
@@ -928,14 +1067,14 @@
                 </div>
             </div>
 
-            <!-- TAB 10: LIVE CHAT SECTION -->
+            <!-- TAB 10: LIVE CHAT SECTION (🌟 पिवळ्या रंगाची हेडर पट्टी व स्पष्ट बटण) -->
             <div id="tab-chat" class="tab-content">
                 <div class="panel" style="margin-bottom:0;">
                     <div class="chat-top-nav-bar">
-                        <button type="button" class="btn-action bg-warning" style="color:#000; font-weight:800;" onclick="openTab('tab-dash', document.querySelector('.tab-menu .tab-btn'))">
+                        <button type="button" class="btn-chat-back-main" onclick="openTab('tab-dash', document.querySelector('.tab-menu .tab-btn'))">
                             <i class="fa fa-arrow-left"></i> मुख्य डॅशबोर्डवर जा
                         </button>
-                        <span style="font-weight:800; font-size:1.1rem;"><i class="fa-solid fa-comments"></i> Live Chat</span>
+                        <span style="font-weight:800; font-size:1.15rem; color:#071938;"><i class="fa-solid fa-comments"></i> Live Chat रूम</span>
                     </div>
                     <div class="panel-body" style="padding:0;">
                         <iframe id="memberChatIframe" src="chat.html" title="Live Chat"></iframe>
@@ -1160,6 +1299,7 @@
             document.getElementById('pf_hero_post').innerText = m.designation || 'X-Ray Scientific Officer';
             document.getElementById('pf_hero_mobile').innerText = m.mobile || '-';
             document.getElementById('pf_hero_email').innerText = m.email || '-';
+            document.getElementById('pf_hero_category').innerText = m.category || '-';
             document.getElementById('pf_hero_dist_mandal').innerText = `${m.district||'-'} / ${m.mandal||'-'}`;
             document.getElementById('pf_hero_workplace').innerText = m.workplace || '-';
             document.getElementById('pf_hero_sevarth').innerText = m.sevarthId || '-';
@@ -1189,26 +1329,51 @@
             window.loadTemplatesAndAutoLetters();
         };
 
+        window.populateSelfEditDistricts = function() {
+            let mVal = document.getElementById('self_mandal').value;
+            let dSelect = document.getElementById('self_district');
+            if(!mVal || !mandalData[mVal]) {
+                dSelect.innerHTML = '<option value="">प्रथम मंडळ निवडा</option>';
+                return;
+            }
+            let html = '<option value="">जिल्हा निवडा</option>';
+            mandalData[mVal].forEach(d => { html += `<option value="${d}">${d}</option>`; });
+            dSelect.innerHTML = html;
+        };
+
         window.openSelfEditModal = function() {
             let m = window.currentMember; if(!m) return;
             
             document.getElementById('self_name').value = m.name || '';
+            document.getElementById('self_dob').value = m.dob || '';
+            document.getElementById('self_category').value = m.category || '';
+            document.getElementById('self_bloodGroup').value = m.bloodGroup || '';
+            document.getElementById('self_aadhaar').value = m.aadhaar || '';
+            
+            document.getElementById('self_sevarth').value = m.sevarthId || '';
             document.getElementById('self_post').value = m.designation || '';
+            document.getElementById('self_mandal').value = m.mandal || '';
+            
+            window.populateSelfEditDistricts();
+            document.getElementById('self_district').value = m.district || '';
+            
+            document.getElementById('self_workplace').value = m.workplace || '';
+            document.getElementById('self_joinDate').value = m.joinDate || '';
+            document.getElementById('self_retireDate').value = m.retireDate || '';
+            
             document.getElementById('self_mobile').value = m.mobile || '';
             document.getElementById('self_email').value = m.email || '';
-            document.getElementById('self_sevarth').value = m.sevarthId || '';
-            document.getElementById('self_aadhaar').value = m.aadhaar || '';
-            document.getElementById('self_dob').value = m.dob || '';
-            document.getElementById('self_joinDate').value = m.joinDate || '';
-            document.getElementById('self_bloodGroup').value = m.bloodGroup || '';
-            document.getElementById('self_workplace').value = m.workplace || '';
             document.getElementById('self_address').value = m.address || '';
+            document.getElementById('self_remarks').value = m.remarks || '';
+            document.getElementById('self_pass').value = m.pass || '';
 
             document.getElementById('self_existing_photo_url').value = m.photoUrl || '';
             document.getElementById('self_existing_doc_url').value = m.docUrl || '';
+            document.getElementById('self_existing_other_url').value = m.otherUrl || '';
 
             window.toggleSelfFileUI('photo', m.photoUrl);
             window.toggleSelfFileUI('doc', m.docUrl);
+            window.toggleSelfFileUI('other', m.otherUrl);
 
             document.getElementById('profileEditModal').style.display = 'flex';
         };
@@ -1258,27 +1423,38 @@
             try {
                 let pFile = document.getElementById('self_photo').files[0];
                 let dFile = document.getElementById('self_document').files[0];
+                let oFile = document.getElementById('self_other_document')?.files[0];
 
                 let finalPhoto = document.getElementById('self_existing_photo_url').value;
                 let finalDoc = document.getElementById('self_existing_doc_url').value;
+                let finalOther = document.getElementById('self_existing_other_url').value;
 
                 if(pFile) finalPhoto = await window.uploadToCloudinary(pFile);
                 if(dFile) finalDoc = await window.uploadToCloudinary(dFile);
+                if(oFile) finalOther = await window.uploadToCloudinary(oFile);
 
                 let updatedPayload = {
                     memberId: m.id,
-                    name: document.getElementById('self_name').value,
-                    designation: document.getElementById('self_post').value,
-                    email: document.getElementById('self_email').value,
-                    sevarthId: document.getElementById('self_sevarth').value,
-                    aadhaar: document.getElementById('self_aadhaar').value,
+                    name: document.getElementById('self_name').value.trim(),
                     dob: document.getElementById('self_dob').value,
+                    category: document.getElementById('self_category').value,
+                    bloodGroup: document.getElementById('self_bloodGroup').value.trim(),
+                    aadhaar: document.getElementById('self_aadhaar').value.trim(),
+                    sevarthId: document.getElementById('self_sevarth').value.trim(),
+                    designation: document.getElementById('self_post').value,
+                    mandal: document.getElementById('self_mandal').value,
+                    district: document.getElementById('self_district').value,
+                    workplace: document.getElementById('self_workplace').value.trim(),
                     joinDate: document.getElementById('self_joinDate').value,
-                    bloodGroup: document.getElementById('self_bloodGroup').value,
-                    workplace: document.getElementById('self_workplace').value,
-                    address: document.getElementById('self_address').value,
+                    retireDate: document.getElementById('self_retireDate').value,
+                    mobile: document.getElementById('self_mobile').value.trim(),
+                    email: document.getElementById('self_email').value.trim(),
+                    address: document.getElementById('self_address').value.trim(),
+                    remarks: document.getElementById('self_remarks').value.trim(),
+                    pass: document.getElementById('self_pass').value.trim() || m.pass,
                     photoUrl: finalPhoto,
                     docUrl: finalDoc,
+                    otherUrl: finalOther,
                     status: 'Pending',
                     updatedAt: new Date().toLocaleString('mr-IN')
                 };
@@ -1345,9 +1521,9 @@
                 html += `
                     <div class="form-row" style="background:#fff; padding:10px; border-radius:6px; border:1px solid #cbd5e1; margin-bottom:8px;">
                         <div style="flex:0.2; font-weight:bold;">#${i}</div>
-                        <div style="flex:1.5;"><input type="text" class="form-control off-name" placeholder="कर्मचाऱ्याचे पूर्ण नाव" required></div>
-                        <div style="flex:1;"><input type="date" class="form-control off-joindate" required></div>
-                        <div style="flex:1.2;"><input type="text" class="form-control off-workplace" placeholder="कार्यरत रुग्णालय" required></div>
+                        <div style="flex:1.5;"><input type="text" class="form-control off-name" placeholder="कर्मचाऱ्याचे पूर्ण नाव"></div>
+                        <div style="flex:1;"><input type="date" class="form-control off-joindate"></div>
+                        <div style="flex:1.2;"><input type="text" class="form-control off-workplace" placeholder="कार्यरत रुग्णालय"></div>
                     </div>
                 `;
             }
@@ -1662,7 +1838,7 @@
                 newOpts[choice] = (newOpts[choice] || 0) + 1;
 
                 window.loadPolls();
-                Swal.fire('धन्यवाद!', 'तुमचे मत यशस्वीरित्या नोंदवले गेले.', 'success');
+                Swal.fire('धन्यवाद!', 'तुमचे मत नोंदवले गेले.', 'success');
             } catch(e) { Swal.fire('Error', e.message, 'error'); }
         };
     </script>
