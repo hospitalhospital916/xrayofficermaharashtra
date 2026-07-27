@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ऑनलाइन सदस्य नोंदणी फॉर्म | क्ष-किरण वैज्ञानिक अधिकारी संघटना</title>
+    
+    <!-- Fonts & FontAwesome Icons & SweetAlert2 -->
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        :root {
+            --primary: #0F2C59;
+            --primary-dark: #071938;
+            --secondary: #F86F03;
+            --gold: #FFC436;
+            --success: #10B981;
+            --danger: #EF4444;
+            --info: #3B82F6;
+            --dark: #1E293B;
+            --light-bg: #F1F5F9;
+            --white: #FFFFFF;
+            --card-shadow: 0 12px 35px rgba(15, 44, 89, 0.12);
+            --radius: 16px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mukta', sans-serif; }
+        body { background-color: var(--light-bg); color: var(--dark); padding: 30px 15px; }
+
+        .reg-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--card-shadow);
+            padding: 40px;
+            border-top: 6px solid var(--primary);
+        }
+
+        .reg-header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px dashed #E2E8F0;
+            padding-bottom: 20px;
+        }
+
+        .reg-header img {
+            height: 85px;
+            margin-bottom: 12px;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+        }
+
+        .reg-header h2 {
+            color: var(--primary);
+            font-size: 1.85rem;
+            font-weight: 800;
+            line-height: 1.2;
+        }
+
+        .reg-header p {
+            color: #64748B;
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-top: 4px;
+        }
+
+        .section-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--primary);
+            background: #E0F2FE;
+            padding: 8px 16px;
+            border-radius: 8px;
+            margin: 25px 0 18px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-left: 4px solid var(--info);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 18px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-weight: 700;
+            color: var(--dark);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        label i { color: var(--secondary); }
+
+        input, select, textarea {
+            padding: 11px 14px;
+            border: 2px solid #CBD5E1;
+            border-radius: 10px;
+            font-size: 0.98rem;
+            font-weight: 600;
+            color: var(--dark);
+            outline: none;
+            transition: all 0.3s ease;
+            background: #FAFAFA;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary);
+            background: #FFFFFF;
+            box-shadow: 0 0 0 3px rgba(15, 44, 89, 0.12);
+        }
+
+        /* Document Upload Slots Styling */
+        .pdf-slots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 18px;
+            margin-top: 10px;
+        }
+
+        .upload-slot-card {
+            background: #F8FAFC;
+            border: 2px dashed #CBD5E1;
+            padding: 18px;
+            border-radius: 12px;
+            text-align: center;
+            transition: 0.3s;
+        }
+
+        .upload-slot-card:hover {
+            border-color: var(--primary);
+            background: #F0F4F8;
+        }
+
+        .upload-slot-card i {
+            font-size: 2rem;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .upload-slot-card label {
+            justify-content: center;
+            margin-bottom: 8px;
+        }
+
+        .file-hint {
+            font-size: 0.78rem;
+            color: #64748B;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            border-radius: 35px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 30px;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(15, 44, 89, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-submit:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(248, 111, 3, 0.35);
+        }
+
+        .back-home {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .back-home a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.02rem;
+        }
+
+        .back-home a:hover { text-decoration: underline; }
+
+        @media (max-width: 768px) {
+            .reg-container { padding: 25px 20px; }
+            .reg-header h2 { font-size: 1.45rem; }
+            .form-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="reg-container">
+        <!-- Form Header -->
+        <div class="reg-header">
+            <img src="logo.png" alt="Logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/4006/4006511.png'">
+            <h2>ऑनलाइन सदस्य नोंदणी अर्ज</h2>
+            <p>क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना, महाराष्ट्र राज्य</p>
+        </div>
+
+        <form id="memberRegForm">
+
+            <!-- १. वैयक्तिक माहिती -->
+            <div class="section-title"><i class="fa fa-user"></i> १. वैयक्तिक माहिती</div>
+            <div class="form-grid">
+                <div class="form-group full-width">
+                    <label><i class="fa fa-user-circle"></i> पूर्ण नाव (Full Name) *</label>
+                    <input type="text" id="name" placeholder="उदा. श्री. महेश रामराव हांगे" required>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa fa-calendar-alt"></i> जन्मतारीख (Date of Birth) *</label>
+                    <input type="date" id="dob" required>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa fa-layer-group"></i> प्रवर्ग (Category) *</label>
+                    <select id="category" required>
+                        <option value="">प्रवर्ग निवडा</option>
+                        <option value="खुला">खुला (OPEN)</option>
+                        <option value="अ.जा.">अ.जा. (SC)</option>
+                        <option value="अ.ज.">अ.ज. (ST)</option>
+                        <option value="वि.जा.-अ">वि.जा.-अ (VJ-A)</option>
+                        <option value="भ.ज.-ब">भ.ज.-ब (NT-B)</option>
+                        <option value="भ.ज.-क">भ.ज.-क (NT-C)</option>
+                        <option value="भ.ज.-ड">भ.ज.-ड (NT-D)</option>
+                        <option value="वि.मा.प्र.">वि.मा.प्र. (SBC)</option>
+                        <option value="इ.मा.व.">इ.मा.व. (OBC)</option>
+                        <option value="EWS">EWS</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa fa-tint"></i> रक्तगट (Blood Group)</label>
+                    <input type="text" id="bloodGroup" placeholder="उदा. O+, B+, A+">
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa fa-id-card"></i> आधार क्रमांक (Aadhaar No.) *</label>
+                    <input type="text" id="aadhaar" pattern="[0-9]{12}" maxlength="12" placeholder="१२ अंकी आधार क्रमांक" required>
+                </div>
+            </div>
+
+            <!-- २. नोकरी व पदस्थापना माहिती -->
+            <div class="section-title"><i class="fa fa-briefcase"></i> २. नोकरी व पदस्थापना माहिती</div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label><i class="fa fa-id-badge"></i> सेवार्थ आयडी (Sevarth ID) *</label>
+                    <input type="text" id="sevarthId" placeholder="उदा. LATX8001" required>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa fa-user-tag"></i> पद / हुद्दा (Designation) *</label>
+                    <select id="designation" required>
+                        <option value="">पद निवडा</option>
+                        <option value="क्ष-किरण वैज्ञानिक अधिकारी">क्ष-किरण वैज्ञानिक अधिकारी</option>
+                        <option value="ज्येष्ठ क्ष-किरण वैज्ञानिक अधिकारी">ज्येष्ठ क्ष-किरण वैज्ञानिक अधिकारी</option>
+                        <option value="इतर">इतर</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa fa-sitemap"></i> आरोग्य मंडळ (Mandal) *</label>
+                    <select id="mandal" onchange="updateDistrictDropdown()" required>
+                        <option value="">प्रथम मंडळ निवडा</option>
+                        <option value="पुणे मंडळ">पुणे मंडळ</option>
+                        <option value="नागपूर मंडळ">नागपूर मंडळ</option>
+                        <option value="नाशिक मंडळ">नाशिक मंडळ</option>
+                        <option value="अकोला मंडळ">अकोला मंडळ</option>
+                        <option value="कोल्हापूर मंडळ">कोल्हापूर मंडळ</option>
+                        <option value="छत्रपती संभाजीनगर मंडळ">छत्रपती संभाजीनगर मंडळ</option>
+                        <option value="लातूर मंडळ">लातूर मंडळ</option>
+                        <option value="ठाणे मंडळ">ठाणे मंडळ</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa fa-map-marker-alt"></i> जिल्हा (District) *</label>
+                    <select id="district" required>
+                        <option value="">प्रथम आरोग्य मंडळ निवडा</option>
+                    </select>
+                </div>
+
+                <div class="form-group full-width">
+                    <label><i class="fa fa-hospital"></i> सध्या कार्यरत रुग्णालय / संस्था *</label>
+                    <input type="text" id="workplace" placeholder="उदा. उपजिल्हा रुग्णालय, फलटण / जि.रु. लातूर" required>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa fa-calendar-check"></i> प्रथम शासकीय सेवेत रुजू दिनांक *</label>
+                    <input type="date" id="joinDate" required>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa fa-business-time"></i> सेवानिवृत्ती दिनांक (Superannuation Date)</label>
+                    <input type="date" id="retireDate">
+                </div>
+            </div>
+
+            <!-- ३. संपर्क व पत्ता -->
+            <div class="section-title"><i class="fa fa-address-book"></i> ३. संपर्क व पत्ता</div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label><i class="fa fa-phone"></i> व्हॉट्सॲप / मोबाईल नंबर *</label>
+                    <input type="tel" id="mobile" pattern="[0-9]{10}" maxlength="10" placeholder="१० अंकी मोबाईल नंबर" required>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa fa-envelope"></i> ई-मेल आयडी (Email ID) *</label>
+                    <input type="email" id="email" placeholder="example@gmail.com" required>
+                </div>
+
+                <div class="form-group full-width">
+                    <label><i class="fa fa-home"></i> कायमचा पत्ता (Permanent Address)</label>
+                    <input type="text" id="address" placeholder="घर क्रमांक, गल्ली/रस्ता, तालुका व जिल्हा">
+                </div>
+
+                <div class="form-group full-width">
+                    <label><i class="fa fa-comment-alt"></i> विशेष शेरा / अभिप्राय (Remarks)</label>
+                    <input type="text" id="remarks" placeholder="उदा. प्रकल्पग्रस्त / अनुकंपा / अपंगत्व (असल्यास नमूद करा)">
+                </div>
+            </div>
+
+            <!-- ४. दस्तऐवज व PDF अपलोड कप्पे (Slots) -->
+            <div class="section-title"><i class="fa fa-folder-open"></i> ४. दस्तऐवज व PDF अपलोड कप्पे</div>
+            <div class="pdf-slots-grid">
+                
+                <!-- कप्पा १: प्रोफाइल फोटो -->
+                <div class="upload-slot-card">
+                    <i class="fa fa-camera" style="color:var(--primary);"></i>
+                    <label><i class="fa fa-image"></i> प्रोफाइल फोटो *</label>
+                    <input type="file" id="photoFile" accept="image/*" onchange="checkFileSize(this, 400)" required>
+                    <div class="file-hint">केवळ फोटो (Max 400 KB)</div>
+                </div>
+
+                <!-- कप्पा २: मुख्य कागदपत्र / नियुक्ती आदेश -->
+                <div class="upload-slot-card">
+                    <i class="fa fa-file-pdf" style="color:var(--danger);"></i>
+                    <label><i class="fa fa-file-alt"></i> नियुक्ती/शासकीय आदेश *</label>
+                    <input type="file" id="docFile" accept=".pdf, image/*" onchange="checkFileSize(this, 400)" required>
+                    <div class="file-hint">PDF किंवा इमेज (Max 400 KB)</div>
+                </div>
+
+                <!-- कप्पा ३: आधार / इतर महत्त्वाचे कागदपत्र -->
+                <div class="upload-slot-card">
+                    <i class="fa fa-folder" style="color:var(--info);"></i>
+                    <label><i class="fa fa-id-card"></i> आधार / इतर कागदपत्रे</label>
+                    <input type="file" id="otherFile" accept=".pdf, image/*" onchange="checkFileSize(this, 400)">
+                    <div class="file-hint">PDF किंवा इमेज (Max 400 KB)</div>
+                </div>
+
+            </div>
+
+            <!-- ५. लॉगिन पासवर्ड -->
+            <div class="section-title"><i class="fa fa-lock"></i> ५. सदस्य लॉगिन पासवर्ड</div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label><i class="fa fa-key"></i> लॉगिन पासवर्ड निवडा *</label>
+                    <input type="password" id="pass" minlength="6" placeholder="किमान ६ अक्षरे किंवा अंक" required>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa fa-check-circle"></i> पासवर्ड पुन्हा टाका *</label>
+                    <input type="password" id="confirmPass" minlength="6" placeholder="पासवर्डची खात्री करा" required>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit" id="submitBtn">
+                <i class="fa fa-paper-plane"></i> ऑनलाइन नोंदणी सबमिट करा
+            </button>
+        </form>
+
+        <div class="back-home">
+            <a href="index.html"><i class="fa fa-arrow-left"></i> मुख्यपृष्ठावर परत जा</a>
+        </div>
+    </div>
+
+    <!-- FIREBASE REALTIME SYNC & CLOUDINARY ENGINE -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+        // FIREBASE CONFIGURATION (माहिती ॲडमिन पॅनेलशी जुळणारी)
+        const firebaseConfig = {
+            apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk",
+            authDomain: "xrayunionmah.firebaseapp.com",
+            projectId: "xrayunionmah",
+            storageBucket: "xrayunionmah.firebasestorage.app",
+            messagingSenderId: "763805226978",
+            appId: "1:763805226978:web:6bae81a0b6358b47d88bbb",
+            measurementId: "G-EQS6WH6XLF"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // आरोग्य मंडळ आणि जिल्ह्यांचे मॅपिंग
+        const mandalData = {
+            "पुणे मंडळ": ["पुणे", "सातारा", "सोलापूर"],
+            "नागपूर मंडळ": ["नागपूर", "भंडारा", "वर्धा", "गोंदिया", "चंद्रपूर", "गडचिरोली"],
+            "नाशिक मंडळ": ["नाशिक", "अहमदनगर", "धुळे", "जळगाव", "नंदुरबार"],
+            "अकोला मंडळ": ["अकोला", "अमरावती", "बुलढाणा", "यवतमाळ", "वाशिम"],
+            "कोल्हापूर मंडळ": ["कोल्हापूर", "सांगली", "रत्नागिरी", "सिंधुदुर्ग"],
+            "छत्रपती संभाजीनगर मंडळ": ["छत्रपती संभाजीनगर", "जालना", "परभणी", "हिंगोली"],
+            "लातूर मंडळ": ["लातूर", "धाराशिव", "बीड", "नांदेड"],
+            "ठाणे मंडळ": ["ठाणे", "पालघर", "रायगड", "मुंबई शहर", "मुंबई उपनगर"]
+        };
+
+        // मंडळ बदलल्यावर जिल्हे डायनामिक दाखवणे
+        window.updateDistrictDropdown = function() {
+            const mandalVal = document.getElementById('mandal').value;
+            const distSelect = document.getElementById('district');
+
+            if (!mandalVal || !mandalData[mandalVal]) {
+                distSelect.innerHTML = '<option value="">प्रथम आरोग्य मंडळ निवडा</option>';
+                return;
+            }
+
+            let html = '<option value="">जिल्हा निवडा</option>';
+            mandalData[mandalVal].forEach(d => {
+                html += `<option value="${d}">${d}</option>`;
+            });
+            distSelect.innerHTML = html;
+        };
+
+        // फाईल साईझ ४०० KB पेक्षा कमी असल्याची खात्री करणे
+        window.checkFileSize = function(input, maxKB) {
+            if (input.files && input.files.length > 0) {
+                let fileSize = input.files[0].size / 1024;
+                if (fileSize > maxKB) {
+                    Swal.fire('फाईल साईझ जास्त आहे', `कृपया फाईलची साईझ ${maxKB} KB पेक्षा कमी ठेवा. (सध्याची साईझ: ${Math.round(fileSize)} KB)`, 'warning');
+                    input.value = "";
+                }
+            }
+        };
+
+        // Cloudinary वर फाईल्स डायरेक्ट अपलोड करणे (ॲडमिन पॅनेलशी जुळणारे)
+        async function uploadToCloudinary(file) {
+            if (!file) return "";
+            const cloudName = "jjavsdh5";
+            const uploadPreset = "ml_default";
+            const url = `https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`;
+
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("upload_preset", uploadPreset);
+
+            const res = await fetch(url, { method: "POST", body: formData });
+            const data = await res.json();
+            if (data.secure_url) return data.secure_url;
+            throw new Error("फाईल अपलोड अपूर्ण राहिली.");
+        }
+
+        // फॉर्म सबमिट हँडलर
+        document.getElementById('memberRegForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const pass = document.getElementById('pass').value;
+            const confirmPass = document.getElementById('confirmPass').value;
+
+            if (pass !== confirmPass) {
+                Swal.fire('पासवर्ड चुकीचा आहे', 'पासवर्ड आणि पासवर्ड खात्री दोन्ही जुळत नाहीत.', 'error');
+                return;
+            }
+
+            Swal.fire({
+                title: 'माहिती व कागदपत्रे अपलोड होत आहेत...',
+                text: 'कृपया काही सेकंद वाट पहा.',
+                allowOutsideClick: false,
+                didOpen: () => Swal.showLoading()
+            });
+
+            try {
+                // १. फाईल्स Cloudinary वर अपलोड करा
+                const photoFile = document.getElementById('photoFile').files[0];
+                const docFile = document.getElementById('docFile').files[0];
+                const otherFile = document.getElementById('otherFile').files[0];
+
+                const photoUrl = await uploadToCloudinary(photoFile);
+                const docUrl = await uploadToCloudinary(docFile);
+                const otherUrl = await uploadToCloudinary(otherFile);
+
+                // २. Firestore 'members' कलेक्शनमध्ये डेटा सेव्ह करा
+                await addDoc(collection(db, "members"), {
+                    name: document.getElementById('name').value.trim(),
+                    dob: document.getElementById('dob').value,
+                    category: document.getElementById('category').value,
+                    bloodGroup: document.getElementById('bloodGroup').value.trim(),
+                    aadhaar: document.getElementById('aadhaar').value.trim(),
+                    sevarthId: document.getElementById('sevarthId').value.trim(),
+                    designation: document.getElementById('designation').value,
+                    mandal: document.getElementById('mandal').value,
+                    district: document.getElementById('district').value,
+                    workplace: document.getElementById('workplace').value.trim(),
+                    joinDate: document.getElementById('joinDate').value,
+                    retireDate: document.getElementById('retireDate').value,
+                    mobile: document.getElementById('mobile').value.trim(),
+                    email: document.getElementById('email').value.trim().toLowerCase(),
+                    address: document.getElementById('address').value.trim(),
+                    remarks: document.getElementById('remarks').value.trim(),
+                    pass: pass,
+                    photoUrl: photoUrl,
+                    docUrl: docUrl,
+                    otherUrl: otherUrl,
+                    status: "Pending", // ॲडमिन मंजुरीसाठी
+                    feeStatus: "Unpaid",
+                    isMember: true,
+                    registeredAt: serverTimestamp()
+                });
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'नोंदणी यशस्वी झाली!',
+                    text: 'तुमची नोंदणी यशस्वीरीत्या झाली आहे. ॲडमिनच्या मंजुरीनंतर तुम्हाला सदस्य लॉगिन करता येईल.',
+                    confirmButtonText: 'ओके'
+                }).then(() => {
+                    document.getElementById('memberRegForm').reset();
+                    window.location.href = "member-dashboard.html";
+                });
+
+            } catch (error) {
+                console.error("Registration Error:", error);
+                Swal.fire('त्रुटी आली', 'नोंदणी करताना अडचण आली: ' + error.message, 'error');
+            }
+        });
+    </script>
+</body>
+</html>
