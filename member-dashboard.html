@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<html lang="mr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=1280, initial-scale=0.3, minimum-scale=0.25, maximum-scale=3.0, user-scalable=yes">
@@ -32,7 +33,16 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mukta', sans-serif; }
-        body { background-color: var(--bg-light); color: var(--dark); overflow-x: hidden; }
+        
+        /* Layout Layout Desktop View Height Fixes */
+        html, body { 
+            min-height: 100vh;
+            background-color: var(--bg-light); 
+            color: var(--dark); 
+            overflow-x: hidden; 
+            display: flex;
+            flex-direction: column;
+        }
 
         /* Login Overlay Styling */
         #loginOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, var(--dark), var(--primary)); display: flex; justify-content: center; align-items: center; z-index: 10000; padding: 15px; }
@@ -88,8 +98,22 @@
         .tab-btn:hover { background: rgba(255,255,255,0.25); }
         .tab-btn.active { background: var(--secondary); color: var(--dark); }
 
-        /* Main Container & Panels */
-        .container { max-width: 1450px; margin: 15px auto; padding: 0 12px; }
+        /* App Wrapper & Main Container */
+        #appContent {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .container { 
+            max-width: 1450px; 
+            width: 100%;
+            margin: 15px auto; 
+            padding: 0 12px; 
+            flex: 1;
+        }
+
         .tab-content { display: none; }
         .tab-content.active { display: block; }
         .panel { background: var(--white); border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-bottom: 20px; border: 1px solid #e2e8f0; overflow: hidden; }
@@ -264,7 +288,7 @@
 
         <div class="container">
 
-            <!-- TAB 1: DASHBOARD OVERVIEW -->
+             <!-- TAB 1: DASHBOARD OVERVIEW -->
             <div id="tab-dash" class="tab-content active">
                 
                 <div class="dash-cards-grid">
@@ -402,21 +426,16 @@
                                 </div>
                                 <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#ea580c;">उघडा <i class="fa fa-arrow-right"></i></div>
                             </a>
-                            <!-- आंतर मंडळ बदली प्रस्ताव जनरेटर लिंक -->
-<a href="aantar_mandal_badli_prostav.html" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 hover:shadow-md hover:border-indigo-500 transition flex items-center gap-4 group">
-    <div class="bg-amber-100 text-amber-800 p-3.5 rounded-xl group-hover:bg-amber-500 group-hover:text-white transition">
-        <i class="fa-solid fa-file-export text-2xl"></i>
-    </div>
-    <div class="flex-grow">
-        <h3 class="font-bold text-slate-800 text-base group-hover:text-indigo-600 transition">
-            आंतर मंडळ बदली प्रस्ताव जनरेटर
-        </h3>
-        <p class="text-xs text-slate-500 mt-0.5">
-            १५ मे २०१९ जीआरनुसार सर्व परिशिष्टे, बंधपत्र व परिपूर्ण प्रस्ताव
-        </p>
-    </div>
-    <i class="fa-solid fa-chevron-right text-slate-400 group-hover:text-indigo-600 transition"></i>
-</a>
+
+                            <!-- दुरुस्त केलेली: आंतर मंडळ बदली प्रस्ताव जनरेटर लिंक -->
+                            <a href="aantar_mandal_badli_prostav.html" class="auto-form-card">
+                                <div>
+                                    <div class="auto-form-icon" style="color:#d97706; background:#fffbeb;"><i class="fa fa-file-export"></i></div>
+                                    <h4>आंतर मंडळ बदली प्रस्ताव जनरेटर</h4>
+                                    <p>१५ मे २०१९ जीआरनुसार सर्व परिशिष्टे, बंधपत्र व परिपूर्ण प्रस्ताव.</p>
+                                </div>
+                                <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#d97706;">उघडा <i class="fa fa-arrow-right"></i></div>
+                            </a>
 
                             <a href="gallery.html" class="auto-form-card">
                                 <div>
@@ -431,7 +450,7 @@
                 </div>
             </div>
 
-            <!-- TAB 3: DIGITAL I-CARD -->
+           <!-- TAB 3: DIGITAL I-CARD -->
             <div id="tab-icard" class="tab-content">
                 <div class="panel">
                     <div class="panel-header bg-primary" style="color:white; border-top:none;">
@@ -445,7 +464,7 @@
                                 <h4 style="margin:0; font-size:0.85rem;">क्ष-किरण वैज्ञानिक अधिकारी कर्मचारी संघटना</h4>
                                 <small style="font-size:0.68rem;">महाराष्ट्र राज्य - अधिकृत ओळखपत्र</small>
                             </div>
-                            <img id="ic_photo" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="icard-img-main">
+                            <img id="ic_photo" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="icard-img-main" alt="Member Photo">
                             <h4 id="ic_name" style="color:var(--primary); margin:2px 0; font-size:1.15rem;">-</h4>
                             <p id="ic_post" style="font-weight:bold; font-size:0.82rem; color:#666;">-</p>
                             
@@ -485,12 +504,12 @@
                         <div id="officialReceiptWrapper" style="display:none;">
                             <div class="receipt-box">
                                 <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2.5px solid var(--primary); padding-bottom: 10px; margin-bottom: 12px;">
-                                    <div style="width:70px;"><img src="logo.png" style="width:60px; height:60px;" onerror="this.src='loghho.png'"></div>
+                                    <div style="width:70px;"><img src="logo.png" style="width:60px; height:60px;" onerror="this.src='loghho.png'" alt="Logo"></div>
                                     <div style="text-align: center; flex:1;">
                                         <h2 style="color: var(--primary); font-size: 1.25rem; margin: 0; font-weight:800;">क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना महाराष्ट्र राज्य</h2>
                                         <span style="background: var(--primary); color: #fff; padding: 2px 14px; border-radius: 12px; font-size: 0.78rem; font-weight:bold;">E-RECEIPT / इलेक्ट्रॉनिक पावती</span>
                                     </div>
-                                    <div style="width:70px;"><img id="rc_qr_img" src="" style="width: 65px; height: 65px; border:1px solid #cbd5e1; padding:2px;"></div>
+                                    <div style="width:70px;"><img id="rc_qr_img" src="" style="width: 65px; height: 65px; border:1px solid #cbd5e1; padding:2px;" alt="QR Code"></div>
                                 </div>
 
                                 <div style="display: flex; justify-content: space-between; background: #f0f4f8; padding: 8px 12px; border-radius: 6px; font-weight: bold; margin-bottom: 12px; font-size: 0.88rem;">
@@ -604,7 +623,7 @@
                 </div>
             </div>
 
-            <!-- TAB 7: INFORMATION GATHERING SYSTEM -->
+          <!-- TAB 7: INFORMATION GATHERING SYSTEM -->
             <div id="tab-info-gather" class="tab-content">
                 <div class="panel">
                     <div class="panel-header bg-purple" style="color:white;">
@@ -703,7 +722,7 @@
                         <span><i class="fa fa-comments"></i> राज्यस्तरीय लाईव्ह चॅट (Live Chat System)</span>
                     </div>
                     <div class="panel-body" style="padding:0; height: calc(100vh - 120px); min-height: 480px;">
-                        <iframe id="memberChatIframe" src="chat.html" style="width:100%; height:100%; border:none;"></iframe>
+                        <iframe id="memberChatIframe" src="chat.html" style="width:100%; height:100%; border:none;" title="Live Chat"></iframe>
                     </div>
                 </div>
             </div>
@@ -763,7 +782,7 @@
         window.grievancesList = [];
         window.tbTemplatesList = [];
 
-        // 🟢 1. MEMBER ACTIVITY LOG HELPER FUNCTION (Firebase v10)
+        // 🟢 1. MEMBER ACTIVITY LOG HELPER FUNCTION
         window.logMemberActivity = async function(action) {
             let m = window.currentMember;
             if (!m) return;
@@ -779,7 +798,6 @@
                     timestamp: Date.now(),
                     dateString: new Date().toLocaleString('mr-IN')
                 });
-                console.log("Activity Logged:", action);
             } catch (e) {
                 console.error("Log error:", e);
             }
@@ -792,7 +810,7 @@
                 try {
                     window.currentMember = JSON.parse(savedSession);
                     document.getElementById('loginOverlay').style.display = 'none';
-                    document.getElementById('appContent').style.display = 'block';
+                    document.getElementById('appContent').style.display = 'flex';
                     window.initMemberDashboard();
                 } catch(e) {
                     localStorage.removeItem("memberSession");
@@ -812,7 +830,6 @@
             let floatBtn = document.getElementById('chatFloatingBtn');
             let metaViewport = document.querySelector('meta[name="viewport"]');
 
-            // 📱 चॅट टॅब उघडल्यावर मोबाईलवर व्ह्यूपोर्ट मोठा करणे
             if(tabId === 'tab-chat') {
                 document.body.classList.add('chat-active');
                 if(floatBtn) floatBtn.style.display = 'none';
@@ -833,14 +850,12 @@
                 document.body.classList.remove('chat-active');
                 if(floatBtn) floatBtn.style.display = 'flex';
 
-                // 💻 इतर टॅबसाठी डेस्कटॉप व्ह्यूपोर्ट स्केल पूर्ववत करणे
                 if (window.innerWidth < 1280 && metaViewport) {
                     var scale = window.innerWidth / 1280;
                     metaViewport.setAttribute('content', 'width=1280, initial-scale=' + scale + ', maximum-scale=3.0, user-scalable=yes');
                 }
             }
 
-            // 🟢 Log Tab Navigation
             if (window.currentMember) {
                 window.logMemberActivity(`टॅब उघडला: ${tabId}`);
             }
@@ -907,13 +922,12 @@
                 window.currentMember = mData;
                 localStorage.setItem("memberSession", JSON.stringify(mData));
 
-                // 🟢 Log Login Activity
                 await window.logMemberActivity("पोर्टलवर लॉगिन केले (Logged In)");
 
                 Swal.close();
 
                 document.getElementById('loginOverlay').style.display = 'none';
-                document.getElementById('appContent').style.display = 'block';
+                document.getElementById('appContent').style.display = 'flex';
 
                 window.initMemberDashboard();
             } catch(e) {
@@ -977,7 +991,7 @@
             });
         };
 
-        // Dashboard Stats, Mandal Cards & Chart
+      // Dashboard Stats, Mandal Cards & Chart
         window.loadDashboardData = async function() {
             let mSnap = await getDocs(collection(db, "members"));
             window.allMembers = [];
@@ -1118,7 +1132,6 @@
             let m = window.currentMember;
             if(!t || !m) return;
 
-            // 🟢 Log Letter Generation
             window.logMemberActivity(`पत्र/अर्ज जनरेट केला: ${t.title}`);
 
             let mName = m.name || m.memberName || '___________';
@@ -1171,14 +1184,13 @@
 
             Swal.fire({title: 'तक्रार नोंदवली जात आहे...', didOpen: () => Swal.showLoading()});
 
-            try {
+           try {
                 let inwardNo = `GRI-2026-${Math.floor(100 + Math.random()*900)}`;
                 await addDoc(collection(db, "grievances"), {
                     inwardNo, memberId: m.id, memberName: m.name || m.memberName || '', mobile: m.mobile,
                     subject, category, details, status: 'Pending', remark: '', date: new Date().toLocaleDateString('mr-IN'), timestamp: Date.now()
                 });
 
-                // 🟢 Log Grievance Activity
                 await window.logMemberActivity(`नवीन तक्रार नोंदवली: ${subject}`);
 
                 document.getElementById('grievanceForm').reset();
@@ -1229,7 +1241,6 @@
                     updatedAt: new Date().toLocaleDateString('mr-IN'), timestamp: Date.now()
                 });
 
-                // 🟢 Log Info Gathered Activity
                 await window.logMemberActivity("नवीन माहिती सबमिट केली (Info Gathered)");
 
                 document.getElementById('infoSubmitForm').reset();
@@ -1330,7 +1341,6 @@
                 let newOpts = { ...p.options };
                 newOpts[choice] = (newOpts[choice] || 0) + 1;
 
-                // 🟢 Log Poll Vote Activity
                 await window.logMemberActivity(`पोलमध्ये मत दिले: ${p.question} (${choice})`);
 
                 window.loadPolls();
