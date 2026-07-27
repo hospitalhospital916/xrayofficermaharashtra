@@ -107,7 +107,7 @@
                 <i class="fa-solid fa-file-circle-check text-3xl text-amber-400"></i>
                 <div>
                     <h1 class="text-xl font-bold">परिवीक्षाधीन कालावधी समाप्ती प्रस्ताव प्रणाली</h1>
-                    <p class="text-xs text-indigo-200">महाराष्ट्र शासन - सार्वजनिक आरोग्य विभाग | परिपूर्ण प्रस्ताव जनरेटर</p>
+                    <p class="text-xs text-indigo-200">महाराष्ट्र शासन - सार्वजनिक आरोग्य विभाग | लिंग बदल व स्मार्ट लेटरपॅड जनरेटर</p>
                 </div>
             </div>
             <div class="flex items-center gap-3">
@@ -131,7 +131,7 @@
                 <h2 class="text-lg font-bold text-indigo-900 flex items-center gap-2">
                     <i class="fa-solid fa-pen-to-square text-indigo-600"></i> माहिती व पर्याय संपादन
                 </h2>
-                <p class="text-xs text-slate-500">खालील सर्व माहिती व कागदपत्रांची नावे तुमच्या गरजेनुसार एडिट करा.</p>
+                <p class="text-xs text-slate-500">खालील माहिती भरून स्त्री/पुरुष लिंग व लेटरपॅड पर्याय निवडा.</p>
             </div>
 
             <div class="space-y-4">
@@ -202,13 +202,32 @@
                     </div>
                 </div>
 
-                <!-- 2. Employee Details -->
+                <!-- 2. Employee Details (With Gender & Auto Grammar) -->
                 <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
                     <h3 class="font-bold text-sm text-slate-700 border-b pb-1"><i class="fa-solid fa-user-doctor text-indigo-600 ml-1"></i> २. कर्मचाऱ्याची (अर्जदार) सविस्तर माहिती</h3>
                     
+                    <!-- Gender & Title Selection -->
+                    <div class="grid grid-cols-2 gap-2 bg-indigo-50 p-2 rounded-lg border border-indigo-100">
+                        <div>
+                            <label class="block text-xs font-bold text-indigo-900">कर्मचाऱ्याचे लिंग:</label>
+                            <select id="empGender" onchange="handleGenderChange()" class="w-full mt-1 p-1.5 text-xs font-bold border rounded bg-white text-indigo-900">
+                                <option value="male">पुरुष (Male)</option>
+                                <option value="female">महिला (Female)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-indigo-900">शीर्षक (Title):</label>
+                            <select id="empTitle" onchange="updateAll()" class="w-full mt-1 p-1.5 text-xs font-bold border rounded bg-white text-indigo-900">
+                                <option value="श्री.">श्री.</option>
+                                <option value="श्रीमती">श्रीमती</option>
+                                <option value="कु.">कु.</option>
+                            </select>
+                        </div>
+                    </div>
+
                     <div>
-                        <label class="block text-xs font-semibold text-slate-600">कर्मचाऱ्याचे संपूर्ण नाव:</label>
-                        <input type="text" id="empName" value="श्री. रमेश प्रकाश पाटील" oninput="updateAll()" class="w-full mt-1 p-2 text-sm border rounded-lg">
+                        <label class="block text-xs font-semibold text-slate-600">कर्मचाऱ्याचे संपूर्ण नाव (शीर्षकाशिवाय):</label>
+                        <input type="text" id="empName" value="रमेश प्रकाश पाटील" oninput="updateAll()" class="w-full mt-1 p-2 text-sm border rounded-lg">
                     </div>
 
                     <div class="grid grid-cols-2 gap-2">
@@ -287,7 +306,7 @@
                     </div>
                 </div>
 
-                <!-- 3. Letterhead & Margin Settings (Updated Strict 400KB & Lock Workflow) -->
+                <!-- 3. Letterhead & Margin Settings (With 7-Day Auto Delete Logic) -->
                 <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-200 space-y-3">
                     <h3 class="font-bold text-sm text-indigo-900 border-b border-indigo-200 pb-1 flex justify-between items-center">
                         <span><i class="fa-solid fa-image text-indigo-700 ml-1"></i> ३. लेटरपॅड व मार्जिन सेटिंग्ज</span>
@@ -312,7 +331,7 @@
                         </div>
 
                         <p class="text-[11px] text-slate-600" id="uploadStatusMsg">
-                            एक वेळी एकच लेटरपॅड अपलोड होईल. दुसरे अपलोड करण्यासाठी आधीचे डिलीट करा.
+                            <i class="fa-solid fa-clock text-amber-600"></i> अपलोड केलेले लेटरपॅड **७ दिवसांनंतर ऑटो-डिलीट** होईल ज्यामुळे मोबाईल/PC मधील स्पेस वाचेल.
                         </p>
 
                         <button type="button" id="btnDeleteLogo" onclick="deleteLogo()" class="hidden bg-rose-600 hover:bg-rose-700 text-white text-xs px-3 py-1.5 rounded font-bold transition flex items-center gap-1 shadow">
@@ -321,18 +340,18 @@
                     </div>
                 </div>
 
-                <!-- 4. Checklist & Dynamic Certificate Generation Panel -->
+                <!-- 4. Checklist & Selective Letterhead Control Panel -->
                 <div class="bg-amber-50 p-4 rounded-xl border border-amber-200 space-y-3">
                     <div class="flex justify-between items-center border-b border-amber-200 pb-1">
                         <h3 class="font-bold text-sm text-amber-900">
-                            <i class="fa-solid fa-list-check text-amber-700 ml-1"></i> ४. तपासणी सूची व रो (Rows)
+                            <i class="fa-solid fa-list-check text-amber-700 ml-1"></i> ४. कागदपत्र सूची व लेटरपॅड निवडा
                         </h3>
                         <button type="button" onclick="addNewChecklistRow()" class="bg-amber-600 hover:bg-amber-700 text-white text-xs px-2.5 py-1 rounded font-bold shadow transition flex items-center gap-1">
                             <i class="fa-solid fa-plus"></i> नवीन रो जोडा
                         </button>
                     </div>
                     
-                    <p class="text-[11px] text-slate-600">कागदपत्राचे नाव थेट एडिट करा, स्टेटस बदला व हवे असल्यास नवीन रो वाढवा:</p>
+                    <p class="text-[11px] text-slate-600">ज्या कागदपत्रावर लेटरपॅड हवे आहे फक्त तिथेच 'लेटरपॅड' चेकबॉक्स चालू ठेवा:</p>
 
                     <div id="checklistControls" class="space-y-2 max-h-96 overflow-y-auto pr-1 text-xs">
                         <!-- Dynamic items rendered by JS -->
@@ -357,7 +376,7 @@
 
                     <div class="flex justify-between font-semibold text-xs my-3">
                         <div>जा.क्र./<span class="lbl_outward">ग्रांरुअ/आस्था/प्रोबेशन/९११/२०२६</span></div>
-                        <div>दिनांक: <span class="lbl_prop_date">२६/०७/२०२६</span></div>
+                        <div>दिनांक: <span class="lbl_prop_date">२६/०/२०२६</span></div>
                     </div>
 
                     <div class="my-4 space-y-1">
@@ -370,20 +389,20 @@
                     </div>
 
                     <div class="text-xs my-2 font-semibold space-y-1" id="lbl_references_doc">
-                        <!-- References will render here dynamically -->
+                        <!-- References render dynamically -->
                     </div>
 
                     <p class="mt-4 text-justify">महोदय / महोदया,</p>
                     <p class="indent-8 text-justify mt-2">
-                        उपरोक्त विषयाच्या अनुषंगाने सविनय प्रस्ताव सादर करण्यात येतो की, <span class="lbl_office_full">ग्रामीण रुग्णालय अ ब क</span> येथे कार्यरत असणारे <span class="font-bold lbl_emp_name">श्री. रमेश प्रकाश पाटील</span> (<span class="lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, <span class="lbl_emp_cadre">गट-क</span>, वेतन रचना <span class="lbl_emp_payscale">S-13 : ३५४००-११२४००</span>) यांना १ वर्षाचा परिवीक्षाधीन कालावधी म्हणून तात्पुरत्या स्वरूपात नेमणूक करण्यात आली होती. त्यानुसार सदर कर्मचारी दिनांक <span class="font-bold lbl_emp_joindate">०३/०६/२०२४</span> ला <span class="font-bold lbl_emp_joinsession">मध्यान्हपूर्व</span> वेळेत रुजू झाले होते.
+                        उपरोक्त विषयाच्या अनुषंगाने सविनय प्रस्ताव सादर करण्यात येतो की, <span class="lbl_office_full">ग्रामीण रुग्णालय अ ब क</span> येथे कार्यरत असणारे/असणाऱ्या <span class="font-bold lbl_emp_full_title">श्री. रमेश प्रकाश पाटील</span> (<span class="lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, <span class="lbl_emp_cadre">गट-क</span>, वेतन रचना <span class="lbl_emp_payscale">S-13 : ३५४००-११२४००</span>) यांना १ वर्षाचा परिवीक्षाधीन कालावधी म्हणून तात्पुरत्या स्वरूपात नेमणूक करण्यात आली होती. त्यानुसार सदर कर्मचारी दिनांक <span class="font-bold lbl_emp_joindate">०३/०६/२०२४</span> ला <span class="font-bold lbl_emp_joinsession">मध्यान्हपूर्व</span> वेळेत <span class="font-bold lbl_gram_joined">रुजू झाले</span>.
                     </p>
 
                     <p class="indent-8 text-justify mt-3">
-                        सदर कर्मचाऱ्याचा १ वर्षाचा परिवीक्षाधीन कालावधी दिनांक <span class="font-bold lbl_emp_probend">०२/०६/२०२५</span> ला <span class="font-bold lbl_emp_probendsession">मध्यान्हानंतर</span> यशस्वीरीत्या पूर्ण झाला आहे. या कालावधीत त्यांनी नियुक्ती आदेशातील नमूद सर्व अटी व शर्ती समाधानकारकरित्या पूर्ण केल्या आहेत.
+                        सदर <span class="lbl_gram_emp_type">कर्मचाऱ्याचा</span> १ वर्षाचा परिवीक्षाधीन कालावधी दिनांक <span class="font-bold lbl_emp_probend">०२/०६/२०२५</span> ला <span class="font-bold lbl_emp_probendsession">मध्यान्हानंतर</span> यशस्वीरीत्या पूर्ण झाला आहे. या कालावधीत त्यांनी नियुक्ती आदेशातील नमूद सर्व अटी व शर्ती समाधानकारकरित्या पूर्ण केल्या आहेत.
                     </p>
 
                     <p class="indent-8 text-justify mt-3">
-                        त्यामुळे <span class="font-bold lbl_emp_name">श्री. रमेश प्रकाश पाटील</span> यांचा परिवीक्षाधीन कालावधी समाप्त करून त्यांची सेवा नियमित करण्याचा प्रस्ताव खालील पडताळणी सूची व आवश्यक सर्व प्रमाणपत्रांसह पुढील अंतिम कार्यवाहीस्तव सविनय शिफारशीसह सादर करण्यात येत आहे.
+                        त्यामुळे <span class="font-bold lbl_emp_full_title">श्री. रमेश प्रकाश पाटील</span> यांचा परिवीक्षाधीन कालावधी समाप्त करून त्यांची सेवा नियमित करण्याचा प्रस्ताव खालील पडताळणी सूची व आवश्यक सर्व प्रमाणपत्रांसह पुढील अंतिम कार्यवाहीस्तव सविनय शिफारशीसह सादर करण्यात येत आहे.
                     </p>
 
                     <div class="mt-16 flex justify-between items-end">
@@ -452,7 +471,7 @@
                     </div>
 
                     <p class="indent-8 text-justify mt-6 leading-loose text-base">
-                        प्रमाणित करण्यात येते की, <span class="font-bold text-lg lbl_emp_name">श्री. रमेश प्रकाश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यालय: <span class="font-bold lbl_office_full">ग्रामीण रुग्णालय अ ब क</span> यांनी त्यांच्या परिवीक्षाधीन कालावधीत (दिनांक <span class="font-bold lbl_emp_joindate">०३/०६/२०२४</span> ते <span class="font-bold lbl_emp_probend">०२/०६/२०२५</span>) अनुज्ञेय किरकोळ रजेव्यतिरिक्त (CL) कोणत्याही प्रकारची असाधारण, वैद्यकीय अथवा दीर्घ रजा उपभोगलेली नाही.
+                        प्रमाणित करण्यात येते की, <span class="font-bold text-lg lbl_emp_full_title">श्री. रमेश प्रकाश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यालय: <span class="font-bold lbl_office_full">ग्रामीण रुग्णालय अ ब क</span> यांनी त्यांच्या परिवीक्षाधीन कालावधीत (दिनांक <span class="font-bold lbl_emp_joindate">०३/०६/२०२४</span> ते <span class="font-bold lbl_emp_probend">०२/०६/२०२५</span>) अनुज्ञेय किरकोळ रजेव्यतिरिक्त (CL) कोणत्याही प्रकारची असाधारण, वैद्यकीय अथवा दीर्घ रजा उपभोगलेली नाही.
                     </p>
 
                     <p class="mt-6 text-justify">
@@ -493,7 +512,7 @@
                         <tbody>
                             <tr>
                                 <td class="p-3 font-bold w-1/3">१) कर्मचाऱ्याचे संपूर्ण नाव :-</td>
-                                <td class="p-3 font-bold text-indigo-900 lbl_emp_name">श्री. रमेश प्रकाश पाटील</td>
+                                <td class="p-3 font-bold text-indigo-900 lbl_emp_full_title">श्री. रमेश प्रकाश पाटील</td>
                             </tr>
                             <tr>
                                 <td class="p-3 font-bold">२) पदनाम व संवर्ग :-</td>
@@ -519,7 +538,7 @@
                     </table>
 
                     <p class="indent-8 text-justify mt-4">
-                        सदर कर्मचारी यांनी परिवीक्षाधीन कालावधीत नेमून दिलेली सर्व तांत्रिक व प्रशासकीय कामे अत्यंत जबाबदारीने व निष्ठेने पार पाडली आहेत.
+                        सदर <span class="lbl_gram_emp_type">कर्मचारी</span> यांनी परिवीक्षाधीन कालावधीत नेमून दिलेली सर्व तांत्रिक व प्रशासकीय कामे अत्यंत जबाबदारीने व निष्ठेने पार पाडली आहेत.
                     </p>
 
                     <div class="mt-20 flex justify-between items-end">
@@ -549,7 +568,7 @@
                     </div>
 
                     <p class="indent-8 text-justify mt-6 leading-loose text-base">
-                        प्रमाणित करण्यात येते की, <span class="font-bold text-lg lbl_emp_name">श्री. रमेश प्रकाश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यालय: <span class="font-bold lbl_office_full">ग्रामीण रुग्णालय अ ब क</span> यांच्याविरुद्ध त्यांच्या परिवीक्षाधीन कालावधीत कोणत्याही प्रकारची तक्रार, विभागीय चौकशी अथवा न्यायालयीन प्रकरण प्रलंबित किंवा प्रस्तावित नाही. तसेच त्यांच्याविरुद्ध कोणतीही प्रतिकूल नोंद नाही.
+                        प्रमाणित करण्यात येते की, <span class="font-bold text-lg lbl_emp_full_title">श्री. रमेश प्रकाश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यालय: <span class="font-bold lbl_office_full">ग्रामीण रुग्णालय अ ब क</span> यांच्याविरुद्ध त्यांच्या परिवीक्षाधीन कालावधीत कोणत्याही प्रकारची तक्रार, विभागीय चौकशी अथवा न्यायालयीन प्रकरण प्रलंबित किंवा प्रस्तावित नाही. तसेच त्यांच्याविरुद्ध कोणतीही प्रतिकूल नोंद नाही.
                     </p>
 
                     <p class="mt-6 text-justify">
@@ -583,7 +602,7 @@
                     </div>
 
                     <p class="indent-8 text-justify mt-6 leading-loose text-base">
-                        प्रमाणित करण्यात येते की, <span class="font-bold text-lg lbl_emp_name">श्री. रमेश प्रकाश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यालय: <span class="font-bold lbl_office_full">ग्रामीण रुग्णालय अ ब क</span> यांनी शालांत परीक्षा (S.S.C.) / पदवी परीक्षेत मराठी व हिंदी हे विषय घेऊन उत्तीर्ण केलेले असल्याने त्यांना नियमानुसार भाषा परीक्षा उत्तीर्ण होण्यातून सूट मिळालेली आहे / परीक्षा उत्तीर्ण केली आहे.
+                        प्रमाणित करण्यात येते की, <span class="font-bold text-lg lbl_emp_full_title">श्री. रमेश प्रकाश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यालय: <span class="font-bold lbl_office_full">ग्रामीण रुग्णालय अ ब क</span> यांनी शालांत परीक्षा (S.S.C.) / पदवी परीक्षेत मराठी व हिंदी हे विषय घेऊन उत्तीर्ण <span class="font-bold lbl_gram_passed">केलेले असल्याने</span> त्यांना नियमानुसार भाषा परीक्षा उत्तीर्ण होण्यातून सूट मिळालेली आहे / परीक्षा उत्तीर्ण केली आहे.
                     </p>
 
                     <p class="mt-6 text-justify">
@@ -617,7 +636,7 @@
                     </div>
 
                     <p class="indent-8 text-justify mt-6 leading-loose text-base">
-                        प्रमाणित करण्यात येते की, <span class="font-bold text-lg lbl_emp_name">श्री. रमेश प्रकाश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यालय: <span class="font-bold lbl_office_full">ग्रामीण रुग्णालय अ ब क</span> यांनी शासन मान्य संगणक व टायपिंग अहर्तेचे (<span class="font-bold text-indigo-900 lbl_emp_computer_typing">MS-CIT, CCC, मराठी ३०, इंग्रजी ४०</span>) विहित प्रमाणपत्र या कार्यालयाकडे सादर केलेले असून त्याची नोंद मूळ सेवापुस्तकात घेण्यात आली आहे.
+                        प्रमाणित करण्यात येते की, <span class="font-bold text-lg lbl_emp_full_title">श्री. रमेश प्रकाश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यालय: <span class="font-bold lbl_office_full">ग्रामीण रुग्णालय अ ब क</span> यांनी शासन मान्य संगणक व टायपिंग अहर्तेचे (<span class="font-bold text-indigo-900 lbl_emp_computer_typing">MS-CIT, CCC, मराठी ३०, इंग्रजी ४०</span>) विहित प्रमाणपत्र या कार्यालयाकडे सादर केलेले असून त्याची नोंद मूळ सेवापुस्तकात घेण्यात आली आहे.
                     </p>
 
                     <p class="mt-6 text-justify">
@@ -649,7 +668,7 @@
                     </div>
 
                     <p class="indent-8 text-justify leading-loose">
-                        मी <span class="font-bold text-lg lbl_emp_name">श्री. रमेश प्रकाश पाटील</span>, राहणार: <span class="font-bold lbl_emp_address">मु.पो. वडगाव, ता. जि. बीड</span> याद्वारे पुढीलप्रमाणे घोषित करतो/करते की,-
+                        मी <span class="font-bold text-lg lbl_emp_full_title">श्री. रमेश प्रकाश पाटील</span>, राहणार: <span class="font-bold lbl_emp_address">मु.पो. वडगाव, ता. जि. बीड</span> याद्वारे पुढीलप्रमाणे <span class="font-bold lbl_gram_declare">घोषित करतो</span> की,-
                     </p>
 
                     <ol class="list-decimal ml-8 my-6 space-y-4 text-justify">
@@ -671,7 +690,7 @@
                         </div>
                         <div class="text-center font-bold">
                             प्रतिज्ञापक (स्वाक्षरी),<br><br><br>
-                            <p class="lbl_emp_name">श्री. रमेश प्रकाश पाटील</p>
+                            <p class="lbl_emp_full_title">श्री. रमेश प्रकाश पाटील</p>
                             <p class="text-xs font-normal lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</p>
                         </div>
                     </div>
@@ -691,7 +710,7 @@
                     </div>
 
                     <p class="indent-8 text-justify mt-6 leading-loose text-base">
-                        प्रमाणित करण्यात येते की, <span class="font-bold text-lg lbl_emp_name">श्री. रमेश प्रकाश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यालय: <span class="font-bold lbl_office_full">ग्रामीण रुग्णालय अ ब क</span> यांनी महाराष्ट्र नागरी सेवा (लहान कुटुंबाचे प्रतिज्ञापत्र) नियम २००५ मधील तरतुदीनुसार लहान कुटुंबाचे विहित नमुन्यातील प्रतिज्ञापत्र (नमुना-अ) सादर केलेले असून ते दप्तरी जतन करण्यात आले आहे.
+                        प्रमाणित करण्यात येते की, <span class="font-bold text-lg lbl_emp_full_title">श्री. रमेश प्रकाश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यालय: <span class="font-bold lbl_office_full">ग्रामीण रुग्णालय अ ब क</span> यांनी महाराष्ट्र नागरी सेवा (लहान कुटुंबाचे प्रतिज्ञापत्र) नियम २००५ मधील तरतुदीनुसार लहान कुटुंबाचे विहित नमुन्यातील प्रतिज्ञापत्र (नमुना-अ) सादर केलेले असून ते दप्तरी जतन करण्यात आले आहे.
                     </p>
 
                     <p class="mt-6 text-justify">
@@ -725,7 +744,7 @@
                     </div>
 
                     <p class="indent-8 text-justify mt-6 leading-loose text-base">
-                        प्रमाणित करण्यात येते की, <span class="font-bold text-lg lbl_emp_name">श्री. रमेश प्रकाश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यालय: <span class="font-bold lbl_office_full">ग्रामीण रुग्णालय अ ब क</span> यांनी त्यांच्या सेवेतील परिवीक्षाधीन कालावधीतील तसेच नुकत्याच संपलेल्या आर्थिक वर्षाचे मत्ता व दायित्वांचे (Assets & Liabilities) वार्षिक विवरणपत्र नियमानुसार या कार्यालयास सादर केले आहे.
+                        प्रमाणित करण्यात येते की, <span class="font-bold text-lg lbl_emp_full_title">श्री. रमेश प्रकाश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यालय: <span class="font-bold lbl_office_full">ग्रामीण रुग्णालय अ ब क</span> यांनी त्यांच्या सेवेतील परिवीक्षाधीन कालावधीतील तसेच नुकत्याच संपलेल्या आर्थिक वर्षाचे मत्ता व दायित्वांचे (Assets & Liabilities) वार्षिक विवरणपत्र नियमानुसार या कार्यालयास सादर केले आहे.
                     </p>
 
                     <p class="mt-6 text-justify">
@@ -759,7 +778,7 @@
                     </div>
 
                     <p class="indent-8 text-justify mt-6 leading-loose text-base">
-                        प्रमाणित करण्यात येते की, <span class="font-bold text-lg lbl_emp_name">श्री. रमेश प्रकाश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यालय: <span class="font-bold lbl_office_full">ग्रामीण रुग्णालय अ ब क</span> यांची मूळ जन्मतारीख <span class="font-bold lbl_emp_dob">१५/०६/१९९५</span> व शैक्षणिक अर्हता <span class="font-bold lbl_emp_edu">बी.एससी., एम.एससी.</span> असल्याबाबतच्या मूळ गुणपत्रिका व प्रमाणपत्रांची पडताळणी करण्यात आलेली असून त्याची नोंद मूळ सेवापुस्तकात घेण्यात आलेली आहे.
+                        प्रमाणित करण्यात येते की, <span class="font-bold text-lg lbl_emp_full_title">श्री. रमेश प्रकाश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यालय: <span class="font-bold lbl_office_full">ग्रामीण रुग्णालय अ ब क</span> यांची मूळ जन्मतारीख <span class="font-bold lbl_emp_dob">१५/०६/१९९५</span> व शैक्षणिक अर्हता <span class="font-bold lbl_emp_edu">बी.एससी., एम.एससी.</span> असल्याबाबतच्या मूळ गुणपत्रिका व प्रमाणपत्रांची पडताळणी करण्यात आलेली असून त्याची नोंद मूळ सेवापुस्तकात घेण्यात आलेली आहे.
                     </p>
 
                     <p class="mt-6 text-justify">
@@ -793,7 +812,7 @@
                     </div>
 
                     <p class="indent-8 text-justify mt-6 leading-loose text-base">
-                        प्रमाणित करण्यात येते की, <span class="font-bold text-lg lbl_emp_name">श्री. रमेश प्रकाश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यालय: <span class="font-bold lbl_office_full">ग्रामीण रुग्णालय अ ब क</span> यांची निवड प्रवर्ग/प्रकार: <span class="font-bold lbl_emp_category">सर्वसाधारण / लागू नाही</span> अंतर्गत झालेली असून संबंधित प्राधिकरणाकडून प्राप्त मूळ कागदपत्रांची पडताळणी पूर्ण झालेली आहे.
+                        प्रमाणित करण्यात येते की, <span class="font-bold text-lg lbl_emp_full_title">श्री. रमेश प्रकाश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यालय: <span class="font-bold lbl_office_full">ग्रामीण रुग्णालय अ ब क</span> यांची निवड प्रवर्ग/प्रकार: <span class="font-bold lbl_emp_category">सर्वसाधारण / लागू नाही</span> अंतर्गत झालेली असून संबंधित प्राधिकरणाकडून प्राप्त मूळ कागदपत्रांची पडताळणी पूर्ण झालेली आहे.
                     </p>
 
                     <p class="mt-6 text-justify">
@@ -827,7 +846,7 @@
                     </div>
 
                     <p class="indent-8 text-justify mt-6 leading-loose text-base">
-                        प्रमाणित करण्यात येते की, <span class="font-bold text-lg lbl_emp_name">श्री. रमेश प्रकाश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यालय: <span class="font-bold lbl_office_full">ग्रामीण रुग्णालय अ ब क</span> यांनी त्यांच्या मूळ नियुक्ती आदेशातील नमूद केलेल्या सर्व अटी व शर्तींची (वैद्यकीय शारीरिक फिटनेस तपासणी, चारित्र्य पडताळणी अहवाल, शपथपत्र इत्यादी) यशस्वीरीत्या पूर्तता केलेली आहे.
+                        प्रमाणित करण्यात येते की, <span class="font-bold text-lg lbl_emp_full_title">श्री. रमेश प्रकाश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यालय: <span class="font-bold lbl_office_full">ग्रामीण रुग्णालय अ ब क</span> यांनी त्यांच्या मूळ नियुक्ती आदेशातील नमूद केलेल्या सर्व अटी व शर्तींची (वैद्यकीय शारीरिक फिटनेस तपासणी, चारित्र्य पडताळणी अहवाल, शपथपत्र इत्यादी) यशस्वीरीत्या पूर्तता केलेली आहे.
                     </p>
 
                     <p class="mt-6 text-justify">
@@ -861,7 +880,7 @@
                     </div>
 
                     <p class="indent-8 text-justify mt-6 leading-loose text-base">
-                        प्रमाणित करण्यात येते की, <span class="font-bold text-lg lbl_emp_name">श्री. रमेश प्रकाश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यालय: <span class="font-bold lbl_office_full">ग्रामीण रुग्णालय अ ब क</span> हे रुग्णालयाच्या मुख्यालयाच्या ठिकाणी प्रत्यक्ष वास्तव्यास असून आणीबाणीच्या प्रसंगी रुग्णालयात त्वरित सेवेसाठी उपलब्ध राहतात.
+                        प्रमाणित करण्यात येते की, <span class="font-bold text-lg lbl_emp_full_title">श्री. रमेश प्रकाश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यालय: <span class="font-bold lbl_office_full">ग्रामीण रुग्णालय अ ब क</span> हे रुग्णालयाच्या मुख्यालयाच्या ठिकाणी प्रत्यक्ष वास्तव्यास असून आणीबाणीच्या प्रसंगी रुग्णालयात त्वरित सेवेसाठी उपलब्ध राहतात.
                     </p>
 
                     <p class="mt-6 text-justify">
@@ -895,11 +914,11 @@
                     </div>
 
                     <p class="indent-8 text-justify mt-6 leading-loose text-base">
-                        प्रमाणित करण्यात येते की, <span class="font-bold text-lg lbl_emp_name">श्री. रमेश प्रकाश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यालय: <span class="font-bold lbl_office_full">ग्रामीण रुग्णालय अ ब क</span> यांनी १ वर्षाच्या परिवीक्षाधीन कालावधीत (दिनांक <span class="lbl_emp_joindate">०३/०६/२०२४</span> ते <span class="lbl_emp_probend">०२/०६/२०२५</span>) आपल्या पदाची कर्तव्ये, कामे व जबाबदाऱ्या अत्यंत उत्कृष्टपणे पार पाडल्या असून त्यांची वर्तणूक समाधानकारक व चांगली आहे.
+                        प्रमाणित करण्यात येते की, <span class="font-bold text-lg lbl_emp_full_title">श्री. रमेश प्रकाश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यालय: <span class="font-bold lbl_office_full">ग्रामीण रुग्णालय अ ब क</span> यांनी १ वर्षाच्या परिवीक्षाधीन कालावधीत (दिनांक <span class="lbl_emp_joindate">०३/०६/२०२४</span> ते <span class="lbl_emp_probend">०२/०६/२०२५</span>) आपल्या पदाची कर्तव्ये, कामे व जबाबदाऱ्या अत्यंत उत्कृष्टपणे पार पाडल्या असून त्यांची वर्तणूक समाधानकारक व चांगली आहे.
                     </p>
 
                     <p class="indent-8 text-justify mt-4 text-base font-semibold">
-                        करिता <span class="lbl_emp_name">श्री. रमेश प्रकाश पाटील</span> यांचा परिवीक्षाधीन कालावधी समाप्त करून त्यांची सेवा नियमित करण्याबाबत या कार्यालयाकडून **सकारात्मक शिफारस** करण्यात येत आहे.
+                        करिता <span class="lbl_emp_full_title">श्री. रमेश प्रकाश पाटील</span> यांचा परिवीक्षाधीन कालावधी समाप्त करून त्यांची सेवा नियमित करण्याबाबत या कार्यालयाकडून **सकारात्मक शिफारस** करण्यात येत आहे.
                     </p>
 
                     <div class="mt-28 flex justify-between items-end">
@@ -927,24 +946,54 @@
             "नियुक्ती आदेश जा.क्र. तांत्रिक-आस्था/नियुक्ती/२०२४, दिनांक ०२/०६/२०२४."
         ];
 
-        // Master List of Documents/Certificates
+        // Master List of Documents with 'hasLetterhead' feature
         let checklistItems = [
-            { id: 'doc_proposal', name: '१. मुख्य प्रस्ताव व शिफारस जावक पत्र', fixed: true, status: 'जोडले आहे', enabled: true },
-            { id: 'doc_checklist', name: '२. कागदपत्रांची पडताळणी सूची (Checklist)', fixed: true, status: 'जोडले आहे', enabled: true },
-            { id: 'doc_leave', name: '३. परिवीक्षाधीन कालावधीतील रजेचे प्रमाणपत्र', status: 'जोडले आहे', enabled: true },
-            { id: 'doc_work_report', name: '४. कामाचा विशेष मूल्यमापन अहवाल', status: 'जोडले आहे', enabled: true },
-            { id: 'doc_no_inquiry', name: '५. ना-चौकशी तथा ना-तक्रार प्रमाणपत्र', status: 'जोडले आहे', enabled: true },
-            { id: 'doc_language', name: '६. मराठी व हिंदी भाषा परीक्षा उत्तीर्ण/सूट प्रमाणपत्र', status: 'जोडले आहे', enabled: true },
-            { id: 'doc_computer', name: '७. संगणक व टायपिंग अर्हता उत्तीर्ण प्रमाणपत्र', status: 'जोडले आहे', enabled: true },
-            { id: 'doc_small_family_decl', name: '८. लहान कुटुंबाचे प्रतिज्ञापत्र (नमुना-अ)', status: 'जोडले आहे', enabled: true },
-            { id: 'doc_small_family_cert', name: '९. लहान कुटुंबाचे कार्यालयीन प्रमाणपत्र', status: 'जोडले आहे', enabled: true },
-            { id: 'doc_property', name: '१०. मत्ता व दायित्व विवरणपत्र प्रमाणपत्र', status: 'जोडले आहे', enabled: true },
-            { id: 'doc_education_dob', name: '११. शैक्षणिक अर्हता व जन्मदिनांक पडताळणी प्रमाणपत्र', status: 'जोडले आहे', enabled: true },
-            { id: 'doc_sports_reservation', name: '१२. खेळ / समांतर आरक्षण पडताळणी प्रमाणपत्र', status: 'जोडले आहे', enabled: true },
-            { id: 'doc_terms_conditions', name: '१३. नेमणूक अटी व शर्ती पूर्तता प्रमाणपत्र', status: 'जोडले आहे', enabled: true },
-            { id: 'doc_headquarter', name: '१४. मुख्यालयात वास्तव्य प्रमाणपत्र', status: 'जोडले आहे', enabled: true },
-            { id: 'doc_recommendation', name: '१५. कार्यालय प्रमुखाचा शिफारस अभिप्राय', status: 'जोडले आहे', enabled: true }
+            { id: 'doc_proposal', name: '१. मुख्य प्रस्ताव व शिफारस जावक पत्र', fixed: true, status: 'जोडले आहे', enabled: true, hasLetterhead: true },
+            { id: 'doc_checklist', name: '२. कागदपत्रांची पडताळणी सूची (Checklist)', fixed: true, status: 'जोडले आहे', enabled: true, hasLetterhead: false },
+            { id: 'doc_leave', name: '३. परिवीक्षाधीन कालावधीतील रजेचे प्रमाणपत्र', status: 'जोडले आहे', enabled: true, hasLetterhead: true },
+            { id: 'doc_work_report', name: '४. कामाचा विशेष मूल्यमापन अहवाल', status: 'जोडले आहे', enabled: true, hasLetterhead: false },
+            { id: 'doc_no_inquiry', name: '५. ना-चौकशी तथा ना-तक्रार प्रमाणपत्र', status: 'जोडले आहे', enabled: true, hasLetterhead: true },
+            { id: 'doc_language', name: '६. मराठी व हिंदी भाषा परीक्षा उत्तीर्ण/सूट प्रमाणपत्र', status: 'जोडले आहे', enabled: true, hasLetterhead: true },
+            { id: 'doc_computer', name: '७. संगणक व टायपिंग अर्हता उत्तीर्ण प्रमाणपत्र', status: 'जोडले आहे', enabled: true, hasLetterhead: true },
+            { id: 'doc_small_family_decl', name: '८. लहान कुटुंबाचे प्रतिज्ञापत्र (नमुना-अ)', status: 'जोडले आहे', enabled: true, hasLetterhead: false },
+            { id: 'doc_small_family_cert', name: '९. लहान कुटुंबाचे कार्यालयीन प्रमाणपत्र', status: 'जोडले आहे', enabled: true, hasLetterhead: true },
+            { id: 'doc_property', name: '१०. मत्ता व दायित्व विवरणपत्र प्रमाणपत्र', status: 'जोडले आहे', enabled: true, hasLetterhead: true },
+            { id: 'doc_education_dob', name: '११. शैक्षणिक अर्हता व जन्मदिनांक पडताळणी प्रमाणपत्र', status: 'जोडले आहे', enabled: true, hasLetterhead: true },
+            { id: 'doc_sports_reservation', name: '१२. खेळ / समांतर आरक्षण पडताळणी प्रमाणपत्र', status: 'जोडले आहे', enabled: true, hasLetterhead: true },
+            { id: 'doc_terms_conditions', name: '१३. नेमणूक अटी व शर्ती पूर्तता प्रमाणपत्र', status: 'जोडले आहे', enabled: true, hasLetterhead: true },
+            { id: 'doc_headquarter', name: '१४. मुख्यालयात वास्तव्य प्रमाणपत्र', status: 'जोडले आहे', enabled: true, hasLetterhead: true },
+            { id: 'doc_recommendation', name: '१५. कार्यालय प्रमुखाचा शिफारस अभिप्राय', status: 'जोडले आहे', enabled: true, hasLetterhead: true }
         ];
+
+        let currentLogoSrc = null;
+        const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
+
+        // --- Auto Storage & 7-Day Auto Cleanup Engine ---
+        function checkAndLoadSavedLetterhead() {
+            const savedImg = localStorage.getItem('app_letterhead_img');
+            const savedTime = localStorage.getItem('app_letterhead_time');
+
+            if (savedImg && savedTime) {
+                const age = Date.now() - parseInt(savedTime, 10);
+                if (age > SEVEN_DAYS_MS) {
+                    // Over 7 days old: Auto Delete to save space!
+                    clearSavedLetterhead();
+                    alert("ℹ️ सूचना: आधी अपलोड केलेले लेटरपॅड ७ दिवसांपेक्षा जुने झाल्यामुळे सिस्टीमद्वारे ऑटो-डिलीट करण्यात आले आहे.");
+                } else {
+                    currentLogoSrc = savedImg;
+                    setLogoUIActive();
+                    applyLogoToDocuments();
+                }
+            }
+        }
+
+        function clearSavedLetterhead() {
+            localStorage.removeItem('app_letterhead_img');
+            localStorage.removeItem('app_letterhead_time');
+            currentLogoSrc = null;
+            document.querySelectorAll('.letterhead-bg-img').forEach(img => img.remove());
+            resetLogoUI();
+        }
 
         // --- References Functions ---
         function renderReferencesInputs() {
@@ -1002,7 +1051,7 @@
             docContainer.innerHTML = html;
         }
 
-        // --- Checklist Dynamic Controls & Tables ---
+        // --- Checklist & Selective Letterhead Controls ---
         function renderChecklistControls() {
             const container = document.getElementById('checklistControls');
             container.innerHTML = '';
@@ -1013,13 +1062,19 @@
 
                 div.innerHTML = `
                     <div class="flex items-center gap-2 flex-grow overflow-hidden">
-                        ${item.id ? `<input type="checkbox" ${item.enabled ? 'checked' : ''} onchange="toggleDocVisibility('${item.id}', this.checked, ${index})" class="h-4 w-4 text-indigo-600 rounded">` : '<span class="w-4"></span>'}
+                        ${item.id ? `<input type="checkbox" ${item.enabled ? 'checked' : ''} onchange="toggleDocVisibility('${item.id}', this.checked, ${index})" class="h-4 w-4 text-indigo-600 rounded" title="प्रस्तावात दाखवा/लपवा">` : '<span class="w-4"></span>'}
                         <div class="flex items-center gap-1 w-full">
                             <i class="fa-solid fa-pen text-[10px] text-slate-400"></i>
                             <input type="text" value="${item.name}" oninput="updateItemName(${index}, this.value)" class="w-full text-xs font-semibold text-slate-800 border-b border-transparent hover:border-slate-300 focus:border-indigo-500 focus:outline-none bg-transparent px-1">
                         </div>
                     </div>
                     <div class="flex items-center gap-1">
+                        ${item.id ? `
+                            <label class="flex items-center gap-1 text-[10px] bg-indigo-50 text-indigo-800 px-1.5 py-0.5 rounded cursor-pointer border border-indigo-200" title="फक्त या कागदपत्रावर लेटरपॅड लावा">
+                                <input type="checkbox" ${item.hasLetterhead ? 'checked' : ''} onchange="toggleDocLetterhead(${index}, this.checked)" class="h-3 w-3 text-indigo-600">
+                                <span>लेटरपॅड</span>
+                            </label>
+                        ` : ''}
                         <select onchange="updateItemStatus(${index}, this.value)" class="text-[11px] border p-1 rounded bg-slate-50 font-semibold">
                             <option value="जोडले आहे" ${item.status === 'जोडले आहे' ? 'selected' : ''}>जोडले आहे</option>
                             <option value="जोडले नाही" ${item.status === 'जोडले नाही' ? 'selected' : ''}>जोडले नाही</option>
@@ -1036,6 +1091,11 @@
             });
 
             renderChecklistTable();
+        }
+
+        function toggleDocLetterhead(index, isChecked) {
+            checklistItems[index].hasLetterhead = isChecked;
+            applyLogoToDocuments();
         }
 
         function updateItemName(index, val) {
@@ -1069,7 +1129,8 @@
                 name: `${nextNo}. सानुकूल कागदपत्राचे नाव`,
                 status: 'जोडले आहे',
                 enabled: true,
-                fixed: false
+                fixed: false,
+                hasLetterhead: false
             });
             renderChecklistControls();
         }
@@ -1099,6 +1160,19 @@
             });
         }
 
+        // --- Gender Auto Change Handler ---
+        function handleGenderChange() {
+            const gender = document.getElementById('empGender').value;
+            const titleSel = document.getElementById('empTitle');
+            
+            if (gender === 'female') {
+                titleSel.value = 'श्रीमती';
+            } else {
+                titleSel.value = 'श्री.';
+            }
+            updateAll();
+        }
+
         // --- Head Designation Changes ---
         function handleHeadDesignationChange(val) {
             const customInput = document.getElementById('customHeadDesignation');
@@ -1118,8 +1192,13 @@
             return sel;
         }
 
-        // --- Master Update Function ---
+        // --- Master Dynamic Grammar & Information Update ---
         function updateAll() {
+            const gender = document.getElementById('empGender').value;
+            const title = document.getElementById('empTitle').value;
+            const empRawName = document.getElementById('empName').value || '';
+            const empFullTitleName = `${title} ${empRawName}`.trim();
+
             const headDesig = getHeadDesignation();
             const office = document.getElementById('officeName').value || '';
             const taluka = document.getElementById('officeTaluka').value || '';
@@ -1129,7 +1208,6 @@
             const outward = document.getElementById('outwardNo').value || '';
             const propDate = document.getElementById('proposalDate').value || '';
 
-            const empName = document.getElementById('empName').value || '';
             const empPost = document.getElementById('empPost').value || '';
             const empCadre = document.getElementById('empCadre').value || '';
             const empPayScale = document.getElementById('empPayScale').value || '';
@@ -1151,13 +1229,24 @@
             const officeFull = `${office}, ता. ${taluka}, जि. ${dist}`;
             const headerTitle = `कार्यालय, ${headDesig}, ${office}`;
 
+            // --- Apply Grammar Rules based on Female/Male ---
+            let gramJoined = (gender === 'female') ? 'रुजू झाल्या' : 'रुजू झाले';
+            let gramDeclare = (gender === 'female') ? 'घोषित करते' : 'घोषित करतो';
+            let gramPassed = (gender === 'female') ? 'उत्तीर्ण केलेल्या असल्याने' : 'उत्तीर्ण केलेले असल्याने';
+            let gramEmpType = (gender === 'female') ? 'महिला कर्मचाऱ्याचा' : 'कर्मचाऱ्याचा';
+
+            document.querySelectorAll('.lbl_gram_joined').forEach(el => el.innerText = gramJoined);
+            document.querySelectorAll('.lbl_gram_declare').forEach(el => el.innerText = gramDeclare);
+            document.querySelectorAll('.lbl_gram_passed').forEach(el => el.innerText = gramPassed);
+            document.querySelectorAll('.lbl_gram_emp_type').forEach(el => el.innerText = gramEmpType);
+
             // Update Labels across all documents
             document.querySelectorAll('.lbl_office_header').forEach(el => el.innerText = headerTitle);
             document.querySelectorAll('.lbl_sign_head').forEach(el => el.innerText = headDesig);
             document.querySelectorAll('.lbl_sign_office').forEach(el => el.innerText = `${office}, जि. ${dist}`);
             document.querySelectorAll('.lbl_place').forEach(el => el.innerText = place);
 
-            document.querySelectorAll('.lbl_emp_name').forEach(el => el.innerText = empName);
+            document.querySelectorAll('.lbl_emp_full_title').forEach(el => el.innerText = empFullTitleName);
             document.querySelectorAll('.lbl_emp_post').forEach(el => el.innerText = empPost);
             document.querySelectorAll('.lbl_emp_cadre').forEach(el => el.innerText = empCadre);
             document.querySelectorAll('.lbl_emp_payscale').forEach(el => el.innerText = empPayScale);
@@ -1186,8 +1275,23 @@
             document.querySelectorAll('.lbl_office_sub').forEach(el => el.innerText = `जिल्हा: ${dist} | पिन कोड: ४३११२२`);
         }
 
-        // --- Letterhead System (Strict 400KB limit, Overlay Alignment & Delete Lock) ---
-        let currentLogoSrc = null;
+        // --- Letterhead UI Helpers ---
+        function setLogoUIActive() {
+            const fileInput = document.getElementById('letterheadFileInput');
+            fileInput.disabled = true;
+            document.getElementById('uploadContainer').classList.add('bg-slate-100', 'cursor-not-allowed');
+            document.getElementById('btnDeleteLogo').classList.remove('hidden');
+            document.getElementById('uploadStatusMsg').innerHTML = '<span class="text-emerald-700 font-bold"><i class="fa-solid fa-circle-check"></i> लेटरपॅड यशस्वीरीत्या अपलोड झाले आहे (७ दिवस सेव्ह राहील).</span>';
+        }
+
+        function resetLogoUI() {
+            const fileInput = document.getElementById('letterheadFileInput');
+            fileInput.value = '';
+            fileInput.disabled = false;
+            document.getElementById('uploadContainer').classList.remove('bg-slate-100', 'cursor-not-allowed');
+            document.getElementById('btnDeleteLogo').classList.add('hidden');
+            document.getElementById('uploadStatusMsg').innerHTML = '<i class="fa-solid fa-clock text-amber-600"></i> अपलोड केलेले लेटरपॅड **७ दिवसांनंतर ऑटो-डिलीट** होईल ज्यामुळे मोबाईल/PC मधील स्पेस वाचेल.';
+        }
 
         function toggleLetterheadDisplay() {
             const isChecked = document.getElementById('toggleLetterhead').checked;
@@ -1205,7 +1309,6 @@
             const file = event.target.files[0];
             if (!file) return;
 
-            // Strict File Size Validation: Max 400 KB (400 * 1024 Bytes)
             if (file.size > 400 * 1024) {
                 alert("⚠️ त्रुटी: फोटोची साईज ४०० KB पेक्षा जास्त आहे! कृपया ४०० KB पेक्षा कमी साईजचा फोटो अपलोड करा.");
                 event.target.value = '';
@@ -1215,56 +1318,54 @@
             const reader = new FileReader();
             reader.onload = function(e) {
                 currentLogoSrc = e.target.result;
-                applyLogoToDocuments();
-
-                // Lock upload input and enforce delete workflow
-                const fileInput = document.getElementById('letterheadFileInput');
-                fileInput.disabled = true;
                 
-                document.getElementById('uploadContainer').classList.add('bg-slate-100', 'cursor-not-allowed');
-                document.getElementById('btnDeleteLogo').classList.remove('hidden');
-                document.getElementById('uploadStatusMsg').innerHTML = '<span class="text-emerald-700 font-bold"><i class="fa-solid fa-circle-check"></i> लेटरपॅड यशस्वीरीत्या अपलोड झाले आहे. नवीन लेटरपॅड अपलोड करण्यासाठी आधी डिलीट करा.</span>';
+                // Save to LocalStorage with Timestamp for 7 days auto deletion
+                try {
+                    localStorage.setItem('app_letterhead_img', currentLogoSrc);
+                    localStorage.setItem('app_letterhead_time', Date.now().toString());
+                } catch(err) {
+                    console.log("Storage space full, rendering image directly without offline cache.");
+                }
+
+                setLogoUIActive();
+                applyLogoToDocuments();
             };
             reader.readAsDataURL(file);
         }
 
         function deleteLogo() {
-            currentLogoSrc = null;
-            const fileInput = document.getElementById('letterheadFileInput');
-            fileInput.value = '';
-            fileInput.disabled = false;
-
-            document.getElementById('uploadContainer').classList.remove('bg-slate-100', 'cursor-not-allowed');
-            
-            // Remove background letterhead images from all pages
-            document.querySelectorAll('.letterhead-bg-img').forEach(img => img.remove());
-            
-            document.getElementById('btnDeleteLogo').classList.add('hidden');
-            document.getElementById('uploadStatusMsg').innerText = 'एक वेळी एकच लेटरपॅड अपलोड होईल. दुसरे अपलोड करण्यासाठी आधीचे डिलीट करा.';
+            clearSavedLetterhead();
         }
 
+        // Apply Letterhead strictly to pages where 'hasLetterhead: true'
         function applyLogoToDocuments() {
-            if (!currentLogoSrc) return;
+            checklistItems.forEach(item => {
+                if (!item.id) return;
+                const page = document.getElementById(item.id);
+                if (!page) return;
 
-            document.querySelectorAll('.a4-page').forEach(page => {
                 let img = page.querySelector('.letterhead-bg-img');
-                if (!img) {
-                    img = document.createElement('img');
-                    img.className = 'letterhead-bg-img';
-                    page.insertBefore(img, page.firstChild);
+
+                if (currentLogoSrc && item.hasLetterhead) {
+                    if (!img) {
+                        img = document.createElement('img');
+                        img.className = 'letterhead-bg-img';
+                        page.insertBefore(img, page.firstChild);
+                    }
+                    img.src = currentLogoSrc;
+                } else {
+                    if (img) img.remove();
                 }
-                img.src = currentLogoSrc;
             });
         }
 
-        // --- High Quality PDF Export System (Fix for Broken Marathi Fonts) ---
+        // --- PDF Export System ---
         function downloadPDF() {
             const element = document.getElementById('printableArea');
             const empName = document.getElementById('empName').value || 'Employee';
             
             window.scrollTo(0, 0);
 
-            // PDF generation config optimized for Marathi Devanagari ligatures
             const opt = {
                 margin:       [0, 0, 0, 0],
                 filename:     `Probation_Proposal_${empName}.pdf`,
@@ -1273,7 +1374,7 @@
                     scale: 2, 
                     useCORS: true, 
                     scrollY: 0,
-                    letterRendering: false // Disabling letterRendering prevents Devanagari Marathi text clipping!
+                    letterRendering: false
                 },
                 jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
                 pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
@@ -1282,10 +1383,11 @@
             html2pdf().set(opt).from(element).save();
         }
 
-        // Initialize Everything on Page Load
+        // Initialize Engine
         window.onload = function() {
             renderReferencesInputs();
             renderChecklistControls();
+            checkAndLoadSavedLetterhead();
             updateAll();
         };
     </script>
