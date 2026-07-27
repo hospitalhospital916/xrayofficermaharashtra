@@ -396,7 +396,6 @@
                     <i class="fa fa-lock icon-left"></i>
                     <input type="password" id="loginPassword" class="no-prefix" placeholder="पासवर्ड टाका" onkeydown="if(event.key === 'Enter') loginMemberWithMobileAndPassword();">
                 </div>
-                <!-- 🌟 'पासवर्ड विसरलात?' नवीन लिंक -->
                 <div style="text-align: right; margin-top: 6px;">
                     <a href="javascript:void(0)" onclick="openForgotPasswordModal()" style="font-size: 0.82rem; color: #0B3D91; font-weight: bold; text-decoration: underline;">
                         <i class="fa fa-key"></i> पासवर्ड विसरलात? (Forgot Password)
@@ -417,7 +416,7 @@
         </div>
     </div>
 
-    <!-- 🌟 FORGOT PASSWORD MODAL (ऑटोमॅटिक पासवर्ड रिसेट) -->
+    <!-- FORGOT PASSWORD MODAL -->
     <div id="forgotPasswordModal" class="custom-modal-overlay">
         <div class="custom-modal" style="max-width: 450px;">
             <div class="custom-modal-header bg-primary">
@@ -426,7 +425,6 @@
             </div>
             <div class="custom-modal-body">
                 
-                <!-- १. पडताळणी फॉर्म (मोबाईल + जन्मतारीख) -->
                 <div id="reset_step1_box">
                     <p style="font-size: 0.88rem; color: #64748b; margin-bottom: 15px; font-weight: 600;">
                         खात्री करण्यासाठी तुमचा नोंदणीकृत मोबाईल नंबर आणि जन्मतारीख टाका:
@@ -444,7 +442,6 @@
                     </button>
                 </div>
 
-                <!-- २. नवीन पासवर्ड सेट फॉर्म (माहिती जुळल्यानंतर उघडणार) -->
                 <div id="reset_step2_box" style="display: none;">
                     <div style="background: #e0f2fe; border: 1px solid #7dd3fc; color: #0369a1; padding: 10px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 15px; font-weight: bold;">
                         ✓ ओळख पडताळणी यशस्वी झाली! आता नवीन पासवर्ड सेट करा.
@@ -467,7 +464,7 @@
         </div>
     </div>
 
-    <!-- 3. FULL PROFILE EDIT MODAL (सर्व २०+ नोंदणी फिल्ड्स) -->
+    <!-- 3. FULL PROFILE EDIT MODAL -->
     <div id="profileEditModal" class="custom-modal-overlay">
         <div class="custom-modal">
             <div class="custom-modal-header bg-primary">
@@ -1708,7 +1705,7 @@
                 });
                 document.getElementById('grievanceForm').reset();
                 Swal.fire('यशस्वी', `आपली तक्रार आवक क्र. ${inwardNo} सह नोंदवली गेली!`, 'success');
-            } catch(err) { Swal.fire('Error', err.message, 'error'); }
+            } catch(err) { Swal.fire('Error', e.message, 'error'); }
         };
 
         window.listenToGrievances = function() {
@@ -1887,12 +1884,14 @@
             let newPass = document.getElementById('reset_new_pass').value.trim();
             let confirmPass = document.getElementById('reset_confirm_pass').value.trim();
 
+            if(!memberId) return Swal.fire('त्रुटी', 'सदस्य ओळख पटली नाही. कृपया माहिती पुन्हा पडताळणी करा.', 'error');
             if(!newPass || newPass.length < 6) return Swal.fire('कमकुवत पासवर्ड', 'पासवर्ड किमान ६ अक्षरांचा किंवा अंकांचा असावा.', 'warning');
             if(newPass !== confirmPass) return Swal.fire('चुकीची माहिती', 'नवीन पासवर्ड आणि कन्फर्म पासवर्ड दोन्ही जुळत नाहीत.', 'error');
 
-            Swal.fire({ title: 'पासवर्ड बदलत आहे...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+            Swal.fire({ title: 'पासवर्ड अपडेट होत आहे...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
 
             try {
+                // मूळ सदस्याचा पासवर्ड Firestore मध्ये अपडेट करणे
                 await updateDoc(doc(db, "members", memberId), {
                     pass: newPass,
                     password: newPass
@@ -1901,7 +1900,7 @@
                 Swal.fire({
                     icon: 'success',
                     title: 'पासवर्ड यशस्वीरीत्या बदलला!',
-                    text: 'आता तुम्ही तुमच्या नवीन पासवर्डने लॉगिन करू शकता.',
+                    text: 'तुमचा नवीन पासवर्ड सेव्ह झाला आहे. आता तुम्ही नवीन पासवर्डने लॉगिन करू शकता.',
                     confirmButtonText: 'लॉगिन करा'
                 }).then(() => {
                     window.closeModal('forgotPasswordModal');
@@ -1910,7 +1909,8 @@
                 });
 
             } catch(e) {
-                Swal.fire('Error', e.message, 'error');
+                console.error("Password update error:", e);
+                Swal.fire('अडचण आली', 'पासवर्ड बदलताना त्रुटी आली: ' + e.message, 'error');
             }
         };
     </script>
