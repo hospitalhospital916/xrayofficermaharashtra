@@ -26,8 +26,17 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mukta', sans-serif; }
         
-        html, body { height: 100%; width: 100%; overflow: hidden; background-color: #f1f5f9; }
-        body { display: flex; justify-content: center; align-items: center; }
+        html, body { 
+            height: 100%; 
+            width: 100%; 
+            overflow: hidden; 
+            background-color: #f1f5f9; 
+        }
+        body { 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+        }
 
         .chat-container { 
             width: 100%; 
@@ -42,8 +51,8 @@
         }
         
         @media (min-width: 768px) {
-            body { padding: 10px; }
-            .chat-container { height: 96vh; border-radius: 18px; overflow: hidden; border: 2px solid #94a3b8; }
+            body { padding: 0; }
+            .chat-container { height: 100vh; height: 100dvh; border-radius: 0; border: none; }
         }
 
         .org-header { 
@@ -613,7 +622,6 @@
         }
     }
 
-    // 🟢 फाईल अपलोड (फोटो + PDF साठी टेलिग्राम बॉट API जोडले आहे)
     async function handleFileUpload(event) {
         const file = event.target.files[0];
         if (!file) return;
@@ -627,7 +635,6 @@
             const timeStr = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
             const isTypeAdmin = (currentRole === "super_admin" || currentRole === "sub_admin");
 
-            // १. फोटो अपलोड (ImgBB द्वारे)
             if (file.type.startsWith("image/")) {
                 const formData = new FormData();
                 formData.append("image", file);
@@ -642,13 +649,11 @@
                     throw new Error("फोटो अपलोड अपयशी ठरला.");
                 }
             } 
-            // २. PDF अपलोड (Telegram Bot API द्वारे)
             else if (file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf")) {
                 const formData = new FormData();
                 formData.append("chat_id", appSettings.telegramChannelId || "@xrayunion_pdf_storage");
                 formData.append("document", file);
 
-                // टेलिग्राम बॉटकडे फाईल पाठवणे
                 const tgRes = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument`, {
                     method: "POST",
                     body: formData
@@ -657,9 +662,7 @@
 
                 if (tgData.ok) {
                     const fileId = tgData.result.document.file_id;
-                    
-                    // टेलिग्रामकडून फाईलचा थेट डाऊनलोड पाथ (File Path) फेच करणे
-                    const fileGetRes = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getFile?file_id=${fileId}`);
+                    const fileGetRes = await fetch(`https://api.telegram.org/file/bot${TELEGRAM_BOT_TOKEN}/getFile?file_id=${fileId}`);
                     const fileGetData = await fileGetRes.json();
 
                     if (fileGetData.ok) {
