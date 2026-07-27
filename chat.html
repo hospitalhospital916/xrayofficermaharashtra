@@ -314,7 +314,6 @@
     const db = firebase.firestore();
     const auth = firebase.auth();
 
-    // 🟢 २. सदस्याचे मूळ नाव सेशन्समधून खात्रीशीर मिळवणे
     function initUserCredentials() {
         const urlParams = new URLSearchParams(window.location.search);
         let nameParam = urlParams.get('name');
@@ -482,7 +481,6 @@
         });
     }
 
-    // 🟢 ३. मेसेज रेंडर करताना नाव नेहमी दाखवणे (Never Hide Name)
     function renderMessages(messages) {
         const chatBox = document.getElementById("chatBox");
         chatBox.innerHTML = "";
@@ -499,7 +497,6 @@
             const wrapper = document.createElement("div");
             wrapper.className = `message-wrapper ${isMyMsg ? "my-msg-wrapper" : ""}`;
 
-            // १. सदस्य DP
             const avatar = document.createElement("div");
             avatar.className = "avatar";
             if (data.userPhoto && data.userPhoto !== "1001264489.png") {
@@ -512,7 +509,6 @@
             const msgDiv = document.createElement("div");
             msgDiv.className = "message";
 
-            // 👑 ॲडमिन की 👤 सभासद बॅज
             let roleBadgeHtml = '';
             if (senderType === 'admin') {
                 roleBadgeHtml = `<span style="background:#fef08a; color:#854d0e; font-size:0.7rem; padding:1px 6px; border-radius:10px; font-weight:800; border:1px solid #fde047;">👑 ॲडमिन</span>`;
@@ -526,7 +522,6 @@
             
             let subDetailsHtml = subDetails.length > 0 ? `<span class="msg-subinfo">${subDetails.join(' | ')}</span>` : `<span class="msg-subinfo">(${userPost})</span>`;
             
-            // 🟢 सदस्याचे नाव नेहमी वरच्या बाजूला बोल्ड अक्षरात दाखवणे
             let nameHeader = `<div class="msg-user-title"><span style="font-size:0.95rem; font-weight:800; color:var(--primary);">${userName}</span> ${roleBadgeHtml}</div>`;
 
             let contentHtml = `${nameHeader}${subDetailsHtml}`;
@@ -618,6 +613,7 @@
         }
     }
 
+    // 🟢 फाईल अपलोड (फोटो + PDF साठी टेलिग्राम बॉट API जोडले आहे)
     async function handleFileUpload(event) {
         const file = event.target.files[0];
         if (!file) return;
@@ -631,6 +627,7 @@
             const timeStr = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
             const isTypeAdmin = (currentRole === "super_admin" || currentRole === "sub_admin");
 
+            // १. फोटो अपलोड (ImgBB द्वारे)
             if (file.type.startsWith("image/")) {
                 const formData = new FormData();
                 formData.append("image", file);
@@ -641,6 +638,55 @@
                     await db.collection("chat_messages").add({
                         room: currentRoom, senderName: currentUser, user: currentUser, senderRole: currentUserPost, userPost: currentUserPost, userMobile: currentUserMobile, userOffice: currentUserOffice, userPhoto: currentUserPhoto, senderType: isTypeAdmin ? "admin" : "member", text: data.data.url, message: data.data.url, type: "image", time: timeStr, readBy: [{ name: currentUser, role: currentUserPost, office: currentUserOffice, time: timeStr }], timestamp: firebase.firestore.FieldValue.serverTimestamp()
                     });
+                } else {
+                    throw new Error("फोटो अपलोड अपयशी ठरला.");
+                }
+            } 
+            // २. PDF अपलोड (Telegram Bot API द्वारे)
+            else if (file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf")) {
+                const formData = new FormData();
+                formData.append("chat_id", appSettings.telegramChannelId || "@xrayunion_pdf_storage");
+                formData.append("document", file);
+
+                // टेलिग्राम बॉटकडे फाईल पाठवणे
+                const tgRes = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument`, {
+                    method: "POST",
+                    body: formData
+                });
+                const tgData = await tgRes.json();
+
+                if (tgData.ok) {
+                    const fileId = tgData.result.document.file_id;
+                    
+                    // टेलिग्रामकडून फाईलचा थेट डाऊनलोड पाथ (File Path) फेच करणे
+                    const fileGetRes = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getFile?file_id=${fileId}`);
+                    const fileGetData = await fileGetRes.json();
+
+                    if (fileGetData.ok) {
+                        const filePath = fileGetData.result.file_path;
+                        const pdfDirectUrl = `https://api.telegram.org/file/bot${TELEGRAM_BOT_TOKEN}/${filePath}`;
+
+                        await db.collection("chat_messages").add({
+                            room: currentRoom,
+                            senderName: currentUser,
+                            user: currentUser,
+                            senderRole: currentUserPost,
+                            userPost: currentUserPost,
+                            userMobile: currentUserMobile,
+                            userOffice: currentUserOffice,
+                            userPhoto: currentUserPhoto,
+                            senderType: isTypeAdmin ? "admin" : "member",
+                            text: pdfDirectUrl,
+                            message: pdfDirectUrl,
+                            fileName: file.name,
+                            type: "pdf",
+                            time: timeStr,
+                            readBy: [{ name: currentUser, role: currentUserPost, office: currentUserOffice, time: timeStr }],
+                            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                    }
+                } else {
+                    throw new Error("Telegram वर PDF पाठवता आली नाही. Telegram Channel मध्ये Bot Admin आहे का ते तपासा.");
                 }
             }
         } catch (error) {
