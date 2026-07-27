@@ -71,7 +71,6 @@
         .custom-modal-header { background: var(--primary); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10; }
         .custom-modal-body { padding: 20px; }
 
-        /* Section Titles in Modal */
         .modal-section-title {
             font-size: 1rem;
             font-weight: 800;
@@ -95,10 +94,8 @@
         .nav-profile { display: flex; align-items: center; gap: 12px; }
         .btn-logout { background: var(--danger); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 0.8rem; }
 
-        /* Scrolling Ticker */
         .ticker-wrap { background: var(--primary); border-bottom: 2px solid var(--secondary); color: #fff; padding: 6px 15px; font-weight: 600; font-size: 0.88rem; }
 
-        /* Navigation Menu Tabs */
         .tab-menu { display: flex; gap: 6px; overflow-x: auto; background: #07275e; padding: 8px 12px; white-space: nowrap; position: sticky; top: 0; z-index: 999; }
         .tab-menu::-webkit-scrollbar { height: 4px; }
         .tab-menu::-webkit-scrollbar-thumb { background: var(--secondary); border-radius: 10px; }
@@ -106,7 +103,6 @@
         .tab-btn:hover { background: rgba(255,255,255,0.25); }
         .tab-btn.active { background: var(--secondary); color: var(--dark); }
 
-        /* Main Container */
         #appContent { min-height: 100vh; display: flex; flex-direction: column; width: 100%; }
         .container { max-width: 1450px; width: 100%; margin: 15px auto; padding: 0 12px; flex: 1; }
         .tab-content { display: none; }
@@ -115,7 +111,6 @@
         .panel-header { padding: 12px 16px; font-size: 1rem; font-weight: 800; background: #f8fafc; border-bottom: 1px solid #e2e8f0; border-top: 5px solid var(--primary); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
         .panel-body { padding: 15px; overflow-x: auto; }
 
-        /* 🌟 'माझी माहिती' (Hero Profile View - Top Position) */
         .member-profile-hero {
             background: linear-gradient(135deg, #ffffff 0%, #f0f4f8 100%);
             border: 2px solid var(--primary);
@@ -184,7 +179,6 @@
             font-weight: 700;
         }
 
-        /* 🌟 पिवळ्या रंगाचे एडिट बटण CSS (Yellow Highlight) */
         .btn-edit-profile-gold {
             background: linear-gradient(135deg, #FFC436, #f39c12) !important;
             color: #071938 !important;
@@ -206,13 +200,11 @@
             background: linear-gradient(135deg, #f1c40f, #e67e22) !important;
         }
 
-        /* Mini Stats */
         .dash-cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 15px; }
         .dash-card-mini { background: #fff; border: 1px solid #e2e8f0; border-left: 5px solid var(--primary); padding: 12px 15px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); text-align: center; }
         .dash-card-mini h3 { font-size: 0.82rem; color: #64748b; margin-bottom: 4px; font-weight: 700; }
         .dash-card-mini h2 { font-size: 1.3rem; color: var(--dark); font-weight: 800; }
 
-        /* Repository Auto Forms Grid (All 13 Cards) */
         .forms-cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 15px; }
         .auto-form-card { background: #fff; border: 1px solid #e2e8f0; border-top: 4px solid var(--primary); border-radius: 12px; padding: 16px; transition: all 0.3s ease; display: flex; flex-direction: column; justify-content: space-between; text-decoration: none; color: inherit; }
         .auto-form-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(11, 61, 145, 0.12); border-top-color: var(--secondary); }
@@ -220,7 +212,6 @@
         .auto-form-card h4 { font-size: 1rem; font-weight: 800; color: var(--primary); margin-bottom: 4px; }
         .auto-form-card p { font-size: 0.8rem; color: #64748b; line-height: 1.4; }
 
-        /* Mandal Map & Pie Chart Grid */
         .map-pie-grid { display: grid; grid-template-columns: 2.3fr 1fr; gap: 15px; margin-bottom: 15px; }
         @media (max-width: 900px) { .map-pie-grid { grid-template-columns: 1fr; } }
         .mandal-map-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; padding: 10px; }
@@ -231,7 +222,6 @@
         .dist-badge { display: inline-flex; justify-content: space-between; align-items: center; width: 100%; background: rgba(0,0,0,0.25); font-size: 0.68rem; padding: 3px 6px; margin: 2px 0; border-radius: 4px; font-weight: 600; }
         .dist-badge .dist-count { background: #fff; color: #000; padding: 1px 5px; border-radius: 10px; font-weight: 800; font-size: 0.62rem; }
 
-        /* Controls */
         .btn-action { background: var(--primary); color: white; border: none; padding: 8px 14px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 6px; font-size: 0.85rem; }
         .btn-action:hover { opacity: 0.9; transform: translateY(-1px); }
         .form-control { width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem; outline: none; }
@@ -239,7 +229,6 @@
         .form-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; align-items: center; }
         .form-row > div { flex: 1; min-width: 180px; }
 
-        /* Tables & Badges */
         table { width: 100%; border-collapse: collapse; min-width: 700px; background: white; }
         th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #e2e8f0; vertical-align: middle; font-size: 0.88rem; }
         th { background: var(--primary); color: white; font-weight: 800; white-space: nowrap; }
@@ -247,7 +236,6 @@
         .badge { padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; color: #fff; display: inline-block; }
         .bg-success { background: var(--success); } .bg-warning { background: var(--secondary); color: #000; } .bg-danger { background: var(--danger); } .bg-primary { background: var(--primary); } .bg-info { background: var(--info); } .bg-purple { background: var(--purple); }
 
-        /* 🚀 फ्लोटिंग चॅट बटण CSS */
         #floatingLiveChatWidget { 
             position: fixed; 
             bottom: 35px; 
@@ -307,7 +295,6 @@
             border: 2px solid white; 
         }
 
-        /* 🌟 चॅट मधील पिवळी नेव्हिगेशन पट्टी (Chat Header Yellow Strip) */
         .chat-top-nav-bar { display: none; }
         
         body.chat-active-mode .chat-top-nav-bar { 
@@ -388,7 +375,7 @@
         </div>
     </div>
 
-    <!-- 2. MEMBER LOGIN OVERLAY -->
+    <!-- 2. MEMBER LOGIN OVERLAY (पासवर्ड विसरलात? लिंकसह) -->
     <div id="loginOverlay">
         <div class="login-card">
             <img src="logo.png" alt="Association Logo" class="login-logo" onerror="this.src='loghho.png'">
@@ -409,6 +396,12 @@
                     <i class="fa fa-lock icon-left"></i>
                     <input type="password" id="loginPassword" class="no-prefix" placeholder="पासवर्ड टाका" onkeydown="if(event.key === 'Enter') loginMemberWithMobileAndPassword();">
                 </div>
+                <!-- 🌟 'पासवर्ड विसरलात?' नवीन लिंक -->
+                <div style="text-align: right; margin-top: 6px;">
+                    <a href="javascript:void(0)" onclick="openForgotPasswordModal()" style="font-size: 0.82rem; color: #0B3D91; font-weight: bold; text-decoration: underline;">
+                        <i class="fa fa-key"></i> पासवर्ड विसरलात? (Forgot Password)
+                    </a>
+                </div>
             </div>
 
             <button type="button" onclick="loginMemberWithMobileAndPassword()"><i class="fa fa-sign-in-alt me-1"></i> सुरक्षित लॉगिन करा</button>
@@ -424,7 +417,57 @@
         </div>
     </div>
 
-    <!-- 3. FULL PROFILE EDIT MODAL (सर्व २०+ नोंदणी फिल्ड्स - एकही फील्ड compulsory नाही) -->
+    <!-- 🌟 FORGOT PASSWORD MODAL (ऑटोमॅटिक पासवर्ड रिसेट) -->
+    <div id="forgotPasswordModal" class="custom-modal-overlay">
+        <div class="custom-modal" style="max-width: 450px;">
+            <div class="custom-modal-header bg-primary">
+                <h3><i class="fa fa-unlock-alt"></i> ऑटोमॅटिक पासवर्ड रिसेट</h3>
+                <button onclick="closeModal('forgotPasswordModal')" style="background:transparent; border:none; color:white; font-size:1.5rem; cursor:pointer;">&times;</button>
+            </div>
+            <div class="custom-modal-body">
+                
+                <!-- १. पडताळणी फॉर्म (मोबाईल + जन्मतारीख) -->
+                <div id="reset_step1_box">
+                    <p style="font-size: 0.88rem; color: #64748b; margin-bottom: 15px; font-weight: 600;">
+                        खात्री करण्यासाठी तुमचा नोंदणीकृत मोबाईल नंबर आणि जन्मतारीख टाका:
+                    </p>
+                    <div class="login-input-box" style="margin: 10px 0;">
+                        <label>मोबाईल नंबर:</label>
+                        <input type="tel" id="reset_mobile" class="form-control" placeholder="१० अंकी मोबाईल नंबर" maxlength="10">
+                    </div>
+                    <div class="login-input-box" style="margin: 10px 0;">
+                        <label>जन्मतारीख (Date of Birth):</label>
+                        <input type="date" id="reset_dob" class="form-control">
+                    </div>
+                    <button type="button" class="btn-action bg-primary" onclick="verifyMemberForReset()" style="width: 100%; justify-content: center; padding: 12px; margin-top: 15px; font-size: 1rem;">
+                        <i class="fa fa-check-circle"></i> माहिती पडताळा
+                    </button>
+                </div>
+
+                <!-- २. नवीन पासवर्ड सेट फॉर्म (माहिती जुळल्यानंतर उघडणार) -->
+                <div id="reset_step2_box" style="display: none;">
+                    <div style="background: #e0f2fe; border: 1px solid #7dd3fc; color: #0369a1; padding: 10px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 15px; font-weight: bold;">
+                        ✓ ओळख पडताळणी यशस्वी झाली! आता नवीन पासवर्ड सेट करा.
+                    </div>
+                    <input type="hidden" id="reset_member_id">
+                    <div class="login-input-box" style="margin: 10px 0;">
+                        <label>नवीन पासवर्ड:</label>
+                        <input type="password" id="reset_new_pass" class="form-control" placeholder="किमान ६ अक्षरे/अंक" minlength="6">
+                    </div>
+                    <div class="login-input-box" style="margin: 10px 0;">
+                        <label>नवीन पासवर्ड पुन्हा टाका:</label>
+                        <input type="password" id="reset_confirm_pass" class="form-control" placeholder="पासवर्डची खात्री करा" minlength="6">
+                    </div>
+                    <button type="button" class="btn-action bg-success" onclick="updateNewPassword()" style="width: 100%; justify-content: center; padding: 12px; margin-top: 15px; font-size: 1rem;">
+                        <i class="fa fa-save"></i> नवीन पासवर्ड सेव्ह करा
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. FULL PROFILE EDIT MODAL (सर्व २०+ नोंदणी फिल्ड्स) -->
     <div id="profileEditModal" class="custom-modal-overlay">
         <div class="custom-modal">
             <div class="custom-modal-header bg-primary">
@@ -438,7 +481,6 @@
 
                 <form id="memberSelfEditForm" onsubmit="submitProfileEditForApproval(event)">
                     
-                    <!-- १. वैयक्तिक माहिती -->
                     <div class="modal-section-title"><i class="fa fa-user"></i> १. वैयक्तिक माहिती</div>
                     <div class="form-row">
                         <div style="flex:1.5;"><label>पूर्ण नाव (Full Name):</label><input type="text" id="self_name" class="form-control" placeholder="पूर्ण नाव"></div>
@@ -466,7 +508,6 @@
                         <div style="flex:1.5;"><label>आधार क्रमांक (Aadhaar No):</label><input type="text" id="self_aadhaar" class="form-control" placeholder="१२ अंकी आधार क्रमांक" maxlength="12"></div>
                     </div>
 
-                    <!-- २. नोकरी व पदस्थापना माहिती -->
                     <div class="modal-section-title"><i class="fa fa-briefcase"></i> २. नोकरी व पदस्थापना माहिती</div>
                     <div class="form-row">
                         <div style="flex:1;"><label>सेवार्थ आयडी (Sevarth ID):</label><input type="text" id="self_sevarth" class="form-control" placeholder="उदा. LATX8001"></div>
@@ -510,7 +551,6 @@
                         <div style="flex:1;"><label>सेवानिवृत्ती दिनांक:</label><input type="date" id="self_retireDate" class="form-control"></div>
                     </div>
 
-                    <!-- ३. संपर्क व पत्ता -->
                     <div class="modal-section-title"><i class="fa fa-address-book"></i> ३. संपर्क व पत्ता</div>
                     <div class="form-row">
                         <div style="flex:1;"><label>मोबाईल नंबर:</label><input type="tel" id="self_mobile" class="form-control" readonly style="background:#e2e8f0;"></div>
@@ -522,10 +562,8 @@
                         <div style="flex:1.5;"><label>विशेष शेरा / अभिप्राय (Remarks):</label><input type="text" id="self_remarks" class="form-control" placeholder="उदा. प्रकल्पग्रस्त / अनुकंपा"></div>
                     </div>
 
-                    <!-- ४. दस्तऐवज व PDF अपलोड कप्पे (Slots) -->
                     <div class="modal-section-title"><i class="fa fa-folder-open"></i> ४. दस्तऐवज व PDF अपलोड कप्पे (Max 400 KB)</div>
                     <div class="form-row">
-                        <!-- कप्पा १: प्रोफाइल फोटो -->
                         <div style="flex:1;">
                             <label style="color:var(--primary); font-weight:bold;"><i class="fa fa-camera"></i> १. प्रोफाईल फोटो</label>
                             <div id="self_upload_box_photo">
@@ -538,7 +576,6 @@
                             <input type="hidden" id="self_existing_photo_url">
                         </div>
 
-                        <!-- कप्पा २: नियुक्ती आदेश -->
                         <div style="flex:1;">
                             <label style="color:var(--danger); font-weight:bold;"><i class="fa fa-file-pdf"></i> २. नियुक्ती/शासकीय आदेश</label>
                             <div id="self_upload_box_doc">
@@ -551,7 +588,6 @@
                             <input type="hidden" id="self_existing_doc_url">
                         </div>
 
-                        <!-- कप्पा ३: आधार / इतर कागदपत्रे -->
                         <div style="flex:1;">
                             <label style="color:var(--info); font-weight:bold;"><i class="fa fa-id-card"></i> ३. आधार / इतर कागदपत्रे</label>
                             <div id="self_upload_box_other">
@@ -565,7 +601,6 @@
                         </div>
                     </div>
 
-                    <!-- ५. लॉगिन पासवर्ड -->
                     <div class="modal-section-title"><i class="fa fa-lock"></i> ५. नवीन पासवर्ड बदलावा (पर्यायी)</div>
                     <div class="form-row">
                         <div style="flex:1;"><label>नवीन पासवर्ड:</label><input type="text" id="self_pass" class="form-control" placeholder="नवीन पासवर्ड टाका (बदलायचा असल्यास)"></div>
@@ -582,7 +617,6 @@
     <!-- 4. MAIN APP CONTENT -->
     <div id="appContent" style="display: none;">
         
-        <!-- Header Navbar -->
         <nav class="navbar">
             <div class="navbar-brand">
                 <img src="logo.png" alt="Logo" onerror="this.src='loghho.png'">
@@ -600,14 +634,12 @@
             </div>
         </nav>
 
-        <!-- Scrolling Ticker -->
         <div class="ticker-wrap no-print">
             <marquee id="memberTickerText" behavior="scroll" direction="left" scrollamount="6">
                 क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना महाराष्ट्र राज्य पोर्टलवर आपले स्वागत आहे.
             </marquee>
         </div>
 
-        <!-- Navigation Tabs -->
         <div class="tab-menu no-print">
             <button class="tab-btn active" onclick="openTab('tab-dash', this)"><i class="fa fa-user-circle"></i> माझी माहिती व डॅशबोर्ड</button>
             <button class="tab-btn" onclick="openTab('tab-auto-forms', this)"><i class="fa fa-file-signature"></i> स्वयंचलित अर्ज प्रणाली</button>
@@ -624,10 +656,9 @@
 
         <div class="container">
 
-            <!-- TAB 1: DASHBOARD OVERVIEW (#1 Position: 'माझी माहिती' + आरोग्य मंडळे व जिल्हे) -->
+            <!-- TAB 1: DASHBOARD OVERVIEW -->
             <div id="tab-dash" class="tab-content active">
                 
-                <!-- 🌟 १. 'माझी माहिती' (पिवळ्या रंगाचे आकर्षक प्रोफाईल एडिट बटण) -->
                 <div class="member-profile-hero">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:2px solid var(--primary); padding-bottom:8px; flex-wrap:wrap; gap:10px;">
                         <h3 style="color:var(--primary); font-weight:800; font-size:1.2rem;"><i class="fa fa-id-card-clip"></i> माझी नोंदणीकृत माहिती</h3>
@@ -658,7 +689,6 @@
                     </div>
                 </div>
 
-                <!-- मिनी स्टॅट कार्ड्स -->
                 <div class="dash-cards-grid">
                     <div class="dash-card-mini" style="border-left-color: var(--primary);"><h3>सदस्यत्व स्थिती</h3><h2 id="st_approval_status" style="color:var(--primary);">-</h2></div>
                     <div class="dash-card-mini" style="border-left-color: var(--success);"><h3>शुल्क भरणा स्थिती</h3><h2 id="st_fee_status" style="color:var(--success);">-</h2></div>
@@ -666,7 +696,6 @@
                     <div class="dash-card-mini" style="border-left-color: var(--purple);"><h3>माझ्या तक्रारी</h3><h2 id="st_grievance_cnt" style="color:var(--purple);">0</h2></div>
                 </div>
 
-                <!-- 🌟 २. आरोग्य विभागाची मंडळे, जिल्हे व पाय-चार्ट -->
                 <div class="map-pie-grid">
                     <div class="panel" style="margin-bottom:0;">
                         <div class="panel-header"><span><i class="fa fa-map-marked-alt" style="color:var(--primary);"></i> आरोग्य विभागाची मंडळे व जिल्हे</span></div>
@@ -685,132 +714,89 @@
 
             </div>
 
-            <!-- TAB 2: REPOSITORY AUTO-GENERATED FORMS (पूर्ण १३ च्या १३ लिंक केलेले कार्ड्स) -->
+            <!-- TAB 2: REPOSITORY AUTO FORMS -->
             <div id="tab-auto-forms" class="tab-content">
                 <div class="panel">
                     <div class="panel-header bg-primary" style="color:white;">
                         <span><i class="fa fa-file-signature"></i> रिपॉझिटरीमधील ऑटो-जनरेटेड शासकीय अर्ज प्रणाली</span>
                     </div>
                     <div class="panel-body">
-                        <p style="color:#64748b; font-weight:bold; margin-bottom:15px; font-size:0.9rem;">
-                            <i class="fa fa-info-circle" style="color:var(--info);"></i> खालील सर्व अर्ज फॉर्म्स तुमच्या रिपॉझिटरीमध्ये लिंक केलेले आहेत. संबंधित अर्जावर क्लिक करून थेट अर्ज तयार करा:
-                        </p>
-
                         <div class="forms-cards-grid">
                             <a href="Leave_Application_System.html" class="auto-form-card" onclick="window.logMemberActivity('रजा अर्ज प्रणाली उघडली')">
-                                <div>
-                                    <div class="auto-form-icon" style="color:#2563eb; background:#eff6ff;"><i class="fa fa-calendar-minus"></i></div>
-                                    <h4>रजा अर्ज प्रणाली</h4>
-                                    <p>अर्जित रजा, नैमित्तिक रजा व वैद्यकीय रजेसाठी ऑटो-जनरेटेड अर्ज तयार करा.</p>
-                                </div>
+                                <div><div class="auto-form-icon" style="color:#2563eb; background:#eff6ff;"><i class="fa fa-calendar-minus"></i></div>
+                                <h4>रजा अर्ज प्रणाली</h4><p>अर्जित रजा, नैमित्तिक रजा व वैद्यकीय रजेसाठी ऑटो-जनरेटेड अर्ज तयार करा.</p></div>
                                 <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#2563eb;">उघडा <i class="fa fa-arrow-right"></i></div>
                             </a>
 
                             <a href="Service_and_Confirmation_Forms.html" class="auto-form-card" onclick="window.logMemberActivity('सेवा व स्थिरीकरण अर्ज उघडले')">
-                                <div>
-                                    <div class="auto-form-icon" style="color:#059669; background:#ecfdf5;"><i class="fa fa-user-check"></i></div>
-                                    <h4>सेवा व स्थिरीकरण अर्ज</h4>
-                                    <p>सेवा पुस्तिकेत नोंद, सेवेचे स्थिरीकरण (Confirmation) व पडताळणी फॉर्म्स.</p>
-                                </div>
+                                <div><div class="auto-form-icon" style="color:#059669; background:#ecfdf5;"><i class="fa fa-user-check"></i></div>
+                                <h4>सेवा व स्थिरीकरण अर्ज</h4><p>सेवा पुस्तिकेत नोंद, सेवेचे स्थिरीकरण (Confirmation) व पडताळणी फॉर्म्स.</p></div>
                                 <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#059669;">उघडा <i class="fa fa-arrow-right"></i></div>
                             </a>
 
                             <a href="probation_system.html" class="auto-form-card" onclick="window.logMemberActivity('परिवीक्षाधीन कालावधी प्रणाली उघडली')">
-                                <div>
-                                    <div class="auto-form-icon" style="color:#7c3aed; background:#f5f3ff;"><i class="fa fa-user-clock"></i></div>
-                                    <h4>परिवीक्षाधीन कालावधी प्रणाली</h4>
-                                    <p>प्रोबेशन कालावधी यशस्वीरीत्या पूर्ण केल्याबाबतचा अधिकृत अर्ज व ट्रॅकिंग.</p>
-                                </div>
+                                <div><div class="auto-form-icon" style="color:#7c3aed; background:#f5f3ff;"><i class="fa fa-user-clock"></i></div>
+                                <h4>परिवीक्षाधीन कालावधी प्रणाली</h4><p>प्रोबेशन कालावधी यशस्वीरीत्या पूर्ण केल्याबाबतचा अधिकृत अर्ज व ट्रॅकिंग.</p></div>
                                 <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#7c3aed;">उघडा <i class="fa fa-arrow-right"></i></div>
                             </a>
 
                             <a href="small_family.html" class="auto-form-card" onclick="window.logMemberActivity('लहान कुटुंबाचे प्रतिज्ञापत्र उघडले')">
-                                <div>
-                                    <div class="auto-form-icon" style="color:#d97706; background:#fffbeb;"><i class="fa fa-users-between-lines"></i></div>
-                                    <h4>लहान कुटुंबाचे प्रतिज्ञापत्र</h4>
-                                    <p>शासकीय नियमांनुसार नमुना 'क' लहान कुटुंबाचे स्वयंघोषणापत्र जनरेटर.</p>
-                                </div>
+                                <div><div class="auto-form-icon" style="color:#d97706; background:#fffbeb;"><i class="fa fa-users-between-lines"></i></div>
+                                <h4>लहान कुटुंबाचे प्रतिज्ञापत्र</h4><p>शासकीय नियमांनुसार नमुना 'क' लहान कुटुंबाचे स्वयंघोषणापत्र जनरेटर.</p></div>
                                 <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#d97706;">उघडा <i class="fa fa-arrow-right"></i></div>
                             </a>
 
                             <a href="asset-form.html" class="auto-form-card" onclick="window.logMemberActivity('मालमत्ता व दायित्व अर्ज उघडला')">
-                                <div>
-                                    <div class="auto-form-icon" style="color:#0891b2; background:#ecfeff;"><i class="fa fa-building-columns"></i></div>
-                                    <h4>मालमत्ता व दायित्व अर्ज</h4>
-                                    <p>वार्षिक स्थावर व जंगम मालमत्ता विवरणपत्र (Asset Declaration) जनरेटर.</p>
-                                </div>
+                                <div><div class="auto-form-icon" style="color:#0891b2; background:#ecfeff;"><i class="fa fa-building-columns"></i></div>
+                                <h4>मालमत्ता व दायित्व अर्ज</h4><p>वार्षिक स्थावर व जंगम मालमत्ता विवरणपत्र (Asset Declaration) जनरेटर.</p></div>
                                 <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#0891b2;">उघडा <i class="fa fa-arrow-right"></i></div>
                             </a>
 
                             <a href="financial-claims.html" class="auto-form-card" onclick="window.logMemberActivity('आर्थिक दावे व भत्ते उघडले')">
-                                <div>
-                                    <div class="auto-form-icon" style="color:#16a34a; background:#f0fdf4;"><i class="fa fa-file-invoice-dollar"></i></div>
-                                    <h4>आर्थिक दावे व भत्ते</h4>
-                                    <p>वैद्यकीय बिल प्रतिपूर्ती, प्रवास भत्ता (TA/DA) व रेडिएशन भत्ता दावे.</p>
-                                </div>
+                                <div><div class="auto-form-icon" style="color:#16a34a; background:#f0fdf4;"><i class="fa fa-file-invoice-dollar"></i></div>
+                                <h4>आर्थिक दावे व भत्ते</h4><p>वैद्यकीय बिल प्रतिपूर्ती, प्रवास भत्ता (TA/DA) व रेडिएशन भत्ता दावे.</p></div>
                                 <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#16a34a;">उघडा <i class="fa fa-arrow-right"></i></div>
                             </a>
 
                             <a href="ligal_forms.html" class="auto-form-card" onclick="window.logMemberActivity('कायदेशीर फॉर्म उघडले')">
-                                <div>
-                                    <div class="auto-form-icon" style="color:#e11d48; background:#fff1f2;"><i class="fa fa-scale-balanced"></i></div>
-                                    <h4>कायदेशीर फॉर्म व मसुदे</h4>
-                                    <p>कायदेशीर मागण्या, प्रशासकीय निवेदने व असोसिएशन कायदेशीर मसुदे.</p>
-                                </div>
+                                <div><div class="auto-form-icon" style="color:#e11d48; background:#fff1f2;"><i class="fa fa-scale-balanced"></i></div>
+                                <h4>कायदेशीर फॉर्म व मसुदे</h4><p>कायदेशीर मागण्या, प्रशासकीय निवेदने व असोसिएशन कायदेशीर मसुदे.</p></div>
                                 <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#e11d48;">उघडा <i class="fa fa-arrow-right"></i></div>
                             </a>
 
                             <a href="tld-generator.html" class="auto-form-card" onclick="window.logMemberActivity('TLD बॅज डोजिमीटर जनरेटर उघडला')">
-                                <div>
-                                    <div class="auto-form-icon" style="color:#9333ea; background:#faf5ff;"><i class="fa fa-radiation"></i></div>
-                                    <h4>TLD बॅज डोजिमीटर जनरेटर</h4>
-                                    <p>रेडिएशन डोस ट्रॅकिंग व नवीन TLD बॅज मागणी/बदली अर्ज ऑटो-जनरेटर.</p>
-                                </div>
+                                <div><div class="auto-form-icon" style="color:#9333ea; background:#faf5ff;"><i class="fa fa-radiation"></i></div>
+                                <h4>TLD बॅज डोजिमीटर जनरेटर</h4><p>रेडिएशन डोस ट्रॅकिंग व नवीन TLD बॅज मागणी/बदली अर्ज ऑटो-जनरेटर.</p></div>
                                 <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#9333ea;">उघडा <i class="fa fa-arrow-right"></i></div>
                             </a>
 
                             <a href="gr.html" class="auto-form-card" onclick="window.logMemberActivity('शासकीय निर्णय GR संग्रह उघडला')">
-                                <div>
-                                    <div class="auto-form-icon" style="color:#dc2626; background:#fef2f2;"><i class="fa fa-file-pdf"></i></div>
-                                    <h4>शासकीय निर्णय (G.R.) संग्रह</h4>
-                                    <p>आरोग्य विभागाचे महत्त्वपूर्ण शासन निर्णय, परिपत्रके व सेवा नियम.</p>
-                                </div>
+                                <div><div class="auto-form-icon" style="color:#dc2626; background:#fef2f2;"><i class="fa fa-file-pdf"></i></div>
+                                <h4>शासकीय निर्णय (G.R.) संग्रह</h4><p>आरोग्य विभागाचे महत्त्वपूर्ण शासन निर्णय, परिपत्रके व सेवा नियम.</p></div>
                                 <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#dc2626;">उघडा <i class="fa fa-arrow-right"></i></div>
                             </a>
 
                             <a href="documents.html" class="auto-form-card" onclick="window.logMemberActivity('कागदपत्रे व दस्तऐवज उघडले')">
-                                <div>
-                                    <div class="auto-form-icon" style="color:#0284c7; background:#f0f9ff;"><i class="fa fa-folder-open"></i></div>
-                                    <h4>कागदपत्रे व दस्तऐवज</h4>
-                                    <p>AERB गाईडलाईन्स, तांत्रिक नियमावली व संघटनेची सर्व दस्तऐवज लायब्ररी.</p>
-                                </div>
+                                <div><div class="auto-form-icon" style="color:#0284c7; background:#f0f9ff;"><i class="fa fa-folder-open"></i></div>
+                                <h4>कागदपत्रे व दस्तऐवज</h4><p>AERB गाईडलाईन्स, तांत्रिक नियमावली व संघटनेची सर्व दस्तऐवज लायब्ररी.</p></div>
                                 <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#0284c7;">उघडा <i class="fa fa-arrow-right"></i></div>
                             </a>
 
                             <a href="map.html" class="auto-form-card" onclick="window.logMemberActivity('एक्स-रे सेंटर्स मॅप उघडला')">
-                                <div>
-                                    <div class="auto-form-icon" style="color:#ea580c; background:#fff7ed;"><i class="fa fa-map-location-dot"></i></div>
-                                    <h4>महाराष्ट्रातील एक्स-रे सेंटर्स मॅप</h4>
-                                    <p>महाराष्ट्रातील सर्व शासकीय रुग्णालये व एक्स-रे सेंटर्सचे लोकेशन.</p>
-                                </div>
+                                <div><div class="auto-form-icon" style="color:#ea580c; background:#fff7ed;"><i class="fa fa-map-location-dot"></i></div>
+                                <h4>महाराष्ट्रातील एक्स-रे सेंटर्स मॅप</h4><p>महाराष्ट्रातील सर्व शासकीय रुग्णालये व एक्स-रे सेंटर्सचे लोकेशन.</p></div>
                                 <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#ea580c;">उघडा <i class="fa fa-arrow-right"></i></div>
                             </a>
 
                             <a href="aantar_mandal_badli_prostav.html" class="auto-form-card" onclick="window.logMemberActivity('आंतर मंडळ बदली प्रस्ताव जनरेटर उघडला')">
-                                <div>
-                                    <div class="auto-form-icon" style="color:#d97706; background:#fffbeb;"><i class="fa fa-file-export"></i></div>
-                                    <h4>आंतर मंडळ बदली प्रस्ताव जनरेटर</h4>
-                                    <p>१५ मे २०१९ जीआरनुसार सर्व परिशिष्टे, बंधपत्र व परिपूर्ण प्रस्ताव.</p>
-                                </div>
+                                <div><div class="auto-form-icon" style="color:#d97706; background:#fffbeb;"><i class="fa fa-file-export"></i></div>
+                                <h4>आंतर मंडळ बदली प्रस्ताव जनरेटर</h4><p>१५ मे २०१९ जीआरनुसार सर्व परिशिष्टे, बंधपत्र व परिपूर्ण प्रस्ताव.</p></div>
                                 <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#d97706;">उघडा <i class="fa fa-arrow-right"></i></div>
                             </a>
 
                             <a href="gallery.html" class="auto-form-card" onclick="window.logMemberActivity('फोटो गॅलरी उघडली')">
-                                <div>
-                                    <div class="auto-form-icon" style="color:#db2777; background:#fdf2f8;"><i class="fa fa-images"></i></div>
-                                    <h4>फोटो गॅलरी व उपक्रम</h4>
-                                    <p>असोसिएशनचे स्नेहसंमेलन, बैठका, आंदोलने व उपक्रमांची छायाचित्रे.</p>
-                                </div>
+                                <div><div class="auto-form-icon" style="color:#db2777; background:#fdf2f8;"><i class="fa fa-images"></i></div>
+                                <h4>फोटो गॅलरी व उपक्रम</h4><p>असोसिएशनचे स्नेहसंमेलन, बैठका, आंदोलने व उपक्रमांची छायाचित्रे.</p></div>
                                 <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#db2777;">उघडा <i class="fa fa-arrow-right"></i></div>
                             </a>
                         </div>
@@ -818,7 +804,7 @@
                 </div>
             </div>
 
-            <!-- TAB 3: DIGITAL I-CARD (ॲडमिनच्या डिझाईनशी हुबेहूब जुळणारे) -->
+            <!-- TAB 3: DIGITAL I-CARD -->
             <div id="tab-icard" class="tab-content">
                 <div class="panel">
                     <div class="panel-header bg-primary" style="color:white; border-top:none;">
@@ -852,7 +838,7 @@
                 </div>
             </div>
 
-            <!-- TAB 4: OFFICIAL E-RECEIPT (ॲडमिनकडून अप्रूव्ह झालेली हुबेहूब पावती) -->
+            <!-- TAB 4: OFFICIAL E-RECEIPT -->
             <div id="tab-receipt" class="tab-content">
                 <div class="panel">
                     <div class="panel-header bg-warning">
@@ -913,7 +899,7 @@
                 </div>
             </div>
 
-            <!-- TAB 5: TEMPLATE BUILDER & AUTO LETTER GENERATOR -->
+            <!-- TAB 5: TEMPLATE BUILDER -->
             <div id="tab-templates" class="tab-content">
                 <div class="panel">
                     <div class="panel-header bg-primary" style="color:white;">
@@ -931,7 +917,7 @@
                 </div>
             </div>
 
-            <!-- TAB 6: GRIEVANCE REDRESSAL SYSTEM -->
+            <!-- TAB 6: GRIEVANCES -->
             <div id="tab-grievances" class="tab-content">
                 <div class="panel">
                     <div class="panel-header bg-danger" style="color:white;">
@@ -989,7 +975,7 @@
                 </div>
             </div>
 
-            <!-- TAB 7: INFORMATION GATHERING SYSTEM (जिल्हानिहाय कार्यरत अधिकाऱ्यांची सविस्तर माहिती) -->
+            <!-- TAB 7: INFORMATION GATHERING SYSTEM -->
             <div id="tab-info-gather" class="tab-content">
                 <div class="panel">
                     <div class="panel-header bg-purple" style="color:white;">
@@ -1008,7 +994,6 @@
                                 </div>
                             </div>
 
-                            <!-- डायनॅमिकली तयार होणारे अधिकाऱ्यांचे रकाने -->
                             <div id="dynamicOfficerListArea" style="margin-top:15px;"></div>
 
                             <button type="button" class="btn-action bg-purple" onclick="submitDetailedGatheredInfo()" style="padding:10px 20px; margin-top:15px; font-size:1rem;"><i class="fa fa-paper-plane"></i> सर्व माहिती ॲडमिनला सबमिट करा</button>
@@ -1067,7 +1052,7 @@
                 </div>
             </div>
 
-            <!-- TAB 10: LIVE CHAT SECTION (🌟 पिवळ्या रंगाची हेडर पट्टी व स्पष्ट बटण) -->
+            <!-- TAB 10: LIVE CHAT SECTION -->
             <div id="tab-chat" class="tab-content">
                 <div class="panel" style="margin-bottom:0;">
                     <div class="chat-top-nav-bar">
@@ -1116,7 +1101,7 @@
     <!-- FIREBASE JS ENGINE & SCRIPT -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, query, where, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, query, where, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk",
@@ -1293,7 +1278,7 @@
             document.getElementById('mem_nav_status').innerText = `${m.district || '-'} (${m.status || 'Approved'})`;
             document.getElementById('mem_nav_status').style.color = m.status === 'Approved' ? 'var(--success)' : 'var(--danger)';
 
-            // Render Hero Profile (Top #1 View-Only)
+            // Render Hero Profile
             document.getElementById('pf_hero_photo').src = m.photoUrl || "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
             document.getElementById('pf_hero_name').innerText = m.name || '-';
             document.getElementById('pf_hero_post').innerText = m.designation || 'X-Ray Scientific Officer';
@@ -1463,7 +1448,7 @@
 
                 window.closeModal('profileEditModal');
                 Swal.fire('मंजुरीसाठी पाठवले!', 'तुमची प्रोफाईल अपडेट ॲडमिनच्या मंजुरीसाठी पाठवण्यात आली आहे.', 'success');
-            } catch(err) { Swal.fire('Error', err.message, 'error'); }
+            } catch(err) { Swal.fire('Error', e.message, 'error'); }
         };
 
         window.renderOfficialICard = function() {
@@ -1840,6 +1825,93 @@
                 window.loadPolls();
                 Swal.fire('धन्यवाद!', 'तुमचे मत नोंदवले गेले.', 'success');
             } catch(e) { Swal.fire('Error', e.message, 'error'); }
+        };
+
+        // ==========================================================
+        // AUTOMATIC FORGOT PASSWORD RESET ENGINE
+        // ==========================================================
+        window.openForgotPasswordModal = function() {
+            document.getElementById('reset_mobile').value = '';
+            document.getElementById('reset_dob').value = '';
+            document.getElementById('reset_new_pass').value = '';
+            document.getElementById('reset_confirm_pass').value = '';
+            document.getElementById('reset_step1_box').style.display = 'block';
+            document.getElementById('reset_step2_box').style.display = 'none';
+            document.getElementById('forgotPasswordModal').style.display = 'flex';
+        };
+
+        window.verifyMemberForReset = async function() {
+            let mob = document.getElementById('reset_mobile').value.trim();
+            let dob = document.getElementById('reset_dob').value;
+
+            if(!mob || mob.length !== 10) return Swal.fire('माहिती अपूर्ण', 'कृपया १० अंकी मोबाईल नंबर टाका.', 'warning');
+            if(!dob) return Swal.fire('माहिती अपूर्ण', 'कृपया तुमची नोंदणीकृत जन्मतारीख निवडा.', 'warning');
+
+            Swal.fire({ title: 'पडताळणी करत आहे...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+            try {
+                const q1 = query(collection(db, "members"), where("mobile", "==", mob));
+                let snap = await getDocs(q1);
+
+                if(snap.empty) {
+                    const q2 = query(collection(db, "members"), where("mobile", "==", Number(mob)));
+                    snap = await getDocs(q2);
+                }
+
+                if(snap.empty) {
+                    Swal.close();
+                    return Swal.fire('नोंदणी सापडली नाही', 'हा मोबाईल नंबर सिस्टीममध्ये नोंदणीकृत नाही.', 'error');
+                }
+
+                let mData = snap.docs[0].data();
+                let docId = snap.docs[0].id;
+
+                if(mData.dob && mData.dob !== dob) {
+                    Swal.close();
+                    return Swal.fire('पडताळणी अयशस्वी', 'प्रविष्ट केलेली जन्मतारीख या मोबाईल नंबरशी जुळत नाही.', 'error');
+                }
+
+                Swal.close();
+                document.getElementById('reset_member_id').value = docId;
+                document.getElementById('reset_step1_box').style.display = 'none';
+                document.getElementById('reset_step2_box').style.display = 'block';
+
+            } catch(e) {
+                Swal.close();
+                Swal.fire('Error', e.message, 'error');
+            }
+        };
+
+        window.updateNewPassword = async function() {
+            let memberId = document.getElementById('reset_member_id').value;
+            let newPass = document.getElementById('reset_new_pass').value.trim();
+            let confirmPass = document.getElementById('reset_confirm_pass').value.trim();
+
+            if(!newPass || newPass.length < 6) return Swal.fire('कमकुवत पासवर्ड', 'पासवर्ड किमान ६ अक्षरांचा किंवा अंकांचा असावा.', 'warning');
+            if(newPass !== confirmPass) return Swal.fire('चुकीची माहिती', 'नवीन पासवर्ड आणि कन्फर्म पासवर्ड दोन्ही जुळत नाहीत.', 'error');
+
+            Swal.fire({ title: 'पासवर्ड बदलत आहे...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+            try {
+                await updateDoc(doc(db, "members", memberId), {
+                    pass: newPass,
+                    password: newPass
+                });
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'पासवर्ड यशस्वीरीत्या बदलला!',
+                    text: 'आता तुम्ही तुमच्या नवीन पासवर्डने लॉगिन करू शकता.',
+                    confirmButtonText: 'लॉगिन करा'
+                }).then(() => {
+                    window.closeModal('forgotPasswordModal');
+                    document.getElementById('loginPassword').value = newPass;
+                    document.getElementById('loginMobileNumber').value = document.getElementById('reset_mobile').value;
+                });
+
+            } catch(e) {
+                Swal.fire('Error', e.message, 'error');
+            }
         };
     </script>
 </body>
