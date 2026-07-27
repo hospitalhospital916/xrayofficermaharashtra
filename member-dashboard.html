@@ -2,7 +2,7 @@
 <html lang="mr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1280, initial-scale=0.3, minimum-scale=0.25, maximum-scale=3.0, user-scalable=yes">
+    <meta name="viewport" id="viewportMeta" content="width=1280, initial-scale=0.3, minimum-scale=0.25, maximum-scale=3.0, user-scalable=yes">
     <title>सदस्य पोर्टल | क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना महाराष्ट्र राज्य</title>
     
     <!-- External Libraries (CDN) -->
@@ -13,10 +13,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <script>
-        if (window.innerWidth < 1280) {
-            var scale = window.innerWidth / 1280;
-            document.querySelector('meta[name="viewport"]').setAttribute('content', 'width=1280, initial-scale=' + scale + ', maximum-scale=3.0, user-scalable=yes');
+        function applyDesktopViewport() {
+            if (window.innerWidth < 1280 && !document.body.classList.contains('chat-active-mode')) {
+                var scale = window.innerWidth / 1280;
+                document.querySelector('meta[name="viewport"]').setAttribute('content', 'width=1280, initial-scale=' + scale + ', maximum-scale=3.0, user-scalable=yes');
+            }
         }
+        applyDesktopViewport();
     </script>
 
     <style>
@@ -148,7 +151,7 @@
         .form-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; align-items: center; }
         .form-row > div { flex: 1; min-width: 180px; }
 
-        /* 🚀 ३ पट (3X) मोठे, ३D व आकर्षक चॅट लॉन्चर विजेट CSS */
+        /* 🚀 चॅट लॉन्चर विजेट CSS */
         #floatingLiveChatWidget { 
             position: fixed; 
             bottom: 25px; 
@@ -156,151 +159,119 @@
             z-index: 9990; 
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
             cursor: pointer;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: transform 0.3s ease;
         }
 
         #floatingLiveChatWidget:hover {
             transform: scale(1.08);
         }
 
-        /* "⚡ Live Chat करा" ३ पट मोठा व स्पष्ट लेबल */
         .chat-pill-label {
             background: linear-gradient(135deg, #0B3D91, #07275e);
             color: #ffffff;
-            padding: 16px 28px;
-            border-radius: 45px;
-            font-size: 1.6rem;
+            padding: 12px 22px;
+            border-radius: 35px;
+            font-size: 1.2rem;
             font-weight: 800;
-            box-shadow: 0 10px 30px rgba(11, 61, 145, 0.5);
-            border: 3px solid #f39c12;
+            box-shadow: 0 10px 25px rgba(11, 61, 145, 0.4);
+            border: 2px solid #f39c12;
             display: flex;
             align-items: center;
-            gap: 12px;
-            letter-spacing: 0.5px;
-            animation: bounceLeft 2s infinite;
+            gap: 10px;
         }
 
-        /* 🟢 १८०px चा ३ पट मोठा ३D अ‍ॅनिमेटेड चॅट आयकॉन */
         .chat-floating-btn { 
-            width: 180px; 
-            height: 180px; 
+            width: 80px; 
+            height: 80px; 
             background: linear-gradient(135deg, #0B3D91, #25D366); 
             color: white; 
             border-radius: 50%; 
             display: flex; 
             justify-content: center; 
             align-items: center; 
-            font-size: 6.5rem; 
-            box-shadow: 0 15px 40px rgba(37, 211, 102, 0.65); 
+            font-size: 2.8rem; 
+            box-shadow: 0 10px 30px rgba(37, 211, 102, 0.5); 
             position: relative; 
-            border: 6px solid #ffffff;
-            animation: pulseGlow 2s infinite; 
+            border: 4px solid #ffffff;
         }
 
-        /* प्रलंबित मेसेज बॅज */
         .chat-unread-badge { 
             position: absolute; 
-            top: -10px; 
-            right: -10px; 
+            top: -5px; 
+            right: -5px; 
             background: #ef4444; 
             color: white; 
             border-radius: 50%; 
-            width: 48px;
-            height: 48px;
-            font-size: 1.4rem; 
+            width: 32px;
+            height: 32px;
+            font-size: 1rem; 
             font-weight: 800; 
             display: none; 
             justify-content: center; 
             align-items: center; 
-            border: 4px solid white; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-            animation: badgePulse 1.5s infinite;
+            border: 2px solid white; 
         }
 
-        @keyframes pulseGlow {
-            0% { box-shadow: 0 0 0 0 rgba(11, 61, 145, 0.8); }
-            70% { box-shadow: 0 0 0 30px rgba(37, 211, 102, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(11, 61, 145, 0); }
-        }
-
-        @keyframes badgePulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.25); }
-        }
-
-        @keyframes bounceLeft {
-            0%, 100% { transform: translateX(0); }
-            50% { transform: translateX(-8px); }
-        }
-
-        /* 📱 डेस्कटॉप लेआउट चॅट */
+        /* 📱 चॅट डेस्कटॉप व मोबाईल व्ह्यू फिटिंग नियम */
         #tab-chat { height: 85vh; width: 100%; }
         #tab-chat .panel { height: 100%; border-radius: 12px; overflow: hidden; margin-bottom: 0; border: 1px solid #cbd5e1; }
         #tab-chat .panel-body { height: 100%; padding: 0; overflow: hidden; }
         #memberChatIframe { width: 100%; height: 100%; border: none; display: block; }
 
-        /* 📱 लहान स्क्रीनवर (मोबाईलवर) चॅट स्क्रीन १००% स्क्रीनवर फिट बसण्यासाठी स्पेशल CSS */
-        @media screen and (max-width: 900px) {
-            #tab-chat.active {
-                position: fixed !important;
-                top: 0 !important;
-                left: 0 !important;
-                width: 100vw !important;
-                height: 100dvh !important;
-                height: 100vh;
-                z-index: 99999 !important;
-                background: #ffffff !important;
-                display: flex !important;
-                flex-direction: column !important;
-                margin: 0 !important;
-                padding: 0 !important;
-            }
-            #tab-chat .panel {
-                height: 100% !important;
-                border: none !important;
-                border-radius: 0 !important;
-                margin: 0 !important;
-                display: flex !important;
-                flex-direction: column !important;
-                box-shadow: none !important;
-            }
-            #tab-chat .panel-body {
-                flex: 1 !important;
-                height: 100% !important;
-                padding: 0 !important;
-                overflow: hidden !important;
-            }
-            #memberChatIframe {
-                width: 100% !important;
-                height: 100% !important;
-                border: none !important;
-            }
-            .chat-top-nav-bar {
-                display: flex !important;
-                align-items: center;
-                justify-content: space-between;
-                background: var(--primary);
-                color: white;
-                padding: 10px 15px;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-            }
-            .chat-floating-btn {
-                width: 120px;
-                height: 120px;
-                font-size: 4.2rem;
-            }
-            .chat-pill-label {
-                font-size: 1.1rem;
-                padding: 10px 18px;
-            }
+        /* 🔥 चॅट ऑन असताना FULLSCREEN MOBILE OVERLAY STYLES */
+        body.chat-active-mode #tab-chat.active {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: 100dvh !important;
+            height: 100vh !important;
+            z-index: 999999 !important;
+            background: #ffffff !important;
+            display: flex !important;
+            flex-direction: column !important;
+            margin: 0 !important;
+            padding: 0 !important;
         }
 
-        @media screen and (min-width: 901px) {
-            .chat-top-nav-bar {
-                display: none !important;
-            }
+        body.chat-active-mode #tab-chat .panel {
+            height: 100% !important;
+            border: none !important;
+            border-radius: 0 !important;
+            margin: 0 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            box-shadow: none !important;
+        }
+
+        body.chat-active-mode #tab-chat .panel-body {
+            flex: 1 !important;
+            height: 100% !important;
+            padding: 0 !important;
+            overflow: hidden !important;
+        }
+
+        body.chat-active-mode #memberChatIframe {
+            width: 100% !important;
+            height: 100% !important;
+            border: none !important;
+        }
+
+        .chat-top-nav-bar {
+            display: none;
+        }
+
+        body.chat-active-mode .chat-top-nav-bar {
+            display: flex !important;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--primary);
+            color: white;
+            padding: 10px 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            z-index: 10;
         }
 
         @media print {
@@ -871,7 +842,7 @@
     <!-- PRINT LETTER TEMPLATE RENDER CONTAINER -->
     <div id="printLetterArea" style="display:none;"></div>
 
-    <!-- 🚀 FLOATING LIVE CHAT LAUNCHER WIDGET (३ पट मोठा व ३D ग्लोईंग आयकॉन) -->
+    <!-- 🚀 FLOATING LIVE CHAT LAUNCHER WIDGET -->
     <div id="floatingLiveChatWidget" onclick="openTab('tab-chat', document.getElementById('btn_tab_chat'))" title="💬 Live Chat (संवाद साधा)">
         <div class="chat-pill-label">
             <i class="fa-solid fa-bolt" style="color: #f39c12;"></i> Live Chat करा
@@ -912,7 +883,6 @@
         window.grievancesList = [];
         window.tbTemplatesList = [];
 
-        // 🟢 1. MASTER MEMBER ACTIVITY LOG FUNCTION
         window.logMemberActivity = async function(action) {
             let m = window.currentMember;
             let memberDisplayName = m ? (m.name || m.memberName || m.fullName || 'सभासद') : 'सभासद';
@@ -935,7 +905,6 @@
             }
         };
 
-        // AUTO-LOGIN CHECK
         window.addEventListener('DOMContentLoaded', () => {
             let savedSession = localStorage.getItem("memberSession");
             if(savedSession) {
@@ -950,7 +919,7 @@
             }
         });
 
-        // Tab Navigation
+        // Dynamic Viewport Switcher logic when clicking Chat vs Other Tabs
         window.openTab = function(tabId, btn) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
@@ -960,14 +929,19 @@
             if(btn) btn.classList.add('active');
 
             let floatWidget = document.getElementById('floatingLiveChatWidget');
+            let metaViewport = document.getElementById('viewportMeta');
 
             if(tabId === 'tab-chat') {
                 if(floatWidget) floatWidget.style.display = 'none';
+                
+                // 🚀 चॅट ऑन झाल्यावर Viewport मोबाईलवर फिट करण्यासाठी बदलणे
+                if(metaViewport) {
+                    metaViewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+                }
+                document.body.classList.add('chat-active-mode');
 
-                // मेसेज पाहिले म्हणून टाईमस्टॅम्प सेव्ह करणे
                 localStorage.setItem("lastReadChatTime", Date.now());
                 
-                // लाल रंगाचा बॅज लपवणे
                 let badge = document.getElementById('chatUnreadCount');
                 if(badge) {
                     badge.innerText = "0";
@@ -982,9 +956,15 @@
                 }
             } else {
                 if(floatWidget) floatWidget.style.display = 'flex';
+                document.body.classList.remove('chat-active-mode');
+
+                // 🔄 पूर्ववत डेस्कटॉप व्ह्यू ऑन करणे
+                if (window.innerWidth < 1280 && metaViewport) {
+                    var scale = window.innerWidth / 1280;
+                    metaViewport.setAttribute('content', 'width=1280, initial-scale=' + scale + ', maximum-scale=3.0, user-scalable=yes');
+                }
             }
 
-            // Log tab viewing
             if (window.currentMember) {
                 let tabNames = {
                     'tab-dash': 'डॅशबोर्ड',
@@ -1011,7 +991,6 @@
             if(el) el.style.display = 'none';
         };
 
-        // Mobile & Password Login Handler
         window.loginMemberWithMobileAndPassword = async function() {
             let mobileInput = document.getElementById('loginMobileNumber').value.trim();
             let passwordInput = document.getElementById('loginPassword').value.trim();
@@ -1064,7 +1043,6 @@
                 window.currentMember = mData;
                 localStorage.setItem("memberSession", JSON.stringify(mData));
 
-                // LOG LOGIN EVENT
                 await window.logMemberActivity("पोर्टलवर लॉगिन केले (Logged In)");
 
                 Swal.close();
@@ -1079,7 +1057,6 @@
             }
         };
 
-        // LOGOUT HANDLER
         window.logoutMember = async function() {
             if (window.currentMember) {
                 await window.logMemberActivity("पोर्टलवरून लॉगआउट केले (Logged Out)");
@@ -1093,7 +1070,6 @@
             if(floatWidget) floatWidget.style.display = 'flex';
         };
 
-        // Master Init
         window.initMemberDashboard = async function() {
             let m = window.currentMember;
             if(!m) return;
@@ -1110,9 +1086,7 @@
                 if(snap.exists() && snap.data().text) document.getElementById('infoPromptBox').innerText = snap.data().text;
             });
 
-            // LISTEN TO UNREAD CHAT MESSAGES
             window.listenToUnreadChatMessages();
-
             window.checkAndShowPopupNotice();
             await window.loadDashboardData();
             window.renderOfficialICard();
@@ -1124,7 +1098,6 @@
             window.loadTemplatesAndAutoLetters();
         };
 
-        // 🟢 न पाहिलेल्या (Unread) मेसेजची संख्या रिअल-टाईम मोजणारे फंक्शन
         window.listenToUnreadChatMessages = function() {
             try {
                 onSnapshot(collection(db, "chat_messages"), (snap) => {
@@ -1165,7 +1138,6 @@
             } catch(e) { console.error("Chat count listener error:", e); }
         };
 
-        // Popup Notice
         window.checkAndShowPopupNotice = async function() {
             let pSnap = await getDocs(collection(db, "settings"));
             pSnap.forEach(d => {
@@ -1177,7 +1149,6 @@
             });
         };
 
-        // Dashboard Stats, Mandal Cards & Chart
         window.loadDashboardData = async function() {
             let mSnap = await getDocs(collection(db, "members"));
             window.allMembers = [];
@@ -1241,7 +1212,6 @@
             } catch(e) { console.error(e); }
         };
 
-        // Official I-Card Render
         window.renderOfficialICard = function() {
             let m = window.currentMember; if(!m) return;
             document.getElementById('ic_photo').src = m.photoUrl || "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
@@ -1262,7 +1232,6 @@
             }
         };
 
-        // Official Approved Receipt Render
         window.renderOfficialReceipt = function() {
             let m = window.currentMember; if(!m) return;
 
@@ -1288,7 +1257,6 @@
             }
         };
 
-        // Template Builder & Auto Letter Generation
         window.loadTemplatesAndAutoLetters = async function() {
             let snap = await getDocs(collection(db, "tb_letters"));
             window.tbTemplatesList = [];
@@ -1318,7 +1286,6 @@
             let m = window.currentMember;
             if(!t || !m) return;
 
-            // LOG LETTER GENERATION EVENT
             window.logMemberActivity(`पत्र/अर्ज जनरेट केला: ${t.title}`);
 
             let mName = m.name || m.memberName || '___________';
@@ -1361,7 +1328,6 @@
             });
         };
 
-        // Grievance Handlers
         window.submitGrievance = async function(e) {
             e.preventDefault();
             let subject = document.getElementById('gr_subject').value.trim();
@@ -1378,7 +1344,6 @@
                     subject, category, details, status: 'Pending', remark: '', date: new Date().toLocaleDateString('mr-IN'), timestamp: Date.now()
                 });
 
-                // LOG GRIEVANCE EVENT
                 await window.logMemberActivity(`नवीन तक्रार नोंदवली: ${subject}`);
 
                 document.getElementById('grievanceForm').reset();
@@ -1411,7 +1376,6 @@
             });
         };
 
-        // Info Gather Handler
         window.submitGatheredInfo = async function(e) {
             e.preventDefault();
             let inst = document.getElementById('inf_institutes').value;
@@ -1429,7 +1393,6 @@
                     updatedAt: new Date().toLocaleDateString('mr-IN'), timestamp: Date.now()
                 });
 
-                // LOG INFO SUBMIT EVENT
                 await window.logMemberActivity("नवीन माहिती सबमिट केली (Info Gathered)");
 
                 document.getElementById('infoSubmitForm').reset();
@@ -1437,7 +1400,6 @@
             } catch(err) { Swal.fire('Error', err.message, 'error'); }
         };
 
-        // State Employees Directory
         window.loadEmployeeDirectory = async function() {
             let snap = await getDocs(collection(db, "other_staff"));
             window.allEmployees = [];
@@ -1464,7 +1426,6 @@
             document.getElementById('employeeDirectoryBody').innerHTML = rowsHtml || '<tr><td colspan="7" style="text-align:center;">कर्मचारी सापडले नाहीत.</td></tr>';
         };
 
-        // Folders & Documents
         window.loadFoldersAndFiles = async function() {
             let fSnap = await getDocs(collection(db, "member_folders"));
             let folders = []; fSnap.forEach(d => folders.push({id: d.id, ...d.data()}));
@@ -1490,7 +1451,6 @@
             document.getElementById('memberFilesBody').innerHTML = filesHtml || '<tr><td colspan="4" style="text-align:center;">फाईल्स उपलब्ध नाहीत.</td></tr>';
         };
 
-        // Voting & Polls
         window.loadPolls = async function() {
             let snap = await getDocs(collection(db, "polls"));
             let polls = []; snap.forEach(d => polls.push({id: d.id, ...d.data()}));
@@ -1530,7 +1490,6 @@
                 let newOpts = { ...p.options };
                 newOpts[choice] = (newOpts[choice] || 0) + 1;
 
-                // LOG POLL VOTE EVENT
                 await window.logMemberActivity(`पोलमध्ये मत दिले: ${p.question} (${choice})`);
 
                 window.loadPolls();
