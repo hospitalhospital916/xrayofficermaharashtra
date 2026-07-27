@@ -4773,7 +4773,7 @@ window.listenToProfileEditRequests = function() {
     });
 };
 
-// २. पॉप-अप उघडून अर्जांची यादी दाखवणे
+// २. पॉप-अप उघडून सदस्यांची सर्व नवीन माहिती व फाईल्स दाखवणे
 window.openProfileRequestsModal = function() {
     let tbody = document.getElementById('profileRequestsTableBody');
     if(!tbody) return;
@@ -4784,17 +4784,26 @@ window.openProfileRequestsModal = function() {
         tbody.innerHTML = window.profileEditRequestsList.map((req, i) => `
             <tr>
                 <td>${i + 1}</td>
-                <td><b>${req.name}</b><br><small>${req.designation || '-'}</small></td>
+                <td>
+                    <b>${req.name || '-'}</b><br>
+                    <small style="color:var(--primary); font-weight:bold;">${req.designation || '-'}</small><br>
+                    <small>📱 ${req.mobile || '-'}</small>
+                </td>
                 <td style="text-align:center;">
-                    ${req.photoUrl ? `<a href="${req.photoUrl}" target="_blank"><img src="${req.photoUrl}" style="width:45px; height:45px; border-radius:50%; object-fit:cover; border:2px solid var(--primary);"></a>` : 'फोटो नाही'}<br>
-                    ${req.docUrl ? `<a href="${req.docUrl}" target="_blank" class="badge bg-info"><i class="fa fa-file"></i> कागदपत्र</a>` : ''}
+                    ${req.photoUrl ? `<a href="${req.photoUrl}" target="_blank" title="फोटो पहा"><img src="${req.photoUrl}" style="width:45px; height:45px; border-radius:50%; object-fit:cover; border:2px solid var(--primary);"></a>` : '<small>फोटो नाही</small>'}<br>
+                    <div style="margin-top:4px; display:flex; gap:4px; justify-content:center; flex-wrap:wrap;">
+                        ${req.docUrl ? `<a href="${req.docUrl}" target="_blank" class="badge bg-danger" style="text-decoration:none;"><i class="fa fa-file-pdf"></i> आदेश</a>` : ''}
+                        ${req.otherUrl ? `<a href="${req.otherUrl}" target="_blank" class="badge bg-info" style="text-decoration:none;"><i class="fa fa-id-card"></i> आधार/इतर</a>` : ''}
+                    </div>
                 </td>
                 <td>
-                    <small>
+                    <small style="line-height:1.5; display:block;">
+                        <b>प्रवर्ग:</b> ${req.category || '-'} | <b>रक्तगट:</b> ${req.bloodGroup || '-'}<br>
+                        <b>मंडळ/जिल्हा:</b> ${req.mandal || '-'} / ${req.district || '-'}<br>
                         <b>रुग्णालय:</b> ${req.workplace || '-'}<br>
-                        <b>ईमेल:</b> ${req.email || '-'}<br>
-                        <b>सेवार्थ ID:</b> ${req.sevarthId || '-'}<br>
-                        <b>आधार:</b> ${req.aadhaar || '-'}
+                        <b>सेवार्थ ID:</b> ${req.sevarthId || '-'} | <b>आधार:</b> ${req.aadhaar || '-'}<br>
+                        <b>रुजू दिनांक:</b> ${req.joinDate || '-'} | <b>ईमेल:</b> ${req.email || '-'}<br>
+                        <b>शेरा:</b> ${req.remarks || '-'}
                     </small>
                 </td>
                 <td><small>${req.updatedAt || '-'}</small></td>
@@ -4809,7 +4818,7 @@ window.openProfileRequestsModal = function() {
     document.getElementById('profileRequestsModalOverlay').style.display = 'flex';
 };
 
-// ३. ॲडमिनने 'मंजूर करा' वर क्लिक केल्यावर डेटा मूळ मेंबर प्रोफाईलला अपडेट करणे
+// ३. ॲडमिनने 'मंजूर करा' वर क्लिक केल्यावर नोंदणी फॉर्मची सर्व २०+ माहिती मूळ प्रोफाईलला सेव्ह करणे
 window.approveProfileEdit = async function(reqId, memberId) {
     let reqData = window.profileEditRequestsList.find(r => r.id === reqId);
     if(!reqData) return;
@@ -4817,25 +4826,35 @@ window.approveProfileEdit = async function(reqId, memberId) {
     if(confirm(`श्री/श्रीमती ${reqData.name} यांचे प्रोफाईल बदल मंजूर करायचे आहेत का?`)) {
         Swal.fire({title: 'प्रोफाईल अपडेट होत आहे...', didOpen: () => Swal.showLoading()});
         try {
+            // नोंदणी फॉर्ममधील सर्व फील्ड्स मूळ डेटाबेसमध्ये अपडेट करणे
             await updateDoc(doc(db, "members", memberId), {
-                name: reqData.name,
-                designation: reqData.designation,
-                email: reqData.email,
-                sevarthId: reqData.sevarthId,
-                aadhaar: reqData.aadhaar,
-                dob: reqData.dob,
-                joinDate: reqData.joinDate,
-                bloodGroup: reqData.bloodGroup,
-                workplace: reqData.workplace,
-                address: reqData.address,
-                photoUrl: reqData.photoUrl,
-                docUrl: reqData.docUrl
+                name: reqData.name || '',
+                dob: reqData.dob || '',
+                category: reqData.category || '',
+                bloodGroup: reqData.bloodGroup || '',
+                aadhaar: reqData.aadhaar || '',
+                sevarthId: reqData.sevarthId || '',
+                designation: reqData.designation || '',
+                mandal: reqData.mandal || '',
+                district: reqData.district || '',
+                workplace: reqData.workplace || '',
+                joinDate: reqData.joinDate || '',
+                retireDate: reqData.retireDate || '',
+                mobile: reqData.mobile || '',
+                email: reqData.email || '',
+                address: reqData.address || '',
+                remarks: reqData.remarks || '',
+                photoUrl: reqData.photoUrl || '',
+                docUrl: reqData.docUrl || '',
+                otherUrl: reqData.otherUrl || '',
+                pass: reqData.pass || ''
             });
 
+            // अर्जाचा स्टेटस 'Approved' करणे
             await updateDoc(doc(db, "profile_edit_requests", reqId), { status: "Approved" });
 
-            await window.logAdminActivity(`Approved profile edit for member: ${reqData.name}`);
-            Swal.fire('मंजूर केले!', 'सदस्याची नवीन माहिती प्रोफाईलवर सेव्ह झाली आहे.', 'success');
+            await window.logAdminActivity(`Approved full profile edit for member: ${reqData.name}`);
+            Swal.fire('मंजूर केले!', 'सदस्याची नवीन भरलेली सर्व माहिती प्रोफाईलवर सेव्ह झाली आहे.', 'success');
 
             window.openProfileRequestsModal();
             loadData();
