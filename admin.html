@@ -601,7 +601,32 @@
                 </table>
             </div>
         </div>
+    </div><!-- 🌟 MEMBER PROFILE EDIT REQUESTS APPROVAL MODAL -->
+<div id="profileRequestsModalOverlay" class="custom-modal-overlay">
+    <div class="custom-modal" style="max-width:900px;">
+        <div class="custom-modal-header bg-warning" style="color:black;">
+            <h3><i class="fa fa-user-edit"></i> सदस्यांचे प्रोफाईल बदल अर्ज (Approval Pending)</h3>
+            <button onclick="closeModal('profileRequestsModalOverlay')" style="background:transparent; border:none; color:black; font-size:1.5rem; cursor:pointer;">&times;</button>
+        </div>
+        <div class="custom-modal-body">
+            <table style="font-size:0.88rem;">
+                <thead>
+                    <tr>
+                        <th>अ.क्र.</th>
+                        <th>सदस्याचे नाव व मोबाईल</th>
+                        <th>नवीन फोटो / डॉक्युमेंट</th>
+                        <th>बदललेली नवीन माहिती</th>
+                        <th>तारीख</th>
+                        <th style="text-align:center;">Action (मंजुरी निर्णय)</th>
+                    </tr>
+                </thead>
+                <tbody id="profileRequestsTableBody">
+                    <tr><td colspan="6" style="text-align:center;">कोणतेही प्रलंबित अर्ज नाहीत.</td></tr>
+                </tbody>
+            </table>
+        </div>
     </div>
+</div>
 
     <!-- 8. MEMBER I-CARD MODAL -->
     <div id="memberICardOverlay" class="custom-modal-overlay">
@@ -743,7 +768,10 @@
                 <span id="pending_requests_badge" class="badge bg-danger" style="cursor:pointer; font-size:0.9rem; padding:8px 12px;" onclick="openPendingRequests()">
                     <i class="fa fa-user-clock"></i> प्रलंबित अर्ज: <b id="pending_cnt">0</b>
                 </span>
-                
+                <!-- 🌟 प्रोफाईल बदल अर्जांचे नवीन बटण -->
+ <span id="profile_requests_badge" class="badge bg-warning" style="cursor:pointer; font-size:0.9rem; padding:8px 12px; margin-right:10px; color:#000;" onclick="openProfileRequestsModal()">
+    <i class="fa fa-user-edit"></i> प्रोफाईल बदल अर्ज: <b id="profile_req_cnt">0</b>
+</span>
                 <div style="text-align:right;">
                     <span id="login_user_name" style="font-weight:bold; color:var(--primary); display:block; font-size:0.95rem;"></span>
                     <span id="login_user_role" style="font-weight:bold; color:var(--success); font-size:0.8rem;"></span>
@@ -2225,6 +2253,7 @@
                 await window.logAdminActivity(`लॉगिन यशस्वी: ${currentLoggedInAdminName} (${currentLoggedInAdminDesignation})`);
                 
                 window.checkAndShowPopupNotice();
+                window.listenToProfileEditRequests();
             } 
             else { 
                 document.getElementById('login-screen').style.display = 'flex'; 
@@ -4727,6 +4756,100 @@ window.renderDashboard = function() {
             options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
         });
     } catch(err) { console.error(err); }
-};  </script>
+}; // ==========================================================
+// MEMBER PROFILE EDIT REQUESTS ENGINE FOR ADMIN
+// ==========================================================
+window.profileEditRequestsList = [];
+
+// १. प्रलंबित अर्जांची रिअल-टाईम संख्या मोजणे
+window.listenToProfileEditRequests = function() {
+    const q = query(collection(db, "profile_edit_requests"), where("status", "==", "Pending"));
+    onSnapshot(q, (snap) => {
+        window.profileEditRequestsList = [];
+        snap.forEach(d => window.profileEditRequestsList.push({ id: d.id, ...d.data() }));
+
+        let cntBadge = document.getElementById('profile_req_cnt');
+        if(cntBadge) cntBadge.innerText = window.profileEditRequestsList.length;
+    });
+};
+
+// २. पॉप-अप उघडून अर्जांची यादी दाखवणे
+window.openProfileRequestsModal = function() {
+    let tbody = document.getElementById('profileRequestsTableBody');
+    if(!tbody) return;
+
+    if(window.profileEditRequestsList.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:20px;">सध्या एकही प्रलंबित प्रोफाईल बदल अर्ज नाही.</td></tr>';
+    } else {
+        tbody.innerHTML = window.profileEditRequestsList.map((req, i) => `
+            <tr>
+                <td>${i + 1}</td>
+                <td><b>${req.name}</b><br><small>${req.designation || '-'}</small></td>
+                <td style="text-align:center;">
+                    ${req.photoUrl ? `<a href="${req.photoUrl}" target="_blank"><img src="${req.photoUrl}" style="width:45px; height:45px; border-radius:50%; object-fit:cover; border:2px solid var(--primary);"></a>` : 'फोटो नाही'}<br>
+                    ${req.docUrl ? `<a href="${req.docUrl}" target="_blank" class="badge bg-info"><i class="fa fa-file"></i> कागदपत्र</a>` : ''}
+                </td>
+                <td>
+                    <small>
+                        <b>रुग्णालय:</b> ${req.workplace || '-'}<br>
+                        <b>ईमेल:</b> ${req.email || '-'}<br>
+                        <b>सेवार्थ ID:</b> ${req.sevarthId || '-'}<br>
+                        <b>आधार:</b> ${req.aadhaar || '-'}
+                    </small>
+                </td>
+                <td><small>${req.updatedAt || '-'}</small></td>
+                <td style="text-align:center; white-space:nowrap;">
+                    <button class="btn-action bg-success" onclick="approveProfileEdit('${req.id}', '${req.memberId}')"><i class="fa fa-check"></i> मंजूर करा</button>
+                    <button class="btn-action bg-danger" onclick="rejectProfileEdit('${req.id}')"><i class="fa fa-times"></i> नाकारा</button>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    document.getElementById('profileRequestsModalOverlay').style.display = 'flex';
+};
+
+// ३. ॲडमिनने 'मंजूर करा' वर क्लिक केल्यावर डेटा मूळ मेंबर प्रोफाईलला अपडेट करणे
+window.approveProfileEdit = async function(reqId, memberId) {
+    let reqData = window.profileEditRequestsList.find(r => r.id === reqId);
+    if(!reqData) return;
+
+    if(confirm(`श्री/श्रीमती ${reqData.name} यांचे प्रोफाईल बदल मंजूर करायचे आहेत का?`)) {
+        Swal.fire({title: 'प्रोफाईल अपडेट होत आहे...', didOpen: () => Swal.showLoading()});
+        try {
+            await updateDoc(doc(db, "members", memberId), {
+                name: reqData.name,
+                designation: reqData.designation,
+                email: reqData.email,
+                sevarthId: reqData.sevarthId,
+                aadhaar: reqData.aadhaar,
+                dob: reqData.dob,
+                joinDate: reqData.joinDate,
+                bloodGroup: reqData.bloodGroup,
+                workplace: reqData.workplace,
+                address: reqData.address,
+                photoUrl: reqData.photoUrl,
+                docUrl: reqData.docUrl
+            });
+
+            await updateDoc(doc(db, "profile_edit_requests", reqId), { status: "Approved" });
+
+            await window.logAdminActivity(`Approved profile edit for member: ${reqData.name}`);
+            Swal.fire('मंजूर केले!', 'सदस्याची नवीन माहिती प्रोफाईलवर सेव्ह झाली आहे.', 'success');
+
+            window.openProfileRequestsModal();
+            loadData();
+        } catch(e) { Swal.fire('Error', e.message, 'error'); }
+    }
+};
+
+// ४. ॲडमिनने 'नाकारा' वर क्लिक केल्यास अर्ज नाकारणे
+window.rejectProfileEdit = async function(reqId) {
+    if(confirm("हा अर्ज नाकारायचा आहे का?")) {
+        await updateDoc(doc(db, "profile_edit_requests", reqId), { status: "Rejected" });
+        Swal.fire('नाकारले', 'अर्ज रद्द करण्यात आला.', 'info');
+        window.openProfileRequestsModal();
+    }
+}; </script>
 </body>
 </html>
