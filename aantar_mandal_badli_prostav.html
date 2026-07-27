@@ -16,6 +16,7 @@
     <style>
         * {
             font-variant-ligatures: normal !important;
+            letter-spacing: normal !important;
         }
 
         body {
@@ -141,7 +142,7 @@
             </div>
             <div class="flex items-center gap-3">
                 <button onclick="window.print()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg font-bold text-sm transition flex items-center gap-2 shadow">
-                    <i class="fa-solid fa-print"></i> प्रिंट करा
+                    <i class="fa-solid fa-print"></i> प्रिंट करा (Vector Print)
                 </button>
                 <button onclick="downloadPDF()" class="bg-amber-500 hover:bg-amber-600 text-slate-950 px-4 py-2 rounded-lg font-bold text-sm transition flex items-center gap-2 shadow">
                     <i class="fa-solid fa-file-pdf"></i> PDF डाऊनलोड करा
@@ -236,13 +237,22 @@
                     </div>
                 </div>
 
-                <!-- 2. Employee Details -->
+                <!-- 2. Employee Details & Gender Auto-Adaptation -->
                 <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
-                    <h3 class="font-bold text-sm text-slate-800 border-b pb-1"><i class="fa-solid fa-user-doctor text-indigo-600 ml-1"></i> २. कर्मचाऱ्याची सविस्तर माहिती</h3>
+                    <h3 class="font-bold text-sm text-slate-800 border-b pb-1"><i class="fa-solid fa-user-doctor text-indigo-600 ml-1"></i> २. कर्मचाऱ्याची माहिती व लिंग (Grammar Setting)</h3>
                     
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600">कर्मचाऱ्याचे संपूर्ण नाव:</label>
-                        <input type="text" id="empName" value="श्री. राहुल रमेश पाटील" oninput="updateAll()" class="w-full mt-1 p-2 text-sm border rounded-lg font-bold">
+                    <div class="grid grid-cols-3 gap-2">
+                        <div class="col-span-1">
+                            <label class="block text-xs font-bold text-indigo-900">लिंग (Gender):</label>
+                            <select id="empGender" onchange="updateAll()" class="w-full mt-1 p-2 text-sm border-2 border-indigo-500 rounded-lg font-bold text-indigo-900 bg-indigo-50">
+                                <option value="male">पुरुष (Male)</option>
+                                <option value="female">महिला (Female)</option>
+                            </select>
+                        </div>
+                        <div class="col-span-2">
+                            <label class="block text-xs font-semibold text-slate-600">कर्मचाऱ्याचे नाव (श्री./श्रीमती सोडून):</label>
+                            <input type="text" id="empNameRaw" value="राहुल रमेश पाटील" oninput="updateAll()" class="w-full mt-1 p-2 text-sm border rounded-lg font-bold">
+                        </div>
                     </div>
 
                     <div class="grid grid-cols-2 gap-2">
@@ -303,10 +313,10 @@
                     </div>
                 </div>
 
-                <!-- 3. Letterhead & Margin Settings -->
+                <!-- 3. Letterhead & Page-Specific Settings -->
                 <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-200 space-y-3">
                     <h3 class="font-bold text-sm text-indigo-900 border-b border-indigo-200 pb-1 flex justify-between items-center">
-                        <span><i class="fa-solid fa-image text-indigo-700 ml-1"></i> ३. लेटरपॅड व मार्जिन सेटिंग्ज</span>
+                        <span><i class="fa-solid fa-image text-indigo-700 ml-1"></i> ३. लेटरपॅड व मार्जिन (पानांनुसार)</span>
                     </h3>
                     
                     <div class="flex items-center justify-between">
@@ -315,33 +325,53 @@
                     </div>
 
                     <div>
-                        <label class="block text-xs font-semibold text-slate-600">वरची मार्जिन (Top Margin - Slider):</label>
+                        <label class="block text-xs font-semibold text-slate-600">वरची मार्जिन (Top Margin):</label>
                         <input type="range" id="marginTopSlider" min="0" max="100" value="18" oninput="adjustTopMargin(this.value)" class="w-full">
                         <span class="text-xs text-indigo-700 font-bold" id="marginVal">18 mm</span>
                     </div>
 
                     <div class="border-t border-indigo-200 pt-2 space-y-2">
-                        <label class="block text-xs font-bold text-slate-700">A4 लेटरपॅड फोटो अपलोड करा (मर्यादा: ५०० KB):</label>
+                        <label class="block text-xs font-bold text-slate-700">A4 लेटरपॅड फोटो अपलोड करा (५०० KB):</label>
                         
                         <div id="uploadContainer" class="bg-white p-2 rounded border border-slate-300">
                             <input type="file" id="letterheadFileInput" accept="image/*" onchange="uploadLogo(event)" class="w-full text-xs">
                         </div>
 
                         <p class="text-[11px] text-slate-600" id="uploadStatusMsg">
-                            एक वेळी एकच लेटरपॅड अपलोड होईल. (हे ७ दिवसांनी स्वयंचलित डिलीट होईल)
+                            अपलोड केलेले लेटरपॅड तुम्ही निवडलेल्या विशिष्ट पानांवरच दिसेल.
                         </p>
 
                         <button type="button" id="btnDeleteLogo" onclick="deleteLogo()" class="hidden bg-rose-600 hover:bg-rose-700 text-white text-xs px-3 py-1.5 rounded font-bold transition flex items-center gap-1 shadow">
                             <i class="fa-solid fa-trash"></i> सध्याचे लेटरपॅड डिलीट करा
                         </button>
+
+                        <div class="border-t border-indigo-200 pt-2">
+                            <label class="block text-xs font-bold text-indigo-950 mb-1">कोणत्या विशिष्ट पानांवर लेटरपॅड दाखवायचे? (Page Select):</label>
+                            <div id="pageSelectorContainer" class="space-y-1 text-xs max-h-40 overflow-y-auto bg-white p-2 rounded border border-indigo-200">
+                                <!-- Rendered dynamically by JS -->
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- 4. Checklist & Dynamic Certificate Generation Panel -->
+                <!-- 4. Parishisht-B Dynamic Row Addition Section -->
+                <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-200 space-y-3">
+                    <div class="flex justify-between items-center border-b border-emerald-200 pb-1">
+                        <h3 class="font-bold text-sm text-emerald-900">
+                            <i class="fa-solid fa-table-list text-emerald-700 ml-1"></i> ४. परिशिष्ट - ब (कोष्टक रो नियंत्रणे)
+                        </h3>
+                        <button type="button" onclick="addParishishtBRow()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs px-2.5 py-1 rounded font-bold shadow transition flex items-center gap-1">
+                            <i class="fa-solid fa-plus"></i> नवीन मुद्दा जोडा
+                        </button>
+                    </div>
+                    <p class="text-[11px] text-slate-600">परिशिष्ट-ब मध्ये आवश्यकतेनुसार अतिरिक्त रो/मुद्दे जोडा किंवा काढून टाका.</p>
+                </div>
+
+                <!-- 5. Checklist & Dynamic Certificate Panel -->
                 <div class="bg-amber-50 p-4 rounded-xl border border-amber-200 space-y-3">
                     <div class="flex justify-between items-center border-b border-amber-200 pb-1">
                         <h3 class="font-bold text-sm text-amber-900">
-                            <i class="fa-solid fa-list-check text-amber-700 ml-1"></i> ४. तपासणी सूची (परिशिष्ट-अ) व कागदपत्रे
+                            <i class="fa-solid fa-list-check text-amber-700 ml-1"></i> ५. तपासणी सूची (परिशिष्ट-अ) व कागदपत्रे
                         </h3>
                         <button type="button" onclick="addNewChecklistRow()" class="bg-amber-600 hover:bg-amber-700 text-white text-xs px-2.5 py-1 rounded font-bold shadow transition flex items-center gap-1">
                             <i class="fa-solid fa-plus"></i> नवीन डॉक्युमेंट जोडा
@@ -383,7 +413,7 @@
 
                     <div class="my-4 font-bold text-center bg-slate-100 p-2 rounded border border-slate-300">
                         विषय: सामान्य प्रशासन विभाग, शासन निर्णय दि. १५ मे २०१९ नुसार आंतर मंडळ विनंती बदली प्रस्तावास शिफारस करणेबाबत...<br>
-                        <span class="text-xs font-normal">(कर्मचारी: <span class="font-bold lbl_emp_name">श्री. राहुल रमेश पाटील</span>, <span class="lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>)</span>
+                        <span class="text-xs font-normal">(कर्मचारी: <span class="font-bold lbl_emp_full_name">श्री. राहुल रमेश पाटील</span>, <span class="lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>)</span>
                     </div>
 
                     <div class="text-xs my-2 font-semibold space-y-1">
@@ -393,7 +423,7 @@
 
                     <p class="mt-4 text-justify">महोदय,</p>
                     <p class="indent-8 text-justify mt-2">
-                        उपरोक्त विषयान्वये सविनय सादर करण्यात येते की, <span class="lbl_office_full">जिल्हा रुग्णालय, गडचिरोली, ता. गडचिरोली, जि. गडचिरोली</span> या कार्यालयाच्या आस्थापनेवर कार्यरत असणारे <span class="font-bold lbl_emp_name">श्री. राहुल रमेश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span> (<span class="lbl_emp_cadre">गट-क</span>) हे दिनांक <span class="font-bold lbl_emp_joindate">०३/०६/२०२१</span> पासून नियमित सेवेत कार्यरत आहेत.
+                        उपरोक्त विषयान्वये सविनय सादर करण्यात येते की, <span class="lbl_office_full">जिल्हा रुग्णालय, गडचिरोली, ता. गडचिरोली, जि. गडचिरोली</span> या कार्यालयाच्या आस्थापनेवर कार्यरत असणाऱ्या <span class="font-bold lbl_emp_full_name">श्री. राहुल रमेश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span> (<span class="lbl_emp_cadre">गट-क</span>) ह्या दिनांक <span class="font-bold lbl_emp_joindate">०३/०६/२०२१</span> पासून नियमित सेवेत कार्यरत आहेत.
                     </p>
 
                     <p class="indent-8 text-justify mt-3">
@@ -442,7 +472,7 @@
 
                     <p class="mt-4 text-justify">महोदय,</p>
                     <p class="indent-8 text-justify mt-2">
-                        मी खालील स्वाक्षरी करणारा <span class="font-bold lbl_emp_name">श्री. राहुल रमेश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, सध्या <span class="lbl_office_full">जिल्हा रुग्णालय, गडचिरोली</span> येथे कार्यरत आहे. माझी शासन सेवेतील प्रथम नियुक्ती दिनांक <span class="font-bold lbl_emp_joindate">०३/०६/२०२१</span> रोजी झालेली असून माझी सलग ५ वर्षे सेवा पूर्ण झालेली आहे.
+                        मी खालील स्वाक्षरी <span class="lbl_g_karnara">करणारा</span> <span class="font-bold lbl_emp_full_name">श्री. राहुल रमेश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, सध्या <span class="lbl_office_full">जिल्हा रुग्णालय, गडचिरोली</span> येथे कार्यरत आहे. माझी शासन सेवेतील प्रथम नियुक्ती दिनांक <span class="font-bold lbl_emp_joindate">०३/०६/२०२१</span> रोजी झालेली असून माझी सलग ५ वर्षे सेवा पूर्ण झालेली आहे.
                     </p>
 
                     <p class="indent-8 text-justify mt-3">
@@ -459,8 +489,8 @@
                             दिनांक: <span class="lbl_prop_date">०५/०६/२०२६</span>
                         </div>
                         <div class="text-center font-bold">
-                            आपला नम्र,<br><br><br>
-                            <p class="lbl_emp_name">श्री. राहुल रमेश पाटील</p>
+                            <span class="lbl_g_namra">आपला नम्र</span>,<br><br><br>
+                            <p class="lbl_emp_full_name">श्री. राहुल रमेश पाटील</p>
                             <p class="text-xs font-normal lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</p>
                         </div>
                     </div>
@@ -517,7 +547,7 @@
                 </div>
             </div>
 
-            <!-- DOC 4: परिशिष्ट - ब (२१ मुद्द्यांचा कर्मचारी सेवा तपशील) -->
+            <!-- DOC 4: परिशिष्ट - ब (कर्मचारी सेवा तपशील - Dynamic Rows) -->
             <div class="a4-page text-slate-900 text-sm leading-relaxed doc-container" id="doc_service_details" contenteditable="true">
                 <div class="a4-content">
                     <div class="text-center font-bold text-base mb-2">
@@ -533,33 +563,13 @@
                                 <th class="p-1 text-left">माहिती / स्थिती</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr><td class="p-1 text-center font-bold">१</td><td class="p-1">कर्मचाऱ्याचे संपूर्ण नाव</td><td class="p-1 font-bold lbl_emp_name">श्री. राहुल रमेश पाटील</td></tr>
-                            <tr><td class="p-1 text-center font-bold">२</td><td class="p-1">पदनाम व संवर्ग</td><td class="p-1"><span class="lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span> (<span class="lbl_emp_cadre">गट-क</span>)</td></tr>
-                            <tr><td class="p-1 text-center font-bold">३</td><td class="p-1">जन्म दिनांक</td><td class="p-1 lbl_emp_dob">११/१०/१९९५</td></tr>
-                            <tr><td class="p-1 text-center font-bold">४</td><td class="p-1">मूळ जातीचा प्रवर्ग</td><td class="p-1 font-bold lbl_emp_caste_category">भज-ड (NT-D)</td></tr>
-                            <tr><td class="p-1 text-center font-bold">५</td><td class="p-1">शासन सेवेत कोणत्या प्रवर्गातून/कोट्यातून नियुक्ती झाली?</td><td class="p-1 font-bold lbl_emp_appoint_category">खुला (सर्वसाधारण) / नामनिर्देशन</td></tr>
-                            <tr><td class="p-1 text-center font-bold">६</td><td class="p-1">धारण करीत असलेली शैक्षणिक अर्हता</td><td class="p-1 lbl_emp_edu">बी.एससी., एम.एससी.</td></tr>
-                            <tr><td class="p-1 text-center font-bold">७</td><td class="p-1">शासन सेवेत प्रत्यक्ष रुजू दिनांक</td><td class="p-1 font-bold lbl_emp_joindate">०३/०६/२०२१</td></tr>
-                            <tr><td class="p-1 text-center font-bold">८</td><td class="p-1">नियुक्तीचे क्षेत्र (अनुसूचित / बिगर अनुसूचित)</td><td class="p-1 font-bold lbl_emp_areatype">अनुसूचित क्षेत्र (PESA Area)</td></tr>
-                            <tr><td class="p-1 text-center font-bold">९</td><td class="p-1">सलग अर्हताकारी ५ वर्षे सेवा पूर्ण झाली आहे का?</td><td class="p-1 font-bold text-emerald-800">होय (दिनांक <span class="lbl_emp_service_5yr">०२/०६/२०२६</span> रोजी पूर्ण)</td></tr>
-                            <tr><td class="p-1 text-center font-bold">१०</td><td class="p-1">परिवीक्षाधीन कालावधी पूर्ण झाला आहे का?</td><td class="p-1 font-bold text-emerald-800">होय</td></tr>
-                            <tr><td class="p-1 text-center font-bold">११</td><td class="p-1">मूळ नियुक्तीच्या पदावर स्थायित्वाचे लाभ दिले आहेत का?</td><td class="p-1 font-bold text-emerald-800">होय</td></tr>
-                            <tr><td class="p-1 text-center font-bold">१२</td><td class="p-1">मराठी व हिंदी भाषा परीक्षा सूट / उत्तीर्ण?</td><td class="p-1">सूट प्राप्त आहे / उत्तीर्ण</td></tr>
-                            <tr><td class="p-1 text-center font-bold">१३</td><td class="p-1">संगणक अर्हता परीक्षा उत्तीर्ण प्रमाणपत्र सादर केले आहे का?</td><td class="p-1 font-bold text-emerald-800">होय (MS-CIT / CCC)</td></tr>
-                            <tr><td class="p-1 text-center font-bold">१४</td><td class="p-1">अनधिकृत गैरहजेरी / असाधारण रजा / सेवेत खंड आहे का?</td><td class="p-1 font-bold text-emerald-800">नाही</td></tr>
-                            <tr><td class="p-1 text-center font-bold">१५</td><td class="p-1">विभागीय चौकशी / न्यायालयीन प्रकरण प्रलंबित आहे का?</td><td class="p-1 font-bold text-emerald-800">नाही</td></tr>
-                            <tr><td class="p-1 text-center font-bold">१६</td><td class="p-1">चारित्र्य पडताळणी झाली आहे का?</td><td class="p-1 font-bold text-emerald-800">होय</td></tr>
-                            <tr><td class="p-1 text-center font-bold">१७</td><td class="p-1">शारीरिक वैद्यकीय फिटनेस तपासणी झाली आहे का?</td><td class="p-1 font-bold text-emerald-800">होय</td></tr>
-                            <tr><td class="p-1 text-center font-bold">१८</td><td class="p-1">लहान कुटुंबाचे प्रतिज्ञापत्र नियम २००५ नुसार सादर केले आहे का?</td><td class="p-1 font-bold text-emerald-800">होय</td></tr>
-                            <tr><td class="p-1 text-center font-bold">१९</td><td class="p-1">कायमस्वरूपी समावेशन यापूर्वी सेवेत एकदाही घेतलेले नाही?</td><td class="p-1 font-bold text-emerald-800">होय (खात्री केली आहे)</td></tr>
-                            <tr><td class="p-1 text-center font-bold">२०</td><td class="p-1">लगतच्या ५ वर्षांचे गोपनीय अहवाल किमान 'ब' दर्जाचे आहेत का?</td><td class="p-1 font-bold text-emerald-800">होय (संख्यात्मक गुण ४ पेक्षा जास्त)</td></tr>
-                            <tr><td class="p-1 text-center font-bold">२१</td><td class="p-1">मत्ता व दायित्व विवरणपत्र कार्यालयात सादर केले आहे का?</td><td class="p-1 font-bold text-emerald-800">होय</td></tr>
+                        <tbody id="parishishtBTableBody">
+                            <!-- Dynamically rendered via JS -->
                         </tbody>
                     </table>
 
                     <p class="text-xs text-justify font-semibold mt-2">
-                        प्रमाणित करण्यात येते की, उक्त कोष्टकात अ.क्र. १ ते २१ वर नमूद माहिती <span class="lbl_emp_name">श्री. राहुल रमेश पाटील</span> यांच्या मूळ सेवा अभिलेखाच्या आधारे तपासणी करून सादर करण्यात आलेली आहे.
+                        प्रमाणित करण्यात येते की, उक्त कोष्टकातील माहिती <span class="lbl_emp_full_name">श्री. राहुल रमेश पाटील</span> यांच्या मूळ सेवा अभिलेखाच्या आधारे तपासणी करून सादर करण्यात आलेली आहे.
                     </p>
 
                     <div class="mt-8 flex justify-between items-end">
@@ -595,7 +605,7 @@
                     </div>
 
                     <p class="indent-8 text-justify mt-6 leading-loose text-base">
-                        प्रमाणित करण्यात येते की, सामान्य प्रशासन विभाग, शासन निर्णय क्र. एसआरव्ही २०१६/प्र.क्र.५०९/कार्या.१२, दिनांक १५ मे २०१९ मधील अ.क्र. २ (१) मधील अटीनुसार <span class="font-bold text-lg lbl_emp_name">श्री. राहुल रमेश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यालय: <span class="font-bold lbl_office_full">जिल्हा रुग्णालय, गडचिरोली, ता. गडचिरोली, जि. गडचिरोली</span> यांची शासन सेवेत रुजू दिनांकापासून (<span class="font-bold lbl_emp_joindate">०३/०६/२०२१</span>) नियमित अर्हताकारी सलग ५ वर्षे सेवा दिनांक <span class="font-bold text-indigo-900 lbl_emp_service_5yr">०२/०६/२०२६</span> रोजी पूर्ण झालेली आहे.
+                        प्रमाणित करण्यात येते की, सामान्य प्रशासन विभाग, शासन निर्णय क्र. एसआरव्ही २०१६/प्र.क्र.५०९/कार्या.१२, दिनांक १५ मे २०१९ मधील अ.क्र. २ (१) मधील अटीनुसार <span class="font-bold text-lg lbl_emp_full_name">श्री. राहुल रमेश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यालय: <span class="font-bold lbl_office_full">जिल्हा रुग्णालय, गडचिरोली, ता. गडचिरोली, जि. गडचिरोली</span> यांची शासन सेवेत रुजू दिनांकापासून (<span class="font-bold lbl_emp_joindate">०३/०६/२०२१</span>) नियमित अर्हताकारी सलग ५ वर्षे सेवा दिनांक <span class="font-bold text-indigo-900 lbl_emp_service_5yr">०२/०६/२०२६</span> रोजी पूर्ण झालेली आहे.
                     </p>
 
                     <p class="mt-6 text-justify">
@@ -632,7 +642,7 @@
                     </div>
 
                     <p class="indent-8 text-justify text-sm leading-relaxed">
-                        मी <span class="font-bold text-base lbl_emp_name">श्री. राहुल रमेश पाटील</span> असे नमूद करतो की, माझी <span class="font-bold lbl_office_full">जिल्हा रुग्णालय, गडचिरोली</span> या कार्यालयात <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span> या पदावर सरळसेवेने <span class="font-bold lbl_emp_appoint_category">खुला (सर्वसाधारण) / नामनिर्देशन</span> प्रवर्गातून दिनांक <span class="font-bold lbl_emp_joindate">०३/०६/२०२१</span> रोजी नियुक्ती झाली आहे.
+                        मी <span class="font-bold text-base lbl_emp_full_name">श्री. राहुल रमेश पाटील</span> असे <span class="lbl_g_karto">नमूद करतो</span> की, माझी <span class="font-bold lbl_office_full">जिल्हा रुग्णालय, गडचिरोली</span> या कार्यालयात <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span> या पदावर सरळसेवेने <span class="font-bold lbl_emp_appoint_category">खुला (सर्वसाधारण) / नामनिर्देशन</span> प्रवर्गातून दिनांक <span class="font-bold lbl_emp_joindate">०३/०६/२०२१</span> रोजी नियुक्ती झाली आहे.
                     </p>
 
                     <p class="indent-8 text-justify text-sm leading-relaxed mt-2">
@@ -659,8 +669,8 @@
                             दिनांक: <span class="lbl_prop_date">०५/०६/२०२६</span>
                         </div>
                         <div class="text-center font-bold">
-                            बंधपत्र देणारा (स्वाक्षरी),<br><br><br>
-                            <p class="lbl_emp_name">श्री. राहुल रमेश पाटील</p>
+                            बंधपत्र <span class="lbl_g_denara">देणारा</span> (स्वाक्षरी),<br><br><br>
+                            <p class="lbl_emp_full_name">श्री. राहुल रमेश पाटील</p>
                             <p class="text-xs font-normal lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</p>
                         </div>
                     </div>
@@ -685,7 +695,7 @@
                     </div>
 
                     <p class="indent-8 text-justify mt-6 leading-loose text-base">
-                        प्रमाणित करण्यात येते की, <span class="font-bold text-lg lbl_emp_name">श्री. राहुल रमेश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, हे <span class="lbl_office_full">जिल्हा रुग्णालय, गडचिरोली</span> येथे नियमित सेवेत कार्यरत आहेत.
+                        प्रमाणित करण्यात येते की, <span class="font-bold text-lg lbl_emp_full_name">श्री. राहुल रमेश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, ह्या <span class="lbl_office_full">जिल्हा रुग्णालय, गडचिरोली</span> येथे नियमित सेवेत कार्यरत आहेत.
                     </p>
 
                     <p class="indent-8 text-justify mt-4 leading-loose text-base">
@@ -724,7 +734,7 @@
                     </div>
 
                     <p class="indent-8 text-justify mt-6 leading-loose text-base">
-                        प्रमाणित करण्यात येते की, <span class="font-bold text-lg lbl_emp_name">श्री. राहुल रमेश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यरत: <span class="lbl_office_full">जिल्हा रुग्णालय, गडचिरोली</span> यांच्या सेवा अभिलेखाची तपासणी केली असता, त्यांनी त्यांच्या सेवाकाळात कोणतीही अनधिकृत गैरहजेरी केलेली नाही, सेवेत कोणताही खंड पडलेला नाही तसेच असाधारण रजा (Extra Ordinary Leave) उपभोगलेली नाही.
+                        प्रमाणित करण्यात येते की, <span class="font-bold text-lg lbl_emp_full_name">श्री. राहुल रमेश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यरत: <span class="lbl_office_full">जिल्हा रुग्णालय, गडचिरोली</span> यांच्या सेवा अभिलेखाची तपासणी केली असता, त्यांनी त्यांच्या सेवाकाळात कोणतीही अनधिकृत गैरहजेरी केलेली नाही, सेवेत कोणताही खंड पडलेला नाही तसेच असाधारण रजा (Extra Ordinary Leave) उपभोगलेली नाही.
                     </p>
 
                     <div class="mt-28 flex justify-between items-end">
@@ -759,7 +769,7 @@
                     </div>
 
                     <p class="indent-8 text-justify mt-6 leading-loose text-base">
-                        प्रमाणित करण्यात येते की, <span class="font-bold text-lg lbl_emp_name">श्री. राहुल रमेश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, यांनी त्यांच्या संपूर्ण शासकीय सेवाकाळात यापूर्वी कर्मचाऱ्यांच्या विनंतीवरून करण्यात येणाऱ्या कायमस्वरूपी समावेशनाचा (आंतर मंडळ बदली) लाभ एकदाही घेतलेला नाही असे मूळ सेवापुस्तकातील नोंदींवरून दिसून येते.
+                        प्रमाणित करण्यात येते की, <span class="font-bold text-lg lbl_emp_full_name">श्री. राहुल रमेश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, यांनी त्यांच्या संपूर्ण शासकीय सेवाकाळात यापूर्वी कर्मचाऱ्यांच्या विनंतीवरून करण्यात येणाऱ्या कायमस्वरूपी समावेशनाचा (आंतर मंडळ बदली) लाभ एकदाही घेतलेला नाही असे मूळ सेवापुस्तकातील नोंदींवरून दिसून येते.
                     </p>
 
                     <div class="mt-28 flex justify-between items-end">
@@ -794,7 +804,7 @@
                     </div>
 
                     <p class="indent-8 text-justify mt-6 leading-loose text-base">
-                        प्रमाणित करण्यात येते की, <span class="font-bold text-lg lbl_emp_name">श्री. राहुल रमेश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यरत: <span class="lbl_office_full">जिल्हा रुग्णालय, गडचिरोली</span> यांच्याकडे या कार्यालयाचे कोणतेही शासकीय देयक, आगाऊ रक्कम, साहित्य, साधने किंवा उपकरणे प्रलंबित नाहीत. त्यामुळे त्यांना हे ना-देय प्रमाणपत्र निर्गमित करण्यात येत आहे.
+                        प्रमाणित करण्यात येते की, <span class="font-bold text-lg lbl_emp_full_name">श्री. राहुल रमेश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यरत: <span class="lbl_office_full">जिल्हा रुग्णालय, गडचिरोली</span> यांच्याकडे या कार्यालयाचे कोणतेही शासकीय देयक, आगाऊ रक्कम, साहित्य, साधने किंवा उपकरणे प्रलंबित नाहीत. त्यामुळे त्यांना हे ना-देय प्रमाणपत्र निर्गमित करण्यात येत आहे.
                     </p>
 
                     <div class="mt-28 flex justify-between items-end">
@@ -814,7 +824,8 @@
                     <span>https://xrayunionmah.web.app</span>
                 </div>
             </div>
-<!-- DOC 11: शून्य सेवा ज्येष्ठता (Zero Seniority) हमीपत्र -->
+
+            <!-- DOC 11: शून्य सेवा ज्येष्ठता (Zero Seniority) हमीपत्र -->
             <div class="a4-page text-slate-900 text-sm leading-relaxed doc-container" id="doc_zero_seniority" contenteditable="true">
                 <div class="a4-content">
                     <div class="text-center font-bold text-base my-6 underline">
@@ -822,7 +833,7 @@
                     </div>
 
                     <p class="indent-8 text-justify mt-6 leading-loose text-base">
-                        मी <span class="font-bold text-lg lbl_emp_name">श्री. राहुल रमेश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यरत: <span class="font-bold lbl_office_full">जिल्हा रुग्णालय, गडचिरोली</span> याद्वारे लिखित हमीपत्र देतो की, माझी विनंती आंतर मंडळ बदली मंजूर झाल्यास <span class="font-bold lbl_target_circle">लातूर मंडळ</span> च्या आस्थापनेवर जाण्यास मी पूर्णतः तयार आहे.
+                        मी <span class="font-bold text-lg lbl_emp_full_name">श्री. राहुल रमेश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यरत: <span class="font-bold lbl_office_full">जिल्हा रुग्णालय, गडचिरोली</span> याद्वारे लिखित हमीपत्र <span class="lbl_g_deto">देतो</span> की, माझी विनंती आंतर मंडळ बदली मंजूर झाल्यास <span class="font-bold lbl_target_circle">लातूर मंडळ</span> च्या आस्थापनेवर जाण्यास मी पूर्णतः तयार आहे.
                     </p>
 
                     <p class="indent-8 text-justify mt-4 leading-loose text-base">
@@ -835,8 +846,8 @@
                             दिनांक: <span class="lbl_prop_date">०५/०६/२०२६</span>
                         </div>
                         <div class="text-center font-bold">
-                            हमीपत्र देणारा (स्वाक्षरी),<br><br><br>
-                            <p class="lbl_emp_name">श्री. राहुल रमेश पाटील</p>
+                            हमीपत्र <span class="lbl_g_denara">देणारा</span> (स्वाक्षरी),<br><br><br>
+                            <p class="lbl_emp_full_name">श्री. राहुल रमेश पाटील</p>
                             <p class="text-xs font-normal lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</p>
                         </div>
                     </div>
@@ -856,7 +867,7 @@
                     </div>
 
                     <p class="indent-8 text-justify mt-6 leading-loose text-base">
-                        मी <span class="font-bold text-lg lbl_emp_name">श्री. राहुल रमेश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span> याद्वारे प्रमाणित करतो की, माझ्या आंतर मंडळ कायमस्वरूपी समावेशनाबाबत सक्षम प्राधिकाऱ्याकडून आदेश निर्गमित झाल्यानंतर माझा मूळ कार्यालयातील (<span class="lbl_office_full">जिल्हा रुग्णालय, गडचिरोली</span>) पदावरील कोणताही धारणाधिकार (Lien) राहणार नाही याची मला पूर्ण जाणीव आहे.
+                        मी <span class="font-bold text-lg lbl_emp_full_name">श्री. राहुल रमेश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span> याद्वारे <span class="lbl_g_pramanit_karto">प्रमाणित करतो</span> की, माझ्या आंतर मंडळ कायमस्वरूपी समावेशनाबाबत सक्षम प्राधिकाऱ्याकडून आदेश निर्गमित झाल्यानंतर माझा मूळ कार्यालयातील (<span class="lbl_office_full">जिल्हा रुग्णालय, गडचिरोली</span>) पदावरील कोणताही धारणाधिकार (Lien) राहणार नाही याची मला पूर्ण जाणीव आहे.
                     </p>
 
                     <p class="indent-8 text-justify mt-4 leading-loose text-base">
@@ -869,8 +880,8 @@
                             दिनांक: <span class="lbl_prop_date">०५/०६/२०२६</span>
                         </div>
                         <div class="text-center font-bold">
-                            हमीपत्र देणारा (स्वाक्षरी),<br><br><br>
-                            <p class="lbl_emp_name">श्री. राहुल रमेश पाटील</p>
+                            हमीपत्र <span class="lbl_g_denara">देणारा</span> (स्वाक्षरी),<br><br><br>
+                            <p class="lbl_emp_full_name">श्री. राहुल रमेश पाटील</p>
                             <p class="text-xs font-normal lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</p>
                         </div>
                     </div>
@@ -888,7 +899,7 @@
         </div>
     </div>
 
-    <!-- JavaScript Core Engine -->
+    <!-- JavaScript Engine -->
     <script>
         // Master Checklist Items (Parishisht-A)
         let checklistItems = [
@@ -905,6 +916,79 @@
             { id: 'doc_zero_seniority', name: '११. शून्य सेवा ज्येष्ठता व स्वखर्च हमीपत्र', status: 'जोडले आहे', enabled: true },
             { id: 'doc_lien_relinquish', name: '१२. धारणाधिकार (Lien) समाप्ती हमीपत्र', status: 'जोडले आहे', enabled: true }
         ];
+
+        // Default Parishisht-B Items Array
+        let parishishtBItems = [
+            { desc: "कर्मचाऱ्याचे संपूर्ण नाव", valKey: "lbl_emp_full_name", isDynamic: false },
+            { desc: "पदनाम व संवर्ग", htmlVal: `<span class="lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span> (<span class="lbl_emp_cadre">गट-क</span>)` },
+            { desc: "जन्म दिनांक", valKey: "lbl_emp_dob" },
+            { desc: "मूळ जातीचा प्रवर्ग", valKey: "lbl_emp_caste_category", isBold: true },
+            { desc: "शासन सेवेत कोणत्या प्रवर्गातून/कोट्यातून नियुक्ती झाली?", valKey: "lbl_emp_appoint_category", isBold: true },
+            { desc: "धारण करीत असलेली शैक्षणिक अर्हता", valKey: "lbl_emp_edu" },
+            { desc: "शासन सेवेत प्रत्यक्ष रुजू दिनांक", valKey: "lbl_emp_joindate", isBold: true },
+            { desc: "नियुक्तीचे क्षेत्र (अनुसूचित / बिगर अनुसूचित)", valKey: "lbl_emp_areatype", isBold: true },
+            { desc: "सलग अर्हताकारी ५ वर्षे सेवा पूर्ण झाली आहे का?", htmlVal: `होय (दिनांक <span class="lbl_emp_service_5yr">०२/०६/२०२६</span> रोजी पूर्ण)`, isBold: true, textClass: "text-emerald-800" },
+            { desc: "परिवीक्षाधीन कालावधी पूर्ण झाला आहे का?", defaultText: "होय", isBold: true, textClass: "text-emerald-800" },
+            { desc: "मूळ नियुक्तीच्या पदावर स्थायित्वाचे लाभ दिले आहेत का?", defaultText: "होय", isBold: true, textClass: "text-emerald-800" },
+            { desc: "मराठी व हिंदी भाषा परीक्षा सूट / उत्तीर्ण?", defaultText: "सूट प्राप्त आहे / उत्तीर्ण" },
+            { desc: "संगणक अर्हता परीक्षा उत्तीर्ण प्रमाणपत्र सादर केले आहे का?", defaultText: "होय (MS-CIT / CCC)", isBold: true, textClass: "text-emerald-800" },
+            { desc: "अनधिकृत गैरहजेरी / असाधारण रजा / सेवेत खंड आहे का?", defaultText: "नाही", isBold: true, textClass: "text-emerald-800" },
+            { desc: "विभागीय चौकशी / न्यायालयीन प्रकरण प्रलंबित आहे का?", defaultText: "नाही", isBold: true, textClass: "text-emerald-800" },
+            { desc: "चारित्र्य पडताळणी झाली आहे का?", defaultText: "होय", isBold: true, textClass: "text-emerald-800" },
+            { desc: "शारीरिक वैद्यकीय फिटनेस तपासणी झाली आहे का?", defaultText: "होय", isBold: true, textClass: "text-emerald-800" },
+            { desc: "लहान कुटुंबाचे प्रतिज्ञापत्र नियम २००५ नुसार सादर केले आहे का?", defaultText: "होय", isBold: true, textClass: "text-emerald-800" },
+            { desc: "कायमस्वरूपी समावेशन यापूर्वी सेवेत एकदाही घेतलेले नाही?", defaultText: "होय (खात्री केली आहे)", isBold: true, textClass: "text-emerald-800" },
+            { desc: "लगतच्या ५ वर्षांचे गोपनीय अहवाल किमान 'ब' दर्जाचे आहेत का?", defaultText: "होय (संख्यात्मक गुण ४ पेक्षा जास्त)", isBold: true, textClass: "text-emerald-800" },
+            { desc: "मत्ता व दायित्व विवरणपत्र कार्यालयात सादर केले आहे का?", defaultText: "होय", isBold: true, textClass: "text-emerald-800" }
+        ];
+
+        // Track page-specific letterhead toggles
+        let pageLetterheadSelected = {};
+
+        // --- Render Parishisht-B Table ---
+        function renderParishishtBTable() {
+            const tbody = document.getElementById('parishishtBTableBody');
+            if(!tbody) return;
+            tbody.innerHTML = '';
+
+            parishishtBItems.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                let boldClass = item.isBold ? 'font-bold' : '';
+                let textColClass = item.textClass || '';
+
+                let valContent = '';
+                if (item.htmlVal) {
+                    valContent = item.htmlVal;
+                } else if (item.valKey) {
+                    valContent = `<span class="${item.valKey}"></span>`;
+                } else {
+                    valContent = item.defaultText || '';
+                }
+
+                tr.innerHTML = `
+                    <td class="p-1 text-center font-bold">${index + 1}</td>
+                    <td class="p-1">${item.desc}</td>
+                    <td class="p-1 ${boldClass} ${textColClass}">${valContent}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+            updateAllLabelsOnly();
+        }
+
+        function addParishishtBRow() {
+            const rowDesc = prompt("परिशिष्ट-ब मधील नवीन मुद्द्याचे विवरण (तपशील) टाका:");
+            if (!rowDesc) return;
+            const rowVal = prompt("या मुद्द्याची माहिती/स्थिती टाका (उदा. होय / नाही / लागू नाही):", "होय");
+            
+            parishishtBItems.push({
+                desc: rowDesc,
+                defaultText: rowVal || "होय",
+                isBold: true,
+                textClass: "text-emerald-800"
+            });
+
+            renderParishishtBTable();
+        }
 
         // --- Checklist Controls Rendering ---
         function renderChecklistControls() {
@@ -937,11 +1021,13 @@
             });
 
             renderChecklistTable();
+            renderPageSelectorUI();
         }
 
         function updateItemName(index, val) {
             checklistItems[index].name = val;
             renderChecklistTable();
+            renderPageSelectorUI();
         }
 
         function updateItemStatus(index, val) {
@@ -960,6 +1046,7 @@
                 }
             }
             renderChecklistTable();
+            renderPageSelectorUI();
         }
 
         function addNewChecklistRow() {
@@ -999,7 +1086,7 @@
                     </div>
 
                     <p class="indent-8 text-justify mt-6 leading-loose text-base">
-                        प्रमाणित करण्यात येते की, <span class="font-bold text-lg lbl_emp_name">श्री. राहुल रमेश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यालय: <span class="font-bold lbl_office_full">जिल्हा रुग्णालय, गडचिरोली</span> यांच्या सेवा अभिलेखाची पडताळणी केली असता... (येथे तुमचा मजकूर टाईप करा).
+                        प्रमाणित करण्यात येते की, <span class="font-bold text-lg lbl_emp_full_name">श्री. राहुल रमेश पाटील</span>, पदनाम: <span class="font-bold lbl_emp_post">क्ष-किरण वैज्ञानिक अधिकारी</span>, कार्यालय: <span class="font-bold lbl_office_full">जिल्हा रुग्णालय, गडचिरोली</span> यांच्या सेवा अभिलेखाची पडताळणी केली असता... (येथे तुमचा मजकूर टाईप करा).
                     </p>
 
                     <div class="mt-32 flex justify-between items-end">
@@ -1055,6 +1142,35 @@
             });
         }
 
+        // Render page selector controls for Letterhead
+        function renderPageSelectorUI() {
+            const container = document.getElementById('pageSelectorContainer');
+            if(!container) return;
+            container.innerHTML = '';
+
+            checklistItems.forEach((item) => {
+                if(!item.id || !item.enabled) return;
+
+                if (pageLetterheadSelected[item.id] === undefined) {
+                    pageLetterheadSelected[item.id] = true; // Default enable
+                }
+
+                const div = document.createElement('label');
+                div.className = 'flex items-center gap-2 cursor-pointer hover:bg-slate-50 p-1 rounded';
+                div.innerHTML = `
+                    <input type="checkbox" ${pageLetterheadSelected[item.id] ? 'checked' : ''} onchange="togglePageLetterhead('${item.id}', this.checked)" class="h-3.5 w-3.5 text-indigo-600 rounded">
+                    <span class="text-slate-800 text-[11px] truncate">${item.name}</span>
+                `;
+                container.appendChild(div);
+            });
+            applyLogoToDocuments();
+        }
+
+        function togglePageLetterhead(docId, isChecked) {
+            pageLetterheadSelected[docId] = isChecked;
+            applyLogoToDocuments();
+        }
+
         // --- Head Designation Changes ---
         function handleHeadDesignationChange(val) {
             const customInput = document.getElementById('customHeadDesignation');
@@ -1074,8 +1190,17 @@
             return sel;
         }
 
-        // --- Master Dynamic Update Function ---
+        // --- Master Dynamic Update Function & Gender Auto-Grammar Engine ---
         function updateAll() {
+            updateAllLabelsOnly();
+        }
+
+        function updateAllLabelsOnly() {
+            const gender = document.getElementById('empGender').value || 'male';
+            const prefix = (gender === 'female') ? 'श्रीमती' : 'श्री.';
+            const rawName = document.getElementById('empNameRaw').value || '';
+            const fullName = `${prefix} ${rawName}`.trim();
+
             const headDesig = getHeadDesignation();
             const office = document.getElementById('officeName').value || '';
             const taluka = document.getElementById('officeTaluka').value || '';
@@ -1088,7 +1213,6 @@
             const outward = document.getElementById('outwardNo').value || '';
             const propDate = document.getElementById('proposalDate').value || '';
 
-            const empName = document.getElementById('empName').value || '';
             const empPost = document.getElementById('empPost').value || '';
             const empCadre = document.getElementById('empCadre').value || '';
             const empCasteCategory = document.getElementById('empCasteCategory').value || '';
@@ -1108,7 +1232,7 @@
             document.querySelectorAll('.lbl_sign_office').forEach(el => el.innerText = `${office}, जि. ${dist}`);
             document.querySelectorAll('.lbl_place').forEach(el => el.innerText = place);
 
-            document.querySelectorAll('.lbl_emp_name').forEach(el => el.innerText = empName);
+            document.querySelectorAll('.lbl_emp_full_name').forEach(el => el.innerText = fullName);
             document.querySelectorAll('.lbl_emp_post').forEach(el => el.innerText = empPost);
             document.querySelectorAll('.lbl_emp_cadre').forEach(el => el.innerText = empCadre);
             document.querySelectorAll('.lbl_emp_caste_category').forEach(el => el.innerText = empCasteCategory);
@@ -1128,13 +1252,21 @@
             document.querySelectorAll('.lbl_outward').forEach(el => el.innerText = outward);
             document.querySelectorAll('.lbl_prop_date').forEach(el => el.innerText = propDate);
 
+            // Gender Grammar Auto-Swaps
+            document.querySelectorAll('.lbl_g_karnara').forEach(el => el.innerText = (gender === 'female') ? 'करणारी' : 'करणारा');
+            document.querySelectorAll('.lbl_g_namra').forEach(el => el.innerText = (gender === 'female') ? 'आपली नम्र' : 'आपला नम्र');
+            document.querySelectorAll('.lbl_g_karto').forEach(el => el.innerText = (gender === 'female') ? 'नमूद करते' : 'नमूद करतो');
+            document.querySelectorAll('.lbl_g_denara').forEach(el => el.innerText = (gender === 'female') ? 'देणारी' : 'देणारा');
+            document.querySelectorAll('.lbl_g_deto').forEach(el => el.innerText = (gender === 'female') ? 'देते' : 'देतो');
+            document.querySelectorAll('.lbl_g_pramanit_karto').forEach(el => el.innerText = (gender === 'female') ? 'प्रमाणित करते' : 'प्रमाणित करतो');
+
             const lblHigher = document.getElementById('lbl_higher_auth');
             if (lblHigher) lblHigher.innerText = higherAuth;
             
             document.querySelectorAll('.lbl_office_sub').forEach(el => el.innerText = `जिल्हा: ${dist} | पिन कोड: ४४२६०६`);
         }
 
-        // --- Letterhead Upload & Margin Control ---
+        // --- Letterhead Upload & Page Control ---
         const LOGO_STORAGE_KEY = 'interboard_letterhead_bg';
         const LOGO_TIME_KEY = 'interboard_letterhead_timestamp';
         let currentLogoSrc = null;
@@ -1200,7 +1332,7 @@
             fileInput.disabled = true;
             document.getElementById('uploadContainer').classList.add('bg-slate-100', 'cursor-not-allowed');
             document.getElementById('btnDeleteLogo').classList.remove('hidden');
-            document.getElementById('uploadStatusMsg').innerHTML = '<span class="text-emerald-700 font-bold"><i class="fa-solid fa-circle-check"></i> लेटरपॅड जोडले आहे.</span>';
+            document.getElementById('uploadStatusMsg').innerHTML = '<span class="text-emerald-700 font-bold"><i class="fa-solid fa-circle-check"></i> लेटरपॅड लोड केले आहे.</span>';
         }
 
         function deleteLogo() {
@@ -1216,39 +1348,49 @@
             document.querySelectorAll('.letterhead-bg-img').forEach(img => img.remove());
             
             document.getElementById('btnDeleteLogo').classList.add('hidden');
-            document.getElementById('uploadStatusMsg').innerText = 'एक वेळी एकच लेटरपॅड अपलोड होईल. (हे ७ दिवसांनी स्वयंचलित डिलीट होईल)';
+            document.getElementById('uploadStatusMsg').innerText = 'अपलोड केलेले लेटरपॅड तुम्ही निवडलेल्या विशिष्ट पानांवरच दिसेल.';
         }
 
         function applyLogoToDocuments() {
-            if (!currentLogoSrc) return;
-
             document.querySelectorAll('.a4-page').forEach(page => {
+                const docId = page.id;
                 let img = page.querySelector('.letterhead-bg-img');
-                if (!img) {
-                    img = document.createElement('img');
-                    img.className = 'letterhead-bg-img';
-                    page.insertBefore(img, page.firstChild);
+
+                if (currentLogoSrc && pageLetterheadSelected[docId]) {
+                    if (!img) {
+                        img = document.createElement('img');
+                        img.className = 'letterhead-bg-img';
+                        page.insertBefore(img, page.firstChild);
+                    }
+                    img.src = currentLogoSrc;
+                } else {
+                    if (img) img.remove();
                 }
-                img.src = currentLogoSrc;
             });
         }
 
-        // --- High Quality PDF Export ---
-        function downloadPDF() {
+        // --- Optimized High Quality Devanagari PDF Export Engine ---
+        async function downloadPDF() {
             const element = document.getElementById('printableArea');
-            const empName = document.getElementById('empName').value || 'Employee';
+            const rawName = document.getElementById('empNameRaw').value || 'Employee';
             
             window.scrollTo(0, 0);
 
+            // Wait for fonts to fully load to prevent Unicode / ligature distortion in canvas
+            if (document.fonts && document.fonts.ready) {
+                await document.fonts.ready;
+            }
+
             const opt = {
                 margin:       [0, 0, 0, 0],
-                filename:     `InterBoard_Transfer_Proposal_${empName}.pdf`,
+                filename:     `InterBoard_Transfer_Proposal_${rawName}.pdf`,
                 image:        { type: 'jpeg', quality: 0.98 },
                 html2canvas:  { 
                     scale: 2, 
                     useCORS: true, 
                     scrollY: 0,
-                    letterRendering: false
+                    letterRendering: true,
+                    allowTaint: true
                 },
                 jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
                 pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
@@ -1257,8 +1399,9 @@
             html2pdf().set(opt).from(element).save();
         }
 
-        // Initialize on Load
+        // Initialize Engine
         window.onload = function() {
+            renderParishishtBTable();
             renderChecklistControls();
             updateAll();
             checkLogoExpiryAndLoad();
