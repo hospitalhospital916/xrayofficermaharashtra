@@ -3099,33 +3099,74 @@
             }
         };
 
+      // १. तारखेतील अनावश्यक वेळ (00:00:00) काढून स्वच्छ करणारे लहान फंक्शन
+        function cleanVal(val) {
+            if (!val || val === '-' || val === 'undefined' || val === 'null') return '';
+            if (val instanceof Date) {
+                let day = String(val.getDate()).padStart(2, '0');
+                let month = String(val.getMonth() + 1).padStart(2, '0');
+                let year = val.getFullYear();
+                return `${day}/${month}/${year}`;
+            }
+            return String(val).replace(' 00:00:00', '').trim();
+        }
+
+        // २. अद्ययावत इम्पोर्ट फंक्शन (मराठी व इंग्लिश दोन्ही हेडर ऑटो-डिटेक्ट करेल)
         window.importEmployeeData = (e) => {
-            let file = e.target.files[0]; if(!file) return;
+            let file = e.target.files[0]; 
+            if (!file) return;
+
             let reader = new FileReader();
             reader.onload = async (evt) => {
                 let data = new Uint8Array(evt.target.result);
-                let workbook = XLSX.read(data, { type: 'array' });
+                let workbook = XLSX.read(data, { type: 'array', cellDates: true });
                 let sheet = workbook.Sheets[workbook.SheetNames[0]];
-                let rows = XLSX.utils.sheet_to_json(sheet);
-                
-                Swal.fire({title: 'कर्मचारी डेटा फीड होत आहे...', didOpen: () => Swal.showLoading()});
-                for(let r of rows) {
-                    let obj = {
-                        name: r['नाव'] || r['Name'] || '', post: r['पद'] || r['Post'] || '',
-                        category: r['प्रवर्ग'] || r['Category'] || '', mobile: String(r['मोबाईल'] || r['Mobile'] || ''),
-                        dob: r['जन्मतारीख'] || r['DOB'] || '',
-                        workplace: r['सध्या कार्यरत ठिकाण'] || r['Workplace'] || '', district: r['जिल्हा'] || r['District'] || '',
-                        mandal: r['मंडळ'] || r['Mandal'] || '', joinDate: r['रुजू दिनांक'] || r['Join Date'] || '',
-                        remarks: r['अभिप्राय'] || r['शेरा'] || '', empStatus: 'Active'
-                    };
-                    if(obj.name) await addDoc(collection(db, "other_staff"), obj);
+                let rows = XLSX.utils.sheet_to_json(sheet, { defval: "" });
+
+                Swal.fire({
+                    title: 'कर्मचारी डेटा फीड होत आहे...',
+                    allowOutsideClick: false,
+                    didOpen: () => Swal.showLoading()
+                });
+
+                try {
+                    let count = 0;
+                    for (let r of rows) {
+                        // मराठी व इंग्रजी दोन्ही प्रकारच्या कॉलमच्या नावांची तपासणी
+                        let name = r['Employee Name'] || r['नाव'] || r['Name'] || r['Full Name'] || r['कर्मचारी नाव'] || '';
+                        
+                        if (name && String(name).trim() !== '' && String(name).trim() !== '-') {
+                            let obj = {
+                                name: String(name).trim(),
+                                post: r['पद'] || r['Post'] || r['Designation'] || r['Qualification'] || 'X-Ray Scientific Officer',
+                                category: r['Caste Category'] || r['प्रवर्ग'] || r['Category'] || r['Recruitment Category'] || '',
+                                mobile: cleanVal(r['मोबाईल'] || r['Mobile'] || r['Contact'] || r['Mobile No']),
+                                dob: cleanVal(r['Date of Birth'] || r['जन्मतारीख'] || r['DOB']),
+                                workplace: r['Office Name / Workplace'] || r['सध्या कार्यरत ठिकाण'] || r['Workplace'] || r['Office Name'] || '',
+                                transferPosting: r['Transfer Posting'] || r['बदलीने पदस्थापना'] || '',
+                                rejoinedWorkplace: r['Rejoined Workplace'] || r['पुन्हा कार्यरत ठिकाण'] || '',
+                                district: r['District'] || r['जिल्हा'] || '',
+                                mandal: r['Circle (Mandal)'] || r['Circle'] || r['Mandal'] || r['मंडळ'] || '',
+                                joinDate: cleanVal(r['Initial Appointment Date'] || r['रुजू दिनांक'] || r['Join Date'] || r['Appointment Date']),
+                                retireDate: cleanVal(r['Date of Retirement'] || r['सेवानिवृत्ती दिनांक'] || r['Retirement Date']),
+                                remarks: r['Remarks'] || r['अभिप्राय'] || r['शेरा'] || '',
+                                empStatus: 'Active'
+                            };
+
+                            await addDoc(collection(db, "other_staff"), obj);
+                            count++;
+                        }
+                    }
+
+                    Swal.fire('यशस्वी!', `एकूण ${count} कर्मचाऱ्यांचा डेटा यशस्वीरित्या जोडला गेला!`, 'success');
+                    loadData();
+                } catch (error) {
+                    console.error("Import error:", error);
+                    Swal.fire('त्रुटी', 'डेटा अपलोड करताना अडचण आली: ' + error.message, 'error');
                 }
-                Swal.fire('यशस्वी', 'कर्मचारी डेटा जोडला गेला!', 'success');
-                loadData();
             };
             reader.readAsArrayBuffer(file);
         };
-
         window.exportToExcel = () => {
             let data = window.otherStaffData.map((e, i) => ({
                 "अ.क्र.": i + 1, "नाव": e.name || "", "पद": e.post || "", "प्रवर्ग": e.category || "",
