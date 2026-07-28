@@ -826,7 +826,12 @@
         </div>
         <div class="panel" style="margin-bottom:0;">
             <div class="panel-header h-warning"><span><i class="fa fa-chart-pie"></i> मंडळनिहाय मान्य सदस्य</span></div>
-           
+            <div class="panel-body" style="height:350px; display:flex; justify-content:center; align-items:center;">
+                <canvas id="mandalPieChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
             <!-- TAB 2: MEMBERS CONTROL -->
             <div id="tab-members" class="tab-content">
                 <div class="panel">
@@ -1849,7 +1854,16 @@
                                 <label><input type="checkbox" id="col_show_transfers" checked> बदली ठिकाण दाखवा</label>
                             </div>
                             
-                            <div class="form-row" style="background:#f8fafc; padding:15px; border-radius:8px; margin-bottom:20px; border-left:4px solid var(--info);">
+                            <h5 style="margin-top:14px; color:var(--dark); font-weight:bold;">२. लाईव्ह चॅट, पोल व टेम्प्लेट बिल्डर दाखवण्याचे सुपर ॲडमिन कंट्रोल:</h5>
+                            <div class="authority-box-grid">
+                                <label><input type="checkbox" id="set_show_chat_admin" checked> ॲडमिनला Live Chat दाखवा</label>
+                                <label><input type="checkbox" id="set_show_chat_member" checked> सदस्याला Live Chat दाखवा</label>
+                                <label><input type="checkbox" id="set_show_poll_system" checked> पोल सिस्टीम दाखवा</label>
+                                <label><input type="checkbox" id="set_show_template_builder" checked> टेम्प्लेट बिल्डर दाखवा</label>
+                            </div>
+                        </div>
+
+                        <div class="form-row" style="background:#f8fafc; padding:15px; border-radius:8px; margin-bottom:20px; border-left:4px solid var(--info);">
                             <div style="flex:1;">
                                 <h4 style="color:var(--primary); margin-bottom:10px;">पावती क्रमांक व सेवार्थ आयडी सेटिंग्ज</h4>
                                 <label style="font-weight:bold;">पावती क्रमांकाची सुरुवात / Prefix:</label>
@@ -3371,7 +3385,28 @@
             }
         };
 
-      if(document.getElementById('empCountSummary')) document.getElementById('empCountSummary').innerText = `एकूण कर्मचारी: ${fil.length}`;
+        // सदस्यांसाठी आणि कर्मचाऱ्यांसाठी थेट बटण लिंक्स
+        window.showDuplicateMembersModal = function() { window.showDuplicateModal('members'); };
+        window.showDuplicateEmployeesModal = function() { window.showDuplicateModal('other_staff'); };
+        window.renderOtherStaff = () => {
+            let s = document.getElementById('empSearch')?.value.toLowerCase() || '';
+            let mFil = document.getElementById('empMandal')?.value || 'All';
+            let catFil = document.getElementById('empCategory')?.value || 'All';
+            let statFil = document.getElementById('empStatusFilter')?.value || 'All';
+
+            let showMob = document.getElementById('col_show_mobile')?.checked ?? true;
+            let showDob = document.getElementById('col_show_dob')?.checked ?? true;
+
+            let fil = window.otherStaffData.filter(e => {
+                if (subAdminAccessRegion !== "All" && e.mandal !== subAdminAccessRegion) return false;
+                if (mFil !== 'All' && e.mandal !== mFil) return false;
+                if (catFil !== 'All' && e.category !== catFil) return false;
+                if (statFil !== 'All' && (e.empStatus||'Active') !== statFil) return false;
+                if (s && !((e.name || '').toLowerCase().includes(s) || (e.mobile || '').includes(s))) return false;
+                return true;
+            });
+
+            if(document.getElementById('empCountSummary')) document.getElementById('empCountSummary').innerText = `एकूण कर्मचारी: ${fil.length}`;
 
             let tbody = document.getElementById('otherBody');
             if(!tbody) return;
