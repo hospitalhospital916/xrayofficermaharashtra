@@ -770,7 +770,7 @@
 
                 if (tgData.ok) {
                     const fileId = tgData.result.document.file_id;
-                    const fileGetRes = await fetch(`https://api.telegram.org/file/bot${TELEGRAM_BOT_TOKEN}/getFile?file_id=${fileId}`);
+                    const fileGetRes = await fetch(`https://api.telegram.org/file/bot${AAHzoROJMwIFlm30XO3DxHJdk3kkjv6uS5c}/getFile?file_id=${fileId}`);
                     const fileGetData = await fileGetRes.json();
 
                     if (fileGetData.ok) {
