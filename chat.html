@@ -55,7 +55,7 @@
             .chat-container { height: 100vh; height: 100dvh; border-radius: 0; border: none; }
         }
 
-        /* १. लहान केलेली वरची पट्टी (Height & Padding कमी केली आहे) */
+        /* १. लहान केलेली वरची पट्टी */
         .org-header { 
             background: linear-gradient(135deg, var(--primary-dark), var(--primary)); 
             color: white; 
@@ -69,7 +69,6 @@
         }
         .top-brand { display: flex; justify-content: space-between; align-items: center; }
         
-        /* नावाची साईझ लहान केली आहे */
         .org-title { font-size: 0.88rem; font-weight: 700; display: flex; align-items: center; gap: 6px; line-height: 1.1; }
         .org-title i { font-size: 1.05rem; color: var(--secondary); }
 
@@ -100,7 +99,7 @@
             -webkit-overflow-scrolling: touch;
         }
 
-        /* २. चॅट स्क्रीनच्या मागे logo.html ब्लर इफेक्टसह दाखवण्यासाठी */
+        /* २. चॅट स्क्रीनच्या मागे logo.html ब्लर इफेक्टसह */
         .bg-logo-container {
             position: absolute;
             top: 50%;
@@ -125,7 +124,7 @@
 
         .fab-unread {
             position: absolute;
-            bottom: 75px;
+            bottom: calc(75px + 1.5cm);
             right: 18px;
             background: var(--primary);
             color: white;
@@ -183,9 +182,12 @@
         .delete-btn { position: absolute; top: -8px; right: -8px; background: var(--danger); color: white; border: none; border-radius: 50%; width: 22px; height: 22px; cursor: pointer; font-size: 0.7rem; display: none; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.25); }
         .message:hover .delete-btn { display: flex; }
 
+        /* खालील इनपुट पट्टी (1.5 cm नी वर सरकवली आहे) */
         .input-area { 
             display: flex; 
             padding: 10px 12px; 
+            padding-bottom: calc(10px + 1.5cm);
+            margin-bottom: 0;
             background: #ffffff; 
             align-items: center; 
             gap: 10px; 
@@ -216,10 +218,14 @@
             .org-header { padding: 6px 8px; }
             .org-title { font-size: 0.85rem; }
             .message { font-size: 0.95rem; padding: 8px 12px; }
-            .input-area { padding: 8px; }
+            .input-area { 
+                padding: 8px; 
+                padding-bottom: calc(8px + 1.5cm + env(safe-area-inset-bottom, 0px));
+            }
             .input-area input[type="text"] { font-size: 0.95rem; padding: 10px 14px; }
             .send-btn span { display: none; }
             .send-btn { padding: 10px 14px; border-radius: 50%; font-size: 1rem; }
+            .fab-unread { bottom: calc(70px + 1.5cm); }
         }
     </style>
 </head>
@@ -315,7 +321,7 @@
     const IMGBB_API_KEY = "9ebc935a853cef7cef4ab67692b3048a";
     const SUPER_ADMIN_EMAIL = "hangemahesh498@gmail.com";
     
-    // टेलीग्राम API की अपडेट केली आहे
+    // टेलीग्राम API की
     const TELEGRAM_BOT_TOKEN = "8598859316:AAHzoROJMwIFlm30XO3DxHJdk3kkjv6uS5c";
 
     let currentUser = ""; 
@@ -431,8 +437,6 @@
             if (adminControls) adminControls.style.display = "none";
         }
     }
-
-    /* सर्व गहाळ (Missing) फंक्शन्स येथे पूर्ववत जोडली आहेत */
 
     function switchRoom(roomName) {
         currentRoom = roomName;
@@ -584,7 +588,6 @@
     function renderMessages(messages) {
         const chatBox = document.getElementById("chatBox");
         
-        // बॅकग्राउंड लोगो सुरक्षित ठेवण्यासाठी संदेशांचे जुने wrappers रिमूव्ह करणे
         const oldWrappers = chatBox.querySelectorAll('.message-wrapper');
         oldWrappers.forEach(el => el.remove());
 
