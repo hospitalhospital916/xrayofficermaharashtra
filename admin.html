@@ -835,19 +835,61 @@
             <!-- TAB 2: MEMBERS CONTROL -->
             <div id="tab-members" class="tab-content">
                 <div class="panel">
-                    <div class="panel-header">
-                        <span><i class="fa fa-user-check"></i> सदस्य नियंत्रण कक्ष</span>
-                        <div style="display:flex; gap:10px; flex-wrap:wrap;">
-                            <button class="btn-action bg-warning" onclick="downloadSampleMemberExcel()"><i class="fa fa-download"></i> नमुना एक्सल डाउनलोड</button>
-                            <button id="btn_mem_import" class="btn-action bg-info" onclick="document.getElementById('importExcelMem').click()"><i class="fa fa-file-excel"></i> Import Excel</button>
-                            <input type="file" id="importExcelMem" accept=".xlsx, .xls" style="display:none;" onchange="importMemberExcelData(event)">
-                            <button id="btn_mem_export" class="btn-action bg-success" onclick="exportMembersToExcel()"><i class="fa fa-file-excel"></i> Export Excel</button>
-                            <button class="btn-action bg-wa" onclick="bulkWhatsApp()"><i class="fa fa-whatsapp"></i> Bulk MSG</button>
-                            <button class="btn-action bg-mail" onclick="bulkEmailMembers()"><i class="fa fa-envelope"></i> Bulk Email</button>
-                            <button id="btn_mem_add" class="btn-action bg-success" onclick="openAddNew('members')"><i class="fa fa-user-plus"></i> नवीन जोडा</button>
-                            <button id="btn_mem_dup" class="btn-action bg-warning" onclick="showDuplicateMembersModal()"><i class="fa fa-copy"></i> डुप्लिकेट सदस्य शोधा</button> 
-                            <button id="btn_mem_del" class="btn-action bg-danger" onclick="deleteSelectedMembers()"><i class="fa fa-trash"></i> निवडलेले मल्टी-डिलीट</button> 
-                            <button class="btn-action bg-primary" onclick="window.print()"><i class="fa fa-print"></i> प्रिंट यादी</button>
+                    <div class="panel-body no-print" style="background:#f8fafc; border-bottom:1px solid #cbd5e1; padding:12px;">
+                        <div class="form-row" style="gap:10px; flex-wrap:wrap; margin-bottom:10px;">
+                            <input type="text" id="empSearch" class="form-control" placeholder="🔍 नाव, पद, रुग्णालय किंवा जिल्हा टाईप करा..." onkeyup="renderOtherStaff()" style="flex:2; min-width:200px;">
+                            
+                            <select id="empMandal" class="form-control" onchange="populateDistricts('empMandal', 'empDistrict'); renderOtherStaff();">
+                                <option value="All">सर्व मंडळे (All Mandals)</option>
+                            </select>
+                            
+                            <select id="empDistrict" class="form-control" onchange="renderOtherStaff()">
+                                <option value="All">सर्व जिल्हे (All Districts)</option>
+                            </select>
+
+                            <select id="empCategory" class="form-control" onchange="renderOtherStaff()">
+                                <option value="All">सर्व प्रवर्ग (All Categories)</option>
+                                <option value="खुला">खुला (OPEN)</option>
+                                <option value="अ.जा.">अ.जा. (SC)</option>
+                                <option value="अ.ज.">अ.ज. (ST)</option>
+                                <option value="वि.जा.-अ">वि.जा.-अ (VJ-A)</option>
+                                <option value="भ.ज.-ब">भ.ज.-ब (NT-B)</option>
+                                <option value="भ.ज.-क">भ.ज.-क (NT-C)</option>
+                                <option value="भ.ज.-ड">भ.ज.-ड (NT-D)</option>
+                                <option value="वि.मा.प्र.">वि.मा.प्र. (SBC)</option>
+                                <option value="इ.मा.व.">इ.मा.व. (OBC)</option>
+                                <option value="EWS">EWS</option>
+                            </select>
+
+                            <select id="empStatusFilter" class="form-control" onchange="renderOtherStaff()">
+                                <option value="All">सर्व स्टेटस (Active + Retired)</option>
+                                <option value="Active">कार्यरत (Active)</option>
+                                <option value="Retired">सेवानिवृत्त (Retired)</option>
+                                <option value="InterMandal">आंतरमंडळ बदली</option>
+                            </select>
+
+                            <select id="empLinkFilter" class="form-control" onchange="renderOtherStaff()">
+                                <option value="All">सर्व (सभासद + अ-सभासद)</option>
+                                <option value="Linked">✓ सभासद लिंक असलेले</option>
+                                <option value="Unlinked">❌ अन-लिंक (अ-सभासद)</option>
+                            </select>
+
+                            <!-- सेवाज्येष्ठतेनुसार नवीन फिल्टर -->
+                            <select id="empSeniority" class="form-control" onchange="renderOtherStaff()">
+                                <option value="All">क्रमवारी: अकारविल्हे (A-Z)</option>
+                                <option value="Senior">सेवाज्येष्ठतेनुसार (रुजू दिनांक)</option>
+                                <option value="DOB">वयाने ज्येष्ठतेनुसार (जन्मतारीख)</option>
+                            </select>
+                        </div>
+
+                        <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px dashed #cbd5e1; padding-top:8px;">
+                            <h4 id="empCountSummary" style="color:var(--primary); margin:0;">एकूण कर्मचारी: 0</h4>
+                            <div style="display:flex; gap:8px;">
+                                <!-- मंडळनिहाय डुप्लिकेट शोधण्याचे बटण -->
+                                <button class="btn-action bg-warning" onclick="showDuplicateEmployeesModal()"><i class="fa fa-copy"></i> डुप्लिकेट शोध व नियंत्रण</button>
+                                <button class="btn-action bg-primary" onclick="downloadEmployeePDF()"><i class="fa fa-file-pdf"></i> A4 PDF डाउनलोड</button>
+                                <button class="btn-action bg-info" onclick="window.print()"><i class="fa fa-print"></i> पोर्ट्रेट प्रिंट</button>
+                            </div>
                         </div>
                     </div>
                     
@@ -3025,7 +3067,327 @@
                 } catch (e) { Swal.fire('Error', e.message, 'error'); }
             }
         };
+// ==========================================================
+        // 🌟 १. सर्व फिल्टर्स व सेवाज्येष्ठतेनुसार सॉर्टिंग चालणारे रेन्डर फंक्शन
+        // ==========================================================
+        window.renderOtherStaff = () => {
+            let s = document.getElementById('empSearch')?.value.toLowerCase() || '';
+            let mFil = document.getElementById('empMandal')?.value || 'All';
+            let dFil = document.getElementById('empDistrict')?.value || 'All';
+            let catFil = document.getElementById('empCategory')?.value || 'All';
+            let statFil = document.getElementById('empStatusFilter')?.value || 'All';
+            let linkFil = document.getElementById('empLinkFilter')?.value || 'All';
+            let senFil = document.getElementById('empSeniority')?.value || 'All';
 
+            let showMob = document.getElementById('col_show_mobile')?.checked ?? true;
+            let showDob = document.getElementById('col_show_dob')?.checked ?? true;
+
+            // सभासद लिंक ओळखण्यासाठी सेट्स तयार करणे
+            let memberMobiles = new Set((window.membersData || []).map(m => String(m.mobile || '').trim()).filter(x => x));
+            let memberNames = new Set((window.membersData || []).map(m => String(m.name || '').trim().toLowerCase()).filter(x => x));
+
+            let fil = window.otherStaffData.filter(e => {
+                if (subAdminAccessRegion !== "All" && e.mandal !== subAdminAccessRegion) return false;
+                if (mFil !== 'All' && e.mandal !== mFil) return false;
+                if (dFil !== 'All' && dFil !== '' && e.district !== dFil) return false;
+                if (catFil !== 'All' && e.category !== catFil) return false;
+                if (statFil !== 'All' && (e.empStatus || 'Active') !== statFil) return false;
+
+                // सभासद लिंक तपासणी
+                let isLinked = (e.mobile && memberMobiles.has(String(e.mobile).trim())) || 
+                               (e.name && memberNames.has(String(e.name).trim().toLowerCase()));
+                if (linkFil === 'Linked' && !isLinked) return false;
+                if (linkFil === 'Unlinked' && isLinked) return false;
+
+                // शोध शब्द तपासणी (नाव, पद, रुग्णालय, मोबाईल, जिल्हा, मंडळ)
+                if (s) {
+                    let n = (e.name || '').toLowerCase();
+                    let p = (e.post || '').toLowerCase();
+                    let w = (e.workplace || '').toLowerCase();
+                    let mob = (e.mobile || '');
+                    let dist = (e.district || '').toLowerCase();
+                    let man = (e.mandal || '').toLowerCase();
+                    let rem = (e.remarks || '').toLowerCase();
+                    if (!n.includes(s) && !p.includes(s) && !w.includes(s) && !mob.includes(s) && !dist.includes(s) && !man.includes(s) && !rem.includes(s)) {
+                        return false;
+                    }
+                }
+                return true;
+            });
+
+            // तारखेनुसार सॉर्टिंग करण्यासाठी मदतनीस फंक्शन
+            let parseDateForSort = (dStr) => {
+                if (!dStr || dStr === '-' || dStr === 'undefined') return '9999-99-99';
+                let str = String(dStr).replace(' 00:00:00', '').trim();
+                let parts = str.split('/');
+                if (parts.length === 3) return `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+                let partsDash = str.split('-');
+                if (partsDash.length === 3) {
+                    if (partsDash[0].length === 4) return str;
+                    return `${partsDash[2]}-${partsDash[1].padStart(2, '0')}-${partsDash[0].padStart(2, '0')}`;
+                }
+                return '9999-99-99';
+            };
+
+            // क्रमवारी लागू करणे (सेवाज्येष्ठता / जन्मतारीख / A-Z)
+            if (senFil === 'Senior') {
+                fil.sort((a, b) => parseDateForSort(a.joinDate).localeCompare(parseDateForSort(b.joinDate)));
+            } else if (senFil === 'DOB') {
+                fil.sort((a, b) => parseDateForSort(a.dob).localeCompare(parseDateForSort(b.dob)));
+            } else {
+                fil.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+            }
+
+            if (document.getElementById('empCountSummary')) {
+                document.getElementById('empCountSummary').innerText = `एकूण दर्शविलेले कर्मचारी: ${fil.length}`;
+            }
+
+            let tbody = document.getElementById('otherBody');
+            if (!tbody) return;
+
+            tbody.innerHTML = fil.map((s, i) => {
+                let isLinked = (s.mobile && memberMobiles.has(String(s.mobile).trim())) || 
+                               (s.name && memberNames.has(String(s.name).trim().toLowerCase()));
+                let linkBadge = isLinked 
+                    ? `<span class="badge bg-success" title="सभासद नोंदणी झालेली आहे">✓ सभासद</span>` 
+                    : `<span class="badge bg-warning" style="color:#000;" title="अजून सभासद झाले नाहीत">अ-सभासद</span>`;
+
+                return `
+                    <tr>
+                        <td>${i + 1}</td>
+                        <td><input type="checkbox" class="emp-chk" value="${s.id}"></td>
+                        <td><b>${s.name}</b> ${linkBadge}<br><small style="color:gray;">${s.post || '-'}</small></td>
+                        <td><span class="badge bg-info">${s.category || '-'}</span></td>
+                        <td>${showMob ? (s.mobile || '-') : '🔒 लपवले'}</td>
+                        <td><b>${s.workplace || '-'}</b></td>
+                        <td><small style="color:blue;">${s.transferPosting || '-'}</small></td>
+                        <td><small style="color:green;">${s.rejoinedWorkplace || '-'}</small></td>
+                        <td>${s.district || '-'}</td>
+                        <td>${s.mandal || '-'}</td>
+                        <td><small>${s.joinDate || '-'}</small></td>
+                        <td><small style="color:#854d0e;">${s.remarks || '-'}</small></td>
+                        <td class="no-print" style="white-space:nowrap; text-align:center;">
+                            <button class="btn-action bg-warning" onclick="shiftEmployeeMandal('${s.id}')" title="आंतरमंडळ बदली"><i class="fa fa-exchange-alt"></i></button>
+                            <button class="btn-action bg-primary" onclick="openFullEditModal('${s.id}','other_staff')" title="माहिती संपादित करा"><i class="fa fa-pen"></i></button>
+                            <button class="btn-action bg-danger" onclick="deleteOtherStaff('${s.id}')" title="डिलीट करा"><i class="fa fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            }).join('') || '<tr><td colspan="13" style="text-align:center; padding:15px;">सध्या एकही कर्मचारी उपलब्ध नाही.</td></tr>';
+        };
+
+        // ==========================================================
+        // 🌟 २. मंडळनिहाय डुप्लिकेट शोध व नियंत्रण प्रणाली (ADVANCED DUPLICATE ENGINE)
+        // ==========================================================
+        function cleanNameForMatching(str) {
+            if (!str) return '';
+            return str.toLowerCase()
+                .replace(/shri|smt|dr|mr|mrs|श्री|श्रीमती|डॉ/g, '')
+                .replace(/[^a-z0-9\u0900-\u097F]/g, '')
+                .trim();
+        }
+
+        function calculateStringSimilarity(a, b) {
+            let cleanA = cleanNameForMatching(a);
+            let cleanB = cleanNameForMatching(b);
+            if (!cleanA || !cleanB) return 0;
+            if (cleanA === cleanB) return 1.0;
+
+            const dist = getLevenshteinDistance(cleanA, cleanB);
+            const maxLen = Math.max(cleanA.length, cleanB.length);
+            return maxLen > 0 ? (maxLen - dist) / maxLen : 0;
+        }
+
+        window.showDuplicateModal = function(datasetType = 'members') {
+            let titleText = (datasetType === 'members') ? '👥 सदस्य डेटाबेसमधील' : '🏢 राज्यातील कर्मचारी डेटाबेसमधील';
+
+            let mandalOptions = '<option value="All">सर्व मंडळे (All Mandals)</option>';
+            Object.keys(mandalData).forEach(m => {
+                mandalOptions += `<option value="${m}">${m}</option>`;
+            });
+
+            let modalHtml = `
+                <div style="background:#f8fafc; padding:12px; border-radius:8px; border:1px solid #cbd5e1; margin-bottom:15px; display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+                    <div style="flex:1; min-width:200px;">
+                        <label style="font-weight:bold; color:var(--primary); font-size:0.88rem;">आरोग्य मंडळ निवडा (मंडळनिहाय):</label>
+                        <select id="dupModalMandalFilter" class="form-control" onchange="filterDuplicatePairsList('${datasetType}')">
+                            ${mandalOptions}
+                        </select>
+                    </div>
+                    <div style="flex:1; min-width:200px;">
+                        <label style="font-weight:bold; color:var(--dark); font-size:0.88rem;">शोध निकष:</label>
+                        <select id="dupModalMatchType" class="form-control" onchange="filterDuplicatePairsList('${datasetType}')">
+                            <option value="All">सर्व (नाव + मोबाईल नंबर)</option>
+                            <option value="Name">फक्त नावात साम्य (>= 80%)</option>
+                            <option value="Mobile">फक्त मोबाईल नंबर समान</option>
+                        </select>
+                    </div>
+                    <div style="margin-top:18px;">
+                        <button class="btn-action bg-danger" onclick="deleteAllDuplicateDuplicates('${datasetType}')">
+                            <i class="fa fa-trash"></i> सर्व सापडलेले डुप्लिकेट एकत्र डिलीट करा
+                        </button>
+                    </div>
+                </div>
+
+                <div style="margin-bottom:8px; font-weight:bold; color:var(--primary);" id="dupCountSummary">
+                    शोधत आहे...
+                </div>
+
+                <div style="max-height:420px; overflow-y:auto; border:1px solid #cbd5e1; border-radius:8px;">
+                    <table style="width:100%; border-collapse:collapse; font-size:0.86rem; text-align:left;">
+                        <thead>
+                            <tr style="background:var(--primary); color:white;">
+                                <th style="padding:8px; width:40px;">#</th>
+                                <th style="padding:8px;">मूळ नोंद (Record 1)</th>
+                                <th style="padding:8px;">संभाव्य डुप्लिकेट (Record 2)</th>
+                                <th style="padding:8px;">साम्य कारण</th>
+                                <th style="padding:8px; text-align:center;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="duplicatePairsTableBody">
+                            <tr><td colspan="5" style="text-align:center; padding:20px;">लोड होत आहे...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            Swal.fire({
+                title: `🔍 ${titleText} डुप्लिकेट शोध व मंडळनिहाय नियंत्रण`,
+                html: modalHtml,
+                width: '1000px',
+                showCloseButton: true,
+                showConfirmButton: false,
+                didOpen: () => {
+                    window.filterDuplicatePairsList(datasetType);
+                }
+            });
+        };
+
+        window.filterDuplicatePairsList = function(datasetType) {
+            let dataset = (datasetType === 'members') ? window.membersData : window.otherStaffData;
+            let selectedMandal = document.getElementById('dupModalMandalFilter')?.value || 'All';
+            let matchType = document.getElementById('dupModalMatchType')?.value || 'All';
+
+            let pairs = [];
+            window.currentDuplicateIds = [];
+
+            for (let i = 0; i < dataset.length; i++) {
+                for (let j = i + 1; j < dataset.length; j++) {
+                    let item1 = dataset[i];
+                    let item2 = dataset[j];
+
+                    // मंडळ फिल्टर तपासणी
+                    if (selectedMandal !== 'All') {
+                        if (item1.mandal !== selectedMandal && item2.mandal !== selectedMandal) {
+                            continue;
+                        }
+                    }
+
+                    let mob1 = String(item1.mobile || '').trim();
+                    let mob2 = String(item2.mobile || '').trim();
+                    let name1 = String(item1.name || '').trim();
+                    let name2 = String(item2.name || '').trim();
+
+                    let isDup = false;
+                    let reason = '';
+
+                    // मोबाईल तपासणी
+                    if ((matchType === 'All' || matchType === 'Mobile') && mob1 && mob2 && mob1 !== '-' && mob1 === mob2) {
+                        isDup = true;
+                        reason = '📱 मोबाईल नंबर समान';
+                    }
+                    // नावातील साम्य तपासणी (>= 80%)
+                    if (!isDup && (matchType === 'All' || matchType === 'Name')) {
+                        let sim = calculateStringSimilarity(name1, name2);
+                        if (sim >= 0.80) {
+                            isDup = true;
+                            reason = `👤 नावात ${Math.round(sim * 100)}% साम्य`;
+                        }
+                    }
+
+                    if (isDup) {
+                        pairs.push({ rec1: item1, rec2: item2, reason: reason });
+                        window.currentDuplicateIds.push(item2.id);
+                    }
+                }
+            }
+
+            let countEl = document.getElementById('dupCountSummary');
+            if (countEl) {
+                countEl.innerText = `एकूण सापडलेल्या डुप्लिकेट जोड्या: ${pairs.length} (निवडलेले मंडळ: ${selectedMandal})`;
+            }
+
+            let tbody = document.getElementById('duplicatePairsTableBody');
+            if (!tbody) return;
+
+            if (pairs.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:25px; color:green; font-weight:bold;"><i class="fa fa-check-circle" style="font-size:1.5rem;"></i><br>या मंडळात एकही डुप्लिकेट नोंद सापडली नाही!</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = pairs.map((p, idx) => `
+                <tr>
+                    <td>${idx + 1}</td>
+                    <td>
+                        <b>${p.rec1.name}</b><br>
+                        <small style="color:gray;">📱 ${p.rec1.mobile || '-'} | 📍 ${p.rec1.district || '-'} (${p.rec1.mandal || '-'})</small><br>
+                        <small style="color:#0B3D91;">रुग्णालय: ${p.rec1.workplace || '-'}</small>
+                    </td>
+                    <td style="background:#fff1f2;">
+                        <b style="color:var(--danger);">${p.rec2.name}</b><br>
+                        <small style="color:gray;">📱 ${p.rec2.mobile || '-'} | 📍 ${p.rec2.district || '-'} (${p.rec2.mandal || '-'})</small><br>
+                        <small style="color:#0B3D91;">रुग्णालय: ${p.rec2.workplace || '-'}</small>
+                    </td>
+                    <td><span class="badge bg-danger">${p.reason}</span></td>
+                    <td style="text-align:center; white-space:nowrap;">
+                        <button class="btn-action bg-danger" onclick="deleteDuplicateEntry('${datasetType}', '${p.rec2.id}')" title="हा डुप्लिकेट डिलीट करा">
+                            <i class="fa fa-trash"></i> डिलीट
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        };
+
+        window.deleteDuplicateEntry = async function(datasetType, id) {
+            let colName = (datasetType === 'members') ? 'members' : 'other_staff';
+            let dataset = (datasetType === 'members') ? window.membersData : window.otherStaffData;
+            let item = dataset.find(x => x.id === id);
+
+            if (confirm(`या कर्मचाऱ्याची/सदस्याची डुप्लिकेट नोंद डिलीट करून रिसायकल बिनमध्ये पाठवायची का?`)) {
+                if (item) await window.moveToRecycleBin(datasetType === 'members' ? "सदस्य" : "कर्मचारी", item, item.name);
+                await deleteDoc(doc(db, colName, id));
+                await window.logAdminActivity(`Deleted Duplicate Entry: ${item ? item.name : id}`);
+                Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'डुप्लिकेट डिलीट झाला!', showConfirmButton: false, timer: 1200 });
+                await loadData();
+                window.filterDuplicatePairsList(datasetType);
+            }
+        };
+
+        window.deleteAllDuplicateDuplicates = async function(datasetType) {
+            if (!window.currentDuplicateIds || window.currentDuplicateIds.length === 0) {
+                return Swal.fire('सूचना', 'एकही डुप्लिकेट नोंद सापडली नाही.', 'info');
+            }
+
+            let colName = (datasetType === 'members') ? 'members' : 'other_staff';
+            let dataset = (datasetType === 'members') ? window.membersData : window.otherStaffData;
+
+            if (confirm(`सापडलेले सर्व ${window.currentDuplicateIds.length} डुप्लिकेट रेकॉर्ड्स एकत्र डिलीट करून रिसायकल बिनमध्ये पाठवायचे का?`)) {
+                Swal.fire({ title: 'डुप्लिकेट्स डिलीट होत आहेत...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+                for (let id of window.currentDuplicateIds) {
+                    let item = dataset.find(x => x.id === id);
+                    if (item) await window.moveToRecycleBin(datasetType === 'members' ? "सदस्य" : "कर्मचारी", item, item.name);
+                    await deleteDoc(doc(db, colName, id));
+                }
+                await window.logAdminActivity(`Bulk Deleted ${window.currentDuplicateIds.length} duplicates from ${datasetType}`);
+                Swal.fire('यशस्वी!', 'सर्व डुप्लिकेट्स डिलीट झाले!', 'success');
+                await loadData();
+                window.filterDuplicatePairsList(datasetType);
+            }
+        };
+
+        // सदस्यांसाठी आणि कर्मचाऱ्यांसाठी थेट बटण लिंक्स
+        window.showDuplicateMembersModal = function() { window.showDuplicateModal('members'); };
+        window.showDuplicateEmployeesModal = function() { window.showDuplicateModal('other_staff'); };
         window.renderOtherStaff = () => {
             let s = document.getElementById('empSearch')?.value.toLowerCase() || '';
             let mFil = document.getElementById('empMandal')?.value || 'All';
