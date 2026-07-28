@@ -38,6 +38,7 @@
             align-items: center; 
         }
 
+        /* चॅट कंटेनर लेआउट - डेस्कटॉप व मोबाईल सुसंगत */
         .chat-container { 
             width: 100%; 
             max-width: 900px; 
@@ -48,47 +49,45 @@
             height: 100dvh; 
             position: relative; 
             box-shadow: 0 12px 35px rgba(0,0,0,0.15); 
+            overflow: hidden;
         }
         
-        @media (min-width: 768px) {
-            body { padding: 0; }
-            .chat-container { height: 100vh; height: 100dvh; border-radius: 0; border: none; }
-        }
-
-        /* १. लहान केलेली वरची पट्टी */
+        /* १. वरची पट्टी (Header) */
         .org-header { 
             background: linear-gradient(135deg, var(--primary-dark), var(--primary)); 
             color: white; 
-            padding: 5px 10px; 
+            padding: 6px 12px; 
             display: flex; 
             flex-direction: column; 
-            gap: 4px; 
+            gap: 6px; 
             z-index: 10; 
             border-bottom: 2px solid var(--secondary); 
             flex-shrink: 0;
         }
         .top-brand { display: flex; justify-content: space-between; align-items: center; }
         
-        .org-title { font-size: 0.88rem; font-weight: 700; display: flex; align-items: center; gap: 6px; line-height: 1.1; }
-        .org-title i { font-size: 1.05rem; color: var(--secondary); }
+        .org-title { font-size: 0.9rem; font-weight: 700; display: flex; align-items: center; gap: 6px; line-height: 1.1; }
+        .org-title i { font-size: 1.1rem; color: var(--secondary); }
 
-        .role-badge { background: rgba(255,255,255,0.22); font-size: 0.68rem; padding: 1px 6px; border-radius: 8px; font-weight: 700; color: #fef08a; margin-left: 4px; }
+        .role-badge { background: rgba(255,255,255,0.22); font-size: 0.7rem; padding: 1px 6px; border-radius: 8px; font-weight: 700; color: #fef08a; margin-left: 4px; }
 
-        .admin-btn { background: var(--secondary); color: var(--primary-dark); border: none; padding: 3px 8px; border-radius: 10px; cursor: pointer; font-size: 0.75rem; font-weight: 800; display: flex; align-items: center; gap: 4px; }
-        .login-btn-head { background: #ffffff; color: var(--primary); border: none; padding: 3px 8px; border-radius: 10px; font-weight: 800; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; gap: 4px; }
+        .admin-btn { background: var(--secondary); color: var(--primary-dark); border: none; padding: 4px 10px; border-radius: 10px; cursor: pointer; font-size: 0.78rem; font-weight: 800; display: flex; align-items: center; gap: 4px; }
+        .login-btn-head { background: #ffffff; color: var(--primary); border: none; padding: 4px 10px; border-radius: 10px; font-weight: 800; font-size: 0.78rem; cursor: pointer; display: flex; align-items: center; gap: 4px; }
 
-        .search-tab-row { display: flex; flex-direction: column; gap: 4px; }
-        .search-box { width: 100%; display: flex; align-items: center; background: rgba(255, 255, 255, 0.2); border-radius: 12px; padding: 3px 8px; border: 1px solid rgba(255,255,255,0.3); }
-        .search-box input { border: none; background: transparent; outline: none; color: white; width: 100%; padding: 2px 6px; font-size: 0.82rem; }
+        .search-tab-row { display: flex; flex-direction: column; gap: 6px; }
+        .search-box { width: 100%; display: flex; align-items: center; background: rgba(255, 255, 255, 0.2); border-radius: 12px; padding: 4px 10px; border: 1px solid rgba(255,255,255,0.3); }
+        .search-box input { border: none; background: transparent; outline: none; color: white; width: 100%; padding: 2px 6px; font-size: 0.85rem; }
         .search-box input::placeholder { color: #e2e8f0; }
 
-        .tabs { display: none; gap: 4px; }
-        .tabs button { flex: 1; background: rgba(255,255,255,0.2); border: none; color: white; font-size: 0.78rem; font-weight: 700; padding: 4px 8px; border-radius: 6px; cursor: pointer; }
+        .tabs { display: none; gap: 6px; }
+        .tabs button { flex: 1; background: rgba(255,255,255,0.2); border: none; color: white; font-size: 0.8rem; font-weight: 700; padding: 5px 10px; border-radius: 6px; cursor: pointer; }
         .tabs button.active { background: #ffffff; color: var(--primary); font-weight: 800; }
 
+        /* चॅट मेसेज एरिया */
         .chat-box { 
             flex: 1; 
-            padding: 12px; 
+            min-height: 0; /* फ्लेक्स ओव्हरफ्लो कॉम्प्युटरवर रोखण्यासाठी अत्यंत महत्त्वाचे */
+            padding: 14px; 
             overflow-y: auto; 
             background-color: var(--bg-chat); 
             display: flex; 
@@ -99,7 +98,7 @@
             -webkit-overflow-scrolling: touch;
         }
 
-        /* २. चॅट स्क्रीनच्या मागे logo.html ब्लर इफेक्टसह */
+        /* चॅट स्क्रीनच्या मागे ब्लर लोगो */
         .bg-logo-container {
             position: absolute;
             top: 50%;
@@ -124,8 +123,8 @@
 
         .fab-unread {
             position: absolute;
-            bottom: calc(75px + 1.5cm);
-            right: 18px;
+            bottom: 80px; /* डेस्कटॉपसाठी डीफॉल्ट */
+            right: 20px;
             background: var(--primary);
             color: white;
             border: 2px solid white;
@@ -152,7 +151,7 @@
             border: 2px solid white;
         }
 
-        .message-wrapper { display: flex; align-items: flex-start; gap: 10px; max-width: 90%; position: relative; z-index: 1; }
+        .message-wrapper { display: flex; align-items: flex-start; gap: 10px; max-width: 85%; position: relative; z-index: 1; }
         .message-wrapper.my-msg-wrapper { align-self: flex-end; flex-direction: row-reverse; }
 
         .avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 800; flex-shrink: 0; overflow: hidden; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.12); }
@@ -182,12 +181,10 @@
         .delete-btn { position: absolute; top: -8px; right: -8px; background: var(--danger); color: white; border: none; border-radius: 50%; width: 22px; height: 22px; cursor: pointer; font-size: 0.7rem; display: none; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.25); }
         .message:hover .delete-btn { display: flex; }
 
-        /* खालील इनपुट पट्टी (1.5 cm नी वर सरकवली आहे) */
+        /* २. खालील चॅट इनपुट पट्टी (डेस्कटॉपसाठी नॉर्मल लेआउट) */
         .input-area { 
             display: flex; 
-            padding: 10px 12px; 
-            padding-bottom: calc(10px + 1.5cm);
-            margin-bottom: 0;
+            padding: 12px 16px; 
             background: #ffffff; 
             align-items: center; 
             gap: 10px; 
@@ -212,15 +209,19 @@
         .modal-content { background: white; padding: 18px; border-radius: 16px; width: 92%; max-width: 520px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); max-height: 88vh; overflow-y: auto; }
         .modal-header { font-size: 1.05rem; font-weight: 800; margin-bottom: 12px; color: var(--primary); display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; }
 
+        /* ३. फक्त मोबाईल/PWA अॅपसाठी खालील अतिरिक्त जागा लागू होईल */
         @media (max-width: 768px) {
             body { padding: 0; background: white; }
             .chat-container { height: 100vh; height: 100dvh; border-radius: 0; border: none; }
             .org-header { padding: 6px 8px; }
             .org-title { font-size: 0.85rem; }
+            .message-wrapper { max-width: 92%; }
             .message { font-size: 0.95rem; padding: 8px 12px; }
+            
+            /* मोबाईलवर PWA/नेव्हिगेशन बारसाठी १.५ सेमी अतिरिक्त पॅडिंग */
             .input-area { 
-                padding: 8px; 
-                padding-bottom: calc(8px + 1.5cm + env(safe-area-inset-bottom, 0px));
+                padding: 10px; 
+                padding-bottom: calc(10px + 1.5cm + env(safe-area-inset-bottom, 0px));
             }
             .input-area input[type="text"] { font-size: 0.95rem; padding: 10px 14px; }
             .send-btn span { display: none; }
@@ -233,7 +234,7 @@
 
 <div class="chat-container">
     
-    <!-- लहान केलेली वरची पट्टी -->
+    <!-- वरची संस्थात्मक पट्टी -->
     <div class="org-header">
         <div class="top-brand">
             <div class="org-title">
@@ -266,7 +267,7 @@
 
     <div id="loader"><i class="fa-solid fa-spinner fa-spin"></i> फाईल अपलोड होत आहे... कृपया वाट पहा...</div>
     
-    <!-- चॅट एरिया -->
+    <!-- चॅट मुख्य भाग -->
     <div class="chat-box" id="chatBox" onscroll="handleChatScroll()">
         <!-- मागे ब्लर स्वरूपात दिसणारा logo.html -->
         <div class="bg-logo-container">
@@ -279,6 +280,7 @@
         <span class="fab-badge" id="unreadBadge">0</span>
     </button>
 
+    <!-- चॅट मेसेज इनपुट पट्टी -->
     <div class="input-area" id="inputAreaBox">
         <label for="fileInput" class="file-label" id="fileInputLabel" title="फोटो किंवा PDF फाईल पाठवा">
             <i class="fa-solid fa-paperclip"></i>
@@ -321,7 +323,7 @@
     const IMGBB_API_KEY = "9ebc935a853cef7cef4ab67692b3048a";
     const SUPER_ADMIN_EMAIL = "hangemahesh498@gmail.com";
     
-    // टेलीग्राम API की
+    // टेलीग्राम API
     const TELEGRAM_BOT_TOKEN = "8598859316:AAHzoROJMwIFlm30XO3DxHJdk3kkjv6uS5c";
 
     let currentUser = ""; 
