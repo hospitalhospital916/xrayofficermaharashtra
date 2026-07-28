@@ -909,9 +909,9 @@
                         </div>
                     </div>
 
-                   <div class="panel-body no-print" style="background:#f8fafc; border-bottom:1px solid #cbd5e1; padding:12px;">
+                    <div class="panel-body no-print" style="background:#f8fafc; border-bottom:1px solid #cbd5e1; padding:12px;">
                         <div class="form-row" style="gap:10px; flex-wrap:wrap; margin-bottom:10px;">
-                            <input type="text" id="empSearch" class="form-control" placeholder="🔍 नाव, पद, रुग्णालय किंवा जिल्हा टाईप करा..." onkeyup="renderOtherStaff()" style="flex:2; min-width:200px;">
+                            <input type="text" id="empSearch" class="form-control" placeholder="🔍 नाव, पद, ठिकाण टाईप करा..." onkeyup="renderOtherStaff()" style="flex:2; min-width:200px;">
                             
                             <select id="empMandal" class="form-control" onchange="populateDistricts('empMandal', 'empDistrict'); renderOtherStaff();">
                                 <option value="All">सर्व मंडळे (All Mandals)</option>
@@ -947,25 +947,42 @@
                                 <option value="Linked">✓ सभासद लिंक असलेले</option>
                                 <option value="Unlinked">❌ अन-लिंक (अ-सभासद)</option>
                             </select>
-
-                            <!-- 🌟 १. सेवाज्येष्ठतेनुसार नवीन फिल्टर -->
-                            <select id="empSeniority" class="form-control" onchange="renderOtherStaff()">
-                                <option value="All">क्रमवारी: अकारविल्हे (A-Z)</option>
-                                <option value="Senior">सेवाज्येष्ठतेनुसार (रुजू दिनांक)</option>
-                                <option value="DOB">वयाने ज्येष्ठतेनुसार (जन्मतारीख)</option>
-                            </select>
                         </div>
 
                         <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px dashed #cbd5e1; padding-top:8px;">
                             <h4 id="empCountSummary" style="color:var(--primary); margin:0;">एकूण कर्मचारी: 0</h4>
                             <div style="display:flex; gap:8px;">
-                                <!-- 🌟 २. मंडळनिहाय डुप्लिकेट शोधण्याचे बटण -->
-                                <button class="btn-action bg-warning" onclick="showDuplicateEmployeesModal()"><i class="fa fa-copy"></i> डुप्लिकेट शोध व नियंत्रण</button>
                                 <button class="btn-action bg-primary" onclick="downloadEmployeePDF()"><i class="fa fa-file-pdf"></i> A4 PDF डाउनलोड</button>
                                 <button class="btn-action bg-info" onclick="window.print()"><i class="fa fa-print"></i> पोर्ट्रेट प्रिंट</button>
                             </div>
                         </div>
                     </div>
+
+                    <div class="panel-body" style="padding:0; overflow-x:auto;">
+                        <table id="employeeTable">
+                            <thead>
+                                <tr>
+                                    <th style="width:40px;">अ.क्र.</th>
+                                    <th style="width:30px;"><input type="checkbox" id="selectAllEmp" onchange="toggleSelectAllEmp(this)"></th>
+                                    <th>नाव व पद</th>
+                                    <th>प्रवर्ग</th>
+                                    <th>मोबाईल</th>
+                                    <th>सध्या कार्यरत ठिकाण</th>
+                                    <th>बदलीने पदस्थापना</th>
+                                    <th>पुन्हा कार्यरत ठिकाण</th>
+                                    <th>जिल्हा</th>
+                                    <th>मंडळ</th>
+                                    <th>रुजू दिनांक</th>
+                                    <th>अभिप्राय / शेरा</th>
+                                    <th class="no-print" style="text-align:center;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="otherBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
             <!-- TAB 4: OFFICE BEARERS (With Arrow Reordering) -->
             <div id="tab-committee" class="tab-content">
                 <div class="panel">
@@ -3082,74 +3099,33 @@
             }
         };
 
-      // १. तारखेतील अनावश्यक वेळ (00:00:00) काढून स्वच्छ करणारे लहान फंक्शन
-        function cleanVal(val) {
-            if (!val || val === '-' || val === 'undefined' || val === 'null') return '';
-            if (val instanceof Date) {
-                let day = String(val.getDate()).padStart(2, '0');
-                let month = String(val.getMonth() + 1).padStart(2, '0');
-                let year = val.getFullYear();
-                return `${day}/${month}/${year}`;
-            }
-            return String(val).replace(' 00:00:00', '').trim();
-        }
-
-        // २. अद्ययावत इम्पोर्ट फंक्शन (मराठी व इंग्लिश दोन्ही हेडर ऑटो-डिटेक्ट करेल)
         window.importEmployeeData = (e) => {
-            let file = e.target.files[0]; 
-            if (!file) return;
-
+            let file = e.target.files[0]; if(!file) return;
             let reader = new FileReader();
             reader.onload = async (evt) => {
                 let data = new Uint8Array(evt.target.result);
-                let workbook = XLSX.read(data, { type: 'array', cellDates: true });
+                let workbook = XLSX.read(data, { type: 'array' });
                 let sheet = workbook.Sheets[workbook.SheetNames[0]];
-                let rows = XLSX.utils.sheet_to_json(sheet, { defval: "" });
-
-                Swal.fire({
-                    title: 'कर्मचारी डेटा फीड होत आहे...',
-                    allowOutsideClick: false,
-                    didOpen: () => Swal.showLoading()
-                });
-
-                try {
-                    let count = 0;
-                    for (let r of rows) {
-                        // मराठी व इंग्रजी दोन्ही प्रकारच्या कॉलमच्या नावांची तपासणी
-                        let name = r['Employee Name'] || r['नाव'] || r['Name'] || r['Full Name'] || r['कर्मचारी नाव'] || '';
-                        
-                        if (name && String(name).trim() !== '' && String(name).trim() !== '-') {
-                            let obj = {
-                                name: String(name).trim(),
-                                post: r['पद'] || r['Post'] || r['Designation'] || r['Qualification'] || 'X-Ray Scientific Officer',
-                                category: r['Caste Category'] || r['प्रवर्ग'] || r['Category'] || r['Recruitment Category'] || '',
-                                mobile: cleanVal(r['मोबाईल'] || r['Mobile'] || r['Contact'] || r['Mobile No']),
-                                dob: cleanVal(r['Date of Birth'] || r['जन्मतारीख'] || r['DOB']),
-                                workplace: r['Office Name / Workplace'] || r['सध्या कार्यरत ठिकाण'] || r['Workplace'] || r['Office Name'] || '',
-                                transferPosting: r['Transfer Posting'] || r['बदलीने पदस्थापना'] || '',
-                                rejoinedWorkplace: r['Rejoined Workplace'] || r['पुन्हा कार्यरत ठिकाण'] || '',
-                                district: r['District'] || r['जिल्हा'] || '',
-                                mandal: r['Circle (Mandal)'] || r['Circle'] || r['Mandal'] || r['मंडळ'] || '',
-                                joinDate: cleanVal(r['Initial Appointment Date'] || r['रुजू दिनांक'] || r['Join Date'] || r['Appointment Date']),
-                                retireDate: cleanVal(r['Date of Retirement'] || r['सेवानिवृत्ती दिनांक'] || r['Retirement Date']),
-                                remarks: r['Remarks'] || r['अभिप्राय'] || r['शेरा'] || '',
-                                empStatus: 'Active'
-                            };
-
-                            await addDoc(collection(db, "other_staff"), obj);
-                            count++;
-                        }
-                    }
-
-                    Swal.fire('यशस्वी!', `एकूण ${count} कर्मचाऱ्यांचा डेटा यशस्वीरित्या जोडला गेला!`, 'success');
-                    loadData();
-                } catch (error) {
-                    console.error("Import error:", error);
-                    Swal.fire('त्रुटी', 'डेटा अपलोड करताना अडचण आली: ' + error.message, 'error');
+                let rows = XLSX.utils.sheet_to_json(sheet);
+                
+                Swal.fire({title: 'कर्मचारी डेटा फीड होत आहे...', didOpen: () => Swal.showLoading()});
+                for(let r of rows) {
+                    let obj = {
+                        name: r['नाव'] || r['Name'] || '', post: r['पद'] || r['Post'] || '',
+                        category: r['प्रवर्ग'] || r['Category'] || '', mobile: String(r['मोबाईल'] || r['Mobile'] || ''),
+                        dob: r['जन्मतारीख'] || r['DOB'] || '',
+                        workplace: r['सध्या कार्यरत ठिकाण'] || r['Workplace'] || '', district: r['जिल्हा'] || r['District'] || '',
+                        mandal: r['मंडळ'] || r['Mandal'] || '', joinDate: r['रुजू दिनांक'] || r['Join Date'] || '',
+                        remarks: r['अभिप्राय'] || r['शेरा'] || '', empStatus: 'Active'
+                    };
+                    if(obj.name) await addDoc(collection(db, "other_staff"), obj);
                 }
+                Swal.fire('यशस्वी', 'कर्मचारी डेटा जोडला गेला!', 'success');
+                loadData();
             };
             reader.readAsArrayBuffer(file);
         };
+
         window.exportToExcel = () => {
             let data = window.otherStaffData.map((e, i) => ({
                 "अ.क्र.": i + 1, "नाव": e.name || "", "पद": e.post || "", "प्रवर्ग": e.category || "",
