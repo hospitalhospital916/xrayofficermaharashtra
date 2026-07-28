@@ -30,33 +30,36 @@
             height: 100%; 
             width: 100%; 
             overflow: hidden; 
-            background-color: #f1f5f9; 
+            background-color: #0f172a; /* PC बॅकग्राउंडला सुंदर डार्क स्लेट थीम */
         }
+        
         body { 
             display: flex; 
             justify-content: center; 
             align-items: center; 
         }
 
-        /* चॅट कंटेनर लेआउट - डेस्कटॉप व मोबाईल सुसंगत */
+        /* PC / डेस्कटॉपवर हुबेहूब मोबाईल अॅप स्क्रीन */
         .chat-container { 
             width: 100%; 
-            max-width: 900px; 
+            max-width: 450px; /* मोबाईल स्क्रीन रुंदी */
+            height: 94vh; 
+            max-height: 900px;
             background: #ffffff; 
             display: flex; 
             flex-direction: column; 
-            height: 100vh; 
-            height: 100dvh; 
             position: relative; 
-            box-shadow: 0 12px 35px rgba(0,0,0,0.15); 
+            border-radius: 24px; 
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4); 
             overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.1);
         }
-        
-        /* १. वरची पट्टी (Header) */
+
+        /* १. वरची संस्थात्मक पट्टी (Header) */
         .org-header { 
             background: linear-gradient(135deg, var(--primary-dark), var(--primary)); 
             color: white; 
-            padding: 6px 12px; 
+            padding: 8px 12px; 
             display: flex; 
             flex-direction: column; 
             gap: 6px; 
@@ -66,28 +69,28 @@
         }
         .top-brand { display: flex; justify-content: space-between; align-items: center; }
         
-        .org-title { font-size: 0.9rem; font-weight: 700; display: flex; align-items: center; gap: 6px; line-height: 1.1; }
-        .org-title i { font-size: 1.1rem; color: var(--secondary); }
+        .org-title { font-size: 0.88rem; font-weight: 700; display: flex; align-items: center; gap: 6px; line-height: 1.1; }
+        .org-title i { font-size: 1.05rem; color: var(--secondary); }
 
-        .role-badge { background: rgba(255,255,255,0.22); font-size: 0.7rem; padding: 1px 6px; border-radius: 8px; font-weight: 700; color: #fef08a; margin-left: 4px; }
+        .role-badge { background: rgba(255,255,255,0.22); font-size: 0.68rem; padding: 1px 6px; border-radius: 8px; font-weight: 700; color: #fef08a; margin-left: 4px; }
 
-        .admin-btn { background: var(--secondary); color: var(--primary-dark); border: none; padding: 4px 10px; border-radius: 10px; cursor: pointer; font-size: 0.78rem; font-weight: 800; display: flex; align-items: center; gap: 4px; }
-        .login-btn-head { background: #ffffff; color: var(--primary); border: none; padding: 4px 10px; border-radius: 10px; font-weight: 800; font-size: 0.78rem; cursor: pointer; display: flex; align-items: center; gap: 4px; }
+        .admin-btn { background: var(--secondary); color: var(--primary-dark); border: none; padding: 3px 8px; border-radius: 10px; cursor: pointer; font-size: 0.75rem; font-weight: 800; display: flex; align-items: center; gap: 4px; }
+        .login-btn-head { background: #ffffff; color: var(--primary); border: none; padding: 3px 8px; border-radius: 10px; font-weight: 800; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; gap: 4px; }
 
-        .search-tab-row { display: flex; flex-direction: column; gap: 6px; }
-        .search-box { width: 100%; display: flex; align-items: center; background: rgba(255, 255, 255, 0.2); border-radius: 12px; padding: 4px 10px; border: 1px solid rgba(255,255,255,0.3); }
-        .search-box input { border: none; background: transparent; outline: none; color: white; width: 100%; padding: 2px 6px; font-size: 0.85rem; }
+        .search-tab-row { display: flex; flex-direction: column; gap: 4px; }
+        .search-box { width: 100%; display: flex; align-items: center; background: rgba(255, 255, 255, 0.2); border-radius: 12px; padding: 3px 8px; border: 1px solid rgba(255,255,255,0.3); }
+        .search-box input { border: none; background: transparent; outline: none; color: white; width: 100%; padding: 2px 6px; font-size: 0.82rem; }
         .search-box input::placeholder { color: #e2e8f0; }
 
-        .tabs { display: none; gap: 6px; }
-        .tabs button { flex: 1; background: rgba(255,255,255,0.2); border: none; color: white; font-size: 0.8rem; font-weight: 700; padding: 5px 10px; border-radius: 6px; cursor: pointer; }
+        .tabs { display: none; gap: 4px; }
+        .tabs button { flex: 1; background: rgba(255,255,255,0.2); border: none; color: white; font-size: 0.78rem; font-weight: 700; padding: 4px 8px; border-radius: 6px; cursor: pointer; }
         .tabs button.active { background: #ffffff; color: var(--primary); font-weight: 800; }
 
-        /* चॅट मेसेज एरिया */
+        /* चॅट बॉक्स (Scrollable Area) */
         .chat-box { 
             flex: 1; 
-            min-height: 0; /* फ्लेक्स ओव्हरफ्लो कॉम्प्युटरवर रोखण्यासाठी अत्यंत महत्त्वाचे */
-            padding: 14px; 
+            min-height: 0; 
+            padding: 12px; 
             overflow-y: auto; 
             background-color: var(--bg-chat); 
             display: flex; 
@@ -98,14 +101,14 @@
             -webkit-overflow-scrolling: touch;
         }
 
-        /* चॅट स्क्रीनच्या मागे ब्लर लोगो */
+        /* बॅकग्राउंड ब्लर लोगो */
         .bg-logo-container {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 260px;
-            height: 260px;
+            width: 220px;
+            height: 220px;
             pointer-events: none;
             z-index: 0;
             opacity: 0.15;
@@ -123,13 +126,13 @@
 
         .fab-unread {
             position: absolute;
-            bottom: 80px; /* डेस्कटॉपसाठी डीफॉल्ट */
-            right: 20px;
+            bottom: 75px; 
+            right: 16px;
             background: var(--primary);
             color: white;
             border: 2px solid white;
-            width: 44px;
-            height: 44px;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
             display: none;
             align-items: center;
@@ -151,82 +154,88 @@
             border: 2px solid white;
         }
 
-        .message-wrapper { display: flex; align-items: flex-start; gap: 10px; max-width: 85%; position: relative; z-index: 1; }
+        .message-wrapper { display: flex; align-items: flex-start; gap: 8px; max-width: 90%; position: relative; z-index: 1; }
         .message-wrapper.my-msg-wrapper { align-self: flex-end; flex-direction: row-reverse; }
 
-        .avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 800; flex-shrink: 0; overflow: hidden; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.12); }
+        .avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.95rem; font-weight: 800; flex-shrink: 0; overflow: hidden; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.12); }
         .avatar img { width: 100%; height: 100%; object-fit: cover; }
 
-        .message { padding: 10px 14px; border-radius: 14px; background: #ffffff; position: relative; box-shadow: 0 2px 6px rgba(0,0,0,0.06); font-size: 0.98rem; line-height: 1.4; border-top-left-radius: 2px; word-break: break-word; color: var(--text-dark); border: 1px solid #e2e8f0; }
+        .message { padding: 8px 12px; border-radius: 14px; background: #ffffff; position: relative; box-shadow: 0 2px 6px rgba(0,0,0,0.06); font-size: 0.95rem; line-height: 1.35; border-top-left-radius: 2px; word-break: break-word; color: var(--text-dark); border: 1px solid #e2e8f0; }
         .message-wrapper.my-msg-wrapper .message { background: var(--my-msg); border-top-left-radius: 14px; border-top-right-radius: 2px; border: 1px solid #bce3a6; }
         
-        .msg-user-title { font-size: 0.9rem; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 2px; }
-        .msg-subinfo { font-size: 0.75rem; color: #475569; font-weight: 600; display: block; margin-bottom: 4px; }
+        .msg-user-title { font-size: 0.88rem; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 2px; }
+        .msg-subinfo { font-size: 0.72rem; color: #475569; font-weight: 600; display: block; margin-bottom: 4px; }
         
-        .msg-time-row { display: flex; justify-content: flex-end; align-items: center; gap: 6px; margin-top: 6px; }
-        .msg-time { font-size: 0.68rem; color: #64748b; font-weight: 700; }
+        .msg-time-row { display: flex; justify-content: flex-end; align-items: center; gap: 6px; margin-top: 4px; }
+        .msg-time { font-size: 0.65rem; color: #64748b; font-weight: 700; }
         
-        .seen-badge { cursor: pointer; color: #0284c7; font-size: 0.72rem; font-weight: 800; background: rgba(59, 130, 246, 0.12); padding: 2px 7px; border-radius: 8px; transition: 0.2s; border: 1px solid rgba(59, 130, 246, 0.2); }
+        .seen-badge { cursor: pointer; color: #0284c7; font-size: 0.7rem; font-weight: 800; background: rgba(59, 130, 246, 0.12); padding: 1px 6px; border-radius: 8px; transition: 0.2s; border: 1px solid rgba(59, 130, 246, 0.2); }
         .seen-badge:hover { background: #0284c7; color: white; }
         
         .msg-image-box { position: relative; margin-top: 6px; }
-        .msg-image { max-width: 100%; border-radius: 10px; cursor: pointer; border: 1px solid #cbd5e1; max-height: 260px; object-fit: cover; display: block; }
-        .img-download-btn { display: inline-flex; align-items: center; gap: 5px; background: var(--primary); color: white; border: none; padding: 5px 10px; border-radius: 6px; font-size: 0.78rem; font-weight: 700; margin-top: 5px; text-decoration: none; }
+        .msg-image { max-width: 100%; border-radius: 10px; cursor: pointer; border: 1px solid #cbd5e1; max-height: 240px; object-fit: cover; display: block; }
+        .img-download-btn { display: inline-flex; align-items: center; gap: 5px; background: var(--primary); color: white; border: none; padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; margin-top: 5px; text-decoration: none; }
 
-        .pdf-card { margin-top: 6px; background: #fff1f2; border: 1px solid #fecdd3; padding: 10px; border-radius: 10px; display: flex; align-items: center; gap: 10px; }
-        .pdf-card i { font-size: 2rem; color: #ef4444; }
+        .pdf-card { margin-top: 6px; background: #fff1f2; border: 1px solid #fecdd3; padding: 8px; border-radius: 10px; display: flex; align-items: center; gap: 8px; }
+        .pdf-card i { font-size: 1.8rem; color: #ef4444; }
         .pdf-card-info { flex: 1; overflow: hidden; }
-        .pdf-card-name { font-size: 0.85rem; color: #881337; font-weight: 700; display: block; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
+        .pdf-card-name { font-size: 0.8rem; color: #881337; font-weight: 700; display: block; text-overflow: ellipsis; overflow: hidden; white-space: nowrap; }
 
         .delete-btn { position: absolute; top: -8px; right: -8px; background: var(--danger); color: white; border: none; border-radius: 50%; width: 22px; height: 22px; cursor: pointer; font-size: 0.7rem; display: none; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.25); }
         .message:hover .delete-btn { display: flex; }
 
-        /* २. खालील चॅट इनपुट पट्टी (डेस्कटॉपसाठी नॉर्मल लेआउट) */
+        /* २. खालील चॅट इनपुट पट्टी */
         .input-area { 
             display: flex; 
-            padding: 12px 16px; 
+            padding: 10px 12px; 
             background: #ffffff; 
             align-items: center; 
-            gap: 10px; 
+            gap: 8px; 
             border-top: 1px solid #cbd5e1; 
             z-index: 20; 
             flex-shrink: 0; 
             box-shadow: 0 -3px 10px rgba(0,0,0,0.04);
         }
-        .file-label { cursor: pointer; font-size: 1.4rem; color: #475569; padding: 4px; display: flex; align-items: center; transition: 0.3s; }
+        .file-label { cursor: pointer; font-size: 1.3rem; color: #475569; padding: 4px; display: flex; align-items: center; transition: 0.3s; }
         .file-label:hover { color: var(--primary); }
         #fileInput { display: none; }
         
-        .input-area input[type="text"] { flex: 1; padding: 12px 18px; border-radius: 24px; border: 1.5px solid #cbd5e1; outline: none; font-size: 1rem; background: #f8fafc; }
+        .input-area input[type="text"] { flex: 1; padding: 10px 14px; border-radius: 24px; border: 1.5px solid #cbd5e1; outline: none; font-size: 0.95rem; background: #f8fafc; }
         .input-area input[type="text"]:focus { border-color: var(--primary); background: #ffffff; }
         
-        .send-btn { background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 24px; cursor: pointer; font-weight: 800; font-size: 0.95rem; display: flex; align-items: center; gap: 6px; transition: 0.3s; flex-shrink: 0; }
+        .send-btn { background: var(--primary); color: white; border: none; padding: 10px 16px; border-radius: 24px; cursor: pointer; font-weight: 800; font-size: 0.9rem; display: flex; align-items: center; gap: 6px; transition: 0.3s; flex-shrink: 0; }
         .send-btn:hover { background: var(--primary-dark); }
 
-        #loader { display: none; background: #fef08a; color: #854d0e; padding: 6px; text-align: center; font-size: 0.85rem; font-weight: bold; border-bottom: 1px solid #fde047; flex-shrink: 0; }
+        #loader { display: none; background: #fef08a; color: #854d0e; padding: 6px; text-align: center; font-size: 0.82rem; font-weight: bold; border-bottom: 1px solid #fde047; flex-shrink: 0; }
 
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.65); justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(2px); }
-        .modal-content { background: white; padding: 18px; border-radius: 16px; width: 92%; max-width: 520px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); max-height: 88vh; overflow-y: auto; }
-        .modal-header { font-size: 1.05rem; font-weight: 800; margin-bottom: 12px; color: var(--primary); display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; }
+        .modal-content { background: white; padding: 18px; border-radius: 16px; width: 92%; max-width: 380px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); max-height: 88vh; overflow-y: auto; }
+        .modal-header { font-size: 1rem; font-weight: 800; margin-bottom: 12px; color: var(--primary); display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; }
 
-        /* ३. फक्त मोबाईल/PWA अॅपसाठी खालील अतिरिक्त जागा लागू होईल */
+        /* ३. फक्त मोबाईल डिव्हाईस किंवा PWA अॅपसाठी लेआउट समायोजन */
         @media (max-width: 768px) {
-            body { padding: 0; background: white; }
-            .chat-container { height: 100vh; height: 100dvh; border-radius: 0; border: none; }
-            .org-header { padding: 6px 8px; }
-            .org-title { font-size: 0.85rem; }
-            .message-wrapper { max-width: 92%; }
-            .message { font-size: 0.95rem; padding: 8px 12px; }
+            html, body {
+                background-color: #ffffff;
+            }
+            .chat-container { 
+                max-width: 100%; 
+                height: 100vh; 
+                height: 100dvh; 
+                max-height: none;
+                border-radius: 0; 
+                border: none; 
+                box-shadow: none;
+            }
             
             /* मोबाईलवर PWA/नेव्हिगेशन बारसाठी १.५ सेमी अतिरिक्त पॅडिंग */
             .input-area { 
-                padding: 10px; 
+                padding: 10px 12px; 
                 padding-bottom: calc(10px + 1.5cm + env(safe-area-inset-bottom, 0px));
             }
-            .input-area input[type="text"] { font-size: 0.95rem; padding: 10px 14px; }
-            .send-btn span { display: none; }
-            .send-btn { padding: 10px 14px; border-radius: 50%; font-size: 1rem; }
-            .fab-unread { bottom: calc(70px + 1.5cm); }
+            
+            .fab-unread { 
+                bottom: calc(70px + 1.5cm); 
+            }
         }
     </style>
 </head>
@@ -295,7 +304,7 @@
 </div>
 
 <div class="modal" id="loginModal">
-    <div class="modal-content" style="max-width: 380px; text-align: center;">
+    <div class="modal-content">
         <div class="modal-header">
             <span>🔐 ॲडमिन सुरक्षित लॉगिन</span>
             <button class="close-modal" onclick="closeModal('loginModal')" style="border:none; background:none; cursor:pointer; font-size:1.2rem;">✖</button>
@@ -619,9 +628,9 @@
 
             let roleBadgeHtml = '';
             if (senderType === 'admin') {
-                roleBadgeHtml = `<span style="background:#fef08a; color:#854d0e; font-size:0.7rem; padding:1px 6px; border-radius:10px; font-weight:800; border:1px solid #fde047;">👑 ॲडमिन</span>`;
+                roleBadgeHtml = `<span style="background:#fef08a; color:#854d0e; font-size:0.68rem; padding:1px 6px; border-radius:10px; font-weight:800; border:1px solid #fde047;">👑 ॲडमिन</span>`;
             } else {
-                roleBadgeHtml = `<span style="background:#e0f2fe; color:#0369a1; font-size:0.7rem; padding:1px 6px; border-radius:10px; font-weight:800; border:1px solid #bae6fd;">👤 सभासद</span>`;
+                roleBadgeHtml = `<span style="background:#e0f2fe; color:#0369a1; font-size:0.68rem; padding:1px 6px; border-radius:10px; font-weight:800; border:1px solid #bae6fd;">👤 सभासद</span>`;
             }
 
             let subDetails = [];
@@ -630,7 +639,7 @@
             
             let subDetailsHtml = subDetails.length > 0 ? `<span class="msg-subinfo">${subDetails.join(' | ')}</span>` : `<span class="msg-subinfo">(${userPost})</span>`;
             
-            let nameHeader = `<div class="msg-user-title"><span style="font-size:0.95rem; font-weight:800; color:var(--primary);">${userName}</span> ${roleBadgeHtml}</div>`;
+            let nameHeader = `<div class="msg-user-title"><span style="font-size:0.92rem; font-weight:800; color:var(--primary);">${userName}</span> ${roleBadgeHtml}</div>`;
 
             let contentHtml = `${nameHeader}${subDetailsHtml}`;
 
@@ -644,7 +653,7 @@
                 let pdfDownloadBtn = `<a href="${msgText}" target="_blank" download="${pdfFileName}" class="img-download-btn" style="background:#ef4444;"><i class="fa-solid fa-file-arrow-down"></i> डाऊनलोड PDF</a>`;
                 contentHtml += `<div class="pdf-card"><i class="fa-solid fa-file-pdf"></i><div class="pdf-card-info"><b class="pdf-card-name">${pdfFileName}</b>${pdfDownloadBtn}</div></div>`;
             } else {
-                contentHtml += `<div style="margin-top:4px; font-size:0.96rem; color:#0f172a;">${msgText}</div>`;
+                contentHtml += `<div style="margin-top:4px; font-size:0.92rem; color:#0f172a;">${msgText}</div>`;
             }
 
             const timeStr = data.time || (data.timestamp ? new Date(data.timestamp.toDate()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '');
