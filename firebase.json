@@ -3,9 +3,20 @@
     "public": ".",
     "ignore": [
       "firebase.json",
-      "*/.",
-      "*/node_modules/*"
+      "**/.*",
+      "**/node_modules/**"
     ],
-    "cleanUrls": true
+    "cleanUrls": true,
+    "headers": [
+      {
+        "source": "/sitemap.xml",
+        "headers": [
+          {
+            "key": "Content-Type",
+            "value": "application/xml"
+          }
+        ]
+      }
+    ]
   }
 }
