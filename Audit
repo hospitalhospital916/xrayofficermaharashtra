@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fully Editable Prescription Audit System</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- html2pdf Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <style>
+        body {
+            background-color: #f4f6f9;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            color: #212529;
+        }
+        .audit-card {
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 35px;
+            margin-bottom: 30px;
+        }
+        .header-box {
+            border-bottom: 3px solid #0d6efd;
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .section-title {
+            background-color: #e9ecef;
+            padding: 6px 12px;
+            font-weight: bold;
+            font-size: 1.05rem;
+            border-left: 5px solid #0d6efd;
+            margin-top: 20px;
+            margin-bottom: 12px;
+        }
+        .table-custom th {
+            background-color: #f1f3f5;
+        }
+        /* Style when editing is live */
+        [contenteditable="true"] {
+            outline: 1px dashed #0d6efd;
+            background-color: #f8faff;
+            min-height: 20px;
+        }
+        .save-indicator {
+            font-size: 0.85rem;
+            color: #198754;
+            font-weight: bold;
+        }
+        @media print {
+            .no-print { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container my-3">
+    <!-- Top Action Bar -->
+    <div class="card p-3 mb-3 no-print bg-white border-primary shadow-sm">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <div>
+                <h5 class="mb-0 text-primary fw-bold">⚡ Teleradiology Audit Report Generator</h5>
+                <span class="save-indicator" id="saveStatus">✓ हॉस्पिटल व कमिटीची नावे सेव्ह झाली आहेत.</span>
+            </div>
+            <div>
+                <button type="button" class="btn btn-outline-secondary btn-sm" onclick="clearFixedData()">🔄 फिक्स डाटा रिसेट</button>
+                <button type="button" class="btn btn-primary" onclick="downloadPDF()">📄 PDF डाऊनलोड</button>
+                <button type="button" class="btn btn-success" onclick="downloadWord()">📝 Word डाऊनलोड</button>
+            </div>
+        </div>
+        <small class="text-muted mt-2">💡 **टीप:** स्क्रीनवरील **कोणत्याही शब्दावर क्लिक करून** तुम्ही मजकूर, हेडिंग किंवा कमिटी सदस्यांची नावे **शब्द न शब्द बदलू शकता**. माहिती स्वयंचलितपणे सेव्ह होते.</small>
+    </div>
+  <!-- Main Audit Report Document -->
+    <div class="audit-card" id="auditReport">
+        
+        <!-- Header -->
+        <div class="header-box">
+            <h3 class="fw-bold text-primary mb-1" contenteditable="true">Overview of Prescription Audit Methodology of X-Ray & CT Scan</h3>
+            <h5 class="text-secondary mb-1" contenteditable="true">(Tele-Radiology Services in PPP Mode)</h5>
+            <p class="mb-0 small" contenteditable="true"><em>An audit committee to be formed under ADHS (Medical) at Circle/DD level. Audit to be conducted separately for X-Ray and CT scan referrals/reports.</em></p>
+        </div>
+
+        <form id="auditForm">
+            <!-- Hospital & Fixed Data (Saved) -->
+            <div class="row g-3 mb-2">
+                <div class="col-md-6">
+                    <label class="form-label fw-bold text-danger">हॉस्पिटल / संस्था (फिक्स):</label>
+                    <input type="text" class="form-control fw-bold border-danger" id="hospitalName" placeholder="Enter Hospital / Circle Name" oninput="saveFixedData()">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-bold text-primary">ऑडिट महिना व वर्ष:</label>
+                    <input type="month" class="form-control fw-bold border-primary" id="auditMonth">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-bold text-danger">टेक्निशियनचे नाव (फिक्स):</label>
+                    <input type="text" class="form-control" id="technicianName" placeholder="Technician Name" oninput="saveFixedData()">
+                </div>
+            </div>
+
+            <!-- Section 1: OPD & Referral Counts -->
+            <div class="section-title" contenteditable="true">1. Indicators to check the completeness of Prescription / Referral</div>
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label">Total no. of patients OPD in hospital (Monthly):</label>
+                    <input type="number" class="form-control fw-bold" id="opdCount" placeholder="0">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Total no. of X-Ray done (Monthly):</label>
+                    <input type="number" class="form-control fw-bold" id="xrayCount" placeholder="0">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Total no. of CT Scan done (Monthly):</label>
+                    <input type="number" class="form-control fw-bold" id="ctCount" placeholder="0">
+                </div>
+            </div>
+
+            <div class="mt-3">
+                <label class="fw-bold mb-1" contenteditable="true">Prescription / referral slip should be verified for the following details:</label>
+                <div class="row small">
+                    <div class="col-md-6">
+                        <div class="form-check"><input class="form-check-input" type="checkbox" id="check1" checked><label class="form-check-label" contenteditable="true">Patient details – Name, Age, Sex, Reported allergy, Date of consultation/registration in OPD.</label></div>
+                        <div class="form-check"><input class="form-check-input" type="checkbox" id="check2" checked><label class="form-check-label" contenteditable="true">Contact No. of patient.</label></div>
+                        <div class="form-check"><input class="form-check-input" type="checkbox" id="check3" checked><label class="form-check-label" contenteditable="true">Test name (X-Ray site / CT scan region) and Emergency / Non-Emergency tagging (as per treating doctor, MoU Clause 1.11).</label></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-check"><input class="form-check-input" type="checkbox" id="check4" checked><label class="form-check-label" contenteditable="true">Signature and information about the Prescribing / Referring Doctor.</label></div>
+                        <div class="form-check"><input class="form-check-input" type="checkbox" id="check5" checked><label class="form-check-label" contenteditable="true">Signature of Medical Superintendent / Institute Head.</label></div>
+                        <div class="form-check"><input class="form-check-input" type="checkbox" id="check6" checked><label class="form-check-label" contenteditable="true">The sample should be representative of the total OPD attendance, separately for X-Ray and CT scan.</label></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 2: Sample Size Reference Table -->
+            <div class="section-title" contenteditable="true">2. Sample Size (Margin of Error 10%; Confidence level 95%)</div>
+            <p class="small text-muted mb-1" contenteditable="true">Simple random sampling technique used. Half of the sample taken from first two weeks and half from remaining two weeks.</p>
+            <table class="table table-sm table-bordered text-center table-custom mb-2">
+                <thead>
+                    <tr contenteditable="true"><th>Population (Monthly OPD/Referrals)</th><th>10</th><th>20</th><th>50</th><th>100</th><th>200</th><th>300</th><th>500</th><th>1000</th><th>3000</th><th>5000</th><th>10000+</th></tr>
+                </thead>
+                <tbody>
+                    <tr contenteditable="true"><td><strong>Sample Size (No. Audited)</strong></td><td>9</td><td>17</td><td>34</td><td>50</td><td>66</td><td>73</td><td>81</td><td>88</td><td>94</td><td>95</td><td>96</td></tr>
+                </tbody>
+            </table>
+
+            <!-- Section 3: Timeliness of Reporting -->
+            <div class="section-title" contenteditable="true">3. Timeliness of Reporting (as per MoU Clause 1.11 & Annexure-B)</div>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label" contenteditable="true">Emergency cases (X-Ray/CT) - % reported within 1 hour of receipt:</label>
+                    <input type="text" class="form-control" id="timeEmergency" placeholder="e.g. 100%">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" contenteditable="true">Non-emergency / Routine cases (8 AM to 6 PM) - % reported within 12 hours:</label>
+                    <input type="text" class="form-control" id="timeRoutine" placeholder="e.g. 95%">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" contenteditable="true">Non-emergency cases (6 PM to 8 AM) - % reported before 10 AM/12 Noon:</label>
+                    <input type="text" class="form-control" id="timeNight" placeholder="e.g. 98%">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" contenteditable="true">Applicable MoU Shortfall Penalty Deduction:</label>
+                    <input type="text" class="form-control" id="timelinePenalty" placeholder="None / 1% Deduction (90-99%) / 2% (70-89%) / 5% (50-69%)">
+                </div>
+            </div>
+
+            <!-- Section 4: Records Keeping -->
+            <div class="section-title" contenteditable="true">4. Records Keeping (MoU Clause 3.10, 3.17, 3.19)</div>
+            <div class="row small">
+                <div class="col-md-6">
+                    <div class="form-check"><input class="form-check-input" type="checkbox" id="rec1" checked><label class="form-check-label" contenteditable="true">Daily patients register maintained for X-Ray/CT Scan referrals.</label></div>
+                    <div class="form-check"><input class="form-check-input" type="checkbox" id="rec2" checked><label class="form-check-label" contenteditable="true">Logbook maintained for breakdown/shutdown of CR system, equipment or software.</label></div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-check"><input class="form-check-input" type="checkbox" id="rec3" checked><label class="form-check-label" contenteditable="true">Detailed records (soft copy + hard copy) & 1 report copy available at centre.</label></div>
+                    <div class="form-check"><input class="form-check-input" type="checkbox" id="rec4" checked><label class="form-check-label" contenteditable="true">Monthly report submitted showing Government & Private patients separately.</label></div>
+                </div>
+            </div>
+
+            <!-- Section 5: Quality of Reports -->
+            <div class="section-title" contenteditable="true">5. Quality of Reports (MoU Clause 3.9 & Annexure-B)</div>
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label" contenteditable="true">% Diagnostic Error (among 1% sample):</label>
+                    <input type="text" class="form-control" id="errorRate" placeholder="e.g. 3%">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" contenteditable="true">Name of Radiologist / Independent Agency:</label>
+                    <input type="text" class="form-control" id="agencyName" placeholder="Agency/Radiologist Name">
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" contenteditable="true">Quality Penalty Deduction:</label>
+                    <input type="text" class="form-control" id="qualityPenalty" placeholder="No Penalty (≤10%) / 10% / 50%">
+                </div>
+            </div>
+
+            <!-- Section 6: Equipment Upkeep & Training -->
+            <div class="section-title" contenteditable="true">6. Equipment Upkeep & Training (Annexure-B)</div>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label" contenteditable="true">CR/Digitizer Daily Functionality % (Min 90%; max single shutdown ≤ 7 days):</label>
+                    <input type="text" class="form-control" id="upkeepRate" placeholder="e.g. 96%">
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" contenteditable="true">Radiographer Training Completion Status (within 3 months):</label>
+                    <input type="text" class="form-control" id="trainingStatus" placeholder="Completed & Verified">
+                </div>
+            </div>
+
+            <!-- Committee Signatures (AUTO-SAVED & FULLY EDITABLE) -->
+            <div class="section-title" contenteditable="true">7. Audit Committee Signatures</div>
+            <div class="row text-center mt-4 pt-3">
+                <div class="col-4">
+                    <input type="text" class="form-control text-center fw-bold border-0 bg-light mb-1" id="msName" placeholder="[ Medical Superintendent Name ]" oninput="saveFixedData()">
+                    <p class="mb-0" contenteditable="true"><strong>Medical Superintendent</strong></p>
+                </div>
+                <div class="col-4">
+                    <input type="text" class="form-control text-center fw-bold border-0 bg-light mb-1" id="radiologistName" placeholder="[ Radiologist / Assessor Name ]" oninput="saveFixedData()">
+                    <p class="mb-0" contenteditable="true"><strong>Radiologist / Assessor</strong></p>
+                </div>
+                <div class="col-4">
+                    <input type="text" class="form-control text-center fw-bold border-0 bg-light mb-1" id="adhsName" placeholder="[ ADHS (Medical) Officer Name ]" oninput="saveFixedData()">
+                    <p class="mb-0" contenteditable="true"><strong>ADHS (Medical) Circle Head</strong></p>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+// Load Saved Hospital & Committee Names
+window.onload = function() {
+    loadFixedData();
+    const today = new Date();
+    document.getElementById('auditMonth').value = today.toISOString().slice(0, 7);
+};
+
+// Auto Save Fixed Data
+function saveFixedData() {
+    const fixedData = {
+        hospitalName: document.getElementById('hospitalName').value,
+        technicianName: document.getElementById('technicianName').value,
+        msName: document.getElementById('msName').value,
+        radiologistName: document.getElementById('radiologistName').value,
+        adhsName: document.getElementById('adhsName').value
+    };
+    localStorage.setItem('tele_audit_fixed_data', JSON.stringify(fixedData));
+    document.getElementById('saveStatus').innerText = "✓ नावे सेव्ह झाली आहेत.";
+}
+
+// Load Stored Data
+function loadFixedData() {
+    const saved = localStorage.getItem('tele_audit_fixed_data');
+    if (saved) {
+        const data = JSON.parse(saved);
+        if(data.hospitalName) document.getElementById('hospitalName').value = data.hospitalName;
+        if(data.technicianName) document.getElementById('technicianName').value = data.technicianName;
+        if(data.msName) document.getElementById('msName').value = data.msName;
+        if(data.radiologistName) document.getElementById('radiologistName').value = data.radiologistName;
+        if(data.adhsName) document.getElementById('adhsName').value = data.adhsName;
+    }
+}
+
+// Reset Saved Names
+function clearFixedData() {
+    if(confirm("तुम्हाला सेव्ह केलेली सर्व नावे काढून टाकायची आहेत का?")) {
+        localStorage.removeItem('tele_audit_fixed_data');
+        document.getElementById('hospitalName').value = '';
+        document.getElementById('technicianName').value = '';
+        document.getElementById('msName').value = '';
+        document.getElementById('radiologistName').value = '';
+        document.getElementById('adhsName').value = '';
+        document.getElementById('saveStatus').innerText = "नावे रीसेट झाली.";
+    }
+}
+
+// Download Functions
+function downloadPDF() {
+    const element = document.getElementById('auditReport');
+    const month = document.getElementById('auditMonth').value || 'Report';
+    const opt = {
+        margin:       8,
+        filename:     `Teleradiology_Audit_${month}.pdf`,
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2 },
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+    html2pdf().set(opt).from(element).save();
+}
+
+function downloadWord() {
+    const month = document.getElementById('auditMonth').value || 'Report';
+    const header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'></head><body>";
+    const footer = "</body></html>";
+    const sourceHTML = header + document.getElementById("auditReport").innerHTML + footer;
+    
+    const source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
+    const fileDownload = document.createElement("a");
+    document.body.appendChild(fileDownload);
+    fileDownload.href = source;
+    fileDownload.download = `Teleradiology_Audit_${month}.doc`;
+    fileDownload.click();
+    document.body.removeChild(fileDownload);
+}
+</script>
+
+</body>
+</html>
+    
