@@ -3,133 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prescription Audit Report - Maharashtra State</title>
-    <!-- Bootstrap 5 & FontAwesome -->
+    <title>Prescription Audit Report - Tele-Radiology</title>
+    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- html2pdf Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;700;800&display=swap');
 
-        :root {
-            --primary-color: #0d6efd;
-            --dark-color: #0f172a;
-        }
-
         body {
-            background-color: #f1f5f9;
-            font-family: 'Mukta', sans-serif;
-            color: #1e293b;
+            background-color: #cbd5e1;
+            font-family: 'Mukta', Arial, sans-serif;
+            color: #000000;
         }
 
-        /* Top Bar Styling */
-        .control-header {
+        /* Top Action Bar */
+        .control-panel {
             background: #ffffff;
-            border-bottom: 3px solid var(--primary-color);
-            padding: 12px 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border-bottom: 2px solid #000000;
+            padding: 10px 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
-        /* A4 Document Setup */
-        .a4-container {
+        /* A4 Page Container (Black & White Layout) */
+        .a4-document {
             background: #ffffff;
             width: 210mm;
             min-height: 297mm;
-            padding: 12mm 15mm 12mm 15mm;
-            margin: 20px auto;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+            padding: 12mm 15mm;
+            margin: 15px auto;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
             box-sizing: border-box;
-            border-radius: 4px;
+            color: #000000;
+            line-height: 1.4;
         }
 
+        /* Header Styling */
         .report-header {
             text-align: center;
-            border-bottom: 2px solid #0f172a;
-            padding-bottom: 8px;
-            margin-bottom: 12px;
+            border-bottom: 2px solid #000000;
+            padding-bottom: 6px;
+            margin-bottom: 10px;
         }
 
         .report-header h3 {
-            font-size: 1.3rem;
+            font-size: 1.25rem;
             font-weight: 800;
-            color: #0f172a;
-            margin-bottom: 2px;
+            margin: 0;
             text-transform: uppercase;
         }
 
         .report-header h5 {
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 700;
-            color: #475569;
-            margin-bottom: 4px;
+            margin: 2px 0;
             text-transform: uppercase;
         }
 
         .report-title {
-            font-size: 1.05rem;
+            font-size: 0.95rem;
             font-weight: 800;
-            color: #0284c7;
             text-decoration: underline;
-            margin-bottom: 6px;
+            margin-top: 4px;
         }
 
+        /* Section Title Styling */
         .section-header {
-            font-size: 0.88rem;
+            font-size: 0.85rem;
             font-weight: 800;
-            background: #e0f2fe;
-            color: #0369a1;
-            padding: 4px 10px;
-            border-left: 5px solid #0284c7;
+            background: #f1f5f9;
+            border-left: 4px solid #000000;
+            padding: 2px 6px;
             margin-top: 10px;
-            margin-bottom: 6px;
-            border-radius: 2px;
+            margin-bottom: 4px;
+            text-transform: uppercase;
         }
 
         .audit-text, .audit-text li {
-            font-size: 0.83rem;
-            line-height: 1.4;
-            margin-bottom: 4px;
+            font-size: 0.82rem;
+            line-height: 1.35;
+            margin-bottom: 2px;
         }
 
         .audit-text ul {
-            padding-left: 20px;
-            margin-bottom: 6px;
+            padding-left: 18px;
+            margin-bottom: 4px;
         }
 
-        /* Inline Editable Inputs */
-        .inline-input {
+        /* Input Controls */
+        .inline-field {
             border: none;
-            border-bottom: 1px dashed #94a3b8;
+            border-bottom: 1px solid #000000;
             font-weight: 700;
-            font-size: 0.83rem;
-            color: #0f172a;
+            font-size: 0.82rem;
+            color: #000000;
             background: transparent;
             padding: 0 4px;
         }
 
-        .inline-input:focus {
+        .inline-field:focus {
             outline: none;
-            border-bottom: 2px solid #0284c7;
-            background: #f0f9ff;
+            background: #f8fafc;
         }
 
-        /* Word-by-Word Editable Highlights */
-      [contenteditable="true"] {
-            outline: 1px dashed #7dd3fc;
-            background-color: #f0f9ff;
-            padding: 1px 4px;
-            border-radius: 3px;
+        /* Page Break Rules for Print & PDF */
+        .page-break {
+            page-break-before: always;
+            break-before: page;
+            margin-top: 15mm;
         }
 
-        [contenteditable="true"]:focus {
-            outline: 2px solid #0284c7;
-            background-color: #ffffff;
-        }
-
-        .signature-section {
-            margin-top: 30px;
+        /* Signature Grid */
+        .signature-container {
+            margin-top: 35px;
             display: flex;
             justify-content: space-between;
             text-align: center;
@@ -137,176 +124,184 @@
 
         .signature-box {
             flex: 1;
-            padding: 0 8px;
+            padding: 0 5px;
         }
 
         @media print {
             .no-print { display: none !important; }
-            body { background: white; margin: 0; }
-            .a4-container { box-shadow: none; margin: 0; width: 100%; padding: 10mm; }
+            body { background: #ffffff; margin: 0; }
+            .a4-document { box-shadow: none; margin: 0; width: 100%; padding: 10mm; }
         }
     </style>
 </head>
 <body>
 
-<!-- Top Navigation & Month Selection Bar -->
-<div class="control-header no-print sticky-top">
+<!-- Control Panel -->
+<div class="control-panel no-print sticky-top">
     <div class="container-fluid d-flex justify-content-between align-items-center flex-wrap gap-2">
         <div class="d-flex align-items-center gap-3">
-            <h5 class="mb-0 text-primary fw-bold"><i class="fa-solid fa-file-medical"></i> Prescription Audit Portal</h5>
+            <h5 class="mb-0 fw-bold text-dark">📋 Prescription Audit Report Portal</h5>
             
-            <!-- Month Selector Dropdown -->
             <div class="d-flex align-items-center gap-2 bg-light p-1 px-2 rounded border">
-                <label for="selectMonthYear" class="fw-bold text-dark small mb-0"><i class="fa-solid fa-calendar-days text-primary"></i> महिना निवडा:</label>
-                <select id="selectMonthYear" class="form-select form-select-sm fw-bold border-primary" style="min-width: 160px;" onchange="onMonthChange()">
-                    <!-- Auto-populated from March 2025 to August 2026 -->
+                <label for="selectMonth" class="fw-bold small mb-0">महिना निवडा:</label>
+                <select id="selectMonth" class="form-select form-select-sm fw-bold border-dark" style="min-width: 150px;" onchange="onMonthSelect()">
+                    <!-- March 2025 to August 2026 -->
                 </select>
             </div>
         </div>
 
-        <div class="d-flex gap-2 align-items-center">
-            <span id="saveBadge" class="badge bg-success-subtle text-success border border-success px-2 py-1 small">✓ सेव्ह झाले</span>
-            <button class="btn btn-outline-danger btn-sm" onclick="resetCurrentMonthData()"><i class="fa-solid fa-rotate-right"></i> रीसेट</button>
-            <button class="btn btn-secondary btn-sm" onclick="window.print()"><i class="fa-solid fa-print"></i> 🖨️ A4 प्रिंट</button>
-            <button class="btn btn-primary btn-sm" onclick="downloadPDF()"><i class="fa-solid fa-file-pdf"></i> PDF डाऊनलोड</button>
-            <button class="btn btn-success btn-sm" onclick="downloadWord()"><i class="fa-solid fa-file-word"></i> Word डाऊनलोड</button>
+        <div class="d-flex gap-2">
+            <button class="btn btn-outline-dark btn-sm" onclick="resetMonthData()">🔄 रीसेट डाटा</button>
+            <button class="btn btn-dark btn-sm" onclick="window.print()">🖨️ A4 ब्लॅक अँड व्हाईट प्रिंट</button>
+            <button class="btn btn-primary btn-sm" onclick="downloadPDF()">📄 PDF डाऊनलोड</button>
+            <button class="btn btn-success btn-sm" onclick="downloadWord()">📝 Word डाऊनलोड</button>
         </div>
     </div>
 </div>
 
-<!-- A4 Printable Document -->
-<div class="a4-container audit-text" id="auditDocument">
+<!-- Main Printable Document Container (A4 Layout) -->
+<div class="a4-document audit-text" id="auditDocument">
     
-    <!-- Header -->
+     <!-- PAGE 1 CONTENT -->
     <div class="report-header">
-        <h3 contenteditable="true" id="hosp_name" onkeyup="saveData()">RURAL HOSPITAL DHANORA</h3>
-        <h5 contenteditable="true" id="dist_name" onkeyup="saveData()">DIST GADCHIROLI</h5>
-        <div class="report-title" contenteditable="true">PRESCRIPTION AUDIT REPORT (X-RAY SERVICES)</div>
-        <div class="fw-bold mt-1" style="font-size: 0.9rem;">
-            Audit Month & Year: <span class="text-primary fw-bold" id="display_selected_month">March 2025</span>
+        <h3 id="lbl_hosp_title">RURAL HOSPITAL DHANORA</h3>
+        <h5 id="lbl_dist_title">DIST GADCHIROLI</h5>
+        <div class="report-title">PRESCRIPTION AUDIT REPORT (X-RAY SERVICES)</div>
+        <div class="fw-bold mt-1" style="font-size: 0.85rem;">
+            Audit Month & Year: <span class="fw-bold" id="lbl_month_display">March 2025</span>
         </div>
-        <p class="text-muted mb-0 mt-1" style="font-size: 0.72rem;" contenteditable="true">
+        <p class="mb-0 mt-1" style="font-size: 0.72rem;">
             Overview of Prescription Audit Methodology of X-Ray & CT Scan (Tele-Radiology Services in PPP Mode)
         </p>
     </div>
 
     <!-- Section 1 -->
-    <div class="section-header" contenteditable="true">1. Indicators to check the completeness of Prescription / Referral</div>
+    <div class="section-header">1. Indicators to check the completeness of Prescription / Referral</div>
+    <p>
+        <strong>Hospital / Circle Name:</strong> 
+        <input type="text" class="inline-field fw-bold" id="hosp_input" value="RURAL HOSPITAL DHANORA" style="width: 250px;" oninput="updateHospitalAndSave()">
+        &nbsp;&nbsp;<strong>District:</strong> 
+        <input type="text" class="inline-field fw-bold" id="dist_input" value="DIST GADCHIROLI" style="width: 180px;" oninput="updateHospitalAndSave()">
+    </p>
     <p>
         <strong>Total no. of patients OPD in hospital (Monthly):</strong> 
-        <input type="text" class="inline-input fw-bold" id="opd_count" value="3,594 (3,398 OPD + 196 Casualty/IPD)" style="width: 260px;" oninput="saveData()">
+        <input type="text" class="inline-field fw-bold" id="opd_count" value="3,594 (3,398 OPD + 196 Casualty/IPD)" style="width: 280px;" oninput="saveCurrentData()">
     </p>
     <p>
         <strong>Total no. of X-Ray done (Monthly):</strong> 
-        <input type="number" class="inline-input fw-bold text-primary" id="xray_count" value="184" style="width: 80px;" oninput="calculateMetrics(); saveData();">
+        <input type="number" class="inline-field fw-bold" id="xray_count" value="184" style="width: 70px;" oninput="calculateAndSave();">
     </p>
     <p>
         <strong>Total no. of CT Scan done (Monthly):</strong> 
-        <input type="text" class="inline-input" id="ct_count" value="N/A (Facility not available at RH level)" style="width: 320px;" oninput="saveData()">
+        <input type="text" class="inline-field" id="ct_count" value="N/A (Not Applicable - Facility not available at RH level)" style="width: 340px;" oninput="saveCurrentData()">
     </p>
 
-    <p class="fw-bold mt-2 mb-1" contenteditable="true">Prescription / referral slip verification status:</p>
+    <p class="fw-bold mt-1 mb-1">Prescription / referral slip verification status:</p>
     <ul>
-        <li contenteditable="true">Patient details (Name, Age, Sex, Reported allergy, Date of consultation/registration in OPD): <strong>Verified & Complete (100%)</strong></li>
-        <li contenteditable="true">Contact No. of patient: <strong>Verified & Complete (100%)</strong></li>
-        <li contenteditable="true">Test name (X-Ray site / CT scan region) and Emergency / Non-Emergency tagging (as per treating doctor, MoU Clause 1.11): <strong>Verified & Tagged Properly (100%)</strong></li>
-        <li contenteditable="true">Signature and information about the Prescribing / Referring Doctor: <strong>Verified & Available (100%)</strong></li>
-        <li contenteditable="true">Signature of Medical Superintendent / Institute Head: <strong>Verified & Signed (100%)</strong></li>
+        <li>Patient details (Name, Age, Sex, Reported allergy, Date of consultation/registration in OPD): <strong>Verified & Complete (100%)</strong></li>
+        <li>Contact No. of patient: <strong>Verified & Complete (100%)</strong></li>
+        <li>Test name (X-Ray site / CT scan region) and Emergency / Non-Emergency tagging (MoU Clause 1.11): <strong>Verified & Tagged Properly (100%)</strong></li>
+        <li>Signature and information about the Prescribing / Referring Doctor: <strong>Verified & Available (100%)</strong></li>
+        <li>Signature of Medical Superintendent / Institute Head: <strong>Verified & Signed (100%)</strong></li>
     </ul>
 
     <!-- Section 2 -->
-    <div class="section-header" contenteditable="true">2. Sample Size (Auto-Calculated)</div>
+    <div class="section-header">2. Sample Size</div>
     <p>
-        <strong>Population (Monthly referrals for X-Ray):</strong> <span id="lbl_pop" class="fw-bold">184</span>
+        <strong>Population (Monthly referrals for X-Ray):</strong> <span id="val_population" class="fw-bold">184</span>
     </p>
     <p>
-        <strong>Sample size audited:</strong> <span id="lbl_sample" class="fw-bold text-primary fs-6">66</span> prescriptions/referral slips 
-        <span contenteditable="true">(Margin of Error 10%; Confidence level 95% as per ~200 population norm)</span>
+        <strong>Sample size audited:</strong> <span id="val_sample" class="fw-bold">66</span> prescriptions/referral slips 
+        (Margin of Error 10%; Confidence level 95% as per ~200 population norm)
     </p>
 
     <!-- Section 3 -->
-    <div class="section-header" contenteditable="true">3. Data Collection</div>
-    <p contenteditable="true"><strong>Sampling Technique:</strong> Simple random sampling technique used.</p>
+    <div class="section-header">3. Data Collection</div>
+    <p><strong>Sampling Technique:</strong> Simple random sampling technique used.</p>
     <p>
-        <strong>Distribution:</strong> Half of the sample (<span id="lbl_half1" class="fw-bold">33</span>) taken from the first two weeks 
-        (<input type="text" class="inline-input" id="fortnight1_text" value="1-15 March: 83 total X-Rays" style="width: 190px;" oninput="saveData()">) 
-        and half (<span id="lbl_half2" class="fw-bold">33</span>) from the remaining two weeks 
-        (<input type="text" class="inline-input" id="fortnight2_text" value="16-31 March: 101 total X-Rays" style="width: 200px;" oninput="saveData()">) of 
-        <span id="lbl_month_name" class="fw-bold">March 2025</span>.
+        <strong>Distribution:</strong> Half of the sample (<span id="val_half1" class="fw-bold">33</span>) taken from the first two weeks 
+        (<input type="text" class="inline-field" id="fn1_text" value="1-15 March: 83 total X-Rays" style="width: 190px;" oninput="saveCurrentData()">) 
+        and half (<span id="val_half2" class="fw-bold">33</span>) from the remaining two weeks 
+        (<input type="text" class="inline-field" id="fn2_text" value="16-31 March: 101 total X-Rays" style="width: 200px;" oninput="saveCurrentData()">) of 
+        <span id="lbl_month_in_text" class="fw-bold">March 2025</span>.
     </p>
 
     <!-- Section 4 -->
-    <div class="section-header" contenteditable="true">4. Timeliness of Reporting (as per MoU Clause 1.11 & Annexure-B)</div>
+    <div class="section-header">4. Timeliness of Reporting (as per MoU Clause 1.11 & Annexure-B)</div>
     <ul>
         <li>
             <strong>Emergency cases (X-Ray):</strong> 
-            <input type="text" class="inline-input" id="time_emerg" value="82.5% interpreted & reported within 1 hour (33 out of 40 cases reported within 1 hour; 7 cases reported beyond TAT)." style="width: 90%;" oninput="saveData()">
+            <input type="text" class="inline-field" id="t_emerg" value="82.5% interpreted & reported within 1 hour (33 out of 40 cases reported within 1 hour; 7 cases reported beyond TAT)." style="width: 92%;" oninput="saveCurrentData()">
         </li>
         <li>
             <strong>Non-emergency/routine cases (8 AM to 6 PM / 12 Hours):</strong> 
-            <input type="text" class="inline-input" id="time_rout" value="100% reported within TAT (144 out of 144 cases)." style="width: 90%;" oninput="saveData()">
+            <input type="text" class="inline-field" id="t_rout" value="100% reported within TAT (144 out of 144 cases)." style="width: 92%;" oninput="saveCurrentData()">
         </li>
         <li>
             <strong>Overall Reporting Timeliness:</strong> 
-            <input type="text" class="inline-input fw-bold" id="time_overall" value="96.2% compliant (177 out of 184 overall reported within TAT)." style="width: 90%;" oninput="saveData()">
+            <input type="text" class="inline-field fw-bold" id="t_over" value="96.2% compliant (177 out of 184 overall reported within TAT)." style="width: 92%;" oninput="saveCurrentData()">
         </li>
         <li>
             <strong>Shortfall / Deduction:</strong> 
-            <input type="text" class="inline-input text-danger fw-bold" id="time_deduct" value="1% deduction applicable if quarterly overall falls in 90-99% slab as per MoU Annexure-B." style="width: 90%;" oninput="saveData()">
+            <input type="text" class="inline-field fw-bold" id="t_deduct" value="1% deduction applicable if quarterly overall falls in 90-99% slab as per MoU Annexure-B." style="width: 92%;" oninput="saveCurrentData()">
         </li>
     </ul>
 
+    <!-- PAGE 2 BREAK -->
+    <div class="page-break"></div>
+
+    <!-- PAGE 2 CONTENT -->
     <!-- Section 5 -->
-    <div class="section-header" contenteditable="true">5. Records Keeping (MoU Clause 3.10, 3.17, 3.19)</div>
+    <div class="section-header">5. Records Keeping (MoU Clause 3.10, 3.17, 3.19)</div>
     <ul>
-        <li contenteditable="true">Daily patients register maintained for patients referred for X-Ray: <strong>Maintained (Yes)</strong></li>
-        <li contenteditable="true">Logbook for record of any breakdown/shutdown of CR system, equipment or software: <strong>Maintained (Yes - Zero breakdown)</strong></li>
-        <li contenteditable="true">Detailed records of patients & their reports (soft copy + hard copy) maintained: <strong>Maintained at institute (Yes)</strong></li>
-        <li contenteditable="true">One report copy of every patient available at the centre at any instance: <strong>Available (Yes)</strong></li>
-        <li contenteditable="true">Monthly report submitted to Medical Superintendent/Institute Head: <strong>Submitted (Yes)</strong></li>
-        <li contenteditable="true">Dues towards missing reports / penalties / fines: <strong>Nil</strong></li>
+        <li>Daily patients register maintained for patients referred for X-Ray: <strong>Maintained (Yes)</strong></li>
+        <li>Logbook for record of any breakdown/shutdown of CR system, equipment or software: <strong>Maintained (Yes - Zero breakdown)</strong></li>
+        <li>Detailed records of patients & their reports (soft copy + hard copy) maintained: <strong>Maintained at institute (Yes)</strong></li>
+        <li>One report copy of every patient available at the centre at any instance: <strong>Available (Yes)</strong></li>
+        <li>Monthly report submitted to Medical Superintendent/Institute Head: <strong>Submitted (Yes)</strong></li>
+        <li>Dues towards missing reports / penalties / fines: <strong>Nil</strong></li>
     </ul>
 
     <!-- Section 6 -->
-    <div class="section-header" contenteditable="true">6. Quality of Reports (MoU Clause 3.9 & Annexure-B)</div>
+    <div class="section-header">6. Quality of Reports (MoU Clause 3.9 & Annexure-B)</div>
     <ul>
-        <li contenteditable="true">% of error in diagnosis reported (among sample sent for quality testing): <strong>0% (Zero Error)</strong></li>
-        <li contenteditable="true">Quality assessment/testing done by: <strong>Empanelled Radiologist / Quality Audit Agency</strong></li>
-        <li contenteditable="true">Penalty applicable: <strong>Nil (0% penalty)</strong></li>
-        <li contenteditable="true">Digital Signature: <strong>Reports bear valid digital signature of qualified Radiologist (PG Degree/Diploma in Radiology)</strong></li>
+        <li>% of error in diagnosis reported (among sample sent for quality testing): <strong>0% (Zero Error)</strong></li>
+        <li>Quality assessment/testing done by: <strong>Empanelled Radiologist / Quality Audit Agency</strong></li>
+        <li>Penalty applicable: <strong>Nil (0% penalty)</strong></li>
+        <li>Digital Signature: <strong>Reports bear valid digital signature of qualified Radiologist (PG Degree/Diploma in Radiology)</strong></li>
     </ul>
 
     <!-- Section 7 -->
-    <div class="section-header" contenteditable="true">7. Equipment Upkeep & Training (Annexure-B)</div>
+    <div class="section-header">7. Equipment Upkeep & Training (Annexure-B)</div>
     <ul>
-        <li contenteditable="true">Functionality of CR/Digitizer equipment: <strong>100% functional daily (Exceeds minimum 90% threshold)</strong></li>
-        <li contenteditable="true">Training of radiographers on digitization/transmission: <strong>Completed successfully</strong></li>
+        <li>Functionality of CR/Digitizer equipment: <strong>100% functional daily (Exceeds minimum 90% threshold)</strong></li>
+        <li>Training of radiographers on digitization/transmission: <strong>Completed successfully</strong></li>
     </ul>
 
-    <!-- Signatures -->
-    <div class="signature-section">
+    <!-- Signatures Section -->
+    <div class="signature-container">
         <div class="signature-box">
-            <input type="text" class="inline-input text-center fw-bold w-100" id="sig1_name" value="(Mahesh S. Hange)" oninput="saveData()"><br>
-            <strong contenteditable="true">X-Ray Scientific Officer</strong><br>
-            <span class="lbl_hosp">Rural Hospital Dhanora</span>
+            <input type="text" class="inline-field text-center fw-bold w-100" id="sig1_name" value="(Mahesh S. Hange)" oninput="saveCurrentData()"><br>
+            <strong>X-Ray Scientific Officer</strong><br>
+            <span class="lbl_hosp_display">Rural Hospital Dhanora</span>
         </div>
         <div class="signature-box">
-            <input type="text" class="inline-input text-center fw-bold w-100" id="sig2_name" value="(Dr. Manjusha Lepse)" oninput="saveData()"><br>
-            <strong contenteditable="true">Medical Officer</strong><br>
-            <span class="lbl_hosp">Rural Hospital Dhanora</span>
+            <input type="text" class="inline-field text-center fw-bold w-100" id="sig2_name" value="(Dr. Manjusha Lepse)" oninput="saveCurrentData()"><br>
+            <strong>Medical Officer</strong><br>
+            <span class="lbl_hosp_display">Rural Hospital Dhanora</span>
         </div>
         <div class="signature-box">
-            <input type="text" class="inline-input text-center fw-bold w-100" id="sig3_name" value="(Dr. Bagraj Dhurve)" oninput="saveData()"><br>
-            <strong contenteditable="true">Medical Superintendent</strong><br>
-            <span class="lbl_hosp">Rural Hospital Dhanora</span>
+            <input type="text" class="inline-field text-center fw-bold w-100" id="sig3_name" value="(Dr. Bagraj Dhurve)" oninput="saveCurrentData()"><br>
+            <strong>Medical Superintendent</strong><br>
+            <span class="lbl_hosp_display">Rural Hospital Dhanora</span>
         </div>
     </div>
 
 </div>
 
 <script>
-// --- Populate Month Range: March 2025 to August 2026 ---
-const monthsList = [
+// Months Dropdown Range: March 2025 to August 2026
+const allMonths = [
     "March 2025", "April 2025", "May 2025", "June 2025", "July 2025", "August 2025",
     "September 2025", "October 2025", "November 2025", "December 2025",
     "January 2026", "February 2026", "March 2026", "April 2026", "May 2026", "June 2026",
@@ -314,24 +309,24 @@ const monthsList = [
 ];
 
 window.onload = function() {
-    initMonthDropdown();
+    populateMonthDropdown();
     loadMonthData();
 };
 
-function initMonthDropdown() {
-    const select = document.getElementById('selectMonthYear');
-    select.innerHTML = monthsList.map(m => `<option value="${m}">${m}</option>`).join('');
+function populateMonthDropdown() {
+    const sel = document.getElementById('selectMonth');
+    sel.innerHTML = allMonths.map(m => `<option value="${m}">${m}</option>`).join('');
 }
 
-// --- Sample Size Logic (MoU Standard Table) ---
-function getSampleSize(pop) {
+// MoU Standard Sample Size Formula
+function calculateMoUSampleSize(pop) {
     pop = parseInt(pop) || 0;
     if (pop <= 0) return 0;
     if (pop <= 10) return Math.min(pop, 9);
     if (pop <= 20) return 17;
     if (pop <= 50) return 34;
     if (pop <= 100) return 50;
-    if (pop <= 200) return 66; // 184 count -> 66
+    if (pop <= 200) return 66; // 184 referrals -> 66 sample size
     if (pop <= 300) return 73;
     if (pop <= 500) return 81;
     if (pop <= 1000) return 88;
@@ -340,113 +335,118 @@ function getSampleSize(pop) {
     return 96;
 }
 
-function calculateMetrics() {
+function calculateAndSave() {
     let xray = parseInt(document.getElementById('xray_count').value) || 0;
-    let sample = getSampleSize(xray);
+    let sample = calculateMoUSampleSize(xray);
     let half1 = Math.round(sample / 2);
     let half2 = sample - half1;
 
-    document.getElementById('lbl_pop').innerText = xray;
-    document.getElementById('lbl_sample').innerText = sample;
-    document.getElementById('lbl_half1').innerText = half1;
-    document.getElementById('lbl_half2').innerText = half2;
+    document.getElementById('val_population').innerText = xray;
+    document.getElementById('val_sample').innerText = sample;
+    document.getElementById('val_half1').innerText = half1;
+    document.getElementById('val_half2').innerText = half2;
 
-    let hName = document.getElementById('hosp_name').innerText.trim();
-    document.querySelectorAll('.lbl_hosp').forEach(el => el.innerText = hName);
+    saveCurrentData();
 }
 
-// --- LocalStorage Monthly Engine ---
-function getStorageKey() {
-    const selectedMonth = document.getElementById('selectMonthYear').value;
-    return `audit_data_${selectedMonth.replace(/\s+/g, '_')}`;
+function updateHospitalAndSave() {
+    let hName = document.getElementById('hosp_input').value.trim();
+    let dName = document.getElementById('dist_input').value.trim();
+
+    document.getElementById('lbl_hosp_title').innerText = hName;
+    document.getElementById('lbl_dist_title').innerText = dName;
+    document.querySelectorAll('.lbl_hosp_display').forEach(el => el.innerText = hName);
+
+    saveCurrentData();
 }
 
-function onMonthChange() {
+// LocalStorage Management
+function getCurrentKey() {
+    let m = document.getElementById('selectMonth').value;
+    return `audit_rec_${m.replace(/\s+/g, '_')}`;
+}
+
+function onMonthSelect() {
     loadMonthData();
 }
 
-function saveData() {
-    calculateMetrics();
-    const key = getStorageKey();
-    const data = {
-        hosp: document.getElementById('hosp_name').innerText,
-        dist: document.getElementById('dist_name').innerText,
+function saveCurrentData() {
+    let key = getCurrentKey();
+    let data = {
+        hosp: document.getElementById('hosp_input').value,
+        dist: document.getElementById('dist_input').value,
         opd: document.getElementById('opd_count').value,
         xray: document.getElementById('xray_count').value,
         ct: document.getElementById('ct_count').value,
-        f1: document.getElementById('fortnight1_text').value,
-        f2: document.getElementById('fortnight2_text').value,
-        t1: document.getElementById('time_emerg').value,
-        t2: document.getElementById('time_rout').value,
-        t3: document.getElementById('time_overall').value,
-        t4: document.getElementById('time_deduct').value,
+        fn1: document.getElementById('fn1_text').value,
+        fn2: document.getElementById('fn2_text').value,
+        t_emerg: document.getElementById('t_emerg').value,
+        t_rout: document.getElementById('t_rout').value,
+        t_over: document.getElementById('t_over').value,
+        t_deduct: document.getElementById('t_deduct').value,
         s1: document.getElementById('sig1_name').value,
         s2: document.getElementById('sig2_name').value,
         s3: document.getElementById('sig3_name').value
     };
     localStorage.setItem(key, JSON.stringify(data));
-    
-    // Save common hospital & staff names globally
-    localStorage.setItem('audit_global_hosp', document.getElementById('hosp_name').innerText);
-    localStorage.setItem('audit_global_dist', document.getElementById('dist_name').innerText);
-    localStorage.setItem('audit_global_s1', document.getElementById('sig1_name').value);
-    localStorage.setItem('audit_global_s2', document.getElementById('sig2_name').value);
-    localStorage.setItem('audit_global_s3', document.getElementById('sig3_name').value);
 
-    document.getElementById('saveStatus').innerText = "✓ सेव्ह झाले";
+    // Save global hospital info
+    localStorage.setItem('global_audit_hosp', document.getElementById('hosp_input').value);
+    localStorage.setItem('global_audit_dist', document.getElementById('dist_input').value);
+    localStorage.setItem('global_audit_s1', document.getElementById('sig1_name').value);
+    localStorage.setItem('global_audit_s2', document.getElementById('sig2_name').value);
+    localStorage.setItem('global_audit_s3', document.getElementById('sig3_name').value);
 }
 
 function loadMonthData() {
-    const selectedMonth = document.getElementById('selectMonthYear').value;
-    document.getElementById('display_selected_month').innerText = selectedMonth;
-    document.getElementById('lbl_month_name').innerText = selectedMonth;
+    let selectedMonth = document.getElementById('selectMonth').value;
+    document.getElementById('lbl_month_display').innerText = selectedMonth;
+    document.getElementById('lbl_month_in_text').innerText = selectedMonth;
 
-    const key = getStorageKey();
-    const saved = localStorage.getItem(key);
+    let key = getCurrentKey();
+    let saved = localStorage.getItem(key);
 
- if (saved) {
-        const d = JSON.parse(saved);
-        if(d.hosp) document.getElementById('hosp_name').innerText = d.hosp;
-        if(d.dist) document.getElementById('dist_name').innerText = d.dist;
+    if (saved) {
+        let d = JSON.parse(saved);
+        if(d.hosp) document.getElementById('hosp_input').value = d.hosp;
+        if(d.dist) document.getElementById('dist_input').value = d.dist;
         if(d.opd) document.getElementById('opd_count').value = d.opd;
         if(d.xray) document.getElementById('xray_count').value = d.xray;
         if(d.ct) document.getElementById('ct_count').value = d.ct;
-        if(d.f1) document.getElementById('fortnight1_text').value = d.f1;
-        if(d.f2) document.getElementById('fortnight2_text').value = d.f2;
-        if(d.t1) document.getElementById('time_emerg').value = d.t1;
-        if(d.t2) document.getElementById('time_rout').value = d.t2;
-        if(d.t3) document.getElementById('time_overall').value = d.t3;
-        if(d.t4) document.getElementById('time_deduct').value = d.t4;
+        if(d.fn1) document.getElementById('fn1_text').value = d.fn1;
+        if(d.fn2) document.getElementById('fn2_text').value = d.fn2;
+        if(d.t_emerg) document.getElementById('t_emerg').value = d.t_emerg;
+        if(d.t_rout) document.getElementById('t_rout').value = d.t_rout;
+        if(d.t_over) document.getElementById('t_over').value = d.t_over;
+        if(d.t_deduct) document.getElementById('t_deduct').value = d.t_deduct;
         if(d.s1) document.getElementById('sig1_name').value = d.s1;
         if(d.s2) document.getElementById('sig2_name').value = d.s2;
         if(d.s3) document.getElementById('sig3_name').value = d.s3;
     } else {
-        // Load global fixed info if available
-        if(localStorage.getItem('audit_global_hosp')) document.getElementById('hosp_name').innerText = localStorage.getItem('audit_global_hosp');
-        if(localStorage.getItem('audit_global_dist')) document.getElementById('dist_name').innerText = localStorage.getItem('audit_global_dist');
-        if(localStorage.getItem('audit_global_s1')) document.getElementById('sig1_name').value = localStorage.getItem('audit_global_s1');
-        if(localStorage.getItem('audit_global_s2')) document.getElementById('sig2_name').value = localStorage.getItem('audit_global_s2');
-        if(localStorage.getItem('audit_global_s3')) document.getElementById('sig3_name').value = localStorage.getItem('audit_global_s3');
-        
-        // Dynamic dates for fortnight
-        document.getElementById('fortnight1_text').value = `1-15 ${selectedMonth}: 83 X-Rays`;
-        document.getElementById('fortnight2_text').value = `16-30 ${selectedMonth}: 101 X-Rays`;
+        if(localStorage.getItem('global_audit_hosp')) document.getElementById('hosp_input').value = localStorage.getItem('global_audit_hosp');
+        if(localStorage.getItem('global_audit_dist')) document.getElementById('dist_input').value = localStorage.getItem('global_audit_dist');
+        if(localStorage.getItem('global_audit_s1')) document.getElementById('sig1_name').value = localStorage.getItem('global_audit_s1');
+        if(localStorage.getItem('global_audit_s2')) document.getElementById('sig2_name').value = localStorage.getItem('global_audit_s2');
+        if(localStorage.getItem('global_audit_s3')) document.getElementById('sig3_name').value = localStorage.getItem('global_audit_s3');
+
+        document.getElementById('fn1_text').value = `1-15 ${selectedMonth}: 83 X-Rays`;
+        document.getElementById('fn2_text').value = `16-30 ${selectedMonth}: 101 X-Rays`;
     }
 
-    calculateMetrics();
+    updateHospitalAndSave();
 }
 
-function resetCurrentMonthData() {
-    if(confirm("निवडलेल्या महिन्याचा डाटा रीसेट करायचा आहे का?")) {
-        localStorage.removeItem(getStorageKey());
+function resetMonthData() {
+    if(confirm("या महिन्याचा डाटा रीसेट करायचा आहे का?")) {
+        localStorage.removeItem(getCurrentKey());
         loadMonthData();
     }
 }
 
-// --- Print & Downloads ---
+// Download Functions
 function downloadPDF() {
     const element = document.getElementById('auditDocument');
-    const selectedMonth = document.getElementById('selectMonthYear').value;
+    const selectedMonth = document.getElementById('selectMonth').value;
     const opt = {
         margin:       [8, 10, 8, 10],
         filename:     `Prescription_Audit_Report_${selectedMonth.replace(/\s+/g, '_')}.pdf`,
@@ -458,7 +458,7 @@ function downloadPDF() {
 }
 
 function downloadWord() {
-    const selectedMonth = document.getElementById('selectMonthYear').value;
+    const selectedMonth = document.getElementById('selectMonth').value;
     const header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'></head><body>";
     const footer = "</body></html>";
     const sourceHTML = header + document.getElementById("auditDocument").innerHTML + footer;
