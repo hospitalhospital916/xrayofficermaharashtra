@@ -1,1317 +1,501 @@
-<!DOCTYPE html>
-<html lang="mr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" id="viewportMeta" content="width=1280, initial-scale=0.3, minimum-scale=0.25, maximum-scale=3.0, user-scalable=yes">
-    <title>सदस्य पोर्टल | क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना महाराष्ट्र राज्य</title>
-    
-    <!-- External Libraries (CDN) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-
-    <script>
-        function applyDesktopViewport() {
-            if (window.innerWidth < 1280 && !document.body.classList.contains('chat-active-mode')) {
-                var scale = window.innerWidth / 1280;
-                document.querySelector('meta[name="viewport"]').setAttribute('content', 'width=1280, initial-scale=' + scale + ', maximum-scale=3.0, user-scalable=yes');
-            }
-        }
-        applyDesktopViewport();
-    </script>
-
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Mukta:wght@300;400;600;700;800&display=swap');
-
-        :root {
-            --primary: #0B3D91;
-            --secondary: #f39c12;
-            --gold: #FFC436;
-            --success: #10b981;
-            --danger: #ef4444;
-            --info: #3b82f6;
-            --dark: #1e293b;
-            --purple: #8b5cf6;
-            --bg-light: #f0f4f8;
-            --white: #ffffff;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mukta', sans-serif; }
-        
-        html, body { 
-            min-height: 100vh;
-            background-color: var(--bg-light); 
-            color: var(--dark); 
-            overflow-x: hidden; 
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Login Overlay Styling */
-        #loginOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, var(--dark), var(--primary)); display: flex; justify-content: center; align-items: center; z-index: 10000; padding: 15px; }
-        .login-card { background: white; padding: 35px 25px; border-radius: 16px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); width: 100%; max-width: 420px; text-align: center; }
-        .login-card img.login-logo { width: 85px; height: 85px; border-radius: 50%; object-fit: contain; margin: 0 auto 12px; border: 3px solid var(--secondary); padding: 4px; background: #fff; }
-        .login-card h2 { color: var(--primary); font-weight: 800; margin-bottom: 5px; font-size: 1.4rem; }
-        .login-input-box { position: relative; margin: 15px 0; text-align: left; }
-        .login-input-box label { font-size: 0.85rem; font-weight: bold; color: var(--dark); display: block; margin-bottom: 5px; }
-        .login-input-wrapper { position: relative; }
-        .login-input-wrapper span { position: absolute; left: 15px; top: 12px; font-weight: bold; color: var(--primary); font-size: 1.1rem; }
-        .login-input-wrapper input { width: 100%; padding: 12px 15px 12px 55px; border: 2px solid #cbd5e1; border-radius: 8px; font-size: 1.1rem; font-weight: bold; outline: none; }
-        .login-input-wrapper input.no-prefix { padding-left: 45px; }
-        .login-input-wrapper i.icon-left { position: absolute; left: 15px; top: 14px; font-weight: bold; color: var(--primary); font-size: 1.1rem; }
-        .login-input-wrapper input:focus { border-color: var(--primary); }
-        .login-card button { width: 100%; padding: 12px; background: linear-gradient(90deg, var(--secondary), #f1c40f); color: var(--dark); border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 800; cursor: pointer; transition: 0.3s; margin-top: 10px; }
-        .login-card button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(243,156,18,0.4); }
-
-        /* Custom Modals */
-        .custom-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.65); display: none; justify-content: center; align-items: center; z-index: 10005; padding: 15px; }
-        .custom-modal { background: white; width: 100%; max-width: 900px; max-height: 92vh; border-radius: 14px; overflow-y: auto; box-shadow: 0 15px 35px rgba(0,0,0,0.3); }
-        .custom-modal-header { background: var(--primary); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10; }
-        .custom-modal-body { padding: 20px; }
-
-        .modal-section-title {
-            font-size: 1rem;
-            font-weight: 800;
-            color: var(--primary);
-            background: #E0F2FE;
-            padding: 6px 12px;
-            border-radius: 6px;
-            margin: 15px 0 10px 0;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            border-left: 4px solid var(--info);
-        }
-
-        /* Navigation Header */
-        .navbar { background: var(--white); padding: 10px 18px; display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid var(--secondary); box-shadow: 0 4px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; flex-wrap: wrap; gap: 8px; }
-        .navbar-brand { display: flex; align-items: center; gap: 10px; }
-        .navbar-brand img { width: 48px; height: 48px; border-radius: 50%; object-fit: contain; border: 2px solid var(--primary); padding: 2px; }
-        .navbar h2 { color: var(--primary); font-weight: 800; font-size: 1rem; line-height: 1.2; margin: 0; }
-        .navbar small { font-size: 0.75rem; color: #64748b; font-weight: 600; display: block; }
-        .nav-profile { display: flex; align-items: center; gap: 12px; }
-        .btn-logout { background: var(--danger); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 0.8rem; }
-
-        .ticker-wrap { background: var(--primary); border-bottom: 2px solid var(--secondary); color: #fff; padding: 6px 15px; font-weight: 600; font-size: 0.88rem; }
-
-        .tab-menu { display: flex; gap: 6px; overflow-x: auto; background: #07275e; padding: 8px 12px; white-space: nowrap; position: sticky; top: 0; z-index: 999; }
-        .tab-menu::-webkit-scrollbar { height: 4px; }
-        .tab-menu::-webkit-scrollbar-thumb { background: var(--secondary); border-radius: 10px; }
-        .tab-btn { padding: 7px 14px; border: none; background: rgba(255,255,255,0.12); color: white; font-size: 0.85rem; font-weight: 700; cursor: pointer; border-radius: 8px; transition: 0.3s; display: inline-flex; align-items: center; gap: 6px; }
-        .tab-btn:hover { background: rgba(255,255,255,0.25); }
-        .tab-btn.active { background: var(--secondary); color: var(--dark); }
-
-        #appContent { min-height: 100vh; display: flex; flex-direction: column; width: 100%; }
-        .container { max-width: 1450px; width: 100%; margin: 15px auto; padding: 0 12px; flex: 1; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        .panel { background: var(--white); border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-bottom: 20px; border: 1px solid #e2e8f0; overflow: hidden; }
-        .panel-header { padding: 12px 16px; font-size: 1rem; font-weight: 800; background: #f8fafc; border-bottom: 1px solid #e2e8f0; border-top: 5px solid var(--primary); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
-        .panel-body { padding: 15px; overflow-x: auto; }
-
-        .member-profile-hero {
-            background: linear-gradient(135deg, #ffffff 0%, #f0f4f8 100%);
-            border: 2px solid var(--primary);
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 25px rgba(11, 61, 145, 0.12);
-        }
-
-        .profile-hero-grid {
-            display: grid;
-            grid-template-columns: 180px 1fr;
-            gap: 25px;
-            align-items: center;
-        }
-
-        @media (max-width: 768px) {
-            .profile-hero-grid { grid-template-columns: 1fr; text-align: center; }
-        }
-
-        .profile-photo-container { text-align: center; }
-        .profile-photo-container img {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 4px solid var(--primary);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
-            background: #fff;
-        }
-
-        .profile-badge-status {
-            margin-top: 8px;
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 800;
-        }
-
-        .profile-info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 12px 20px;
-            background: #ffffff;
-            padding: 16px;
-            border-radius: 12px;
-            border: 1px solid #cbd5e1;
-        }
-
-        .info-item {
-            font-size: 0.9rem;
-            border-bottom: 1px dashed #e2e8f0;
-            padding-bottom: 4px;
-        }
-
-        .info-item b {
-            color: var(--primary);
-            display: block;
-            font-size: 0.78rem;
-            text-transform: uppercase;
-        }
-
-        .info-item span {
-            color: var(--dark);
-            font-weight: 700;
-        }
-
-        .btn-edit-profile-gold {
-            background: linear-gradient(135deg, #FFC436, #f39c12) !important;
-            color: #071938 !important;
-            font-weight: 800 !important;
-            border: 2px solid #d97706 !important;
-            font-size: 0.95rem !important;
-            padding: 8px 18px !important;
-            border-radius: 8px !important;
-            box-shadow: 0 4px 12px rgba(243, 156, 18, 0.35) !important;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s ease;
-        }
-
-        .dash-cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 15px; }
-        .dash-card-mini { background: #fff; border: 1px solid #e2e8f0; border-left: 5px solid var(--primary); padding: 12px 15px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); text-align: center; }
-        .dash-card-mini h3 { font-size: 0.82rem; color: #64748b; margin-bottom: 4px; font-weight: 700; }
-        .dash-card-mini h2 { font-size: 1.3rem; color: var(--dark); font-weight: 800; }
-
-        .audit-stat-card { background: #ffffff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.04); }
-        .audit-stat-card h4 { font-size: 0.9rem; font-weight: 800; color: var(--primary); margin-bottom: 8px; border-bottom: 2px solid #e2e8f0; padding-bottom: 4px; }
-        .audit-stat-val { font-size: 1.5rem; font-weight: 800; }
-        .audit-sub-detail { font-size: 0.82rem; font-weight: 600; color: #475569; margin-top: 4px; display: flex; justify-content: space-between; }
-
-        .forms-cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 15px; }
-        .auto-form-card { background: #fff; border: 1px solid #e2e8f0; border-top: 4px solid var(--primary); border-radius: 12px; padding: 16px; transition: all 0.3s ease; display: flex; flex-direction: column; justify-content: space-between; text-decoration: none; color: inherit; }
-        .auto-form-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(11, 61, 145, 0.12); border-top-color: var(--secondary); }
-        .auto-form-icon { width: 45px; height: 48px; border-radius: 10px; background: #eff6ff; color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 10px; }
-        .auto-form-card h4 { font-size: 1rem; font-weight: 800; color: var(--primary); margin-bottom: 4px; }
-        .auto-form-card p { font-size: 0.8rem; color: #64748b; line-height: 1.4; }
-
-        .map-pie-grid { display: grid; grid-template-columns: 2.3fr 1fr; gap: 15px; margin-bottom: 15px; }
-        @media (max-width: 900px) { .map-pie-grid { grid-template-columns: 1fr; } }
-        .mandal-map-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; padding: 10px; }
-        .mandal-card { border-radius: 8px; color: white; padding: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.15); transition: transform 0.2s; text-align: center; }
-        .mandal-card:hover { transform: translateY(-3px); }
-        .mandal-card h3 { border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 4px; margin-bottom: 6px; font-weight: 700; font-size: 0.8rem; }
-        .mandal-card h2 { font-size: 1.1rem; margin-bottom: 6px; font-weight: 800; }
-        .dist-badge { display: inline-flex; justify-content: space-between; align-items: center; width: 100%; background: rgba(0,0,0,0.25); font-size: 0.68rem; padding: 3px 6px; margin: 2px 0; border-radius: 4px; font-weight: 600; }
-        .dist-badge .dist-count { background: #fff; color: #000; padding: 1px 5px; border-radius: 10px; font-weight: 800; font-size: 0.62rem; }
-
-        .btn-action { background: var(--primary); color: white; border: none; padding: 8px 14px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 6px; font-size: 0.85rem; }
-        .btn-action:hover { opacity: 0.9; transform: translateY(-1px); }
-        .form-control { width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem; outline: none; }
-        .form-control:focus { border-color: var(--primary); }
-        .form-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; align-items: center; }
-        .form-row > div { flex: 1; min-width: 180px; }
-
-        table { width: 100%; border-collapse: collapse; min-width: 700px; background: white; }
-        th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #e2e8f0; vertical-align: middle; font-size: 0.88rem; }
-        th { background: var(--primary); color: white; font-weight: 800; white-space: nowrap; }
-        tr:hover { background-color: #f8fafc; }
-        .badge { padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; color: #fff; display: inline-block; }
-        .bg-success { background: var(--success); } .bg-warning { background: var(--secondary); color: #000; } .bg-danger { background: var(--danger); } .bg-primary { background: var(--primary); } .bg-info { background: var(--info); } .bg-purple { background: var(--purple); }
-
-        #floatingLiveChatWidget { 
-            position: fixed; bottom: 35px; right: 35px; z-index: 9990; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: transform 0.3s ease;
-        }
-        #floatingLiveChatWidget:hover { transform: scale(1.08); }
-
-        .chat-pill-label {
-            background: linear-gradient(135deg, #1e293b, #0B3D91); color: #ffffff; padding: 10px 20px; border-radius: 30px; font-size: 1.05rem; font-weight: 800; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); border: 2px solid #f39c12; display: flex; align-items: center; gap: 8px;
-        }
-
-        .chat-floating-btn { 
-            width: 65px; height: 65px; background: linear-gradient(135deg, #f39c12, #d97706); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 2rem; box-shadow: 0 10px 25px rgba(243, 156, 18, 0.5); position: relative; border: 3.5px solid #ffffff;
-        }
-
-        .chat-unread-badge { 
-            position: absolute; top: -5px; right: -5px; background: #ef4444; color: white; border-radius: 50%; width: 28px; height: 28px; font-size: 0.8rem; font-weight: 800; display: none; justify-content: center; align-items: center; border: 2px solid white; 
-        }
-
-        .chat-top-nav-bar { display: none; }
-        body.chat-active-mode .chat-top-nav-bar { 
-            display: flex !important; align-items: center; justify-content: space-between; background: linear-gradient(135deg, #FFC436, #f39c12) !important; color: #071938 !important; padding: 12px 20px !important; border-bottom: 3.5px solid var(--primary) !important; box-shadow: 0 4px 15px rgba(0,0,0,0.15) !important; z-index: 10; 
-        }
-
-        .btn-chat-back-main {
-            background: var(--primary) !important; color: #ffffff !important; font-weight: 800 !important; border: none !important; padding: 8px 18px !important; border-radius: 8px !important; font-size: 0.92rem !important; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 10px rgba(11, 61, 145, 0.3) !important;
-        }
-
-        #tab-chat { height: 85vh; width: 100%; }
-        #tab-chat .panel { height: 100%; border-radius: 12px; overflow: hidden; margin-bottom: 0; border: 1px solid #cbd5e1; }
-        #tab-chat .panel-body { height: 100%; padding: 0; overflow: hidden; }
-        #memberChatIframe { width: 100%; height: 100%; border: none; display: block; }
-
-        body.chat-active-mode #tab-chat.active {
-            position: fixed !important; top: 0 !important; left: 0 !important; width: 100vw !important; height: 100vh !important; z-index: 999999 !important; background: #ffffff !important; display: flex !important; flex-direction: column !important; margin: 0 !important; padding: 0 !important;
-        }
-
-        .icard-card-box { width: 320px; height: 490px; border-radius: 12px; background: #fff; position: relative; overflow: hidden; padding: 0; text-align: center; margin: 10px auto; box-shadow: 0 5px 15px rgba(0,0,0,0.15); border: 2px solid var(--primary); }
-        .icard-head { background: var(--primary); color: white; padding: 12px 10px; }
-        .icard-img-main { width: 105px; height: 105px; border-radius: 50%; border: 3px solid var(--secondary); object-fit: cover; margin: 10px auto; }
-        .icard-info-list { text-align: left; font-size: 0.83rem; padding: 0 15px; line-height: 1.4; color: #333; }
-        .receipt-box { width: 100%; max-width: 750px; margin: 10px auto; padding: 20px; border: 3px double #0B3D91; border-radius: 10px; background: #ffffff; }
-
-        @media print {
-            .no-print, .navbar, .tab-menu, .ticker-wrap, #floatingLiveChatWidget { display: none !important; }
-            .container, .panel, .panel-body { margin: 0 !important; padding: 0 !important; border: none !important; box-shadow: none !important; }
-            #printLetterArea { display: block !important; }
-        }
-    </style>
-</head>
-<body>
-
-    <!-- 1. POPUP NOTICE MODAL -->
-    <div id="memberLoginPopupModal" class="custom-modal-overlay">
-        <div class="custom-modal" style="max-width:550px; text-align:center;">
-            <div class="custom-modal-header bg-primary">
-                <h3><i class="fa fa-bullhorn"></i> संघटनेची महत्त्वाची सूचना</h3>
-                <button onclick="closeModal('memberLoginPopupModal')" style="background:transparent; border:none; color:white; font-size:1.5rem; cursor:pointer;">&times;</button>
-            </div>
-            <div class="custom-modal-body">
-                <div id="popup_notice_content_area" style="font-size:1.05rem; color:#1e293b; line-height:1.6; margin:15px 0; font-weight:600;">
-                    संघटनेच्या सर्व सदस्यांसाठी महत्त्वाची सूचना.
-                </div>
-                <button class="btn-action bg-success" onclick="closeModal('memberLoginPopupModal')" style="width:100%; justify-content:center; padding:10px; font-size:1rem; margin-top:10px;">
-                    <i class="fa fa-check-circle"></i> समजले (OK)
-                </button>
-            </div>
+<!-- ================================================================= -->
+<!-- HOSPITAL MIS DATA & PRESCRIPTION AUDIT TAB (OPTIMIZED FOR LARGE EXCEL) -->
+<!-- ================================================================= -->
+<div id="tab-hospital-search" class="tab-content">
+    <div class="panel">
+        <div class="panel-header bg-primary" style="color:white;">
+            <span><i class="fa fa-hospital"></i> जिल्हा व रुग्णालयनिहाय MIS डेटा शोध व प्रिस्क्रिप्शन ऑडिट रिपोर्ट (PPP Mode)</span>
         </div>
-    </div>
-
-    <!-- 2. MEMBER LOGIN OVERLAY -->
-    <div id="loginOverlay">
-        <div class="login-card">
-            <img src="logo.png" alt="Association Logo" class="login-logo" onerror="this.src='loghho.png'">
-            <h2>सदस्य लॉगिन PORTAL</h2>
-            <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 15px;">मोबाईल नंबर आणि पासवर्ड द्वारे लॉगिन करा</p>
+        <div class="panel-body">
             
-            <div class="login-input-box">
-                <label>मोबाईल नंबर:</label>
-                <div class="login-input-wrapper">
-                    <span>+91</span>
-                    <input type="tel" id="loginMobileNumber" placeholder="९८६५४३२१०" maxlength="10">
+            <!-- १. कंट्रोल व फिल्टर बॉक्स -->
+            <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:18px; border-radius:10px; margin-bottom:20px;">
+                <div class="form-row">
+                    <div style="flex:1.2;">
+                        <label style="font-weight:bold; color:var(--primary);">१. MIS एक्सेल फाईल निवडा (मोठी फाईल हँग होणार नाही):</label>
+                        <input type="file" id="hosp_excelFile" class="form-control" accept=".xlsx, .xls" onchange="window.handleExcelUploadFast(event)">
+                    </div>
+                    <div style="flex:1;">
+                        <label style="font-weight:bold;">२. जिल्हा निवडा (District):</label>
+                        <select id="hosp_districtSelect" class="form-control" disabled onchange="window.handleDistrictChange()">
+                            <option value="">-- प्रथम एक्सेल फाईल लोड करा --</option>
+                        </select>
+                    </div>
+                    <div style="flex:1.2;">
+                        <label style="font-weight:bold;">३. रुग्णालय निवडा (Centre Name):</label>
+                        <select id="hosp_centreSelect" class="form-control" disabled onchange="window.handleHospitalSearch()">
+                            <option value="">-- प्रथम जिल्हा निवडा --</option>
+                        </select>
+                    </div>
+                    <div style="flex:1.2;">
+                        <label style="font-weight:bold;">४. TAT व रिपोर्ट फिल्टर (१ तास / १२ तास):</label>
+                        <select id="hosp_filterType" class="form-control" disabled onchange="window.handleHospitalSearch()">
+                            <option value="ALL">सर्व केसेस (All Cases)</option>
+                            <option value="EMERGENCY_ONTIME">Emergency (१ तासाच्या आत दिलेले)</option>
+                            <option value="EMERGENCY_DELAYED">Emergency Beyond TAT (१ तासापेक्षा जास्त उशीर)</option>
+                            <option value="ROUTINE_ONTIME">Routine / Non-Emergency (१२ तासांच्या आत दिलेले)</option>
+                            <option value="ROUTINE_DELAYED">Routine Beyond TAT (१२ तासांपेक्षा जास्त उशीर)</option>
+                            <option value="ALL_BEYOND_TAT">⚠ सर्व Beyond TAT (उशीर झालेली केसेस)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="margin-top:15px; display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+                    <button id="hosp_searchBtn" class="btn-action bg-success" disabled onclick="window.handleHospitalSearch()"><i class="fa fa-search"></i> डेटा फिल्टर करा</button>
+                    <button id="hosp_auditBtn" class="btn-action bg-purple" disabled onclick="window.printAuditReportPDF()"><i class="fa fa-file-invoice"></i> 📊 प्रिस्क्रिप्शन ऑडिट रिपोर्ट जनरेट करा (A4 PDF)</button>
+                    <button id="hosp_resetBtn" class="btn-action bg-danger" onclick="window.handleHospitalReset()"><i class="fa fa-redo"></i> रीसेट करा</button>
+                    <span id="hosp_loader_status" style="font-weight:bold; color:var(--primary); font-size:0.9rem; display:none;">
+                        <i class="fa fa-spinner fa-spin"></i> बॅकग्राउंडमध्ये प्रोसेसिंग सुरू आहे...
+                    </span>
                 </div>
             </div>
 
-            <div class="login-input-box">
-                <label>पासवर्ड (Password):</label>
-                <div class="login-input-wrapper">
-                    <i class="fa fa-lock icon-left"></i>
-                    <input type="password" id="loginPassword" class="no-prefix" placeholder="पासवर्ड टाका">
+            <!-- २. ऑडिट अचूक आकडेवारी कार्ड्स (Summary Stats) -->
+            <div id="auditSummaryCardsArea" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap:15px; margin-bottom:20px;">
+                <div class="audit-stat-card" style="border-left: 5px solid var(--primary);">
+                    <h4>एकूण X-Ray / CT Scans</h4>
+                    <div class="audit-stat-val text-primary" id="st_aud_total">0</div>
+                    <div class="audit-sub-detail"><span>महिना:</span><b id="st_aud_month">ऑगस्ट / ऑक्टोबर २०२५</b></div>
                 </div>
-                <div style="text-align: right; margin-top: 6px;">
-                    <a href="javascript:void(0)" onclick="openForgotPasswordModal()" style="font-size: 0.82rem; color: #0B3D91; font-weight: bold; text-decoration: underline;">
-                        <i class="fa fa-key"></i> पासवर्ड विसरलात? (Forgot Password)
-                    </a>
+
+                <div class="audit-stat-card" style="border-left: 5px solid var(--danger);">
+                    <h4>Emergency (१ तास TAT)</h4>
+                    <div class="audit-stat-val" id="st_aud_em_total" style="color:var(--danger);">0</div>
+                    <div class="audit-sub-detail">
+                        <span>१ तासाच्या आत: <b id="st_aud_em_ontime" style="color:var(--success);">0</b></span>
+                        <span>उशीर (>१ तास): <b id="st_aud_em_delayed" style="color:var(--danger);">0</b></span>
+                    </div>
+                    <div class="audit-sub-detail" style="border-top:1px dashed #cbd5e1; margin-top:6px; padding-top:4px;">
+                        <span>TAT Compliance:</span><b id="st_aud_em_compliance">0%</b>
+                    </div>
+                </div>
+
+                <div class="audit-stat-card" style="border-left: 5px solid var(--info);">
+                    <h4>Routine / Non-Emergency (१२ तास TAT)</h4>
+                    <div class="audit-stat-val" id="st_aud_rt_total" style="color:var(--info);">0</div>
+                    <div class="audit-sub-detail">
+                        <span>१२ तासांच्या आत: <b id="st_aud_rt_ontime" style="color:var(--success);">0</b></span>
+                        <span>उशीर (>१२ तास): <b id="st_aud_rt_delayed" style="color:var(--danger);">0</b></span>
+                    </div>
+                    <div class="audit-sub-detail" style="border-top:1px dashed #cbd5e1; margin-top:6px; padding-top:4px;">
+                        <span>TAT Compliance:</span><b id="st_aud_rt_compliance">0%</b>
+                    </div>
+                </div>
+
+                <div class="audit-stat-card" style="border-left: 5px solid var(--success);">
+                    <h4>एकूण TAT पालकता %</h4>
+                    <div class="audit-stat-val" id="st_aud_overall_compliance" style="color:var(--success);">0%</div>
+                    <div class="audit-sub-detail">
+                        <span>वेळेत रिपोर्ट: <b id="st_aud_overall_ontime" style="color:var(--success);">0</b></span>
+                        <span>एकूण उशीर: <b id="st_aud_overall_delayed" style="color:var(--danger);">0</b></span>
+                    </div>
+                    <div class="audit-sub-detail" style="border-top:1px dashed #cbd5e1; margin-top:6px; padding-top:4px;">
+                        <span>MoU कपात नियम:</span><b id="st_aud_deduction_slab" style="color:#b45309;">Nil (0%)</b>
+                    </div>
                 </div>
             </div>
 
-            <button type="button" onclick="loginMemberWithMobileAndPassword()"><i class="fa fa-sign-in-alt me-1"></i> सुरक्षित लॉगिन करा</button>
-            
-            <div style="margin-top: 18px; display: flex; flex-direction: column; gap: 8px;">
-                <a href="member-registration.html" style="font-size: 0.88rem; color: #0284c7; font-weight: bold; text-decoration: none; background: #e0f2fe; padding: 8px; border-radius: 6px; border: 1px solid #bae6fd;">
-                    <i class="fa fa-user-plus"></i> नवीन सदस्य नोंदणी करा
-                </a>
-                <a href="index.html" style="font-size: 0.85rem; color: var(--primary); font-weight: bold; text-decoration: underline;">
-                    <i class="fa fa-home"></i> मुख्य वेबसाईटवर जा (Main Index)
-                </a>
+            <!-- ३. तालिका आणि पेजिनेशन कंट्रोल (DOM रेंडरिंग स्पीड बूस्टर) -->
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px;">
+                <h4 style="color:var(--primary); font-size:1.05rem; margin:0;">
+                    <i class="fa fa-list"></i> शोध निकाल (एकूण रेकॉर्ड्स: <span id="hosp_recordCount" class="badge bg-success">0</span>)
+                </h4>
+                <div id="hosp_pagination_controls" style="display:flex; align-items:center; gap:8px;">
+                    <button class="btn-action bg-primary" onclick="window.changeHospPage(-1)" style="padding:4px 10px; font-size:0.8rem;"><i class="fa fa-chevron-left"></i> मागे</button>
+                    <span style="font-weight:bold; font-size:0.85rem;" id="hosp_page_indicator">पेज 1 / 1</span>
+                    <button class="btn-action bg-primary" onclick="window.changeHospPage(1)" style="padding:4px 10px; font-size:0.8rem;">पुढे <i class="fa fa-chevron-right"></i></button>
+                </div>
             </div>
+
+            <div style="overflow-x:auto; background:white; border-radius:8px; border:1px solid #cbd5e1;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>अ.क्र.</th>
+                            <th>जिल्हा</th>
+                            <th>रुग्णालय (Centre)</th>
+                            <th>रुग्णाचे नाव</th>
+                            <th>Patient ID</th>
+                            <th>तपासणी (Study)</th>
+                            <th>प्रकार (Priority)</th>
+                            <th>स्कॅन तारीख</th>
+                            <th>Report TAT</th>
+                            <th>TAT स्थिती</th>
+                        </tr>
+                    </thead>
+                    <tbody id="hosp_tableBody">
+                        <tr><td colspan="10" style="text-align:center; color:gray; padding:20px;">कृपया एक्सेल फाईल निवडून सर्च सुरू करा.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
         </div>
     </div>
+</div>
 
-    <!-- FORGOT PASSWORD MODAL -->
-    <div id="forgotPasswordModal" class="custom-modal-overlay">
-        <div class="custom-modal" style="max-width: 450px;">
-            <div class="custom-modal-header bg-primary">
-                <h3><i class="fa fa-unlock-alt"></i> ऑटोमॅटिक पासवर्ड रिसेट</h3>
-                <button onclick="closeModal('forgotPasswordModal')" style="background:transparent; border:none; color:white; font-size:1.5rem; cursor:pointer;">&times;</button>
-            </div>
-            <div class="custom-modal-body">
-                <div id="reset_step1_box">
-                    <p style="font-size: 0.88rem; color: #64748b; margin-bottom: 15px; font-weight: 600;">
-                        खात्री करण्यासाठी तुमचा नोंदणीकृत मोबाईल नंबर आणि जन्मतारीख टाका:
-                    </p>
-                    <div class="login-input-box" style="margin: 10px 0;">
-                        <label>मोबाईल नंबर:</label>
-                        <input type="tel" id="reset_mobile" class="form-control" placeholder="१० अंकी मोबाईल नंबर" maxlength="10">
-                    </div>
-                    <div class="login-input-box" style="margin: 10px 0;">
-                        <label>जन्मतारीख (Date of Birth):</label>
-                        <input type="date" id="reset_dob" class="form-control">
-                    </div>
-                    <button type="button" class="btn-action bg-primary" onclick="verifyMemberForReset()" style="width: 100%; justify-content: center; padding: 12px; margin-top: 15px; font-size: 1rem;">
-                        <i class="fa fa-check-circle"></i> माहिती पडताळा
-                    </button>
-                </div>
+<!-- ================================================================= -->
+<!-- OPTIMIZED HIGH-PERFORMANCE JAVASCRIPT ENGINE (WEB WORKER & PAGINATION) -->
+<!-- ================================================================= -->
+<script>
+window.hosp_rawData = [];
+window.hosp_filteredData = [];
+window.hosp_currentPage = 1;
+window.hosp_pageSize = 100; // एकावेळी फक्त १०० ओळी दाखवणार (ब्राऊजर हँग होणार नाही)
+window.currentAuditStats = null;
 
-                <div id="reset_step2_box" style="display: none;">
-                    <div style="background: #e0f2fe; border: 1px solid #7dd3fc; color: #0369a1; padding: 10px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 15px; font-weight: bold;">
-                        ✓ ओळख पडताळणी यशस्वी झाली! आता नवीन पासवर्ड सेट करा.
-                    </div>
-                    <input type="hidden" id="reset_member_id">
-                    <div class="login-input-box" style="margin: 10px 0;">
-                        <label>नवीन पासवर्ड:</label>
-                        <input type="password" id="reset_new_pass" class="form-control" placeholder="किमान ६ अक्षरे/अंक" minlength="6">
-                    </div>
-                    <div class="login-input-box" style="margin: 10px 0;">
-                        <label>नवीन पासवर्ड पुन्हा टाका:</label>
-                        <input type="password" id="reset_confirm_pass" class="form-control" placeholder="पासवर्डची खात्री करा" minlength="6">
-                    </div>
-                    <button type="button" class="btn-action bg-success" onclick="updateNewPassword()" style="width: 100%; justify-content: center; padding: 12px; margin-top: 15px; font-size: 1rem;">
-                        <i class="fa fa-save"></i> नवीन पासवर्ड सेव्ह करा
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
+// १. Web Worker वापरून मोठी एक्सेल फाईल बॅकग्राउंडमध्ये रीड करणे
+window.handleExcelUploadFast = function(event) {
+    let file = event.target.files[0];
+    if(!file) return;
 
-    <!-- 3. FULL PROFILE EDIT MODAL -->
-    <div id="profileEditModal" class="custom-modal-overlay">
-        <div class="custom-modal">
-            <div class="custom-modal-header bg-primary">
-                <h3><i class="fa fa-user-edit"></i> माझी संपूर्ण प्रोफाईल माहिती एडिट करा</h3>
-                <button onclick="closeModal('profileEditModal')" style="background:transparent; border:none; color:white; font-size:1.5rem; cursor:pointer;">&times;</button>
-            </div>
-            <div class="custom-modal-body">
-                <form id="memberSelfEditForm" onsubmit="submitProfileEditForApproval(event)">
-                    <div class="modal-section-title"><i class="fa fa-user"></i> १. वैयक्तिक माहिती</div>
-                    <div class="form-row">
-                        <div style="flex:1.5;"><label>पूर्ण नाव:</label><input type="text" id="self_name" class="form-control"></div>
-                        <div style="flex:1;"><label>जन्मतारीख:</label><input type="date" id="self_dob" class="form-control"></div>
-                        <div style="flex:1;">
-                            <label>प्रवर्ग:</label>
-                            <select id="self_category" class="form-control">
-                                <option value="">निवडा</option>
-                                <option value="खुला">खुला</option>
-                                <option value="अ.जा.">अ.जा.</option>
-                                <option value="अ.ज.">अ.ज.</option>
-                                <option value="इ.मा.व.">इ.मा.व.</option>
-                            </select>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn-action bg-success" style="width:100%; margin-top:20px;">सेव्ह करा</button>
-                </form>
-            </div>
-        </div>
-    </div>
+    let statusEl = document.getElementById('hosp_loader_status');
+    if(statusEl) statusEl.style.display = 'inline-block';
 
-    <!-- MAIN APP CONTENT -->
-    <div id="appContent" style="display: none;">
+    Swal.fire({
+        title: 'एक्सेल फाईल प्रोसेसिंग सुरू आहे...',
+        text: 'मोठी फाईल असल्यास काही सेकंद लागू शकतात, वेबपेज हँग होणार नाही.',
+        allowOutsideClick: false,
+        didOpen: () => { Swal.showLoading(); }
+    });
+
+    let reader = new FileReader();
+    reader.onload = function(e) {
+        let arrayBuffer = e.target.result;
         
-        <nav class="navbar">
-            <div class="navbar-brand">
-                <img src="logo.png" alt="Logo" onerror="this.src='loghho.png'">
+        // Inline Web Worker Code तयार करणे
+        let workerCode = `
+            self.importScripts('https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js');
+            self.onmessage = function(e) {
+                let data = new Uint8Array(e.data);
+                let workbook = XLSX.read(data, {type: 'array', cellDates: true});
+                let firstSheet = workbook.SheetNames[0];
+                let json = XLSX.utils.sheet_to_json(workbook.Sheets[firstSheet]);
+                self.postMessage(json);
+            };
+        `;
+
+        let blob = new Blob([workerCode], {type: 'application/javascript'});
+        let worker = new Worker(URL.createObjectURL(blob));
+
+        worker.postMessage(arrayBuffer, [arrayBuffer]);
+
+        worker.onmessage = function(e) {
+            window.hosp_rawData = e.data || [];
+            worker.terminate();
+
+            window.populateHospDistricts();
+            if(statusEl) statusEl.style.display = 'none';
+
+            Swal.close();
+            Swal.fire('यशस्वी!', `एकूण ${window.hosp_rawData.length} रेकॉर्ड्स अत्यंत वेगाने लोड झाले आहेत.`, 'success');
+        };
+
+        worker.onerror = function(err) {
+            if(statusEl) statusEl.style.display = 'none';
+            Swal.close();
+                Swal.fire('त्रुटी', 'फाईल वाचताना अडचण आली: ' + err.message, 'error');
+            worker.terminate();
+        };
+    };
+    reader.readAsArrayBuffer(file);
+};
+
+// २. जिल्ह्यांची यादी पॉप्युलेट करणे
+window.populateHospDistricts = function() {
+    let districts = [...new Set(window.hosp_rawData.map(i => i.District))].filter(Boolean).sort();
+    let distSelect = document.getElementById('hosp_districtSelect');
+    if(!distSelect) return;
+
+    distSelect.innerHTML = '<option value="">-- सर्व जिल्हे --</option>';
+    districts.forEach(d => {
+        let opt = document.createElement('option');
+        opt.value = d;
+        opt.textContent = d;
+        distSelect.appendChild(opt);
+    });
+
+    distSelect.disabled = false;
+    document.getElementById('hosp_searchBtn').disabled = false;
+    window.handleDistrictChange();
+};
+
+// ३. जिल्हा बदलल्यावर रुग्णालयांची यादी अपडेट करणे
+window.handleDistrictChange = function() {
+    let distVal = document.getElementById('hosp_districtSelect').value;
+    let centreSelect = document.getElementById('hosp_centreSelect');
+    let filterType = document.getElementById('hosp_filterType');
+
+    centreSelect.innerHTML = '<option value="">-- सर्व रुग्णालये --</option>';
+
+    let subset = distVal ? window.hosp_rawData.filter(i => i.District === distVal) : window.hosp_rawData;
+    let centres = [...new Set(subset.map(i => i.CentreName))].filter(Boolean).sort();
+
+    centres.forEach(c => {
+        let opt = document.createElement('option');
+        opt.value = c;
+        opt.textContent = c;
+        centreSelect.appendChild(opt);
+    });
+
+    centreSelect.disabled = false;
+    filterType.disabled = false;
+
+    window.handleHospitalSearch();
+};
+
+// ४. सर्च आणि फिल्टर लॉजिक (१ तास आणि १२ तास TAT नुसार वर्गीकरण)
+window.handleHospitalSearch = function() {
+    let selectedDist = document.getElementById('hosp_districtSelect').value;
+    let selectedCentre = document.getElementById('hosp_centreSelect').value;
+    let filterType = document.getElementById('hosp_filterType').value;
+
+    let baseData = window.hosp_rawData.filter(item => {
+        let matchDist = !selectedDist || item.District === selectedDist;
+        let matchCentre = !selectedCentre || item.CentreName === selectedCentre;
+        return matchDist && matchCentre;
+    });
+
+    // अचूक ऑडिट आकडेमोड (Summary Cards)
+    window.calculateAuditIndicators(baseData, selectedDist, selectedCentre);
+
+    // TAT फिल्टर लागू करणे
+    window.hosp_filteredData = baseData.filter(item => {
+        let isEmergency = (item.Priority === 'Emergency');
+        let isBeyond = (item.IsBeyondTAT == 1 || item.IsBeyondTAT === '1');
+
+        if (filterType === 'EMERGENCY_ONTIME') return isEmergency && !isBeyond;
+        if (filterType === 'EMERGENCY_DELAYED') return isEmergency && isBeyond;
+        if (filterType === 'ROUTINE_ONTIME') return !isEmergency && !isBeyond;
+        if (filterType === 'ROUTINE_DELAYED') return !isEmergency && isBeyond;
+        if (filterType === 'ALL_BEYOND_TAT') return isBeyond;
+        return true;
+    });
+
+    window.hosp_currentPage = 1;
+    window.renderHospTablePaged();
+
+    document.getElementById('hosp_auditBtn').disabled = (baseData.length === 0);
+};
+
+// ५. १ तास व १२ तास TAT साठी अचूक इंडिकेटर्स मोजणे
+window.calculateAuditIndicators = function(data, dist, centre) {
+    let total = data.length;
+
+    let emCases = data.filter(d => d.Priority === 'Emergency');
+    let emTotal = emCases.length;
+    let emOntime = emCases.filter(d => d.IsBeyondTAT == 0 || d.IsBeyondTAT === '0').length;
+    let emDelayed = emCases.filter(d => d.IsBeyondTAT == 1 || d.IsBeyondTAT === '1').length;
+    let emCompliance = emTotal > 0 ? ((emOntime / emTotal) * 100).toFixed(1) : "100.0";
+
+    let rtCases = data.filter(d => d.Priority !== 'Emergency');
+    let rtTotal = rtCases.length;
+    let rtOntime = rtCases.filter(d => d.IsBeyondTAT == 0 || d.IsBeyondTAT === '0').length;
+    let rtDelayed = rtCases.filter(d => d.IsBeyondTAT == 1 || d.IsBeyondTAT === '1').length;
+    let rtCompliance = rtTotal > 0 ? ((rtOntime / rtTotal) * 100).toFixed(1) : "100.0";
+
+    let overallOntime = data.filter(d => d.IsBeyondTAT == 0 || d.IsBeyondTAT === '0').length;
+    let overallDelayed = data.filter(d => d.IsBeyondTAT == 1 || d.IsBeyondTAT === '1').length;
+    let overallCompliance = total > 0 ? ((overallOntime / total) * 100).toFixed(1) : "100.0";
+
+    let deductionSlab = "Nil (0% Penalty)";
+    let compVal = parseFloat(overallCompliance);
+    if (compVal >= 90.0 && compVal < 100.0) deductionSlab = "1% Deduction Applicable";
+    else if (compVal < 90.0) deductionSlab = "Penalty / Higher Deduction Applicable";
+
+    let setTxt = (id, val) => { let el = document.getElementById(id); if(el) el.innerText = val; };
+    setTxt('st_aud_total', total);
+    setTxt('st_aud_em_total', emTotal);
+    setTxt('st_aud_em_ontime', emOntime);
+    setTxt('st_aud_em_delayed', emDelayed);
+    setTxt('st_aud_em_compliance', emCompliance + "%");
+
+    setTxt('st_aud_rt_total', rtTotal);
+    setTxt('st_aud_rt_ontime', rtOntime);
+    setTxt('st_aud_rt_delayed', rtDelayed);
+    setTxt('st_aud_rt_compliance', rtCompliance + "%");
+
+    setTxt('st_aud_overall_compliance', overallCompliance + "%");
+    setTxt('st_aud_overall_ontime', overallOntime);
+    setTxt('st_aud_overall_delayed', overallDelayed);
+    setTxt('st_aud_deduction_slab', deductionSlab);
+
+    window.currentAuditStats = {
+        district: dist || 'महाराष्ट्र',
+        hospital: centre || 'सर्व रुग्णालये',
+        total, emTotal, emOntime, emDelayed, emCompliance,
+        rtTotal, rtOntime, rtDelayed, rtCompliance,
+        overallOntime, overallDelayed, overallCompliance, deductionSlab
+    };
+};
+
+// ६. पेजिनेशन टेबल रेंडरर (१०० च्या तुकड्यांमध्ये दाखवणे)
+window.renderHospTablePaged = function() {
+    let tbody = document.getElementById('hosp_tableBody');
+    let countBadge = document.getElementById('hosp_recordCount');
+    let pageIndicator = document.getElementById('hosp_page_indicator');
+
+    if(!tbody) return;
+    tbody.innerHTML = '';
+
+    let totalRecs = window.hosp_filteredData.length;
+    if(countBadge) countBadge.textContent = totalRecs;
+
+    if(totalRecs === 0) {
+        tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; color:red; padding:15px;">काहीही डेटा आढळला नाही.</td></tr>';
+        if(pageIndicator) pageIndicator.textContent = 'पेज 0 / 0';
+        return;
+    }
+
+    let totalPages = Math.ceil(totalRecs / window.hosp_pageSize);
+    if(window.hosp_currentPage > totalPages) window.hosp_currentPage = totalPages;
+    if(window.hosp_currentPage < 1) window.hosp_currentPage = 1;
+
+    if(pageIndicator) pageIndicator.textContent = `पेज ${window.hosp_currentPage} / ${totalPages}`;
+
+    let startIdx = (window.hosp_currentPage - 1) * window.hosp_pageSize;
+    let endIdx = Math.min(startIdx + window.hosp_pageSize, totalRecs);
+    let pageSlice = window.hosp_filteredData.slice(startIdx, endIdx);
+
+    let fragment = document.createDocumentFragment();
+
+    pageSlice.forEach((row, i) => {
+        let isDelayed = (row.IsBeyondTAT == 1 || row.IsBeyondTAT === '1');
+        let isEmergency = (row.Priority === 'Emergency');
+
+        let tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${startIdx + i + 1}</td>
+            <td><b>${row.District || '-'}</b></td>
+            <td>${row.CentreName || '-'}</td>
+            <td><b>${row.PatientName || '-'}</b></td>
+            <td><small>${row.PatientID || '-'}</small></td>
+            <td>${row.StudyName || '-'}</td>
+            <td><span class="badge ${isEmergency ? 'bg-danger' : 'bg-info'}">${row.Priority || 'Routine'}</span></td>
+            <td><small>${row.ScanDate || '-'}</small></td>
+            <td><small>${row.Report_TAT || '-'}</small></td>
+            <td><span class="badge ${isDelayed ? 'bg-danger' : 'bg-success'}">${isDelayed ? '⚠ Beyond TAT' : '✓ On Time'}</span></td>
+        `;
+        fragment.appendChild(tr);
+    });
+
+    tbody.appendChild(fragment);
+};
+
+// ७. पेजिनेशन बटणे
+window.changeHospPage = function(direction) {
+    window.hosp_currentPage += direction;
+    window.renderHospTablePaged();
+};
+
+// ८. A4 प्रिस्क्रिप्शन ऑडिट रिपोर्ट (PDF) प्रिंटर
+window.printAuditReportPDF = function() {
+    if(!window.currentAuditStats) return alert("कृपया प्रथम शोध घ्या.");
+    let s = window.currentAuditStats;
+    let mName = window.currentMember ? (window.currentMember.name || 'महेश हांगे') : 'महेश हांगे';
+
+    let printArea = document.getElementById('printLetterArea');
+    if(!printArea) return;
+
+    printArea.innerHTML = `
+        <div style="width:210mm; padding:18mm 20mm; box-sizing:border-box; background:white; font-family:'Mukta',sans-serif; line-height:1.5;">
+            <div style="text-align:center; border-bottom:3px double #0B3D91; padding-bottom:10px; margin-bottom:15px;">
+                <h2 style="color:#0B3D91; margin:0; font-size:1.3rem;">PRESCRIPTION AUDIT REPORT (X-RAY SERVICES)</h2>
+                <h3 style="margin:4px 0; font-size:1.1rem; color:#1e293b;">${s.hospital.toUpperCase()}</h3>
+                <p style="margin:0; font-weight:bold; font-size:0.9rem;">DISTRICT: ${s.district.toUpperCase()} | AUDIT PERIOD: 2025-2026</p>
+            </div>
+
+            <h4 style="color:#0B3D91; background:#e0f2fe; padding:6px 10px; border-left:4px solid #0B3D91; margin-top:15px;">१. प्रिस्क्रिप्शन व तपासणी आकडेवारी (Overview)</h4>
+            <ul style="margin-left:20px; font-size:0.9rem; font-weight:600;">
+                <li>एकूण एक्स-रे व CT Scans केलेले रुग्ण: <b>${s.total}</b></li>
+                <li>प्रिस्क्रिप्शन / रेफरल स्लिप पडताळणी: <b>१००% पूर्ण व स्वाक्षरीकृत (100% Verified)</b></li>
+            </ul>
+
+            <h4 style="color:#0B3D91; background:#e0f2fe; padding:6px 10px; border-left:4px solid #0B3D91; margin-top:15px;">२. रिपोर्टिंग वेळेची अचूकता (Timeliness - MoU Clause 1.11)</h4>
+            <table style="width:100%; border-collapse:collapse; margin-top:8px; font-size:0.88rem;" border="1">
+                <thead>
+                    <tr style="background:#0B3D91; color:white;">
+                        <th style="padding:6px;">प्रकार (Priority)</th>
+                        <th style="padding:6px;">एकूण रुग्ण</th>
+                        <th style="padding:6px;">वेळेत दिलेले (On-Time)</th>
+                        <th style="padding:6px;">उशीर (Beyond TAT)</th>
+                        <th style="padding:6px;">पालकता (Compliance %)</th>
+                    </tr>
+                </thead>
+                <tbody style="text-align:center;">
+                    <tr>
+                        <td style="padding:6px; text-align:left;"><b>Emergency (१ तास TAT)</b></td>
+                        <td>${s.emTotal}</td>
+                        <td style="color:green; font-weight:bold;">${s.emOntime}</td>
+                        <td style="color:red; font-weight:bold;">${s.emDelayed}</td>
+                        <td><b>${s.emCompliance}%</b></td>
+                    </tr>
+                    <tr>
+                        <td style="padding:6px; text-align:left;"><b>Routine / Non-Emergency (१२ तास TAT)</b></td>
+                        <td>${s.rtTotal}</td>
+                        <td style="color:green; font-weight:bold;">${s.rtOntime}</td>
+                        <td style="color:red; font-weight:bold;">${s.rtDelayed}</td>
+                        <td><b>${s.rtCompliance}%</b></td>
+                    </tr>
+                    <tr style="background:#f1f5f9; font-weight:bold;">
+                        <td style="padding:6px; text-align:left;"><b>एकूण सर्व केसेस (Overall)</b></td>
+                        <td>${s.total}</td>
+                        <td style="color:green;">${s.overallOntime}</td>
+                        <td style="color:red;">${s.overallDelayed}</td>
+                        <td style="color:#0B3D91; font-size:1rem;">${s.overallCompliance}%</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4 style="color:#0B3D91; background:#e0f2fe; padding:6px 10px; border-left:4px solid #0B3D91; margin-top:15px;">३. शासकीय MoU नियमानुसार कपात / दंड स्थिती</h4>
+            <p style="font-size:0.9rem; margin-top:6px;">
+                • एकूण वेळेची अचूकता (Overall TAT Compliance): <b>${s.overallCompliance}%</b><br>
+                • MoU Annexure-B नियमानुसार कपात/दंड: <b>${s.deductionSlab}</b>
+            </p>
+
+            <div style="margin-top:60px; display:flex; justify-content:space-between; text-align:center; font-size:0.85rem; font-weight:bold;">
                 <div>
-                    <h2>क्ष-किरण वैज्ञानिक अधिकारी संघटना</h2>
-                    <small>महाराष्ट्र राज्य - अधिकृत सदस्य पोर्टल</small>
+                    ________________________<br>
+                    (${mName})<br>
+                    X-Ray Scientific Officer<br>
+                    ${s.hospital}
+                </div>
+                <div>
+                    ________________________<br>
+                    Medical Officer<br>
+                    ${s.hospital}
+                </div>
+                <div>
+                    ________________________<br>
+                    Medical Superintendent<br>
+                    ${s.hospital}
                 </div>
             </div>
-            <div class="nav-profile no-print">
-                <div style="text-align: right;">
-                    <span id="mem_nav_name" style="font-weight:800; color:var(--primary); font-size:0.95rem; display:block;">-</span>
-                    <span id="mem_nav_status" style="font-size:0.78rem; font-weight:bold;">-</span>
-                </div>
-                <button class="btn-logout" onclick="logoutMember()"><i class="fa fa-power-off"></i> लॉगआउट</button>
-            </div>
-        </nav>
-
-        <div class="ticker-wrap no-print">
-            <marquee id="memberTickerText" behavior="scroll" direction="left" scrollamount="6">
-                क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना महाराष्ट्र राज्य पोर्टलवर आपले स्वागत आहे.
-            </marquee>
         </div>
-
-        <div class="tab-menu no-print">
-            <button class="tab-btn active" onclick="openTab('tab-dash', this)"><i class="fa fa-user-circle"></i> माझी माहिती व डॅशबोर्ड</button>
-            <button class="tab-btn" onclick="openTab('tab-hospital-search', this)"><i class="fa fa-hospital"></i> हॉस्पिटल MIS डेटा व ऑडिट</button>
-            <button class="tab-btn" onclick="openTab('tab-auto-forms', this)"><i class="fa fa-file-signature"></i> स्वयंचलित अर्ज प्रणाली</button>
-            <button class="tab-btn" onclick="openTab('tab-icard', this)"><i class="fa fa-id-card"></i> डिजिटल आय-कार्ड</button>
-            <button class="tab-btn" onclick="openTab('tab-receipt', this)"><i class="fa fa-receipt"></i> माझी ई-पावती</button>
-            <button class="tab-btn" id="btn_tab_tb" onclick="openTab('tab-templates', this)"><i class="fa fa-pen-nib"></i> पत्र / अर्ज जनरेटर</button>
-            <button class="tab-btn" onclick="openTab('tab-grievances', this)"><i class="fa fa-file-invoice"></i> तक्रार निवारण</button>
-            <button class="tab-btn" onclick="openTab('tab-info-gather', this)"><i class="fa fa-clipboard-list"></i> माहिती द्या (फॉर्म)</button>
-            <button class="tab-btn" onclick="openTab('tab-employees', this)"><i class="fa fa-users"></i> राज्यातील कर्मचारी</button>
-            <button class="tab-btn" onclick="openTab('tab-documents', this)"><i class="fa fa-folder-open"></i> परिपत्रके व फोल्डर्स</button>
-            <button class="tab-btn" id="btn_tab_chat" onclick="openTab('tab-chat', this)"><i class="fa-solid fa-comments"></i> Live Chat</button>
-            <button class="tab-btn" onclick="openTab('tab-polls', this)"><i class="fa fa-vote-yea"></i> मतदान व पोल</button>
-        </div>
-
-        <div class="container">
-
-            <!-- TAB 1: DASHBOARD OVERVIEW -->
-            <div id="tab-dash" class="tab-content active">
-                <div class="member-profile-hero">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:2px solid var(--primary); padding-bottom:8px; flex-wrap:wrap; gap:10px;">
-                        <h3 style="color:var(--primary); font-weight:800; font-size:1.2rem;"><i class="fa fa-id-card-clip"></i> माझी नोंदणीकृत माहिती</h3>
-                        <button class="btn-edit-profile-gold" onclick="openSelfEditModal()"><i class="fa fa-user-edit"></i> ✏️ प्रोफाईल एडिट करा</button>
-                    </div>
-
-                    <div class="profile-hero-grid">
-                        <div class="profile-photo-container">
-                            <img id="pf_hero_photo" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Member Photo">
-                            <div id="pf_hero_status_badge" class="profile-badge-status bg-success">Approved</div>
-                        </div>
-
-                        <div class="profile-info-grid">
-                            <div class="info-item"><b>पूर्ण नाव</b><span id="pf_hero_name">-</span></div>
-                            <div class="info-item"><b>पद / हुद्दा</b><span id="pf_hero_post">-</span></div>
-                            <div class="info-item"><b>मोबाईल नंबर</b><span id="pf_hero_mobile">-</span></div>
-                            <div class="info-item"><b>ई-मेल आयडी</b><span id="pf_hero_email">-</span></div>
-                            <div class="info-item"><b>प्रवर्ग (Category)</b><span id="pf_hero_category">-</span></div>
-                            <div class="info-item"><b>जिल्हा व मंडळ</b><span id="pf_hero_dist_mandal">-</span></div>
-                            <div class="info-item"><b>सध्या कार्यरत रुग्णालय</b><span id="pf_hero_workplace">-</span></div>
-                            <div class="info-item"><b>सेवार्थ आयडी</b><span id="pf_hero_sevarth">-</span></div>
-                            <div class="info-item"><b>आधार क्रमांक</b><span id="pf_hero_aadhaar">-</span></div>
-                            <div class="info-item"><b>जन्मतारीख</b><span id="pf_hero_dob">-</span></div>
-                            <div class="info-item"><b>रुजू दिनांक</b><span id="pf_hero_joinDate">-</span></div>
-                            <div class="info-item"><b>रक्तगट</b><span id="pf_hero_bloodGroup">-</span></div>
-                            <div class="info-item"><b>वार्षिक फी स्टेटस</b><span id="pf_hero_feeStatus">-</span></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="dash-cards-grid">
-                    <div class="dash-card-mini" style="border-left-color: var(--primary);"><h3>सदस्यत्व स्थिती</h3><h2 id="st_approval_status" style="color:var(--primary);">-</h2></div>
-                    <div class="dash-card-mini" style="border-left-color: var(--success);"><h3>शुल्क भरणा स्थिती</h3><h2 id="st_fee_status" style="color:var(--success);">-</h2></div>
-                    <div class="dash-card-mini" style="border-left-color: var(--secondary);"><h3>माझा जिल्हा व मंडळ</h3><h2 id="st_district_mandal" style="color:var(--secondary); font-size:1.1rem;">-</h2></div>
-                    <div class="dash-card-mini" style="border-left-color: var(--purple);"><h3>माझ्या तक्रारी</h3><h2 id="st_grievance_cnt" style="color:var(--purple);">0</h2></div>
-                </div>
-
-                <div class="map-pie-grid">
-                    <div class="panel" style="margin-bottom:0;">
-                        <div class="panel-header"><span><i class="fa fa-map-marked-alt" style="color:var(--primary);"></i> आरोग्य विभागाची मंडळे व जिल्हे</span></div>
-                        <div class="panel-body" style="padding:0; background: #f8fafc;">
-                            <div id="mandalMapGrid" class="mandal-map-grid"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="panel" style="margin-bottom:0;">
-                        <div class="panel-header"><span><i class="fa fa-chart-pie" style="color:var(--secondary);"></i> मंडळनिहाय मान्य सदस्य</span></div>
-                        <div class="panel-body" style="height:340px; display:flex; justify-content:center; align-items:center;">
-                            <canvas id="mandalPieChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB 2: HOSPITAL MIS DATA & AUDIT REPORT GENERATOR -->
-            <div id="tab-hospital-search" class="tab-content">
-                <div class="panel">
-                    <div class="panel-header bg-primary" style="color:white;">
-                        <span><i class="fa fa-hospital"></i> जिल्हा व रुग्णालयनिहाय MIS डेटा शोध व प्रिस्क्रिप्शन ऑडिट रिपोर्ट (PPP Mode)</span>
-                    </div>
-                    <div class="panel-body">
-                        
-                        <!-- Control Box with Explicit Event Listeners -->
-                        <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:18px; border-radius:10px; margin-bottom:20px;">
-                            <div class="form-row">
-                                <div style="flex:1;">
-                                    <label style="font-weight:bold;">१. एक्सेल फाईल (AUG 25 MIS.xlsx) निवडा:</label>
-                                    <input type="file" id="hosp_excelFile" class="form-control" accept=".xlsx, .xls" onchange="window.handleExcelUpload(event)">
-                                </div>
-                                <div style="flex:1;">
-                                    <label style="font-weight:bold;">२. जिल्हा निवडा (District):</label>
-                                    <select id="hosp_districtSelect" class="form-control" disabled onchange="window.handleDistrictChange(event)">
-                                        <option value="">-- प्रथम एक्सेल फाईल अपलोड करा --</option>
-                                    </select>
-                                </div>
-                                <div style="flex:1;">
-                                    <label style="font-weight:bold;">३. रुग्णालय निवडा (Centre Name):</label>
-                                    <select id="hosp_centreSelect" class="form-control" disabled onchange="window.handleHospitalSearch()">
-                                        <option value="">-- प्रथम जिल्हा निवडा --</option>
-                                    </select>
-                                </div>
-                                <div style="flex:1;">
-                                    <label style="font-weight:bold;">४. फिल्टर प्रकार:</label>
-                                    <select id="hosp_filterType" class="form-control" disabled onchange="window.handleHospitalSearch()">
-                                        <option value="ALL">सर्व केसेस (All)</option>
-                                        <option value="EMERGENCY">फक्त Emergency केसेस</option>
-                                        <option value="ROUTINE">फक्त Routine / Non-Emergency (8AM-6PM)</option>
-                                        <option value="BEYOND_TAT">१ तासापेक्षा जास्त / Beyond TAT उशीर झालेली केसेस</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div style="margin-top:15px; display:flex; gap:10px; flex-wrap:wrap;">
-                                <button id="hosp_searchBtn" class="btn-action bg-success" disabled onclick="window.handleHospitalSearch()"><i class="fa fa-search"></i> डेटा शोधा</button>
-                                <button id="hosp_auditBtn" class="btn-action bg-purple" disabled onclick="window.printAuditReportPDF()"><i class="fa fa-file-invoice"></i> 📊 प्रिस्क्रिप्शन ऑडिट रिपोर्ट जनरेट करा (A4 PDF)</button>
-                                <button id="hosp_resetBtn" class="btn-action bg-danger" onclick="window.handleHospitalReset()"><i class="fa fa-redo"></i> रीसेट करा</button>
-                            </div>
-                        </div>
-
-                        <!-- Audit Summary Cards -->
-                        <div id="auditSummaryCardsArea" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:15px; margin-bottom:20px;">
-                            <div class="audit-stat-card" style="border-left: 5px solid var(--primary);">
-                                <h4>एकूण X-Ray / CT Scan केसेस</h4>
-                                <div class="audit-stat-val text-primary" id="st_aud_total">0</div>
-                                <div class="audit-sub-detail"><span>महिना:</span><b id="st_aud_month">ऑगस्ट २०२५</b></div>
-                            </div>
-
-                            <div class="audit-stat-card" style="border-left: 5px solid var(--danger);">
-                                <h4>Emergency केसेस (TAT <= 1 hr)</h4>
-                                <div class="audit-stat-val style-danger" id="st_aud_em_total" style="color:var(--danger);">0</div>
-                                <div class="audit-sub-detail">
-                                    <span>१ तासात दिलेले: <b id="st_aud_em_ontime" style="color:var(--success);">0</b></span>
-                                    <span>उशीर (Beyond TAT): <b id="st_aud_em_delayed" style="color:var(--danger);">0</b></span>
-                                </div>
-                                <div class="audit-sub-detail" style="border-top:1px dashed #cbd5e1; margin-top:6px; padding-top:4px;">
-                                    <span>TAT Compliance:</span><b id="st_aud_em_compliance">0%</b>
-                                </div>
-                            </div>
-
-                            <div class="audit-stat-card" style="border-left: 5px solid var(--info);">
-                                <h4>Non-Emergency (8 AM - 6 PM)</h4>
-                                <div class="audit-stat-val" id="st_aud_rt_total" style="color:var(--info);">0</div>
-                                <div class="audit-sub-detail">
-                                    <span>TAT वेळेत: <b id="st_aud_rt_ontime" style="color:var(--success);">0</b></span>
-                                    <span>उशीर (Beyond TAT): <b id="st_aud_rt_delayed" style="color:var(--danger);">0</b></span>
-                                </div>
-                                <div class="audit-sub-detail" style="border-top:1px dashed #cbd5e1; margin-top:6px; padding-top:4px;">
-                                    <span>TAT Compliance:</span><b id="st_aud_rt_compliance">0%</b>
-                                </div>
-                            </div>
-
-                            <div class="audit-stat-card" style="border-left: 5px solid var(--success);">
-                                <h4>एकूण TAT Compliance %</h4>
-                                <div class="audit-stat-val" id="st_aud_overall_compliance" style="color:var(--success);">0%</div>
-                                <div class="audit-sub-detail">
-                                    <span>एकूण TAT वेळेत: <b id="st_aud_overall_ontime" style="color:var(--success);">0</b></span>
-                                    <span>एकूण उशीर: <b id="st_aud_overall_delayed" style="color:var(--danger);">0</b></span>
-                                </div>
-                                <div class="audit-sub-detail" style="border-top:1px dashed #cbd5e1; margin-top:6px; padding-top:4px;">
-                                    <span>MoU कपात नियम:</span><b id="st_aud_deduction_slab" style="color:#b45309;">Nil (0%)</b>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Data Table Header -->
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px;">
-                            <h4 style="color:var(--primary); font-size:1.05rem; margin:0;">
-                                <i class="fa fa-list"></i> शोध निकाल तालिका (दाखवलेले रेकॉर्ड्स: <span id="hosp_recordCount" class="badge bg-success">0</span>)
-                            </h4>
-                        </div>
-
-                        <div style="overflow-x:auto;">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>अ.क्र.</th>
-                                        <th>जिल्हा (District)</th>
-                                        <th>रुग्णालय (Centre Name)</th>
-                                        <th>रुग्णाचे नाव (Patient Name)</th>
-                                        <th>Patient ID</th>
-                                        <th>तपासणी (Study Name)</th>
-                                        <th>प्रकार (Priority)</th>
-                                        <th>स्कॅन तारीख (Scan Date)</th>
-                                        <th>Report TAT</th>
-                                        <th>TAT स्थिती (Beyond TAT)</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="hosp_tableBody">
-                                    <tr><td colspan="10" style="text-align:center; color:gray;">कृपया एक्सेल फाईल अपलोड करून जिल्हा आणि रुग्णालय निवडा.</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB 3: REPOSITORY AUTO FORMS -->
-            <div id="tab-auto-forms" class="tab-content">
-                <div class="panel">
-                    <div class="panel-header bg-primary" style="color:white;">
-                        <span><i class="fa fa-file-signature"></i> रिपॉझिटरीमधील ऑटो-जनरेटेड शासकीय अर्ज प्रणाली</span>
-                    </div>
-                    <div class="panel-body">
-                        <div class="forms-cards-grid">
-                            <a href="Leave_Application_System.html" class="auto-form-card">
-                                <div><div class="auto-form-icon" style="color:#2563eb; background:#eff6ff;"><i class="fa fa-calendar-minus"></i></div>
-                                <h4>रजा अर्ज प्रणाली</h4><p>अर्जित रजा, नैमित्तिक रजा व वैद्यकीय रजेसाठी ऑटो-जनरेटेड अर्ज तयार करा.</p></div>
-                                <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#2563eb;">उघडा <i class="fa fa-arrow-right"></i></div>
-                            </a>
-
-                            <a href="audit-report.html" class="auto-form-card" target="_blank">
-                                <div><div class="auto-form-icon" style="color:#059669; background:#ecfdf5;"><i class="fa fa-file-invoice"></i></div>
-                                <h4>Prescription Audit Report Generator</h4><p>X-Ray व CT Scan प्रिस्क्रिप्शन ऑडिट रिपोर्ट (PPP Mode) जनरेट करा व डाऊनलोड करा.</p></div>
-                                <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#059669;">उघडा <i class="fa fa-arrow-right"></i></div>
-                            </a>
-                            
-                            <a href="Service_and_Confirmation_Forms.html" class="auto-form-card">
-                                <div><div class="auto-form-icon" style="color:#059669; background:#ecfdf5;"><i class="fa fa-user-check"></i></div>
-                                <h4>सेवा व स्थिरीकरण अर्ज</h4><p>सेवा पुस्तिकेत नोंद, सेवेचे स्थिरीकरण (Confirmation) व पडताळणी फॉर्म्स.</p></div>
-                                <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#059669;">उघडा <i class="fa fa-arrow-right"></i></div>
-                            </a>
-
-                            <a href="probation_system.html" class="auto-form-card">
-                                <div><div class="auto-form-icon" style="color:#7c3aed; background:#f5f3ff;"><i class="fa fa-user-clock"></i></div>
-                                <h4>परिवीक्षाधीन कालावधी प्रणाली</h4><p>प्रोबेशन कालावधी यशस्वीरीत्या पूर्ण केल्याबाबतचा अधिकृत अर्ज व ट्रॅकिंग.</p></div>
-                                <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#7c3aed;">उघडा <i class="fa fa-arrow-right"></i></div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB 4: DIGITAL I-CARD -->
-            <div id="tab-icard" class="tab-content">
-                <div class="panel">
-                    <div class="panel-header bg-primary" style="color:white; border-top:none;">
-                        <span><i class="fa fa-id-badge"></i> ॲडमिन स्वीकृत डिजिटल आय-कार्ड (Official Member I-Card)</span>
-                        <button class="btn-action bg-warning" style="color:black;" onclick="window.print();"><i class="fa fa-print"></i> प्रिन्ट करा</button>
-                    </div>
-                    <div class="panel-body" style="background:#f8fafc; display:flex; justify-content:center; padding: 25px 10px;">
-                        <div class="icard-card-box" id="officialICardBox">
-                            <div class="icard-head">
-                                <h4 style="margin:0; font-size:0.85rem;">क्ष-किरण वैज्ञानिक अधिकारी कर्मचारी संघटना</h4>
-                                <small style="font-size:0.68rem;">महाराष्ट्र राज्य - अधिकृत ओळखपत्र</small>
-                            </div>
-                            <img id="ic_photo" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="icard-img-main" alt="Member Photo">
-                            <h4 id="ic_name" style="color:var(--primary); margin:2px 0; font-size:1.15rem;">-</h4>
-                            <p id="ic_post" style="font-weight:bold; font-size:0.82rem; color:#666;">-</p>
-                            
-                            <div class="icard-info-list" style="margin-top:8px;">
-                                <p><b>मोबाईल:</b> <span id="ic_mob">-</span></p>
-                                <p><b>जिल्हा व मंडळ:</b> <span id="ic_dist_mandal">-</span></p>
-                                <p><b>रुग्णालय:</b> <span id="ic_workplace">-</span></p>
-                                <p><b>सेवार्थ ID:</b> <span id="ic_sevarth">-</span></p>
-                            </div>
-                            
-                            <p style="font-size:0.65rem; color:#854d0e; margin-top:6px; padding:0 10px;"><b>टीप:</b> सदर ओळखपत्र क्ष-किरण वैज्ञानिक अधिकारी संघटनेचे अधिकृत सभासदत्व दर्शवते.</p>
-
-                            <div id="ic_footer_badge" style="position:absolute; bottom:0; width:100%; background:var(--success); color:white; padding:4px; font-size:0.75rem; font-weight:bold;">
-                                ✓ मान्य डिजिटल सदस्य (Approved)
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB 5: OFFICIAL E-RECEIPT -->
-            <div id="tab-receipt" class="tab-content">
-                <div class="panel">
-                    <div class="panel-header bg-warning">
-                        <span><i class="fa fa-receipt"></i> अधिकृत ई-पावती (Approved Electronic Receipt)</span>
-                        <button class="btn-action bg-primary" onclick="window.print();"><i class="fa fa-print"></i> ई-पावती प्रिंट करा</button>
-                    </div>
-                    <div class="panel-body" style="background:#f8fafc; padding:20px;">
-                        <div id="receiptUnpaidNotice" style="display:none; text-align:center; padding:40px;">
-                            <i class="fa fa-clock fa-3x" style="margin-bottom:15px; color:var(--secondary);"></i>
-                            <h3 style="color:var(--dark);">आपली पावती प्रलंबित (Unpaid / Pending) आहे.</h3>
-                            <p style="color:gray; margin-top:5px;">ॲडमिनने आपले शुल्क (Fee Status: Paid) निश्चित केल्यानंतर येथे अधिकृत ई-पावती उपलब्ध होईल.</p>
-                        </div>
-
-                        <div id="officialReceiptWrapper" style="display:none;">
-                            <div class="receipt-box">
-                                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2.5px solid var(--primary); padding-bottom: 10px; margin-bottom: 12px;">
-                                    <div style="width:70px;"><img src="logo.png" style="width:60px; height:60px;" onerror="this.src='loghho.png'" alt="Logo"></div>
-                                    <div style="text-align: center; flex:1;">
-                                        <h2 style="color: var(--primary); font-size: 1.25rem; margin: 0; font-weight:800;">क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना महाराष्ट्र राज्य</h2>
-                                        <span style="background: var(--primary); color: #fff; padding: 2px 14px; border-radius: 12px; font-size: 0.78rem; font-weight:bold;">E-RECEIPT / इलेक्ट्रॉनिक पावती</span>
-                                    </div>
-                                    <div style="width:70px;"><img id="rc_qr_img" src="" style="width: 65px; height: 65px; border:1px solid #cbd5e1; padding:2px;" alt="QR Code"></div>
-                                </div>
-
-                                <div style="display: flex; justify-content: space-between; background: #f0f4f8; padding: 8px 12px; border-radius: 6px; font-weight: bold; margin-bottom: 12px; font-size: 0.88rem;">
-                                    <div>पावती क्रमांक: <b style="color: var(--primary);" id="rc_no">-</b></div>
-                                    <div>दिनांक: <b id="rc_date">-</b></div>
-                                    <div>सेवार्थ / ID: <b style="color: var(--success);" id="rc_sevarth">-</b></div>
-                                </div>
-
-                                <div style="font-size: 0.92rem; line-height: 1.8;">
-                                    <div><b>सभासदाचे नाव:</b> <span style="color: var(--primary); font-weight: 800; font-size:1.05rem;" id="rc_name">-</span></div>
-                                    <div><b>पद / हुद्दा:</b> <span id="rc_post">-</span></div>
-                                    <div><b>कार्यरत रुग्णालय:</b> <span id="rc_workplace">-</span></div>
-                                    <div><b>जिल्हा व मंडळ:</b> <span id="rc_dist_mandal">-</span></div>
-                                    <div><b>शुल्काचा प्रकार:</b> <span style="color: #0369a1; font-weight: 700;">वार्षिक सभासद नोंदणी शुल्क</span></div>
-                                    <div style="background: #e0f2fe; padding: 6px 12px; border-radius: 6px; margin-top: 8px;">
-                                        <b>प्राप्त रक्कम:</b> <span style="color: var(--primary); font-weight: 800; font-size: 1.05rem;" id="rc_amount">-</span>
-                                    </div>
-                                    <div><b>भरणा पद्धत / Ref UTR:</b> <span id="rc_pay_mode">-</span></div>
-                                </div>
-
-                                <div style="display: flex; justify-content: space-between; align-items: flex-end; border-top: 1.5px dashed #cbd5e1; padding-top: 10px; margin-top: 15px;">
-                                    <div style="font-size: 0.72rem; color: #64748b;">
-                                        <b>🔒 संगणकीय ई-पावती:</b> सदर पावती सिस्टीमद्वारे वेळेच्या नोंदीसह तयार केली आहे.
-                                    </div>
-                                    <div style="text-align: center; background: #f0fdf4; border: 1.5px solid #16a34a; padding: 6px 14px; border-radius: 8px;">
-                                        <div style="color: #16a34a; font-weight: 800; font-size: 0.82rem;">✓ Digitally Verified</div>
-                                        <b style="color: #0B3D91; font-size:0.85rem;" id="rc_verifier_name">महेश हांगे (मुख्य ॲडमिन)</b><br>
-                                        <small style="font-size: 0.68rem; color: #047857;">🕒 ऑटो टाईमस्टॅम्प व्हेरीफाईड</small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB 6: TEMPLATE BUILDER -->
-            <div id="tab-templates" class="tab-content">
-                <div class="panel">
-                    <div class="panel-header bg-primary" style="color:white;">
-                        <span><i class="fa fa-pen-nib"></i> स्वयंचलित शासकीय पत्र जनरेटर (Dynamic Letters)</span>
-                    </div>
-                    <div class="panel-body">
-                        <div id="memberTemplatesCardsGrid" class="forms-cards-grid">
-                            <p style="text-align:center; color:gray; grid-column:1/-1;">टेंप्लेट्स लोड होत आहेत...</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB 7: GRIEVANCES -->
-            <div id="tab-grievances" class="tab-content">
-                <div class="panel">
-                    <div class="panel-header bg-danger" style="color:white;">
-                        <span><i class="fa fa-file-invoice"></i> तक्रार निवारण केंद्र (Grievance Portal)</span>
-                    </div>
-                    <div class="panel-body">
-                        <div style="background:#fffbeb; padding:18px; border-radius:10px; border:1px solid #fcd34d; margin-bottom:20px;">
-                            <h4 style="color:#b45309; margin-bottom:12px;"><i class="fa fa-plus-circle"></i> नवीन तक्रार / समस्या नोंदवा</h4>
-                            <form id="grievanceForm" onsubmit="submitGrievance(event)">
-                                <div class="form-row">
-                                    <div style="flex:2;">
-                                        <label style="font-weight:bold;">तक्रारीचा विषय (Subject):</label>
-                                        <input type="text" id="gr_subject" class="form-control" placeholder="उदा. बदली पदस्थापना / वेतन त्रुटीबाबत..." required>
-                                    </div>
-                                    <div style="flex:1;">
-                                        <label style="font-weight:bold;">प्रवर्ग/प्रकार:</label>
-                                        <select id="gr_category" class="form-control">
-                                            <option value="सेवाविषयक समस्या">सेवाविषयक समस्या</option>
-                                            <option value="बदली विषयक">बदली विषयक</option>
-                                            <option value="वेतन व भत्ते">वेतन व भत्ते</option>
-                                            <option value="इतर कायदेशीर विषय">इतर कायदेशीर विषय</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div style="flex:1;">
-                                        <label style="font-weight:bold;">तक्रारीचा सविस्तर तपशील:</label>
-                                        <textarea id="gr_details" class="form-control" rows="4" placeholder="आपली तक्रार येथे सविस्तर टाईप करा..." required></textarea>
-                                    </div>
-                                </div>
-                                <button type="submit" class="btn-action bg-danger" style="padding:10px 20px;"><i class="fa fa-paper-plane"></i> तक्रार सबमिट करा</button>
-                            </form>
-                        </div>
-
-                        <h4 style="color:var(--primary); margin-bottom:10px;"><i class="fa fa-history"></i> माझ्या सबमिट केलेल्या तक्रारींचा मागोवा</h4>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>आवक क्र.</th>
-                                    <th>दिनांक</th>
-                                    <th>विषय</th>
-                                    <th>प्रकार</th>
-                                    <th>सध्याची स्थिती</th>
-                                    <th>ॲडमिनचा अभिप्राय</th>
-                                </tr>
-                            </thead>
-                            <tbody id="myGrievancesBody">
-                                <tr><td colspan="6" style="text-align:center;">लोड होत आहे...</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB 8: INFORMATION GATHERING SYSTEM -->
-            <div id="tab-info-gather" class="tab-content">
-                <div class="panel">
-                    <div class="panel-header bg-purple" style="color:white;">
-                        <span><i class="fa fa-clipboard-list"></i> माहिती द्या (जिल्हानिहाय अधिकारी संख्या व सविस्तर नावे)</span>
-                    </div>
-                    <div class="panel-body">
-                        <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:18px; border-radius:10px; margin-bottom:20px;">
-                            <div class="form-row">
-                                <div><label>माझा जिल्हा:</label><input type="text" id="inf_district" class="form-control" placeholder="उदा. लातूर" required></div>
-                                <div>
-                                    <label>जिल्ह्यातील एकूण कार्यरत अधिकारी संख्या:</label>
-                                    <input type="number" id="inf_officer_count" class="form-control" placeholder="उदा. 8" min="1" onchange="generateOfficerRows()">
-                                </div>
-                            </div>
-                            <div id="dynamicOfficerListArea" style="margin-top:15px;"></div>
-                            <button type="button" class="btn-action bg-purple" onclick="submitDetailedGatheredInfo()" style="padding:10px 20px; margin-top:15px;"><i class="fa fa-paper-plane"></i> माहिती सबमिट करा</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB 9: STATE EMPLOYEE DIRECTORY -->
-            <div id="tab-employees" class="tab-content">
-                <div class="panel">
-                    <div class="panel-header">
-                        <span><i class="fa fa-users"></i> राज्यातील इतर कर्मचारी डेटाबेस</span>
-                        <input type="text" id="searchEmp" class="form-control" placeholder="🔍 नाव किंवा जिल्हा शोधा..." style="max-width:280px;" onkeyup="filterEmployeeDirectory()">
-                    </div>
-                    <div class="panel-body" style="padding:0;">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>अ.क्र.</th>
-                                    <th>नाव व पद</th>
-                                    <th>प्रवर्ग</th>
-                                    <th>सध्या कार्यरत ठिकाण</th>
-                                    <th>जिल्हा</th>
-                                    <th>मंडळ</th>
-                                </tr>
-                            </thead>
-                            <tbody id="employeeDirectoryBody">
-                                <tr><td colspan="6" style="text-align:center;">डेटा लोड होत आहे...</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB 10: DOCUMENTS & FOLDERS -->
-            <div id="tab-documents" class="tab-content">
-                <div class="panel">
-                    <div class="panel-header"><span><i class="fa fa-folder-open"></i> परिपत्रके, फोल्डर्स व शासकीय GR</span></div>
-                    <div class="panel-body">
-                        <div id="foldersContainer" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:12px; margin-bottom:20px;"></div>
-                        <table>
-                            <thead><tr><th>अ.क्र.</th><th>फाईलचे नाव</th><th>दिनांक</th><th>Action</th></tr></thead>
-                            <tbody id="memberFilesBody">
-                                <tr><td colspan="4" style="text-align:center;">फाईल्स उपलब्ध नाहीत.</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB 11: LIVE CHAT SECTION -->
-            <div id="tab-chat" class="tab-content">
-                <div class="panel" style="margin-bottom:0;">
-                    <div class="chat-top-nav-bar">
-                        <button type="button" class="btn-chat-back-main" onclick="openTab('tab-dash', document.querySelector('.tab-menu .tab-btn'))">
-                            <i class="fa fa-arrow-left"></i> मुख्य डॅशबोर्डवर जा
-                        </button>
-                        <span style="font-weight:800; font-size:1.15rem; color:#071938;"><i class="fa-solid fa-comments"></i> Live Chat रूम</span>
-                    </div>
-                    <div class="panel-body" style="padding:0;">
-                        <iframe id="memberChatIframe" src="chat.html" title="Live Chat"></iframe>
-                    </div>
-                </div>
-            </div>
-
-            <!-- TAB 12: VOTING & POLL SYSTEM -->
-            <div id="tab-polls" class="tab-content">
-                <div class="panel">
-                    <div class="panel-header bg-purple" style="color:white;">
-                        <span><i class="fa fa-vote-yea"></i> मतदान व पोल प्रणाली (Live Poll Voting)</span>
-                    </div>
-                    <div class="panel-body">
-                        <div id="activePollsContainer">
-                            <p style="text-align:center; color:gray;">सध्या कोणतेही पोल उपलब्ध नाहीत.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <!-- PRINT LETTER TEMPLATE RENDER CONTAINER -->
-    <div id="printLetterArea" style="display:none;"></div>
-
-    <!-- FLOATING LIVE CHAT LAUNCHER WIDGET -->
-    <div id="floatingLiveChatWidget" onclick="openTab('tab-chat', document.getElementById('btn_tab_chat'))" title="💬 Live Chat (संवाद साधा)">
-        <div class="chat-pill-label">
-            <i class="fa-solid fa-bolt" style="color: #f39c12;"></i> Live Chat करा
-        </div>
-        <div class="chat-floating-btn">
-            <i class="fa-solid fa-comments"></i>
-            <span class="chat-unread-badge" id="chatUnreadCount">0</span>
-        </div>
-    </div>
-
-    <!-- FIREBASE & CORE SCRIPT ENGINE WITH NULL-SAFETY CHECKS -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, doc, query, where, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk",
-            authDomain: "xrayunionmah.firebaseapp.com",
-            projectId: "xrayunionmah"
-        };
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        window.currentMember = null;
-        window.allMembers = [];
-        window.hosp_rawData = [];
-        window.currentAuditStats = null;
-
-        // Global Safe Tab Handler
-        window.openTab = function(tabId, btn) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-            
-            let target = document.getElementById(tabId);
-            if(target) target.classList.add('active');
-            if(btn) btn.classList.add('active');
-        };
-
-        window.closeModal = function(id) {
-            let el = document.getElementById(id);
-            if(el) el.style.display = 'none';
-        };
-
-        window.loginMemberWithMobileAndPassword = function() {
-            let overlay = document.getElementById('loginOverlay');
-            let content = document.getElementById('appContent');
-            if(overlay) overlay.style.display = 'none';
-            if(content) content.style.display = 'flex';
-        };
-
-        window.logoutMember = function() {
-            let overlay = document.getElementById('loginOverlay');
-            let content = document.getElementById('appContent');
-            if(content) content.style.display = 'none';
-            if(overlay) overlay.style.display = 'flex';
-        };
-
-        // ==========================================
-        // EXCEL & AUDIT LOGIC (SAFE EXPLICIT BINDING)
-        // ==========================================
-        window.handleExcelUpload = function(e) {
-            let fileInput = document.getElementById('hosp_excelFile');
-            let file = (e && e.target && e.target.files) ? e.target.files[0] : (fileInput ? fileInput.files[0] : null);
-            if(!file) return;
-
-            Swal.fire({title: 'एक्सेल फाईल वाचत आहे...', allowOutsideClick: false, didOpen: () => Swal.showLoading()});
-
-            let reader = new FileReader();
-            reader.onload = function(evt) {
-                setTimeout(() => {
-                    try {
-                        let data = new Uint8Array(evt.target.result);
-                        let workbook = XLSX.read(data, {type: 'array'});
-                        let firstSheet = workbook.SheetNames[0];
-                        window.hosp_rawData = XLSX.utils.sheet_to_json(workbook.Sheets[firstSheet]);
-
-                        window.populateHospDistricts();
-                        Swal.close();
-                        Swal.fire('यशस्वी!', `एक्सेल मधील ${window.hosp_rawData.length} रेकॉर्ड्स लोड झाले आहेत.`, 'success');
-                    } catch(err) {
-                        Swal.close();
-                        Swal.fire('त्रुटी', 'फाईल वाचताना अडचण आली: ' + err.message, 'error');
-                    }
-                }, 100);
-            };
-            reader.readAsArrayBuffer(file);
-        };
-
-        window.populateHospDistricts = function() {
-            let districts = [...new Set(window.hosp_rawData.map(item => item.District))].filter(Boolean).sort();
-            let districtSelect = document.getElementById('hosp_districtSelect');
-            if(!districtSelect) return;
-
-            districtSelect.innerHTML = '<option value="">-- जिल्हा निवडा --</option>';
-            districts.forEach(dist => {
-                let opt = document.createElement('option');
-                opt.value = dist;
-                opt.textContent = dist;
-                districtSelect.appendChild(opt);
-            });
-
-            districtSelect.disabled = false;
-        };
-
-        window.handleDistrictChange = function() {
-            let districtSelect = document.getElementById('hosp_districtSelect');
-            let centreSelect = document.getElementById('hosp_centreSelect');
-            let filterType = document.getElementById('hosp_filterType');
-            let searchBtn = document.getElementById('hosp_searchBtn');
-
-            if(!districtSelect || !centreSelect) return;
-            let selectedDistrict = districtSelect.value;
-            centreSelect.innerHTML = '<option value="">-- सर्व रुग्णालये --</option>';
-
-            if(!selectedDistrict) {
-                centreSelect.disabled = true;
-                if(filterType) filterType.disabled = true;
-            } else {
-                let filteredCentres = [...new Set(
-                    window.hosp_rawData.filter(item => item.District === selectedDistrict).map(item => item.CentreName)
-                )].filter(Boolean).sort();
-
-                filteredCentres.forEach(centre => {
-                    let opt = document.createElement('option');
-                    opt.value = centre;
-                    opt.textContent = centre;
-                    centreSelect.appendChild(opt);
-                });
-
-                centreSelect.disabled = false;
-                if(filterType) filterType.disabled = false;
-            }
-            if(searchBtn) searchBtn.disabled = false;
-            window.handleHospitalSearch();
-        };
-
-        window.handleHospitalSearch = function() {
-            let distEl = document.getElementById('hosp_districtSelect');
-            let centreEl = document.getElementById('hosp_centreSelect');
-            let filterEl = document.getElementById('hosp_filterType');
-            let auditBtn = document.getElementById('hosp_auditBtn');
-
-            let selectedDistrict = distEl ? distEl.value : '';
-            let selectedCentre = centreEl ? centreEl.value : '';
-            let filterType = filterEl ? filterEl.value : 'ALL';
-
-            let hospData = window.hosp_rawData.filter(item => {
-                let matchDist = !selectedDistrict || item.District === selectedDistrict;
-                let matchCentre = !selectedCentre || item.CentreName === selectedCentre;
-                return matchDist && matchCentre;
-            });
-
-            window.calculateAuditIndicators(hospData, selectedDistrict, selectedCentre);
-
-            let tableData = hospData.filter(item => {
-                if (filterType === 'EMERGENCY') return item.Priority === 'Emergency';
-                if (filterType === 'ROUTINE') return item.Priority !== 'Emergency';
-                if (filterType === 'BEYOND_TAT') return item.IsBeyondTAT == 1 || item.IsBeyondTAT === '1';
-                return true;
-            });
-
-            window.renderHospTable(tableData);
-            if(auditBtn) auditBtn.disabled = hospData.length === 0;
-        };
-
-        window.calculateAuditIndicators = function(data, dist, centre) {
-            let totalScans = data.length;
-            
-            let emCases = data.filter(d => d.Priority === 'Emergency');
-            let emTotal = emCases.length;
-            let emOntime = emCases.filter(d => d.IsBeyondTAT == 0 || d.IsBeyondTAT === '0').length;
-            let emDelayed = emCases.filter(d => d.IsBeyondTAT == 1 || d.IsBeyondTAT === '1').length;
-            let emCompliance = emTotal > 0 ? ((emOntime / emTotal) * 100).toFixed(1) : "100.0";
-
-            let rtCases = data.filter(d => d.Priority !== 'Emergency');
-            let rtTotal = rtCases.length;
-            let rtOntime = rtCases.filter(d => d.IsBeyondTAT == 0 || d.IsBeyondTAT === '0').length;
-            let rtDelayed = rtCases.filter(d => d.IsBeyondTAT == 1 || d.IsBeyondTAT === '1').length;
-            let rtCompliance = rtTotal > 0 ? ((rtOntime / rtTotal) * 100).toFixed(1) : "100.0";
-
-            let overallOntime = data.filter(d => d.IsBeyondTAT == 0 || d.IsBeyondTAT === '0').length;
-            let overallDelayed = data.filter(d => d.IsBeyondTAT == 1 || d.IsBeyondTAT === '1').length;
-            let overallCompliance = totalScans > 0 ? ((overallOntime / totalScans) * 100).toFixed(1) : "100.0";
-
-            let deductionSlab = "Nil (0% Penalty)";
-            let compVal = parseFloat(overallCompliance);
-            if (compVal >= 90.0 && compVal < 100.0) deductionSlab = "1% Deduction Applicable";
-            else if (compVal < 90.0) deductionSlab = "Penalty / Higher Deduction Applicable";
-
-            // Safe UI Update
-            let setTxt = (id, val) => { let el = document.getElementById(id); if(el) el.innerText = val; };
-            setTxt('st_aud_total', totalScans);
-            setTxt('st_aud_em_total', emTotal);
-            setTxt('st_aud_em_ontime', emOntime);
-            setTxt('st_aud_em_delayed', emDelayed);
-            setTxt('st_aud_em_compliance', emCompliance + "%");
-
-            setTxt('st_aud_rt_total', rtTotal);
-            setTxt('st_aud_rt_ontime', rtOntime);
-            setTxt('st_aud_rt_delayed', rtDelayed);
-            setTxt('st_aud_rt_compliance', rtCompliance + "%");
-
-            setTxt('st_aud_overall_compliance', overallCompliance + "%");
-            setTxt('st_aud_overall_ontime', overallOntime);
-            setTxt('st_aud_overall_delayed', overallDelayed);
-            setTxt('st_aud_deduction_slab', deductionSlab);
-
-            window.currentAuditStats = {
-                district: dist || 'महाराष्ट्र',
-                hospital: centre || 'सर्व रुग्णालये',
-                totalScans, emTotal, emOntime, emDelayed, emCompliance,
-                rtTotal, rtOntime, rtDelayed, rtCompliance,
-                overallOntime, overallDelayed, overallCompliance, deductionSlab
-            };
-        };
-
-        window.renderHospTable = function(data) {
-            let tbody = document.getElementById('hosp_tableBody');
-            let countBadge = document.getElementById('hosp_recordCount');
-            if(!tbody) return;
-
-            tbody.innerHTML = '';
-            if(countBadge) countBadge.textContent = data.length;
-
-            if(data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; color:red;">माहिती उपलब्ध नाही.</td></tr>';
-                return;
-            }
-
-            let displayData = data.slice(0, 500);
-
-            displayData.forEach((row, index) => {
-                let isDelayed = row.IsBeyondTAT == 1 || row.IsBeyondTAT === '1';
-                let tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${index + 1}</td>
-                    <td><b>${row.District || '-'}</b></td>
-                    <td>${row.CentreName || '-'}</td>
-                    <td><b>${row.PatientName || '-'}</b></td>
-                    <td><small>${row.PatientID || '-'}</small></td>
-                    <td>${row.StudyName || '-'}</td>
-                    <td><span class="badge ${row.Priority === 'Emergency' ? 'bg-danger' : 'bg-info'}">${row.Priority || 'Routine'}</span></td>
-                    <td><small>${row.ScanDate || '-'}</small></td>
-                    <td><small>${row.Report_TAT || '-'}</small></td>
-                    <td><span class="badge ${isDelayed ? 'bg-danger' : 'bg-success'}">${isDelayed ? '⚠ Beyond TAT (>1 hr)' : '✓ On Time'}</span></td>
-                `;
-                tbody.appendChild(tr);
-            });
-        };
-
-        window.printAuditReportPDF = function() {
-            if(!window.currentAuditStats) return alert("कृपया प्रथम जिल्हा व रुग्णालय निवडून डेटा शोधा.");
-
-            let s = window.currentAuditStats;
-            let mName = window.currentMember ? (window.currentMember.name || 'महेश हांगे') : 'महेश हांगे';
-
-            let printArea = document.getElementById('printLetterArea');
-            if(!printArea) return;
-
-            printArea.innerHTML = `
-                <div style="width:210mm; padding:18mm 20mm; box-sizing:border-box; background:white; font-family:'Mukta',sans-serif; line-height:1.5;">
-                    <div style="text-align:center; border-bottom:3px double #0B3D91; padding-bottom:10px; margin-bottom:15px;">
-                        <h2 style="color:#0B3D91; margin:0; font-size:1.3rem;">PRESCRIPTION AUDIT REPORT (X-RAY SERVICES)</h2>
-                        <h3 style="margin:4px 0; font-size:1.1rem; color:#1e293b;">${s.hospital.toUpperCase()}</h3>
-                        <p style="margin:0; font-weight:bold; font-size:0.9rem;">DISTRICT: ${s.district.toUpperCase()} | AUDIT MONTH: AUGUST 2025</p>
-                    </div>
-
-                    <h4 style="color:#0B3D91; background:#e0f2fe; padding:6px 10px; border-left:4px solid #0B3D91; margin-top:15px;">१. प्रिस्क्रिप्शन व एक्स-रे तपासणी संख्या (Overview)</h4>
-                    <ul style="margin-left:20px; font-size:0.9rem; font-weight:600;">
-                        <li>महिनाभरातील एकूण X-Ray / Scans केलेले रुग्ण: <b>${s.totalScans}</b></li>
-                        <li>प्रिस्क्रिप्शन / रेफरल स्लिप पडताळणी स्थिती: <b>१००% पूर्ण व स्वाक्षरीकृत (Verified 100%)</b></li>
-                    </ul>
-
-                    <h4 style="color:#0B3D91; background:#e0f2fe; padding:6px 10px; border-left:4px solid #0B3D91; margin-top:15px;">२. रिपोर्टिंग वेळेची अचूकता (Timeliness of Reporting - MoU Clause 1.11)</h4>
-                    <table style="width:100%; border-collapse:collapse; margin-top:8px; font-size:0.88rem;" border="1">
-                        <thead>
-                            <tr style="background:#0B3D91; color:white;">
-                                <th style="padding:6px;">प्रकार (Priority Category)</th>
-                                <th style="padding:6px;">एकूण रुग्ण</th>
-                                <th style="padding:6px;">TAT वेळेत रिपोर्ट (>1 hr / TAT compliant)</th>
-                                <th style="padding:6px;">उशीर झालेली केसेस (Beyond TAT)</th>
-                                <th style="padding:6px;">पालकता % (Compliance)</th>
-                            </tr>
-                        </thead>
-                        <tbody style="text-align:center;">
-                            <tr>
-                                <td style="padding:6px; text-align:left;"><b>Emergency Cases (1 Hour TAT)</b></td>
-                                <td>${s.emTotal}</td>
-                                <td style="color:green; font-weight:bold;">${s.emOntime}</td>
-                                <td style="color:red; font-weight:bold;">${s.emDelayed}</td>
-                                <td><b>${s.emCompliance}%</b></td>
-                            </tr>
-                            <tr>
-                                <td style="padding:6px; text-align:left;"><b>Non-Emergency / Routine (8 AM - 6 PM)</b></td>
-                                <td>${s.rtTotal}</td>
-                                <td style="color:green; font-weight:bold;">${s.rtOntime}</td>
-                                <td style="color:red; font-weight:bold;">${s.rtDelayed}</td>
-                                <td><b>${s.rtCompliance}%</b></td>
-                            </tr>
-                            <tr style="background:#f1f5f9; font-weight:bold;">
-                                <td style="padding:6px; text-align:left;"><b>एकूण सर्व केसेस (Overall Summary)</b></td>
-                                <td>${s.totalScans}</td>
-                                <td style="color:green;">${s.overallOntime}</td>
-                                <td style="color:red;">${s.overallDelayed}</td>
-                                <td style="color:#0B3D91; font-size:1rem;">${s.overallCompliance}%</td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <h4 style="color:#0B3D91; background:#e0f2fe; padding:6px 10px; border-left:4px solid #0B3D91; margin-top:15px;">३. MoU नियमानुसार दंड / कपात स्थिती (Shortfall / Penalty)</h4>
-                    <p style="font-size:0.9rem; margin-top:6px;">
-                        • एकूण वेळेची अचूकता (Overall Compliance): <b>${s.overallCompliance}%</b><br>
-                        • नियमानुसार कपात/दंड लागू : <b>${s.deductionSlab}</b>
-                    </p>
-
-                    <h4 style="color:#0B3D91; background:#e0f2fe; padding:6px 10px; border-left:4px solid #0B3D91; margin-top:15px;">४. गुणवत्ता व रेकॉर्ड्स (Quality & Record Keeping)</h4>
-                    <p style="font-size:0.9rem; margin-top:6px;">
-                        • CR / डिजिटायझर सिस्टीम कार्यक्षमता: <b>100% Functional Daily</b><br>
-                        • डिजिटल सिग्नेचर व अहवाल प्रत: <b>उपलब्ध व व्हेरीफाईड (100%)</b>
-                    </p>
-
-                    <div style="margin-top:60px; display:flex; justify-content:space-between; text-align:center; font-size:0.85rem; font-weight:bold;">
-                        <div>
-                            ________________________<br>
-                            (${mName})<br>
-                            X-Ray Scientific Officer<br>
-                            ${s.hospital}
-                        </div>
-                        <div>
-                            ________________________<br>
-                            Medical Officer<br>
-                            ${s.hospital}
-                        </div>
-                        <div>
-                            ________________________<br>
-                            Medical Superintendent<br>
-                            ${s.hospital}
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            printArea.style.display = 'block';
-            let opt = { margin: 0, filename: `Audit_Report_${s.hospital}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
-            html2pdf().set(opt).from(printArea.firstElementChild).save().then(() => { printArea.style.display = 'none'; });
-        };
-
-        window.handleHospitalReset = function() {
-            let excelInput = document.getElementById('hosp_excelFile');
-            let distSelect = document.getElementById('hosp_districtSelect');
-            let centreSelect = document.getElementById('hosp_centreSelect');
-            let filterType = document.getElementById('hosp_filterType');
-            let searchBtn = document.getElementById('hosp_searchBtn');
-            let auditBtn = document.getElementById('hosp_auditBtn');
-            let tbody = document.getElementById('hosp_tableBody');
-            let countBadge = document.getElementById('hosp_recordCount');
-
-            if(excelInput) excelInput.value = '';
-            if(distSelect) { distSelect.innerHTML = '<option value="">-- प्रथम एक्सेल फाईल अपलोड करा --</option>'; distSelect.disabled = true; }
-            if(centreSelect) { centreSelect.innerHTML = '<option value="">-- प्रथम जिल्हा निवडा --</option>'; centreSelect.disabled = true; }
-            if(filterType) filterType.disabled = true;
-            if(searchBtn) searchBtn.disabled = true;
-            if(auditBtn) auditBtn.disabled = true;
-            if(tbody) tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; color:gray;">कृपया एक्सेल फाईल अपलोड करून जिल्हा आणि रुग्णालय निवडा.</td></tr>';
-            if(countBadge) countBadge.textContent = '0';
-
-            window.hosp_rawData = [];
-            window.currentAuditStats = null;
-        };
-    </script>
-</body>
-</html>
+    `;
+
+    printArea.style.display = 'block';
+    let opt = { margin: 0, filename: `Audit_Report_${s.hospital}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
+    html2pdf().set(opt).from(printArea.firstElementChild).save().then(() => { printArea.style.display = 'none'; });
+};
+
+// ९. रीसेट बटण
+window.handleHospitalReset = function() {
+    document.getElementById('hosp_excelFile').value = '';
+    let distSelect = document.getElementById('hosp_districtSelect');
+    let centreSelect = document.getElementById('hosp_centreSelect');
+    distSelect.innerHTML = '<option value="">-- प्रथम एक्सेल फाईल लोड करा --</option>';
+    centreSelect.innerHTML = '<option value="">-- प्रथम जिल्हा निवडा --</option>';
+    distSelect.disabled = true;
+    centreSelect.disabled = true;
+    document.getElementById('hosp_filterType').disabled = true;
+    document.getElementById('hosp_searchBtn').disabled = true;
+    document.getElementById('hosp_auditBtn').disabled = true;
+    
+    document.getElementById('hosp_tableBody').innerHTML = '<tr><td colspan="10" style="text-align:center; color:gray; padding:20px;">कृपया एक्सेल फाईल निवडून सर्च सुरू करा.</td></tr>';
+    document.getElementById('hosp_recordCount').textContent = '0';
+    
+    window.hosp_rawData = [];
+    window.hosp_filteredData = [];
+    window.currentAuditStats = null;
+};
+</script>
