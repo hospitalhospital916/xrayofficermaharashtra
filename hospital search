@@ -459,15 +459,6 @@
         </div>
     </div>
 
-    <!-- PRINT LETTER TEMPLATE CONTAINER -->
-    <div id="printLetterArea" style="display:none;"></div>
-
-    <!-- FLOATING CHAT WIDGET -->
-    <div id="floatingLiveChatWidget" onclick="openTab('tab-chat', document.getElementById('btn_tab_chat'))" title="💬 Live Chat">
-        <div class="chat-pill-label"><i class="fa-solid fa-bolt" style="color: #f39c12;"></i> Live Chat करा</div>
-        <div class="chat-floating-btn"><i class="fa-solid fa-comments"></i></div>
-    </div>
-
     <!-- ADVANCED ROBUST JAVASCRIPT ENGINE -->
     <script>
         window.hosp_rawData = [];
@@ -482,24 +473,6 @@
             let target = document.getElementById(tabId);
             if(target) target.classList.add('active');
             if(btn) btn.classList.add('active');
-        };
-
-        window.closeModal = function(id) {
-            let el = document.getElementById(id); if(el) el.style.display = 'none';
-        };
-
-        window.loginMemberWithMobileAndPassword = function() {
-            let overlay = document.getElementById('loginOverlay');
-            let content = document.getElementById('appContent');
-            if(overlay) overlay.style.display = 'none';
-            if(content) content.style.display = 'flex';
-        };
-
-        window.logoutMember = function() {
-            let overlay = document.getElementById('loginOverlay');
-            let content = document.getElementById('appContent');
-            if(content) content.style.display = 'none';
-            if(overlay) overlay.style.display = 'flex';
         };
 
         // ==========================================
@@ -556,7 +529,7 @@
         }
 
         // ==========================================
-        // FAST EXCEL PARSER (WEB WORKER)
+        // EXCEL PARSER FIX (Safe for Browser)
         // ==========================================
         window.handleExcelUploadFast = function(event) {
             let file = event.target.files[0];
@@ -567,45 +540,31 @@
 
             Swal.fire({
                 title: 'एक्सेल फाईल वाचत आहे...',
-                text: 'मोठी फाईल असल्यास काही सेकंद लागतील, सिस्टीम हँग होणार नाही.',
+                text: 'कृपया वाट पहा, डेटा लोड होत आहे...',
                 allowOutsideClick: false,
                 didOpen: () => { Swal.showLoading(); }
             });
 
             let reader = new FileReader();
             reader.onload = function(e) {
-                let arrayBuffer = e.target.result;
-                let workerCode = `
-                    self.importScripts('https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js');
-                    self.onmessage = function(e) {
-                        let data = new Uint8Array(e.data);
+                setTimeout(() => {
+                    try {
+                        let data = new Uint8Array(e.target.result);
                         let workbook = XLSX.read(data, {type: 'array', cellDates: true});
                         let firstSheet = workbook.SheetNames[0];
-                        let json = XLSX.utils.sheet_to_json(workbook.Sheets[firstSheet]);
-                        self.postMessage(json);
-                    };
-                `;
-                let blob = new Blob([workerCode], {type: 'application/javascript'});
-                let worker = new Worker(URL.createObjectURL(blob));
-                worker.postMessage(arrayBuffer, [arrayBuffer]);
+                        window.hosp_rawData = XLSX.utils.sheet_to_json(workbook.Sheets[firstSheet]) || [];
 
-                worker.onmessage = function(evt) {
-                    window.hosp_rawData = evt.data || [];
-                    worker.terminate();
+                        window.populateHospDistricts();
+                        if(statusEl) statusEl.style.display = 'none';
 
-                    window.populateHospDistricts();
-                    if(statusEl) statusEl.style.display = 'none';
-
-                    Swal.close();
-                    Swal.fire('यशस्वी!', `एक्सेल मधील ${window.hosp_rawData.length} रेकॉर्ड्स यशस्वीरीत्या लोड झाले आहेत.`, 'success');
-                };
-
-                worker.onerror = function(err) {
-                    if(statusEl) statusEl.style.display = 'none';
-                    Swal.close();
-                    Swal.fire('त्रुटी', 'फाईल वाचताना अडचण आली: ' + err.message, 'error');
-                    worker.terminate();
-                };
+                        Swal.close();
+                        Swal.fire('यशस्वी!', `एक्सेल मधील ${window.hosp_rawData.length} रेकॉर्ड्स यशस्वीरीत्या लोड झाले आहेत.`, 'success');
+                    } catch(err) {
+                        if(statusEl) statusEl.style.display = 'none';
+                        Swal.close();
+                        Swal.fire('त्रुटी', 'एक्सेल फाईल वाचताना अडचण आली: ' + err.message, 'error');
+                    }
+                }, 100);
             };
             reader.readAsArrayBuffer(file);
         };
@@ -749,7 +708,7 @@
             setTxt('st_aud_deduction_slab', deductionSlab);
 
             window.currentAuditStats = {
-                district: dist || 'गडचिरोली / महाराष्ट्र',
+                district: dist || 'महाराष्ट्र',
                 hospital: centre || 'ग्रामीण रुग्णालय',
                 total, emTotal, emOntime, emDelayed, emCompliance,
                 rtTotal, rtOntime, rtDelayed, rtCompliance,
@@ -810,15 +769,18 @@
         };
 
         // ==========================================
-        // AUTO GENERATED EDITABLE AUDIT REPORT (EXACT PDF 7 POINTS)
+        // AUTO GENERATED EDITABLE AUDIT REPORT
         // ==========================================
         window.generateEditableAuditReport = function() {
-            if(!window.currentAuditStats) return alert("कृपया प्रथम शोध घ्या.");
+            if(!window.currentAuditStats) return alert("कृपया प्रथम जिल्हा किंवा रुग्णालय निवडून शोधा.");
             let s = window.currentAuditStats;
             let modal = document.getElementById('editableAuditModal');
             let reportArea = document.getElementById('reportPrintArea');
 
-            let mName = window.currentMember ? (window.currentMember.name || 'महेश हांगे') : 'महेश एस. हांगे';
+            let mName = (window.currentMember && window.currentMember.name) ? window.currentMember.name : 'महेश एस. हांगे';
+
+            let sampleSize = s.total > 0 ? Math.min(66, Math.max(10, Math.round(s.total * 0.35))) : 0;
+            let halfSample = Math.round(sampleSize / 2);
 
             reportArea.innerHTML = `
                 <div style="text-align:center; border-bottom:3px double #0B3D91; padding-bottom:8px; margin-bottom:12px;">
@@ -834,6 +796,7 @@
                 <ul style="margin:0 0 8px 18px; font-size:0.85rem; line-height:1.4;">
                     <li>Total no. of patients OPD in hospital (Monthly): <b>3,594 (3,398 OPD + 196 Casualty/IPD)</b></li>
                     <li>Total no. of X-Ray done (Monthly): <b>${s.total}</b></li>
+                    <li>Total Emergency X-Rays: <b>${s.emTotal}</b> (Within 1 Hr: <b>${s.emOntime}</b> | Beyond 1 Hr: <b>${s.emDelayed}</b>)</li>
                     <li>Total no. of CT Scan done (Monthly): <b>N/A (Facility not available at RH level)</b></li>
                     <li>Prescription / referral slip verification status:
                         <ul style="margin-left:15px; list-style-type:circle;">
@@ -848,18 +811,18 @@
 
                 <h4 style="color:#0B3D91; background:#f0f9ff; padding:4px 8px; border-left:4px solid #0B3D91; margin:10px 0 6px 0; font-size:0.92rem;">2. Sample Size</h4>
                 <p style="font-size:0.85rem; margin:0 0 6px 10px;">• Population (Monthly referrals for X-Ray): <b>${s.total}</b><br>
-                • Sample size audited: <b>66 prescriptions/referral slips</b> (Margin of Error 10%; Confidence level 95%)</p>
+                • Sample size audited: <b>${sampleSize} prescriptions/referral slips</b> (Margin of Error 10%; Confidence level 95%)</p>
 
                 <h4 style="color:#0B3D91; background:#f0f9ff; padding:4px 8px; border-left:4px solid #0B3D91; margin:10px 0 6px 0; font-size:0.92rem;">3. Data Collection</h4>
                 <p style="font-size:0.85rem; margin:0 0 6px 10px;">• Sampling Technique: Simple random sampling technique used.<br>
-                • Distribution: Half of the sample (33) taken from first two weeks and half (33) from remaining two weeks.</p>
+                • Distribution: Half of the sample (${halfSample}) taken from first two weeks and remaining half (${sampleSize - halfSample}) from remaining two weeks.</p>
 
                 <h4 style="color:#0B3D91; background:#f0f9ff; padding:4px 8px; border-left:4px solid #0B3D91; margin:10px 0 6px 0; font-size:0.92rem;">4. Timeliness of Reporting (as per MoU Clause 1.11 & Annexure-B)</h4>
                 <ul style="margin:0 0 8px 18px; font-size:0.85rem; line-height:1.4;">
-                    <li>Emergency cases (X-Ray - 1 Hour TAT): <b>${s.emCompliance}% interpreted & reported within 1 hour</b> (${s.emOntime} out of ${s.emTotal} cases; ${s.emDelayed} cases reported beyond TAT).</li>
-                    <li>Non-emergency/routine cases (12 Hours TAT): <b>${s.rtCompliance}% reported within TAT</b> (${s.rtOntime} out of ${s.rtTotal} cases).</li>
-                    <li>Overall Reporting Timeliness: <b>${s.overallCompliance}% compliant</b> (${s.overallOntime} out of ${s.total} overall reported within TAT).</li>
-                    <li>Shortfall / Deduction: <b>${s.deductionSlab}</b></li>
+                    <li>🚨 <b>Emergency cases (X-Ray - 1 Hour TAT):</b> <b>${s.emCompliance}%</b> interpreted & reported within 1 hour (<b>${s.emOntime}</b> out of <b>${s.emTotal}</b> cases; <b style="color:${s.emDelayed > 0 ? 'red' : 'green'};">${s.emDelayed}</b> cases reported beyond 1 hour TAT).</li>
+                    <li>📋 <b>Non-emergency/routine cases (12 Hours TAT):</b> <b>${s.rtCompliance}%</b> reported within TAT (<b>${s.rtOntime}</b> out of <b>${s.rtTotal}</b> cases; <b>${s.rtDelayed}</b> delayed).</li>
+                    <li>📊 <b>Overall Reporting Timeliness:</b> <b>${s.overallCompliance}%</b> compliant (<b>${s.overallOntime}</b> out of <b>${s.total}</b> overall reported within TAT).</li>
+                    <li>💰 <b>Shortfall / Deduction:</b> <b>${s.deductionSlab}</b></li>
                 </ul>
 
                 <h4 style="color:#0B3D91; background:#f0f9ff; padding:4px 8px; border-left:4px solid #0B3D91; margin:10px 0 6px 0; font-size:0.92rem;">5. Records Keeping (MoU Clause 3.10, 3.17, 3.19)</h4>
