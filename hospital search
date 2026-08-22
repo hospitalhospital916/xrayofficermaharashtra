@@ -1,417 +1,894 @@
-<!-- ================================================================= -->
-<!-- HOSPITAL MIS DATA & PRESCRIPTION AUDIT TAB (EDITABLE AUDIT SHEET) -->
-<!-- ================================================================= -->
-<div id="tab-hospital-search" class="tab-content">
-    <div class="panel">
-        <div class="panel-header bg-primary" style="color:white; padding: 10px 15px;">
-            <span><i class="fa fa-hospital"></i> जिल्हा व रुग्णालयनिहाय MIS डेटा शोध व प्रिस्क्रिप्शन ऑडिट रिपोर्ट (PPP Mode)</span>
-        </div>
-        <div class="panel-body" style="padding:15px;">
-            
-            <!-- १. कंट्रोल व फिल्टर बॉक्स -->
-            <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:18px; border-radius:10px; margin-bottom:20px;">
-                <div class="form-row" style="display:flex; gap:12px; flex-wrap:wrap;">
-                    <div style="flex:1.2; min-width:200px;">
-                        <label style="font-weight:bold; color:var(--primary);">१. MIS एक्सेल फाईल निवडा:</label>
-                        <input type="file" id="hosp_excelFile" class="form-control" accept=".xlsx, .xls" onchange="window.handleExcelUploadFast(event)">
-                    </div>
-                    <div style="flex:1; min-width:180px;">
-                        <label style="font-weight:bold;">२. जिल्हा (District):</label>
-                        <select id="hosp_districtSelect" class="form-control" disabled onchange="window.handleDistrictChange()">
-                            <option value="">-- प्रथम एक्सेल फाईल लोड करा --</option>
-                        </select>
-                    </div>
-                    <div style="flex:1.2; min-width:200px;">
-                        <label style="font-weight:bold;">३. रुग्णालय (Centre Name):</label>
-                        <select id="hosp_centreSelect" class="form-control" disabled onchange="window.handleHospitalSearch()">
-                            <option value="">-- प्रथम जिल्हा निवडा --</option>
-                        </select>
-                    </div>
-                    <div style="flex:1.2; min-width:220px;">
-                        <label style="font-weight:bold;">४. Emergency & TAT फिल्टर:</label>
-                        <select id="hosp_filterType" class="form-control" disabled onchange="window.handleHospitalSearch()">
-                            <option value="ALL">सर्व केसेस (All Cases)</option>
-                            <option value="ALL_EMERGENCY">🚨 सर्व Emergency X-Ray केसेस</option>
-                            <option value="EMERGENCY_ONTIME"> Emergency (१ तासाच्या आत दिलेले)</option>
-                            <option value="EMERGENCY_DELAYED"> Emergency Beyond TAT (>१ तास उशीर)</option>
-                            <option value="ROUTINE_ONTIME"> Routine / Non-Emergency (१२ तासांच्या आत)</option>
-                            <option value="ROUTINE_DELAYED"> Routine Beyond TAT (>१२ तास उशीर)</option>
-                            <option value="ALL_BEYOND_TAT">⚠ सर्व Beyond TAT (उशीर झालेली केसेस)</option>
-                        </select>
-                    </div>
-                </div>
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" id="viewportMeta" content="width=1280, initial-scale=0.3, minimum-scale=0.25, maximum-scale=3.0, user-scalable=yes">
+    <title>सदस्य पोर्टल | क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना महाराष्ट्र राज्य</title>
+    
+    <!-- External Libraries (CDN) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
-                <div style="margin-top:15px; display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
-                    <button id="hosp_searchBtn" class="btn-action bg-success" disabled onclick="window.handleHospitalSearch()"><i class="fa fa-search"></i> डेटा फिल्टर करा</button>
-                    <button id="hosp_auditBtn" class="btn-action bg-purple" disabled onclick="window.generateEditableAuditReport()"><i class="fa fa-file-invoice"></i> 📊 प्रिस्क्रिप्शन ऑडिट रिपोर्ट तयार करा (Edit & PDF)</button>
-                    <button id="hosp_resetBtn" class="btn-action bg-danger" onclick="window.handleHospitalReset()"><i class="fa fa-redo"></i> रीसेट करा</button>
-                    <span id="hosp_loader_status" style="font-weight:bold; color:var(--primary); font-size:0.9rem; display:none;">
-                        <i class="fa fa-spinner fa-spin"></i> प्रोसेसिंग सुरू आहे...
-                    </span>
-                </div>
-            </div>
+    <script>
+        function applyDesktopViewport() {
+            if (window.innerWidth < 1280 && !document.body.classList.contains('chat-active-mode')) {
+                var scale = window.innerWidth / 1280;
+                document.querySelector('meta[name="viewport"]').setAttribute('content', 'width=1280, initial-scale=' + scale + ', maximum-scale=3.0, user-scalable=yes');
+            }
+        }
+        applyDesktopViewport();
+    </script>
 
-            <!-- २. समरी कार्ड्स -->
-            <div id="auditSummaryCardsArea" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap:15px; margin-bottom:20px;">
-                <div class="audit-stat-card" style="border-left: 5px solid var(--primary); background:white; padding:12px; border-radius:8px; box-shadow:0 2px 4px rgba(0,0,0,0.05);">
-                    <h4 style="margin:0; font-size:0.9rem;">एकूण X-Ray / CT Scans</h4>
-                    <div class="audit-stat-val text-primary" id="st_aud_total" style="font-size:1.6rem; font-weight:bold;">0</div>
-                </div>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Mukta:wght@300;400;600;700;800&display=swap');
 
-                <div class="audit-stat-card" style="border-left: 5px solid #dc2626; background:#fef2f2; padding:12px; border-radius:8px; box-shadow:0 2px 4px rgba(0,0,0,0.05);">
-                    <h4 style="margin:0; font-size:0.9rem; color:#991b1b;">🚨 Emergency X-Ray</h4>
-                    <div class="audit-stat-val" id="st_aud_em_total" style="color:#dc2626; font-size:1.6rem; font-weight:bold;">0</div>
-                    <div style="font-size:0.8rem; margin-top:4px;">
-                        <span>१ तासाच्या आत: <b id="st_aud_em_ontime" style="color:green;">0</b></span> | 
-                        <span>उशीर: <b id="st_aud_em_delayed" style="color:red;">0</b></span>
-                    </div>
-                </div>
+        :root {
+            --primary: #0B3D91;
+            --secondary: #f39c12;
+            --gold: #FFC436;
+            --success: #10b981;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            --dark: #1e293b;
+            --purple: #8b5cf6;
+            --bg-light: #f0f4f8;
+            --white: #ffffff;
+        }
 
-                <div class="audit-stat-card" style="border-left: 5px solid #0284c7; background:white; padding:12px; border-radius:8px; box-shadow:0 2px 4px rgba(0,0,0,0.05);">
-                    <h4 style="margin:0; font-size:0.9rem;">Routine X-Ray (१२ तास)</h4>
-                    <div class="audit-stat-val" id="st_aud_rt_total" style="color:#0284c7; font-size:1.6rem; font-weight:bold;">0</div>
-                    <div style="font-size:0.8rem; margin-top:4px;">
-                        <span>वेळेत: <b id="st_aud_rt_ontime" style="color:green;">0</b></span> | 
-                        <span>उशीर: <b id="st_aud_rt_delayed" style="color:red;">0</b></span>
-                    </div>
-                </div>
-
-                <div class="audit-stat-card" style="border-left: 5px solid #16a34a; background:white; padding:12px; border-radius:8px; box-shadow:0 2px 4px rgba(0,0,0,0.05);">
-                    <h4 style="margin:0; font-size:0.9rem;">एकूण TAT पालकता %</h4>
-                    <div class="audit-stat-val" id="st_aud_overall_compliance" style="color:#16a34a; font-size:1.6rem; font-weight:bold;">0%</div>
-                    <div style="font-size:0.8rem; margin-top:4px;">
-                        <span>MoU नियम: <b id="st_aud_deduction_slab" style="color:#b45309;">Nil</b></span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ३. डेटा टेबल -->
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px;">
-                <h4 style="color:var(--primary); font-size:1.05rem; margin:0;">
-                    <i class="fa fa-list"></i> शोध निकाल (एकूण: <span id="hosp_recordCount" class="badge bg-success">0</span>)
-                </h4>
-                <div id="hosp_pagination_controls" style="display:flex; align-items:center; gap:8px;">
-                    <button class="btn-action bg-primary" onclick="window.changeHospPage(-1)" style="padding:4px 10px; font-size:0.8rem;"><i class="fa fa-chevron-left"></i> मागे</button>
-                    <span style="font-weight:bold; font-size:0.85rem;" id="hosp_page_indicator">पेज 1 / 1</span>
-                    <button class="btn-action bg-primary" onclick="window.changeHospPage(1)" style="padding:4px 10px; font-size:0.8rem;">पुढे <i class="fa fa-chevron-right"></i></button>
-                </div>
-            </div>
-
-            <div style="overflow-x:auto; background:white; border-radius:8px; border:1px solid #cbd5e1;">
-                <table style="width:100%; border-collapse:collapse;" border="1" cellpadding="8">
-                    <thead>
-                        <tr style="background:#f1f5f9; text-align:left;">
-                            <th>अ.क्र.</th>
-                            <th>जिल्हा</th>
-                            <th>रुग्णालय (Centre)</th>
-                            <th>रुग्णाचे नाव</th>
-                            <th>Patient ID</th>
-                            <th>तपासणी (Study)</th>
-                            <th>प्रकार (Priority)</th>
-                            <th>स्कॅन तारीख</th>
-                            <th>Report TAT</th>
-                            <th>TAT स्थिती</th>
-                        </tr>
-                    </thead>
-                    <tbody id="hosp_tableBody">
-                        <tr><td colspan="10" style="text-align:center; color:gray; padding:20px;">कृपया एक्सेल फाईल निवडून सर्च सुरू करा.</td></tr>
-                    </tbody>
-                </table>
-            </div>
-
-        </div>
-    </div>
-</div>
-
-<!-- ४. एडिट करण्यायोग्य ऑडिट रिपोर्ट मोडल/कंटेनर -->
-<div id="editableAuditModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:9999; overflow-y:auto; padding:20px;">
-    <div style="max-width:900px; margin:auto; background:white; border-radius:10px; padding:20px; box-shadow:0 5px 15px rgba(0,0,0,0.3);">
-        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #cbd5e1; padding-bottom:10px; margin-bottom:15px;">
-            <h3 style="margin:0; color:#0B3D91;"><i class="fa fa-edit"></i> प्रिस्क्रिप्शन ऑडिट रिपोर्ट (संपादित करा / Edit Mode)</h3>
-            <div>
-                <button class="btn-action bg-success" onclick="window.printEditablePDF()"><i class="fa fa-file-pdf"></i> PDF डाउनलोड करा</button>
-                <button class="btn-action bg-danger" onclick="document.getElementById('editableAuditModal').style.display='none'">बंद करा</button>
-            </div>
-        </div>
-        <p style="background:#fef3c7; color:#92400e; padding:8px 12px; border-radius:6px; font-size:0.85rem; margin-bottom:15px;">
-            💡 <b>टीप:</b> खालील रिपोर्टमधील कोणत्याही मजकुरावर किंवा आकड्यावर क्लिक करून तुम्ही तुमचे बदल थेट टाईप करू शकता.
-        </p>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Mukta', sans-serif; }
         
-        <!-- Editable Report Preview -->
-        <div id="reportPrintArea" contenteditable="true" style="outline:none; background:white; padding:25mm 20mm; border:1px solid #e2e8f0; font-family:'Mukta', sans-serif; line-height:1.5; color:#1e293b;">
-            <!-- Dynamic Content loaded here -->
+        html, body { 
+            min-height: 100vh;
+            background-color: var(--bg-light); 
+            color: var(--dark); 
+            overflow-x: hidden; 
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Login Overlay Styling */
+        #loginOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, var(--dark), var(--primary)); display: flex; justify-content: center; align-items: center; z-index: 10000; padding: 15px; }
+        .login-card { background: white; padding: 35px 25px; border-radius: 16px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); width: 100%; max-width: 420px; text-align: center; }
+        .login-card img.login-logo { width: 85px; height: 85px; border-radius: 50%; object-fit: contain; margin: 0 auto 12px; border: 3px solid var(--secondary); padding: 4px; background: #fff; }
+        .login-card h2 { color: var(--primary); font-weight: 800; margin-bottom: 5px; font-size: 1.4rem; }
+        .login-input-box { position: relative; margin: 15px 0; text-align: left; }
+        .login-input-box label { font-size: 0.85rem; font-weight: bold; color: var(--dark); display: block; margin-bottom: 5px; }
+        .login-input-wrapper { position: relative; }
+        .login-input-wrapper span { position: absolute; left: 15px; top: 12px; font-weight: bold; color: var(--primary); font-size: 1.1rem; }
+        .login-input-wrapper input { width: 100%; padding: 12px 15px 12px 55px; border: 2px solid #cbd5e1; border-radius: 8px; font-size: 1.1rem; font-weight: bold; outline: none; }
+        .login-input-wrapper input.no-prefix { padding-left: 45px; }
+        .login-input-wrapper i.icon-left { position: absolute; left: 15px; top: 14px; font-weight: bold; color: var(--primary); font-size: 1.1rem; }
+        .login-input-wrapper input:focus { border-color: var(--primary); }
+        .login-card button { width: 100%; padding: 12px; background: linear-gradient(90deg, var(--secondary), #f1c40f); color: var(--dark); border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 800; cursor: pointer; transition: 0.3s; margin-top: 10px; }
+        .login-card button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(243,156,18,0.4); }
+
+        /* Custom Modals */
+        .custom-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.65); display: none; justify-content: center; align-items: center; z-index: 10005; padding: 15px; }
+        .custom-modal { background: white; width: 100%; max-width: 900px; max-height: 92vh; border-radius: 14px; overflow-y: auto; box-shadow: 0 15px 35px rgba(0,0,0,0.3); }
+        .custom-modal-header { background: var(--primary); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10; }
+        .custom-modal-body { padding: 20px; }
+
+        .modal-section-title {
+            font-size: 1rem; font-weight: 800; color: var(--primary); background: #E0F2FE; padding: 6px 12px; border-radius: 6px; margin: 15px 0 10px 0; display: flex; align-items: center; gap: 8px; border-left: 4px solid var(--info);
+        }
+
+        /* Navigation Header */
+        .navbar { background: var(--white); padding: 10px 18px; display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid var(--secondary); box-shadow: 0 4px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 1000; flex-wrap: wrap; gap: 8px; }
+        .navbar-brand { display: flex; align-items: center; gap: 10px; }
+        .navbar-brand img { width: 48px; height: 48px; border-radius: 50%; object-fit: contain; border: 2px solid var(--primary); padding: 2px; }
+        .navbar h2 { color: var(--primary); font-weight: 800; font-size: 1rem; line-height: 1.2; margin: 0; }
+        .navbar small { font-size: 0.75rem; color: #64748b; font-weight: 600; display: block; }
+        .nav-profile { display: flex; align-items: center; gap: 12px; }
+        .btn-logout { background: var(--danger); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s; font-size: 0.8rem; }
+
+        .ticker-wrap { background: var(--primary); border-bottom: 2px solid var(--secondary); color: #fff; padding: 6px 15px; font-weight: 600; font-size: 0.88rem; }
+
+        .tab-menu { display: flex; gap: 6px; overflow-x: auto; background: #07275e; padding: 8px 12px; white-space: nowrap; position: sticky; top: 0; z-index: 999; }
+        .tab-menu::-webkit-scrollbar { height: 4px; }
+        .tab-menu::-webkit-scrollbar-thumb { background: var(--secondary); border-radius: 10px; }
+        .tab-btn { padding: 7px 14px; border: none; background: rgba(255,255,255,0.12); color: white; font-size: 0.85rem; font-weight: 700; cursor: pointer; border-radius: 8px; transition: 0.3s; display: inline-flex; align-items: center; gap: 6px; }
+        .tab-btn:hover { background: rgba(255,255,255,0.25); }
+        .tab-btn.active { background: var(--secondary); color: var(--dark); }
+
+        #appContent { min-height: 100vh; display: flex; flex-direction: column; width: 100%; }
+        .container { max-width: 1450px; width: 100%; margin: 15px auto; padding: 0 12px; flex: 1; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .panel { background: var(--white); border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); margin-bottom: 20px; border: 1px solid #e2e8f0; overflow: hidden; }
+        .panel-header { padding: 12px 16px; font-size: 1rem; font-weight: 800; background: #f8fafc; border-bottom: 1px solid #e2e8f0; border-top: 5px solid var(--primary); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+        .panel-body { padding: 15px; overflow-x: auto; }
+
+        .member-profile-hero {
+            background: linear-gradient(135deg, #ffffff 0%, #f0f4f8 100%); border: 2px solid var(--primary); border-radius: 16px; padding: 20px; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(11, 61, 145, 0.12);
+        }
+
+        .profile-hero-grid { display: grid; grid-template-columns: 180px 1fr; gap: 25px; align-items: center; }
+        @media (max-width: 768px) { .profile-hero-grid { grid-template-columns: 1fr; text-align: center; } }
+
+        .profile-photo-container img { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 4px solid var(--primary); box-shadow: 0 8px 16px rgba(0,0,0,0.15); background: #fff; }
+        .profile-badge-status { margin-top: 8px; display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 800; }
+
+        .profile-info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px 20px; background: #ffffff; padding: 16px; border-radius: 12px; border: 1px solid #cbd5e1; }
+        .info-item { font-size: 0.9rem; border-bottom: 1px dashed #e2e8f0; padding-bottom: 4px; }
+        .info-item b { color: var(--primary); display: block; font-size: 0.78rem; text-transform: uppercase; }
+        .info-item span { color: var(--dark); font-weight: 700; }
+
+        .btn-edit-profile-gold {
+            background: linear-gradient(135deg, #FFC436, #f39c12) !important; color: #071938 !important; font-weight: 800 !important; border: 2px solid #d97706 !important; font-size: 0.95rem !important; padding: 8px 18px !important; border-radius: 8px !important; box-shadow: 0 4px 12px rgba(243, 156, 18, 0.35) !important; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
+        }
+
+        .dash-cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 15px; }
+        .dash-card-mini { background: #fff; border: 1px solid #e2e8f0; border-left: 5px solid var(--primary); padding: 12px 15px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); text-align: center; }
+        .dash-card-mini h3 { font-size: 0.82rem; color: #64748b; margin-bottom: 4px; font-weight: 700; }
+        .dash-card-mini h2 { font-size: 1.3rem; color: var(--dark); font-weight: 800; }
+
+        .audit-stat-card { background: #ffffff; border: 1px solid #cbd5e1; border-radius: 12px; padding: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.04); }
+        .audit-stat-card h4 { font-size: 0.9rem; font-weight: 800; color: var(--primary); margin-bottom: 8px; border-bottom: 2px solid #e2e8f0; padding-bottom: 4px; }
+        .audit-stat-val { font-size: 1.5rem; font-weight: 800; }
+        .audit-sub-detail { font-size: 0.82rem; font-weight: 600; color: #475569; margin-top: 4px; display: flex; justify-content: space-between; }
+
+        .forms-cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 15px; }
+        .auto-form-card { background: #fff; border: 1px solid #e2e8f0; border-top: 4px solid var(--primary); border-radius: 12px; padding: 16px; transition: all 0.3s ease; display: flex; flex-direction: column; justify-content: space-between; text-decoration: none; color: inherit; }
+        .auto-form-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(11, 61, 145, 0.12); border-top-color: var(--secondary); }
+        .auto-form-icon { width: 45px; height: 48px; border-radius: 10px; background: #eff6ff; color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 10px; }
+
+        .map-pie-grid { display: grid; grid-template-columns: 2.3fr 1fr; gap: 15px; margin-bottom: 15px; }
+        @media (max-width: 900px) { .map-pie-grid { grid-template-columns: 1fr; } }
+        .mandal-map-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; padding: 10px; }
+        .mandal-card { border-radius: 8px; color: white; padding: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.15); transition: transform 0.2s; text-align: center; }
+        .dist-badge { display: inline-flex; justify-content: space-between; align-items: center; width: 100%; background: rgba(0,0,0,0.25); font-size: 0.68rem; padding: 3px 6px; margin: 2px 0; border-radius: 4px; font-weight: 600; }
+        .dist-badge .dist-count { background: #fff; color: #000; padding: 1px 5px; border-radius: 10px; font-weight: 800; font-size: 0.62rem; }
+
+        .btn-action { background: var(--primary); color: white; border: none; padding: 8px 14px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 6px; font-size: 0.85rem; }
+        .btn-action:hover { opacity: 0.9; transform: translateY(-1px); }
+        .form-control { width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem; outline: none; }
+        .form-control:focus { border-color: var(--primary); }
+        .form-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; align-items: center; }
+        .form-row > div { flex: 1; min-width: 180px; }
+
+        table { width: 100%; border-collapse: collapse; min-width: 700px; background: white; }
+        th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #e2e8f0; vertical-align: middle; font-size: 0.88rem; }
+        th { background: var(--primary); color: white; font-weight: 800; white-space: nowrap; }
+        tr:hover { background-color: #f8fafc; }
+        .badge { padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; color: #fff; display: inline-block; }
+        .bg-success { background: var(--success); } .bg-warning { background: var(--secondary); color: #000; } .bg-danger { background: var(--danger); } .bg-primary { background: var(--primary); } .bg-info { background: var(--info); } .bg-purple { background: var(--purple); }
+
+        #floatingLiveChatWidget { position: fixed; bottom: 35px; right: 35px; z-index: 9990; display: flex; align-items: center; gap: 12px; cursor: pointer; }
+        .chat-pill-label { background: linear-gradient(135deg, #1e293b, #0B3D91); color: #ffffff; padding: 10px 20px; border-radius: 30px; font-size: 1.05rem; font-weight: 800; border: 2px solid #f39c12; display: flex; align-items: center; gap: 8px; }
+        .chat-floating-btn { width: 65px; height: 65px; background: linear-gradient(135deg, #f39c12, #d97706); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 2rem; border: 3.5px solid #ffffff; }
+
+        .icard-card-box { width: 320px; height: 490px; border-radius: 12px; background: #fff; position: relative; overflow: hidden; padding: 0; text-align: center; margin: 10px auto; box-shadow: 0 5px 15px rgba(0,0,0,0.15); border: 2px solid var(--primary); }
+        .icard-head { background: var(--primary); color: white; padding: 12px 10px; }
+        .icard-img-main { width: 105px; height: 105px; border-radius: 50%; border: 3px solid var(--secondary); object-fit: cover; margin: 10px auto; }
+        .icard-info-list { text-align: left; font-size: 0.83rem; padding: 0 15px; line-height: 1.4; color: #333; }
+        .receipt-box { width: 100%; max-width: 750px; margin: 10px auto; padding: 20px; border: 3px double #0B3D91; border-radius: 10px; background: #ffffff; }
+
+        @media print {
+            .no-print, .navbar, .tab-menu, .ticker-wrap, #floatingLiveChatWidget { display: none !important; }
+            .container, .panel, .panel-body { margin: 0 !important; padding: 0 !important; border: none !important; box-shadow: none !important; }
+            #printLetterArea { display: block !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. POPUP NOTICE MODAL -->
+    <div id="memberLoginPopupModal" class="custom-modal-overlay">
+        <div class="custom-modal" style="max-width:550px; text-align:center;">
+            <div class="custom-modal-header bg-primary">
+                <h3><i class="fa fa-bullhorn"></i> संघटनेची महत्त्वाची सूचना</h3>
+                <button onclick="closeModal('memberLoginPopupModal')" style="background:transparent; border:none; color:white; font-size:1.5rem; cursor:pointer;">&times;</button>
+            </div>
+            <div class="custom-modal-body">
+                <div id="popup_notice_content_area" style="font-size:1.05rem; color:#1e293b; line-height:1.6; margin:15px 0; font-weight:600;">
+                    संघटनेच्या सर्व सदस्यांसाठी महत्त्वाची सूचना.
+                </div>
+                <button class="btn-action bg-success" onclick="closeModal('memberLoginPopupModal')" style="width:100%; justify-content:center; padding:10px; font-size:1rem; margin-top:10px;">
+                    <i class="fa fa-check-circle"></i> समजले (OK)
+                </button>
+            </div>
         </div>
     </div>
-</div>
 
-<script>
-window.hosp_rawData = [];
-window.hosp_filteredData = [];
-window.hosp_currentPage = 1;
-window.hosp_pageSize = 100;
-window.currentAuditStats = null;
+    <!-- 2. MEMBER LOGIN OVERLAY -->
+    <div id="loginOverlay">
+        <div class="login-card">
+            <img src="logo.png" alt="Association Logo" class="login-logo" onerror="this.src='loghho.png'">
+            <h2>सदस्य लॉगिन PORTAL</h2>
+            <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 15px;">मोबाईल नंबर आणि पासवर्ड द्वारे लॉगिन करा</p>
+            
+            <div class="login-input-box">
+                <label>मोबाईल नंबर:</label>
+                <div class="login-input-wrapper">
+                    <span>+91</span>
+                    <input type="tel" id="loginMobileNumber" placeholder="९८६५४३२१०" maxlength="10">
+                </div>
+            </div>
 
-// १. Excel Upload
-window.handleExcelUploadFast = function(event) {
-    let file = event.target.files[0];
-    if(!file) return;
+            <div class="login-input-box">
+                <label>पासवर्ड (Password):</label>
+                <div class="login-input-wrapper">
+                    <i class="fa fa-lock icon-left"></i>
+                    <input type="password" id="loginPassword" class="no-prefix" placeholder="पासवर्ड टाका">
+                </div>
+            </div>
 
-    let statusEl = document.getElementById('hosp_loader_status');
-    if(statusEl) statusEl.style.display = 'inline-block';
+            <button type="button" onclick="loginMemberWithMobileAndPassword()"><i class="fa fa-sign-in-alt me-1"></i> सुरक्षित लॉगिन करा</button>
+        </div>
+    </div>
 
-    let reader = new FileReader();
-    reader.onload = function(e) {
-        let arrayBuffer = e.target.result;
-        let workerCode = `
-            self.importScripts('https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js');
-            self.onmessage = function(e) {
-                let data = new Uint8Array(e.data);
-                let workbook = XLSX.read(data, {type: 'array', cellDates: true});
-                let json = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
-                self.postMessage(json);
-            };
-        `;
-        let blob = new Blob([workerCode], {type: 'application/javascript'});
-        let worker = new Worker(URL.createObjectURL(blob));
-        worker.postMessage(arrayBuffer, [arrayBuffer]);
+    <!-- MAIN APP CONTENT -->
+    <div id="appContent" style="display: none;">
+        
+        <nav class="navbar">
+            <div class="navbar-brand">
+                <img src="logo.png" alt="Logo" onerror="this.src='loghho.png'">
+                <div>
+                    <h2>क्ष-किरण वैज्ञानिक अधिकारी संघटना</h2>
+                    <small>महाराष्ट्र राज्य - अधिकृत सदस्य पोर्टल</small>
+                </div>
+            </div>
+            <div class="nav-profile no-print">
+                <div style="text-align: right;">
+                    <span id="mem_nav_name" style="font-weight:800; color:var(--primary); font-size:0.95rem; display:block;">-</span>
+                    <span id="mem_nav_status" style="font-size:0.78rem; font-weight:bold;">-</span>
+                </div>
+                <button class="btn-logout" onclick="logoutMember()"><i class="fa fa-power-off"></i> लॉगआउट</button>
+            </div>
+        </nav>
 
-        worker.onmessage = function(e) {
-            window.hosp_rawData = e.data || [];
-            worker.terminate();
-            window.populateHospDistricts();
-            if(statusEl) statusEl.style.display = 'none';
+        <div class="ticker-wrap no-print">
+            <marquee id="memberTickerText" behavior="scroll" direction="left" scrollamount="6">
+                क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना महाराष्ट्र राज्य पोर्टलवर आपले स्वागत आहे.
+            </marquee>
+        </div>
+
+        <div class="tab-menu no-print">
+            <button class="tab-btn active" onclick="openTab('tab-dash', this)"><i class="fa fa-user-circle"></i> माझी माहिती व डॅशबोर्ड</button>
+            <button class="tab-btn" onclick="openTab('tab-hospital-search', this)"><i class="fa fa-hospital"></i> हॉस्पिटल MIS डेटा व ऑडिट</button>
+            <button class="tab-btn" onclick="openTab('tab-auto-forms', this)"><i class="fa fa-file-signature"></i> स्वयंचलित अर्ज प्रणाली</button>
+            <button class="tab-btn" onclick="openTab('tab-icard', this)"><i class="fa fa-id-card"></i> डिजिटल आय-कार्ड</button>
+            <button class="tab-btn" onclick="openTab('tab-receipt', this)"><i class="fa fa-receipt"></i> माझी ई-पावती</button>
+            <button class="tab-btn" id="btn_tab_tb" onclick="openTab('tab-templates', this)"><i class="fa fa-pen-nib"></i> पत्र / अर्ज जनरेटर</button>
+            <button class="tab-btn" onclick="openTab('tab-grievances', this)"><i class="fa fa-file-invoice"></i> तक्रार निवारण</button>
+            <button class="tab-btn" onclick="openTab('tab-info-gather', this)"><i class="fa fa-clipboard-list"></i> माहिती द्या (फॉर्म)</button>
+            <button class="tab-btn" onclick="openTab('tab-employees', this)"><i class="fa fa-users"></i> राज्यातील कर्मचारी</button>
+            <button class="tab-btn" onclick="openTab('tab-documents', this)"><i class="fa fa-folder-open"></i> परिपत्रके व फोल्डर्स</button>
+            <button class="tab-btn" id="btn_tab_chat" onclick="openTab('tab-chat', this)"><i class="fa-solid fa-comments"></i> Live Chat</button>
+            <button class="tab-btn" onclick="openTab('tab-polls', this)"><i class="fa fa-vote-yea"></i> मतदान व पोल</button>
+        </div>
+
+        <div class="container">
+
+            <!-- TAB 1: DASHBOARD OVERVIEW -->
+            <div id="tab-dash" class="tab-content active">
+                <div class="member-profile-hero">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:2px solid var(--primary); padding-bottom:8px;">
+                        <h3 style="color:var(--primary); font-weight:800; font-size:1.2rem;"><i class="fa fa-id-card-clip"></i> माझी नोंदणीकृत माहिती</h3>
+                    </div>
+
+                    <div class="profile-hero-grid">
+                        <div class="profile-photo-container">
+                            <img id="pf_hero_photo" src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Member Photo">
+                            <div id="pf_hero_status_badge" class="profile-badge-status bg-success">Approved</div>
+                        </div>
+
+                        <div class="profile-info-grid">
+                            <div class="info-item"><b>पूर्ण नाव</b><span id="pf_hero_name">-</span></div>
+                            <div class="info-item"><b>पद / हुद्दा</b><span id="pf_hero_post">-</span></div>
+                            <div class="info-item"><b>मोबाईल नंबर</b><span id="pf_hero_mobile">-</span></div>
+                            <div class="info-item"><b>ई-मेल आयडी</b><span id="pf_hero_email">-</span></div>
+                            <div class="info-item"><b>प्रवर्ग</b><span id="pf_hero_category">-</span></div>
+                            <div class="info-item"><b>जिल्हा व मंडळ</b><span id="pf_hero_dist_mandal">-</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dash-cards-grid">
+                    <div class="dash-card-mini" style="border-left-color: var(--primary);"><h3>सदस्यत्व स्थिती</h3><h2 id="st_approval_status" style="color:var(--primary);">-</h2></div>
+                    <div class="dash-card-mini" style="border-left-color: var(--success);"><h3>शुल्क भरणा स्थिती</h3><h2 id="st_fee_status" style="color:var(--success);">-</h2></div>
+                    <div class="dash-card-mini" style="border-left-color: var(--secondary);"><h3>माझा जिल्हा व मंडळ</h3><h2 id="st_district_mandal" style="color:var(--secondary); font-size:1.1rem;">-</h2></div>
+                    <div class="dash-card-mini" style="border-left-color: var(--purple);"><h3>माझ्या तक्रारी</h3><h2 id="st_grievance_cnt" style="color:var(--purple);">0</h2></div>
+                </div>
+            </div>
+
+            <!-- TAB 2: HOSPITAL MIS DATA & EDITABLE AUDIT REPORT GENERATOR -->
+            <div id="tab-hospital-search" class="tab-content">
+                <div class="panel">
+                    <div class="panel-header bg-primary" style="color:white; padding: 10px 15px;">
+                        <span><i class="fa fa-hospital"></i> जिल्हा व रुग्णालयनिहाय MIS डेटा शोध व प्रिस्क्रिप्शन ऑडिट रिपोर्ट (PPP Mode)</span>
+                    </div>
+                    <div class="panel-body" style="padding:15px;">
+                        
+                        <!-- १. कंट्रोल व फिल्टर बॉक्स -->
+                        <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:18px; border-radius:10px; margin-bottom:20px;">
+                            <div class="form-row" style="display:flex; gap:12px; flex-wrap:wrap;">
+                                <div style="flex:1.2; min-width:200px;">
+                                    <label style="font-weight:bold; color:var(--primary);">१. MIS एक्सेल फाईल निवडा:</label>
+                                    <input type="file" id="hosp_excelFile" class="form-control" accept=".xlsx, .xls" onchange="window.handleExcelUploadFast(event)">
+                                </div>
+                                <div style="flex:1; min-width:180px;">
+                                    <label style="font-weight:bold;">२. जिल्हा (District):</label>
+                                    <select id="hosp_districtSelect" class="form-control" disabled onchange="window.handleDistrictChange()">
+                                        <option value="">-- प्रथम एक्सेल फाईल लोड करा --</option>
+                                    </select>
+                                </div>
+                                <div style="flex:1.2; min-width:200px;">
+                                    <label style="font-weight:bold;">३. रुग्णालय (Centre Name):</label>
+                                    <select id="hosp_centreSelect" class="form-control" disabled onchange="window.handleHospitalSearch()">
+                                        <option value="">-- प्रथम जिल्हा निवडा --</option>
+                                    </select>
+                                </div>
+                                <div style="flex:1.2; min-width:200px;">
+                                    <label style="font-weight:bold;">४. थेट शोध (Patient / ID / Study):</label>
+                                    <input type="text" id="hosp_textSearch" class="form-control" placeholder="उदा. नाव / PRN No / Chest..." disabled onkeyup="window.handleHospitalSearch()">
+                                </div>
+                                <div style="flex:1.2; min-width:220px;">
+                                    <label style="font-weight:bold;">५. Emergency & TAT फिल्टर:</label>
+                                    <select id="hosp_filterType" class="form-control" disabled onchange="window.handleHospitalSearch()">
+                                        <option value="ALL">सर्व केसेस (All Cases)</option>
+                                        <option value="ALL_EMERGENCY">🚨 सर्व Emergency X-Ray केसेस</option>
+                                        <option value="EMERGENCY_ONTIME"> Emergency (१ तासाच्या आत दिलेले)</option>
+                                        <option value="EMERGENCY_DELAYED"> Emergency Beyond TAT (>१ तास उशीर)</option>
+                                        <option value="ROUTINE_ONTIME"> Routine / Non-Emergency (१२ तासांच्या आत)</option>
+                                        <option value="ROUTINE_DELAYED"> Routine Beyond TAT (>१२ तास उशीर)</option>
+                                        <option value="ALL_BEYOND_TAT">⚠ सर्व Beyond TAT (उशीर झालेली केसेस)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div style="margin-top:15px; display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+                                <button id="hosp_searchBtn" class="btn-action bg-success" disabled onclick="window.handleHospitalSearch()"><i class="fa fa-search"></i> डेटा फिल्टर करा</button>
+                                <button id="hosp_auditBtn" class="btn-action bg-purple" disabled onclick="window.generateEditableAuditReport()"><i class="fa fa-file-invoice"></i> 📊 प्रिस्क्रिप्शन ऑडिट रिपोर्ट जनरेट करा (Edit & PDF)</button>
+                                <button id="hosp_resetBtn" class="btn-action bg-danger" onclick="window.handleHospitalReset()"><i class="fa fa-redo"></i> रीसेट करा</button>
+                                <span id="hosp_loader_status" style="font-weight:bold; color:var(--primary); font-size:0.9rem; display:none;">
+                                    <i class="fa fa-spinner fa-spin"></i> प्रोसेसिंग सुरू आहे...
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- २. समरी कार्ड्स -->
+                        <div id="auditSummaryCardsArea" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap:15px; margin-bottom:20px;">
+                            <div class="audit-stat-card" style="border-left: 5px solid var(--primary); background:white; padding:12px; border-radius:8px; box-shadow:0 2px 4px rgba(0,0,0,0.05);">
+                                <h4 style="margin:0; font-size:0.9rem;">एकूण X-Ray / CT Scans</h4>
+                                <div class="audit-stat-val text-primary" id="st_aud_total" style="font-size:1.6rem; font-weight:bold;">0</div>
+                            </div>
+
+                            <div class="audit-stat-card" style="border-left: 5px solid #dc2626; background:#fef2f2; padding:12px; border-radius:8px; box-shadow:0 2px 4px rgba(0,0,0,0.05);">
+                                <h4 style="margin:0; font-size:0.9rem; color:#991b1b;">🚨 Emergency X-Ray</h4>
+                                <div class="audit-stat-val" id="st_aud_em_total" style="color:#dc2626; font-size:1.6rem; font-weight:bold;">0</div>
+                                <div style="font-size:0.8rem; margin-top:4px;">
+                                    <span>१ तासाच्या आत: <b id="st_aud_em_ontime" style="color:green;">0</b></span> | 
+                                    <span>उशीर (>१ तास): <b id="st_aud_em_delayed" style="color:red;">0</b></span>
+                                </div>
+                            </div>
+
+                            <div class="audit-stat-card" style="border-left: 5px solid #0284c7; background:white; padding:12px; border-radius:8px; box-shadow:0 2px 4px rgba(0,0,0,0.05);">
+                                <h4 style="margin:0; font-size:0.9rem;">Routine X-Ray (१२ तास)</h4>
+                                <div class="audit-stat-val" id="st_aud_rt_total" style="color:#0284c7; font-size:1.6rem; font-weight:bold;">0</div>
+                                <div style="font-size:0.8rem; margin-top:4px;">
+                                    <span>वेळेत: <b id="st_aud_rt_ontime" style="color:green;">0</b></span> | 
+                                    <span>उशीर (>१२ तास): <b id="st_aud_rt_delayed" style="color:red;">0</b></span>
+                                </div>
+                            </div>
+
+                            <div class="audit-stat-card" style="border-left: 5px solid #16a34a; background:white; padding:12px; border-radius:8px; box-shadow:0 2px 4px rgba(0,0,0,0.05);">
+                                <h4 style="margin:0; font-size:0.9rem;">एकूण TAT पालकता %</h4>
+                                <div class="audit-stat-val" id="st_aud_overall_compliance" style="color:#16a34a; font-size:1.6rem; font-weight:bold;">0%</div>
+                                <div style="font-size:0.8rem; margin-top:4px;">
+                                    <span>MoU कपात नियम: <b id="st_aud_deduction_slab" style="color:#b45309;">Nil</b></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ३. डेटा टेबल व पेजिनेशन -->
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px;">
+                            <h4 style="color:var(--primary); font-size:1.05rem; margin:0;">
+                                <i class="fa fa-list"></i> शोध निकाल (एकूण: <span id="hosp_recordCount" class="badge bg-success">0</span>)
+                            </h4>
+                            <div id="hosp_pagination_controls" style="display:flex; align-items:center; gap:8px;">
+                                <button class="btn-action bg-primary" onclick="window.changeHospPage(-1)" style="padding:4px 10px; font-size:0.8rem;"><i class="fa fa-chevron-left"></i> मागे</button>
+                                <span style="font-weight:bold; font-size:0.85rem;" id="hosp_page_indicator">पेज 1 / 1</span>
+                                <button class="btn-action bg-primary" onclick="window.changeHospPage(1)" style="padding:4px 10px; font-size:0.8rem;">पुढे <i class="fa fa-chevron-right"></i></button>
+                            </div>
+                        </div>
+
+                        <div style="overflow-x:auto; background:white; border-radius:8px; border:1px solid #cbd5e1;">
+                            <table style="width:100%; border-collapse:collapse;" border="1" cellpadding="8">
+                                <thead>
+                                    <tr style="background:#f1f5f9; text-align:left;">
+                                        <th>अ.क्र.</th>
+                                        <th>जिल्हा</th>
+                                        <th>रुग्णालय (Centre)</th>
+                                        <th>रुग्णाचे नाव</th>
+                                        <th>Patient ID</th>
+                                        <th>तपासणी (Study)</th>
+                                        <th>प्रकार (Priority)</th>
+                                        <th>स्कॅन तारीख</th>
+                                        <th>Report TAT</th>
+                                        <th>TAT स्थिती</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="hosp_tableBody">
+                                    <tr><td colspan="10" style="text-align:center; color:gray; padding:20px;">कृपया एक्सेल फाईल निवडून सर्च सुरू करा.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- इतर सर्व टॅब्स (३ ते १२) -->
+            <div id="tab-auto-forms" class="tab-content"><div class="panel"><div class="panel-body"><p>स्वयंचलित अर्ज प्रणाली</p></div></div></div>
+            <div id="tab-icard" class="tab-content"><div class="panel"><div class="panel-body"><p>डिजिटल आय-कार्ड</p></div></div></div>
+            <div id="tab-receipt" class="tab-content"><div class="panel"><div class="panel-body"><p>माझी ई-पावती</p></div></div></div>
+            <div id="tab-templates" class="tab-content"><div class="panel"><div class="panel-body"><p>पत्र जनरेटर</p></div></div></div>
+            <div id="tab-grievances" class="tab-content"><div class="panel"><div class="panel-body"><p>तक्रार निवारण</p></div></div></div>
+            <div id="tab-info-gather" class="tab-content"><div class="panel"><div class="panel-body"><p>माहिती फॉर्म</p></div></div></div>
+            <div id="tab-employees" class="tab-content"><div class="panel"><div class="panel-body"><p>कर्मचारी यादी</p></div></div></div>
+            <div id="tab-documents" class="tab-content"><div class="panel"><div class="panel-body"><p>परिपत्रके व फोल्डर्स</p></div></div></div>
+            <div id="tab-chat" class="tab-content"><div class="panel"><div class="panel-body"><iframe id="memberChatIframe" src="chat.html" style="width:100%; height:500px; border:none;"></iframe></div></div></div>
+            <div id="tab-polls" class="tab-content"><div class="panel"><div class="panel-body"><p>मतदान व पोल</p></div></div></div>
+
+        </div>
+    </div>
+
+    <!-- ४. 100% एडिट करता येणारा प्रिस्क्रिप्शन ऑडिट रिपोर्ट मोडल (Editable Modal) -->
+    <div id="editableAuditModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:9999; overflow-y:auto; padding:20px;">
+        <div style="max-width:900px; margin:auto; background:white; border-radius:10px; padding:20px; box-shadow:0 5px 15px rgba(0,0,0,0.3);">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #cbd5e1; padding-bottom:10px; margin-bottom:15px;">
+                <h3 style="margin:0; color:#0B3D91;"><i class="fa fa-edit"></i> प्रिस्क्रिप्शन ऑडिट रिपोर्ट (Edit & Print)</h3>
+                <div>
+                    <button class="btn-action bg-success" onclick="window.printEditablePDF()"><i class="fa fa-file-pdf"></i> PDF डाऊनलोड करा</button>
+                    <button class="btn-action bg-danger" onclick="document.getElementById('editableAuditModal').style.display='none'">बंद करा</button>
+                </div>
+            </div>
+            <p style="background:#fef3c7; color:#92400e; padding:8px 12px; border-radius:6px; font-size:0.85rem; margin-bottom:15px;">
+                💡 <b>संपादित करा:</b> खालील रिपोर्ट मधील कोणत्याही टेक्स्टवर किंवा आकड्यावर क्लिक करून तुम्ही सर्व माहिती थेट टाईप करून बदलू शकता.
+            </p>
+            
+            <!-- रिपोर्ट एडिट कप्पा -->
+            <div id="reportPrintArea" contenteditable="true" style="outline:none; background:white; padding:20mm; border:1px solid #cbd5e1; font-family:'Mukta', sans-serif; line-height:1.5; color:#1e293b;">
+                <!-- JavaScript Dynamic Report Content -->
+            </div>
+        </div>
+    </div>
+
+    <!-- PRINT LETTER TEMPLATE CONTAINER -->
+    <div id="printLetterArea" style="display:none;"></div>
+
+    <!-- FLOATING CHAT WIDGET -->
+    <div id="floatingLiveChatWidget" onclick="openTab('tab-chat', document.getElementById('btn_tab_chat'))" title="💬 Live Chat">
+        <div class="chat-pill-label"><i class="fa-solid fa-bolt" style="color: #f39c12;"></i> Live Chat करा</div>
+        <div class="chat-floating-btn"><i class="fa-solid fa-comments"></i></div>
+    </div>
+
+    <!-- ADVANCED ROBUST JAVASCRIPT ENGINE -->
+    <script>
+        window.hosp_rawData = [];
+        window.hosp_filteredData = [];
+        window.hosp_currentPage = 1;
+        window.hosp_pageSize = 100;
+        window.currentAuditStats = null;
+
+        window.openTab = function(tabId, btn) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            let target = document.getElementById(tabId);
+            if(target) target.classList.add('active');
+            if(btn) btn.classList.add('active');
         };
-    };
-    reader.readAsArrayBuffer(file);
-};
 
-// २. Districts Populator
-window.populateHospDistricts = function() {
-    let districts = [...new Set(window.hosp_rawData.map(i => i.District))].filter(Boolean).sort();
-    let distSelect = document.getElementById('hosp_districtSelect');
-    distSelect.innerHTML = '<option value="">-- सर्व जिल्हे --</option>';
-    districts.forEach(d => {
-        let opt = document.createElement('option');
-        opt.value = d; opt.textContent = d;
-        distSelect.appendChild(opt);
-    });
-    distSelect.disabled = false;
-    document.getElementById('hosp_searchBtn').disabled = false;
-    window.handleDistrictChange();
-};
+        window.closeModal = function(id) {
+            let el = document.getElementById(id); if(el) el.style.display = 'none';
+        };
 
-// ३. Hospital Change
-window.handleDistrictChange = function() {
-    let distVal = document.getElementById('hosp_districtSelect').value;
-    let centreSelect = document.getElementById('hosp_centreSelect');
-    centreSelect.innerHTML = '<option value="">-- सर्व रुग्णालये --</option>';
+        window.loginMemberWithMobileAndPassword = function() {
+            let overlay = document.getElementById('loginOverlay');
+            let content = document.getElementById('appContent');
+            if(overlay) overlay.style.display = 'none';
+            if(content) content.style.display = 'flex';
+        };
 
-    let subset = distVal ? window.hosp_rawData.filter(i => i.District === distVal) : window.hosp_rawData;
-    let centres = [...new Set(subset.map(i => i.CentreName))].filter(Boolean).sort();
+        window.logoutMember = function() {
+            let overlay = document.getElementById('loginOverlay');
+            let content = document.getElementById('appContent');
+            if(content) content.style.display = 'none';
+            if(overlay) overlay.style.display = 'flex';
+        };
 
-    centres.forEach(c => {
-        let opt = document.createElement('option');
-        opt.value = c; opt.textContent = c;
-        centreSelect.appendChild(opt);
-    });
+        // ==========================================
+        // SMART COLUMN LOOKUP HELPER
+        // ==========================================
+        function getVal(row, candidates) {
+            if (!row) return '';
+            let keys = Object.keys(row);
+            for (let candidate of candidates) {
+                let candClean = candidate.toLowerCase().replace(/[^a-z0-9]/g, '');
+                for (let k of keys) {
+                    let kClean = k.toLowerCase().replace(/[^a-z0-9]/g, '');
+                    if (kClean === candClean && row[k] !== undefined && row[k] !== null) {
+                        return row[k];
+                    }
+                }
+            }
+            return '';
+        }
 
-    centreSelect.disabled = false;
-    document.getElementById('hosp_filterType').disabled = false;
-    window.handleHospitalSearch();
-};
+        function isEmergencyCase(row) {
+            let prio = String(getVal(row, ['Priority', 'PriorityCategory', 'Emergency', 'CaseType', 'Type'])).trim().toLowerCase();
+            return prio === 'emergency' || prio.includes('emerg') || prio === 'e' || prio === 'yes' || prio === '1';
+        }
 
-// ४. Search & Emergency Filter Logic
-window.handleHospitalSearch = function() {
-    let selectedDist = document.getElementById('hosp_districtSelect').value;
-    let selectedCentre = document.getElementById('hosp_centreSelect').value;
-    let filterType = document.getElementById('hosp_filterType').value;
+        function isBeyondTatCase(row) {
+            let rawTat = getVal(row, ['IsBeyondTAT', 'Is Beyond TAT', 'BeyondTAT', 'Beyond TAT', 'Delayed', 'IsDelayed']);
+            if (rawTat === 1 || rawTat === '1' || String(rawTat).trim() === '1' || String(rawTat).trim().toLowerCase() === 'true' || String(rawTat).trim().toLowerCase() === 'yes') {
+                return true;
+            }
+            if (rawTat === 0 || rawTat === '0' || String(rawTat).trim() === '0' || String(rawTat).trim().toLowerCase() === 'false' || String(rawTat).trim().toLowerCase() === 'no') {
+                return false;
+            }
 
-    let baseData = window.hosp_rawData.filter(item => {
-        let matchDist = !selectedDist || item.District === selectedDist;
-        let matchCentre = !selectedCentre || item.CentreName === selectedCentre;
-        return matchDist && matchCentre;
-    });
+            // Fallback checking Report_TAT string
+            let tatStr = String(getVal(row, ['Report_TAT', 'Report TAT', 'TAT'])).trim();
+            if (tatStr) {
+                let daysMatch = tatStr.match(/(\d+)\s*Days?/i);
+                let hrsMatch = tatStr.match(/(\d+)\s*hrs?/i);
+                let minsMatch = tatStr.match(/(\d+)\s*Min/i);
+                
+                let d = daysMatch ? parseInt(daysMatch[1]) : 0;
+                let h = hrsMatch ? parseInt(hrsMatch[1]) : 0;
+                let m = minsMatch ? parseInt(minsMatch[1]) : 0;
+                let totalMins = (d * 1440) + (h * 60) + m;
+                
+                if (isEmergencyCase(row)) {
+                    return totalMins > 60; // Emergency 1 Hour
+                } else {
+                    return totalMins > 720; // Routine 12 Hours
+                }
+            }
+            return false;
+        }
 
-    window.calculateAuditIndicators(baseData, selectedDist, selectedCentre);
+        // ==========================================
+        // FAST EXCEL PARSER (WEB WORKER)
+        // ==========================================
+        window.handleExcelUploadFast = function(event) {
+            let file = event.target.files[0];
+            if(!file) return;
 
-    window.hosp_filteredData = baseData.filter(item => {
-        let isEmergency = (item.Priority === 'Emergency');
-        let isBeyond = (item.IsBeyondTAT == 1 || item.IsBeyondTAT === '1');
+            let statusEl = document.getElementById('hosp_loader_status');
+            if(statusEl) statusEl.style.display = 'inline-block';
 
-        if (filterType === 'ALL_EMERGENCY') return isEmergency;
-        if (filterType === 'EMERGENCY_ONTIME') return isEmergency && !isBeyond;
-        if (filterType === 'EMERGENCY_DELAYED') return isEmergency && isBeyond;
-        if (filterType === 'ROUTINE_ONTIME') return !isEmergency && !isBeyond;
-        if (filterType === 'ROUTINE_DELAYED') return !isEmergency && isBeyond;
-        if (filterType === 'ALL_BEYOND_TAT') return isBeyond;
-        return true;
-    });
+            Swal.fire({
+                title: 'एक्सेल फाईल वाचत आहे...',
+                text: 'मोठी फाईल असल्यास काही सेकंद लागतील, सिस्टीम हँग होणार नाही.',
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading(); }
+            });
 
-    window.hosp_currentPage = 1;
-    window.renderHospTablePaged();
-    document.getElementById('hosp_auditBtn').disabled = (baseData.length === 0);
-};
+            let reader = new FileReader();
+            reader.onload = function(e) {
+                let arrayBuffer = e.target.result;
+                let workerCode = `
+                    self.importScripts('https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js');
+                    self.onmessage = function(e) {
+                        let data = new Uint8Array(e.data);
+                        let workbook = XLSX.read(data, {type: 'array', cellDates: true});
+                        let firstSheet = workbook.SheetNames[0];
+                        let json = XLSX.utils.sheet_to_json(workbook.Sheets[firstSheet]);
+                        self.postMessage(json);
+                    };
+                `;
+                let blob = new Blob([workerCode], {type: 'application/javascript'});
+                let worker = new Worker(URL.createObjectURL(blob));
+                worker.postMessage(arrayBuffer, [arrayBuffer]);
 
-// ५. Audit Calculation
-window.calculateAuditIndicators = function(data, dist, centre) {
-    let total = data.length;
-    let emCases = data.filter(d => d.Priority === 'Emergency');
-    let emTotal = emCases.length;
-    let emOntime = emCases.filter(d => d.IsBeyondTAT == 0 || d.IsBeyondTAT === '0').length;
-    let emDelayed = emCases.filter(d => d.IsBeyondTAT == 1 || d.IsBeyondTAT === '1').length;
+                worker.onmessage = function(evt) {
+                    window.hosp_rawData = evt.data || [];
+                    worker.terminate();
 
-    let rtCases = data.filter(d => d.Priority !== 'Emergency');
-    let rtTotal = rtCases.length;
-    let rtOntime = rtCases.filter(d => d.IsBeyondTAT == 0 || d.IsBeyondTAT === '0').length;
-    let rtDelayed = rtCases.filter(d => d.IsBeyondTAT == 1 || d.IsBeyondTAT === '1').length;
+                    window.populateHospDistricts();
+                    if(statusEl) statusEl.style.display = 'none';
 
-    let overallOntime = data.filter(d => d.IsBeyondTAT == 0 || d.IsBeyondTAT === '0').length;
-    let overallDelayed = data.filter(d => d.IsBeyondTAT == 1 || d.IsBeyondTAT === '1').length;
-    let overallCompliance = total > 0 ? ((overallOntime / total) * 100).toFixed(1) : "100.0";
+                    Swal.close();
+                    Swal.fire('यशस्वी!', `एक्सेल मधील ${window.hosp_rawData.length} रेकॉर्ड्स यशस्वीरीत्या लोड झाले आहेत.`, 'success');
+                };
 
-    let setTxt = (id, val) => { let el = document.getElementById(id); if(el) el.innerText = val; };
-    setTxt('st_aud_total', total);
-    setTxt('st_aud_em_total', emTotal);
-    setTxt('st_aud_em_ontime', emOntime);
-    setTxt('st_aud_em_delayed', emDelayed);
-    setTxt('st_aud_rt_total', rtTotal);
-    setTxt('st_aud_rt_ontime', rtOntime);
-    setTxt('st_aud_rt_delayed', rtDelayed);
-    setTxt('st_aud_overall_compliance', overallCompliance + "%");
+                worker.onerror = function(err) {
+                    if(statusEl) statusEl.style.display = 'none';
+                    Swal.close();
+                    Swal.fire('त्रुटी', 'फाईल वाचताना अडचण आली: ' + err.message, 'error');
+                    worker.terminate();
+                };
+            };
+            reader.readAsArrayBuffer(file);
+        };
 
-    window.currentAuditStats = {
-        district: dist || 'गडचिरोली / महाराष्ट्र',
-        hospital: centre || 'ग्रामीण रुग्णालय',
-        total, emTotal, emOntime, emDelayed,
-        rtTotal, rtOntime, rtDelayed, overallCompliance
-    };
-};
+        window.populateHospDistricts = function() {
+            let districts = [...new Set(window.hosp_rawData.map(item => String(getVal(item, ['District', 'DistrictName'])).trim()))].filter(Boolean).sort();
+            let districtSelect = document.getElementById('hosp_districtSelect');
+            if(!districtSelect) return;
 
-// ६. Editable Audit Sheet Generator (Matching exact PDF 7 points)
-window.generateEditableAuditReport = function() {
-    if(!window.currentAuditStats) return alert("डेटा उपलब्ध नाही.");
-    let s = window.currentAuditStats;
-    let modal = document.getElementById('editableAuditModal');
-    let reportArea = document.getElementById('reportPrintArea');
+            districtSelect.innerHTML = '<option value="">-- सर्व जिल्हे --</option>';
+            districts.forEach(dist => {
+                let opt = document.createElement('option');
+                opt.value = dist;
+                opt.textContent = dist;
+                districtSelect.appendChild(opt);
+            });
 
-    let emCompliance = s.emTotal > 0 ? ((s.emOntime / s.emTotal) * 100).toFixed(1) : "100.0";
-    let rtCompliance = s.rtTotal > 0 ? ((s.rtOntime / s.rtTotal) * 100).toFixed(1) : "100.0";
+            districtSelect.disabled = false;
+            document.getElementById('hosp_textSearch').disabled = false;
+            document.getElementById('hosp_searchBtn').disabled = false;
+            window.handleDistrictChange();
+        };
 
-    reportArea.innerHTML = `
-        <div style="text-align:center; border-bottom:3px double #0B3D91; padding-bottom:8px; margin-bottom:12px;">
-            <h2 style="color:#0B3D91; margin:0; font-size:1.3rem;">${s.hospital.toUpperCase()}</h2>
-            <h3 style="margin:2px 0; font-size:1.05rem; color:#334155;">DISTRICT: ${s.district.toUpperCase()}</h3>
-            <h3 style="margin:2px 0; font-size:1.1rem; color:#0B3D91; text-decoration:underline;">PRESCRIPTION AUDIT REPORT (X-RAY SERVICES)</h3>
-            <p style="margin:4px 0 0 0; font-weight:bold; font-size:0.9rem;">Audit Month & Year: April 2025</p>
-        </div>
+        window.handleDistrictChange = function() {
+            let distSelect = document.getElementById('hosp_districtSelect');
+            let centreSelect = document.getElementById('hosp_centreSelect');
+            let filterType = document.getElementById('hosp_filterType');
 
-        <p style="font-size:0.88rem; font-weight:bold; margin-bottom:8px;">Overview of Prescription Audit Methodology of X-Ray & CT Scan (Tele-Radiology Services in PPP Mode)</p>
+            if(!distSelect || !centreSelect) return;
+            let selectedDistrict = distSelect.value;
+            centreSelect.innerHTML = '<option value="">-- सर्व रुग्णालये --</option>';
 
-        <h4 style="color:#0B3D91; background:#f0f9ff; padding:4px 8px; border-left:4px solid #0B3D91; margin:10px 0 6px 0; font-size:0.92rem;">1. Indicators to check the completeness of Prescription / Referral</h4>
-        <ul style="margin:0 0 8px 18px; font-size:0.85rem; line-height:1.4;">
-            <li>Total no. of patients OPD in hospital (Monthly): <b>3,594 (3,398 OPD + 196 Casualty/IPD)</b></li>
-            <li>Total no. of X-Ray done (Monthly): <b>${s.total}</b></li>
-            <li>Total no. of CT Scan done (Monthly): <b>N/A (Facility not available at RH level)</b></li>
-            <li>Prescription / referral slip verification status:
-                <ul style="margin-left:15px; list-style-type:circle;">
-                    <li>Patient details (Name, Age, Sex, Reported allergy, Date of consultation): <b>Verified & Complete (100%)</b></li>
-                    <li>Contact No. of patient: <b>Verified & Complete (100%)</b></li>
-                    <li>Test name & Emergency / Non-Emergency tagging (as per MoU Clause 1.11): <b>Verified & Tagged Properly (100%)</b></li>
-                    <li>Signature of Prescribing / Referring Doctor: <b>Verified & Available (100%)</b></li>
-                    <li>Signature of Medical Superintendent / Institute Head: <b>Verified & Signed (100%)</b></li>
+            let filteredCentres = [...new Set(
+                window.hosp_rawData
+                    .filter(item => !selectedDistrict || String(getVal(item, ['District', 'DistrictName'])).trim() === selectedDistrict.trim())
+                    .map(item => String(getVal(item, ['CentreName', 'Centre Name', 'Facility'])).trim())
+            )].filter(Boolean).sort();
+
+            filteredCentres.forEach(centre => {
+                let opt = document.createElement('option');
+                opt.value = centre;
+                opt.textContent = centre;
+                centreSelect.appendChild(opt);
+            });
+
+            centreSelect.disabled = false;
+            if(filterType) filterType.disabled = false;
+
+            window.handleHospitalSearch();
+        };
+
+        window.handleHospitalSearch = function() {
+            let distEl = document.getElementById('hosp_districtSelect');
+            let centreEl = document.getElementById('hosp_centreSelect');
+            let filterEl = document.getElementById('hosp_filterType');
+            let textEl = document.getElementById('hosp_textSearch');
+            let auditBtn = document.getElementById('hosp_auditBtn');
+
+            let selectedDistrict = distEl ? distEl.value.trim() : '';
+            let selectedCentre = centreEl ? centreEl.value.trim() : '';
+            let filterType = filterEl ? filterEl.value : 'ALL';
+            let txtQuery = textEl ? textEl.value.trim().toLowerCase() : '';
+
+            let hospData = window.hosp_rawData.filter(item => {
+                let itemDist = String(getVal(item, ['District', 'DistrictName'])).trim();
+                let itemCentre = String(getVal(item, ['CentreName', 'Centre Name', 'Facility'])).trim();
+                
+                let matchDist = !selectedDistrict || itemDist === selectedDistrict;
+                let matchCentre = !selectedCentre || itemCentre === selectedCentre;
+                return matchDist && matchCentre;
+            });
+
+            // Calculate indicators
+            window.calculateAuditIndicators(hospData, selectedDistrict, selectedCentre);
+
+            // Filter for display
+            window.hosp_filteredData = hospData.filter(item => {
+                let isEm = isEmergencyCase(item);
+                let isDel = isBeyondTatCase(item);
+
+                // Text search match
+                let matchText = true;
+                if (txtQuery) {
+                    let pName = String(getVal(item, ['PatientName', 'Name'])).toLowerCase();
+                    let pId = String(getVal(item, ['PatientID', 'PRN_No', 'ID'])).toLowerCase();
+                    let study = String(getVal(item, ['StudyName', 'Modality'])).toLowerCase();
+                    matchText = pName.includes(txtQuery) || pId.includes(txtQuery) || study.includes(txtQuery);
+                }
+
+                if (!matchText) return false;
+
+                if (filterType === 'ALL_EMERGENCY') return isEm;
+                if (filterType === 'EMERGENCY_ONTIME') return isEm && !isDel;
+                if (filterType === 'EMERGENCY_DELAYED') return isEm && isDel;
+                if (filterType === 'ROUTINE_ONTIME') return !isEm && !isDel;
+                if (filterType === 'ROUTINE_DELAYED') return !isEm && isDel;
+                if (filterType === 'ALL_BEYOND_TAT') return isDel;
+                return true;
+            });
+
+            window.hosp_currentPage = 1;
+            window.renderHospTablePaged();
+            if(auditBtn) auditBtn.disabled = (hospData.length === 0);
+        };
+
+        window.calculateAuditIndicators = function(data, dist, centre) {
+            let total = data.length;
+            
+            let emCases = data.filter(d => isEmergencyCase(d));
+            let emTotal = emCases.length;
+            let emDelayed = emCases.filter(d => isBeyondTatCase(d)).length;
+            let emOntime = emTotal - emDelayed;
+            let emCompliance = emTotal > 0 ? ((emOntime / emTotal) * 100).toFixed(1) : "100.0";
+
+            let rtCases = data.filter(d => !isEmergencyCase(d));
+            let rtTotal = rtCases.length;
+            let rtDelayed = rtCases.filter(d => isBeyondTatCase(d)).length;
+            let rtOntime = rtTotal - rtDelayed;
+            let rtCompliance = rtTotal > 0 ? ((rtOntime / rtTotal) * 100).toFixed(1) : "100.0";
+
+            let overallDelayed = data.filter(d => isBeyondTatCase(d)).length;
+            let overallOntime = total - overallDelayed;
+            let overallCompliance = total > 0 ? ((overallOntime / total) * 100).toFixed(1) : "100.0";
+
+            let deductionSlab = "Nil (0% Penalty)";
+            let compVal = parseFloat(overallCompliance);
+            if (compVal >= 90.0 && compVal < 100.0) deductionSlab = "1% Deduction Applicable";
+            else if (compVal < 90.0) deductionSlab = "Penalty / Higher Deduction Applicable";
+
+            let setTxt = (id, val) => { let el = document.getElementById(id); if(el) el.innerText = val; };
+            setTxt('st_aud_total', total);
+            setTxt('st_aud_em_total', emTotal);
+            setTxt('st_aud_em_ontime', emOntime);
+            setTxt('st_aud_em_delayed', emDelayed);
+            
+            setTxt('st_aud_rt_total', rtTotal);
+            setTxt('st_aud_rt_ontime', rtOntime);
+            setTxt('st_aud_rt_delayed', rtDelayed);
+
+            setTxt('st_aud_overall_compliance', overallCompliance + "%");
+            setTxt('st_aud_deduction_slab', deductionSlab);
+
+            window.currentAuditStats = {
+                district: dist || 'गडचिरोली / महाराष्ट्र',
+                hospital: centre || 'ग्रामीण रुग्णालय',
+                total, emTotal, emOntime, emDelayed, emCompliance,
+                rtTotal, rtOntime, rtDelayed, rtCompliance,
+                overallOntime, overallDelayed, overallCompliance, deductionSlab
+            };
+        };
+
+        window.renderHospTablePaged = function() {
+            let tbody = document.getElementById('hosp_tableBody');
+            let countBadge = document.getElementById('hosp_recordCount');
+            let pageIndicator = document.getElementById('hosp_page_indicator');
+            if(!tbody) return;
+
+            tbody.innerHTML = '';
+            let totalRecs = window.hosp_filteredData.length;
+            if(countBadge) countBadge.textContent = totalRecs;
+
+            if(totalRecs === 0) {
+                tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; color:red; padding:15px;">काहीही माहिती आढळली नाही.</td></tr>';
+                if(pageIndicator) pageIndicator.textContent = 'पेज 0 / 0';
+                return;
+            }
+
+            let totalPages = Math.ceil(totalRecs / window.hosp_pageSize);
+            if(pageIndicator) pageIndicator.textContent = `पेज ${window.hosp_currentPage} / ${totalPages}`;
+
+            let startIdx = (window.hosp_currentPage - 1) * window.hosp_pageSize;
+            let pageSlice = window.hosp_filteredData.slice(startIdx, startIdx + window.hosp_pageSize);
+
+            let fragment = document.createDocumentFragment();
+
+            pageSlice.forEach((row, i) => {
+                let isEm = isEmergencyCase(row);
+                let isDel = isBeyondTatCase(row);
+
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${startIdx + i + 1}</td>
+                    <td><b>${getVal(row, ['District', 'DistrictName']) || '-'}</b></td>
+                    <td>${getVal(row, ['CentreName', 'Facility']) || '-'}</td>
+                    <td><b>${getVal(row, ['PatientName', 'Name']) || '-'}</b></td>
+                    <td><small>${getVal(row, ['PatientID', 'PRN_No', 'ID']) || '-'}</small></td>
+                    <td>${getVal(row, ['StudyName', 'Modality']) || '-'}</td>
+                    <td><span style="background:${isEm ? '#dc2626' : '#0284c7'}; color:white; padding:2px 6px; border-radius:4px; font-size:0.75rem;">${isEm ? '🚨 Emergency' : 'Routine'}</span></td>
+                    <td><small>${getVal(row, ['ScanDate', 'Date']) || '-'}</small></td>
+                    <td><small>${getVal(row, ['Report_TAT', 'TAT']) || '-'}</small></td>
+                    <td><span style="background:${isDel ? '#ef4444' : '#22c55e'}; color:white; padding:2px 6px; border-radius:4px; font-size:0.75rem;">${isDel ? '⚠ Beyond TAT' : '✓ On Time'}</span></td>
+                `;
+                fragment.appendChild(tr);
+            });
+
+            tbody.appendChild(fragment);
+        };
+
+        window.changeHospPage = function(dir) {
+            window.hosp_currentPage += dir;
+            window.renderHospTablePaged();
+        };
+
+        // ==========================================
+        // AUTO GENERATED EDITABLE AUDIT REPORT (EXACT PDF 7 POINTS)
+        // ==========================================
+        window.generateEditableAuditReport = function() {
+            if(!window.currentAuditStats) return alert("कृपया प्रथम शोध घ्या.");
+            let s = window.currentAuditStats;
+            let modal = document.getElementById('editableAuditModal');
+            let reportArea = document.getElementById('reportPrintArea');
+
+            let mName = window.currentMember ? (window.currentMember.name || 'महेश हांगे') : 'महेश एस. हांगे';
+
+            reportArea.innerHTML = `
+                <div style="text-align:center; border-bottom:3px double #0B3D91; padding-bottom:8px; margin-bottom:12px;">
+                    <h2 style="color:#0B3D91; margin:0; font-size:1.3rem;">${s.hospital.toUpperCase()}</h2>
+                    <h3 style="margin:2px 0; font-size:1.05rem; color:#334155;">DISTRICT: ${s.district.toUpperCase()}</h3>
+                    <h3 style="margin:2px 0; font-size:1.1rem; color:#0B3D91; text-decoration:underline;">PRESCRIPTION AUDIT REPORT (X-RAY SERVICES)</h3>
+                    <p style="margin:4px 0 0 0; font-weight:bold; font-size:0.9rem;">Audit Month & Year: April 2025</p>
+                </div>
+
+                <p style="font-size:0.88rem; font-weight:bold; margin-bottom:8px;">Overview of Prescription Audit Methodology of X-Ray & CT Scan (Tele-Radiology Services in PPP Mode)</p>
+
+                <h4 style="color:#0B3D91; background:#f0f9ff; padding:4px 8px; border-left:4px solid #0B3D91; margin:10px 0 6px 0; font-size:0.92rem;">1. Indicators to check the completeness of Prescription / Referral</h4>
+                <ul style="margin:0 0 8px 18px; font-size:0.85rem; line-height:1.4;">
+                    <li>Total no. of patients OPD in hospital (Monthly): <b>3,594 (3,398 OPD + 196 Casualty/IPD)</b></li>
+                    <li>Total no. of X-Ray done (Monthly): <b>${s.total}</b></li>
+                    <li>Total no. of CT Scan done (Monthly): <b>N/A (Facility not available at RH level)</b></li>
+                    <li>Prescription / referral slip verification status:
+                        <ul style="margin-left:15px; list-style-type:circle;">
+                            <li>Patient details (Name, Age, Sex, Reported allergy, Date of consultation): <b>Verified & Complete (100%)</b></li>
+                            <li>Contact No. of patient: <b>Verified & Complete (100%)</b></li>
+                            <li>Test name & Emergency / Non-Emergency tagging (as per MoU Clause 1.11): <b>Verified & Tagged Properly (100%)</b></li>
+                            <li>Signature of Prescribing / Referring Doctor: <b>Verified & Available (100%)</b></li>
+                            <li>Signature of Medical Superintendent / Institute Head: <b>Verified & Signed (100%)</b></li>
+                        </ul>
+                    </li>
                 </ul>
-            </li>
-        </ul>
 
-        <h4 style="color:#0B3D91; background:#f0f9ff; padding:4px 8px; border-left:4px solid #0B3D91; margin:10px 0 6px 0; font-size:0.92rem;">2. Sample Size</h4>
-        <p style="font-size:0.85rem; margin:0 0 6px 10px;">• Population (Monthly referrals for X-Ray): <b>${s.total}</b><br>
-        • Sample size audited: <b>66 prescriptions/referral slips</b> (Margin of Error 10%; Confidence level 95%)</p>
+                <h4 style="color:#0B3D91; background:#f0f9ff; padding:4px 8px; border-left:4px solid #0B3D91; margin:10px 0 6px 0; font-size:0.92rem;">2. Sample Size</h4>
+                <p style="font-size:0.85rem; margin:0 0 6px 10px;">• Population (Monthly referrals for X-Ray): <b>${s.total}</b><br>
+                • Sample size audited: <b>66 prescriptions/referral slips</b> (Margin of Error 10%; Confidence level 95%)</p>
 
-        <h4 style="color:#0B3D91; background:#f0f9ff; padding:4px 8px; border-left:4px solid #0B3D91; margin:10px 0 6px 0; font-size:0.92rem;">3. Data Collection</h4>
-        <p style="font-size:0.85rem; margin:0 0 6px 10px;">• Sampling Technique: Simple random sampling technique used.<br>
-        • Distribution: Half of the sample (33) taken from first two weeks and half (33) from remaining two weeks.</p>
+                <h4 style="color:#0B3D91; background:#f0f9ff; padding:4px 8px; border-left:4px solid #0B3D91; margin:10px 0 6px 0; font-size:0.92rem;">3. Data Collection</h4>
+                <p style="font-size:0.85rem; margin:0 0 6px 10px;">• Sampling Technique: Simple random sampling technique used.<br>
+                • Distribution: Half of the sample (33) taken from first two weeks and half (33) from remaining two weeks.</p>
 
-        <h4 style="color:#0B3D91; background:#f0f9ff; padding:4px 8px; border-left:4px solid #0B3D91; margin:10px 0 6px 0; font-size:0.92rem;">4. Timeliness of Reporting (as per MoU Clause 1.11 & Annexure-B)</h4>
-        <ul style="margin:0 0 8px 18px; font-size:0.85rem; line-height:1.4;">
-            <li>Emergency cases (X-Ray - 1 Hour TAT): <b>${emCompliance}% interpreted & reported within 1 hour</b> (${s.emOntime} out of ${s.emTotal} cases; ${s.emDelayed} cases beyond TAT).</li>
-            <li>Non-emergency/routine cases (12 Hours TAT): <b>${rtCompliance}% reported within TAT</b> (${s.rtOntime} out of ${s.rtTotal} cases).</li>
-            <li>Overall Reporting Timeliness: <b>${s.overallCompliance}% compliant</b>.</li>
-            <li>Shortfall / Deduction: <b>Nil (0% penalty applicable)</b></li>
-        </ul>
+                <h4 style="color:#0B3D91; background:#f0f9ff; padding:4px 8px; border-left:4px solid #0B3D91; margin:10px 0 6px 0; font-size:0.92rem;">4. Timeliness of Reporting (as per MoU Clause 1.11 & Annexure-B)</h4>
+                <ul style="margin:0 0 8px 18px; font-size:0.85rem; line-height:1.4;">
+                    <li>Emergency cases (X-Ray - 1 Hour TAT): <b>${s.emCompliance}% interpreted & reported within 1 hour</b> (${s.emOntime} out of ${s.emTotal} cases; ${s.emDelayed} cases reported beyond TAT).</li>
+                    <li>Non-emergency/routine cases (12 Hours TAT): <b>${s.rtCompliance}% reported within TAT</b> (${s.rtOntime} out of ${s.rtTotal} cases).</li>
+                    <li>Overall Reporting Timeliness: <b>${s.overallCompliance}% compliant</b> (${s.overallOntime} out of ${s.total} overall reported within TAT).</li>
+                    <li>Shortfall / Deduction: <b>${s.deductionSlab}</b></li>
+                </ul>
 
-        <h4 style="color:#0B3D91; background:#f0f9ff; padding:4px 8px; border-left:4px solid #0B3D91; margin:10px 0 6px 0; font-size:0.92rem;">5. Records Keeping (MoU Clause 3.10, 3.17, 3.19)</h4>
-        <p style="font-size:0.85rem; margin:0 0 6px 10px;">• Daily patients register & logbook maintained: <b>Maintained (Yes - Zero breakdown)</b><br>
-        • Soft & Hard copy reports: <b>Available at institute (Yes)</b> | Dues/Penalties: <b>Nil</b></p>
+                <h4 style="color:#0B3D91; background:#f0f9ff; padding:4px 8px; border-left:4px solid #0B3D91; margin:10px 0 6px 0; font-size:0.92rem;">5. Records Keeping (MoU Clause 3.10, 3.17, 3.19)</h4>
+                <p style="font-size:0.85rem; margin:0 0 6px 10px;">• Daily patients register & logbook maintained: <b>Maintained (Yes - Zero breakdown)</b><br>
+                • Detailed records (soft copy + hard copy) maintained: <b>Maintained at institute (Yes)</b> | Dues/Penalties: <b>Nil</b></p>
 
-        <h4 style="color:#0B3D91; background:#f0f9ff; padding:4px 8px; border-left:4px solid #0B3D91; margin:10px 0 6px 0; font-size:0.92rem;">6. Quality of Reports & 7. Equipment Upkeep</h4>
-        <p style="font-size:0.85rem; margin:0 0 6px 10px;">• Error in diagnosis: <b>0% (Zero Error)</b> | Valid Digital Signature of Radiologist: <b>Yes</b><br>
-        • CR/Digitizer functionality: <b>100% functional daily</b> | Radiographer Training: <b>Completed successfully</b></p>
+                <h4 style="color:#0B3D91; background:#f0f9ff; padding:4px 8px; border-left:4px solid #0B3D91; margin:10px 0 6px 0; font-size:0.92rem;">6. Quality of Reports & 7. Equipment Upkeep</h4>
+                <p style="font-size:0.85rem; margin:0 0 6px 10px;">• Error in diagnosis: <b>0% (Zero Error)</b> | Valid Digital Signature of Radiologist: <b>Yes</b><br>
+                • CR/Digitizer functionality: <b>100% functional daily</b> | Radiographer Training: <b>Completed successfully</b></p>
 
-        <div style="margin-top:45px; display:flex; justify-content:space-between; text-align:center; font-size:0.82rem; font-weight:bold;">
-            <div>_______________________<br>(Mahesh S. Hange)<br>X-Ray Scientific Officer</div>
-            <div>_______________________<br>Medical Officer<br>${s.hospital}</div>
-            <div>_______________________<br>Medical Superintendent<br>${s.hospital}</div>
-        </div>
-    `;
+                <div style="margin-top:45px; display:flex; justify-content:space-between; text-align:center; font-size:0.82rem; font-weight:bold;">
+                    <div>_______________________<br>(${mName})<br>X-Ray Scientific Officer</div>
+                    <div>_______________________<br>Medical Officer<br>${s.hospital}</div>
+                    <div>_______________________<br>Medical Superintendent<br>${s.hospital}</div>
+                </div>
+            `;
 
-    modal.style.display = 'block';
-};
+            modal.style.display = 'block';
+        };
 
-// ७. PDF Print Runner
-window.printEditablePDF = function() {
-    let reportArea = document.getElementById('reportPrintArea');
-    let opt = { margin: 5, filename: `Prescription_Audit_Report.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
-    html2pdf().set(opt).from(reportArea).save();
-};
+        window.printEditablePDF = function() {
+            let reportArea = document.getElementById('reportPrintArea');
+            let opt = { margin: 5, filename: `Prescription_Audit_Report.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
+            html2pdf().set(opt).from(reportArea).save();
+        };
 
-// Table Paging Render
-window.renderHospTablePaged = function() {
-    let tbody = document.getElementById('hosp_tableBody');
-    let countBadge = document.getElementById('hosp_recordCount');
-    let pageIndicator = document.getElementById('hosp_page_indicator');
-    tbody.innerHTML = '';
-
-    let totalRecs = window.hosp_filteredData.length;
-    if(countBadge) countBadge.textContent = totalRecs;
-
-    if(totalRecs === 0) {
-        tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; color:red; padding:15px;">काहीही डेटा आढळला नाही.</td></tr>';
-        if(pageIndicator) pageIndicator.textContent = 'पेज 0 / 0';
-        return;
-    }
-
-    let totalPages = Math.ceil(totalRecs / window.hosp_pageSize);
-    if(pageIndicator) pageIndicator.textContent = `पेज ${window.hosp_currentPage} / ${totalPages}`;
-
-    let startIdx = (window.hosp_currentPage - 1) * window.hosp_pageSize;
-    let pageSlice = window.hosp_filteredData.slice(startIdx, startIdx + window.hosp_pageSize);
-
-    pageSlice.forEach((row, i) => {
-        let isDelayed = (row.IsBeyondTAT == 1 || row.IsBeyondTAT === '1');
-        let isEmergency = (row.Priority === 'Emergency');
-        let tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td>${startIdx + i + 1}</td>
-            <td><b>${row.District || '-'}</b></td>
-            <td>${row.CentreName || '-'}</td>
-            <td><b>${row.PatientName || '-'}</b></td>
-            <td><small>${row.PatientID || '-'}</small></td>
-            <td>${row.StudyName || '-'}</td>
-            <td><span style="background:${isEmergency ? '#dc2626' : '#0284c7'}; color:white; padding:2px 6px; border-radius:4px; font-size:0.75rem;">${row.Priority || 'Routine'}</span></td>
-            <td><small>${row.ScanDate || '-'}</small></td>
-            <td><small>${row.Report_TAT || '-'}</small></td>
-            <td><span style="background:${isDelayed ? '#ef4444' : '#22c55e'}; color:white; padding:2px 6px; border-radius:4px; font-size:0.75rem;">${isDelayed ? ' Beyond TAT' : '✓ On Time'}</span></td>
-        `;
-        tbody.appendChild(tr);
-    });
-};
-
-window.changeHospPage = function(dir) {
-    window.hosp_currentPage += dir;
-    window.renderHospTablePaged();
-};
-
-window.handleHospitalReset = function() {
-    location.reload();
-};
-</script>
+        window.handleHospitalReset = function() {
+            location.reload();
+        };
+    </script>
+</body>
+</html>
