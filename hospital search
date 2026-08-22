@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>जिल्ह्यानुसार व रुग्णालयनिहाय डेटा शोध</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        body { background-color: #f8f9fa; padding: 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .card { border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .table-responsive { max-height: 550px; overflow-y: auto; }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid">
+    <h3 class="text-center text-primary mb-4">🏥 रुग्णालय आणि जिल्ह्यानुसार माहिती शोध प्रणाली</h3>
+    
+    <div class="card p-4 mb-4">
+        <div class="row g-3 align-items-center">
+            <!-- File Upload -->
+            <div class="col-md-4">
+                <label class="form-label fw-bold">एक्सेल फाईल निवडा (AUG 25 MIS.xlsx):</label>
+                <input type="file" id="excelFile" class="form-control" accept=".xlsx, .xls">
+            </div>
+            
+            <!-- District Dropdown -->
+            <div class="col-md-4">
+                <label class="form-label fw-bold">जिल्हा निवडा (District):</label>
+                <select id="districtSelect" class="form-select" disabled>
+                    <option value="">-- प्रथम एक्सेल फाईल निवडा --</option>
+                </select>
+            </div>
+            
+            <!-- Hospital Dropdown -->
+            <div class="col-md-4">
+                <label class="form-label fw-bold">रुग्णालय निवडा (Centre Name):</label>
+                <select id="hospitalSelect" class="form-select" disabled>
+                    <option value="">-- प्रथम जिल्हा निवडा --</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="mt-3 text-end">
+            <button id="searchBtn" class="btn btn-primary fw-bold" disabled>🔍 डेटा शोधा</button>
+            <button id="resetBtn" class="btn btn-secondary fw-bold ms-2">🔄 रीसेट करा</button>
+        </div>
+    </div>
+
+    <!-- Data Display Table -->
+    <div class="card p-3">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="m-0">शोध निकाल (एकूण रेकॉर्ड्स: <span id="recordCount" class="badge bg-success">0</span>)</h5>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover table-bordered text-center align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>जिल्हा (District)</th>
+                        <th>रुग्णालय (Centre Name)</th>
+                        <th>रुग्णाचे नाव (Patient Name)</th>
+                        <th>ID</th>
+                        <th>तपासणी (Study Name)</th>
+                        <th>प्राधान्य (Priority)</th>
+                        <th>तारीख (Scan Date)</th>
+                        <th>TAT Report</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <tr><td colspan="8" class="text-muted">कृपया एक्सेल फाईल अपलोड करून जिल्हा आणि रुग्णालय निवडा.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    let rawData = [];
+
+    // 1. Read Excel File
+    document.getElementById('excelFile').addEventListener('change', function(e) {
+        let file = e.target.files[0];
+        if(!file) return;
+
+        let reader = new FileReader();
+        reader.onload = function(evt) {
+            let data = new Uint8Array(evt.target.result);
+            let workbook = XLSX.read(data, {type: 'array'});
+            let firstSheet = workbook.SheetNames[0];
+            rawData = XLSX.utils.sheet_to_json(workbook.Sheets[firstSheet]);
+
+            populateDistricts();
+        };
+        reader.readAsArrayBuffer(file);
+    });
+
+    // 2. Populate District Dropdown
+    function populateDistricts() {
+        let districts = [...new Set(rawData.map(item => item.District))].filter(Boolean).sort();
+        let districtSelect = document.getElementById('districtSelect');
+        districtSelect.innerHTML = '<option value="">-- जिल्हा निवडा --</option>';
+        
+        districts.forEach(dist => {
+            let opt = document.createElement('option');
+            opt.value = dist;
+            opt.textContent = dist;
+            districtSelect.appendChild(opt);
+        });
+
+        districtSelect.disabled = false;
+    }
+
+    // 3. District Change Event -> Dynamically Update Hospital Dropdown
+    document.getElementById('districtSelect').addEventListener('change', function() {
+        let selectedDistrict = this.value;
+        let hospitalSelect = document.getElementById('hospitalSelect');
+        hospitalSelect.innerHTML = '<option value="">-- सर्व रुग्णालये --</option>';
+
+        if(!selectedDistrict) {
+            hospitalSelect.disabled = true;
+            document.getElementById('searchBtn').disabled = true;
+            return;
+        }
+
+        let filteredHospitals = [...new Set(
+            rawData.filter(item => item.District === selectedDistrict).map(item => item.CentreName)
+        )].filter(Boolean).sort();
+
+        filteredHospitals.forEach(hosp => {
+            let opt = document.createElement('option');
+            opt.value = hosp;
+            opt.textContent = hosp;
+            hospitalSelect.appendChild(opt);
+        });
+
+        hospitalSelect.disabled = false;
+        document.getElementById('searchBtn').disabled = false;
+    });
+
+    // 4. Search Button Click Event
+    document.getElementById('searchBtn').addEventListener('click', function() {
+        let selectedDistrict = document.getElementById('districtSelect').value;
+        let selectedHospital = document.getElementById('hospitalSelect').value;
+
+        let filteredData = rawData.filter(item => {
+            let matchDist = !selectedDistrict || item.District === selectedDistrict;
+            let matchHosp = !selectedHospital || item.CentreName === selectedHospital;
+            return matchDist && matchHosp;
+        });
+
+        renderTable(filteredData);
+    });
+
+    // 5. Render Data to Table
+    function renderTable(data) {
+        let tbody = document.getElementById('tableBody');
+        tbody.innerHTML = '';
+        document.getElementById('recordCount').textContent = data.length;
+
+        if(data.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="8" class="text-danger">माहिती उपलब्ध नाही.</td></tr>';
+            return;
+        }
+
+        // Display first 500 records for optimal web UI response
+        let displayData = data.slice(0, 500);
+
+        displayData.forEach(row => {
+            let tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${row.District || ''}</td>
+                <td>${row.CentreName || ''}</td>
+                <td>${row.PatientName || ''}</td>
+                <td>${row.PatientID || ''}</td>
+                <td>${row.StudyName || ''}</td>
+                <td>${row.Priority || ''}</td>
+                <td>${row.ScanDate || ''}</td>
+                <td>${row.Report_TAT || ''}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    // 6. Reset Button Event
+    document.getElementById('resetBtn').addEventListener('click', function() {
+        document.getElementById('excelFile').value = '';
+        document.getElementById('districtSelect').innerHTML = '<option value="">-- प्रथम एक्सेल फाईल निवडा --</option>';
+        document.getElementById('districtSelect').disabled = true;
+        document.getElementById('hospitalSelect').innerHTML = '<option value="">-- प्रथम जिल्हा निवडा --</option>';
+        document.getElementById('hospitalSelect').disabled = true;
+        document.getElementById('searchBtn').disabled = true;
+        document.getElementById('tableBody').innerHTML = '<tr><td colspan="8" class="text-muted">कृपया एक्सेल फाईल अपलोड करून जिल्हा आणि रुग्णालय निवडा.</td></tr>';
+        document.getElementById('recordCount').textContent = '0';
+        rawData = [];
+    });
+</script>
+
+</body>
+</html>
