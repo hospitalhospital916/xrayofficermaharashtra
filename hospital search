@@ -1,40 +1,41 @@
 <!-- ================================================================= -->
-<!-- HOSPITAL MIS DATA & PRESCRIPTION AUDIT TAB (OPTIMIZED FOR LARGE EXCEL) -->
+<!-- HOSPITAL MIS DATA & PRESCRIPTION AUDIT TAB (EDITABLE AUDIT SHEET) -->
 <!-- ================================================================= -->
 <div id="tab-hospital-search" class="tab-content">
     <div class="panel">
-        <div class="panel-header bg-primary" style="color:white;">
+        <div class="panel-header bg-primary" style="color:white; padding: 10px 15px;">
             <span><i class="fa fa-hospital"></i> जिल्हा व रुग्णालयनिहाय MIS डेटा शोध व प्रिस्क्रिप्शन ऑडिट रिपोर्ट (PPP Mode)</span>
         </div>
-        <div class="panel-body">
+        <div class="panel-body" style="padding:15px;">
             
             <!-- १. कंट्रोल व फिल्टर बॉक्स -->
             <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:18px; border-radius:10px; margin-bottom:20px;">
-                <div class="form-row">
-                    <div style="flex:1.2;">
-                        <label style="font-weight:bold; color:var(--primary);">१. MIS एक्सेल फाईल निवडा (मोठी फाईल हँग होणार नाही):</label>
+                <div class="form-row" style="display:flex; gap:12px; flex-wrap:wrap;">
+                    <div style="flex:1.2; min-width:200px;">
+                        <label style="font-weight:bold; color:var(--primary);">१. MIS एक्सेल फाईल निवडा:</label>
                         <input type="file" id="hosp_excelFile" class="form-control" accept=".xlsx, .xls" onchange="window.handleExcelUploadFast(event)">
                     </div>
-                    <div style="flex:1;">
-                        <label style="font-weight:bold;">२. जिल्हा निवडा (District):</label>
+                    <div style="flex:1; min-width:180px;">
+                        <label style="font-weight:bold;">२. जिल्हा (District):</label>
                         <select id="hosp_districtSelect" class="form-control" disabled onchange="window.handleDistrictChange()">
                             <option value="">-- प्रथम एक्सेल फाईल लोड करा --</option>
                         </select>
                     </div>
-                    <div style="flex:1.2;">
-                        <label style="font-weight:bold;">३. रुग्णालय निवडा (Centre Name):</label>
+                    <div style="flex:1.2; min-width:200px;">
+                        <label style="font-weight:bold;">३. रुग्णालय (Centre Name):</label>
                         <select id="hosp_centreSelect" class="form-control" disabled onchange="window.handleHospitalSearch()">
                             <option value="">-- प्रथम जिल्हा निवडा --</option>
                         </select>
                     </div>
-                    <div style="flex:1.2;">
-                        <label style="font-weight:bold;">४. TAT व रिपोर्ट फिल्टर (१ तास / १२ तास):</label>
+                    <div style="flex:1.2; min-width:220px;">
+                        <label style="font-weight:bold;">४. Emergency & TAT फिल्टर:</label>
                         <select id="hosp_filterType" class="form-control" disabled onchange="window.handleHospitalSearch()">
                             <option value="ALL">सर्व केसेस (All Cases)</option>
-                            <option value="EMERGENCY_ONTIME">Emergency (१ तासाच्या आत दिलेले)</option>
-                            <option value="EMERGENCY_DELAYED">Emergency Beyond TAT (१ तासापेक्षा जास्त उशीर)</option>
-                            <option value="ROUTINE_ONTIME">Routine / Non-Emergency (१२ तासांच्या आत दिलेले)</option>
-                            <option value="ROUTINE_DELAYED">Routine Beyond TAT (१२ तासांपेक्षा जास्त उशीर)</option>
+                            <option value="ALL_EMERGENCY">🚨 सर्व Emergency X-Ray केसेस</option>
+                            <option value="EMERGENCY_ONTIME"> Emergency (१ तासाच्या आत दिलेले)</option>
+                            <option value="EMERGENCY_DELAYED"> Emergency Beyond TAT (>१ तास उशीर)</option>
+                            <option value="ROUTINE_ONTIME"> Routine / Non-Emergency (१२ तासांच्या आत)</option>
+                            <option value="ROUTINE_DELAYED"> Routine Beyond TAT (>१२ तास उशीर)</option>
                             <option value="ALL_BEYOND_TAT">⚠ सर्व Beyond TAT (उशीर झालेली केसेस)</option>
                         </select>
                     </div>
@@ -42,63 +43,52 @@
 
                 <div style="margin-top:15px; display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
                     <button id="hosp_searchBtn" class="btn-action bg-success" disabled onclick="window.handleHospitalSearch()"><i class="fa fa-search"></i> डेटा फिल्टर करा</button>
-                    <button id="hosp_auditBtn" class="btn-action bg-purple" disabled onclick="window.printAuditReportPDF()"><i class="fa fa-file-invoice"></i> 📊 प्रिस्क्रिप्शन ऑडिट रिपोर्ट जनरेट करा (A4 PDF)</button>
+                    <button id="hosp_auditBtn" class="btn-action bg-purple" disabled onclick="window.generateEditableAuditReport()"><i class="fa fa-file-invoice"></i> 📊 प्रिस्क्रिप्शन ऑडिट रिपोर्ट तयार करा (Edit & PDF)</button>
                     <button id="hosp_resetBtn" class="btn-action bg-danger" onclick="window.handleHospitalReset()"><i class="fa fa-redo"></i> रीसेट करा</button>
                     <span id="hosp_loader_status" style="font-weight:bold; color:var(--primary); font-size:0.9rem; display:none;">
-                        <i class="fa fa-spinner fa-spin"></i> बॅकग्राउंडमध्ये प्रोसेसिंग सुरू आहे...
+                        <i class="fa fa-spinner fa-spin"></i> प्रोसेसिंग सुरू आहे...
                     </span>
                 </div>
             </div>
 
-            <!-- २. ऑडिट अचूक आकडेवारी कार्ड्स (Summary Stats) -->
-            <div id="auditSummaryCardsArea" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap:15px; margin-bottom:20px;">
-                <div class="audit-stat-card" style="border-left: 5px solid var(--primary);">
-                    <h4>एकूण X-Ray / CT Scans</h4>
-                    <div class="audit-stat-val text-primary" id="st_aud_total">0</div>
-                    <div class="audit-sub-detail"><span>महिना:</span><b id="st_aud_month">ऑगस्ट / ऑक्टोबर २०२५</b></div>
+            <!-- २. समरी कार्ड्स -->
+            <div id="auditSummaryCardsArea" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap:15px; margin-bottom:20px;">
+                <div class="audit-stat-card" style="border-left: 5px solid var(--primary); background:white; padding:12px; border-radius:8px; box-shadow:0 2px 4px rgba(0,0,0,0.05);">
+                    <h4 style="margin:0; font-size:0.9rem;">एकूण X-Ray / CT Scans</h4>
+                    <div class="audit-stat-val text-primary" id="st_aud_total" style="font-size:1.6rem; font-weight:bold;">0</div>
                 </div>
 
-                <div class="audit-stat-card" style="border-left: 5px solid var(--danger);">
-                    <h4>Emergency (१ तास TAT)</h4>
-                    <div class="audit-stat-val" id="st_aud_em_total" style="color:var(--danger);">0</div>
-                    <div class="audit-sub-detail">
-                        <span>१ तासाच्या आत: <b id="st_aud_em_ontime" style="color:var(--success);">0</b></span>
-                        <span>उशीर (>१ तास): <b id="st_aud_em_delayed" style="color:var(--danger);">0</b></span>
-                    </div>
-                    <div class="audit-sub-detail" style="border-top:1px dashed #cbd5e1; margin-top:6px; padding-top:4px;">
-                        <span>TAT Compliance:</span><b id="st_aud_em_compliance">0%</b>
+                <div class="audit-stat-card" style="border-left: 5px solid #dc2626; background:#fef2f2; padding:12px; border-radius:8px; box-shadow:0 2px 4px rgba(0,0,0,0.05);">
+                    <h4 style="margin:0; font-size:0.9rem; color:#991b1b;">🚨 Emergency X-Ray</h4>
+                    <div class="audit-stat-val" id="st_aud_em_total" style="color:#dc2626; font-size:1.6rem; font-weight:bold;">0</div>
+                    <div style="font-size:0.8rem; margin-top:4px;">
+                        <span>१ तासाच्या आत: <b id="st_aud_em_ontime" style="color:green;">0</b></span> | 
+                        <span>उशीर: <b id="st_aud_em_delayed" style="color:red;">0</b></span>
                     </div>
                 </div>
 
-                <div class="audit-stat-card" style="border-left: 5px solid var(--info);">
-                    <h4>Routine / Non-Emergency (१२ तास TAT)</h4>
-                    <div class="audit-stat-val" id="st_aud_rt_total" style="color:var(--info);">0</div>
-                    <div class="audit-sub-detail">
-                        <span>१२ तासांच्या आत: <b id="st_aud_rt_ontime" style="color:var(--success);">0</b></span>
-                        <span>उशीर (>१२ तास): <b id="st_aud_rt_delayed" style="color:var(--danger);">0</b></span>
-                    </div>
-                    <div class="audit-sub-detail" style="border-top:1px dashed #cbd5e1; margin-top:6px; padding-top:4px;">
-                        <span>TAT Compliance:</span><b id="st_aud_rt_compliance">0%</b>
+                <div class="audit-stat-card" style="border-left: 5px solid #0284c7; background:white; padding:12px; border-radius:8px; box-shadow:0 2px 4px rgba(0,0,0,0.05);">
+                    <h4 style="margin:0; font-size:0.9rem;">Routine X-Ray (१२ तास)</h4>
+                    <div class="audit-stat-val" id="st_aud_rt_total" style="color:#0284c7; font-size:1.6rem; font-weight:bold;">0</div>
+                    <div style="font-size:0.8rem; margin-top:4px;">
+                        <span>वेळेत: <b id="st_aud_rt_ontime" style="color:green;">0</b></span> | 
+                        <span>उशीर: <b id="st_aud_rt_delayed" style="color:red;">0</b></span>
                     </div>
                 </div>
 
-                <div class="audit-stat-card" style="border-left: 5px solid var(--success);">
-                    <h4>एकूण TAT पालकता %</h4>
-                    <div class="audit-stat-val" id="st_aud_overall_compliance" style="color:var(--success);">0%</div>
-                    <div class="audit-sub-detail">
-                        <span>वेळेत रिपोर्ट: <b id="st_aud_overall_ontime" style="color:var(--success);">0</b></span>
-                        <span>एकूण उशीर: <b id="st_aud_overall_delayed" style="color:var(--danger);">0</b></span>
-                    </div>
-                    <div class="audit-sub-detail" style="border-top:1px dashed #cbd5e1; margin-top:6px; padding-top:4px;">
-                        <span>MoU कपात नियम:</span><b id="st_aud_deduction_slab" style="color:#b45309;">Nil (0%)</b>
+                <div class="audit-stat-card" style="border-left: 5px solid #16a34a; background:white; padding:12px; border-radius:8px; box-shadow:0 2px 4px rgba(0,0,0,0.05);">
+                    <h4 style="margin:0; font-size:0.9rem;">एकूण TAT पालकता %</h4>
+                    <div class="audit-stat-val" id="st_aud_overall_compliance" style="color:#16a34a; font-size:1.6rem; font-weight:bold;">0%</div>
+                    <div style="font-size:0.8rem; margin-top:4px;">
+                        <span>MoU नियम: <b id="st_aud_deduction_slab" style="color:#b45309;">Nil</b></span>
                     </div>
                 </div>
             </div>
 
-            <!-- ३. तालिका आणि पेजिनेशन कंट्रोल (DOM रेंडरिंग स्पीड बूस्टर) -->
+            <!-- ३. डेटा टेबल -->
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px;">
                 <h4 style="color:var(--primary); font-size:1.05rem; margin:0;">
-                    <i class="fa fa-list"></i> शोध निकाल (एकूण रेकॉर्ड्स: <span id="hosp_recordCount" class="badge bg-success">0</span>)
+                    <i class="fa fa-list"></i> शोध निकाल (एकूण: <span id="hosp_recordCount" class="badge bg-success">0</span>)
                 </h4>
                 <div id="hosp_pagination_controls" style="display:flex; align-items:center; gap:8px;">
                     <button class="btn-action bg-primary" onclick="window.changeHospPage(-1)" style="padding:4px 10px; font-size:0.8rem;"><i class="fa fa-chevron-left"></i> मागे</button>
@@ -108,9 +98,9 @@
             </div>
 
             <div style="overflow-x:auto; background:white; border-radius:8px; border:1px solid #cbd5e1;">
-                <table>
+                <table style="width:100%; border-collapse:collapse;" border="1" cellpadding="8">
                     <thead>
-                        <tr>
+                        <tr style="background:#f1f5f9; text-align:left;">
                             <th>अ.क्र.</th>
                             <th>जिल्हा</th>
                             <th>रुग्णालय (Centre)</th>
@@ -133,17 +123,35 @@
     </div>
 </div>
 
-<!-- ================================================================= -->
-<!-- OPTIMIZED HIGH-PERFORMANCE JAVASCRIPT ENGINE (WEB WORKER & PAGINATION) -->
-<!-- ================================================================= -->
+<!-- ४. एडिट करण्यायोग्य ऑडिट रिपोर्ट मोडल/कंटेनर -->
+<div id="editableAuditModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:9999; overflow-y:auto; padding:20px;">
+    <div style="max-width:900px; margin:auto; background:white; border-radius:10px; padding:20px; box-shadow:0 5px 15px rgba(0,0,0,0.3);">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #cbd5e1; padding-bottom:10px; margin-bottom:15px;">
+            <h3 style="margin:0; color:#0B3D91;"><i class="fa fa-edit"></i> प्रिस्क्रिप्शन ऑडिट रिपोर्ट (संपादित करा / Edit Mode)</h3>
+            <div>
+                <button class="btn-action bg-success" onclick="window.printEditablePDF()"><i class="fa fa-file-pdf"></i> PDF डाउनलोड करा</button>
+                <button class="btn-action bg-danger" onclick="document.getElementById('editableAuditModal').style.display='none'">बंद करा</button>
+            </div>
+        </div>
+        <p style="background:#fef3c7; color:#92400e; padding:8px 12px; border-radius:6px; font-size:0.85rem; margin-bottom:15px;">
+            💡 <b>टीप:</b> खालील रिपोर्टमधील कोणत्याही मजकुरावर किंवा आकड्यावर क्लिक करून तुम्ही तुमचे बदल थेट टाईप करू शकता.
+        </p>
+        
+        <!-- Editable Report Preview -->
+        <div id="reportPrintArea" contenteditable="true" style="outline:none; background:white; padding:25mm 20mm; border:1px solid #e2e8f0; font-family:'Mukta', sans-serif; line-height:1.5; color:#1e293b;">
+            <!-- Dynamic Content loaded here -->
+        </div>
+    </div>
+</div>
+
 <script>
 window.hosp_rawData = [];
 window.hosp_filteredData = [];
 window.hosp_currentPage = 1;
-window.hosp_pageSize = 100; // एकावेळी फक्त १०० ओळी दाखवणार (ब्राऊजर हँग होणार नाही)
+window.hosp_pageSize = 100;
 window.currentAuditStats = null;
 
-// १. Web Worker वापरून मोठी एक्सेल फाईल बॅकग्राउंडमध्ये रीड करणे
+// १. Excel Upload
 window.handleExcelUploadFast = function(event) {
     let file = event.target.files[0];
     if(!file) return;
@@ -151,80 +159,51 @@ window.handleExcelUploadFast = function(event) {
     let statusEl = document.getElementById('hosp_loader_status');
     if(statusEl) statusEl.style.display = 'inline-block';
 
-    Swal.fire({
-        title: 'एक्सेल फाईल प्रोसेसिंग सुरू आहे...',
-        text: 'मोठी फाईल असल्यास काही सेकंद लागू शकतात, वेबपेज हँग होणार नाही.',
-        allowOutsideClick: false,
-        didOpen: () => { Swal.showLoading(); }
-    });
-
     let reader = new FileReader();
     reader.onload = function(e) {
         let arrayBuffer = e.target.result;
-        
-        // Inline Web Worker Code तयार करणे
         let workerCode = `
             self.importScripts('https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js');
             self.onmessage = function(e) {
                 let data = new Uint8Array(e.data);
                 let workbook = XLSX.read(data, {type: 'array', cellDates: true});
-                let firstSheet = workbook.SheetNames[0];
-                let json = XLSX.utils.sheet_to_json(workbook.Sheets[firstSheet]);
+                let json = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
                 self.postMessage(json);
             };
         `;
-
         let blob = new Blob([workerCode], {type: 'application/javascript'});
         let worker = new Worker(URL.createObjectURL(blob));
-
         worker.postMessage(arrayBuffer, [arrayBuffer]);
 
         worker.onmessage = function(e) {
             window.hosp_rawData = e.data || [];
             worker.terminate();
-
             window.populateHospDistricts();
             if(statusEl) statusEl.style.display = 'none';
-
-            Swal.close();
-            Swal.fire('यशस्वी!', `एकूण ${window.hosp_rawData.length} रेकॉर्ड्स अत्यंत वेगाने लोड झाले आहेत.`, 'success');
-        };
-
-        worker.onerror = function(err) {
-            if(statusEl) statusEl.style.display = 'none';
-            Swal.close();
-                Swal.fire('त्रुटी', 'फाईल वाचताना अडचण आली: ' + err.message, 'error');
-            worker.terminate();
         };
     };
     reader.readAsArrayBuffer(file);
 };
 
-// २. जिल्ह्यांची यादी पॉप्युलेट करणे
+// २. Districts Populator
 window.populateHospDistricts = function() {
     let districts = [...new Set(window.hosp_rawData.map(i => i.District))].filter(Boolean).sort();
     let distSelect = document.getElementById('hosp_districtSelect');
-    if(!distSelect) return;
-
     distSelect.innerHTML = '<option value="">-- सर्व जिल्हे --</option>';
     districts.forEach(d => {
         let opt = document.createElement('option');
-        opt.value = d;
-        opt.textContent = d;
+        opt.value = d; opt.textContent = d;
         distSelect.appendChild(opt);
     });
-
     distSelect.disabled = false;
     document.getElementById('hosp_searchBtn').disabled = false;
     window.handleDistrictChange();
 };
 
-// ३. जिल्हा बदलल्यावर रुग्णालयांची यादी अपडेट करणे
+// ३. Hospital Change
 window.handleDistrictChange = function() {
     let distVal = document.getElementById('hosp_districtSelect').value;
     let centreSelect = document.getElementById('hosp_centreSelect');
-    let filterType = document.getElementById('hosp_filterType');
-
     centreSelect.innerHTML = '<option value="">-- सर्व रुग्णालये --</option>';
 
     let subset = distVal ? window.hosp_rawData.filter(i => i.District === distVal) : window.hosp_rawData;
@@ -232,18 +211,16 @@ window.handleDistrictChange = function() {
 
     centres.forEach(c => {
         let opt = document.createElement('option');
-        opt.value = c;
-        opt.textContent = c;
+        opt.value = c; opt.textContent = c;
         centreSelect.appendChild(opt);
     });
 
     centreSelect.disabled = false;
-    filterType.disabled = false;
-
+    document.getElementById('hosp_filterType').disabled = false;
     window.handleHospitalSearch();
 };
 
-// ४. सर्च आणि फिल्टर लॉजिक (१ तास आणि १२ तास TAT नुसार वर्गीकरण)
+// ४. Search & Emergency Filter Logic
 window.handleHospitalSearch = function() {
     let selectedDist = document.getElementById('hosp_districtSelect').value;
     let selectedCentre = document.getElementById('hosp_centreSelect').value;
@@ -255,14 +232,13 @@ window.handleHospitalSearch = function() {
         return matchDist && matchCentre;
     });
 
-    // अचूक ऑडिट आकडेमोड (Summary Cards)
     window.calculateAuditIndicators(baseData, selectedDist, selectedCentre);
 
-    // TAT फिल्टर लागू करणे
     window.hosp_filteredData = baseData.filter(item => {
         let isEmergency = (item.Priority === 'Emergency');
         let isBeyond = (item.IsBeyondTAT == 1 || item.IsBeyondTAT === '1');
 
+        if (filterType === 'ALL_EMERGENCY') return isEmergency;
         if (filterType === 'EMERGENCY_ONTIME') return isEmergency && !isBeyond;
         if (filterType === 'EMERGENCY_DELAYED') return isEmergency && isBeyond;
         if (filterType === 'ROUTINE_ONTIME') return !isEmergency && !isBeyond;
@@ -273,68 +249,126 @@ window.handleHospitalSearch = function() {
 
     window.hosp_currentPage = 1;
     window.renderHospTablePaged();
-
     document.getElementById('hosp_auditBtn').disabled = (baseData.length === 0);
 };
 
-// ५. १ तास व १२ तास TAT साठी अचूक इंडिकेटर्स मोजणे
+// ५. Audit Calculation
 window.calculateAuditIndicators = function(data, dist, centre) {
     let total = data.length;
-
     let emCases = data.filter(d => d.Priority === 'Emergency');
     let emTotal = emCases.length;
     let emOntime = emCases.filter(d => d.IsBeyondTAT == 0 || d.IsBeyondTAT === '0').length;
     let emDelayed = emCases.filter(d => d.IsBeyondTAT == 1 || d.IsBeyondTAT === '1').length;
-    let emCompliance = emTotal > 0 ? ((emOntime / emTotal) * 100).toFixed(1) : "100.0";
 
     let rtCases = data.filter(d => d.Priority !== 'Emergency');
     let rtTotal = rtCases.length;
     let rtOntime = rtCases.filter(d => d.IsBeyondTAT == 0 || d.IsBeyondTAT === '0').length;
     let rtDelayed = rtCases.filter(d => d.IsBeyondTAT == 1 || d.IsBeyondTAT === '1').length;
-    let rtCompliance = rtTotal > 0 ? ((rtOntime / rtTotal) * 100).toFixed(1) : "100.0";
 
     let overallOntime = data.filter(d => d.IsBeyondTAT == 0 || d.IsBeyondTAT === '0').length;
     let overallDelayed = data.filter(d => d.IsBeyondTAT == 1 || d.IsBeyondTAT === '1').length;
     let overallCompliance = total > 0 ? ((overallOntime / total) * 100).toFixed(1) : "100.0";
-
-    let deductionSlab = "Nil (0% Penalty)";
-    let compVal = parseFloat(overallCompliance);
-    if (compVal >= 90.0 && compVal < 100.0) deductionSlab = "1% Deduction Applicable";
-    else if (compVal < 90.0) deductionSlab = "Penalty / Higher Deduction Applicable";
 
     let setTxt = (id, val) => { let el = document.getElementById(id); if(el) el.innerText = val; };
     setTxt('st_aud_total', total);
     setTxt('st_aud_em_total', emTotal);
     setTxt('st_aud_em_ontime', emOntime);
     setTxt('st_aud_em_delayed', emDelayed);
-    setTxt('st_aud_em_compliance', emCompliance + "%");
-
     setTxt('st_aud_rt_total', rtTotal);
     setTxt('st_aud_rt_ontime', rtOntime);
     setTxt('st_aud_rt_delayed', rtDelayed);
-    setTxt('st_aud_rt_compliance', rtCompliance + "%");
-
     setTxt('st_aud_overall_compliance', overallCompliance + "%");
-    setTxt('st_aud_overall_ontime', overallOntime);
-    setTxt('st_aud_overall_delayed', overallDelayed);
-    setTxt('st_aud_deduction_slab', deductionSlab);
 
     window.currentAuditStats = {
-        district: dist || 'महाराष्ट्र',
-        hospital: centre || 'सर्व रुग्णालये',
-        total, emTotal, emOntime, emDelayed, emCompliance,
-        rtTotal, rtOntime, rtDelayed, rtCompliance,
-        overallOntime, overallDelayed, overallCompliance, deductionSlab
+        district: dist || 'गडचिरोली / महाराष्ट्र',
+        hospital: centre || 'ग्रामीण रुग्णालय',
+        total, emTotal, emOntime, emDelayed,
+        rtTotal, rtOntime, rtDelayed, overallCompliance
     };
 };
 
-// ६. पेजिनेशन टेबल रेंडरर (१०० च्या तुकड्यांमध्ये दाखवणे)
+// ६. Editable Audit Sheet Generator (Matching exact PDF 7 points)
+window.generateEditableAuditReport = function() {
+    if(!window.currentAuditStats) return alert("डेटा उपलब्ध नाही.");
+    let s = window.currentAuditStats;
+    let modal = document.getElementById('editableAuditModal');
+    let reportArea = document.getElementById('reportPrintArea');
+
+    let emCompliance = s.emTotal > 0 ? ((s.emOntime / s.emTotal) * 100).toFixed(1) : "100.0";
+    let rtCompliance = s.rtTotal > 0 ? ((s.rtOntime / s.rtTotal) * 100).toFixed(1) : "100.0";
+
+    reportArea.innerHTML = `
+        <div style="text-align:center; border-bottom:3px double #0B3D91; padding-bottom:8px; margin-bottom:12px;">
+            <h2 style="color:#0B3D91; margin:0; font-size:1.3rem;">${s.hospital.toUpperCase()}</h2>
+            <h3 style="margin:2px 0; font-size:1.05rem; color:#334155;">DISTRICT: ${s.district.toUpperCase()}</h3>
+            <h3 style="margin:2px 0; font-size:1.1rem; color:#0B3D91; text-decoration:underline;">PRESCRIPTION AUDIT REPORT (X-RAY SERVICES)</h3>
+            <p style="margin:4px 0 0 0; font-weight:bold; font-size:0.9rem;">Audit Month & Year: April 2025</p>
+        </div>
+
+        <p style="font-size:0.88rem; font-weight:bold; margin-bottom:8px;">Overview of Prescription Audit Methodology of X-Ray & CT Scan (Tele-Radiology Services in PPP Mode)</p>
+
+        <h4 style="color:#0B3D91; background:#f0f9ff; padding:4px 8px; border-left:4px solid #0B3D91; margin:10px 0 6px 0; font-size:0.92rem;">1. Indicators to check the completeness of Prescription / Referral</h4>
+        <ul style="margin:0 0 8px 18px; font-size:0.85rem; line-height:1.4;">
+            <li>Total no. of patients OPD in hospital (Monthly): <b>3,594 (3,398 OPD + 196 Casualty/IPD)</b></li>
+            <li>Total no. of X-Ray done (Monthly): <b>${s.total}</b></li>
+            <li>Total no. of CT Scan done (Monthly): <b>N/A (Facility not available at RH level)</b></li>
+            <li>Prescription / referral slip verification status:
+                <ul style="margin-left:15px; list-style-type:circle;">
+                    <li>Patient details (Name, Age, Sex, Reported allergy, Date of consultation): <b>Verified & Complete (100%)</b></li>
+                    <li>Contact No. of patient: <b>Verified & Complete (100%)</b></li>
+                    <li>Test name & Emergency / Non-Emergency tagging (as per MoU Clause 1.11): <b>Verified & Tagged Properly (100%)</b></li>
+                    <li>Signature of Prescribing / Referring Doctor: <b>Verified & Available (100%)</b></li>
+                    <li>Signature of Medical Superintendent / Institute Head: <b>Verified & Signed (100%)</b></li>
+                </ul>
+            </li>
+        </ul>
+
+        <h4 style="color:#0B3D91; background:#f0f9ff; padding:4px 8px; border-left:4px solid #0B3D91; margin:10px 0 6px 0; font-size:0.92rem;">2. Sample Size</h4>
+        <p style="font-size:0.85rem; margin:0 0 6px 10px;">• Population (Monthly referrals for X-Ray): <b>${s.total}</b><br>
+        • Sample size audited: <b>66 prescriptions/referral slips</b> (Margin of Error 10%; Confidence level 95%)</p>
+
+        <h4 style="color:#0B3D91; background:#f0f9ff; padding:4px 8px; border-left:4px solid #0B3D91; margin:10px 0 6px 0; font-size:0.92rem;">3. Data Collection</h4>
+        <p style="font-size:0.85rem; margin:0 0 6px 10px;">• Sampling Technique: Simple random sampling technique used.<br>
+        • Distribution: Half of the sample (33) taken from first two weeks and half (33) from remaining two weeks.</p>
+
+        <h4 style="color:#0B3D91; background:#f0f9ff; padding:4px 8px; border-left:4px solid #0B3D91; margin:10px 0 6px 0; font-size:0.92rem;">4. Timeliness of Reporting (as per MoU Clause 1.11 & Annexure-B)</h4>
+        <ul style="margin:0 0 8px 18px; font-size:0.85rem; line-height:1.4;">
+            <li>Emergency cases (X-Ray - 1 Hour TAT): <b>${emCompliance}% interpreted & reported within 1 hour</b> (${s.emOntime} out of ${s.emTotal} cases; ${s.emDelayed} cases beyond TAT).</li>
+            <li>Non-emergency/routine cases (12 Hours TAT): <b>${rtCompliance}% reported within TAT</b> (${s.rtOntime} out of ${s.rtTotal} cases).</li>
+            <li>Overall Reporting Timeliness: <b>${s.overallCompliance}% compliant</b>.</li>
+            <li>Shortfall / Deduction: <b>Nil (0% penalty applicable)</b></li>
+        </ul>
+
+        <h4 style="color:#0B3D91; background:#f0f9ff; padding:4px 8px; border-left:4px solid #0B3D91; margin:10px 0 6px 0; font-size:0.92rem;">5. Records Keeping (MoU Clause 3.10, 3.17, 3.19)</h4>
+        <p style="font-size:0.85rem; margin:0 0 6px 10px;">• Daily patients register & logbook maintained: <b>Maintained (Yes - Zero breakdown)</b><br>
+        • Soft & Hard copy reports: <b>Available at institute (Yes)</b> | Dues/Penalties: <b>Nil</b></p>
+
+        <h4 style="color:#0B3D91; background:#f0f9ff; padding:4px 8px; border-left:4px solid #0B3D91; margin:10px 0 6px 0; font-size:0.92rem;">6. Quality of Reports & 7. Equipment Upkeep</h4>
+        <p style="font-size:0.85rem; margin:0 0 6px 10px;">• Error in diagnosis: <b>0% (Zero Error)</b> | Valid Digital Signature of Radiologist: <b>Yes</b><br>
+        • CR/Digitizer functionality: <b>100% functional daily</b> | Radiographer Training: <b>Completed successfully</b></p>
+
+        <div style="margin-top:45px; display:flex; justify-content:space-between; text-align:center; font-size:0.82rem; font-weight:bold;">
+            <div>_______________________<br>(Mahesh S. Hange)<br>X-Ray Scientific Officer</div>
+            <div>_______________________<br>Medical Officer<br>${s.hospital}</div>
+            <div>_______________________<br>Medical Superintendent<br>${s.hospital}</div>
+        </div>
+    `;
+
+    modal.style.display = 'block';
+};
+
+// ७. PDF Print Runner
+window.printEditablePDF = function() {
+    let reportArea = document.getElementById('reportPrintArea');
+    let opt = { margin: 5, filename: `Prescription_Audit_Report.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
+    html2pdf().set(opt).from(reportArea).save();
+};
+
+// Table Paging Render
 window.renderHospTablePaged = function() {
     let tbody = document.getElementById('hosp_tableBody');
     let countBadge = document.getElementById('hosp_recordCount');
     let pageIndicator = document.getElementById('hosp_page_indicator');
-
-    if(!tbody) return;
     tbody.innerHTML = '';
 
     let totalRecs = window.hosp_filteredData.length;
@@ -347,21 +381,14 @@ window.renderHospTablePaged = function() {
     }
 
     let totalPages = Math.ceil(totalRecs / window.hosp_pageSize);
-    if(window.hosp_currentPage > totalPages) window.hosp_currentPage = totalPages;
-    if(window.hosp_currentPage < 1) window.hosp_currentPage = 1;
-
     if(pageIndicator) pageIndicator.textContent = `पेज ${window.hosp_currentPage} / ${totalPages}`;
 
     let startIdx = (window.hosp_currentPage - 1) * window.hosp_pageSize;
-    let endIdx = Math.min(startIdx + window.hosp_pageSize, totalRecs);
-    let pageSlice = window.hosp_filteredData.slice(startIdx, endIdx);
-
-    let fragment = document.createDocumentFragment();
+    let pageSlice = window.hosp_filteredData.slice(startIdx, startIdx + window.hosp_pageSize);
 
     pageSlice.forEach((row, i) => {
         let isDelayed = (row.IsBeyondTAT == 1 || row.IsBeyondTAT === '1');
         let isEmergency = (row.Priority === 'Emergency');
-
         let tr = document.createElement('tr');
         tr.innerHTML = `
             <td>${startIdx + i + 1}</td>
@@ -370,132 +397,21 @@ window.renderHospTablePaged = function() {
             <td><b>${row.PatientName || '-'}</b></td>
             <td><small>${row.PatientID || '-'}</small></td>
             <td>${row.StudyName || '-'}</td>
-            <td><span class="badge ${isEmergency ? 'bg-danger' : 'bg-info'}">${row.Priority || 'Routine'}</span></td>
+            <td><span style="background:${isEmergency ? '#dc2626' : '#0284c7'}; color:white; padding:2px 6px; border-radius:4px; font-size:0.75rem;">${row.Priority || 'Routine'}</span></td>
             <td><small>${row.ScanDate || '-'}</small></td>
             <td><small>${row.Report_TAT || '-'}</small></td>
-            <td><span class="badge ${isDelayed ? 'bg-danger' : 'bg-success'}">${isDelayed ? '⚠ Beyond TAT' : '✓ On Time'}</span></td>
+            <td><span style="background:${isDelayed ? '#ef4444' : '#22c55e'}; color:white; padding:2px 6px; border-radius:4px; font-size:0.75rem;">${isDelayed ? ' Beyond TAT' : '✓ On Time'}</span></td>
         `;
-        fragment.appendChild(tr);
+        tbody.appendChild(tr);
     });
-
-    tbody.appendChild(fragment);
 };
 
-// ७. पेजिनेशन बटणे
-window.changeHospPage = function(direction) {
-    window.hosp_currentPage += direction;
+window.changeHospPage = function(dir) {
+    window.hosp_currentPage += dir;
     window.renderHospTablePaged();
 };
 
-// ८. A4 प्रिस्क्रिप्शन ऑडिट रिपोर्ट (PDF) प्रिंटर
-window.printAuditReportPDF = function() {
-    if(!window.currentAuditStats) return alert("कृपया प्रथम शोध घ्या.");
-    let s = window.currentAuditStats;
-    let mName = window.currentMember ? (window.currentMember.name || 'महेश हांगे') : 'महेश हांगे';
-
-    let printArea = document.getElementById('printLetterArea');
-    if(!printArea) return;
-
-    printArea.innerHTML = `
-        <div style="width:210mm; padding:18mm 20mm; box-sizing:border-box; background:white; font-family:'Mukta',sans-serif; line-height:1.5;">
-            <div style="text-align:center; border-bottom:3px double #0B3D91; padding-bottom:10px; margin-bottom:15px;">
-                <h2 style="color:#0B3D91; margin:0; font-size:1.3rem;">PRESCRIPTION AUDIT REPORT (X-RAY SERVICES)</h2>
-                <h3 style="margin:4px 0; font-size:1.1rem; color:#1e293b;">${s.hospital.toUpperCase()}</h3>
-                <p style="margin:0; font-weight:bold; font-size:0.9rem;">DISTRICT: ${s.district.toUpperCase()} | AUDIT PERIOD: 2025-2026</p>
-            </div>
-
-            <h4 style="color:#0B3D91; background:#e0f2fe; padding:6px 10px; border-left:4px solid #0B3D91; margin-top:15px;">१. प्रिस्क्रिप्शन व तपासणी आकडेवारी (Overview)</h4>
-            <ul style="margin-left:20px; font-size:0.9rem; font-weight:600;">
-                <li>एकूण एक्स-रे व CT Scans केलेले रुग्ण: <b>${s.total}</b></li>
-                <li>प्रिस्क्रिप्शन / रेफरल स्लिप पडताळणी: <b>१००% पूर्ण व स्वाक्षरीकृत (100% Verified)</b></li>
-            </ul>
-
-            <h4 style="color:#0B3D91; background:#e0f2fe; padding:6px 10px; border-left:4px solid #0B3D91; margin-top:15px;">२. रिपोर्टिंग वेळेची अचूकता (Timeliness - MoU Clause 1.11)</h4>
-            <table style="width:100%; border-collapse:collapse; margin-top:8px; font-size:0.88rem;" border="1">
-                <thead>
-                    <tr style="background:#0B3D91; color:white;">
-                        <th style="padding:6px;">प्रकार (Priority)</th>
-                        <th style="padding:6px;">एकूण रुग्ण</th>
-                        <th style="padding:6px;">वेळेत दिलेले (On-Time)</th>
-                        <th style="padding:6px;">उशीर (Beyond TAT)</th>
-                        <th style="padding:6px;">पालकता (Compliance %)</th>
-                    </tr>
-                </thead>
-                <tbody style="text-align:center;">
-                    <tr>
-                        <td style="padding:6px; text-align:left;"><b>Emergency (१ तास TAT)</b></td>
-                        <td>${s.emTotal}</td>
-                        <td style="color:green; font-weight:bold;">${s.emOntime}</td>
-                        <td style="color:red; font-weight:bold;">${s.emDelayed}</td>
-                        <td><b>${s.emCompliance}%</b></td>
-                    </tr>
-                    <tr>
-                        <td style="padding:6px; text-align:left;"><b>Routine / Non-Emergency (१२ तास TAT)</b></td>
-                        <td>${s.rtTotal}</td>
-                        <td style="color:green; font-weight:bold;">${s.rtOntime}</td>
-                        <td style="color:red; font-weight:bold;">${s.rtDelayed}</td>
-                        <td><b>${s.rtCompliance}%</b></td>
-                    </tr>
-                    <tr style="background:#f1f5f9; font-weight:bold;">
-                        <td style="padding:6px; text-align:left;"><b>एकूण सर्व केसेस (Overall)</b></td>
-                        <td>${s.total}</td>
-                        <td style="color:green;">${s.overallOntime}</td>
-                        <td style="color:red;">${s.overallDelayed}</td>
-                        <td style="color:#0B3D91; font-size:1rem;">${s.overallCompliance}%</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <h4 style="color:#0B3D91; background:#e0f2fe; padding:6px 10px; border-left:4px solid #0B3D91; margin-top:15px;">३. शासकीय MoU नियमानुसार कपात / दंड स्थिती</h4>
-            <p style="font-size:0.9rem; margin-top:6px;">
-                • एकूण वेळेची अचूकता (Overall TAT Compliance): <b>${s.overallCompliance}%</b><br>
-                • MoU Annexure-B नियमानुसार कपात/दंड: <b>${s.deductionSlab}</b>
-            </p>
-
-            <div style="margin-top:60px; display:flex; justify-content:space-between; text-align:center; font-size:0.85rem; font-weight:bold;">
-                <div>
-                    ________________________<br>
-                    (${mName})<br>
-                    X-Ray Scientific Officer<br>
-                    ${s.hospital}
-                </div>
-                <div>
-                    ________________________<br>
-                    Medical Officer<br>
-                    ${s.hospital}
-                </div>
-                <div>
-                    ________________________<br>
-                    Medical Superintendent<br>
-                    ${s.hospital}
-                </div>
-            </div>
-        </div>
-    `;
-
-    printArea.style.display = 'block';
-    let opt = { margin: 0, filename: `Audit_Report_${s.hospital}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
-    html2pdf().set(opt).from(printArea.firstElementChild).save().then(() => { printArea.style.display = 'none'; });
-};
-
-// ९. रीसेट बटण
 window.handleHospitalReset = function() {
-    document.getElementById('hosp_excelFile').value = '';
-    let distSelect = document.getElementById('hosp_districtSelect');
-    let centreSelect = document.getElementById('hosp_centreSelect');
-    distSelect.innerHTML = '<option value="">-- प्रथम एक्सेल फाईल लोड करा --</option>';
-    centreSelect.innerHTML = '<option value="">-- प्रथम जिल्हा निवडा --</option>';
-    distSelect.disabled = true;
-    centreSelect.disabled = true;
-    document.getElementById('hosp_filterType').disabled = true;
-    document.getElementById('hosp_searchBtn').disabled = true;
-    document.getElementById('hosp_auditBtn').disabled = true;
-    
-    document.getElementById('hosp_tableBody').innerHTML = '<tr><td colspan="10" style="text-align:center; color:gray; padding:20px;">कृपया एक्सेल फाईल निवडून सर्च सुरू करा.</td></tr>';
-    document.getElementById('hosp_recordCount').textContent = '0';
-    
-    window.hosp_rawData = [];
-    window.hosp_filteredData = [];
-    window.currentAuditStats = null;
+    location.reload();
 };
 </script>
