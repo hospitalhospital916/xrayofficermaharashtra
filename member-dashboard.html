@@ -11,6 +11,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
     <script>
         function applyDesktopViewport() {
@@ -375,7 +376,7 @@
         </div>
     </div>
 
-    <!-- 2. MEMBER LOGIN OVERLAY (पासवर्ड विसरलात? लिंकसह) -->
+    <!-- 2. MEMBER LOGIN OVERLAY -->
     <div id="loginOverlay">
         <div class="login-card">
             <img src="logo.png" alt="Association Logo" class="login-logo" onerror="this.src='loghho.png'">
@@ -424,7 +425,6 @@
                 <button onclick="closeModal('forgotPasswordModal')" style="background:transparent; border:none; color:white; font-size:1.5rem; cursor:pointer;">&times;</button>
             </div>
             <div class="custom-modal-body">
-                
                 <div id="reset_step1_box">
                     <p style="font-size: 0.88rem; color: #64748b; margin-bottom: 15px; font-weight: 600;">
                         खात्री करण्यासाठी तुमचा नोंदणीकृत मोबाईल नंबर आणि जन्मतारीख टाका:
@@ -459,7 +459,6 @@
                         <i class="fa fa-save"></i> नवीन पासवर्ड सेव्ह करा
                     </button>
                 </div>
-
             </div>
         </div>
     </div>
@@ -477,7 +476,6 @@
                 </div>
 
                 <form id="memberSelfEditForm" onsubmit="submitProfileEditForApproval(event)">
-                    
                     <div class="modal-section-title"><i class="fa fa-user"></i> १. वैयक्तिक माहिती</div>
                     <div class="form-row">
                         <div style="flex:1.5;"><label>पूर्ण नाव (Full Name):</label><input type="text" id="self_name" class="form-control" placeholder="पूर्ण नाव"></div>
@@ -639,6 +637,7 @@
 
         <div class="tab-menu no-print">
             <button class="tab-btn active" onclick="openTab('tab-dash', this)"><i class="fa fa-user-circle"></i> माझी माहिती व डॅशबोर्ड</button>
+            <button class="tab-btn" onclick="openTab('tab-hospital-search', this)"><i class="fa fa-hospital"></i> हॉस्पिटल MIS डेटा सर्च</button>
             <button class="tab-btn" onclick="openTab('tab-auto-forms', this)"><i class="fa fa-file-signature"></i> स्वयंचलित अर्ज प्रणाली</button>
             <button class="tab-btn" onclick="openTab('tab-icard', this)"><i class="fa fa-id-card"></i> डिजिटल आय-कार्ड</button>
             <button class="tab-btn" onclick="openTab('tab-receipt', this)"><i class="fa fa-receipt"></i> माझी ई-पावती</button>
@@ -711,7 +710,72 @@
 
             </div>
 
-            <!-- TAB 2: REPOSITORY AUTO FORMS -->
+            <!-- TAB 2: HOSPITAL MIS DATA SEARCH SYSTEM (NEW INTEGRATED) -->
+            <div id="tab-hospital-search" class="tab-content">
+                <div class="panel">
+                    <div class="panel-header bg-primary" style="color:white;">
+                        <span><i class="fa fa-hospital"></i> जिल्हा व रुग्णालयनिहाय MIS डेटा शोधा (AUG 25 MIS)</span>
+                    </div>
+                    <div class="panel-body">
+                        
+                        <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:18px; border-radius:10px; margin-bottom:20px;">
+                            <div class="form-row">
+                                <div style="flex:1;">
+                                    <label style="font-weight:bold;">१. एक्सेल फाईल (AUG 25 MIS.xlsx) निवडा:</label>
+                                    <input type="file" id="hosp_excelFile" class="form-control" accept=".xlsx, .xls">
+                                </div>
+                                <div style="flex:1;">
+                                    <label style="font-weight:bold;">२. जिल्हा निवडा (District):</label>
+                                    <select id="hosp_districtSelect" class="form-control" disabled>
+                                        <option value="">-- प्रथम एक्सेल फाईल अपलोड करा --</option>
+                                    </select>
+                                </div>
+                                <div style="flex:1;">
+                                    <label style="font-weight:bold;">३. रुग्णालय निवडा (Centre Name):</label>
+                                    <select id="hosp_centreSelect" class="form-control" disabled>
+                                        <option value="">-- प्रथम जिल्हा निवडा --</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div style="margin-top:15px; display:flex; gap:10px;">
+                                <button id="hosp_searchBtn" class="btn-action bg-success" disabled><i class="fa fa-search"></i> डेटा शोधा</button>
+                                <button id="hosp_resetBtn" class="btn-action bg-danger"><i class="fa fa-redo"></i> रीसेट करा</button>
+                            </div>
+                        </div>
+
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                            <h4 style="color:var(--primary); font-size:1.05rem; margin:0;">
+                                <i class="fa fa-list"></i> शोध निकाल (एकूण रेकॉर्ड्स: <span id="hosp_recordCount" class="badge bg-success">0</span>)
+                            </h4>
+                        </div>
+
+                        <div style="overflow-x:auto;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>अ.क्र.</th>
+                                        <th>जिल्हा (District)</th>
+                                        <th>रुग्णालय (Centre Name)</th>
+                                        <th>रुग्णाचे नाव (Patient Name)</th>
+                                        <th>Patient ID</th>
+                                        <th>तपासणी (Study Name)</th>
+                                        <th>प्राधान्य (Priority)</th>
+                                        <th>तारीख (Scan Date)</th>
+                                        <th>Report TAT</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="hosp_tableBody">
+                                    <tr><td colspan="9" style="text-align:center; color:gray;">कृपया एक्सेल फाईल अपलोड करून जिल्हा आणि रुग्णालय निवडा.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: REPOSITORY AUTO FORMS -->
             <div id="tab-auto-forms" class="tab-content">
                 <div class="panel">
                     <div class="panel-header bg-primary" style="color:white;">
@@ -724,19 +788,12 @@
                                 <h4>रजा अर्ज प्रणाली</h4><p>अर्जित रजा, नैमित्तिक रजा व वैद्यकीय रजेसाठी ऑटो-जनरेटेड अर्ज तयार करा.</p></div>
                                 <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#2563eb;">उघडा <i class="fa fa-arrow-right"></i></div>
                             </a>
-<!-- TAB 2 मधील forms-cards-grid मध्ये हे कार्ड जोडा -->
-<a href="audit-report.html" class="auto-form-card" target="_blank" onclick="window.logMemberActivity('Prescription Audit Portal उघडले')">
-    <div>
-        <div class="auto-form-icon" style="color:#059669; background:#ecfdf5;">
-            <i class="fa fa-file-invoice"></i>
-        </div>
-        <h4>Prescription Audit Report Generator</h4>
-        <p>X-Ray व CT Scan प्रिस्क्रिप्शन ऑडिट रिपोर्ट (PPP Mode) जनरेट करा आणि PDF/Word डाऊनलोड करा.</p>
-    </div>
-    <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#059669;">
-        उघडा <i class="fa fa-arrow-right"></i>
-    </div>
-</a>
+
+                            <a href="audit-report.html" class="auto-form-card" target="_blank" onclick="window.logMemberActivity('Prescription Audit Portal उघडले')">
+                                <div><div class="auto-form-icon" style="color:#059669; background:#ecfdf5;"><i class="fa fa-file-invoice"></i></div>
+                                <h4>Prescription Audit Report Generator</h4><p>X-Ray व CT Scan प्रिस्क्रिप्शन ऑडिट रिपोर्ट (PPP Mode) जनरेट करा आणि PDF/Word डाऊनलोड करा.</p></div>
+                                <div style="margin-top:12px; font-size:0.8rem; font-weight:bold; color:#059669;">उघडा <i class="fa fa-arrow-right"></i></div>
+                            </a>
                             
                             <a href="Service_and_Confirmation_Forms.html" class="auto-form-card" onclick="window.logMemberActivity('सेवा व स्थिरीकरण अर्ज उघडले')">
                                 <div><div class="auto-form-icon" style="color:#059669; background:#ecfdf5;"><i class="fa fa-user-check"></i></div>
@@ -814,7 +871,7 @@
                 </div>
             </div>
 
-            <!-- TAB 3: DIGITAL I-CARD -->
+            <!-- TAB 4: DIGITAL I-CARD -->
             <div id="tab-icard" class="tab-content">
                 <div class="panel">
                     <div class="panel-header bg-primary" style="color:white; border-top:none;">
@@ -848,7 +905,7 @@
                 </div>
             </div>
 
-            <!-- TAB 4: OFFICIAL E-RECEIPT -->
+            <!-- TAB 5: OFFICIAL E-RECEIPT -->
             <div id="tab-receipt" class="tab-content">
                 <div class="panel">
                     <div class="panel-header bg-warning">
@@ -856,7 +913,6 @@
                         <button class="btn-action bg-primary" onclick="window.logMemberActivity('ई-पावती प्रिन्ट केली'); window.print();"><i class="fa fa-print"></i> ई-पावती प्रिंट करा</button>
                     </div>
                     <div class="panel-body" style="background:#f8fafc; padding:20px;">
-                        
                         <div id="receiptUnpaidNotice" style="display:none; text-align:center; padding:40px;">
                             <i class="fa fa-clock fa-3x" style="margin-bottom:15px; color:var(--secondary);"></i>
                             <h3 style="color:var(--dark);">आपली पावती प्रलंबित (Unpaid / Pending) आहे.</h3>
@@ -904,12 +960,11 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
 
-            <!-- TAB 5: TEMPLATE BUILDER -->
+            <!-- TAB 6: TEMPLATE BUILDER -->
             <div id="tab-templates" class="tab-content">
                 <div class="panel">
                     <div class="panel-header bg-primary" style="color:white;">
@@ -919,7 +974,6 @@
                         <p style="color:var(--dark); font-weight:bold; margin-bottom:12px;">
                             <i class="fa fa-info-circle" style="color:var(--info);"></i> खालीलपैकी आवश्यक तो अर्जाचा फॉरमॅट निवडा. तुमची माहिती ऑटोमॅटिक भरून शासकीय A4 पत्र तयार होईल:
                         </p>
-                        
                         <div id="memberTemplatesCardsGrid" class="forms-cards-grid">
                             <p style="text-align:center; color:gray; grid-column:1/-1;">टेंप्लेट्स लोड होत आहेत...</p>
                         </div>
@@ -927,14 +981,13 @@
                 </div>
             </div>
 
-            <!-- TAB 6: GRIEVANCES -->
+            <!-- TAB 7: GRIEVANCES -->
             <div id="tab-grievances" class="tab-content">
                 <div class="panel">
                     <div class="panel-header bg-danger" style="color:white;">
                         <span><i class="fa fa-file-invoice"></i> तक्रार निवारण केंद्र (Grievance Portal)</span>
                     </div>
                     <div class="panel-body">
-                        
                         <div style="background:#fffbeb; padding:18px; border-radius:10px; border:1px solid #fcd34d; margin-bottom:20px;">
                             <h4 style="color:#b45309; margin-bottom:12px;"><i class="fa fa-plus-circle"></i> नवीन तक्रार / समस्या नोंदवा</h4>
                             <form id="grievanceForm" onsubmit="submitGrievance(event)">
@@ -980,22 +1033,19 @@
                                 <tr><td colspan="7" style="text-align:center;">लोड होत आहे...</td></tr>
                             </tbody>
                         </table>
-
                     </div>
                 </div>
             </div>
 
-            <!-- TAB 7: INFORMATION GATHERING SYSTEM -->
+            <!-- TAB 8: INFORMATION GATHERING SYSTEM -->
             <div id="tab-info-gather" class="tab-content">
                 <div class="panel">
                     <div class="panel-header bg-purple" style="color:white;">
                         <span><i class="fa fa-clipboard-list"></i> माहिती द्या (जिल्हानिहाय अधिकारी संख्या व सविस्तर नावे)</span>
                     </div>
                     <div class="panel-body">
-                        
                         <div style="background:#f8fafc; border:1px solid #cbd5e1; padding:18px; border-radius:10px; margin-bottom:20px;">
                             <h4 style="color:var(--primary); margin-bottom:12px;"><i class="fa fa-building"></i> १. जिल्हा व एकूण कार्यरत अधिकारी संख्या प्रविष्ट करा</h4>
-                            
                             <div class="form-row">
                                 <div><label>माझा जिल्हा:</label><input type="text" id="inf_district" class="form-control" placeholder="उदा. लातूर" required></div>
                                 <div>
@@ -1003,17 +1053,14 @@
                                     <input type="number" id="inf_officer_count" class="form-control" placeholder="उदा. 8" min="1" onchange="generateOfficerRows()" onkeyup="generateOfficerRows()">
                                 </div>
                             </div>
-
                             <div id="dynamicOfficerListArea" style="margin-top:15px;"></div>
-
                             <button type="button" class="btn-action bg-purple" onclick="submitDetailedGatheredInfo()" style="padding:10px 20px; margin-top:15px; font-size:1rem;"><i class="fa fa-paper-plane"></i> सर्व माहिती ॲडमिनला सबमिट करा</button>
                         </div>
-
                     </div>
                 </div>
             </div>
 
-            <!-- TAB 8: STATE EMPLOYEE DIRECTORY -->
+            <!-- TAB 9: STATE EMPLOYEE DIRECTORY -->
             <div id="tab-employees" class="tab-content">
                 <div class="panel">
                     <div class="panel-header">
@@ -1041,16 +1088,14 @@
                 </div>
             </div>
 
-            <!-- TAB 9: DOCUMENTS & FOLDERS -->
+            <!-- TAB 10: DOCUMENTS & FOLDERS -->
             <div id="tab-documents" class="tab-content">
                 <div class="panel">
                     <div class="panel-header"><span><i class="fa fa-folder-open"></i> परिपत्रके, फोल्डर्स व शासकीय GR</span></div>
                     <div class="panel-body">
                         <h4 style="color:var(--primary); margin-bottom:12px;">सदस्यांसाठी फोल्डर्स (Member Folders)</h4>
                         <div id="foldersContainer" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:12px; margin-bottom:20px;"></div>
-
                         <hr style="margin:20px 0;">
-
                         <h4 style="color:var(--dark); margin-bottom:12px;">उपलब्ध फाईल्स व परिपत्रके</h4>
                         <table>
                             <thead><tr><th>अ.क्र.</th><th>फाईलचे नाव</th><th>दिनांक</th><th>Action</th></tr></thead>
@@ -1062,7 +1107,7 @@
                 </div>
             </div>
 
-            <!-- TAB 10: LIVE CHAT SECTION -->
+            <!-- TAB 11: LIVE CHAT SECTION -->
             <div id="tab-chat" class="tab-content">
                 <div class="panel" style="margin-bottom:0;">
                     <div class="chat-top-nav-bar">
@@ -1077,7 +1122,7 @@
                 </div>
             </div>
 
-            <!-- TAB 11: VOTING & POLL SYSTEM -->
+            <!-- TAB 12: VOTING & POLL SYSTEM -->
             <div id="tab-polls" class="tab-content">
                 <div class="panel">
                     <div class="panel-header bg-purple" style="color:white;">
@@ -1097,7 +1142,7 @@
     <!-- PRINT LETTER TEMPLATE RENDER CONTAINER -->
     <div id="printLetterArea" style="display:none;"></div>
 
-    <!-- 🚀 FLOATING LIVE CHAT LAUNCHER WIDGET -->
+    <!-- FLOATING LIVE CHAT LAUNCHER WIDGET -->
     <div id="floatingLiveChatWidget" onclick="openTab('tab-chat', document.getElementById('btn_tab_chat'))" title="💬 Live Chat (संवाद साधा)">
         <div class="chat-pill-label">
             <i class="fa-solid fa-bolt" style="color: #f39c12;"></i> Live Chat करा
@@ -1108,7 +1153,7 @@
         </div>
     </div>
 
-    <!-- FIREBASE JS ENGINE & SCRIPT -->
+    <!-- FIREBASE & CORE SCRIPT ENGINE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, doc, query, where, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
@@ -1137,6 +1182,7 @@
         window.allEmployees = [];
         window.grievancesList = [];
         window.tbTemplatesList = [];
+        let hosp_rawData = [];
 
         window.logMemberActivity = async function(action) {
             let m = window.currentMember;
@@ -1168,6 +1214,12 @@
                     window.initMemberDashboard();
                 } catch(e) { localStorage.removeItem("memberSession"); }
             }
+
+            // Setup Excel Event Listeners for Hospital Search Tab
+            document.getElementById('hosp_excelFile')?.addEventListener('change', handleExcelUpload);
+            document.getElementById('hosp_districtSelect')?.addEventListener('change', handleDistrictChange);
+            document.getElementById('hosp_searchBtn')?.addEventListener('click', handleHospitalSearch);
+            document.getElementById('hosp_resetBtn')?.addEventListener('click', handleHospitalReset);
         });
 
         window.openTab = function(tabId, btn) {
@@ -1288,7 +1340,6 @@
             document.getElementById('mem_nav_status').innerText = `${m.district || '-'} (${m.status || 'Approved'})`;
             document.getElementById('mem_nav_status').style.color = m.status === 'Approved' ? 'var(--success)' : 'var(--danger)';
 
-            // Render Hero Profile
             document.getElementById('pf_hero_photo').src = m.photoUrl || "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
             document.getElementById('pf_hero_name').innerText = m.name || '-';
             document.getElementById('pf_hero_post').innerText = m.designation || 'X-Ray Scientific Officer';
@@ -1323,6 +1374,127 @@
             window.loadPolls();
             window.loadTemplatesAndAutoLetters();
         };
+
+        // ==========================================
+        // HOSPITAL MIS EXCEL SEARCH LOGIC
+        // ==========================================
+        function handleExcelUpload(e) {
+            let file = e.target.files[0];
+            if(!file) return;
+
+            Swal.fire({title: 'एक्सेल फाईल वाचत आहे...', allowOutsideClick: false, didOpen: () => Swal.showLoading()});
+
+            let reader = new FileReader();
+            reader.onload = function(evt) {
+                try {
+                    let data = new Uint8Array(evt.target.result);
+                    let workbook = XLSX.read(data, {type: 'array'});
+                    let firstSheet = workbook.SheetNames[0];
+                    hosp_rawData = XLSX.utils.sheet_to_json(workbook.Sheets[firstSheet]);
+
+                    populateHospDistricts();
+                    Swal.close();
+                    Swal.fire('यशस्वी!', 'एक्सेल डेटा फाईल यशस्वीरीत्या लोड झाली आहे.', 'success');
+                } catch(err) {
+                    Swal.close();
+                    Swal.fire('त्रुटी', 'फाईल वाचताना अडचण आली: ' + err.message, 'error');
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        function populateHospDistricts() {
+            let districts = [...new Set(hosp_rawData.map(item => item.District))].filter(Boolean).sort();
+            let districtSelect = document.getElementById('hosp_districtSelect');
+            districtSelect.innerHTML = '<option value="">-- सर्व जिल्हे --</option>';
+            
+            districts.forEach(dist => {
+                let opt = document.createElement('option');
+                opt.value = dist;
+                opt.textContent = dist;
+                districtSelect.appendChild(opt);
+            });
+
+            districtSelect.disabled = false;
+        }
+
+        function handleDistrictChange() {
+            let selectedDistrict = this.value;
+            let centreSelect = document.getElementById('hosp_centreSelect');
+            centreSelect.innerHTML = '<option value="">-- सर्व रुग्णालये --</option>';
+
+            if(!selectedDistrict) {
+                centreSelect.disabled = true;
+            } else {
+                let filteredCentres = [...new Set(
+                    hosp_rawData.filter(item => item.District === selectedDistrict).map(item => item.CentreName)
+                )].filter(Boolean).sort();
+
+                filteredCentres.forEach(centre => {
+                    let opt = document.createElement('option');
+                    opt.value = centre;
+                    opt.textContent = centre;
+                    centreSelect.appendChild(opt);
+                });
+
+                centreSelect.disabled = false;
+            }
+            document.getElementById('hosp_searchBtn').disabled = false;
+        }
+
+        function handleHospitalSearch() {
+            let selectedDistrict = document.getElementById('hosp_districtSelect').value;
+            let selectedCentre = document.getElementById('hosp_centreSelect').value;
+
+            let filteredData = hosp_rawData.filter(item => {
+                let matchDist = !selectedDistrict || item.District === selectedDistrict;
+                let matchCentre = !selectedCentre || item.CentreName === selectedCentre;
+                return matchDist && matchCentre;
+            });
+
+            renderHospTable(filteredData);
+        }
+
+        function renderHospTable(data) {
+            let tbody = document.getElementById('hosp_tableBody');
+            tbody.innerHTML = '';
+            document.getElementById('hosp_recordCount').textContent = data.length;
+
+            if(data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; color:red;">माहिती उपलब्ध नाही.</td></tr>';
+                return;
+            }
+
+            let displayData = data.slice(0, 500);
+
+            displayData.forEach((row, index) => {
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td><b>${row.District || '-'}</b></td>
+                    <td>${row.CentreName || '-'}</td>
+                    <td><b>${row.PatientName || '-'}</b></td>
+                    <td><small>${row.PatientID || '-'}</small></td>
+                    <td>${row.StudyName || '-'}</td>
+                    <td><span class="badge ${row.Priority === 'Emergency' ? 'bg-danger' : 'bg-info'}">${row.Priority || 'Routine'}</span></td>
+                    <td><small>${row.ScanDate || '-'}</small></td>
+                    <td><small>${row.Report_TAT || '-'}</small></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function handleHospitalReset() {
+            document.getElementById('hosp_excelFile').value = '';
+            document.getElementById('hosp_districtSelect').innerHTML = '<option value="">-- प्रथम एक्सेल फाईल अपलोड करा --</option>';
+            document.getElementById('hosp_districtSelect').disabled = true;
+            document.getElementById('hosp_centreSelect').innerHTML = '<option value="">-- प्रथम जिल्हा निवडा --</option>';
+            document.getElementById('hosp_centreSelect').disabled = true;
+            document.getElementById('hosp_searchBtn').disabled = true;
+            document.getElementById('hosp_tableBody').innerHTML = '<tr><td colspan="9" style="text-align:center; color:gray;">कृपया एक्सेल फाईल अपलोड करून जिल्हा आणि रुग्णालय निवडा.</td></tr>';
+            document.getElementById('hosp_recordCount').textContent = '0';
+            hosp_rawData = [];
+        }
 
         window.populateSelfEditDistricts = function() {
             let mVal = document.getElementById('self_mandal').value;
@@ -1458,7 +1630,7 @@
 
                 window.closeModal('profileEditModal');
                 Swal.fire('मंजुरीसाठी पाठवले!', 'तुमची प्रोफाईल अपडेट ॲडमिनच्या मंजुरीसाठी पाठवण्यात आली आहे.', 'success');
-            } catch(err) { Swal.fire('Error', e.message, 'error'); }
+            } catch(err) { Swal.fire('Error', err.message, 'error'); }
         };
 
         window.renderOfficialICard = function() {
@@ -1718,7 +1890,7 @@
                 });
                 document.getElementById('grievanceForm').reset();
                 Swal.fire('यशस्वी', `आपली तक्रार आवक क्र. ${inwardNo} सह नोंदवली गेली!`, 'success');
-            } catch(err) { Swal.fire('Error', e.message, 'error'); }
+            } catch(err) { Swal.fire('Error', err.message, 'error'); }
         };
 
         window.listenToGrievances = function() {
@@ -1837,9 +2009,6 @@
             } catch(e) { Swal.fire('Error', e.message, 'error'); }
         };
 
-        // ==========================================================
-        // AUTOMATIC FORGOT PASSWORD RESET ENGINE
-        // ==========================================================
         window.openForgotPasswordModal = function() {
             document.getElementById('reset_mobile').value = '';
             document.getElementById('reset_dob').value = '';
@@ -1904,7 +2073,6 @@
             Swal.fire({ title: 'पासवर्ड अपडेट होत आहे...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
 
             try {
-                // मूळ सदस्याचा पासवर्ड Firestore मध्ये अपडेट करणे
                 await updateDoc(doc(db, "members", memberId), {
                     pass: newPass,
                     password: newPass
