@@ -45,6 +45,12 @@
             box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.2);
         }
 
+        .auto-tag {
+            font-size: 0.68rem;
+            color: #0d6efd;
+            font-weight: bold;
+        }
+
         /* A4 Page Formatting (Black & White Layout) */
         .a4-document {
             background: #ffffff;
@@ -188,7 +194,7 @@
                 <div class="form-check mt-3">
                     <input class="form-check-input" type="checkbox" id="chk_audit_date" onchange="toggleDateInput()">
                     <label class="form-check-label fw-bold small text-primary" for="chk_audit_date">
-                        ☑️ ऑडिट/जगदीप तपासणी दिनांक जोडायची आहे का?
+                        ☑️ ऑडिट/तपासणी दिनांक जोडायची आहे का?
                     </label>
                 </div>
             </div>
@@ -197,8 +203,8 @@
                 <input type="date" id="in_audit_date" class="form-control form-control-sm border-primary" onchange="updateAll()">
             </div>
             <div class="col-md-4">
-                <label class="box-label">जगदीप/तपासणी टिपणी (शेरा):</label>
-                <input type="text" id="in_audit_remark" class="form-control form-control-sm" placeholder="उदा. जगदीप समितीद्वारे प्रत्यक्ष पडताळणी पूर्ण" oninput="updateAll()">
+                <label class="box-label">तपासणी टिपणी (शेरा):</label>
+                <input type="text" id="in_audit_remark" class="form-control form-control-sm" placeholder="उदा. समितीद्वारे प्रत्यक्ष पडताळणी पूर्ण" oninput="updateAll()">
             </div>
 
             <!-- Row 3: OPD & X-Ray Counts -->
@@ -212,29 +218,29 @@
             </div>
             <div class="col-md-2">
                 <label class="box-label text-primary">७. एकूण X-Ray count:</label>
-                <input type="number" id="in_xray" class="form-control form-control-sm border-primary" value="140" oninput="updateAll()">
+                <input type="number" id="in_xray" class="form-control form-control-sm border-primary" value="140" oninput="onXRayInputTotal(); updateAll();">
             </div>
             <div class="col-md-3">
-                <label class="box-label">८. पहिल्या १५ दिवसांत X-Rays:</label>
-                <input type="number" id="in_fn1_count" class="form-control form-control-sm" value="65" oninput="updateAll()">
+                <label class="box-label">८. पहिल्या १५ दिवसांत X-Rays <span class="auto-tag">(Auto/Editable)</span>:</label>
+                <input type="number" id="in_fn1_count" class="form-control form-control-sm" value="70" oninput="onXRayInputFn1(); updateAll();">
             </div>
             <div class="col-md-3">
-                <label class="box-label">९. दुसऱ्या १५ दिवसांत X-Rays:</label>
-                <input type="number" id="in_fn2_count" class="form-control form-control-sm" value="75" oninput="updateAll()">
+                <label class="box-label">९. दुसऱ्या १५ दिवसांत X-Rays <span class="auto-tag">(Auto/Editable)</span>:</label>
+                <input type="number" id="in_fn2_count" class="form-control form-control-sm" value="70" oninput="onXRayInputFn2(); updateAll();">
             </div>
 
              <!-- Row 4: Emergency & Routine Detailed Numbers -->
             <div class="col-md-3">
                 <label class="box-label text-danger">१०. एकूण Emergency केसेस:</label>
-                <input type="number" id="in_emerg_total" class="form-control form-control-sm" value="1" oninput="updateAll()">
+                <input type="number" id="in_emerg_total" class="form-control form-control-sm" value="1" oninput="onEmergTotalInput(); updateAll();">
             </div>
             <div class="col-md-3">
                 <label class="box-label text-success">११. Emergency (१ तासाच्या आत):</label>
                 <input type="number" id="in_emerg_in_tat" class="form-control form-control-sm" value="1" oninput="updateAll()">
             </div>
             <div class="col-md-3">
-                <label class="box-label">१२. एकूण Routine केसेस:</label>
-                <input type="number" id="in_rout_total" class="form-control form-control-sm" value="139" oninput="updateAll()">
+                <label class="box-label">१२. एकूण Routine केसेस <span class="auto-tag">(Auto)</span>:</label>
+                <input type="number" id="in_rout_total" class="form-control form-control-sm" value="139" oninput="onRoutTotalInput(); updateAll();">
             </div>
             <div class="col-md-3">
                 <label class="box-label">१३. Routine (१२ तासांच्या आत):</label>
@@ -292,11 +298,11 @@
 
     <p class="fw-bold mt-1 mb-1" contenteditable="true">Prescription / referral slip verification status:</p>
     <ul>
-        <li contenteditable="true">Patient details (Name, Age, Sex, Reported allergy, Date of consultation/registration in OPD): <strong>Verified & Complete (100%)</strong></li>
-        <li contenteditable="true">Contact No. of patient: <strong>Verified & Complete (100%)</strong></li>
-        <li contenteditable="true">Test name (X-Ray site / CT scan region) and Emergency / Non-Emergency tagging (MoU Clause 1.11): <strong>Verified & Tagged Properly (100%)</strong></li>
-        <li contenteditable="true">Signature and information about the Prescribing / Referring Doctor: <strong>Verified & Available (100%)</strong></li>
-        <li contenteditable="true">Signature of Medical Superintendent / Institute Head: <strong>Verified & Signed (100%)</strong></li>
+        <li contenteditable="true">Patient details (Name, Age, Sex, Reported allergy, Date of consultation/registration in OPD): <strong id="out_p_details">Verified & Complete (100%)</strong></li>
+        <li contenteditable="true">Contact No. of patient: <strong id="out_p_contact">Verified & Complete (100%)</strong></li>
+        <li contenteditable="true">Test name (X-Ray site / CT scan region) and Emergency / Non-Emergency tagging (MoU Clause 1.11): <strong id="out_p_test">Verified & Tagged Properly (100%)</strong></li>
+        <li contenteditable="true">Signature and information about the Prescribing / Referring Doctor: <strong id="out_p_doc">Verified & Available (100%)</strong></li>
+        <li contenteditable="true">Signature of Medical Superintendent / Institute Head: <strong id="out_p_ms">Verified & Signed (100%)</strong></li>
     </ul>
 
     <!-- Section 2 -->
@@ -314,8 +320,8 @@
     <p contenteditable="true"><strong>Sampling Technique:</strong> Simple random sampling technique used.</p>
     <p contenteditable="true">
         <strong>Distribution:</strong> Half of the sample (<span id="out_half1" class="fw-bold">29</span>) taken from the first two weeks 
-        (<span id="out_fn1_str">1-15 Nov: 65 total X-Rays</span>) 
-        and half (<span id="out_half2" class="fw-bold">29</span>) from the remaining two weeks (<span id="out_fn2_str">16-30 Nov: 75 total X-Rays</span>) of 
+        (<span id="out_fn1_str">1-15 Nov: 70 total X-Rays</span>) 
+        and half (<span id="out_half2" class="fw-bold">29</span>) from the remaining two weeks (<span id="out_fn2_str">16-30 Nov: 70 total X-Rays</span>) of 
         <span id="out_month_str" class="fw-bold">November 2025</span>.
     </p>
 
@@ -329,7 +335,7 @@
     </ul>
 
     <div id="out_remark_box" style="display: none; margin-top: 5px;" contenteditable="true">
-        <strong>ऑडिट / जगदीप तपासणी शेरा:</strong> <span id="out_remark_val">--</span>
+        <strong>तपासणी टिपणी (शेरा):</strong> <span id="out_remark_val">--</span>
     </div>
 
     <!-- PAGE 2 BREAK -->
@@ -339,11 +345,11 @@
     <!-- Section 5 -->
     <div class="section-header" contenteditable="true">5. Records Keeping (MoU Clause 3.10, 3.17, 3.19)</div>
     <ul>
-        <li contenteditable="true">Daily patients register maintained for patients referred for X-Ray: <strong>Maintained (Yes)</strong></li>
-        <li contenteditable="true">Logbook for record of any breakdown/shutdown of CR system, equipment or software: <strong>Maintained (Yes - Zero breakdown)</strong></li>
-        <li contenteditable="true">Detailed records of patients & their reports (soft copy + hard copy) maintained: <strong>Maintained at institute (Yes)</strong></li>
-        <li contenteditable="true">One report copy of every patient available at the centre at any instance: <strong>Available (Yes)</strong></li>
-        <li contenteditable="true">Monthly report submitted to Medical Superintendent/Institute Head: <strong>Submitted (Yes)</strong></li>
+        <li contenteditable="true">Daily patients register maintained for patients referred for X-Ray: <strong id="out_rk_reg">Maintained (Yes)</strong></li>
+        <li contenteditable="true">Logbook for record of any breakdown/shutdown of CR system, equipment or software: <strong id="out_rk_log">Maintained (Yes - Zero breakdown)</strong></li>
+        <li contenteditable="true">Detailed records of patients & their reports (soft copy + hard copy) maintained: <strong id="out_rk_rec">Maintained at institute (Yes)</strong></li>
+        <li contenteditable="true">One report copy of every patient available at the centre at any instance: <strong id="out_rk_copy">Available (Yes)</strong></li>
+        <li contenteditable="true">Monthly report submitted to Medical Superintendent/Institute Head: <strong id="out_rk_rep">Submitted (Yes)</strong></li>
         <li contenteditable="true">Dues towards missing reports / penalties / fines: <strong>Nil</strong></li>
     </ul>
 
@@ -406,6 +412,22 @@ function initMonthSelect() {
     sel.value = "November 2025";
 }
 
+function getDaysInMonth(monthStr) {
+    if (!monthStr) return 30;
+    const parts = monthStr.split(' ');
+    const monthName = parts[0];
+    const year = parseInt(parts[1]) || 2025;
+    
+    const monthDaysMap = {
+        "January": 31,
+        "February": ((year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0)) ? 29 : 28,
+        "March": 31, "April": 30, "May": 31, "June": 30,
+        "July": 31, "August": 31, "September": 30, "October": 31,
+        "November": 30, "December": 31
+    };
+    return monthDaysMap[monthName] || 30;
+}
+
 function toggleDateInput() {
     let chk = document.getElementById('chk_audit_date').checked;
     document.getElementById('box_date_picker').style.display = chk ? 'block' : 'none';
@@ -430,6 +452,75 @@ function getMoUSampleSize(pop) {
     return 96;
 }
 
+// --- Auto Distribution Handlers for 15 Days X-Rays ---
+function onXRayInputTotal() {
+    let xray = parseInt(document.getElementById('in_xray').value) || 0;
+    if (xray < 0) { xray = 0; document.getElementById('in_xray').value = 0; }
+
+    let fn1 = Math.floor(xray / 2);
+    let fn2 = xray - fn1;
+
+    document.getElementById('in_fn1_count').value = fn1;
+    document.getElementById('in_fn2_count').value = fn2;
+
+    // Also adjust emergency/routine totals safely
+    onEmergTotalInput();
+}
+
+function onXRayInputFn1() {
+    let xray = parseInt(document.getElementById('in_xray').value) || 0;
+    let fn1 = parseInt(document.getElementById('in_fn1_count').value) || 0;
+    if (fn1 < 0) fn1 = 0;
+    if (fn1 > xray) fn1 = xray;
+    document.getElementById('in_fn1_count').value = fn1;
+    document.getElementById('in_fn2_count').value = xray - fn1;
+}
+
+function onXRayInputFn2() {
+    let xray = parseInt(document.getElementById('in_xray').value) || 0;
+    let fn2 = parseInt(document.getElementById('in_fn2_count').value) || 0;
+    if (fn2 < 0) fn2 = 0;
+    if (fn2 > xray) fn2 = xray;
+    document.getElementById('in_fn2_count').value = fn2;
+    document.getElementById('in_fn1_count').value = xray - fn2;
+}
+
+// --- Emergency & Routine Auto-Split ---
+function onEmergTotalInput() {
+    let xray = parseInt(document.getElementById('in_xray').value) || 0;
+    let emTotal = parseInt(document.getElementById('in_emerg_total').value) || 0;
+    if (emTotal < 0) emTotal = 0;
+    if (emTotal > xray) emTotal = xray;
+
+    document.getElementById('in_emerg_total').value = emTotal;
+    document.getElementById('in_rout_total').value = xray - emTotal;
+
+    // Adjust in-tat bounds
+    let emInTat = parseInt(document.getElementById('in_emerg_in_tat').value) || 0;
+    if (emInTat > emTotal) document.getElementById('in_emerg_in_tat').value = emTotal;
+
+    let rtTotal = xray - emTotal;
+    let rtInTat = parseInt(document.getElementById('in_rout_in_tat').value) || 0;
+    if (rtInTat > rtTotal) document.getElementById('in_rout_in_tat').value = rtTotal;
+}
+
+function onRoutTotalInput() {
+    let xray = parseInt(document.getElementById('in_xray').value) || 0;
+    let rtTotal = parseInt(document.getElementById('in_rout_total').value) || 0;
+    if (rtTotal < 0) rtTotal = 0;
+    if (rtTotal > xray) rtTotal = xray;
+
+    document.getElementById('in_rout_total').value = rtTotal;
+    document.getElementById('in_emerg_total').value = xray - rtTotal;
+
+    let emTotal = xray - rtTotal;
+    let emInTat = parseInt(document.getElementById('in_emerg_in_tat').value) || 0;
+    if (emInTat > emTotal) document.getElementById('in_emerg_in_tat').value = emTotal;
+
+    let rtInTat = parseInt(document.getElementById('in_rout_in_tat').value) || 0;
+    if (rtInTat > rtTotal) document.getElementById('in_rout_in_tat').value = rtTotal;
+}
+
 function updateAll() {
     let hosp = document.getElementById('in_hosp').value.trim();
     let dist = document.getElementById('in_dist').value.trim();
@@ -445,7 +536,7 @@ function updateAll() {
     let fn2Count = parseInt(document.getElementById('in_fn2_count').value) || 0;
 
     let sample = getMoUSampleSize(xray);
-    let half1 = Math.round(sample / 2);
+    let half1 = Math.floor(sample / 2);
     let half2 = sample - half1;
 
     // Date & Remark Option
@@ -470,23 +561,25 @@ function updateAll() {
     // Emergency TAT Math
     let emTotal = parseInt(document.getElementById('in_emerg_total').value) || 0;
     let emInTat = parseInt(document.getElementById('in_emerg_in_tat').value) || 0;
-    let emPct = emTotal > 0 ? ((emInTat / emTotal) * 100).toFixed(1) : 100;
+    let emPct = emTotal > 0 ? ((emInTat / emTotal) * 100).toFixed(1) : (xray === 0 ? "N/A" : "100.0");
     let emLate = emTotal - emInTat;
 
     // Routine TAT Math
     let rtTotal = parseInt(document.getElementById('in_rout_total').value) || 0;
     let rtInTat = parseInt(document.getElementById('in_rout_in_tat').value) || 0;
-    let rtPct = rtTotal > 0 ? ((rtInTat / rtTotal) * 100).toFixed(1) : 100;
+    let rtPct = rtTotal > 0 ? ((rtInTat / rtTotal) * 100).toFixed(1) : (xray === 0 ? "N/A" : "100.0");
     let rtLate = rtTotal - rtInTat;
 
     // Overall Compliance Math
     let overallTotal = emTotal + rtTotal;
     let overallInTat = emInTat + rtInTat;
-    let overallPct = overallTotal > 0 ? ((overallInTat / overallTotal) * 100).toFixed(1) : 100;
+    let overallPct = overallTotal > 0 ? ((overallInTat / overallTotal) * 100).toFixed(1) : (xray === 0 ? "N/A" : "100.0");
 
     // Shortfall Penalty Logic (MoU Annexure-B)
     let deductionStr = "Nil (0% deduction - Exceeds required threshold).";
-    if (overallPct < 100 && overallPct >= 90) {
+    if (xray === 0) {
+        deductionStr = "Nil (No penalty applicable for zero volume).";
+    } else if (overallPct < 100 && overallPct >= 90) {
         deductionStr = "1% deduction applicable if quarterly overall falls in 90-99% slab as per MoU Annexure-B.";
     } else if (overallPct < 90 && overallPct >= 70) {
         deductionStr = "2% deduction applicable as per MoU Annexure-B (70-89% slab).";
@@ -494,6 +587,29 @@ function updateAll() {
         deductionStr = "5% deduction applicable as per MoU Annexure-B (50-69% slab).";
     } else if (overallPct < 50) {
         deductionStr = "10% deduction / non-compliance penalty applicable as per MoU Annexure-B.";
+    }
+
+    // Zero X-Ray Handling for Checklist
+    if (xray === 0) {
+        document.getElementById('out_p_details').innerText = "N/A (0 X-Ray cases during the month)";
+        document.getElementById('out_p_contact').innerText = "N/A (0 X-Ray cases during the month)";
+        document.getElementById('out_p_test').innerText = "N/A (0 X-Ray cases during the month)";
+        document.getElementById('out_p_doc').innerText = "N/A (0 X-Ray cases during the month)";
+        document.getElementById('out_p_ms').innerText = "Verified & Signed (100%)";
+        
+        document.getElementById('out_rk_reg').innerText = "Maintained (Yes - Nil entries for " + month + ")";
+        document.getElementById('out_rk_copy').innerText = "Available (N/A - 0 cases)";
+        document.getElementById('out_rk_rep').innerText = "Submitted (Yes - Nil report submitted)";
+    } else {
+        document.getElementById('out_p_details').innerText = "Verified & Complete (100%)";
+        document.getElementById('out_p_contact').innerText = "Verified & Complete (100%)";
+        document.getElementById('out_p_test').innerText = "Verified & Tagged Properly (100%)";
+        document.getElementById('out_p_doc').innerText = "Verified & Available (100%)";
+        document.getElementById('out_p_ms').innerText = "Verified & Signed (100%)";
+
+        document.getElementById('out_rk_reg').innerText = "Maintained (Yes)";
+        document.getElementById('out_rk_copy').innerText = "Available (Yes)";
+        document.getElementById('out_rk_rep').innerText = "Submitted (Yes)";
     }
 
     // Render Outputs safely
@@ -514,23 +630,37 @@ function updateAll() {
     if (document.getElementById('out_half2')) document.getElementById('out_half2').innerText = half2;
 
     let monthNameOnly = month.split(' ')[0];
+    let lastDay = getDaysInMonth(month);
+
     if (document.getElementById('out_fn1_str')) {
         document.getElementById('out_fn1_str').innerText = `1-15 ${monthNameOnly}: ${fn1Count} total X-Rays`;
     }
     if (document.getElementById('out_fn2_str')) {
-        document.getElementById('out_fn2_str').innerText = `16-30 ${monthNameOnly}: ${fn2Count} total X-Rays`;
+        document.getElementById('out_fn2_str').innerText = `16-${lastDay} ${monthNameOnly}: ${fn2Count} total X-Rays`;
     }
 
     if (document.getElementById('out_emerg_str')) {
-        let emLateStr = emLate > 0 ? `; ${emLate} cases reported beyond TAT` : "";
-        document.getElementById('out_emerg_str').innerText = `${emPct}% interpreted & reported within 1 hour TAT (${emInTat} out of ${emTotal} cases reported within 1 hour${emLateStr}).`;
+        if (xray === 0 || emTotal === 0) {
+            document.getElementById('out_emerg_str').innerText = "N/A (0 cases reported).";
+        } else {
+            let emLateStr = emLate > 0 ? `; ${emLate} cases reported beyond TAT` : "";
+            document.getElementById('out_emerg_str').innerText = `${emPct}% interpreted & reported within 1 hour TAT (${emInTat} out of ${emTotal} cases reported within 1 hour${emLateStr}).`;
+        }
     }
     if (document.getElementById('out_rout_str')) {
-        let rtLateStr = rtLate > 0 ? `; ${rtLate} cases reported beyond TAT` : "";
-        document.getElementById('out_rout_str').innerText = `${rtPct}% reported within TAT (${rtInTat} out of ${rtTotal} cases${rtLateStr}).`;
+        if (xray === 0 || rtTotal === 0) {
+            document.getElementById('out_rout_str').innerText = "N/A (0 cases reported).";
+        } else {
+            let rtLateStr = rtLate > 0 ? `; ${rtLate} cases reported beyond TAT` : "";
+            document.getElementById('out_rout_str').innerText = `${rtPct}% reported within TAT (${rtInTat} out of ${rtTotal} cases${rtLateStr}).`;
+        }
     }
     if (document.getElementById('out_over_str')) {
-        document.getElementById('out_over_str').innerText = `${overallPct}% compliant (${overallInTat} out of ${overallTotal} overall reported within TAT).`;
+        if (xray === 0) {
+            document.getElementById('out_over_str').innerText = "N/A (0 cases).";
+        } else {
+            document.getElementById('out_over_str').innerText = `${overallPct}% compliant (${overallInTat} out of ${overallTotal} overall reported within TAT).`;
+        }
     }
     if (document.getElementById('out_deduct_str')) {
         document.getElementById('out_deduct_str').innerText = deductionStr;
@@ -621,6 +751,9 @@ function loadCurrentMonthData() {
         if(localStorage.getItem('global_audit_s1')) document.getElementById('in_sig1').value = localStorage.getItem('global_audit_s1');
         if(localStorage.getItem('global_audit_s2')) document.getElementById('in_sig2').value = localStorage.getItem('global_audit_s2');
         if(localStorage.getItem('global_audit_s3')) document.getElementById('in_sig3').value = localStorage.getItem('global_audit_s3');
+        
+        // Auto calculate default split for initial load
+        onXRayInputTotal();
     }
 
     updateAll();
