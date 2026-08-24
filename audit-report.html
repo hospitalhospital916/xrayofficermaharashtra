@@ -51,6 +51,12 @@
             font-weight: bold;
         }
 
+        .late-tag {
+            font-size: 0.68rem;
+            color: #dc3545;
+            font-weight: bold;
+        }
+
         /* A4 Page Formatting (Black & White Layout) */
         .a4-document {
             background: #ffffff;
@@ -221,43 +227,53 @@
                 <input type="number" id="in_xray" class="form-control form-control-sm border-primary" value="140" oninput="onXRayInputTotal(); updateAll();">
             </div>
             <div class="col-md-3">
-                <label class="box-label">८. पहिल्या १५ दिवसांत X-Rays <span class="auto-tag">(Auto/Editable)</span>:</label>
+                <label class="box-label">८. पहिल्या १५ दिवसांत X-Rays <span class="auto-tag">(Auto Sync)</span>:</label>
                 <input type="number" id="in_fn1_count" class="form-control form-control-sm" value="70" oninput="onXRayInputFn1(); updateAll();">
             </div>
             <div class="col-md-3">
-                <label class="box-label">९. दुसऱ्या १५ दिवसांत X-Rays <span class="auto-tag">(Auto/Editable)</span>:</label>
+                <label class="box-label">९. दुसऱ्या १५ दिवसांत X-Rays <span class="auto-tag">(Auto Sync)</span>:</label>
                 <input type="number" id="in_fn2_count" class="form-control form-control-sm" value="70" oninput="onXRayInputFn2(); updateAll();">
             </div>
 
-             <!-- Row 4: Emergency & Routine Detailed Numbers -->
-            <div class="col-md-3">
+            <!-- Row 4: Emergency Details (Total, Within TAT, Late/Beyond TAT) -->
+            <div class="col-md-4">
                 <label class="box-label text-danger">१०. एकूण Emergency केसेस:</label>
                 <input type="number" id="in_emerg_total" class="form-control form-control-sm" value="1" oninput="onEmergTotalInput(); updateAll();">
             </div>
-            <div class="col-md-3">
-                <label class="box-label text-success">११. Emergency (१ तासाच्या आत):</label>
-                <input type="number" id="in_emerg_in_tat" class="form-control form-control-sm" value="1" oninput="updateAll()">
+            <div class="col-md-4">
+                <label class="box-label text-success">११. Emergency (१ तासाच्या आत - Within TAT) <span class="auto-tag">(Auto Sync)</span>:</label>
+                <input type="number" id="in_emerg_in_tat" class="form-control form-control-sm" value="1" oninput="onEmergInTatInput(); updateAll();">
             </div>
-            <div class="col-md-3">
-                <label class="box-label">१२. एकूण Routine केसेस <span class="auto-tag">(Auto)</span>:</label>
-                <input type="number" id="in_rout_total" class="form-control form-control-sm" value="139" oninput="onRoutTotalInput(); updateAll();">
-            </div>
-            <div class="col-md-3">
-                <label class="box-label">१३. Routine (१२ तासांच्या आत):</label>
-                <input type="number" id="in_rout_in_tat" class="form-control form-control-sm" value="138" oninput="updateAll()">
+            <div class="col-md-4">
+                <label class="box-label text-danger">१२. Emergency (१ तासानंतर - Late/Beyond TAT) <span class="late-tag">(Auto Sync)</span>:</label>
+                <input type="number" id="in_emerg_late" class="form-control form-control-sm" value="0" oninput="onEmergLateInput(); updateAll();">
             </div>
 
-            <!-- Row 5: Officers Signatures -->
+            <!-- Row 5: Routine Details (Total, Within TAT, Late/Beyond TAT) -->
             <div class="col-md-4">
-                <label class="box-label">१४. X-Ray Scientific Officer नाव:</label>
+                <label class="box-label text-primary">१३. एकूण Routine केसेस <span class="auto-tag">(Auto/Editable)</span>:</label>
+                <input type="number" id="in_rout_total" class="form-control form-control-sm" value="139" oninput="onRoutTotalInput(); updateAll();">
+            </div>
+            <div class="col-md-4">
+                <label class="box-label text-success">१४. Routine (१२ तासांच्या आत - Within TAT) <span class="auto-tag">(Auto Sync)</span>:</label>
+                <input type="number" id="in_rout_in_tat" class="form-control form-control-sm" value="138" oninput="onRoutInTatInput(); updateAll();">
+            </div>
+            <div class="col-md-4">
+                <label class="box-label text-danger">१५. Routine (१२ तासांनंतर - Late/Beyond TAT) <span class="late-tag">(Auto Sync)</span>:</label>
+                <input type="number" id="in_rout_late" class="form-control form-control-sm" value="1" oninput="onRoutLateInput(); updateAll();">
+            </div>
+
+            <!-- Row 6: Officers Signatures -->
+            <div class="col-md-4">
+                <label class="box-label">१६. X-Ray Scientific Officer नाव:</label>
                 <input type="text" id="in_sig1" class="form-control form-control-sm" value="(Mahesh S. Hange)" oninput="updateAll()">
             </div>
             <div class="col-md-4">
-                <label class="box-label">१५. OPD Medical Officer नाव:</label>
+                <label class="box-label">१७. OPD Medical Officer नाव:</label>
                 <input type="text" id="in_sig2" class="form-control form-control-sm" value="(Dr. Medical Officer)" oninput="updateAll()">
             </div>
             <div class="col-md-4">
-                <label class="box-label">१६. Medical Superintendent नाव:</label>
+                <label class="box-label">१८. Medical Superintendent नाव:</label>
                 <input type="text" id="in_sig3" class="form-control form-control-sm" value="(Dr. Medical Superintendent)" oninput="updateAll()">
             </div>
         </div>
@@ -485,7 +501,7 @@ function onXRayInputFn2() {
     document.getElementById('in_fn1_count').value = xray - fn2;
 }
 
-// --- Emergency & Routine Auto-Split ---
+// --- Emergency Dynamic Auto Sync ---
 function onEmergTotalInput() {
     let xray = parseInt(document.getElementById('in_xray').value) || 0;
     let emTotal = parseInt(document.getElementById('in_emerg_total').value) || 0;
@@ -495,15 +511,39 @@ function onEmergTotalInput() {
     document.getElementById('in_emerg_total').value = emTotal;
     document.getElementById('in_rout_total').value = xray - emTotal;
 
-    // Adjust in-tat bounds
-    let emInTat = parseInt(document.getElementById('in_emerg_in_tat').value) || 0;
-    if (emInTat > emTotal) document.getElementById('in_emerg_in_tat').value = emTotal;
+    // Sync Emergency Within TAT & Late
+    let emLate = parseInt(document.getElementById('in_emerg_late').value) || 0;
+    if (emLate > emTotal) emLate = emTotal;
+    let emInTat = emTotal - emLate;
 
-    let rtTotal = xray - emTotal;
-    let rtInTat = parseInt(document.getElementById('in_rout_in_tat').value) || 0;
-    if (rtInTat > rtTotal) document.getElementById('in_rout_in_tat').value = rtTotal;
+    document.getElementById('in_emerg_in_tat').value = emInTat;
+    document.getElementById('in_emerg_late').value = emLate;
+
+    // Sync Routine
+    onRoutTotalInputSync();
 }
 
+function onEmergInTatInput() {
+    let emTotal = parseInt(document.getElementById('in_emerg_total').value) || 0;
+    let emInTat = parseInt(document.getElementById('in_emerg_in_tat').value) || 0;
+    if (emInTat < 0) emInTat = 0;
+    if (emInTat > emTotal) emInTat = emTotal;
+
+    document.getElementById('in_emerg_in_tat').value = emInTat;
+    document.getElementById('in_emerg_late').value = emTotal - emInTat; // Auto calculate Late
+}
+
+function onEmergLateInput() {
+    let emTotal = parseInt(document.getElementById('in_emerg_total').value) || 0;
+    let emLate = parseInt(document.getElementById('in_emerg_late').value) || 0;
+    if (emLate < 0) emLate = 0;
+    if (emLate > emTotal) emLate = emTotal;
+
+    document.getElementById('in_emerg_late').value = emLate;
+    document.getElementById('in_emerg_in_tat').value = emTotal - emLate; // Auto calculate Within TAT
+}
+
+// --- Routine Dynamic Auto Sync ---
 function onRoutTotalInput() {
     let xray = parseInt(document.getElementById('in_xray').value) || 0;
     let rtTotal = parseInt(document.getElementById('in_rout_total').value) || 0;
@@ -513,12 +553,44 @@ function onRoutTotalInput() {
     document.getElementById('in_rout_total').value = rtTotal;
     document.getElementById('in_emerg_total').value = xray - rtTotal;
 
+    onRoutTotalInputSync();
+    
+    // Sync Emergency bounds
     let emTotal = xray - rtTotal;
-    let emInTat = parseInt(document.getElementById('in_emerg_in_tat').value) || 0;
-    if (emInTat > emTotal) document.getElementById('in_emerg_in_tat').value = emTotal;
+    let emLate = parseInt(document.getElementById('in_emerg_late').value) || 0;
+    if (emLate > emTotal) emLate = emTotal;
+    document.getElementById('in_emerg_late').value = emLate;
+    document.getElementById('in_emerg_in_tat').value = emTotal - emLate;
+}
 
+function onRoutTotalInputSync() {
+    let rtTotal = parseInt(document.getElementById('in_rout_total').value) || 0;
+    let rtLate = parseInt(document.getElementById('in_rout_late').value) || 0;
+    if (rtLate > rtTotal) rtLate = rtTotal;
+    let rtInTat = rtTotal - rtLate;
+
+    document.getElementById('in_rout_in_tat').value = rtInTat;
+    document.getElementById('in_rout_late').value = rtLate;
+}
+
+function onRoutInTatInput() {
+    let rtTotal = parseInt(document.getElementById('in_rout_total').value) || 0;
     let rtInTat = parseInt(document.getElementById('in_rout_in_tat').value) || 0;
-    if (rtInTat > rtTotal) document.getElementById('in_rout_in_tat').value = rtTotal;
+    if (rtInTat < 0) rtInTat = 0;
+    if (rtInTat > rtTotal) rtInTat = rtTotal;
+
+    document.getElementById('in_rout_in_tat').value = rtInTat;
+    document.getElementById('in_rout_late').value = rtTotal - rtInTat; // Auto calculate Late
+}
+
+function onRoutLateInput() {
+    let rtTotal = parseInt(document.getElementById('in_rout_total').value) || 0;
+    let rtLate = parseInt(document.getElementById('in_rout_late').value) || 0;
+    if (rtLate < 0) rtLate = 0;
+    if (rtLate > rtTotal) rtLate = rtTotal;
+
+    document.getElementById('in_rout_late').value = rtLate;
+    document.getElementById('in_rout_in_tat').value = rtTotal - rtLate; // Auto calculate Within TAT
 }
 
 function updateAll() {
@@ -561,14 +633,14 @@ function updateAll() {
     // Emergency TAT Math
     let emTotal = parseInt(document.getElementById('in_emerg_total').value) || 0;
     let emInTat = parseInt(document.getElementById('in_emerg_in_tat').value) || 0;
+    let emLate = parseInt(document.getElementById('in_emerg_late').value) || 0;
     let emPct = emTotal > 0 ? ((emInTat / emTotal) * 100).toFixed(1) : (xray === 0 ? "N/A" : "100.0");
-    let emLate = emTotal - emInTat;
 
     // Routine TAT Math
     let rtTotal = parseInt(document.getElementById('in_rout_total').value) || 0;
     let rtInTat = parseInt(document.getElementById('in_rout_in_tat').value) || 0;
+    let rtLate = parseInt(document.getElementById('in_rout_late').value) || 0;
     let rtPct = rtTotal > 0 ? ((rtInTat / rtTotal) * 100).toFixed(1) : (xray === 0 ? "N/A" : "100.0");
-    let rtLate = rtTotal - rtInTat;
 
     // Overall Compliance Math
     let overallTotal = emTotal + rtTotal;
@@ -701,8 +773,10 @@ function saveToLocalStorage() {
         fn2: document.getElementById('in_fn2_count').value,
         emTotal: document.getElementById('in_emerg_total').value,
         emTat: document.getElementById('in_emerg_in_tat').value,
+        emLate: document.getElementById('in_emerg_late').value,
         rtTotal: document.getElementById('in_rout_total').value,
         rtTat: document.getElementById('in_rout_in_tat').value,
+        rtLate: document.getElementById('in_rout_late').value,
         sig1: document.getElementById('in_sig1').value,
         sig2: document.getElementById('in_sig2').value,
         sig3: document.getElementById('in_sig3').value
@@ -740,8 +814,10 @@ function loadCurrentMonthData() {
         if(d.fn2 !== undefined) document.getElementById('in_fn2_count').value = d.fn2;
         if(d.emTotal !== undefined) document.getElementById('in_emerg_total').value = d.emTotal;
         if(d.emTat !== undefined) document.getElementById('in_emerg_in_tat').value = d.emTat;
+        if(d.emLate !== undefined) document.getElementById('in_emerg_late').value = d.emLate;
         if(d.rtTotal !== undefined) document.getElementById('in_rout_total').value = d.rtTotal;
         if(d.rtTat !== undefined) document.getElementById('in_rout_in_tat').value = d.rtTat;
+        if(d.rtLate !== undefined) document.getElementById('in_rout_late').value = d.rtLate;
         if(d.sig1 !== undefined) document.getElementById('in_sig1').value = d.sig1;
         if(d.sig2 !== undefined) document.getElementById('in_sig2').value = d.sig2;
         if(d.sig3 !== undefined) document.getElementById('in_sig3').value = d.sig3;
