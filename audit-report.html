@@ -121,9 +121,9 @@
             background-color: #ffffff;
         }
 
-        /* Enhanced Signature Section with Extra Space */
+        /* Signature Section */
         .signature-container {
-            margin-top: 55px; /* सह्या करण्यासाठी मोकळी जागा */
+            margin-top: 55px;
             display: flex;
             justify-content: space-between;
             text-align: center;
@@ -151,7 +151,7 @@
 </head>
 <body>
 
-<!-- Top Input Panel (चौकोनामधून माहिती भरण्यासाठी) -->
+<!-- Top Input Panel -->
 <div class="input-panel no-print">
     <div class="container-fluid">
         <div class="d-flex justify-content-between align-items-center mb-2">
@@ -315,7 +315,7 @@
     <p contenteditable="true">
         <strong>Distribution:</strong> Half of the sample (<span id="out_half1" class="fw-bold">29</span>) taken from the first two weeks 
         (<span id="out_fn1_str">1-15 Nov: 65 total X-Rays</span>) 
-        and half (<span id="out_half2" class="fw-bold">29</span>) from the remaining two weeks of 
+        and half (<span id="out_half2" class="fw-bold">29</span>) from the remaining two weeks (<span id="out_fn2_str">16-30 Nov: 75 total X-Rays</span>) of 
         <span id="out_month_str" class="fw-bold">November 2025</span>.
     </p>
 
@@ -363,7 +363,7 @@
         <li contenteditable="true">Training of radiographers on digitization/transmission: <strong>Completed successfully</strong></li>
     </ul>
 
-    <!-- Signatures Section with Extra Space for Official Stamp & Sign -->
+    <!-- Signatures Section -->
     <div class="signature-container">
         <div class="signature-box">
             <div style="height: 40px;"></div>
@@ -389,8 +389,8 @@
 
 <script>
 const monthRange = [
-    "March 2025", "April 2025", "May 2025", "June 2025", "July 2025", "August 2025",
-    "September 2025", "October 2025", "November 2025", "December 2025",
+    "January 2025", "February 2025", "March 2025", "April 2025", "May 2025", "June 2025", 
+    "July 2025", "August 2025", "September 2025", "October 2025", "November 2025", "December 2025",
     "January 2026", "February 2026", "March 2026", "April 2026", "May 2026", "June 2026",
     "July 2026", "August 2026"
 ];
@@ -421,12 +421,12 @@ function getMoUSampleSize(pop) {
     if (pop <= 20) return 17;
     if (pop <= 50) return 34;
     if (pop <= 100) return 50;
-    if (pop <= 150) return 58; 
     if (pop <= 200) return 66; 
     if (pop <= 300) return 73;
     if (pop <= 500) return 81;
     if (pop <= 1000) return 88;
     if (pop <= 3000) return 94;
+    if (pop <= 5000) return 95;
     return 96;
 }
 
@@ -471,54 +471,74 @@ function updateAll() {
     let emTotal = parseInt(document.getElementById('in_emerg_total').value) || 0;
     let emInTat = parseInt(document.getElementById('in_emerg_in_tat').value) || 0;
     let emPct = emTotal > 0 ? ((emInTat / emTotal) * 100).toFixed(1) : 100;
+    let emLate = emTotal - emInTat;
 
     // Routine TAT Math
     let rtTotal = parseInt(document.getElementById('in_rout_total').value) || 0;
     let rtInTat = parseInt(document.getElementById('in_rout_in_tat').value) || 0;
     let rtPct = rtTotal > 0 ? ((rtInTat / rtTotal) * 100).toFixed(1) : 100;
+    let rtLate = rtTotal - rtInTat;
 
     // Overall Compliance Math
     let overallTotal = emTotal + rtTotal;
     let overallInTat = emInTat + rtInTat;
     let overallPct = overallTotal > 0 ? ((overallInTat / overallTotal) * 100).toFixed(1) : 100;
 
-    // Shortfall Penalty Logic
+    // Shortfall Penalty Logic (MoU Annexure-B)
     let deductionStr = "Nil (0% deduction - Exceeds required threshold).";
-    if (overallPct < 90 && overallPct >= 70) {
+    if (overallPct < 100 && overallPct >= 90) {
+        deductionStr = "1% deduction applicable if quarterly overall falls in 90-99% slab as per MoU Annexure-B.";
+    } else if (overallPct < 90 && overallPct >= 70) {
         deductionStr = "2% deduction applicable as per MoU Annexure-B (70-89% slab).";
     } else if (overallPct < 70 && overallPct >= 50) {
         deductionStr = "5% deduction applicable as per MoU Annexure-B (50-69% slab).";
-    } else if (overallPct < 90) {
-        deductionStr = "1% deduction applicable as per MoU Annexure-B (90-99% slab).";
+    } else if (overallPct < 50) {
+        deductionStr = "10% deduction / non-compliance penalty applicable as per MoU Annexure-B.";
     }
 
-    // Render Outputs
-    document.getElementById('out_hosp_title').innerText = hosp;
-    document.getElementById('out_dist_title').innerText = dist;
-    document.getElementById('out_month_display').innerText = month;
-    document.getElementById('out_month_str').innerText = month;
+    // Render Outputs safely
+    if (document.getElementById('out_hosp_title')) document.getElementById('out_hosp_title').innerText = hosp;
+    if (document.getElementById('out_dist_title')) document.getElementById('out_dist_title').innerText = dist;
+    if (document.getElementById('out_month_display')) document.getElementById('out_month_display').innerText = month;
+    if (document.getElementById('out_month_str')) document.getElementById('out_month_str').innerText = month;
 
-    document.getElementById('out_total_opd_str').innerText = `${totalOpd.toLocaleString('en-IN')} (${opd.toLocaleString('en-IN')} OPD + ${ipd.toLocaleString('en-IN')} Casualty/IPD)`;
-    document.getElementById('out_xray_count').innerText = xray;
-    document.getElementById('out_ct_count').innerText = ct;
+    if (document.getElementById('out_total_opd_str')) {
+        document.getElementById('out_total_opd_str').innerText = `${totalOpd.toLocaleString('en-IN')} (${opd.toLocaleString('en-IN')} OPD + ${ipd.toLocaleString('en-IN')} Casualty/IPD)`;
+    }
+    if (document.getElementById('out_xray_count')) document.getElementById('out_xray_count').innerText = xray;
+    if (document.getElementById('out_ct_count')) document.getElementById('out_ct_count').innerText = ct;
 
-    document.getElementById('out_pop_count').innerText = xray;
-    document.getElementById('out_sample_size').innerText = sample;
-    document.getElementById('out_half1').innerText = half1;
-    document.getElementById('out_half2').innerText = half2;
+    if (document.getElementById('out_pop_count')) document.getElementById('out_pop_count').innerText = xray;
+    if (document.getElementById('out_sample_size')) document.getElementById('out_sample_size').innerText = sample;
+    if (document.getElementById('out_half1')) document.getElementById('out_half1').innerText = half1;
+    if (document.getElementById('out_half2')) document.getElementById('out_half2').innerText = half2;
 
     let monthNameOnly = month.split(' ')[0];
-    document.getElementById('out_fn1_str').innerText = `1-15 ${monthNameOnly}: ${fn1Count} total X-Rays`;
-    document.getElementById('out_fn2_str').innerText = `16-30 ${monthNameOnly}: ${fn2Count} total X-Rays`;
+    if (document.getElementById('out_fn1_str')) {
+        document.getElementById('out_fn1_str').innerText = `1-15 ${monthNameOnly}: ${fn1Count} total X-Rays`;
+    }
+    if (document.getElementById('out_fn2_str')) {
+        document.getElementById('out_fn2_str').innerText = `16-30 ${monthNameOnly}: ${fn2Count} total X-Rays`;
+    }
 
-    document.getElementById('out_emerg_str').innerText = `${emPct}% interpreted & reported within 1 hour TAT (${emInTat} out of ${emTotal} cases).`;
-    document.getElementById('out_rout_str').innerText = `${rtPct}% reported within TAT (${rtInTat} out of ${rtTotal} cases).`;
-    document.getElementById('out_over_str').innerText = `${overallPct}% compliant (${overallInTat} out of ${overallTotal} overall reported within TAT).`;
-    document.getElementById('out_deduct_str').innerText = deductionStr;
+    if (document.getElementById('out_emerg_str')) {
+        let emLateStr = emLate > 0 ? `; ${emLate} cases reported beyond TAT` : "";
+        document.getElementById('out_emerg_str').innerText = `${emPct}% interpreted & reported within 1 hour TAT (${emInTat} out of ${emTotal} cases reported within 1 hour${emLateStr}).`;
+    }
+    if (document.getElementById('out_rout_str')) {
+        let rtLateStr = rtLate > 0 ? `; ${rtLate} cases reported beyond TAT` : "";
+        document.getElementById('out_rout_str').innerText = `${rtPct}% reported within TAT (${rtInTat} out of ${rtTotal} cases${rtLateStr}).`;
+    }
+    if (document.getElementById('out_over_str')) {
+        document.getElementById('out_over_str').innerText = `${overallPct}% compliant (${overallInTat} out of ${overallTotal} overall reported within TAT).`;
+    }
+    if (document.getElementById('out_deduct_str')) {
+        document.getElementById('out_deduct_str').innerText = deductionStr;
+    }
 
-    document.getElementById('out_sig1').innerText = document.getElementById('in_sig1').value;
-    document.getElementById('out_sig2').innerText = document.getElementById('in_sig2').value;
-    document.getElementById('out_sig3').innerText = document.getElementById('in_sig3').value;
+    if (document.getElementById('out_sig1')) document.getElementById('out_sig1').innerText = document.getElementById('in_sig1').value;
+    if (document.getElementById('out_sig2')) document.getElementById('out_sig2').innerText = document.getElementById('in_sig2').value;
+    if (document.getElementById('out_sig3')) document.getElementById('out_sig3').innerText = document.getElementById('in_sig3').value;
 
     document.querySelectorAll('.out_hosp_display').forEach(el => el.innerText = hosp);
 
@@ -536,7 +556,7 @@ function onMonthSelect() {
 }
 
 function saveToLocalStorage() {
-   let key = getStorageKey();
+    let key = getStorageKey();
     let data = {
         hosp: document.getElementById('in_hosp').value,
         dist: document.getElementById('in_dist').value,
@@ -574,27 +594,27 @@ function loadCurrentMonthData() {
 
     if (saved) {
         let d = JSON.parse(saved);
-        if(d.hosp) document.getElementById('in_hosp').value = d.hosp;
-        if(d.dist) document.getElementById('in_dist').value = d.dist;
-        if(d.ct) document.getElementById('in_ct').value = d.ct;
+        if(d.hosp !== undefined) document.getElementById('in_hosp').value = d.hosp;
+        if(d.dist !== undefined) document.getElementById('in_dist').value = d.dist;
+        if(d.ct !== undefined) document.getElementById('in_ct').value = d.ct;
         if(d.chkDate !== undefined) {
             document.getElementById('chk_audit_date').checked = d.chkDate;
             toggleDateInput();
         }
-        if(d.auditDate) document.getElementById('in_audit_date').value = d.auditDate;
-        if(d.auditRemark) document.getElementById('in_audit_remark').value = d.auditRemark;
-        if(d.opd) document.getElementById('in_opd').value = d.opd;
-        if(d.ipd) document.getElementById('in_ipd').value = d.ipd;
-        if(d.xray) document.getElementById('in_xray').value = d.xray;
-        if(d.fn1) document.getElementById('in_fn1_count').value = d.fn1;
-        if(d.fn2) document.getElementById('in_fn2_count').value = d.fn2;
-        if(d.emTotal) document.getElementById('in_emerg_total').value = d.emTotal;
-        if(d.emTat) document.getElementById('in_emerg_in_tat').value = d.emTat;
-        if(d.rtTotal) document.getElementById('in_rout_total').value = d.rtTotal;
-        if(d.rtTat) document.getElementById('in_rout_in_tat').value = d.rtTat;
-        if(d.sig1) document.getElementById('in_sig1').value = d.sig1;
-        if(d.sig2) document.getElementById('in_sig2').value = d.sig2;
-        if(d.sig3) document.getElementById('in_sig3').value = d.sig3;
+        if(d.auditDate !== undefined) document.getElementById('in_audit_date').value = d.auditDate;
+        if(d.auditRemark !== undefined) document.getElementById('in_audit_remark').value = d.auditRemark;
+        if(d.opd !== undefined) document.getElementById('in_opd').value = d.opd;
+        if(d.ipd !== undefined) document.getElementById('in_ipd').value = d.ipd;
+        if(d.xray !== undefined) document.getElementById('in_xray').value = d.xray;
+        if(d.fn1 !== undefined) document.getElementById('in_fn1_count').value = d.fn1;
+        if(d.fn2 !== undefined) document.getElementById('in_fn2_count').value = d.fn2;
+        if(d.emTotal !== undefined) document.getElementById('in_emerg_total').value = d.emTotal;
+        if(d.emTat !== undefined) document.getElementById('in_emerg_in_tat').value = d.emTat;
+        if(d.rtTotal !== undefined) document.getElementById('in_rout_total').value = d.rtTotal;
+        if(d.rtTat !== undefined) document.getElementById('in_rout_in_tat').value = d.rtTat;
+        if(d.sig1 !== undefined) document.getElementById('in_sig1').value = d.sig1;
+        if(d.sig2 !== undefined) document.getElementById('in_sig2').value = d.sig2;
+        if(d.sig3 !== undefined) document.getElementById('in_sig3').value = d.sig3;
     } else {
         if(localStorage.getItem('global_audit_hosp')) document.getElementById('in_hosp').value = localStorage.getItem('global_audit_hosp');
         if(localStorage.getItem('global_audit_dist')) document.getElementById('in_dist').value = localStorage.getItem('global_audit_dist');
