@@ -1751,25 +1751,26 @@
                     </div>
                 </div>
             </div>
-
-            <!-- TAB 20: MEMBER ACTIVITY LOGS -->
+<!-- TAB 20: MEMBER ACTIVITY LOGS -->
             <div id="tab-member-logs" class="tab-content">
                 <div class="panel">
                     <div class="panel-header">
-                        <span><i class="fa fa-user-clock"></i> मेम्बर ऍक्टिव्हिटी लॉग (Member Activity Log - मागील ४ महिने)</span>
+                        <span><i class="fa fa-user-clock"></i> नुकतेच लॉगिन व ऍक्टिव्हिटी झालेले सदस्य (Recent Member Logins & Activity)</span>
                         <button class="btn-action bg-danger" onclick="clearActivityLogs('member_logs')"><i class="fa fa-trash"></i> सर्व मेम्बर लॉग्स डिलीट करा</button>
                     </div>
                     <div class="panel-body activity-log-table">
                         <table>
                             <thead>
                                 <tr>
-                                    <th style="width: 180px;">दिनांक व वेळ</th>
-                                    <th>सभासदाचे नाव व मोबाईल</th>
-                                    <th>सभासदाने केलेली ऍक्टिव्हिटी</th>
+                                    <th style="width: 170px;">दिनांक व वेळ</th>
+                                    <th>सभासदाचे नाव (Name)</th>
+                                    <th>ई-मेल (Email)</th>
+                                    <th>मोबाईल नंबर (Mobile)</th>
+                                    <th>ऍक्टिव्हिटी / लॉगिन (Action)</th>
                                 </tr>
                             </thead>
                             <tbody id="memberLogsBody">
-                                <tr><td colspan="3" style="text-align:center; padding:15px;">मेम्बर लॉग्स लोड होत आहेत...</td></tr>
+                                <tr><td colspan="5" style="text-align:center; padding:15px;">मेम्बर लॉग्स लोड होत आहेत...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -2315,15 +2316,41 @@
             } catch(e) { console.error(e); }
         };
 
-        window.renderMemberLogs = async function() {
+       window.renderMemberLogs = async function() {
             try {
                 const snap = await getDocs(query(collection(db, "member_logs"), orderBy("timestamp", "desc")));
                 let html = '';
+
+                // सदस्यांचे ई-मेल मॅप करण्यासाठी
+                let emailMap = {};
+                (window.membersData || []).forEach(m => {
+                    let mob = String(m.mobile || m.मोबाईल || '').trim();
+                    let em = m.email || m.ईमेल || '-';
+                    if (mob) emailMap[mob] = em;
+                });
+
                 snap.forEach((d) => {
                     let l = d.data();
-                    html += `<tr><td><small>${l.dateString}</small></td><td><b>${l.memberName}</b></td><td>${l.action}</td></tr>`;
+                    let rawName = l.memberName || '-';
+                    
+                    // मोबाईल व नाव वेगळे करणे
+                    let mob = l.mobile || (rawName.match(/\d{10}/) ? rawName.match(/\d{10}/)[0] : '') || '-';
+                    let cleanName = rawName.replace(/\(\d{10}\)/, '').trim();
+                    
+                    // ई-मेल शोधणे
+                    let email = l.email || emailMap[String(mob)] || '-';
+
+                    html += `
+                        <tr>
+                            <td><small>${l.dateString || '-'}</small></td>
+                            <td style="font-weight:bold; color:var(--primary);">${cleanName}</td>
+                            <td>${email}</td>
+                            <td><b>${mob}</b></td>
+                            <td><span class="badge bg-info">${l.action || 'लॉगिन'}</span></td>
+                        </tr>
+                    `;
                 });
-                document.getElementById('memberLogsBody').innerHTML = html || '<tr><td colspan="3" style="text-align:center;">मेम्बर लॉग्स उपलब्ध नाहीत.</td></tr>';
+                document.getElementById('memberLogsBody').innerHTML = html || '<tr><td colspan="5" style="text-align:center;">मेम्बर लॉग्स उपलब्ध नाहीत.</td></tr>';
             } catch(e) { console.error(e); }
         };
 
