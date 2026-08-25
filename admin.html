@@ -2316,7 +2316,7 @@
             } catch(e) { console.error(e); }
         };
 
-       window.renderMemberLogs = async function() {
+    window.renderMemberLogs = async function() {
             try {
                 const snap = await getDocs(query(collection(db, "member_logs"), orderBy("timestamp", "desc")));
                 let html = '';
@@ -2337,7 +2337,7 @@
                     let mob = l.mobile || (rawName.match(/\d{10}/) ? rawName.match(/\d{10}/)[0] : '') || '-';
                     let cleanName = rawName.replace(/\(\d{10}\)/, '').trim();
                     
-                    // ई-मेल शोधणे
+                    // ई-मेल शोधणे (थेट किंवा मोबाईल मॅपिंगद्वारे)
                     let email = l.email || emailMap[String(mob)] || '-';
 
                     html += `
