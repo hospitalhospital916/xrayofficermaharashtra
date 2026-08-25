@@ -381,30 +381,43 @@
         <div class="login-card">
             <img src="logo.png" alt="Association Logo" class="login-logo" onerror="this.src='loghho.png'">
             <h2>सदस्य लॉगिन PORTAL</h2>
-            <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 15px;">मोबाईल नंबर आणि पासवर्ड द्वारे लॉगिन करा</p>
+            <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 15px;">Google किंवा मोबाईल नंबरद्वारे लॉगिन करा</p>
             
-            <div class="login-input-box">
-                <label>मोबाईल नंबर:</label>
-                <div class="login-input-wrapper">
-                    <span>+91</span>
-                    <input type="tel" id="loginMobileNumber" placeholder="९८६५४३२१०" maxlength="10" onkeydown="if(event.key === 'Enter') document.getElementById('loginPassword').focus();">
-                </div>
+            <!-- Google Login Button -->
+            <button type="button" onclick="loginWithGoogle()" style="background: #4285F4; color: white; margin-bottom: 15px; border-radius: 8px; font-size: 1.05rem; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                <i class="fa-brands fa-google"></i> Google सह सुरक्षित लॉगिन करा
+            </button>
+
+            <div style="margin: 12px 0; text-align: center; position: relative;">
+                <hr style="border: 0; border-top: 1px solid #cbd5e1;">
+                <span style="position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: white; padding: 0 10px; font-size: 0.8rem; color: #64748b; font-weight: bold;">किंवा</span>
             </div>
 
-            <div class="login-input-box">
-                <label>पासवर्ड (Password):</label>
-                <div class="login-input-wrapper">
-                    <i class="fa fa-lock icon-left"></i>
-                    <input type="password" id="loginPassword" class="no-prefix" placeholder="पासवर्ड टाका" onkeydown="if(event.key === 'Enter') loginMemberWithMobileAndPassword();">
+            <!-- Mobile Login Section -->
+            <div id="mobileLoginFormSection">
+                <div class="login-input-box">
+                    <label>मोबाईल नंबर:</label>
+                    <div class="login-input-wrapper">
+                        <span>+91</span>
+                        <input type="tel" id="loginMobileNumber" placeholder="९८६५४३२१०" maxlength="10" onkeydown="if(event.key === 'Enter') document.getElementById('loginPassword').focus();">
+                    </div>
                 </div>
-                <div style="text-align: right; margin-top: 6px;">
-                    <a href="javascript:void(0)" onclick="openForgotPasswordModal()" style="font-size: 0.82rem; color: #0B3D91; font-weight: bold; text-decoration: underline;">
-                        <i class="fa fa-key"></i> पासवर्ड विसरलात? (Forgot Password)
-                    </a>
-                </div>
-            </div>
 
-            <button type="button" onclick="loginMemberWithMobileAndPassword()"><i class="fa fa-sign-in-alt me-1"></i> सुरक्षित लॉगिन करा</button>
+                <div class="login-input-box">
+                    <label>पासवर्ड (Password):</label>
+                    <div class="login-input-wrapper">
+                        <i class="fa fa-lock icon-left"></i>
+                        <input type="password" id="loginPassword" class="no-prefix" placeholder="पासवर्ड टाका" onkeydown="if(event.key === 'Enter') loginMemberWithMobileAndPassword();">
+                    </div>
+                    <div style="text-align: right; margin-top: 6px;">
+                        <a href="javascript:void(0)" onclick="openForgotPasswordModal()" style="font-size: 0.82rem; color: #0B3D91; font-weight: bold; text-decoration: underline;">
+                            <i class="fa fa-key"></i> पासवर्ड विसरलात? (Forgot Password)
+                        </a>
+                    </div>
+                </div>
+
+                <button type="button" onclick="loginMemberWithMobileAndPassword()"><i class="fa fa-sign-in-alt me-1"></i> मोबाईलने सुरक्षित लॉगिन करा</button>
+            </div>
             
             <div style="margin-top: 18px; display: flex; flex-direction: column; gap: 8px;">
                 <a href="member-registration.html" style="font-size: 0.88rem; color: #0284c7; font-weight: bold; text-decoration: none; background: #e0f2fe; padding: 8px; border-radius: 6px; border: 1px solid #bae6fd;">
@@ -1156,6 +1169,7 @@
     <!-- FIREBASE & CORE SCRIPT ENGINE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
         import { getFirestore, collection, addDoc, getDocs, doc, query, where, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -1164,6 +1178,7 @@
             projectId: "xrayunionmah"
         };
         const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
         const db = getFirestore(app);
 
         const mandalData = {
@@ -1267,7 +1282,53 @@
             if(el) el.style.display = 'none';
         };
 
-        // १. मोबाईल लॉगिन आणि ई-मेल सिक्युरिटी चेक (सुधारित फंक्शन)
+        // 🚀 १. Google सह सुरक्षित लॉगिन करण्याचे फंक्शन
+        window.loginWithGoogle = async function() {
+            const provider = new GoogleAuthProvider();
+            Swal.fire({ title: 'Google ऑथेंटिकेशन होत आहे...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+            try {
+                const result = await signInWithPopup(auth, provider);
+                const user = result.user;
+                const googleEmail = user.email;
+
+                // Firestore मध्ये सदस्याचा ई-मेल शोधा ('email' व 'ईमेल' दोन्ही शेतांची तपासणी)
+                let q = query(collection(db, "members"), where("email", "==", googleEmail));
+                let snap = await getDocs(q);
+
+                if (snap.empty) {
+                    q = query(collection(db, "members"), where("ईमेल", "==", googleEmail));
+                    snap = await getDocs(q);
+                }
+
+                if (!snap.empty) {
+                    let mData = { id: snap.docs[0].id, ...snap.docs[0].data() };
+
+                    delete mData.password;
+                    delete mData.pass;
+
+                    window.currentMember = mData;
+                    localStorage.setItem("memberSession", JSON.stringify(mData));
+
+                    await window.logMemberActivity("Google सह लॉगिन केले (Logged In via Google)");
+
+                    Swal.close();
+                    document.getElementById('loginOverlay').style.display = 'none';
+                    document.getElementById('appContent').style.display = 'flex';
+
+                    window.initMemberDashboard();
+                } else {
+                    Swal.close();
+                    await signOut(auth);
+                    Swal.fire('नोंदणी सापडली नाही!', `हा ई-मेल (${googleEmail}) सिस्टीममध्ये नोंदणीकृत नाही.`, 'error');
+                }
+            } catch (error) {
+                Swal.close();
+                Swal.fire('लॉगिन अपयशी', error.message, 'error');
+            }
+        };
+
+        // 🔒 २. मोबाईल लॉगिन आणि ई-मेल सिक्युरिटी चेक (ई-मेल अपडेट असल्यास मोबाईल बॉक्स लपवला जाईल)
         window.loginMemberWithMobileAndPassword = async function() {
             let mobileInput = document.getElementById('loginMobileNumber').value.trim();
             let passwordInput = document.getElementById('loginPassword').value.trim();
@@ -1297,13 +1358,20 @@
 
                 let mData = { id: snap.docs[0].id, ...snap.docs[0].data() };
 
-                // 🔒 सुरक्षा तपासणी: जर सदस्याने ई-मेल अपडेट केला असेल तर मोबाईल लॉगिन ब्लॉक करा
+                // 🛑 सुरक्षा तपासणी: जर सदस्याने ई-मेल अपडेट केला असेल तर मोबाईल लॉगिन ब्लॉक करा व लपवा
                 if(mData.isDefaultEmail === false || mData.emailUpdated === true) {
                     Swal.close();
+                    
+                    // मोबाईल लॉगिन फॉर्म लपवा
+                    const mobileSection = document.getElementById('mobileLoginFormSection');
+                    if (mobileSection) {
+                        mobileSection.style.display = 'none';
+                    }
+
                     return Swal.fire({
                         icon: 'info',
                         title: 'मोबाईल लॉगिन बंद आहे',
-                        text: 'तुमचा ई-मेल आधीच जोडला गेला आहे. सुरक्षा कारणास्तव मोबाईल लॉगिन बंद करण्यात आले आहे. कृपया ई-मेल / Google लॉगिन वापरा.'
+                        text: 'तुमचा ई-मेल आधीच जोडला गेला आहे. सुरक्षा कारणास्तव मोबाईल लॉगिन बंद करण्यात आले आहे. कृपया "Google सह सुरक्षित लॉगिन करा" बटणाचा वापर करा.'
                     });
                 }
 
@@ -1332,7 +1400,7 @@
             }
         };
 
-        // २. ई-मेल अपडेट जोडणी तपासणी
+        // ३. ई-मेल अपडेट जोडणी तपासणी
         window.checkDefaultEmailAndUpdate = function(memberData) {
             // डिफॉल्ट ई-मेल असल्यास अपडेट सुचवणे
             const isDefault = !memberData.email || memberData.isDefaultEmail === true || memberData.email.includes("default");
