@@ -1267,6 +1267,7 @@
             if(el) el.style.display = 'none';
         };
 
+        // १. मोबाईल लॉगिन आणि ई-मेल सिक्युरिटी चेक (सुधारित फंक्शन)
         window.loginMemberWithMobileAndPassword = async function() {
             let mobileInput = document.getElementById('loginMobileNumber').value.trim();
             let passwordInput = document.getElementById('loginPassword').value.trim();
@@ -1296,6 +1297,16 @@
 
                 let mData = { id: snap.docs[0].id, ...snap.docs[0].data() };
 
+                // 🔒 सुरक्षा तपासणी: जर सदस्याने ई-मेल अपडेट केला असेल तर मोबाईल लॉगिन ब्लॉक करा
+                if(mData.isDefaultEmail === false || mData.emailUpdated === true) {
+                    Swal.close();
+                    return Swal.fire({
+                        icon: 'info',
+                        title: 'मोबाईल लॉगिन बंद आहे',
+                        text: 'तुमचा ई-मेल आधीच जोडला गेला आहे. सुरक्षा कारणास्तव मोबाईल लॉगिन बंद करण्यात आले आहे. कृपया ई-मेल / Google लॉगिन वापरा.'
+                    });
+                }
+
                 let userPass = mData.password || mData.pass;
                 if(userPass && userPass !== passwordInput) {
                     Swal.close();
@@ -1318,6 +1329,27 @@
             } catch(e) {
                 Swal.close();
                 Swal.fire('Error', e.message, 'error');
+            }
+        };
+
+        // २. ई-मेल अपडेट जोडणी तपासणी
+        window.checkDefaultEmailAndUpdate = function(memberData) {
+            // डिफॉल्ट ई-मेल असल्यास अपडेट सुचवणे
+            const isDefault = !memberData.email || memberData.isDefaultEmail === true || memberData.email.includes("default");
+            
+            if (isDefault) {
+                Swal.fire({
+                    title: 'ई-मेल अपडेट करा',
+                    text: 'तुमच्या अकाऊंटवर डिफॉल्ट ई-मेल आहे. भविष्यात सुरक्षित १-क्लिक Google लॉगिनसाठी प्रोफाईल एडिट करून तुमचा खरा ई-मेल सेव्ह करा.',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'प्रोफाईल एडिट करा',
+                    cancelButtonText: 'नंतर करा'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.openSelfEditModal();
+                    }
+                });
             }
         };
 
@@ -1373,6 +1405,9 @@
             window.loadFoldersAndFiles();
             window.loadPolls();
             window.loadTemplatesAndAutoLetters();
+            
+            // ई-मेल तपासणी पॉप-अप कॉल
+            window.checkDefaultEmailAndUpdate(m);
         };
 
         // ==========================================
