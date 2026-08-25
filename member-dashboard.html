@@ -1166,7 +1166,7 @@
     <!-- FIREBASE & CORE SCRIPT ENGINE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
         import { getFirestore, collection, addDoc, getDocs, doc, query, where, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -2118,79 +2118,42 @@
             document.getElementById('forgotPasswordModal').style.display = 'flex';
         };
 
-        window.verifyMemberForReset = async function() {
-            let mob = document.getElementById('reset_mobile').value.trim();
-            let dob = document.getElementById('reset_dob').value;
-
-            if(!mob || mob.length !== 10) return Swal.fire('माहिती अपूर्ण', 'कृपया १० अंकी मोबाईल नंबर टाका.', 'warning');
-            if(!dob) return Swal.fire('माहिती अपूर्ण', 'कृपया तुमची नोंदणीकृत जन्मतारीख निवडा.', 'warning');
-
-            Swal.fire({ title: 'पडताळणी करत आहे...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
-
-            try {
-                const q1 = query(collection(db, "members"), where("mobile", "==", mob));
-                let snap = await getDocs(q1);
-
-                if(snap.empty) {
-                    const q2 = query(collection(db, "members"), where("mobile", "==", Number(mob)));
-                    snap = await getDocs(q2);
-                }
-
-                if(snap.empty) {
-                    Swal.close();
-                    return Swal.fire('नोंदणी सापडली नाही', 'हा मोबाईल नंबर सिस्टीममध्ये नोंदणीकृत नाही.', 'error');
-                }
-
-                let mData = snap.docs[0].data();
-                let docId = snap.docs[0].id;
-
-                if(mData.dob && mData.dob !== dob) {
-                    Swal.close();
-                    return Swal.fire('पडताळणी अयशस्वी', 'प्रविष्ट केलेली जन्मतारीख या मोबाईल नंबरशी जुळत नाही.', 'error');
-                }
-
-                Swal.close();
-                document.getElementById('reset_member_id').value = docId;
-                document.getElementById('reset_step1_box').style.display = 'none';
-                document.getElementById('reset_step2_box').style.display = 'block';
-
-            } catch(e) {
-                Swal.close();
-                Swal.fire('Error', e.message, 'error');
-            }
+       
+        window.openForgotPasswordModal = function() {
+            document.getElementById('reset_email_input').value = '';
+            document.getElementById('forgotPasswordModal').style.display = 'flex';
         };
 
-        window.updateNewPassword = async function() {
-            let memberId = document.getElementById('reset_member_id').value;
-            let newPass = document.getElementById('reset_new_pass').value.trim();
-            let confirmPass = document.getElementById('reset_confirm_pass').value.trim();
+        window.sendPasswordResetEmailLink = async function() {
+            let email = document.getElementById('reset_email_input').value.trim();
 
-            if(!memberId) return Swal.fire('त्रुटी', 'सदस्य ओळख पटली नाही. कृपया माहिती पुन्हा पडताळणी करा.', 'error');
-            if(!newPass || newPass.length < 6) return Swal.fire('कमकुवत पासवर्ड', 'पासवर्ड किमान ६ अक्षरांचा किंवा अंकांचा असावा.', 'warning');
-            if(newPass !== confirmPass) return Swal.fire('चुकीची माहिती', 'नवीन पासवर्ड आणि कन्फर्म पासवर्ड दोन्ही जुळत नाहीत.', 'error');
+            if (!email) {
+                return Swal.fire('माहिती अपूर्ण', 'कृपया तुमचा नोंदणीकृत ई-मेल आयडी टाका.', 'warning');
+            }
 
-            Swal.fire({ title: 'पासवर्ड अपडेट होत आहे...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+            Swal.fire({ title: 'ई-मेलवर रिसेट लिंक पाठवत आहे...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
 
             try {
-                await updateDoc(doc(db, "members", memberId), {
-                    pass: newPass,
-                    password: newPass
-                });
-
+                await sendPasswordResetEmail(auth, email);
+                
                 Swal.fire({
                     icon: 'success',
-                    title: 'पासवर्ड यशस्वीरीत्या बदलला!',
-                    text: 'तुमचा नवीन पासवर्ड सेव्ह झाला आहे. आता तुम्ही नवीन पासवर्डने लॉगिन करू शकता.',
-                    confirmButtonText: 'लॉगिन करा'
+                    title: 'रिसेट लिंक पाठवली!',
+                    text: `पासवर्ड रिसेट करण्यासाठी तुमच्या ${email} वर ई-मेल पाठवला आहे. तुमच्या इनबॉक्समधील लिंकवर क्लिक करून नवीन पासवर्ड सेट करा.`,
+                    confirmButtonText: 'समजले (OK)'
                 }).then(() => {
                     window.closeModal('forgotPasswordModal');
-                    document.getElementById('loginPassword').value = newPass;
-                    document.getElementById('loginMobileNumber').value = document.getElementById('reset_mobile').value;
                 });
 
-            } catch(e) {
-                console.error("Password update error:", e);
-                Swal.fire('अडचण आली', 'पासवर्ड बदलताना त्रुटी आली: ' + e.message, 'error');
+            } catch (error) {
+                console.error("Password reset error:", error);
+                let errorMsg = "पासवर्ड रिसेट लिंक पाठवताना त्रुटी आली.";
+                if (error.code === 'auth/user-not-found') {
+                    errorMsg = "हा ई-मेल डेटाबेसमध्ये नोंदणीकृत नाही.";
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMsg = "कृपया वैध ई-मेल आयडी टाका.";
+                }
+                Swal.fire('त्रुटी', errorMsg, 'error');
             }
         };
     </script>
