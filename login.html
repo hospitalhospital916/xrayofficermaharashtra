@@ -31,6 +31,13 @@
     button:hover { background: #082a63; transform: translateY(-2px); box-shadow: 0 6px 15px rgba(11, 61, 145, 0.3); }
     button:disabled { background: #999; cursor: not-allowed; transform: none; box-shadow: none; }
 
+    .btn-google { background: #4285F4; color: white; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 10px; }
+    .btn-google:hover { background: #3367d6; }
+
+    .divider { margin: 18px 0; text-align: center; position: relative; }
+    .divider span { background: white; padding: 0 10px; color: #777; font-size: 0.85rem; font-weight: bold; }
+    .divider hr { position: absolute; top: 50%; left: 0; right: 0; z-index: -1; margin: 0; border: 0; border-top: 1px solid #ccc; }
+
     #messageBox { margin-top: 15px; font-size: 0.95rem; font-weight: bold; min-height: 20px; }
     
     .extra-links { margin-top: 20px; font-size: 0.9rem; display: flex; justify-content: space-between; }
@@ -49,6 +56,17 @@
     <h2>लॉगिन पोर्टल</h2>
     <p class="subtitle">क्ष किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र</p>
 
+    <!-- Google Login Section -->
+    <button type="button" class="btn-google" id="googleLoginBtn">
+      <i class="fa-brands fa-google"></i> Google सह सुरक्षित लॉगिन करा
+    </button>
+
+    <div class="divider">
+      <hr>
+      <span>किंवा</span>
+    </div>
+
+    <!-- Email/Password Login Section -->
     <div class="input-box">
       <i class="fa-solid fa-envelope input-icon"></i>
       <input type="email" id="email" placeholder="ईमेल आयडी (Email)" required>
@@ -62,7 +80,7 @@
 
     <div class="extra-links">
       <label style="cursor:pointer;"><input type="checkbox"> मला लक्षात ठेवा</label>
-      <a href="#">पासवर्ड विसरलात?</a>
+      <a href="javascript:void(0)">पासवर्ड विसरलात?</a>
     </div>
 
     <button id="loginBtn" style="margin-top: 20px;">लॉगिन करा</button>
@@ -75,8 +93,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-    // Firestore imports added for security checks
+    import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
     import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -95,13 +112,60 @@
     // 👁️ Password Show/Hide Logic
     const togglePassword = document.getElementById("togglePassword");
     const passwordInput = document.getElementById("password");
-    togglePassword.addEventListener("click", function () {
-      const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
-      passwordInput.setAttribute("type", type);
-      this.classList.toggle("fa-eye-slash");
+    if (togglePassword) {
+      togglePassword.addEventListener("click", function () {
+        const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+        passwordInput.setAttribute("type", type);
+        this.classList.toggle("fa-eye-slash");
+      });
+    }
+
+    // 🚀 Google Login Logic
+    document.getElementById("googleLoginBtn").addEventListener("click", async () => {
+      const provider = new GoogleAuthProvider();
+      const msgBox = document.getElementById("messageBox");
+
+      msgBox.innerHTML = "<span style='color:blue;'><i class='fa-solid fa-spinner fa-spin'></i> Google ऑथेंटिकेशन होत आहे...</span>";
+
+      try {
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+        const googleEmail = user.email;
+
+        // Firestore मधील 'members' कलेक्शन तपासा
+        let q = query(collection(db, "members"), where("email", "==", googleEmail));
+        let querySnapshot = await getDocs(q);
+
+        if (querySnapshot.empty) {
+          q = query(collection(db, "members"), where("ईमेल", "==", googleEmail));
+          querySnapshot = await getDocs(q);
+        }
+
+        if (!querySnapshot.empty) {
+          let memberData;
+          querySnapshot.forEach((doc) => { memberData = doc.data(); });
+
+          if (memberData.स्थिती === "प्रलंबित" || memberData.status === "Pending") {
+            msgBox.innerHTML = "<span style='color:#ff9800;'>⏳ तुमचा अर्ज ॲडमिनच्या मंजुरीच्या प्रतीक्षेत आहे.</span>";
+            await signOut(auth);
+          } else if (memberData.अॅक्सेस === "बंद" || memberData.access === "disabled") {
+            msgBox.innerHTML = "<span style='color:red;'>🚫 तुमचा लॉगिन अॅक्सेस बंद आहे. ॲडमिनशी संपर्क साधा.</span>";
+            await signOut(auth);
+          } else {
+            msgBox.innerHTML = "<span style='color:green;'>✅ Google लॉगिन यशस्वी! डॅशबोर्ड उघडत आहे...</span>";
+            setTimeout(() => { window.location.href = "member-dashboard.html"; }, 1000);
+          }
+        } else {
+          msgBox.innerHTML = "<span style='color:red;'>❌ हा ई-मेल डेटाबेसमध्ये नोंदणीकृत नाही.</span>";
+          await signOut(auth);
+        }
+      } catch (error) {
+        msgBox.innerHTML = "<span style='color:red;'>❌ Google लॉगिन अपयशी: " + error.message + "</span>";
+        console.error("Google Login Error:", error);
+      }
     });
 
-    // 🚀 Login & Security Check Logic
+    // 🚀 Standard Email/Password Login Logic
     document.getElementById("loginBtn").addEventListener("click", async () => {
       const email = document.getElementById("email").value.trim();
       const password = passwordInput.value;
@@ -117,47 +181,40 @@
       loginBtn.disabled = true;
 
       try {
-        // Step 1: Firebase Auth द्वारे पासवर्ड चेक करा
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
+        
+        let q = query(collection(db, "members"), where("email", "==", email));
+        let querySnapshot = await getDocs(q);
 
-        // Step 2: Firestore मध्ये युजर 'सदस्य' (Member) आहे का ते तपासा
-        const q = query(collection(db, "members"), where("ईमेल", "==", email));
-        const querySnapshot = await getDocs(q);
+        if (querySnapshot.empty) {
+            q = query(collection(db, "members"), where("ईमेल", "==", email));
+            querySnapshot = await getDocs(q);
+        }
 
         if (!querySnapshot.empty) {
-          // युजरला 'members' टेबलमध्ये रेकॉर्ड सापडला (म्हणजे तो सदस्य आहे)
           let memberData;
           querySnapshot.forEach((doc) => { memberData = doc.data(); });
 
-          // 🛡️ Security Check 1: मंजुरी मिळाली आहे का?
-          if (memberData.स्थिती === "प्रलंबित") {
+          if (memberData.स्थिती === "प्रलंबित" || memberData.status === "Pending") {
             msgBox.innerHTML = "<span style='color:#ff9800;'>⏳ तुमचा अर्ज ॲडमिनच्या मंजुरीच्या प्रतीक्षेत आहे.</span>";
-            await signOut(auth); // बाहेर काढा
-          } 
-          // 🛡️ Security Check 2: लॉगिन अॅक्सेस चालू आहे का?
-          else if (memberData.अॅक्सेस === "बंद") {
+            await signOut(auth);
+          } else if (memberData.अॅक्सेस === "बंद" || memberData.access === "disabled") {
             msgBox.innerHTML = "<span style='color:red;'>🚫 तुमचा लॉगिन अॅक्सेस बंद आहे. ॲडमिनशी संपर्क साधा.</span>";
-            await signOut(auth); // बाहेर काढा
-          } 
-          // ✅ सर्व बरोबर असेल तर 'मेंबर डॅशबोर्ड' ला पाठवा
-          else {
+            await signOut(auth);
+          } else {
             msgBox.innerHTML = "<span style='color:green;'>✅ लॉगिन यशस्वी! डॅशबोर्ड उघडत आहे...</span>";
             setTimeout(() => { window.location.href = "member-dashboard.html"; }, 1000);
           }
         } else {
-          // जर 'members' टेबलमध्ये रेकॉर्ड सापडला नाही, पण लॉगिन झाले...
-          // याचा अर्थ हा 'मुख्य ॲडमिन' (Super Admin) आहे! 
           msgBox.innerHTML = "<span style='color:green;'>✅ ॲडमिन लॉगिन यशस्वी!</span>";
           setTimeout(() => { window.location.href = "admin.html"; }, 1000);
         }
 
       } catch (error) {
-        // लॉगिन फेल झाले (चुकीचा पासवर्ड किंवा ईमेल)
         msgBox.innerHTML = "<span style='color:red;'>❌ चुकीचा ईमेल किंवा पासवर्ड!</span>";
         console.error(error);
       } finally {
-        loginBtn.disabled = false; // बटन पुन्हा चालू करा
+        loginBtn.disabled = false;
       }
     });
   </script>
