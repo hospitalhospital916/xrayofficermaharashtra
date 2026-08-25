@@ -1198,18 +1198,18 @@
         window.grievancesList = [];
         window.tbTemplatesList = [];
         let hosp_rawData = [];
-
         window.logMemberActivity = async function(action) {
             let m = window.currentMember;
             let memberDisplayName = m ? (m.name || m.memberName || m.fullName || 'सभासद') : 'सभासद';
             let mobileStr = m ? (m.mobile || '') : '';
-            let fullMemberInfo = mobileStr ? `${memberDisplayName} (${mobileStr})` : memberDisplayName;
+            let emailStr = m ? (m.email || m.ईमेल || '') : '';
 
             try {
                 await addDoc(collection(db, "member_logs"), {
                     memberId: m ? (m.id || '') : '',
-                    memberName: fullMemberInfo,
+                    memberName: memberDisplayName,
                     mobile: mobileStr,
+                    email: emailStr,
                     district: m ? (m.district || '') : '',
                     mandal: m ? (m.mandal || '') : '',
                     action: action,
@@ -1218,7 +1218,6 @@
                 });
             } catch (e) { console.error("Member Log Error:", e); }
         };
-
         window.addEventListener('DOMContentLoaded', () => {
             let savedSession = localStorage.getItem("memberSession");
             if(savedSession) {
