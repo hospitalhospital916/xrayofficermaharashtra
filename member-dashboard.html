@@ -430,30 +430,27 @@
         </div>
     </div>
 
-    <!-- FORGOT PASSWORD MODAL -->
+   <!-- FORGOT PASSWORD MODAL (सुरक्षित ई-मेल रिसेट - उपाय २) -->
     <div id="forgotPasswordModal" class="custom-modal-overlay">
         <div class="custom-modal" style="max-width: 450px;">
             <div class="custom-modal-header bg-primary">
-                <h3><i class="fa fa-unlock-alt"></i> ऑटोमॅटिक पासवर्ड रिसेट</h3>
+                <h3><i class="fa fa-envelope"></i> ई-मेलद्वारे पासवर्ड रिसेट</h3>
                 <button onclick="closeModal('forgotPasswordModal')" style="background:transparent; border:none; color:white; font-size:1.5rem; cursor:pointer;">&times;</button>
             </div>
             <div class="custom-modal-body">
-                <div id="reset_step1_box">
-                    <p style="font-size: 0.88rem; color: #64748b; margin-bottom: 15px; font-weight: 600;">
-                        खात्री करण्यासाठी तुमचा नोंदणीकृत मोबाईल नंबर आणि जन्मतारीख टाका:
-                    </p>
-                    <div class="login-input-box" style="margin: 10px 0;">
-                        <label>मोबाईल नंबर:</label>
-                        <input type="tel" id="reset_mobile" class="form-control" placeholder="१० अंकी मोबाईल नंबर" maxlength="10">
-                    </div>
-                    <div class="login-input-box" style="margin: 10px 0;">
-                        <label>जन्मतारीख (Date of Birth):</label>
-                        <input type="date" id="reset_dob" class="form-control">
-                    </div>
-                    <button type="button" class="btn-action bg-primary" onclick="verifyMemberForReset()" style="width: 100%; justify-content: center; padding: 12px; margin-top: 15px; font-size: 1rem;">
-                        <i class="fa fa-check-circle"></i> माहिती पडताळा
-                    </button>
+                <p style="font-size: 0.88rem; color: #64748b; margin-bottom: 15px; font-weight: 600;">
+                    तुमचा नोंदणीकृत ई-मेल आयडी प्रविष्ट करा. पासवर्ड बदलण्याची सुरक्षित लिंक थेट तुमच्या ई-मेलवर पाठवली जाईल:
+                </p>
+                <div class="login-input-box" style="margin: 15px 0;">
+                    <label>नोंदणीकृत ई-मेल आयडी (Email):</label>
+                    <input type="email" id="reset_email_input" class="form-control" placeholder="example@gmail.com" required>
                 </div>
+                <button type="button" class="btn-action bg-success" onclick="sendPasswordResetEmailLink()" style="width: 100%; justify-content: center; padding: 12px; margin-top: 15px; font-size: 1rem;">
+                    <i class="fa fa-paper-plane"></i> रिसेट लिंक ई-मेलवर पाठवा
+                </button>
+            </div>
+        </div>
+    </div>
 
                 <div id="reset_step2_box" style="display: none;">
                     <div style="background: #e0f2fe; border: 1px solid #7dd3fc; color: #0369a1; padding: 10px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 15px; font-weight: bold;">
