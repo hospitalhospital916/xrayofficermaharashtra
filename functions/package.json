@@ -1,0 +1,12 @@
+{
+  "name": "xrayunion-functions",
+  "private": true,
+  "engines": {
+    "node": "20"
+  },
+  "dependencies": {
+    "firebase-admin": "^13.4.0",
+    "firebase-functions": "^6.4.0",
+    "busboy": "^1.6.0"
+  }
+}
