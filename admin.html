@@ -1402,12 +1402,10 @@ window.approveMemberFile = async function(fileId, fileName) {
 window.sendPushNotificationToAll = async function(title, body) {
     try {
         // Notification payload
-        await addDoc(collection(db, "notifications_queue"), {
-            title: title,
-            body: body,
-            topic: "all_members",
-            status: "pending",
-            createdAt: Date.now()
+        keywords: keywords,
+description: description,
+status: "Approved",
+createdAt: Date.now()
         });
     } catch(e) {
         console.error("Notification Error:", e);
