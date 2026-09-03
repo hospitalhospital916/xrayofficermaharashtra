@@ -2107,7 +2107,7 @@ window.loadMemberUploadFolders = async function() {
         window.loadFoldersAndFiles = async function() {
             let fSnap = await getDocs(collection(db, "member_folders"));
             let folders = []; fSnap.forEach(d => folders.push({id: d.id, ...d.data()}));
-            let approvedFiles = files.filter(fl => fl.status === "Approved" || !fl.status);
+      
 
             let foldersHtml = folders.map(f => `
                 <div style="background:#fff; border:1px solid #cbd5e1; padding:12px; border-radius:8px; border-top:4px solid var(--primary);">
@@ -2116,8 +2116,16 @@ window.loadMemberUploadFolders = async function() {
             `).join('');
             document.getElementById('foldersContainer').innerHTML = foldersHtml;
 
-            let fileSnap = await getDocs(collection(db, "member_files"));
-            let files = []; fileSnap.forEach(d => files.push({id: d.id, ...d.data()}));
+           let fileSnap = await getDocs(collection(db, "member_files"));
+let files = [];
+
+fileSnap.forEach(d => {
+    files.push({id: d.id, ...d.data()});
+});
+
+let approvedFiles = files.filter(
+    fl => fl.status === "Approved" || !fl.status
+);
 
             let filesHtml = files.map((fl, i) => `
                 <tr>
