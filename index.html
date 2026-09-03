@@ -513,20 +513,16 @@
 
         // वरून येणारे (Foreground Heads-up) नोटिफिकेशन - ॲप चालू असतानाही पॉप-अप दिसेल
         onMessage(messaging, (payload) => {
-            console.log('Foreground Message received: ', payload);
-            if (Notification.permission === 'granted') {
-                navigator.serviceWorker.ready.then((registration) => {
-                    registration.showNotification(payload.notification?.title || "नवीन नोटीस", {
-                        body: payload.notification?.body || "संघटनेची नवीन नोटीस पाहण्यासाठी क्लिक करा.",
-                        icon: '/icon-192x192.png',
-                        badge: '/favicon-32x32.png',
-                        vibrate: [200, 100, 200],
-                        data: {
-                            url: payload.data?.url || '/'
-                        }
-                    });
+            console.log('Foreground Message received:', payload);
+            navigator.serviceWorker.ready.then((registration) => {
+                registration.showNotification(payload.notification?.title || payload.data?.title || "नवीन नोटीस", {
+                    body: payload.notification?.body || payload.data?.body || "नवीन परिपत्रक पाहण्यासाठी क्लिक करा.",
+                    icon: '/icon-192x192.png',
+                    badge: '/favicon-32x32.png',
+                    vibrate: [200,100,200],
+                    data: { url: payload.data?.url || '/member-dashboard.html' }
                 });
-            }
+            });
         });
 
         // हेडरमधील बटणावर क्लिक केल्यास

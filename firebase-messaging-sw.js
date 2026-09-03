@@ -1,57 +1,47 @@
 importScripts('https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/10.12.5/firebase-messaging-compat.js');
 
-// तुमच्या प्रोजेक्टचे अधिकृत क्रेडेंशियल्स
 const firebaseConfig = {
   apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk",
   authDomain: "xrayunionmah.firebaseapp.com",
   projectId: "xrayunionmah",
-  messagingSenderId: "763805226978", // Firebase Console > Project Settings मधील Sender ID
-  appId: "1:763805226978:web:6bae81a0b6358b47d88bbb:web:your_actual_app_id"
+  storageBucket: "xrayunionmah.firebasestorage.app",
+  messagingSenderId: "763805226978",
+  appId: "1:763805226978:web:6bae81a0b6358b47d88bbb",
+  measurementId: "G-EQS6WH6XLF"
 };
-
 firebase.initializeApp(firebaseConfig);
-
 const messaging = firebase.messaging();
 
-// ॲप बॅकग्राउंडमध्ये किंवा बंद असताना येणारे नोटिफिकेशन
 messaging.onBackgroundMessage((payload) => {
-  const notificationTitle = payload.notification?.title || payload.data?.title || "क्ष-किरण वैज्ञानिक अधिकारी संघटना";
-  
-  const notificationOptions = {
-    body: payload.notification?.body || payload.data?.body || "नवीन परिपत्रक किंवा सूचना उपलब्ध झाली आहे.",
-    icon: '/logo.png',
-    badge: '/logo.png',
-    vibrate: [200, 100, 200, 100, 200], // मोबाईल व्हायब्रेशन
-    tag: payload.data?.tag || 'xray-union-notice',
+  const data = payload.data || {};
+  const title = payload.notification?.title || data.title || "क्ष-किरण वैज्ञानिक अधिकारी संघटना";
+  const body = payload.notification?.body || data.body || "नवीन परिपत्रक / सूचना उपलब्ध आहे.";
+  const url = data.url || "/member-dashboard.html";
+  self.registration.showNotification(title, {
+    body,
+    icon: "/icon-192x192.png",
+    badge: "/favicon-32x32.png",
+    vibrate: [200,100,200],
+    tag: data.tag || data.circularId || "xray-union-notice",
     renotify: true,
-    requireInteraction: true, // युझरने क्लिक करेपर्यंत स्क्रीनवर ठेवण्यासाठी
-    data: {
-      url: payload.data?.url || '/member-dashboard.html'
-    }
-  };
-
-  self.registration.showNotification(notificationTitle, notificationOptions);
+    requireInteraction: true,
+    data: { url }
+  });
 });
 
-// नोटिफिकेशनवर क्लिक केल्यावर संबंधित पेज उघडणे
-self.addEventListener('notificationclick', (event) => {
+self.addEventListener("notificationclick", (event) => {
   event.notification.close();
-  const targetUrl = event.notification.data?.url || '/member-dashboard.html';
-
-  event.waitUntil(
-    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((windowClients) => {
-      // ॲप आधीच उघडे असल्यास त्यावर फोकस करा
-      for (let client of windowClients) {
-        if (client.url.includes('xrayunionmah') && 'focus' in client) {
-          client.navigate(targetUrl);
-          return client.focus();
-        }
+  const targetUrl = event.notification?.data?.url || "/member-dashboard.html";
+  event.waitUntil((async () => {
+    const list = await clients.matchAll({ type:"window", includeUncontrolled:true });
+    for (const client of list) {
+      if ("focus" in client) {
+        await client.focus();
+        if ("navigate" in client) await client.navigate(targetUrl);
+        return;
       }
-      // ॲप बंद असल्यास नवीन विंडो/ॲक्टिव्हिटी उघडा
-      if (clients.openWindow) {
-        return clients.openWindow(targetUrl);
-      }
-    })
-  );
+    }
+    if (clients.openWindow) return clients.openWindow(targetUrl);
+  })());
 });

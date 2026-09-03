@@ -1,0 +1,27 @@
+<!doctype html><html lang="mr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Secure PDF Reader</title>
+<link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;600;700;800&display=swap" rel="stylesheet"><style>
+*{box-sizing:border-box}html,body{margin:0;background:#0b1220;color:#fff;font-family:Mukta,sans-serif;height:100%;overflow:hidden}header{height:58px;background:linear-gradient(135deg,#07275e,#0b3d91);display:flex;align-items:center;gap:10px;padding:8px 14px;border-bottom:2px solid #f39c12}header button{border:0;border-radius:10px;padding:8px 12px;font-weight:800;cursor:pointer}#title{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#reader{height:calc(100dvh - 58px);overflow:auto;padding:18px;position:relative;background:#111827}.page{position:relative;margin:0 auto 18px;background:#fff;box-shadow:0 10px 35px #0008;max-width:1000px}canvas{display:block;width:100%;height:auto}.watermark{position:absolute;inset:-10%;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:3;transform:rotate(-28deg);font-size:24px;font-weight:800;color:rgba(10,61,145,.18);text-align:center;white-space:pre-line;line-height:1.5}#loading{position:fixed;inset:58px 0 0;background:#0b1220f2;display:flex;align-items:center;justify-content:center;z-index:20;font-size:18px;padding:20px;text-align:center}
+</style></head><body><header><button onclick="history.back()">←</button><strong id="title">सुरक्षित दस्तऐवज</strong></header><div id="reader" oncontextmenu="return false"></div><div id="loading">प्रमाणीकरण आणि PDF तपासणी सुरू आहे…</div>
+<script type="module">
+import {initializeApp} from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js';
+import {getAuth,onAuthStateChanged} from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js';
+import {getFirestore,doc,getDoc,collection,query,where,getDocs} from 'https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js';
+const app=initializeApp({apiKey:'AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk',authDomain:'xrayunionmah.firebaseapp.com',projectId:'xrayunionmah'});
+const auth=getAuth(app),db=getFirestore(app),qs=new URLSearchParams(location.search);
+const id=qs.get('id'),collectionName=qs.get('collection')||'circulars';
+document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&['p','s','u','c','a'].includes(e.key.toLowerCase()))e.preventDefault();if(e.key==='PrintScreen')navigator.clipboard?.writeText('').catch(()=>{})});
+['copy','cut','selectstart','dragstart'].forEach(x=>document.addEventListener(x,e=>e.preventDefault()));
+async function getMember(u){let name=u.displayName||'अधिकृत सदस्य',mobile='नोंदणीकृत सदस्य';try{const q=query(collection(db,'members'),where('email','==',u.email));const s=await getDocs(q);if(!s.empty){const m=s.docs[0].data();name=m.name||m.fullName||m['पूर्ण नाव']||name;mobile=m.mobile||m.mobileNumber||m.phone||m['मोबाईल']||mobile}}catch(_){}return{name,mobile}}
+function stamp(m){const n=new Date();return `क्ष-किरण वैज्ञानिक अधिकारी संघटना\n${m.name} | ${m.mobile}\n${n.toLocaleDateString('mr-IN')} ${n.toLocaleTimeString('mr-IN')}`}
+async function render(u){
+ if(!id)throw new Error('दस्तऐवज ओळख उपलब्ध नाही.');
+ const s=await getDoc(doc(db,collectionName,id));if(!s.exists())throw new Error('दस्तऐवज उपलब्ध नाही.');
+ const c=s.data();const url=c.fileUrl||c.pdfUrl||c.url||c.documentUrl||c.link;if(!url)throw new Error('PDF URL उपलब्ध नाही.');
+ const member=await getMember(u);document.getElementById('title').textContent=c.title||c.name||c.fileName||'सुरक्षित दस्तऐवज';
+ const pdfjs=await import('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs');pdfjs.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs';
+ const pdf=await pdfjs.getDocument({url,withCredentials:false}).promise,r=document.getElementById('reader');
+ for(let i=1;i<=pdf.numPages;i++){const page=await pdf.getPage(i),vp=page.getViewport({scale:1.35}),wrap=document.createElement('div'),can=document.createElement('canvas'),wm=document.createElement('div');wrap.className='page';wm.className='watermark';wm.textContent=stamp(member);wrap.append(can,wm);r.appendChild(wrap);can.width=Math.ceil(vp.width);can.height=Math.ceil(vp.height);await page.render({canvasContext:can.getContext('2d',{alpha:false}),viewport:vp}).promise}
+ document.getElementById('loading').remove();
+}
+onAuthStateChanged(auth,u=>{if(!u){document.getElementById('loading').textContent='कृपया सदस्य म्हणून लॉगिन करा.';return}render(u).catch(e=>document.getElementById('loading').textContent='PDF उघडता आले नाही: '+e.message)});
+</script></body></html>

@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "763805226978",
+    "firebase_url": "https://xrayunionmah-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "xrayunionmah",
+    "storage_bucket": "xrayunionmah.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:763805226978:android:13e9a01f2632391dd88bbb",
+        "android_client_info": {
+          "package_name": "com.xrayunion.maharashtra"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "763805226978-kciao9f4cliop1vh7gqosl5djaflul8c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBdg7ABuHpnhEbyzaBYbtdENafTiyRmkWI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "763805226978-kciao9f4cliop1vh7gqosl5djaflul8c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

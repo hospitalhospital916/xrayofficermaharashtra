@@ -333,7 +333,7 @@
     const SUPER_ADMIN_EMAIL = "hangemahesh498@gmail.com";
     
     // टेलीग्राम API
-    const TELEGRAM_BOT_TOKEN = "8598859316:AAHzoROJMwIFlm30XO3DxHJdk3kkjv6uS5c";
+    // Telegram bot token MUST NOT be stored in browser code. PDF chat uploads use Cloudinary instead.
 
     let currentUser = ""; 
     let currentUserMobile = "";
@@ -758,47 +758,20 @@
                 }
             } 
             else if (file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf")) {
-                const formData = new FormData();
-                formData.append("chat_id", appSettings.telegramChannelId || "@xrayunion_pdf_storage");
-                formData.append("document", file);
-
-                const tgRes = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument`, {
-                    method: "POST",
-                    body: formData
+                if (file.size > 4 * 1024 * 1024) throw new Error("PDF ची कमाल साईझ 4 MB आहे.");
+                const cloudName="jjavsdh5", uploadPreset="ml_default";
+                const fd=new FormData(); fd.append("file",file); fd.append("upload_preset",uploadPreset);
+                const up=await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/raw/upload`,{method:"POST",body:fd});
+                const tgData=await up.json().catch(()=>({}));
+                if(!up.ok || !tgData.secure_url) throw new Error(`PDF अपलोड अयशस्वी: ${tgData?.error?.message || `Cloudinary HTTP ${up.status}`}`);
+                const pdfDirectUrl=tgData.secure_url;
+                await db.collection("chat_messages").add({
+                    room:currentRoom,senderName:currentUser,user:currentUser,senderRole:currentUserPost,userPost:currentUserPost,
+                    userMobile:currentUserMobile,userOffice:currentUserOffice,userPhoto:currentUserPhoto,senderType:isTypeAdmin?"admin":"member",
+                    text:pdfDirectUrl,message:pdfDirectUrl,fileName:file.name,type:"pdf",time:timeStr,
+                    readBy:[{name:currentUser,role:currentUserPost,office:currentUserOffice,time:timeStr}],
+                    timestamp:firebase.firestore.FieldValue.serverTimestamp()
                 });
-                const tgData = await tgRes.json();
-
-                if (tgData.ok) {
-                    const fileId = tgData.result.document.file_id;
-                    const fileGetRes = await fetch(`https://api.telegram.org/file/bot${AAHzoROJMwIFlm30XO3DxHJdk3kkjv6uS5c}/getFile?file_id=${fileId}`);
-                    const fileGetData = await fileGetRes.json();
-
-                    if (fileGetData.ok) {
-                        const filePath = fileGetData.result.file_path;
-                        const pdfDirectUrl = `https://api.telegram.org/file/bot${TELEGRAM_BOT_TOKEN}/${filePath}`;
-
-                        await db.collection("chat_messages").add({
-                            room: currentRoom,
-                            senderName: currentUser,
-                            user: currentUser,
-                            senderRole: currentUserPost,
-                            userPost: currentUserPost,
-                            userMobile: currentUserMobile,
-                            userOffice: currentUserOffice,
-                            userPhoto: currentUserPhoto,
-                            senderType: isTypeAdmin ? "admin" : "member",
-                            text: pdfDirectUrl,
-                            message: pdfDirectUrl,
-                            fileName: file.name,
-                            type: "pdf",
-                            time: timeStr,
-                            readBy: [{ name: currentUser, role: currentUserPost, office: currentUserOffice, time: timeStr }],
-                            timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                        });
-                    }
-                } else {
-                    throw new Error("Telegram वर PDF पाठवता आली नाही. Telegram Channel मध्ये Bot Admin आहे का ते तपासा.");
-                }
             }
         } catch (error) {
             Swal.fire('त्रुटी', error.message, 'error');

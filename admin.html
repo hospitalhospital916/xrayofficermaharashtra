@@ -360,9 +360,9 @@
                         </div>
 
                         <div style="flex:1;">
-                            <label style="color:var(--danger); font-weight:bold;"><i class="fa fa-file-pdf"></i> डॉक्युमेंट अपलोड (Max 400 KB)</label>
+                            <label style="color:var(--danger); font-weight:bold;"><i class="fa fa-file-pdf"></i> डॉक्युमेंट अपलोड (Max 4 MB)</label>
                             <div id="upload_box_doc">
-                                <input type="file" id="edit_document" accept="image/*,.pdf" class="form-control" style="border: 2px dashed var(--danger); padding: 10px;" onchange="checkFileSize(this, 400)">
+                                <input type="file" id="edit_document" accept="image/*,.pdf" class="form-control" style="border: 2px dashed var(--danger); padding: 10px;" onchange="checkFileSize(this, 4096)">
                             </div>
                             <div id="existing_box_doc" style="display:none; align-items:center; gap:10px; padding:10px; border:1px solid #ccc; border-radius:6px; background:#f8fafc;">
                                 <a id="link_doc" href="#" target="_blank" class="badge bg-success" style="text-decoration:none; padding:8px;"><i class="fa fa-eye"></i> फाईल पहा</a>
@@ -372,9 +372,9 @@
                         </div>
 
                         <div style="flex:1;">
-                            <label id="lbl_other_doc" style="color:var(--info); font-weight:bold;"><i class="fa fa-folder-open"></i> आधार / इतर कागदपत्रे (Max 400 KB)</label>
+                            <label id="lbl_other_doc" style="color:var(--info); font-weight:bold;"><i class="fa fa-folder-open"></i> आधार / इतर कागदपत्रे (Max 4 MB)</label>
                             <div id="upload_box_other">
-                                <input type="file" id="edit_other_doc" accept=".pdf, image/*" class="form-control" style="border: 2px dashed var(--info); padding: 10px;" onchange="checkFileSize(this, 400)">
+                                <input type="file" id="edit_other_doc" accept=".pdf, image/*" class="form-control" style="border: 2px dashed var(--info); padding: 10px;" onchange="checkFileSize(this, 4096)">
                             </div>
                             <div id="existing_box_other" style="display:none; align-items:center; gap:10px; padding:10px; border:1px solid #ccc; border-radius:6px; background:#f8fafc;">
                                 <a id="link_other" href="#" target="_blank" class="badge bg-success" style="text-decoration:none; padding:8px;"><i class="fa fa-eye"></i> फाईल पहा</a>
@@ -805,11 +805,16 @@
             <button class="tab-btn" onclick="openTab('tab-member-logs')" data-perm="member_logs"><i class="fa fa-user-clock"></i> मेम्बर लॉग</button>
             <button class="tab-btn" id="btn-tab-recyclebin" onclick="openTab('tab-recyclebin')" data-perm="recyclebin"><i class="fa fa-trash-restore"></i> रिसायकल बिन</button>
             <button class="tab-btn" id="btn-settings" onclick="openTab('tab-settings')" style="display:none;"><i class="fa fa-sliders-h"></i> सेटिंग्ज व अधिकार</button>
-        </div>
+        <button id="masterAdminTabBtn" class="tab-btn" style="display:none" onclick="openTab('tab-master-admin')"><i class="fa fa-shield-halved"></i> मास्टर सुरक्षा</button></div>
 
         <div class="container">
            <!-- TAB 1: DASHBOARD -->
-<div id="tab-dash" class="tab-content active">
+<div id="tab-master-admin" class="tab-content"><div class="panel"><div class="panel-header"><span>🛡️ मास्टर ॲडमिन • Storage & Security Control</span></div><div class="panel-body">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-bottom:15px"><div class="dash-card-mini"><h3>Firebase records</h3><h2 id="mFirestoreCount">—</h2></div><div class="dash-card-mini"><h3>Cloudinary usage</h3><h2 id="mCloudUsage">—</h2></div></div>
+<div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:14px;margin-bottom:15px"><b>फक्त Master Admin</b><p style="margin:5px 0;color:#334155">सब-ॲडमिनला permanent delete अधिकार नाही. Master कडून cleanup केल्यावर audit log तयार होईल.</p></div>
+<button class="btn-action bg-info" onclick="masterRefreshUsage()">🔄 Storage तपासा</button> <button class="btn-action bg-warning" onclick="masterCleanupOldLogs()">🧹 जुने logs साफ करा</button> <button class="btn-action bg-danger" onclick="masterOpenDanger()">⚠️ Permanent cleanup</button>
+<div id="masterDanger" style="display:none;margin-top:15px;border:2px solid #ef4444;border-radius:12px;padding:15px"><b>Permanent cleanup</b><p>सुरक्षेसाठी CONFIRM लिहा. सदस्य/circular data bulk delete केला जाणार नाही.</p><input id="masterConfirm" placeholder="CONFIRM" style="padding:8px"><button class="btn-action bg-danger" onclick="masterRunCleanup()">Proceed</button></div>
+</div></div></div><div id="tab-dash" class="tab-content active">
     <div class="dash-cards-grid">
         <div class="dash-card-mini" style="border-left-color: var(--primary);"><h3>एकूण सदस्य</h3><h2 id="cnt-all">0</h2></div>
         <div class="dash-card-mini" style="border-left-color: var(--success);"><h3>मान्य (Approved)</h3><h2 id="cnt-approved">0</h2></div>
@@ -1304,9 +1309,9 @@
                             </div>
                         </div>
 
-                        <h4>नोटीस बोर्ड PDF/इमेज अपलोड (Max 400 KB)</h4>
+                        <h4>नोटीस बोर्ड PDF/इमेज अपलोड (Max 4 MB)</h4>
                         <div class="form-row" style="margin-top:10px;">
-                            <input type="file" id="notice_file" accept=".pdf, image/*" class="form-control" onchange="checkFileSize(this, 400)">
+                            <input type="file" id="notice_file" accept=".pdf, image/*" class="form-control" onchange="checkFileSize(this, 4096)">
                             <input type="text" id="notice_name" placeholder="नोटिसचे नाव / शीर्षक" class="form-control">
                             <button class="btn-action bg-success" onclick="uploadNoticePDF()"><i class="fa fa-upload"></i> अपलोड करा</button>
                         </div>
@@ -1379,16 +1384,30 @@ window.approveMemberFile = async function(fileId, fileName) {
     Swal.fire({ title: 'मंजूर करत आहे व नोटिफिकेशन पाठवत आहे...', didOpen: () => Swal.showLoading() });
     try {
         // फाईल स्टेटस मंजूर करा
+        const fileSnap = await getDocs(collection(db, "member_files"));
+        const fileDoc = fileSnap.docs.find(d => d.id === fileId);
+        const fileData = fileDoc ? fileDoc.data() : {};
         await updateDoc(doc(db, "member_files", fileId), {
             status: "Approved",
             approvedBy: currentLoggedInAdminName,
             approvedAt: new Date().toLocaleString('mr-IN')
         });
 
-        // सर्व उपकरणांवर नोटिफिकेशन ट्रिगर करा
+        const circularRef = await addDoc(collection(db, "circulars"), {
+            title: fileName || fileData.fileName || "नवीन परिपत्रक",
+            fileName: fileName || fileData.fileName || "PDF",
+            fileUrl: fileData.fileUrl || fileData.pdfUrl || "",
+            sourceMemberFileId: fileId,
+            status: "Approved",
+            publishedAt: Date.now(),
+            createdAt: Date.now(),
+            category: "Circular"
+        });
+
         await window.sendPushNotificationToAll(
             "नवीन परिपत्रक उपलब्ध!",
-            `"${fileName}" हे परिपत्रक संघटनेच्या पोर्टलवर उपलब्ध झाले आहे.`
+            `"${fileName}" हे परिपत्रक संघटनेच्या पोर्टलवर उपलब्ध झाले आहे.`,
+            { url: `/secure-pdf.html?id=${circularRef.id}&collection=circulars`, circularId: circularRef.id }
         );
 
         Swal.fire('मंजूर झाले!', 'PDF मंजूर झाली आणि सर्व सदस्यांना नोटिफिकेशन गेले.', 'success');
@@ -1399,16 +1418,21 @@ window.approveMemberFile = async function(fileId, fileName) {
 };
 
 // २. पुश नोटिफिकेशन पाठवणारे फंक्शन (Firebase Cloud Function / HTTP v1 API)
-window.sendPushNotificationToAll = async function(title, body) {
+window.sendPushNotificationToAll = async function(title, body, data = {}) {
+    // Never send FCM from the browser with a server key. Queue a Firestore job;
+    // Firebase Cloud Functions sends it using Admin SDK credentials.
     try {
-        // Notification payload
-        keywords: keywords,
-description: description,
-status: "Approved",
-createdAt: Date.now()
+        await addDoc(collection(db, "push_jobs"), {
+            title: title || "नवीन सूचना",
+            body: body || "",
+            data: data || {},
+            createdAt: Date.now(),
+            status: "queued"
         });
+        return true;
     } catch(e) {
-        console.error("Notification Error:", e);
+        console.error("Notification queue error:", e);
+        return false;
     }
 };
             <div id="tab-member-folders" class="tab-content">
@@ -1424,7 +1448,7 @@ createdAt: Date.now()
                         <hr style="margin:25px 0;">
 
                         <div style="background:#fffbeb; padding:15px; border-radius:8px; border:1px solid #fcd34d; margin-bottom:20px;">
-                            <h4 style="color:#b45309; margin-bottom:10px;"><i class="fa fa-cloud-upload-alt"></i> फोल्डरमध्ये नवीन फाईल अपलोड करा (Max 400 KB)</h4>
+                            <h4 style="color:#b45309; margin-bottom:10px;"><i class="fa fa-cloud-upload-alt"></i> फोल्डरमध्ये नवीन फाईल अपलोड करा (Max 4 MB)</h4>
                             <div class="form-row">
                                 <div style="flex:1;">
                                     <label>फोल्डर निवडा:</label>
@@ -1432,7 +1456,7 @@ createdAt: Date.now()
                                 </div>
                                 <div style="flex:1;">
                                     <label>फाईल निवडा (PDF/Image):</label>
-                                    <input type="file" id="mf_file" class="form-control" accept=".pdf, image/*" onchange="checkFileSize(this, 400)">
+                                    <input type="file" id="mf_file" class="form-control" accept=".pdf, image/*" onchange="checkFileSize(this, 4096)">
                                 </div>
                                 <div style="flex:1;">
                                     <label>फाईलचे नाव:</label>
@@ -2663,19 +2687,38 @@ createdAt: Date.now()
         // ==========================================================
         // CLOUDINARY UPLOAD & FILE CONTROL UTILITIES
         // ==========================================================
-        window.uploadToCloudinary = async (file) => {
-            const cloudName = "jjavsdh5"; 
-            const uploadPreset = "ml_default"; 
-            const CLOUDINARY_URL = `https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`;
-            const formData = new FormData(); 
-            formData.append("file", file); 
-            formData.append("upload_preset", uploadPreset);
-            
-            const res = await fetch(CLOUDINARY_URL, { method: "POST", body: formData });
-            const data = await res.json();
-            if(data.secure_url) return data.secure_url; 
-            throw new Error("अपलोड अयशस्वी.");
-        };
+        window.prepareUploadFile = async function(file){
+    if(!file) throw new Error("फाईल निवडलेली नाही.");
+    const max = 4 * 1024 * 1024;
+    if(file.size > max) throw new Error("कमाल फाईल साईझ 4 MB आहे.");
+    if(!file.type.startsWith("image/")) return file;
+    // Photos are kept lightweight; documents/PDFs can use the full 4 MB allowance.
+    if(file.size <= 400*1024) return file;
+    const bmp = await createImageBitmap(file);
+    const maxSide = 2200, scale = Math.min(1, maxSide/Math.max(bmp.width,bmp.height));
+    const c=document.createElement("canvas"); c.width=Math.round(bmp.width*scale); c.height=Math.round(bmp.height*scale);
+    c.getContext("2d").drawImage(bmp,0,0,c.width,c.height);
+    const blob=await new Promise(r=>c.toBlob(r,"image/jpeg",0.88));
+    if(!blob) return file;
+    return new File([blob], file.name.replace(/\.[^.]+$/,"")+".jpg",{type:"image/jpeg"});
+};
+window.uploadToCloudinary = async (file) => {
+    const f=await window.prepareUploadFile(file);
+    const cloudName="jjavsdh5", uploadPreset="ml_default";
+    const isPdf=f.type==="application/pdf" || /\.pdf$/i.test(f.name);
+    const endpoint=isPdf ? `https://api.cloudinary.com/v1_1/${cloudName}/raw/upload` : `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
+    const fd=new FormData(); fd.append("file",f); fd.append("upload_preset",uploadPreset);
+    const res=await fetch(endpoint,{method:"POST",body:fd}); let data={}; try{data=await res.json()}catch(_){}
+    if(!res.ok || !data.secure_url) throw new Error(`Cloudinary अपलोड अयशस्वी: ${data?.error?.message||`HTTP ${res.status}`}`);
+    return data.secure_url;
+};
+    try { data = await res.json(); } catch (_) {}
+    if (!res.ok || !data.secure_url) {
+        const msg = data?.error?.message || `Cloudinary HTTP ${res.status}`;
+        throw new Error(`Cloudinary अपलोड अयशस्वी: ${msg}. Cloudinary मध्ये '${uploadPreset}' preset Unsigned आहे का आणि PDF/raw upload allowed आहे का तपासा.`);
+    }
+    return data.secure_url;
+};
 
         window.removeExistingFile = (boxType, hiddenInputId, fileInputId) => {
             if(confirm("तुम्हाला खरोखर ही फाईल डिलीट करून नवीन फाईल बदलायची आहे का?")) {
@@ -4969,6 +5012,35 @@ window.rejectProfileEdit = async function(reqId) {
         Swal.fire('नाकारले', 'अर्ज रद्द करण्यात आला.', 'info');
         window.openProfileRequestsModal();
     }
-}; </script>
+}; 
+// MASTER ADMIN STORAGE CONTROL
+const MASTER_FN_BASE="https://us-central1-xrayunionmah.cloudfunctions.net";
+async function masterToken(){if(!auth.currentUser)throw new Error("Login required");return await auth.currentUser.getIdToken(true)}
+window.masterRefreshUsage=async function(){
+ if(!isSuperAdmin)return Swal.fire("नकार","Master Admin आवश्यक.","error");
+ try{
+  const cols=["members","member_files","gallery","circulars","chat_messages","admin_logs","member_logs"];let n=0;
+  for(const c of cols){try{n+=(await getDocs(collection(db,c))).size}catch(_){}}
+  document.getElementById("mFirestoreCount").textContent=n+" records";
+  const r=await fetch(MASTER_FN_BASE+"/masterStorageOverview",{headers:{Authorization:"Bearer "+await masterToken()}});
+  const u=await r.json(); const bytes=u.storage?.used_bytes||u.storage?.used_bytes_total||0;
+  document.getElementById("mCloudUsage").textContent=bytes?(Math.round(bytes/1024/1024)+" MB"):"Not configured";
+  Swal.fire("Storage check","Firebase संदर्भ: "+n+" records. Cloudinary usage server कडून तपासले.","success");
+ }catch(e){Swal.fire("त्रुटी",e.message,"error")}
+};
+window.masterCleanupOldLogs=async function(){
+ if(!isSuperAdmin)return;const x=await Swal.fire({title:"जुने logs साफ करायचे?",text:"120 दिवसांपेक्षा जुने logs delete होतील.",icon:"warning",showCancelButton:true,confirmButtonText:"होय"});
+ if(!x.isConfirmed)return;await autoDeleteOldLogs();await logAdminActivity("Master Admin: old logs cleanup");Swal.fire("पूर्ण","जुने logs साफ केले.","success")
+};
+window.masterOpenDanger=function(){if(isSuperAdmin)document.getElementById("masterDanger").style.display="block"};
+window.masterRunCleanup=async function(){
+ if(!isSuperAdmin)return;
+ if(document.getElementById("masterConfirm").value!=="CONFIRM")return Swal.fire("CONFIRM आवश्यक","","error");
+ const x=await Swal.fire({title:"Permanent cleanup?",text:"फक्त 120 दिवसांपेक्षा जुने admin logs साफ होतील. सदस्य/circular data delete होणार नाही.",icon:"warning",showCancelButton:true,confirmButtonText:"Proceed"});
+ if(!x.isConfirmed)return;
+ try{const r=await fetch(MASTER_FN_BASE+"/masterCleanup",{method:"POST",headers:{"Content-Type":"application/json",Authorization:"Bearer "+await masterToken()},body:JSON.stringify({confirm:"CONFIRM"})});const j=await r.json();if(!r.ok)throw new Error(j.error||"Cleanup failed");await logAdminActivity("Master Admin: server cleanup "+j.deletedLogs+" logs");Swal.fire("पूर्ण",j.deletedLogs+" जुने logs साफ झाले.","success");}catch(e){Swal.fire("त्रुटी",e.message,"error")}
+};
+setInterval(()=>{const b=document.getElementById("masterAdminTabBtn");if(b)b.style.display=isSuperAdmin?"inline-flex":"none"},700);
+</script>
 </body>
 </html>

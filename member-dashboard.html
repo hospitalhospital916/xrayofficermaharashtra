@@ -359,7 +359,19 @@
             .container, .panel, .panel-body { margin: 0 !important; padding: 0 !important; border: none !important; box-shadow: none !important; }
             #printLetterArea { display: block !important; }
         }
-    </style>
+    
+        /* ===== Modern Circular Alert Banner ===== */
+        .top-alert-banner{margin:10px 12px 0;border:1px solid #dbeafe;border-radius:16px;background:linear-gradient(135deg,#fff,#eff6ff);box-shadow:0 5px 18px rgba(15,23,42,.08);display:none;overflow:hidden}
+        .top-alert-inner{display:flex;align-items:center;gap:10px;padding:10px 12px}
+        .new-badge{background:#dc2626;color:#fff;border-radius:999px;padding:4px 8px;font-size:11px;font-weight:900;animation:alertPulse 1.4s infinite;white-space:nowrap}
+        .top-alert-icon{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:#fee2e2;color:#dc2626;font-size:17px}
+        .top-alert-copy{min-width:0;flex:1}.top-alert-copy b{display:block;color:#0f172a;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.top-alert-copy small{color:#64748b;font-size:10px}
+        .top-alert-view{border:0;background:#0B3D91;color:#fff;border-radius:10px;padding:8px 10px;font-weight:800;font-size:11px;white-space:nowrap}
+        .top-alert-close{border:0;background:transparent;color:#94a3b8;font-size:16px;padding:5px}
+        @keyframes alertPulse{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.25)}50%{box-shadow:0 0 0 7px rgba(220,38,38,0)}}
+        .secure-pdf-frame{position:fixed;inset:0;width:100%;height:100%;border:0;background:#0b1220;z-index:99999;display:none}
+        @media(max-width:600px){.top-alert-banner{margin:7px 8px 0}.top-alert-inner{padding:8px}.top-alert-view{padding:7px 8px}.top-alert-copy b{font-size:12px}}
+</style>
 </head>
 <body>
 
@@ -589,7 +601,7 @@
                         <div style="flex:1;">
                             <label style="color:var(--danger); font-weight:bold;"><i class="fa fa-file-pdf"></i> २. नियुक्ती/शासकीय आदेश</label>
                             <div id="self_upload_box_doc">
-                                <input type="file" id="self_document" accept="image/*,.pdf" class="form-control" onchange="checkFileSize(this, 400)">
+                                <input type="file" id="self_document" accept="image/*,.pdf" class="form-control" onchange="checkFileSize(this, 4096)">
                             </div>
                             <div id="self_existing_box_doc" style="display:none; align-items:center; justify-content:space-between; padding:8px; border:1px solid #cbd5e1; border-radius:6px; background:#f8fafc;">
                                 <a id="self_link_doc" href="#" target="_blank" class="badge bg-success" style="text-decoration:none;"><i class="fa fa-eye"></i> फाईल पहा</a>
@@ -601,7 +613,7 @@
                         <div style="flex:1;">
                             <label style="color:var(--info); font-weight:bold;"><i class="fa fa-id-card"></i> ३. आधार / इतर कागदपत्रे</label>
                             <div id="self_upload_box_other">
-                                <input type="file" id="self_other_document" accept="image/*,.pdf" class="form-control" onchange="checkFileSize(this, 400)">
+                                <input type="file" id="self_other_document" accept="image/*,.pdf" class="form-control" onchange="checkFileSize(this, 4096)">
                             </div>
                             <div id="self_existing_box_other" style="display:none; align-items:center; justify-content:space-between; padding:8px; border:1px solid #cbd5e1; border-radius:6px; background:#f8fafc;">
                                 <a id="self_link_other" href="#" target="_blank" class="badge bg-success" style="text-decoration:none;"><i class="fa fa-eye"></i> फाईल पहा</a>
@@ -1228,13 +1240,13 @@
                                 </div>
 
                                 <div style="flex:1;">
-                                    <label style="font-weight:bold;">PDF फाईल निवडा (Max 400 KB):</label>
+                                    <label style="font-weight:bold;">PDF फाईल निवडा (Max 4 MB):</label>
                                     <input
                                         type="file"
                                         id="mem_upload_pdf_file"
                                         class="form-control"
                                         accept=".pdf,application/pdf"
-                                        onchange="checkFileSize(this, 400)">
+                                        onchange="checkFileSize(this, 4096)">
                                 </div>
                             </div>
 
@@ -1338,6 +1350,30 @@
         // ==========================================
         window.memberPdfFiles = [];
         window.memberPdfFolders = [];
+        // ===== LIVE CIRCULAR ALERT + DEEP LINK =====
+        window.openSecurePDFById = function(id,title='नवीन परिपत्रक'){
+            if(!id) return;
+            window.location.href = `secure-pdf.html?id=${encodeURIComponent(id)}&collection=circulars&title=${encodeURIComponent(title)}`;
+        };
+        window.loadTopCircularAlert = async function(){
+            const box=document.getElementById('topAlertBanner');
+            if(!box) return;
+            try{
+                const snap=await getDocs(collection(db,'circulars'));
+                const rows=[]; snap.forEach(d=>rows.push({id:d.id,...d.data()}));
+                const approved=rows.filter(x=>!x.status || String(x.status).toLowerCase()==='approved')
+                    .sort((a,b)=>(Number(b.publishedAt||b.createdAt||b.timestamp)||0)-(Number(a.publishedAt||a.createdAt||a.timestamp)||0));
+                const c=approved[0]; if(!c){box.style.display='none';return;}
+                const title=c.title||c.name||c.fileName||'नवीन परिपत्रक / GR';
+                document.getElementById('topAlertTitle').textContent=title;
+                const dt=c.publishedAt||c.createdAt||c.date;
+                document.getElementById('topAlertDate').textContent=dt ? `प्रकाशित: ${new Date(dt).toLocaleString('mr-IN')}` : 'नवीन दस्तऐवज उपलब्ध';
+                document.getElementById('topAlertView').onclick=()=>window.openSecurePDFById(c.id,title);
+                document.getElementById('topAlertClose').onclick=()=>{box.style.display='none';sessionStorage.setItem('dismissedCircularId',c.id)};
+                if(sessionStorage.getItem('dismissedCircularId')!==c.id) box.style.display='block';
+            }catch(e){console.warn('Circular alert:',e)}
+        };
+
 
         // ==========================================
         // MEMBER PDF UPLOAD FOR ADMIN APPROVAL
@@ -1566,7 +1602,7 @@
                                 <button
                                     type="button"
                                     class="btn-action bg-primary"
-                                    onclick="openMemberPDF('${String(f.fileUrl || '').replace(/'/g, "\\'")}')">
+                                    onclick="openMemberPDF('${String(f.fileUrl || '').replace(/'/g, "\\'")}','${String(f.id || '').replace(/'/g, "\\'")}','${String(f.fileName || 'PDF').replace(/'/g, "\\'")}')">
                                     <i class="fa fa-eye"></i> PDF पहा
                                 </button>
                             </div>
@@ -1589,12 +1625,12 @@
             if (infoBox) infoBox.textContent = '';
         };
 
-        window.openMemberPDF = function(url) {
-            if (!url) {
-                return Swal.fire('त्रुटी', 'या फाईलची PDF लिंक उपलब्ध नाही.', 'error');
-            }
-
-            window.open(url, '_blank', 'noopener,noreferrer');
+        window.openMemberPDF = function(url, id = '', title = '') {
+            if (!url && !id) return Swal.fire('त्रुटी', 'या फाईलची PDF लिंक उपलब्ध नाही.', 'error');
+            const qs = id
+                ? `?id=${encodeURIComponent(id)}&collection=member_files&title=${encodeURIComponent(title || 'PDF दस्तऐवज')}`
+                : `?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title || 'PDF दस्तऐवज')}`;
+            window.location.href = `secure-pdf.html${qs}`;
         };
         let hosp_rawData = [];
         window.logMemberActivity = async function(action) {
@@ -2074,12 +2110,34 @@
             }
         };
 
-        window.uploadToCloudinary = async (file) => {
-            const formData = new FormData(); 
-            formData.append("file", file); 
-            formData.append("upload_preset", "ml_default");
-            const res = await fetch(`https://api.cloudinary.com/v1_1/jjavsdh5/auto/upload`, { method: "POST", body: formData });
-            const data = await res.json();
+        window.prepareUploadFile = async function(file){
+    if(!file) throw new Error("फाईल निवडलेली नाही.");
+    const max = 4 * 1024 * 1024;
+    if(file.size > max) throw new Error("कमाल फाईल साईझ 4 MB आहे.");
+    if(!file.type.startsWith("image/")) return file;
+    // Photos are kept lightweight; documents/PDFs can use the full 4 MB allowance.
+    if(file.size <= 400*1024) return file;
+    const bmp = await createImageBitmap(file);
+    const maxSide = 2200, scale = Math.min(1, maxSide/Math.max(bmp.width,bmp.height));
+    const c=document.createElement("canvas"); c.width=Math.round(bmp.width*scale); c.height=Math.round(bmp.height*scale);
+    c.getContext("2d").drawImage(bmp,0,0,c.width,c.height);
+    const blob=await new Promise(r=>c.toBlob(r,"image/jpeg",0.88));
+    if(!blob) return file;
+    return new File([blob], file.name.replace(/\.[^.]+$/,"")+".jpg",{type:"image/jpeg"});
+};
+window.uploadToCloudinary = async (file) => {
+    const f=await window.prepareUploadFile(file);
+    const cloudName="jjavsdh5", uploadPreset="ml_default";
+    const isPdf=f.type==="application/pdf" || /\.pdf$/i.test(f.name);
+    const endpoint=isPdf ? `https://api.cloudinary.com/v1_1/${cloudName}/raw/upload` : `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
+    const fd=new FormData(); fd.append("file",f); fd.append("upload_preset",uploadPreset);
+    const res=await fetch(endpoint,{method:"POST",body:fd}); let data={}; try{data=await res.json()}catch(_){}
+    if(!res.ok || !data.secure_url) throw new Error(`Cloudinary अपलोड अयशस्वी: ${data?.error?.message||`HTTP ${res.status}`}`);
+    return data.secure_url;
+}; try{data=await res.json()}catch(_){}
+            if(!res.ok || !data.secure_url){
+                throw new Error(`Cloudinary अपलोड अयशस्वी: ${data?.error?.message || `HTTP ${res.status}`}. '${uploadPreset}' Unsigned preset आणि PDF/raw upload तपासा.`);
+            }
             return data.secure_url;
         };
 
