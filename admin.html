@@ -1475,7 +1475,32 @@ window.sendPushNotificationToAll = async function(title, body) {
                             <tbody id="memberFilesTableBody"></tbody>
                         </table>
                     </div>
-                </div>
+                </div><!-- admin.html मधील tab-member-folders मध्ये जोडा -->
+<div style="background:#f8fafc; border:1px solid #cbd5e1; padding:15px; border-radius:8px; margin-bottom:20px;">
+    <h4 style="color:var(--primary); margin-bottom:10px;"><i class="fa fa-folder-plus"></i> नवीन फोल्डर तयार करा</h4>
+    <div class="form-row">
+        <input type="text" id="new_folder_name_input" class="form-control" placeholder="उदा. नवीन परिपत्रके 2026">
+        <button class="btn-action bg-primary" onclick="createNewFolderByAdmin()"><i class="fa fa-plus"></i> फोल्डर बनवा</button>
+    </div>
+</div>
+
+<div style="background:#fffbeb; border:1px solid #fde68a; padding:15px; border-radius:8px; margin-bottom:20px;">
+    <h4 style="color:#b45309; margin-bottom:10px;"><i class="fa fa-clock"></i> सदस्यांनी पाठवलेल्या प्रलंबित (Pending) PDF फाईल्स</h4>
+    <table style="font-size:0.88rem;">
+        <thead>
+            <tr>
+                <th>अ.क्र.</th>
+                <th>पाठवणारा सदस्य</th>
+                <th>PDF चे नाव</th>
+                <th>तारीख</th>
+                <th style="text-align:center;">Action (मंजुरी / नाकारणे)</th>
+            </tr>
+        </thead>
+        <tbody id="pendingMemberFilesTableBody">
+            <tr><td colspan="5" style="text-align:center;">लोड होत आहे...</td></tr>
+        </tbody>
+    </table>
+</div>
             </div><!-- TAB 12: VOTING & DYNAMIC POLL SYSTEM -->
             <div id="tab-voting" class="tab-content">
                 <div class="panel">
