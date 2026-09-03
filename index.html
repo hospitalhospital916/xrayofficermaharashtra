@@ -29,7 +29,7 @@
     <meta property="og:description" content="राज्यातील सर्व क्ष-किरण वैज्ञानिक अधिकाऱ्यांच्या न्याय-हक्कांसाठी समर्पित अधिकृत संघटना.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://xrayunionmah.web.app/">
-    <meta property="og:image" content="https://xrayunionmah.web.app/icon-192x192.png"> <!-- WhatsApp वर हा फोटो दिसेल -->
+    <meta property="og:image" content="https://xrayunionmah.web.app/icon-192x192.png">
 
     <!-- PWA Manifest & Theme Color Settings -->
     <link rel="manifest" href="manifest.json">
@@ -138,13 +138,15 @@
         .header-title-box .state-badge { display: inline-block; background: linear-gradient(135deg, var(--primary), #1E40AF); color: var(--gold); font-weight: 800; font-size: 1rem; padding: 2px 14px; border-radius: 20px; margin-top: 4px; }
         .header-title-box small { color: #64748B; font-size: 0.9rem; font-weight: 600; display: block; margin-top: 2px; }
         
-        /* Premium Main Action Buttons */
+        /* Action Buttons */
         .header-actions { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
-        .btn-header { padding: 10px 22px; border-radius: 30px; font-weight: 800; font-size: 0.95rem; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-        .btn-reg { background: linear-gradient(135deg, var(--secondary), #E05D00); color: var(--white); border: none; }
+        .btn-header { padding: 10px 22px; border-radius: 30px; font-weight: 800; font-size: 0.95rem; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border: none; cursor: pointer; }
+        .btn-reg { background: linear-gradient(135deg, var(--secondary), #E05D00); color: var(--white); }
         .btn-reg:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(248, 111, 3, 0.4); }
         .btn-log { background: var(--primary); color: var(--white); border: 2px solid var(--primary); }
         .btn-log:hover { background: var(--primary-dark); transform: translateY(-2px); }
+        .btn-notify { background: #0284C7; color: white; }
+        .btn-notify:hover { background: #0369A1; }
 
         /* --- NAVIGATION BAR --- */
         nav { background: var(--primary); padding: 0 20px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
@@ -159,7 +161,7 @@
         .ticker-wrap { background: #071938; border-bottom: 2px solid var(--secondary); color: var(--gold); padding: 8px 20px; font-size: 1rem; font-weight: 700; display: flex; align-items: center; }
         .ticker-badge { background: var(--danger); color: white; padding: 3px 12px; border-radius: 20px; font-size: 0.85rem; margin-right: 15px; white-space: nowrap; font-weight: 800; }
 
-        /* --- MODERN HERO BANNER --- */
+        /* --- HERO BANNER --- */
         .hero { 
             background: linear-gradient(135deg, rgba(15, 44, 89, 0.92), rgba(7, 25, 56, 0.95)), url('https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80') center/cover; 
             padding: 70px 20px; 
@@ -170,7 +172,6 @@
         .hero h2 { font-size: 2.6rem; font-weight: 800; margin-bottom: 12px; text-shadow: 2px 3px 10px rgba(0,0,0,0.5); letter-spacing: -0.5px; }
         .hero p { font-size: 1.25rem; opacity: 0.95; line-height: 1.6; font-weight: 400; max-width: 780px; margin: 0 auto 30px auto; }
 
-        /* Hero Quick Feature Highlights */
         .hero-stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-top: 35px; }
         .hero-stat-card { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); padding: 18px 12px; border-radius: 12px; transition: 0.3s; }
         .hero-stat-card:hover { transform: translateY(-4px); background: rgba(255, 255, 255, 0.18); }
@@ -185,12 +186,10 @@
         .section-header h2::after { content: ''; width: 60%; height: 4px; background: var(--secondary); display: block; margin: 6px auto 0 auto; border-radius: 2px; }
         .section-header p { color: #64748B; font-weight: 600; margin-top: 4px; font-size: 1.05rem; }
 
-        /* --- ABOUT CARD --- */
         .about-card { background: white; padding: 35px; border-radius: var(--radius); box-shadow: var(--card-shadow); border-left: 6px solid var(--primary); margin-bottom: 40px; }
         .about-card h3 { color: var(--primary); font-size: 1.6rem; margin-bottom: 14px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
         .about-card p { font-size: 1.1rem; color: #334155; line-height: 1.85; text-align: justify; }
 
-        /* --- DYNAMIC FOLDERS & GR SECTION --- */
         .folders-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 25px; margin-bottom: 40px; }
         .folder-box { background: white; border-radius: var(--radius); box-shadow: var(--card-shadow); border-top: 5px solid var(--primary); overflow: hidden; }
         .folder-header { background: #F8FAFC; padding: 16px 20px; border-bottom: 1px solid #E2E8F0; display: flex; justify-content: space-between; align-items: center; }
@@ -204,20 +203,17 @@
         .btn-download { background: var(--primary); color: white; padding: 6px 14px; border-radius: 8px; text-decoration: none; font-size: 0.85rem; font-weight: 700; transition: 0.2s; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; }
         .btn-download:hover { background: var(--secondary); }
 
-        /* --- DYNAMIC TABS SECTION --- */
         .dynamic-tabs-container { margin-bottom: 40px; }
         .tab-buttons-bar { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 8px; border-bottom: 2px solid #CBD5E1; margin-bottom: 20px; }
         .tab-btn-idx { padding: 10px 20px; background: #E2E8F0; color: var(--dark); border: none; border-radius: 8px; font-weight: 700; font-size: 0.98rem; cursor: pointer; transition: 0.3s; white-space: nowrap; }
         .tab-btn-idx.active { background: var(--primary); color: white; box-shadow: 0 4px 10px rgba(15,44,89,0.2); }
 
-        /* --- GALLERY SECTION --- */
         .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px; margin-bottom: 40px; }
         .gallery-card { background: white; border-radius: var(--radius); overflow: hidden; box-shadow: var(--card-shadow); transition: 0.3s; }
         .gallery-card:hover { transform: scale(1.03); box-shadow: var(--hover-shadow); }
         .gallery-card img { width: 100%; height: 175px; object-fit: cover; }
         .gallery-title { padding: 12px; font-size: 0.92rem; font-weight: 700; color: var(--dark); text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        /* --- CONTACT & FOOTER --- */
         .contact-card { background: white; padding: 40px; border-radius: var(--radius); box-shadow: var(--card-shadow); border-top: 5px solid var(--primary); text-align: center; margin-bottom: 40px; }
         .contact-card h2 { color: var(--primary); font-size: 1.8rem; font-weight: 800; margin-bottom: 12px; }
 
@@ -229,7 +225,6 @@
         .admin-login-link { color: #94A3B8; font-size: 0.85rem; text-decoration: underline; margin-top: 20px; display: inline-block; }
         .admin-login-link:hover { color: #FFFFFF; }
 
-        /* --- RESPONSIVE MEDIA QUERIES --- */
         @media (max-width: 992px) {
             header { text-align: center; justify-content: center; }
             .header-brand { flex-direction: column; text-align: center; gap: 10px; }
@@ -267,10 +262,10 @@
         </button>
     </div>
 
-    <!-- Header Banner with Updated Logo Alt Text -->
+    <!-- Header Banner -->
     <header>
         <div class="header-brand">
-            <img src="logo.png" alt="X-Ray Scientific Officer Union Maharashtra - xrayunion xsounion xrayunionmah" class="logo-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/4006/4006511.png'">
+            <img src="logo.png" alt="X-Ray Scientific Officer Union Maharashtra" class="logo-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/4006/4006511.png'">
             <div class="header-title-box">
                 <h1>क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना</h1>
                 <span class="state-badge">महाराष्ट्र राज्य</span>
@@ -278,13 +273,19 @@
             </div>
         </div>
         <div class="header-actions">
-            <button id="installAppBtn" class="btn-header" style="display: none; background: #10B981; color: white; cursor: pointer;"><i class="fa fa-download"></i> ॲप इन्स्टॉल करा</button>
+            <!-- Push Notification Button -->
+            <button id="btnEnableNotify" class="btn-header btn-notify">
+                <i class="fa fa-bell"></i> सूचना सुरू करा
+            </button>
+            <button id="installAppBtn" class="btn-header" style="display: none; background: #10B981; color: white;">
+                <i class="fa fa-download"></i> ॲप इन्स्टॉल करा
+            </button>
             <a href="member-registration.html" class="btn-header btn-reg"><i class="fa fa-user-plus"></i> नवीन सदस्य नोंदणी</a>
             <a href="member-dashboard.html" class="btn-header btn-log"><i class="fa fa-sign-in-alt"></i> सदस्य लॉगिन</a>
         </div>
     </header>
 
-    <!-- Sticky Navigation Menu -->
+    <!-- Navigation Menu -->
     <nav>
         <div class="nav-container">
             <button class="mobile-menu-toggle" onclick="toggleMobileMenu()"><i class="fa fa-bars"></i> मेनू</button>
@@ -308,13 +309,12 @@
         </marquee>
     </div>
 
-    <!-- Clean Hero Banner -->
+    <!-- Hero Banner -->
     <section class="hero">
         <div class="hero-content">
             <h2>न्याय, हक्क आणि प्रगतीसाठी एकजूट!</h2>
             <p>राज्यातील सर्व क्ष-किरण वैज्ञानिक अधिकाऱ्यांच्या सेवाविषयक प्रश्नांना वाचा फोडणारी आणि न्याय्य हक्क मिळवून देणारी एकमेव अधिकृत राज्यस्तरीय संघटना.</p>
             
-            <!-- Quick Feature Highlights Counters -->
             <div class="hero-stats-grid">
                 <div class="hero-stat-card">
                     <i class="fa fa-users"></i>
@@ -340,7 +340,7 @@
         </div>
     </section>
 
-    <!-- Main Container Starts -->
+    <!-- Main Container -->
     <div class="main-container">
 
         <!-- About Section -->
@@ -351,14 +351,13 @@
             </p>
         </section>
 
-        <!-- Dynamic Document Folders Section -->
+        <!-- Dynamic Document Folders -->
         <div class="section-header" id="folders">
             <h2><i class="fa fa-folder-open"></i> परिपत्रके, नोटीस व शासकीय GR</h2>
             <p>ॲडमिन पॅनेलवरून अपडेट केलेले सर्व अधिकृत दस्तऐवज</p>
         </div>
 
        <div class="folders-grid">
-            <!-- Folder 1: परिपत्रके -->
             <div class="folder-box">
                 <div class="folder-header">
                     <h3><i class="fa fa-file-pdf" style="color:var(--danger);"></i> परिपत्रके व GR</h3>
@@ -369,7 +368,6 @@
                 </div>
             </div>
 
-            <!-- Folder 2: नोटीस -->
             <div class="folder-box">
                 <div class="folder-header">
                     <h3><i class="fa fa-bullhorn" style="color:var(--secondary);"></i> महत्त्वाच्या नोटीस व पत्रे</h3>
@@ -381,7 +379,7 @@
             </div>
         </div>
 
-        <!-- Dynamic Index Management Tabs -->
+        <!-- Dynamic Tabs -->
         <div class="dynamic-tabs-container" id="adminIndexTabsSection" style="display:none;">
             <h3 style="color:var(--primary); font-size:1.3rem; font-weight:800; margin-bottom:12px;">
                 <i class="fa fa-cogs"></i> विशेष टॅब व दस्तऐवज (Admin Dynamic Tabs)
@@ -390,7 +388,7 @@
             <div id="dynamicTabContentBox" class="about-card" style="margin-bottom:0; padding:20px;"></div>
         </div>
 
-        <!-- Live Photo Gallery Section -->
+        <!-- Live Photo Gallery -->
         <div class="section-header" id="gallery">
             <h2><i class="fa fa-images"></i> छायाचित्र गॅलरी</h2>
             <p>संघटनेचे उपक्रम, स्नेहमेलने व बैठकांची क्षणचित्रे</p>
@@ -410,7 +408,7 @@
             <p style="margin-top: 6px;"><i class="fa fa-envelope" style="color:var(--primary);"></i> <b>ईमेल:</b> <a href="mailto:xsounion@gmail.com" style="color: var(--primary); text-decoration: none; font-weight: bold;">xsounion@gmail.com</a></p>
         </section>
 
-    </div> <!-- Main Container Ends -->
+    </div>
 
     <!-- Footer -->
     <footer>
@@ -428,7 +426,7 @@
         <a href="admin.html" class="admin-login-link"><i class="fa fa-lock"></i> Admin Login</a>
     </footer>
 
-    <!-- JavaScript Mobile Navigation Toggle & Copy Link Function -->
+    <!-- Helper Functions -->
     <script>
         function toggleMobileMenu() {
             var links = document.getElementById('navLinks');
@@ -445,10 +443,11 @@
         }
     </script>
 
-    <!-- FIREBASE MODULE SCRIPT (v10.12.5 Realtime Sync Engine) -->
+    <!-- FIREBASE MODULE SCRIPT (Firestore + Cloud Push Messaging) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-        import { getFirestore, doc, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+        import { getFirestore, doc, collection, onSnapshot, query, orderBy, setDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+        import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-messaging.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk",
@@ -462,8 +461,89 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        const messaging = getMessaging(app);
 
+        // ==========================================
+        // 🔔 PUSH NOTIFICATION ENGINE SETUP
+        // ==========================================
+        async function setupPushNotifications(isManualClick = false) {
+            if (!("Notification" in window)) {
+                if (isManualClick) alert("तुमचा ब्राउझर पुश नोटिफिकेशन सपोर्ट करत नाही.");
+                return;
+            }
+
+            try {
+                const permission = await Notification.requestPermission();
+                if (permission === 'granted') {
+                    // Service Worker खात्रीशीर रजिस्टर करणे
+                    const swReg = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+                    
+                    // 👇👇 येथे तुमची Firebase Console ची VAPID Key टाका 👇👇
+                    const currentToken = await getToken(messaging, {
+                        serviceWorkerRegistration: swReg,
+                        vapidKey: 'BLNKe2juhanb9IfUSWqFqBoUBZK-gdd-bf1dW-qfweC_tkvCFKI_znB32ZLFPqb4LlYpyFASrmPEbLldSX258wQ'
+                    });
+
+                    if (currentToken) {
+                        console.log('FCM Token Generated:', currentToken);
+                        
+                        // टोकन आपोआप Firestore मध्ये सेव्ह होईल (ॲडमिनला पाठवता यावे म्हणून)
+                        await setDoc(doc(db, "fcm_tokens", currentToken), {
+                            token: currentToken,
+                            updatedAt: new Date().toISOString(),
+                            userAgent: navigator.userAgent
+                        }, { merge: true });
+
+                        const notifyBtn = document.getElementById('btnEnableNotify');
+                        if (notifyBtn) {
+                            notifyBtn.innerHTML = '<i class="fa fa-check-circle"></i> सूचना सक्रिय आहेत';
+                            notifyBtn.style.background = '#10B981';
+                        }
+                        if (isManualClick) {
+                            alert("पुश नोटिफिकेशन यशस्वीरीत्या सुरू करण्यात आले आहे!");
+                        }
+                    }
+                } else if (permission === 'denied' && isManualClick) {
+                    alert("तुम्ही नोटिफिकेशन ब्लॉक केले आहे. कृपया ब्राउझरच्या साईट सेटिंग्जमधून परवानगी द्या.");
+                }
+            } catch (err) {
+                console.error("FCM Token Error:", err);
+            }
+        }
+
+        // वरून येणारे (Foreground Heads-up) नोटिफिकेशन - ॲप चालू असतानाही पॉप-अप दिसेल
+        onMessage(messaging, (payload) => {
+            console.log('Foreground Message received: ', payload);
+            if (Notification.permission === 'granted') {
+                navigator.serviceWorker.ready.then((registration) => {
+                    registration.showNotification(payload.notification?.title || "नवीन नोटीस", {
+                        body: payload.notification?.body || "संघटनेची नवीन नोटीस पाहण्यासाठी क्लिक करा.",
+                        icon: '/icon-192x192.png',
+                        badge: '/favicon-32x32.png',
+                        vibrate: [200, 100, 200],
+                        data: {
+                            url: payload.data?.url || '/'
+                        }
+                    });
+                });
+            }
+        });
+
+        // हेडरमधील बटणावर क्लिक केल्यास
+        document.getElementById('btnEnableNotify').addEventListener('click', () => {
+            setupPushNotifications(true);
+        });
+
+        // पेज लोड झाल्यावर परमिशन तपासणे / सुरू करणे
+        window.addEventListener('load', () => {
+            if (Notification.permission === 'granted') {
+                setupPushNotifications(false);
+            }
+        });
+
+        // ==========================================
         // 1. Scrolling Ticker
+        // ==========================================
         onSnapshot(doc(db, "settings", "scrolling_notice"), (snap) => {
             const ticker = document.getElementById("news-ticker");
             if (snap.exists() && snap.data().text) {
@@ -473,7 +553,9 @@
             }
         });
 
+        // ==========================================
         // 2. Fetch Notices & GR Documents
+        // ==========================================
         onSnapshot(collection(db, "notices"), (snapshot) => {
             let folder1HTML = '';
             let folder2HTML = '';
@@ -512,7 +594,9 @@
             document.getElementById('folder2-docs').innerHTML = f2Count ? folder2HTML : '<p style="color: gray; font-size: 0.9rem; text-align:center;">सध्या कोणतीही नोटीस उपलब्ध नाही.</p>';
         });
 
+        // ==========================================
         // 3. Dynamic Index Management Tabs
+        // ==========================================
         const indexTabsQuery = query(collection(db, "index_tabs"), orderBy("order", "asc"));
         onSnapshot(indexTabsQuery, (snapshot) => {
             let tabsList = [];
@@ -551,7 +635,9 @@
             `;
         };
 
+        // ==========================================
         // 4. Live Photo Gallery Fetch
+        // ==========================================
         const galleryQuery = query(collection(db, "gallery"), orderBy("order", "asc"));
         onSnapshot(galleryQuery, (snapshot) => {
             let photos = [];
