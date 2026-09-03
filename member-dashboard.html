@@ -1116,7 +1116,27 @@
                     </div>
                 </div>
             </div>
-
+<!-- member-dashboard.html मधील tab-documents मध्ये जोडा -->
+<div style="background:#f0fdf4; border:1.5px solid #86efac; padding:15px; border-radius:10px; margin-bottom:20px;">
+    <h4 style="color:#166534; margin-bottom:10px;"><i class="fa fa-file-upload"></i> नवीन PDF फाईल मंजुरीसाठी पाठवा</h4>
+    <div class="form-row">
+        <div style="flex:1;">
+            <label style="font-weight:bold;">फोल्डर निवडा:</label>
+            <select id="mem_upload_folder_select" class="form-control"></select>
+        </div>
+        <div style="flex:1.2;">
+            <label style="font-weight:bold;">PDF फाईलचे नाव:</label>
+            <input type="text" id="mem_upload_file_title" class="form-control" placeholder="उदा. बदली विनंती अर्ज / परिपत्रक">
+        </div>
+        <div style="flex:1;">
+            <label style="font-weight:bold;">PDF फाईल निवडा (Max 400 KB):</label>
+            <input type="file" id="mem_upload_pdf_file" class="form-control" accept=".pdf" onchange="checkFileSize(this, 400)">
+        </div>
+    </div>
+    <button type="button" class="btn-action bg-success" onclick="uploadMemberPDFForApproval()" style="margin-top:10px;">
+        <i class="fa fa-paper-plane"></i> ॲडमिन मंजुरीसाठी पाठवा
+    </button>
+</div>
             <!-- TAB 11: LIVE CHAT SECTION -->
             <div id="tab-chat" class="tab-content">
                 <div class="panel" style="margin-bottom:0;">
