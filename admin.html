@@ -1372,6 +1372,47 @@
             </div>
 
             <!-- TAB 11: MEMBER FOLDERS -->
+            // १. प्रलंबित सदस्य PDF मंजूर करण्याचे फंक्शन
+window.approveMemberFile = async function(fileId, fileName) {
+    if (!confirm(`"${fileName}" ही PDF मंजूर करून सर्व सदस्यांना नोटिफिकेशन पाठवायचे का?`)) return;
+
+    Swal.fire({ title: 'मंजूर करत आहे व नोटिफिकेशन पाठवत आहे...', didOpen: () => Swal.showLoading() });
+    try {
+        // फाईल स्टेटस मंजूर करा
+        await updateDoc(doc(db, "member_files", fileId), {
+            status: "Approved",
+            approvedBy: currentLoggedInAdminName,
+            approvedAt: new Date().toLocaleString('mr-IN')
+        });
+
+        // सर्व उपकरणांवर नोटिफिकेशन ट्रिगर करा
+        await window.sendPushNotificationToAll(
+            "नवीन परिपत्रक उपलब्ध!",
+            `"${fileName}" हे परिपत्रक संघटनेच्या पोर्टलवर उपलब्ध झाले आहे.`
+        );
+
+        Swal.fire('मंजूर झाले!', 'PDF मंजूर झाली आणि सर्व सदस्यांना नोटिफिकेशन गेले.', 'success');
+        loadData();
+    } catch(e) {
+        Swal.fire('Error', e.message, 'error');
+    }
+};
+
+// २. पुश नोटिफिकेशन पाठवणारे फंक्शन (Firebase Cloud Function / HTTP v1 API)
+window.sendPushNotificationToAll = async function(title, body) {
+    try {
+        // Notification payload
+        await addDoc(collection(db, "notifications_queue"), {
+            title: title,
+            body: body,
+            topic: "all_members",
+            status: "pending",
+            createdAt: Date.now()
+        });
+    } catch(e) {
+        console.error("Notification Error:", e);
+    }
+};
             <div id="tab-member-folders" class="tab-content">
                 <div class="panel">
                     <div class="panel-header">
