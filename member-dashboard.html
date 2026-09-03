@@ -2107,6 +2107,7 @@ window.loadMemberUploadFolders = async function() {
         window.loadFoldersAndFiles = async function() {
             let fSnap = await getDocs(collection(db, "member_folders"));
             let folders = []; fSnap.forEach(d => folders.push({id: d.id, ...d.data()}));
+            let approvedFiles = files.filter(fl => fl.status === "Approved" || !fl.status);
 
             let foldersHtml = folders.map(f => `
                 <div style="background:#fff; border:1px solid #cbd5e1; padding:12px; border-radius:8px; border-top:4px solid var(--primary);">
@@ -2148,7 +2149,30 @@ window.loadMemberUploadFolders = async function() {
             }).join('');
             document.getElementById('activePollsContainer').innerHTML = html || '<p style="text-align:center; color:gray;">सध्या कोणतेही पोल उपलब्ध नाहीत.</p>';
         };
+import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-messaging.js";
 
+async function requestNotificationPermission() {
+    try {
+        const messaging = getMessaging(app);
+        const permission = await Notification.requestPermission();
+        if (permission === 'granted') {
+            const token = await getToken(messaging, { 
+                vapidKey: "Firebase Console > Project Settings > Cloud Messaging > Web Push certificates वरून मिळालेली Key" 
+            });
+            if (token && window.currentMember) {
+                // युझरच्या खात्यात टोकन अपडेट करा
+                await updateDoc(doc(db, "members", window.currentMember.id), {
+                    fcmToken: token
+                });
+            }
+        }
+    } catch (error) {
+        console.log("Notification permission error: ", error);
+    }
+}
+
+// युझर लॉगिन झाल्यावर हे रन करा:
+setTimeout(requestNotificationPermission, 2000);
         window.castMemberPollVote = async function(pollId, choice) {
             let m = window.currentMember; if(!m) return;
             Swal.fire({title: 'मत नोंदवले जात आहे...', didOpen: () => Swal.showLoading()});
