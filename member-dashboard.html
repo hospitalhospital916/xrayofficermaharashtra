@@ -1150,9 +1150,36 @@ window.loadMemberUploadFolders = async function() {
                         <h4 style="color:var(--primary); margin-bottom:12px;">सदस्यांसाठी फोल्डर्स (Member Folders)</h4>
                         <div id="foldersContainer" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:12px; margin-bottom:20px;"></div>
                         <hr style="margin:20px 0;">
-                        <h4 style="color:var(--dark); margin-bottom:12px;">उपलब्ध फाईल्स व परिपत्रके</h4>
-                        <table>
-                            <thead><tr><th>अ.क्र.</th><th>फाईलचे नाव</th><th>दिनांक</th><th>Action</th></tr></thead>
+                       <div style="background:#f8fafc; padding:15px; border:1px solid #cbd5e1; border-radius:12px; margin-bottom:18px;">
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <input
+            type="text"
+            id="memberPdfSearch"
+            class="form-control"
+            placeholder="🔍 PDF चे नाव / कीवर्ड / फोल्डर शोधा..."
+            oninput="searchMemberPDFs()"
+            style="flex:1; min-width:220px;"
+        >
+
+        <button
+            type="button"
+            class="btn-action bg-primary"
+            onclick="searchMemberPDFs()">
+            <i class="fa fa-search"></i> शोधा
+        </button>
+
+        <button
+            type="button"
+            class="btn-action"
+            onclick="clearMemberPDFSearch()">
+            <i class="fa fa-times"></i> साफ करा
+        </button>
+    </div>
+
+    <div id="memberPdfSearchInfo"
+         style="margin-top:8px; color:#64748b; font-size:0.9rem;">
+    </div>
+</div>
                             <tbody id="memberFilesBody">
                                 <tr><td colspan="4" style="text-align:center;">फाईल्स उपलब्ध नाहीत.</td></tr>
                             </tbody>
@@ -2126,7 +2153,7 @@ fileSnap.forEach(d => {
 let approvedFiles = files.filter(
     fl => fl.status === "Approved" || !fl.status
 );
-
+let filesHtml = approvedFiles.map((fl, i) => `
          let filesHtml = approvedFiles.map((fl, i) => `
                 <tr>
                     <td>${i+1}</td>
