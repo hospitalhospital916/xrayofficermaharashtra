@@ -2127,7 +2127,7 @@ let approvedFiles = files.filter(
     fl => fl.status === "Approved" || !fl.status
 );
 
-            let filesHtml = files.map((fl, i) => `
+         let filesHtml = approvedFiles.map((fl, i) => `
                 <tr>
                     <td>${i+1}</td>
                     <td><b>${fl.fileName}</b></td>
