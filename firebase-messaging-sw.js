@@ -6,7 +6,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk",
   authDomain: "xrayunionmah.firebaseapp.com",
   projectId: "xrayunionmah",
-  messagingSenderId: "1056581979379", // Firebase Console > Project Settings मधील Sender ID
+  messagingSenderId: "763805226978", // Firebase Console > Project Settings मधील Sender ID
   appId: "1:1056581979379:web:your_actual_app_id"
 };
 
