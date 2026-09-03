@@ -21,6 +21,50 @@
             }
         }
         applyDesktopViewport();
+        window.uploadMemberPDFForApproval = async function() {
+    let fId = document.getElementById('mem_upload_folder_select').value;
+    let title = document.getElementById('mem_upload_file_title').value.trim();
+    let fileInput = document.getElementById('mem_upload_pdf_file');
+    let file = fileInput.files[0];
+    let m = window.currentMember;
+
+    if (!fId || !title || !file) {
+        return Swal.fire('माहिती अपूर्ण', 'कृपया फोल्डर, फाईलचे नाव आणि PDF फाईल निवडा.', 'warning');
+    }
+
+    Swal.fire({ title: 'PDF अपलोड होत आहे...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+    try {
+        let pdfUrl = await window.uploadToCloudinary(file);
+        await addDoc(collection(db, "member_files"), {
+            folderId: fId,
+            fileName: title,
+            fileUrl: pdfUrl,
+            status: "Pending", // ॲडमिनच्या मंजुरीची वाट पाहणार
+            uploadedBy: m ? (m.name || m.memberName || 'सदस्य') : 'सदस्य',
+            memberId: m ? m.id : '',
+            uploadedAt: new Date().toLocaleDateString('mr-IN'),
+            timestamp: Date.now()
+        });
+
+        document.getElementById('mem_upload_file_title').value = '';
+        fileInput.value = '';
+        Swal.fire('यशस्वी!', 'आपली PDF ॲडमिनकडे मंजुरीसाठी पाठवली आहे. मंजुरीनंतर ती सर्वांना दिसेल.', 'success');
+    } catch(err) {
+        Swal.fire('Error', err.message, 'error');
+    }
+};
+
+// सदस्यांच्या ड्रॉपडाऊनमध्ये फोल्डर्स भरणे
+window.loadMemberUploadFolders = async function() {
+    let fSnap = await getDocs(collection(db, "member_folders"));
+    let html = '<option value="">-- फोल्डर निवडा --</option>';
+    fSnap.forEach(d => {
+        let f = d.data();
+        html += `<option value="${d.id}">${f.name}</option>`;
+    });
+    let sel = document.getElementById('mem_upload_folder_select');
+    if(sel) sel.innerHTML = html;
+};
     </script>
 
     <style>
