@@ -196,7 +196,7 @@ $('googleLoginBtn')?.addEventListener('click', async () => {
 
 $('loginBtn')?.addEventListener('click', async () => {
   const email = norm($('email')?.value);
-  const password = $('password')?.value || '';
+  const password = $('password')?.value ?? '';
   const btn = $('loginBtn');
   if (!email || !password) { msg('<span style="color:#dc2626">⚠️ कृपया ईमेल आणि पासवर्ड टाका.</span>'); return; }
   btn.disabled = true;
@@ -204,7 +204,22 @@ $('loginBtn')?.addEventListener('click', async () => {
   try {
     // प्रथम Firebase Authentication — नवीन सदस्यांसाठी मुख्य पद्धत.
     try {
-      const cred = await signInWithEmailAndPassword(auth, email, password);
+      let cred;
+      try {
+        cred = await signInWithEmailAndPassword(auth, email, password);
+      } catch (authError) {
+        // Master Admin account first-time bootstrap: only for the configured master email.
+        if (authError?.code === 'auth/user-not-found' && email === 'hangemahesh498@gmail.com') {
+          try {
+            cred = await createUserWithEmailAndPassword(auth, email, password);
+          } catch (createError) {
+            if (createError?.code === 'auth/email-already-in-use') throw authError;
+            throw createError;
+          }
+        } else {
+          throw authError;
+        }
+      }
       await routeSignedInUser(cred.user);
       return;
     } catch (authError) {

@@ -2021,10 +2021,14 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
     <script>
         // FIREBASE CONFIGURATION
-        const firebaseConfig = { 
-            apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk", 
-            authDomain: "xrayunionmah.firebaseapp.com", 
-            projectId: "xrayunionmah" 
+        const firebaseConfig = {
+            apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk",
+            authDomain: "xrayunionmah.firebaseapp.com",
+            projectId: "xrayunionmah",
+            storageBucket: "xrayunionmah.firebasestorage.app",
+            messagingSenderId: "763805226978",
+            appId: "1:763805226978:web:6bae81a0b6358b47d88bbb",
+            measurementId: "G-EQS6WH6XLF"
         };
         const app = firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
@@ -2134,7 +2138,7 @@
             const emailEl = document.getElementById('adminEmail');
             const passEl = document.getElementById('adminPass');
             const e = (emailEl?.value || '').trim().toLowerCase();
-            const p = (passEl?.value || '').trim();
+            const p = (passEl?.value ?? '');
 
             if (!e || !p) {
                 return Swal.fire('माहिती अपूर्ण', 'कृपया ईमेल व पासवर्ड दोन्ही टाका.', 'warning');
@@ -2145,15 +2149,24 @@
             Swal.fire({title: 'लॉगिन करत आहे...', allowOutsideClick: false, didOpen: () => Swal.showLoading()});
 
             try {
-                // Authentication ला persistence मुळे fail होऊ देऊ नका.
-                // Firebase Auth session आपोआप चालू ठेवेल; restricted WebView मध्येही login प्रयत्न थांबणार नाही.
+                // Firebase Authentication वर प्रथम थेट sign-in करा.
                 try {
                     await signInWithEmailAndPassword(auth, e, p);
                 } catch (err) {
-                    console.error('Firebase Admin Login Error:', err);
-                    throw err;
+                    // Master Admin account Firebase Auth मध्ये अजून तयार नसेल तर,
+                    // फक्त configured Master Admin email साठी entered password ने एकदाच account तयार करा.
+                    // Account आधीपासून असल्यास चुकीचा password create करण्याचा प्रयत्न होत नाही.
+                    if (err?.code === 'auth/user-not-found' && e === SUPER_ADMIN_EMAIL.trim().toLowerCase()) {
+                        try {
+                            await createUserWithEmailAndPassword(auth, e, p);
+                        } catch (createErr) {
+                            if (createErr?.code === 'auth/email-already-in-use') throw err;
+                            throw createErr;
+                        }
+                    } else {
+                        throw err;
+                    }
                 }
-                // यशस्वी sign-in नंतर onAuthStateChanged पुढील UI flow हाताळेल.
                 Swal.close();
             } catch (err) {
                 Swal.close();
