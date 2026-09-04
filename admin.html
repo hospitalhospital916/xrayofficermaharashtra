@@ -2111,58 +2111,55 @@
             Swal.fire({title: 'लॉगिन करत आहे...', allowOutsideClick: false, didOpen: () => Swal.showLoading()});
 
             try {
-                // Persistence failure should NOT block authentication.
+                // Authentication ला persistence मुळे fail होऊ देऊ नका.
+                // Firebase Auth session आपोआप चालू ठेवेल; restricted WebView मध्येही login प्रयत्न थांबणार नाही.
                 try {
-                    await setPersistence(auth, browserSessionPersistence);
-                } catch (sessionErr) {
-                    try {
-                        await setPersistence(auth, browserLocalPersistence);
-                    } catch (localErr) {
-                        // In restricted WebView/private contexts, in-memory auth is the safe fallback.
-                        try { await setPersistence(auth, inMemoryPersistence); } catch (memoryErr) {}
-                    }
+                    await signInWithEmailAndPassword(auth, e, p);
+                } catch (err) {
+                    console.error('Firebase Admin Login Error:', err);
+                    throw err;
                 }
-
-                await signInWithEmailAndPassword(auth, e, p);
+                // यशस्वी sign-in नंतर onAuthStateChanged पुढील UI flow हाताळेल.
                 Swal.close();
             } catch (err) {
                 Swal.close();
-                console.error('Admin login error:', err);
-
                 let msg = 'लॉगिन अयशस्वी झाले.';
                 switch (err?.code) {
                     case 'auth/invalid-credential':
                     case 'auth/wrong-password':
                     case 'auth/user-not-found':
-                        msg = 'ईमेल आयडी किंवा पासवर्ड चुकीचा आहे.';
-                        break;
+                        msg = 'ईमेल आयडी किंवा पासवर्ड चुकीचा आहे.'; break;
                     case 'auth/invalid-email':
-                        msg = 'ईमेल आयडी योग्य स्वरूपात टाका.';
-                        break;
+                        msg = 'ईमेल आयडी योग्य स्वरूपात टाका.'; break;
                     case 'auth/user-disabled':
-                        msg = 'हे Firebase अकाउंट बंद (Disabled) केलेले आहे.';
-                        break;
+                        msg = 'हे Firebase अकाउंट बंद (Disabled) केलेले आहे.'; break;
                     case 'auth/too-many-requests':
-                        msg = 'खूप वेळा प्रयत्न झाले आहेत. थोड्या वेळाने पुन्हा प्रयत्न करा.';
-                        break;
+                        msg = 'खूप वेळा प्रयत्न झाले आहेत. थोड्या वेळाने पुन्हा प्रयत्न करा.'; break;
                     case 'auth/network-request-failed':
-                        msg = 'इंटरनेट / Firebase कनेक्शनची अडचण आहे.';
-                        break;
+                        msg = 'इंटरनेट / Firebase कनेक्शनची अडचण आहे.'; break;
                     case 'auth/operation-not-allowed':
-                        msg = 'Firebase Console मध्ये Email/Password Login सुरू केलेले नाही.';
-                        break;
+                        msg = 'Firebase मध्ये Email/Password Login सक्षम केलेले नाही.'; break;
                     case 'auth/unauthorized-domain':
-                        msg = 'ही वेबसाइट Firebase Authentication च्या Authorized Domains मध्ये नाही.';
-                        break;
+                        msg = 'ही वेबसाइट Firebase Authentication Authorized Domains मध्ये नाही.'; break;
                     default:
-                        msg = `${msg}\nFirebase: ${err?.code || 'unknown-error'}`;
+                        msg = err?.message ? ('Firebase: ' + err.message) : msg;
                 }
-
-                Swal.fire('लॉगिन अयशस्वी', msg, 'error');
+                Swal.fire({icon:'error', title:'लॉगिन अयशस्वी', text:msg, footer: err?.code ? ('Error code: ' + err.code) : ''});
             } finally {
                 if (button) button.disabled = false;
             }
         };
+
+        // Enter key नेही Login करा
+        document.addEventListener('keydown', function(ev) {
+            if (ev.key === 'Enter' && document.getElementById('login-screen')?.style.display !== 'none') {
+                const active = document.activeElement;
+                if (active && (active.id === 'adminEmail' || active.id === 'adminPass')) {
+                    ev.preventDefault();
+                    window.loginAdmin();
+                }
+            }
+        });
 
         window.logoutAdmin = function() {
             signOut(auth);
@@ -2281,89 +2278,108 @@
         // ==========================================================
         // AUTHENTICATION LISTENER
         // ==========================================================
-        onAuthStateChanged(auth, async (user) => { 
-            if (user) { 
-                isSuperAdmin = (user.email === SUPER_ADMIN_EMAIL);
-                
+        onAuthStateChanged(auth, async (user) => {
+            const loginScreen = document.getElementById('login-screen');
+            const appContent = document.getElementById('app-content');
+            const SUPER_EMAIL = SUPER_ADMIN_EMAIL.trim().toLowerCase();
+
+            if (!user) {
+                isSuperAdmin = false;
+                if (loginScreen) loginScreen.style.display = 'flex';
+                if (appContent) appContent.style.display = 'none';
+                if (document.getElementById('floatingLiveChatWidget')) document.getElementById('floatingLiveChatWidget').style.display = 'none';
+                return;
+            }
+
+            try {
+                const userEmail = (user.email || '').trim().toLowerCase();
+                isSuperAdmin = (userEmail === SUPER_EMAIL);
+
                 if (!isSuperAdmin) {
-                    const q = query(collection(db, "admins"), where("email", "==", user.email));
+                    const q = query(collection(db, 'admins'), where('email', '==', userEmail));
                     const snap = await getDocs(q);
-                    
-                    if(snap.empty) { 
+
+                    if (snap.empty) {
                         await signOut(auth);
-                        Swal.fire('एरर', 'तुमचे अकाउंट ॲडमिनने डिलीट केले आहे.', 'error');
-                        return;
-                    }
-                    
-                    let adminData = snap.docs[0].data();
-                    if(adminData.isActive === false) {
-                        await signOut(auth);
-                        Swal.fire('अॅक्सेस नाकारला', 'तुमचे अकाउंट ॲडमिनने ब्लॉक केले आहे.', 'error');
-                        return;
+                        throw new Error('तुमचा ईमेल Admin यादीत नाही. मुख्य Admin ने सब-ॲडमिन म्हणून नोंदणी केलेली असणे आवश्यक आहे.');
                     }
 
-                    subAdminAccessRegion = adminData.access || "All"; 
-                    subAdminPermissions = adminData.permissions || [];
-                    currentLoggedInAdminName = adminData.name || "अधिकृत सब-ॲडमिन";
-                    currentLoggedInAdminDesignation = adminData.designation || "संघटना पदाधिकारी";
+                    const adminData = snap.docs[0].data();
+                    if (adminData.isActive === false) {
+                        await signOut(auth);
+                        throw new Error('तुमचे Admin अकाउंट सध्या Block केलेले आहे.');
+                    }
+
+                    subAdminAccessRegion = adminData.access || 'All';
+                    subAdminPermissions = Array.isArray(adminData.permissions) ? adminData.permissions : [];
+                    currentLoggedInAdminName = adminData.name || 'अधिकृत सब-ॲडमिन';
+                    currentLoggedInAdminDesignation = adminData.designation || 'संघटना पदाधिकारी';
                 } else {
-                    subAdminAccessRegion = "All"; 
+                    subAdminAccessRegion = 'All';
                     subAdminPermissions = [
-                        'dashboard', 'members', 'member_add', 'member_edit', 'member_delete', 
-                        'employees', 'committee', 'gallery', 'icard', 'letterpad', 'template_builder', 
-                        'notices', 'fees', 'cancel_receipt', 'member_folders', 'voting', 'poll_manage', 
-                        'grievances', 'info_gather', 'assoc_hub', 'index_mgmt', 'member_mgmt', 
+                        'dashboard', 'members', 'member_add', 'member_edit', 'member_delete',
+                        'employees', 'committee', 'gallery', 'icard', 'letterpad', 'template_builder',
+                        'notices', 'fees', 'cancel_receipt', 'member_folders', 'voting', 'poll_manage',
+                        'grievances', 'info_gather', 'assoc_hub', 'index_mgmt', 'member_mgmt',
                         'live_chat', 'admin_logs', 'member_logs', 'recyclebin', 'notice_manage', 'popup_manage'
                     ];
-                    currentLoggedInAdminName = "महेश हांगे";
-                    currentLoggedInAdminDesignation = "मुख्य ॲडमिन";
+                    currentLoggedInAdminName = 'महेश हांगे';
+                    currentLoggedInAdminDesignation = 'मुख्य ॲडमिन';
                 }
 
+                // आधी UI unlock करा. नंतर dashboard data load केला तरी data error मुळे login पुन्हा दिसणार नाही.
                 document.querySelectorAll('.tab-btn').forEach(btn => {
-                    let perm = btn.getAttribute('data-perm');
-                    if(perm && !subAdminPermissions.includes(perm) && !isSuperAdmin) {
-                        btn.style.display = 'none';
-                    } else {
-                        btn.style.display = 'inline-block';
-                    }
+                    const perm = btn.getAttribute('data-perm');
+                    if (perm && !subAdminPermissions.includes(perm) && !isSuperAdmin) btn.style.display = 'none';
+                    else btn.style.display = 'inline-block';
                 });
-                
-                let firstAvail = Array.from(document.querySelectorAll('.tab-btn')).find(btn => btn.style.display !== 'none');
-                if(firstAvail) firstAvail.click();
 
-                document.getElementById('login-screen').style.display = 'none'; 
-                document.getElementById('app-content').style.display = 'block'; 
-                if(document.getElementById('floatingLiveChatWidget')) document.getElementById('floatingLiveChatWidget').style.display = 'block';
-                
-                document.getElementById('login_user_name').innerText = currentLoggedInAdminName;
-                document.getElementById('login_user_role').innerText = `(${currentLoggedInAdminDesignation})`;
-                document.getElementById('login_user_region').innerText = subAdminAccessRegion !== "All" ? `[${subAdminAccessRegion}]` : "";
-                
-                if(isSuperAdmin) { 
-                    document.getElementById('btn-settings').style.display = 'inline-block';
-                } else {
-                    document.getElementById('btn-settings').style.display = 'none';
-                    if(subAdminAccessRegion !== "All") {
-                        document.getElementById('filterMandal').value = subAdminAccessRegion;
-                        document.getElementById('filterMandal').disabled = true;
-                        populateDistricts('filterMandal', 'filterDistrict');
-                    }
+                const firstAvail = Array.from(document.querySelectorAll('.tab-btn')).find(btn => btn.style.display !== 'none');
+                if (firstAvail) firstAvail.click();
+
+                if (loginScreen) loginScreen.style.display = 'none';
+                if (appContent) appContent.style.display = 'block';
+                if (document.getElementById('floatingLiveChatWidget')) document.getElementById('floatingLiveChatWidget').style.display = 'flex';
+
+                const nm = document.getElementById('login_user_name');
+                const role = document.getElementById('login_user_role');
+                const region = document.getElementById('login_user_region');
+                if (nm) nm.innerText = currentLoggedInAdminName;
+                if (role) role.innerText = `(${currentLoggedInAdminDesignation})`;
+                if (region) region.innerText = subAdminAccessRegion !== 'All' ? `[${subAdminAccessRegion}]` : '';
+
+                const settings = document.getElementById('btn-settings');
+                if (settings) settings.style.display = isSuperAdmin ? 'inline-block' : 'none';
+                if (!isSuperAdmin && subAdminAccessRegion !== 'All') {
+                    const fm = document.getElementById('filterMandal');
+                    if (fm) { fm.value = subAdminAccessRegion; fm.disabled = true; }
+                    if (typeof populateDistricts === 'function') populateDistricts('filterMandal', 'filterDistrict');
                 }
 
                 applyActionPermissions();
-                populateMandals(); 
-                await loadData(); 
-                await window.logAdminActivity(`लॉगिन यशस्वी: ${currentLoggedInAdminName} (${currentLoggedInAdminDesignation})`);
-                
-                window.checkAndShowPopupNotice();
-                window.listenToProfileEditRequests();
-            } 
-            else { 
-                document.getElementById('login-screen').style.display = 'flex'; 
-                document.getElementById('app-content').style.display = 'none'; 
-                if(document.getElementById('floatingLiveChatWidget')) document.getElementById('floatingLiveChatWidget').style.display = 'none';
-            } 
-        }); 
+                populateMandals();
+
+                // Dashboard/data load fail झाला तरी authenticated UI बंद करू नका.
+                try {
+                    await loadData();
+                } catch (dataErr) {
+                    console.error('Admin data load error:', dataErr);
+                    Swal.fire({icon:'warning', title:'Login यशस्वी आहे', text:'Admin Login झाला आहे; पण काही डेटा लोड झाला नाही. Firebase/Firestore Rules तपासा.', footer: dataErr?.message || ''});
+                }
+
+                try { await window.logAdminActivity(`लॉगिन यशस्वी: ${currentLoggedInAdminName} (${currentLoggedInAdminDesignation})`); }
+                catch (logErr) { console.error('Login log error:', logErr); }
+
+                try { window.checkAndShowPopupNotice(); } catch (e) { console.error(e); }
+                try { window.listenToProfileEditRequests(); } catch (e) { console.error(e); }
+            } catch (err) {
+                console.error('Admin auth-state processing error:', err);
+                if (loginScreen) loginScreen.style.display = 'flex';
+                if (appContent) appContent.style.display = 'none';
+                if (document.getElementById('floatingLiveChatWidget')) document.getElementById('floatingLiveChatWidget').style.display = 'none';
+                Swal.fire({icon:'error', title:'Admin तपासणी अयशस्वी', text: err?.message || 'Admin account तपासताना अडचण आली.', footer: 'Firebase/Firestore Rules किंवा Admin नोंद तपासा.'});
+            }
+        });
 
         function applyActionPermissions() {
             let hasPerm = (p) => isSuperAdmin || subAdminPermissions.includes(p);
