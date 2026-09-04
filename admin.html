@@ -2184,6 +2184,13 @@
             }
         };
 
+        // Email नेहमी lower-case मध्ये normalize करा. Capital/Small फरक पडणार नाही.
+        document.addEventListener('input', function(ev) {
+            if (ev.target && ev.target.id === 'adminEmail') {
+                ev.target.value = ev.target.value.trim().toLowerCase();
+            }
+        });
+
         // Enter key नेही Login करा
         document.addEventListener('keydown', function(ev) {
             if (ev.key === 'Enter' && document.getElementById('login-screen')?.style.display !== 'none') {
@@ -2200,7 +2207,7 @@
         };
 
         window.forgotPassword = async function() {
-            let email = document.getElementById('adminEmail').value.trim();
+            let email = document.getElementById('adminEmail').value.trim().toLowerCase();
             if(!email) return Swal.fire('माहिती अपूर्ण', 'कृपया पासवर्ड रिसेट करण्यासाठी ईमेल आयडी टाका.', 'warning');
             try { 
                 await sendPasswordResetEmail(auth, email); 
@@ -2330,15 +2337,21 @@
                 isSuperAdmin = (userEmail === SUPER_EMAIL);
 
                 if (!isSuperAdmin) {
-                    const q = query(collection(db, 'admins'), where('email', '==', userEmail));
-                    const snap = await getDocs(q);
+                    // Firestore 'where ==' case-insensitive नसल्यामुळे सर्व admin records
+                    // वाचून email lower-case compare करा. त्यामुळे ABC@MAIL.COM आणि abc@mail.com
+                    // दोन्ही चालतील, आणि जुन्या uppercase नोंदीही login करतील.
+                    const adminSnap = await getDocs(collection(db, 'admins'));
+                    const adminDoc = adminSnap.docs.find(d => {
+                        const data = d.data() || {};
+                        return String(data.email || '').trim().toLowerCase() === userEmail;
+                    });
 
-                    if (snap.empty) {
+                    if (!adminDoc) {
                         await signOut(auth);
                         throw new Error('तुमचा ईमेल Admin यादीत नाही. मुख्य Admin ने सब-ॲडमिन म्हणून नोंदणी केलेली असणे आवश्यक आहे.');
                     }
 
-                    const adminData = snap.docs[0].data();
+                    const adminData = adminDoc.data() || {};
                     if (adminData.isActive === false) {
                         await signOut(auth);
                         throw new Error('तुमचे Admin अकाउंट सध्या Block केलेले आहे.');
