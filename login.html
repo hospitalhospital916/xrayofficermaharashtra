@@ -191,39 +191,13 @@ $('loginBtn')?.addEventListener('click', async () => {
   btn.disabled = true;
   msg('<span style="color:#2563eb"><i class="fa-solid fa-spinner fa-spin"></i> सुरक्षित लॉगिन तपासत आहे...</span>');
   try {
-    // प्रथम Firebase Authentication वापरा (नवीन/सुरक्षित accounts).
+    // सर्व सदस्यांसाठी एकच Firebase Authentication पद्धत.
     try {
       const cred = await signInWithEmailAndPassword(auth, email, password);
       await routeSignedInUser(cred.user);
       return;
     } catch (authError) {
       await signOut(auth).catch(()=>{});
-
-      // जुन्या member records साठी Firestore password fallback.
-      // यामुळे जुन्या नोंदणीचे accounts पुन्हा login करू शकतात.
-      const memberDoc = await findMember(email);
-      if (memberDoc) {
-        const data = memberDoc.data() || {};
-        const savedPassword = String(data.password ?? data.pass ?? '');
-        if (savedPassword && savedPassword === password) {
-          const status = norm(data.status ?? data.स्थिती);
-          const access = norm(data.access ?? data.अॅक्सेस);
-          if (status === 'pending' || status === 'प्रलंबित') {
-            throw new Error('तुमचा सदस्य अर्ज अजून ॲडमिनच्या मंजुरीच्या प्रतीक्षेत आहे.');
-          }
-          if (access === 'disabled' || access === 'बंद') {
-            throw new Error('तुमचा लॉगिन अॅक्सेस बंद आहे. ॲडमिनशी संपर्क साधा.');
-          }
-          const member = { id: memberDoc.id, ...data };
-          delete member.password;
-          delete member.pass;
-          localStorage.setItem('memberSession', JSON.stringify(member));
-          msg('<span style="color:green">✅ सदस्य लॉगिन यशस्वी! डॅशबोर्ड उघडत आहे...</span>');
-          setTimeout(() => location.replace('member-dashboard.html'), 350);
-          return;
-        }
-      }
-
       const code = authError?.code || '';
       const text = code.includes('invalid-credential') || code.includes('wrong-password') || code.includes('user-not-found')
         ? 'ईमेल किंवा पासवर्ड चुकीचा आहे.' : (authError.message || 'लॉगिन अयशस्वी.');

@@ -405,6 +405,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
         import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 
         // FIREBASE CONFIGURATION (माहिती ॲडमिन पॅनेलशी जुळणारी)
         const firebaseConfig = {
@@ -419,6 +420,7 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        const auth = getAuth(app);
 
         // आरोग्य मंडळ आणि जिल्ह्यांचे मॅपिंग
         const mandalData = {
@@ -506,7 +508,12 @@
                 const docUrl = await uploadToCloudinary(docFile);
                 const otherUrl = await uploadToCloudinary(otherFile);
 
-                // २. Firestore 'members' कलेक्शनमध्ये डेटा सेव्ह करा
+                // २. Firebase Authentication account तयार करा — आता लॉगिनची एकच सुरक्षित पद्धत
+                const email = document.getElementById('email').value.trim().toLowerCase();
+                const authCredential = await createUserWithEmailAndPassword(auth, email, pass);
+
+                // ३. Firestore 'members' कलेक्शनमध्ये डेटा सेव्ह करा
+                // पासवर्ड Firestore मध्ये सेव्ह केला जात नाही.
                 await addDoc(collection(db, "members"), {
                     name: document.getElementById('name').value.trim(),
                     dob: document.getElementById('dob').value,
@@ -521,10 +528,13 @@
                     joinDate: document.getElementById('joinDate').value,
                     retireDate: document.getElementById('retireDate').value,
                     mobile: document.getElementById('mobile').value.trim(),
-                    email: document.getElementById('email').value.trim().toLowerCase(),
+                    email: email,
+                    uid: authCredential.user.uid,
+                    authVersion: 2,
+                    isDefaultEmail: false,
+                    emailUpdated: false,
                     address: document.getElementById('address').value.trim(),
                     remarks: document.getElementById('remarks').value.trim(),
-                    pass: pass,
                     photoUrl: photoUrl,
                     docUrl: docUrl,
                     otherUrl: otherUrl,
