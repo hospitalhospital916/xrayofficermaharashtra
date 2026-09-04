@@ -92,131 +92,124 @@
   </div>
 
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-    import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signOut, setPersistence, browserLocalPersistence, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk",
-      authDomain: "xrayunionmah.firebaseapp.com",
-      projectId: "xrayunionmah",
-      storageBucket: "xrayunionmah.firebasestorage.app",
-      messagingSenderId: "763805226978",
-      appId: "1:763805226978:web:6bae81a0b6358b47d88bbb"
-    };
+const firebaseConfig = {
+  apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk",
+  authDomain: "xrayunionmah.firebaseapp.com",
+  projectId: "xrayunionmah",
+  storageBucket: "xrayunionmah.firebasestorage.app",
+  messagingSenderId: "763805226978",
+  appId: "1:763805226978:web:6bae81a0b6358b47d88bbb"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+setPersistence(auth, browserLocalPersistence).catch(console.error);
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
+const $ = id => document.getElementById(id);
+const msg = text => { $('messageBox').innerHTML = text; };
+const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+const norm = v => String(v ?? '').trim().toLowerCase();
 
-    // 👁️ Password Show/Hide Logic
-    const togglePassword = document.getElementById("togglePassword");
-    const passwordInput = document.getElementById("password");
-    if (togglePassword) {
-      togglePassword.addEventListener("click", function () {
-        const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
-        passwordInput.setAttribute("type", type);
-        this.classList.toggle("fa-eye-slash");
-      });
-    }
+const togglePassword = $('togglePassword');
+const passwordInput = $('password');
+if (togglePassword && passwordInput) togglePassword.addEventListener('click', function(){
+  const isPassword = passwordInput.type === 'password';
+  passwordInput.type = isPassword ? 'text' : 'password';
+  this.classList.toggle('fa-eye-slash', isPassword);
+});
 
-    // 🚀 Google Login Logic
-    document.getElementById("googleLoginBtn").addEventListener("click", async () => {
-      const provider = new GoogleAuthProvider();
-      const msgBox = document.getElementById("messageBox");
+async function findByField(col, field, value) {
+  try { return await getDocs(query(collection(db, col), where(field, '==', value))); }
+  catch (_) { return { empty:true, docs:[] }; }
+}
 
-      msgBox.innerHTML = "<span style='color:blue;'><i class='fa-solid fa-spinner fa-spin'></i> Google ऑथेंटिकेशन होत आहे...</span>";
+async function findMember(email) {
+  let snap = await findByField('members','email',email);
+  if (!snap.empty) return snap.docs[0];
+  snap = await findByField('members','ईमेल',email);
+  return snap.empty ? null : snap.docs[0];
+}
 
-      try {
-        const result = await signInWithPopup(auth, provider);
-        const user = result.user;
-        const googleEmail = user.email;
+async function findAdmin(email) {
+  let snap = await findByField('admins','email',email);
+  if (!snap.empty) return snap.docs[0];
+  snap = await findByField('admins','ईमेल',email);
+  return snap.empty ? null : snap.docs[0];
+}
 
-        // Firestore मधील 'members' कलेक्शन तपासा
-        let q = query(collection(db, "members"), where("email", "==", googleEmail));
-        let querySnapshot = await getDocs(q);
+function memberBlocked(data) {
+  const status = norm(data?.status || data?.स्थिती);
+  const access = norm(data?.access || data?.अॅक्सेस);
+  return status === 'pending' || status === 'प्रलंबित' || access === 'disabled' || access === 'बंद';
+}
 
-        if (querySnapshot.empty) {
-          q = query(collection(db, "members"), where("ईमेल", "==", googleEmail));
-          querySnapshot = await getDocs(q);
-        }
+async function routeSignedInUser(user) {
+  const email = norm(user.email);
+  if (!email) throw new Error('ई-मेल उपलब्ध नाही.');
 
-        if (!querySnapshot.empty) {
-          let memberData;
-          querySnapshot.forEach((doc) => { memberData = doc.data(); });
+  const adminDoc = await findAdmin(email);
+  if (email === 'hangemahesh498@gmail.com' || adminDoc) {
+    if (adminDoc && adminDoc.data()?.isActive === false) throw new Error('ॲडमिन अकाउंट ब्लॉक केले आहे.');
+    msg('<span style="color:green">✅ ॲडमिन लॉगिन यशस्वी! ॲडमिन पॅनेल उघडत आहे...</span>');
+    setTimeout(() => location.replace('admin.html'), 350);
+    return;
+  }
 
-          if (memberData.स्थिती === "प्रलंबित" || memberData.status === "Pending") {
-            msgBox.innerHTML = "<span style='color:#ff9800;'>⏳ तुमचा अर्ज ॲडमिनच्या मंजुरीच्या प्रतीक्षेत आहे.</span>";
-            await signOut(auth);
-          } else if (memberData.अॅक्सेस === "बंद" || memberData.access === "disabled") {
-            msgBox.innerHTML = "<span style='color:red;'>🚫 तुमचा लॉगिन अॅक्सेस बंद आहे. ॲडमिनशी संपर्क साधा.</span>";
-            await signOut(auth);
-          } else {
-            msgBox.innerHTML = "<span style='color:green;'>✅ Google लॉगिन यशस्वी! डॅशबोर्ड उघडत आहे...</span>";
-            setTimeout(() => { window.location.href = "member-dashboard.html"; }, 1000);
-          }
-        } else {
-          msgBox.innerHTML = "<span style='color:red;'>❌ हा ई-मेल डेटाबेसमध्ये नोंदणीकृत नाही.</span>";
-          await signOut(auth);
-        }
-      } catch (error) {
-        msgBox.innerHTML = "<span style='color:red;'>❌ Google लॉगिन अपयशी: " + error.message + "</span>";
-        console.error("Google Login Error:", error);
-      }
-    });
+  const memberDoc = await findMember(email);
+  if (!memberDoc) throw new Error('हा ई-मेल सदस्य किंवा ॲडमिन खात्यात नोंदणीकृत नाही.');
+  const data = memberDoc.data() || {};
+  if (memberBlocked(data)) {
+    if (norm(data.status || data.स्थिती) === 'pending' || norm(data.status || data.स्थिती) === 'प्रलंबित')
+      throw new Error('तुमचा सदस्य अर्ज अजून ॲडमिनच्या मंजुरीच्या प्रतीक्षेत आहे.');
+    throw new Error('तुमचा लॉगिन अॅक्सेस बंद आहे. ॲडमिनशी संपर्क साधा.');
+  }
+  msg('<span style="color:green">✅ सदस्य लॉगिन यशस्वी! डॅशबोर्ड उघडत आहे...</span>');
+  setTimeout(() => location.replace('member-dashboard.html'), 350);
+}
 
-    // 🚀 Standard Email/Password Login Logic
-    document.getElementById("loginBtn").addEventListener("click", async () => {
-      const email = document.getElementById("email").value.trim();
-      const password = passwordInput.value;
-      const msgBox = document.getElementById("messageBox");
-      const loginBtn = document.getElementById("loginBtn");
+$('googleLoginBtn')?.addEventListener('click', async () => {
+  const btn = $('googleLoginBtn'); btn.disabled = true;
+  msg('<span style="color:#2563eb"><i class="fa-solid fa-spinner fa-spin"></i> Google ऑथेंटिकेशन होत आहे...</span>');
+  try {
+    const result = await signInWithPopup(auth, new GoogleAuthProvider());
+    await routeSignedInUser(result.user);
+  } catch (error) {
+    await signOut(auth).catch(()=>{});
+    msg('<span style="color:#dc2626">❌ ' + esc(error.message || 'Google लॉगिन अपयशी.') + '</span>');
+  } finally { btn.disabled = false; }
+});
 
-      if(!email || !password) {
-        msgBox.innerHTML = "<span style='color:red;'>⚠️ कृपया ईमेल आणि पासवर्ड टाका.</span>";
-        return;
-      }
+$('loginBtn')?.addEventListener('click', async () => {
+  const email = norm($('email')?.value);
+  const password = $('password')?.value || '';
+  const btn = $('loginBtn');
+  if (!email || !password) { msg('<span style="color:#dc2626">⚠️ कृपया ईमेल आणि पासवर्ड टाका.</span>'); return; }
+  btn.disabled = true;
+  msg('<span style="color:#2563eb"><i class="fa-solid fa-spinner fa-spin"></i> सुरक्षित लॉगिन तपासत आहे...</span>');
+  try {
+    const cred = await signInWithEmailAndPassword(auth, email, password);
+    await routeSignedInUser(cred.user);
+  } catch (error) {
+    await signOut(auth).catch(()=>{});
+    const code = error?.code || '';
+    const text = code.includes('invalid-credential') || code.includes('wrong-password') || code.includes('user-not-found')
+      ? 'ईमेल किंवा पासवर्ड चुकीचा आहे.' : (error.message || 'लॉगिन अयशस्वी.');
+    msg('<span style="color:#dc2626">❌ ' + esc(text) + '</span>');
+  } finally { btn.disabled = false; }
+});
 
-      msgBox.innerHTML = "<span style='color:blue;'><i class='fa-solid fa-spinner fa-spin'></i> माहिती तपासत आहे...</span>";
-      loginBtn.disabled = true;
-
-      try {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-        
-        let q = query(collection(db, "members"), where("email", "==", email));
-        let querySnapshot = await getDocs(q);
-
-        if (querySnapshot.empty) {
-            q = query(collection(db, "members"), where("ईमेल", "==", email));
-            querySnapshot = await getDocs(q);
-        }
-
-        if (!querySnapshot.empty) {
-          let memberData;
-          querySnapshot.forEach((doc) => { memberData = doc.data(); });
-
-          if (memberData.स्थिती === "प्रलंबित" || memberData.status === "Pending") {
-            msgBox.innerHTML = "<span style='color:#ff9800;'>⏳ तुमचा अर्ज ॲडमिनच्या मंजुरीच्या प्रतीक्षेत आहे.</span>";
-            await signOut(auth);
-          } else if (memberData.अॅक्सेस === "बंद" || memberData.access === "disabled") {
-            msgBox.innerHTML = "<span style='color:red;'>🚫 तुमचा लॉगिन अॅक्सेस बंद आहे. ॲडमिनशी संपर्क साधा.</span>";
-            await signOut(auth);
-          } else {
-            msgBox.innerHTML = "<span style='color:green;'>✅ लॉगिन यशस्वी! डॅशबोर्ड उघडत आहे...</span>";
-            setTimeout(() => { window.location.href = "member-dashboard.html"; }, 1000);
-          }
-        } else {
-          msgBox.innerHTML = "<span style='color:green;'>✅ ॲडमिन लॉगिन यशस्वी!</span>";
-          setTimeout(() => { window.location.href = "admin.html"; }, 1000);
-        }
-
-      } catch (error) {
-        msgBox.innerHTML = "<span style='color:red;'>❌ चुकीचा ईमेल किंवा पासवर्ड!</span>";
-        console.error(error);
-      } finally {
-        loginBtn.disabled = false;
-      }
-    });
-  </script>
+// Forgot password link
+const forgot = [...document.querySelectorAll('a')].find(a => a.textContent.includes('पासवर्ड विसरलात'));
+forgot?.addEventListener('click', async (e) => {
+  e.preventDefault(); const email = norm($('email')?.value);
+  if (!email) return msg('<span style="color:#d97706">ℹ️ आधी ईमेल टाका, मग "पासवर्ड विसरलात?" पुन्हा दाबा.</span>');
+  try { await sendPasswordResetEmail(auth,email); msg('<span style="color:green">✅ पासवर्ड रीसेट लिंक ईमेलवर पाठवली आहे.</span>'); }
+  catch(e) { msg('<span style="color:#dc2626">❌ ' + esc(e.message) + '</span>'); }
+});
+</script>
 </body>
 </html>

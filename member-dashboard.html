@@ -2671,12 +2671,12 @@ async function requestNotificationPermission() {
         const permission = await Notification.requestPermission();
         if (permission === 'granted') {
             const token = await getToken(messaging, { 
-                vapidKey: "Firebase Console > Project Settings > Cloud Messaging > Web Push certificates वरून मिळालेली Key" 
+                vapidKey: "BLNKe2juhanb9IfUSWqFqBoUBZK-gdd-bf1dW-qfweC_tkvCFKI_znB32ZLFPqb4LlYpyFASrmPEbLldSX258wQ" 
             });
             if (token && window.currentMember) {
                 // युझरच्या खात्यात टोकन अपडेट करा
                 await updateDoc(doc(db, "members", window.currentMember.id), {
-                    fcmToken: token
+                    fcmToken: token, notificationEnabled: true, notificationUpdatedAt: Date.now()
                 });
             }
         }
