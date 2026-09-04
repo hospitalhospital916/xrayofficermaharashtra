@@ -1,1 +1,4 @@
-
+<resources>
+    <string name="app_name">XRAY UNION</string>
+    <string name="app_short_name">XRAY UNION</string>
+</resources>
