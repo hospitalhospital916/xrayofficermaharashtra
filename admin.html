@@ -2019,7 +2019,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where, orderBy, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
-        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, sendPasswordResetEmail, browserSessionPersistence, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, sendPasswordResetEmail, browserSessionPersistence, browserLocalPersistence, inMemoryPersistence, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
         
         // FIREBASE CONFIGURATION
         const firebaseConfig = { 
@@ -2096,19 +2096,72 @@
             window.location.href = "index.html";
         };
 
-        window.loginAdmin = async function() { 
-            let e = document.getElementById('adminEmail').value.trim(); 
-            let p = document.getElementById('adminPass').value.trim();
-            if(!e || !p) return Swal.fire('माहिती अपूर्ण', 'कृपया ईमेल व पासवर्ड दोन्ही टाका.', 'warning'); 
+        window.loginAdmin = async function() {
+            const emailEl = document.getElementById('adminEmail');
+            const passEl = document.getElementById('adminPass');
+            const e = (emailEl?.value || '').trim().toLowerCase();
+            const p = (passEl?.value || '').trim();
+
+            if (!e || !p) {
+                return Swal.fire('माहिती अपूर्ण', 'कृपया ईमेल व पासवर्ड दोन्ही टाका.', 'warning');
+            }
+
+            const button = document.querySelector('#login-screen button[onclick="loginAdmin()"]');
+            if (button) button.disabled = true;
             Swal.fire({title: 'लॉगिन करत आहे...', allowOutsideClick: false, didOpen: () => Swal.showLoading()});
-            try { 
-                await setPersistence(auth, browserSessionPersistence); 
-                await signInWithEmailAndPassword(auth, e, p); 
-                Swal.close(); 
-            } catch(err) { 
-                Swal.close(); 
-                Swal.fire('लॉगिन अयशस्वी', 'चुकीचा ईमेल आयडी किंवा पासवर्ड!', 'error'); 
-            } 
+
+            try {
+                // Persistence failure should NOT block authentication.
+                try {
+                    await setPersistence(auth, browserSessionPersistence);
+                } catch (sessionErr) {
+                    try {
+                        await setPersistence(auth, browserLocalPersistence);
+                    } catch (localErr) {
+                        // In restricted WebView/private contexts, in-memory auth is the safe fallback.
+                        try { await setPersistence(auth, inMemoryPersistence); } catch (memoryErr) {}
+                    }
+                }
+
+                await signInWithEmailAndPassword(auth, e, p);
+                Swal.close();
+            } catch (err) {
+                Swal.close();
+                console.error('Admin login error:', err);
+
+                let msg = 'लॉगिन अयशस्वी झाले.';
+                switch (err?.code) {
+                    case 'auth/invalid-credential':
+                    case 'auth/wrong-password':
+                    case 'auth/user-not-found':
+                        msg = 'ईमेल आयडी किंवा पासवर्ड चुकीचा आहे.';
+                        break;
+                    case 'auth/invalid-email':
+                        msg = 'ईमेल आयडी योग्य स्वरूपात टाका.';
+                        break;
+                    case 'auth/user-disabled':
+                        msg = 'हे Firebase अकाउंट बंद (Disabled) केलेले आहे.';
+                        break;
+                    case 'auth/too-many-requests':
+                        msg = 'खूप वेळा प्रयत्न झाले आहेत. थोड्या वेळाने पुन्हा प्रयत्न करा.';
+                        break;
+                    case 'auth/network-request-failed':
+                        msg = 'इंटरनेट / Firebase कनेक्शनची अडचण आहे.';
+                        break;
+                    case 'auth/operation-not-allowed':
+                        msg = 'Firebase Console मध्ये Email/Password Login सुरू केलेले नाही.';
+                        break;
+                    case 'auth/unauthorized-domain':
+                        msg = 'ही वेबसाइट Firebase Authentication च्या Authorized Domains मध्ये नाही.';
+                        break;
+                    default:
+                        msg = `${msg}\nFirebase: ${err?.code || 'unknown-error'}`;
+                }
+
+                Swal.fire('लॉगिन अयशस्वी', msg, 'error');
+            } finally {
+                if (button) button.disabled = false;
+            }
         };
 
         window.logoutAdmin = function() {
@@ -2125,6 +2178,16 @@
                 Swal.fire('एरर', e.message, 'error'); 
             }
         };
+
+        // Enter key from email/password fields -> login
+        document.addEventListener('DOMContentLoaded', () => {
+            ['adminEmail', 'adminPass'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.addEventListener('keydown', (ev) => {
+                    if (ev.key === 'Enter') { ev.preventDefault(); window.loginAdmin(); }
+                });
+            });
+        });
 
         // ==========================================================
         // UI UTILITIES & TAB NAVIGATION
