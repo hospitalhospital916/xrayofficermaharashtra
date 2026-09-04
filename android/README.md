@@ -1,3 +1,7 @@
-# Native Android App
-Open this `android/` directory in Android Studio. The Firebase Android package is `com.xrayunion.maharashtra` and `google-services.json` is already included.
-Build: `./gradlew assembleRelease` after Android Studio/Gradle setup. FLAG_SECURE is enabled by the secure viewer bridge in production builds.
+# XRAY UNION Android App
+
+- App name: XRAY UNION
+- Launcher icon: repository `logo.png`
+- Android package: `com.xrayunion.maharashtra`
+- GitHub Actions builds the native `android/` project directly.
+- The app opens the hosted portal at https://xrayunionmah.web.app/
