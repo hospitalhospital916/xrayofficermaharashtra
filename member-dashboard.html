@@ -1762,11 +1762,17 @@
             Swal.fire({ title: 'सुरक्षित लॉगिन तपासत आहे...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
 
             try {
-                const q1 = query(collection(db, "members"), where("mobile", "==", mobileInput));
-                let snap = await getDocs(q1);
+                // जुन्या व नवीन दोन्ही member schemas साठी मोबाईल field तपासा:
+                // नवीन registration मध्ये field = "मोबाईल", जुन्या records मध्ये "mobile" असू शकतो.
+                let snap = await getDocs(query(collection(db, "members"), where("mobile", "==", mobileInput)));
                 if(snap.empty) {
-                    const q2 = query(collection(db, "members"), where("mobile", "==", Number(mobileInput)));
-                    snap = await getDocs(q2);
+                    snap = await getDocs(query(collection(db, "members"), where("मोबाईल", "==", mobileInput)));
+                }
+                if(snap.empty) {
+                    snap = await getDocs(query(collection(db, "members"), where("mobile", "==", Number(mobileInput))));
+                }
+                if(snap.empty) {
+                    snap = await getDocs(query(collection(db, "members"), where("मोबाईल", "==", Number(mobileInput))));
                 }
                 if(snap.empty) {
                     Swal.close();
@@ -2145,12 +2151,7 @@ window.uploadToCloudinary = async (file) => {
     const res=await fetch(endpoint,{method:"POST",body:fd}); let data={}; try{data=await res.json()}catch(_){}
     if(!res.ok || !data.secure_url) throw new Error(`Cloudinary अपलोड अयशस्वी: ${data?.error?.message||`HTTP ${res.status}`}`);
     return data.secure_url;
-}; try{data=await res.json()}catch(_){}
-            if(!res.ok || !data.secure_url){
-                throw new Error(`Cloudinary अपलोड अयशस्वी: ${data?.error?.message || `HTTP ${res.status}`}. '${uploadPreset}' Unsigned preset आणि PDF/raw upload तपासा.`);
-            }
-            return data.secure_url;
-        };
+};
 
         window.submitProfileEditForApproval = async function(e) {
             e.preventDefault();

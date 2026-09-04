@@ -1377,64 +1377,6 @@
             </div>
 
             <!-- TAB 11: MEMBER FOLDERS -->
-            // १. प्रलंबित सदस्य PDF मंजूर करण्याचे फंक्शन
-window.approveMemberFile = async function(fileId, fileName) {
-    if (!confirm(`"${fileName}" ही PDF मंजूर करून सर्व सदस्यांना नोटिफिकेशन पाठवायचे का?`)) return;
-
-    Swal.fire({ title: 'मंजूर करत आहे व नोटिफिकेशन पाठवत आहे...', didOpen: () => Swal.showLoading() });
-    try {
-        // फाईल स्टेटस मंजूर करा
-        const fileSnap = await getDocs(collection(db, "member_files"));
-        const fileDoc = fileSnap.docs.find(d => d.id === fileId);
-        const fileData = fileDoc ? fileDoc.data() : {};
-        await updateDoc(doc(db, "member_files", fileId), {
-            status: "Approved",
-            approvedBy: currentLoggedInAdminName,
-            approvedAt: new Date().toLocaleString('mr-IN')
-        });
-
-        const circularRef = await addDoc(collection(db, "circulars"), {
-            title: fileName || fileData.fileName || "नवीन परिपत्रक",
-            fileName: fileName || fileData.fileName || "PDF",
-            fileUrl: fileData.fileUrl || fileData.pdfUrl || "",
-            sourceMemberFileId: fileId,
-            status: "Approved",
-            publishedAt: Date.now(),
-            createdAt: Date.now(),
-            category: "Circular"
-        });
-
-        await window.sendPushNotificationToAll(
-            "नवीन परिपत्रक उपलब्ध!",
-            `"${fileName}" हे परिपत्रक संघटनेच्या पोर्टलवर उपलब्ध झाले आहे.`,
-            { url: `/secure-pdf.html?id=${circularRef.id}&collection=circulars`, circularId: circularRef.id }
-        );
-
-        Swal.fire('मंजूर झाले!', 'PDF मंजूर झाली आणि सर्व सदस्यांना नोटिफिकेशन गेले.', 'success');
-        loadData();
-    } catch(e) {
-        Swal.fire('Error', e.message, 'error');
-    }
-};
-
-// २. पुश नोटिफिकेशन पाठवणारे फंक्शन (Firebase Cloud Function / HTTP v1 API)
-window.sendPushNotificationToAll = async function(title, body, data = {}) {
-    // Never send FCM from the browser with a server key. Queue a Firestore job;
-    // Firebase Cloud Functions sends it using Admin SDK credentials.
-    try {
-        await addDoc(collection(db, "push_jobs"), {
-            title: title || "नवीन सूचना",
-            body: body || "",
-            data: data || {},
-            createdAt: Date.now(),
-            status: "queued"
-        });
-        return true;
-    } catch(e) {
-        console.error("Notification queue error:", e);
-        return false;
-    }
-};
             <div id="tab-member-folders" class="tab-content">
                 <div class="panel">
                     <div class="panel-header">
@@ -2712,13 +2654,7 @@ window.uploadToCloudinary = async (file) => {
     if(!res.ok || !data.secure_url) throw new Error(`Cloudinary अपलोड अयशस्वी: ${data?.error?.message||`HTTP ${res.status}`}`);
     return data.secure_url;
 };
-    try { data = await res.json(); } catch (_) {}
-    if (!res.ok || !data.secure_url) {
-        const msg = data?.error?.message || `Cloudinary HTTP ${res.status}`;
-        throw new Error(`Cloudinary अपलोड अयशस्वी: ${msg}. Cloudinary मध्ये '${uploadPreset}' preset Unsigned आहे का आणि PDF/raw upload allowed आहे का तपासा.`);
-    }
-    return data.secure_url;
-};
+
 
         window.removeExistingFile = (boxType, hiddenInputId, fileInputId) => {
             if(confirm("तुम्हाला खरोखर ही फाईल डिलीट करून नवीन फाईल बदलायची आहे का?")) {
@@ -5041,6 +4977,66 @@ window.masterRunCleanup=async function(){
  try{const r=await fetch(MASTER_FN_BASE+"/masterCleanup",{method:"POST",headers:{"Content-Type":"application/json",Authorization:"Bearer "+await masterToken()},body:JSON.stringify({confirm:"CONFIRM"})});const j=await r.json();if(!r.ok)throw new Error(j.error||"Cleanup failed");await logAdminActivity("Master Admin: server cleanup "+j.deletedLogs+" logs");Swal.fire("पूर्ण",j.deletedLogs+" जुने logs साफ झाले.","success");}catch(e){Swal.fire("त्रुटी",e.message,"error")}
 };
 setInterval(()=>{const b=document.getElementById("masterAdminTabBtn");if(b)b.style.display=isSuperAdmin?"inline-flex":"none"},700);
+
+
+            // १. प्रलंबित सदस्य PDF मंजूर करण्याचे फंक्शन
+window.approveMemberFile = async function(fileId, fileName) {
+    if (!confirm(`"${fileName}" ही PDF मंजूर करून सर्व सदस्यांना नोटिफिकेशन पाठवायचे का?`)) return;
+
+    Swal.fire({ title: 'मंजूर करत आहे व नोटिफिकेशन पाठवत आहे...', didOpen: () => Swal.showLoading() });
+    try {
+        // फाईल स्टेटस मंजूर करा
+        const fileSnap = await getDocs(collection(db, "member_files"));
+        const fileDoc = fileSnap.docs.find(d => d.id === fileId);
+        const fileData = fileDoc ? fileDoc.data() : {};
+        await updateDoc(doc(db, "member_files", fileId), {
+            status: "Approved",
+            approvedBy: currentLoggedInAdminName,
+            approvedAt: new Date().toLocaleString('mr-IN')
+        });
+
+        const circularRef = await addDoc(collection(db, "circulars"), {
+            title: fileName || fileData.fileName || "नवीन परिपत्रक",
+            fileName: fileName || fileData.fileName || "PDF",
+            fileUrl: fileData.fileUrl || fileData.pdfUrl || "",
+            sourceMemberFileId: fileId,
+            status: "Approved",
+            publishedAt: Date.now(),
+            createdAt: Date.now(),
+            category: "Circular"
+        });
+
+        await window.sendPushNotificationToAll(
+            "नवीन परिपत्रक उपलब्ध!",
+            `"${fileName}" हे परिपत्रक संघटनेच्या पोर्टलवर उपलब्ध झाले आहे.`,
+            { url: `/secure-pdf.html?id=${circularRef.id}&collection=circulars`, circularId: circularRef.id }
+        );
+
+        Swal.fire('मंजूर झाले!', 'PDF मंजूर झाली आणि सर्व सदस्यांना नोटिफिकेशन गेले.', 'success');
+        loadData();
+    } catch(e) {
+        Swal.fire('Error', e.message, 'error');
+    }
+};
+
+// २. पुश नोटिफिकेशन पाठवणारे फंक्शन (Firebase Cloud Function / HTTP v1 API)
+window.sendPushNotificationToAll = async function(title, body, data = {}) {
+    // Never send FCM from the browser with a server key. Queue a Firestore job;
+    // Firebase Cloud Functions sends it using Admin SDK credentials.
+    try {
+        await addDoc(collection(db, "push_jobs"), {
+            title: title || "नवीन सूचना",
+            body: body || "",
+            data: data || {},
+            createdAt: Date.now(),
+            status: "queued"
+        });
+        return true;
+    } catch(e) {
+        console.error("Notification queue error:", e);
+        return false;
+    }
+};
 </script>
 </body>
 </html>

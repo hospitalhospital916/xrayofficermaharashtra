@@ -93,8 +93,8 @@
 
   <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signOut, setPersistence, browserLocalPersistence, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signOut, setPersistence, browserLocalPersistence, sendPasswordResetEmail, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+import { getFirestore, collection, query, where, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk",
@@ -123,8 +123,9 @@ if (togglePassword && passwordInput) togglePassword.addEventListener('click', fu
 });
 
 async function findByField(col, field, value) {
-  try { return await getDocs(query(collection(db, col), where(field, '==', value))); }
-  catch (_) { return { empty:true, docs:[] }; }
+  // Firestore permission errors must NOT be hidden as "not registered".
+  // This makes a Firebase Rules problem visible immediately.
+  return await getDocs(query(collection(db, col), where(field, '==', value)));
 }
 
 async function findMember(email) {
@@ -132,6 +133,16 @@ async function findMember(email) {
   if (!snap.empty) return snap.docs[0];
   snap = await findByField('members','ईमेल',email);
   return snap.empty ? null : snap.docs[0];
+}
+
+async function updateMemberAfterMigration(memberId, uid, email) {
+  await updateDoc(doc(db, 'members', memberId), {
+    uid,
+    email,
+    authVersion: 2,
+    password: null,
+    pass: null
+  });
 }
 
 async function findAdmin(email) {
@@ -191,16 +202,53 @@ $('loginBtn')?.addEventListener('click', async () => {
   btn.disabled = true;
   msg('<span style="color:#2563eb"><i class="fa-solid fa-spinner fa-spin"></i> सुरक्षित लॉगिन तपासत आहे...</span>');
   try {
-    // सर्व सदस्यांसाठी एकच Firebase Authentication पद्धत.
+    // प्रथम Firebase Authentication — नवीन सदस्यांसाठी मुख्य पद्धत.
     try {
       const cred = await signInWithEmailAndPassword(auth, email, password);
       await routeSignedInUser(cred.user);
       return;
     } catch (authError) {
       await signOut(auth).catch(()=>{});
+
+      // जुने सदस्य: पूर्वी Firestore मध्ये pass/password असलेल्या records चे
+      // एकदाच Firebase Authentication मध्ये सुरक्षित migration.
       const code = authError?.code || '';
-      const text = code.includes('invalid-credential') || code.includes('wrong-password') || code.includes('user-not-found')
-        ? 'ईमेल किंवा पासवर्ड चुकीचा आहे.' : (authError.message || 'लॉगिन अयशस्वी.');
+      if (code === 'auth/user-not-found' || code === 'auth/invalid-credential') {
+        const memberDoc = await findMember(email);
+        if (memberDoc) {
+          const data = memberDoc.data() || {};
+          const legacyPass = String(data.password || data.pass || '');
+          const status = norm(data.status || data.स्थिती);
+          const access = norm(data.access || data.अॅक्सेस);
+
+          if (status === 'pending' || status === 'प्रलंबित') {
+            throw new Error('तुमचा सदस्य अर्ज अजून ॲडमिनच्या मंजुरीच्या प्रतीक्षेत आहे.');
+          }
+          if (access === 'disabled' || access === 'बंद') {
+            throw new Error('तुमचा लॉगिन अॅक्सेस बंद आहे. ॲडमिनशी संपर्क साधा.');
+          }
+
+          if (legacyPass && legacyPass === password) {
+            try {
+              const cred = await createUserWithEmailAndPassword(auth, email, password);
+              await updateMemberAfterMigration(memberDoc.id, cred.user.uid, email);
+              await routeSignedInUser(cred.user);
+              return;
+            } catch (migrationError) {
+              if (migrationError?.code === 'auth/email-already-in-use') {
+                // Auth account exists, therefore the supplied password is not valid.
+                throw new Error('ईमेल किंवा पासवर्ड चुकीचा आहे.');
+              }
+              throw migrationError;
+            }
+          }
+        }
+      }
+
+      const text = code === 'auth/wrong-password' || code === 'auth/invalid-credential' ||
+                   code === 'auth/user-not-found' || code === 'auth/invalid-email'
+        ? 'ईमेल किंवा पासवर्ड चुकीचा आहे.'
+        : (authError.message || 'लॉगिन अयशस्वी.');
       throw new Error(text);
     }
   } catch (error) {
