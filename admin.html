@@ -2016,20 +2016,54 @@
         </div>
     </div><!-- FIREBASE & CORE JS APPLICATION ENGINE -->
    <!-- FIREBASE & CORE JS APPLICATION ENGINE -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc, query, where, orderBy, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
-        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, sendPasswordResetEmail, browserSessionPersistence, browserLocalPersistence, inMemoryPersistence, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-        
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+    <script>
         // FIREBASE CONFIGURATION
         const firebaseConfig = { 
             apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk", 
             authDomain: "xrayunionmah.firebaseapp.com", 
             projectId: "xrayunionmah" 
         };
-        const app = initializeApp(firebaseConfig); 
-        const db = getFirestore(app); 
-        const auth = getAuth(app);
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        // Compatibility wrappers: keep the existing app logic unchanged while
+        // using the non-module Firebase SDK, which is more reliable for simple
+        // HTML hosting and local previews.
+        const initializeApp = (config, name) => name ? firebase.initializeApp(config, name) : firebase.app();
+        const getFirestore = (appInstance) => firebase.firestore(appInstance);
+        const getAuth = (appInstance) => firebase.auth(appInstance);
+        const collection = (dbRef, name) => dbRef.collection(name);
+        const doc = (dbRef, collectionName, id) => dbRef.collection(collectionName).doc(id);
+        const addDoc = (colRef, data) => colRef.add(data);
+        const getDocs = async (queryRef) => queryRef.get();
+        const updateDoc = (docRef, data) => docRef.update(data);
+        const deleteDoc = (docRef) => docRef.delete();
+        const setDoc = (docRef, data, options) => docRef.set(data, options || {});
+        const where = (field, op, value) => ({ __type: 'where', field, op, value });
+        const orderBy = (field, direction) => ({ __type: 'orderBy', field, direction: direction || 'asc' });
+        const query = (baseRef, ...constraints) => {
+            let q = baseRef;
+            for (const c of constraints) {
+                if (!c) continue;
+                if (c.__type === 'where') q = q.where(c.field, c.op, c.value);
+                else if (c.__type === 'orderBy') q = q.orderBy(c.field, c.direction);
+            }
+            return q;
+        };
+        const onSnapshot = (queryRef, next, error) => queryRef.onSnapshot(next, error);
+        const signInWithEmailAndPassword = (authRef, email, password) => authRef.signInWithEmailAndPassword(email, password);
+        const signOut = (authRef) => authRef.signOut();
+        const onAuthStateChanged = (authRef, callback) => authRef.onAuthStateChanged(callback);
+        const setPersistence = (authRef, persistence) => authRef.setPersistence(persistence);
+        const sendPasswordResetEmail = (authRef, email) => authRef.sendPasswordResetEmail(email);
+        const browserSessionPersistence = firebase.auth.Auth.Persistence.SESSION;
+        const browserLocalPersistence = firebase.auth.Auth.Persistence.LOCAL;
+        const inMemoryPersistence = firebase.auth.Auth.Persistence.NONE;
+        const createUserWithEmailAndPassword = (authRef, email, password) => authRef.createUserWithEmailAndPassword(email, password);
         
         const SUPER_ADMIN_EMAIL = "hangemahesh498@gmail.com";
         let isSuperAdmin = false;
