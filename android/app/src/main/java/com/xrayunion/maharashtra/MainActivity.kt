@@ -49,12 +49,26 @@ class MainActivity : ComponentActivity() {
             override fun onPageFinished(view: WebView, url: String) {
                 super.onPageFinished(view, url)
                 val css = """
-                    body{background:#f1f5f9!important;}
+                    :root{--app-blue:#0b3d91;--app-dark:#071938;}
+                    *{-webkit-tap-highlight-color:transparent;box-sizing:border-box;}
+                    html,body{width:100%;min-height:100%;margin:0;padding:0;overflow-x:hidden;}
+                    body{background:#f5f7fb!important;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif!important;}
+                    img{max-width:100%;height:auto;}
                     .top-bar,.url-share-banner{display:none!important;}
-                    button,.btn,.btn-action{border-radius:14px!important;}
-                    .card,.stat-card,.profile-card,.section-card{border-radius:20px!important;box-shadow:0 8px 24px rgba(15,44,89,.10)!important;}
-                    input,select,textarea{border-radius:12px!important;}
-                    header,.navbar,.app-header{box-shadow:0 6px 20px rgba(0,0,0,.12)!important;}
+                    header,.navbar,.app-header{position:sticky;top:0;z-index:1000;box-shadow:0 5px 18px rgba(0,0,0,.10)!important;}
+                    button,.btn,.btn-action,input[type=button],input[type=submit]{min-height:44px;border-radius:14px!important;}
+                    input,select,textarea{min-height:44px;border-radius:12px!important;font-size:16px!important;}
+                    .card,.stat-card,.profile-card,.section-card,.dashboard-card{border-radius:20px!important;box-shadow:0 7px 24px rgba(15,44,89,.09)!important;}
+                    a{touch-action:manipulation;}
+                    table{display:block;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+                    .container,.content,.main-content{width:100%!important;max-width:1100px;margin-left:auto!important;margin-right:auto!important;}
+                    @media(max-width:600px){
+                      body{font-size:15px!important;}
+                      .container,.content,.main-content{padding-left:12px!important;padding-right:12px!important;}
+                      .grid,.cards,.dashboard-grid{grid-template-columns:1fr!important;}
+                      .modal,.dialog{width:calc(100% - 20px)!important;max-width:none!important;}
+                      button,.btn,.btn-action{width:auto;max-width:100%;}
+                    }
                 """.trimIndent()
                 val js = "(function(){var s=document.getElementById('androidAppPolish');if(!s){s=document.createElement('style');s.id='androidAppPolish';s.innerHTML=" + JSONObject.quote(css) + ";document.head.appendChild(s);}})();"
                 view.evaluateJavascript(js, null)
