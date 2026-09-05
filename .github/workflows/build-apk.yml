@@ -23,14 +23,12 @@ jobs:
         with:
           gradle-version: '8.10.2'
 
-      - name: Build native X-Ray Union APK
+      - name: Build native Android APK
         working-directory: android
         run: gradle --no-daemon :app:assembleDebug
 
       - name: Verify APK
-        run: |
-          test -s android/app/build/outputs/apk/debug/app-debug.apk
-          echo "X-Ray Union APK created successfully"
+        run: test -s android/app/build/outputs/apk/debug/app-debug.apk
 
       - name: Upload X-Ray Union APK
         uses: actions/upload-artifact@v4
