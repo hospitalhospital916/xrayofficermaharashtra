@@ -1,10 +1,10 @@
 {
-  "name": "क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना",
+  "name": "X-Ray Union",
   "short_name": "X-Ray Union",
   "start_url": "https://xrayunionmah.web.app/",
   "scope": "https://xrayunionmah.web.app/",
   "display": "standalone",
-  "orientation": "portrait",
+  "orientation": "any",
   "background_color": "#f8fafc",
   "theme_color": "#0B3D91",
   "description": "राज्यातील सर्व क्ष-किरण वैज्ञानिक अधिकाऱ्यांच्या न्याय-हक्कांसाठी समर्पित अधिकृत संघटना.",
