@@ -275,7 +275,11 @@
             th, td { border: 1px solid #000000 !important; padding: 4px 5px !important; word-wrap: break-word !important; vertical-align: middle !important; color: #000 !important; }
             th { background-color: #f1f5f9 !important; font-weight: 800 !important; }
         }
-    </style>
+    
+        .forgot-admin-btn{width:100%;margin-top:10px!important;background:#eef4ff!important;color:#0b3d91!important;border:1px solid #cbd9f4!important;font-weight:700!important;cursor:pointer;min-height:44px;border-radius:14px!important;}
+        .forgot-admin-btn:hover{filter:brightness(.97);transform:translateY(-1px);}
+        @media(max-width:600px){#login-screen .login-box{width:calc(100% - 28px)!important;padding:24px 18px!important;border-radius:22px!important;}#login-screen h2{font-size:1.25rem!important;}#login-screen input,#login-screen button{width:100%!important;min-height:48px!important;font-size:16px!important;}}
+</style>
 </head>
 <body class="no-screenshot">
 
@@ -286,6 +290,7 @@
             <input type="email" id="adminEmail" placeholder="नोंदणीकृत Email" autocomplete="off">
             <input type="password" id="adminPass" placeholder="Password">
             <button type="button" onclick="loginAdmin()">लॉगिन करा <i class="fa fa-arrow-right"></i></button>
+            <button type="button" class="forgot-admin-btn" onclick="forgotPassword()"><i class="fa fa-key"></i> पासवर्ड विसरलात? / Forgot Password</button>
             <p style="margin-top: 18px; cursor: pointer; color: var(--primary); font-weight: bold; text-decoration: underline;" onclick="navigateToMainIndex()">
                 <i class="fa fa-home"></i> मुख्य मेनूवर जा (Go to Main Index)
             </p>
@@ -4450,113 +4455,81 @@ window.initLiveChatEngine = () => {
             document.getElementById('lp_recipient_district').style.display = type === 'District' ? 'block' : 'none';
         };
 
+        window.escapeLetterHtml = function(value) {
+            return String(value ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+        };
+
+        window.waitForLetterAssets = async function(root) {
+            try { if (document.fonts && document.fonts.ready) await document.fonts.ready; } catch(e) {}
+            const imgs = Array.from(root.querySelectorAll('img'));
+            await Promise.all(imgs.map(img => new Promise(resolve => {
+                if (img.complete) return resolve();
+                img.onload = resolve; img.onerror = resolve;
+                setTimeout(resolve, 15000);
+            })));
+        };
+
         window.getLetterHTML = (templateUrl, topPad, leftPad, rightPad, bottomPad, ref, date, to, sub, body) => {
-            let signsFooterHtml = window.lpSignaturesData.map(s => s.signUrl ? `<div style="text-align:center; width:120px;"><img src="${s.signUrl}" style="max-height:40px;"><br><b>${s.name}</b></div>` : (s.name ? `<div style="text-align:center; width:120px;"><br><b>${s.name}</b></div>` : '')).join('');
-            let stampHtml = window.lpStampUrl ? `<div style="text-align:center;"><img src="${window.lpStampUrl}" style="height:55px;"></div>` : '';
-
+            const safe = window.escapeLetterHtml;
+            const signsFooterHtml = (window.lpSignaturesData || []).map(s => s.signUrl
+                ? `<div style="text-align:center;width:120px;font-family:'Mukta','Noto Sans Devanagari','Nirmala UI',Arial,sans-serif;"><img crossorigin="anonymous" src="${safe(s.signUrl)}" style="max-width:110px;max-height:40px;object-fit:contain;"><br><b>${safe(s.name)}</b></div>`
+                : (s.name ? `<div style="text-align:center;width:120px;font-family:'Mukta','Noto Sans Devanagari','Nirmala UI',Arial,sans-serif;"><br><b>${safe(s.name)}</b></div>` : '')).join('');
+            const stampHtml = window.lpStampUrl ? `<div style="text-align:center;"><img crossorigin="anonymous" src="${safe(window.lpStampUrl)}" style="height:55px;max-width:120px;object-fit:contain;"></div>` : '';
+            const templateLayer = templateUrl ? `<img crossorigin="anonymous" src="${safe(templateUrl)}" style="position:absolute;inset:0;width:210mm;height:297mm;object-fit:fill;z-index:0;pointer-events:none;">` : '';
             return `
-                <div class="a4-print-container" style="width:210mm; height:297mm; background-image: url('${templateUrl||''}'); background-size:100% 100%; padding: ${topPad||60}mm ${rightPad||15}mm ${bottomPad||20}mm ${leftPad||80}mm; box-sizing:border-box;">
-                    <div style="display:flex; justify-content:space-between; font-weight:bold; margin-bottom:15px;">
-                        <div>संदर्भ: ${ref}</div><div>दिनांक: ${date}</div>
+                <div class="a4-print-container" style="position:relative;width:210mm;height:297mm;padding:${Number(topPad)||60}mm ${Number(rightPad)||15}mm ${Number(bottomPad)||20}mm ${Number(leftPad)||80}mm;box-sizing:border-box;background:#fff;overflow:hidden;font-family:'Mukta','Noto Sans Devanagari','Nirmala UI',Arial,sans-serif;color:#111;">
+                    ${templateLayer}
+                    <div style="position:relative;z-index:2;width:100%;height:100%;">
+                        <div style="display:flex;justify-content:space-between;font-weight:bold;margin-bottom:15px;"><div>संदर्भ: ${safe(ref)}</div><div>दिनांक: ${safe(date)}</div></div>
+                        <div style="font-size:15px;font-weight:bold;margin-bottom:15px;">प्रति,<br>${safe(to).split('\\n').join('<br>')}</div>
+                        <div style="font-size:15px;font-weight:bold;text-align:center;text-decoration:underline;margin-bottom:20px;">विषय: ${safe(sub)}</div>
+                        <div style="font-size:15px;line-height:1.6;text-align:justify;white-space:pre-wrap;margin-bottom:20px;">${safe(body)}</div>
+                        ${stampHtml}
+                        <div style="display:flex;justify-content:space-around;align-items:flex-end;margin-top:20px;">${signsFooterHtml}</div>
                     </div>
-                    <div style="font-size:15px; font-weight:bold; margin-bottom:15px;">प्रति,<br>${to.replace(/\n/g, '<br>')}</div>
-                    <div style="font-size:15px; font-weight:bold; text-align:center; text-decoration:underline; margin-bottom:20px;">विषय: ${sub}</div>
-                    <div style="font-size:15px; line-height:1.6; text-align:justify; white-space:pre-wrap; margin-bottom:20px;">${body}</div>
-                    ${stampHtml}
-                    <div style="display:flex; justify-content:space-around; margin-top:20px;">${signsFooterHtml}</div>
-                </div>
-            `;
+                </div>`;
         };
 
-        window.previewLetter = () => {
-            let tmpl = document.getElementById('lp_selected_template').value;
-            let topPad = document.getElementById('lp_top_padding').value || 60;
-            let leftPad = document.getElementById('lp_left_padding').value || 80;
-            let rightPad = document.getElementById('lp_right_padding').value || 15;
-            let bottomPad = document.getElementById('lp_bottom_padding').value || 20;
-
-            let ref = document.getElementById('lp_ref').value || '____';
-            let date = document.getElementById('lp_date').value || 'DD/MM/YYYY';
-            let to = document.getElementById('lp_to').value || '____';
-            let sub = document.getElementById('lp_sub').value || '____';
-            let body = document.getElementById('lp_content').value || '____';
-            
-            let previewWin = window.open('', '_blank');
-            previewWin.document.write(`<html><head><title>Letter Preview</title><style>body{background:#525659; display:flex; justify-content:center; margin:0; padding:20px; font-family:'Mukta',sans-serif;}</style></head><body>${window.getLetterHTML(tmpl, topPad, leftPad, rightPad, bottomPad, ref, date, to, sub, body)}</body></html>`);
+        window.previewLetter = async () => {
+            let tmpl=document.getElementById('lp_selected_template').value;
+            let topPad=document.getElementById('lp_top_padding').value||60, leftPad=document.getElementById('lp_left_padding').value||80, rightPad=document.getElementById('lp_right_padding').value||15, bottomPad=document.getElementById('lp_bottom_padding').value||20;
+            let ref=document.getElementById('lp_ref').value||'____', date=document.getElementById('lp_date').value||'DD/MM/YYYY', to=document.getElementById('lp_to').value||'____', sub=document.getElementById('lp_sub').value||'____', body=document.getElementById('lp_content').value||'____';
+            let previewWin=window.open('','_blank');
+            if(!previewWin)return Swal.fire('Preview','ब्राउझरने नवीन window block केली आहे. कृपया popup allow करा.','warning');
+            previewWin.document.write(`<html><head><meta charset="UTF-8"><title>Letter Preview</title><style>body{background:#525659;display:flex;justify-content:center;margin:0;padding:20px;font-family:'Mukta','Noto Sans Devanagari',Arial,sans-serif}</style></head><body>${window.getLetterHTML(tmpl,topPad,leftPad,rightPad,bottomPad,ref,date,to,sub,body)}</body></html>`);
+            previewWin.document.close();
         };
 
-        window.saveLetter = async () => {
-            let tmpl = document.getElementById('lp_selected_template').value;
-            let topPad = document.getElementById('lp_top_padding').value || 60;
-            let leftPad = document.getElementById('lp_left_padding').value || 80;
-            let rightPad = document.getElementById('lp_right_padding').value || 15;
-            let bottomPad = document.getElementById('lp_bottom_padding').value || 20;
-
-            let ref = document.getElementById('lp_ref').value;
-            let date = document.getElementById('lp_date').value;
-            let to = document.getElementById('lp_to').value;
-            let sub = document.getElementById('lp_sub').value;
-            let body = document.getElementById('lp_content').value;
-            let rType = document.getElementById('lp_recipient_type').value;
-            let rMandal = document.getElementById('lp_recipient_mandal').value;
-            let rDist = document.getElementById('lp_recipient_district').value;
-            
-            if(!sub || !body) return alert("विषय आणि मजकूर भरा.");
-            Swal.fire({title: 'पत्र सेव्ह करत आहे...', didOpen: () => Swal.showLoading()});
-            
-            await addDoc(collection(db, "letters"), {
-                templateUrl: tmpl, topPadding: topPad, leftPadding: leftPad, rightPadding: rightPad, bottomPadding: bottomPad,
-                ref, date, to, subject: sub, body, recipientType: rType, recipientMandal: rMandal, recipientDistrict: rDist,
-                published: false, timestamp: Date.now()
-            });
-            await window.logAdminActivity(`Created Letter: ${sub}`);
-            Swal.fire('यशस्वी', 'पत्र सेव्ह झाले.', 'success');
-            
-            document.getElementById('lp_ref').value = ""; 
-            document.getElementById('lp_to').value = ""; 
-            document.getElementById('lp_sub').value = ""; 
-            document.getElementById('lp_content').value = "";
-            loadData();
+        window.printSavedLetter = async (id) => {
+            let l=window.lettersData.find(x=>x.id===id); if(!l)return;
+            let printArea=document.getElementById('printLetterArea');
+            printArea.innerHTML=window.getLetterHTML(l.templateUrl,l.topPadding||60,l.leftPadding||80,l.rightPadding||15,l.bottomPadding||20,l.ref,l.date,l.to,l.subject,l.body);
+            printArea.style.display='block';
+            await window.waitForLetterAssets(printArea);
+            setTimeout(()=>window.print(),100);
         };
 
-        window.renderLetters = () => {
-            let tbody = document.getElementById('lettersBody'); if(!tbody) return;
-            window.lettersData.sort((a,b) => b.timestamp - a.timestamp);
-
-            tbody.innerHTML = window.lettersData.map((l) => {
-                let recpStr = l.recipientType === 'OnlyMe' ? 'केवळ मी' : (l.recipientType === 'All' ? 'सर्व सदस्य' : (l.recipientType === 'Mandal' ? `${l.recipientMandal} मंडळ` : `${l.recipientDistrict} जिल्हा`));
-                let pubBadge = l.published ? `<span class="badge bg-success">Published</span>` : `<span class="badge bg-warning">Draft</span>`;
-                return `<tr>
-                    <td>${l.date || '-'}</td>
-                    <td><b>${l.subject}</b></td>
-                    <td>${recpStr}</td>
-                    <td>${pubBadge}</td>
-                    <td style="white-space:nowrap;">
-                        <button class="btn-action bg-primary" onclick="printSavedLetter('${l.id}')"><i class="fa fa-print"></i></button>
-                        <button class="btn-action bg-info" onclick="downloadPDFLetter('${l.id}')"><i class="fa fa-file-pdf"></i></button>
-                        <button class="btn-action ${l.published ? 'bg-warning' : 'bg-success'}" onclick="togglePublishLetter('${l.id}', ${l.published})"><i class="fa ${l.published ? 'fa-eye-slash' : 'fa-globe'}"></i></button>
-                        <button class="btn-action bg-danger" onclick="deleteLetter('${l.id}')"><i class="fa fa-trash"></i></button>
-                    </td>
-                </tr>`;
-            }).join('') || '<tr><td colspan="5" style="text-align:center;">कोणतेही पत्र उपलब्ध नाही.</td></tr>';
-        };
-
-        window.printSavedLetter = (id) => {
-            let l = window.lettersData.find(x => x.id === id); if(!l) return;
-            let printArea = document.getElementById('printLetterArea');
-            printArea.innerHTML = window.getLetterHTML(l.templateUrl, l.topPadding||60, l.leftPadding||80, l.rightPadding||15, l.bottomPadding||20, l.ref, l.date, l.to, l.subject, l.body);
-            setTimeout(() => { window.print(); }, 200);
-        };
-
-        window.downloadPDFLetter = (id) => {
-            let l = window.lettersData.find(x => x.id === id); if(!l) return;
-            let printArea = document.getElementById('printLetterArea');
-            printArea.innerHTML = window.getLetterHTML(l.templateUrl, l.topPadding||60, l.leftPadding||80, l.rightPadding||15, l.bottomPadding||20, l.ref, l.date, l.to, l.subject, l.body);
-            printArea.style.display = 'block';
-            
-            let element = printArea.firstElementChild;
-            let opt = { margin: 0, filename: `Letter_${id}.pdf`, image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
-            html2pdf().set(opt).from(element).save().then(()=>{ printArea.style.display = 'none'; });
+        window.downloadPDFLetter = async (id) => {
+            let l=window.lettersData.find(x=>x.id===id); if(!l)return;
+            let printArea=document.getElementById('printLetterArea');
+            try {
+                printArea.innerHTML=window.getLetterHTML(l.templateUrl,l.topPadding||60,l.leftPadding||80,l.rightPadding||15,l.bottomPadding||20,l.ref,l.date,l.to,l.subject,l.body);
+                printArea.style.display='block';
+                const element=printArea.firstElementChild;
+                await window.waitForLetterAssets(element);
+                const opt={
+                    margin:0,filename:`Letter_${id}.pdf`,
+                    image:{type:'jpeg',quality:0.98},
+                    html2canvas:{scale:2,useCORS:true,allowTaint:false,backgroundColor:'#ffffff',logging:false,imageTimeout:15000,letterRendering:true},
+                    jsPDF:{unit:'mm',format:'a4',orientation:'portrait',compress:true},
+                    pagebreak:{mode:['avoid-all','css','legacy']}
+                };
+                await html2pdf().set(opt).from(element).save();
+                Swal.fire({icon:'success',title:'PDF तयार आहे',text:'पत्राचा letterhead/background आणि मजकूर PDF मध्ये समाविष्ट झाला आहे.',timer:1800,showConfirmButton:false});
+            } catch(e) {
+                console.error('Letter PDF error',e);
+                Swal.fire('PDF Error','PDF तयार करताना अडचण आली. Letterhead image/Internet connection तपासा.','error');
+            } finally { printArea.style.display='none'; }
         };
 
         window.togglePublishLetter = async (id, currentStatus) => {

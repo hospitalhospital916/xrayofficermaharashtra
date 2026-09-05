@@ -1,0 +1,10 @@
+X-Ray Union FINAL upload checklist
+
+[OK] Native Android package: com.xrayunion.maharashtra
+[OK] Android app label: X-Ray Union
+[OK] GitHub workflow builds android/app natively; no PortalApp/Cordova
+[OK] Launcher icons synchronized from logo.png
+[OK] Android WebView interface: loading screen, back navigation, mobile polish, error feedback
+[OK] Letterpad PDF: image layer + CORS/font/image waiting + html2pdf options
+[OK] Admin forgot password button connected to Firebase reset flow
+[OK] Android version 1.0.1 / versionCode 2
