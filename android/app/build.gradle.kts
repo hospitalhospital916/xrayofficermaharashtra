@@ -10,10 +10,34 @@ android {
         applicationId = "com.xrayunion.maharashtra"
         minSdk = 23
         targetSdk = 35
-        versionCode = 2
-        versionName = "1.0.1"
+        versionCode = 3
+        versionName = "1.0.2"
     }
+
+    // Keep Java and Kotlin bytecode targets identical for Kotlin 2.x / AGP 8.x.
+    // Force both Java and Kotlin compilation to the same JVM 17 target.
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+
+    java {
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(17))
+        }
+    }
+
 }
+
+// Explicit Kotlin toolchain avoids JVM-target mismatches on GitHub Actions.
+kotlin {
+    jvmToolchain(17)
+}
+
 dependencies {
     implementation(platform("com.google.firebase:firebase-bom:34.2.0"))
     implementation("com.google.firebase:firebase-messaging")
