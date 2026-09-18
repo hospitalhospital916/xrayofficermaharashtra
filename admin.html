@@ -821,7 +821,7 @@
 <div id="tab-master-admin" class="tab-content"><div class="panel"><div class="panel-header"><span>🛡️ मास्टर ॲडमिन • Storage & Security Control</span></div><div class="panel-body">
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-bottom:15px"><div class="dash-card-mini"><h3>Firebase records</h3><h2 id="mFirestoreCount">—</h2></div><div class="dash-card-mini"><h3>Cloudinary usage</h3><h2 id="mCloudUsage">—</h2></div></div>
 <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:14px;margin-bottom:15px"><b>फक्त Master Admin</b><p style="margin:5px 0;color:#334155">सब-ॲडमिनला permanent delete अधिकार नाही. Master कडून cleanup केल्यावर audit log तयार होईल.</p></div>
-<button class="btn-action bg-info" onclick="masterRefreshUsage()">🔄 Storage तपासा</button> <button class="btn-action bg-success" onclick="masterResetAllMemberPasswords()">🔐 सर्व सदस्यांचा प्रारंभिक पासवर्ड सेट करा</button> <button class="btn-action bg-warning" onclick="masterCleanupOldLogs()">🧹 जुने logs साफ करा</button> <button class="btn-action bg-danger" onclick="masterOpenDanger()">⚠️ Permanent cleanup</button>
+<button class="btn-action bg-info" onclick="masterRefreshUsage()">🔄 Storage तपासा</button> <button class="btn-action bg-success" onclick="masterResetAllMemberPasswords()">🔐 अपूर्ण ई-मेल सदस्यांचा डिफॉल्ट पासवर्ड सेट करा</button> <button class="btn-action bg-warning" onclick="masterCleanupOldLogs()">🧹 जुने logs साफ करा</button> <button class="btn-action bg-danger" onclick="masterOpenDanger()">⚠️ Permanent cleanup</button>
 <div id="masterDanger" style="display:none;margin-top:15px;border:2px solid #ef4444;border-radius:12px;padding:15px"><b>Permanent cleanup</b><p>सुरक्षेसाठी CONFIRM लिहा. सदस्य/circular data bulk delete केला जाणार नाही.</p><input id="masterConfirm" placeholder="CONFIRM" style="padding:8px"><button class="btn-action bg-danger" onclick="masterRunCleanup()">Proceed</button></div>
 </div></div></div><div id="tab-dash" class="tab-content active">
     <div class="dash-cards-grid">
@@ -2739,25 +2739,36 @@
             if(!m) return;
 
             const { value: formValues } = await Swal.fire({
-                title: `🔐 पासवर्ड बदला व क्रेडेंशियल्स पाठवा`,
+                title: `🔐 सदस्याचा पासवर्ड सेट करा`,
                 html: `
                     <div style="text-align:left; font-size:0.9rem;">
-                        <p><b>सदस्य:</b> ${m.name}</p>
-                        <p><b>ईमेल:</b> ${m.email || 'उपलब्ध नाही'}</p>
+                        <p><b>सदस्य:</b> ${m.name || '-'}</p>
+                        <p><b>ईमेल:</b> ${m.email || 'अद्याप अपडेट केलेला नाही'}</p>
                         <p><b>मोबाईल:</b> ${m.mobile || '-'}</p>
                         <hr style="margin:10px 0;">
-                        <label><b>नवीन पासवर्ड प्रविष्ट करा:</b></label>
-                        <input id="cred_new_pass" class="swal2-input" value="${m.pass || 'Xray@2026'}" placeholder="नवीन पासवर्ड">
+                        <label style="display:flex;gap:8px;align-items:center;margin-bottom:10px;">
+                          <input type="checkbox" id="cred_use_default" checked>
+                          <b>डिफॉल्ट पासवर्ड वापरा: Pass@123</b>
+                        </label>
+                        <label><b>किंवा नवीन पासवर्ड:</b></label>
+                        <input id="cred_new_pass" class="swal2-input" value="Pass@123" placeholder="किमान 6 अक्षरे">
+                        <small style="color:#64748b;">डिफॉल्ट पासवर्ड सेट केल्यास सदस्याला पहिल्या लॉगिननंतर पासवर्ड बदलणे बंधनकारक राहील.</small>
                     </div>
                 `,
                 focusConfirm: false,
                 showCancelButton: true,
-                confirmButtonText: 'ईमेल व PDF पाठवा',
+                confirmButtonText: 'पासवर्ड सेट करा',
                 cancelButtonText: 'रद्द करा',
+                didOpen: () => {
+                    const cb=document.getElementById('cred_use_default');
+                    const inp=document.getElementById('cred_new_pass');
+                    cb?.addEventListener('change',()=>{ inp.value=cb.checked?'Pass@123':''; inp.disabled=cb.checked; });
+                },
                 preConfirm: () => {
-                    let p = document.getElementById('cred_new_pass').value.trim();
-                    if(!p) { Swal.showValidationMessage('पासवर्ड रिकामा असू शकत नाही.'); return false; }
-                    return { pass: p };
+                    const useDefault=document.getElementById('cred_use_default')?.checked;
+                    let p = (useDefault ? 'Pass@123' : document.getElementById('cred_new_pass')?.value || '').trim();
+                    if(!p || p.length < 6) { Swal.showValidationMessage('पासवर्ड किमान 6 अक्षरांचा असावा.'); return false; }
+                    return { pass: p, isDefault: useDefault };
                 }
             });
 
@@ -2768,31 +2779,18 @@
                     const token = await auth.currentUser.getIdToken(true);
                     const r = await fetch(MASTER_FN_BASE + '/adminSetMemberPassword', {
                         method:'POST', mode:'cors', headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
-                        body:JSON.stringify({memberId, password:newPass})
+                        body:JSON.stringify({memberId, password:newPass, forcePasswordChange:!!formValues.isDefault})
                     });
                     const raw = await r.text(); let j={}; try{j=JSON.parse(raw)}catch(_){ }
                     if(!r.ok) throw new Error(j.error || ('Server error '+r.status));
-                    await window.logAdminActivity(`Updated Firebase Password for: ${m.name}`);
+                    await window.logAdminActivity(`${formValues.isDefault ? 'Default Pass@123' : 'Custom'} password set for: ${m.name}`);
+                    Swal.fire('यशस्वी', `${m.name || 'सदस्य'} यांचा ${formValues.isDefault ? 'डिफॉल्ट Pass@123' : 'नवीन'} पासवर्ड सेट झाला.`, 'success');
                 } catch(e) {
                     Swal.fire('पासवर्ड अपडेट अयशस्वी', e.message || String(e), 'error');
                     return;
                 }
-
-                let credHtml = `
-                    <div style="padding:30px; font-family:'Mukta',sans-serif; border:3px solid #0B3D91; border-radius:12px;">
-                        <h2 style="color:#0B3D91; text-align:center;">क्ष-किरण वैज्ञानिक अधिकारी (गट-क) कर्मचारी संघटना महाराष्ट्र राज्य</h2>
-                        <h3 style="text-align:center;">अधिकृत सदस्य लॉगिन क्रेडेंशियल्स</h3>
-                        <hr>
-                        <p style="font-size:1.1rem;"><b>आदरणीय सभासद,</b> ${m.name}</p>
-                        <p>आपल्या संघटनेच्या अधिकृत पोर्टलवर लॉगिन करण्यासाठी खालील माहिती वापरावी:</p>
-                        <div style="background:#f0f4f8; padding:15px; border-radius:8px; font-size:1rem; margin:15px 0;">
-                            <p><b>लॉगिन ईमेल / आयडी:</b> ${m.email || m.mobile}</p>
-                            <p><b>पासवर्ड:</b> ${newPass}</p>
-                            <p><b>पोर्टल लिंक:</b> https://xrayunionmah.web.app</p>
-                        </div>
-                        <p style="color:#854d0e; font-size:0.85rem;"><b>सूचना:</b> सुरक्षेच्या कारणास्तव आपला पासवर्ड कोणासही शेअर करू नये.</p>
-                    </div>
-                `;
+            }
+        };
 
                 let win = window.open('', '_blank');
                 win.document.write(`<html><head><title>Credentials_${m.name}</title></head><body>${credHtml}</body></html>`);
@@ -5245,7 +5243,7 @@ const MASTER_FN_BASE="https://us-central1-xrayunionmah.cloudfunctions.net";
 async function masterToken(){if(!auth.currentUser)throw new Error("Login required");return await auth.currentUser.getIdToken(true)}
 window.masterResetAllMemberPasswords=async function(){
  if(!isSuperAdmin)return Swal.fire('नकार','Master Admin आवश्यक.','error');
- const ok=await Swal.fire({title:'सर्व सदस्यांचे पासवर्ड बदलायचे?',html:'सर्व active/approved सदस्यांचा सध्याचा password <b>Pass@123</b> केला जाईल.<br><br>यानंतर सदस्य स्वतःचा password बदलू शकतात.',icon:'warning',showCancelButton:true,confirmButtonText:'होय, सेट करा',cancelButtonText:'रद्द'});
+ const ok=await Swal.fire({title:'डिफॉल्ट पासवर्ड सेट करायचा?',html:'फक्त <b>Approved/Active</b> सदस्य ज्यांचा ई-मेल अजून <b>update + verify</b> झालेला नाही, त्यांचाच password <b>Pass@123</b> केला जाईल.<br><br>ज्यांचा ई-मेल व्यवस्थित update व verified आहे त्यांना <b>skip</b> केले जाईल.<br><br>नंतर सदस्याला स्वतःचा password बदलणे बंधनकारक असेल.',icon:'warning',showCancelButton:true,confirmButtonText:'होय, सेट करा',cancelButtonText:'रद्द'});
  if(!ok.isConfirmed)return;
  try{
   Swal.fire({title:'सर्व सदस्यांचे प्रारंभिक password update होत आहेत...',html:'कृपया हे पान बंद करू नका.<br><small>Firebase Authentication records तपासले जात आहेत...</small>',allowOutsideClick:false,didOpen:()=>Swal.showLoading()});
@@ -5255,7 +5253,7 @@ window.masterResetAllMemberPasswords=async function(){
   const raw=await r.text(); let j={}; try{j=JSON.parse(raw)}catch(_){}
   if(!r.ok) throw new Error(j.error||('Server error '+r.status+'. Cloud Function deploy/region तपासा.'));
   await logAdminActivity('Master Admin: reset all member passwords');
-  Swal.fire({icon:'success',title:'पूर्ण झाले',html:`Updated: <b>${j.updated||0}</b><br>Created: <b>${j.created||0}</b><br>Reset: <b>${j.reset||0}</b><br>Skipped: <b>${j.skipped||0}</b>${j.errors?.length?`<br><span style="color:#b91c1c">Errors: ${j.errors.length}</span>`:''}`});
+  Swal.fire({icon:'success',title:'पूर्ण झाले',html:`Updated: <b>${j.updated||0}</b><br>Created: <b>${j.created||0}</b><br>Reset: <b>${j.reset||0}</b><br>ई-मेल व्यवस्थित असल्यामुळे Skip: <b>${j.skippedVerifiedEmail||0}</b><br>इतर Skip: <b>${j.skipped||0}</b>${j.errors?.length?`<br><span style="color:#b91c1c">Errors: ${j.errors.length}</span>`:''}`});
  }catch(e){
   console.error('masterSetMemberDefaultPasswords failed:',e);
   const m=String(e?.message||e);
