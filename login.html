@@ -231,15 +231,32 @@ async function routeSignedInUser(user) {
 }
 
 $('googleLoginBtn')?.addEventListener('click', async () => {
-  const btn = $('googleLoginBtn'); btn.disabled = true;
-  msg('<span style="color:#2563eb"><i class="fa-solid fa-spinner fa-spin"></i> Google ऑथेंटिकेशन होत आहे...</span>');
+  const btn = $('googleLoginBtn');
+  const entered = norm($('email')?.value);
+  if (!entered || /^\d{10}$/.test(entered.replace(/^\+91/, ''))) {
+    msg('<span style="color:#b45309">⚠️ One-Click Google Login साठी आधी Profile मध्ये verify केलेला ई-मेल टाका.</span>');
+    $('email')?.focus();
+    return;
+  }
+  if (entered === '1234@gmail.com') {
+    msg('<span style="color:#b45309">⚠️ 1234@gmail.com हा फक्त default/example ई-मेल आहे. Profile मधून तुमचा स्वतःचा ई-मेल अपडेट व verify करा.</span>');
+    return;
+  }
+  btn.disabled = true;
+  msg('<span style="color:#2563eb"><i class="fa-solid fa-spinner fa-spin"></i> तुमचा ई-मेल तपासत आहे...</span>');
   try {
+    const memberDoc = await findMember(entered);
+    if (!memberDoc) throw new Error('हा ई-मेल सदस्य नोंदीमध्ये सापडला नाही.');
+    const data = memberDoc.data() || {};
+    if (memberBlocked(data)) throw new Error('तुमचा सदस्य लॉगिन अॅक्सेस सध्या बंद/प्रलंबित आहे.');
+    const storedEmail = norm(data.email || data.ईमेल || data.authEmail);
+    if (!storedEmail || storedEmail !== entered) throw new Error('या सदस्यासाठी verified ई-मेल उपलब्ध नाही. Profile मधून ई-मेल अपडेट करा.');
     await signInWithRedirect(auth, new GoogleAuthProvider());
-
   } catch (error) {
     await signOut(auth).catch(()=>{});
     msg('<span style="color:#dc2626">❌ ' + esc(error.message || 'Google लॉगिन अपयशी.') + '</span>');
-  } finally { btn.disabled = false; }
+    btn.disabled = false;
+  }
 });
 
 $('loginBtn')?.addEventListener('click', async () => {
@@ -298,11 +315,7 @@ $('loginBtn')?.addEventListener('click', async () => {
     try {
       cred = await signInWithEmailAndPassword(auth, loginEmail, password);
     } catch (authError) {
-      if (authError?.code === 'auth/user-not-found' && loginEmail === 'hangemahesh498@gmail.com') {
-        cred = await createUserWithEmailAndPassword(auth, loginEmail, password);
-      } else {
-        throw authError;
-      }
+      throw authError;
     }
     await routeSignedInUser(cred.user);
   } catch (error) {
