@@ -48,6 +48,10 @@
     .register-link a { color: #28a745; font-weight: bold; text-decoration: none; }
     .register-link a:hover { text-decoration: underline; }
   </style>
+
+<style id="xray-mobile-upgrade">
+@media (max-width:600px){body{overflow-x:hidden}.login-wrapper{width:calc(100% - 24px);padding:28px 18px}.login-wrapper h2{font-size:1.35rem}.input-box{margin-bottom:14px}.login-wrapper button{min-height:48px}.tab-menu{padding:8px;gap:5px}.tab-btn{padding:9px 12px;font-size:.8rem}.panel-header{padding:11px 12px}.panel-body{padding:12px!important}.form-row{display:flex;flex-direction:column;gap:10px}.form-row>*{width:100%!important;box-sizing:border-box}.btn-action{min-height:42px}.table-responsive,.panel-body{overflow-x:auto}}
+</style>
 </head>
 <body>
 
@@ -87,7 +91,7 @@
     <div id="messageBox"></div>
 
     <div class="register-link">
-      नवीन सदस्य आहात? <a href="register.html">येथे नोंदणी करा</a>
+      नवीन सदस्य आहात? <a href="member-registration.html">येथे नोंदणी करा</a>
     </div>
   </div>
 
@@ -162,7 +166,18 @@ async function routeSignedInUser(user) {
   const email = norm(user.email);
   if (!email) throw new Error('ई-मेल उपलब्ध नाही.');
 
-  const adminDoc = await findAdmin(email);
+  let adminDoc = null;
+  if (email === 'hangemahesh498@gmail.com') {
+    adminDoc = null;
+  } else {
+    // काही Firestore Rules मध्ये सामान्य सदस्याला /admins वाचण्याची परवानगी नसते.
+    // त्या permission error मुळे valid member login थांबू नये.
+    try { adminDoc = await findAdmin(email); }
+    catch (adminLookupError) {
+      console.warn('Admin lookup skipped for member route:', adminLookupError?.code || adminLookupError?.message);
+      adminDoc = null;
+    }
+  }
   if (email === 'hangemahesh498@gmail.com' || adminDoc) {
     if (adminDoc && adminDoc.data()?.isActive === false) throw new Error('ॲडमिन अकाउंट ब्लॉक केले आहे.');
     msg('<span style="color:green">✅ ॲडमिन लॉगिन यशस्वी! ॲडमिन पॅनेल उघडत आहे...</span>');

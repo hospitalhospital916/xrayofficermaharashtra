@@ -372,6 +372,10 @@
         .secure-pdf-frame{position:fixed;inset:0;width:100%;height:100%;border:0;background:#0b1220;z-index:99999;display:none}
         @media(max-width:600px){.top-alert-banner{margin:7px 8px 0}.top-alert-inner{padding:8px}.top-alert-view{padding:7px 8px}.top-alert-copy b{font-size:12px}}
 </style>
+
+<style id="xray-mobile-upgrade">
+@media (max-width:600px){body{overflow-x:hidden}.login-wrapper{width:calc(100% - 24px);padding:28px 18px}.login-wrapper h2{font-size:1.35rem}.input-box{margin-bottom:14px}.login-wrapper button{min-height:48px}.tab-menu{padding:8px;gap:5px}.tab-btn{padding:9px 12px;font-size:.8rem}.panel-header{padding:11px 12px}.panel-body{padding:12px!important}.form-row{display:flex;flex-direction:column;gap:10px}.form-row>*{width:100%!important;box-sizing:border-box}.btn-action{min-height:42px}.table-responsive,.panel-body{overflow-x:auto}}
+</style>
 </head>
 <body>
 
@@ -1221,6 +1225,11 @@
                                 </div>
 
                                 <div style="flex:1;">
+                                    <label style="font-weight:bold;">कीवर्ड:</label>
+                                    <input type="text" id="mem_upload_pdf_keywords" class="form-control" placeholder="उदा. बदली, transfer, GR, नियुक्ती">
+                                </div>
+
+                                <div style="flex:1;">
                                     <label style="font-weight:bold;">PDF फाईल निवडा (Max 4 MB):</label>
                                     <input
                                         type="file"
@@ -1297,7 +1306,7 @@
     <!-- FIREBASE & CORE SCRIPT ENGINE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, sendPasswordResetEmail, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, sendPasswordResetEmail, signInWithEmailAndPassword, createUserWithEmailAndPassword, setPersistence, browserLocalPersistence, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
         import { getFirestore, collection, addDoc, getDocs, doc, query, where, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -1312,6 +1321,7 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+        setPersistence(auth, browserLocalPersistence).catch(e => console.warn("Auth persistence:", e));
 
         const mandalData = {
             "पुणे मंडळ": ["पुणे", "सातारा", "सोलापूर"],
@@ -1402,6 +1412,7 @@
                     folderId: fId,
                     fileName: title,
                     fileUrl: pdfUrl,
+                    keywords,
                     status: "Pending",
                     uploadedBy: m ? (m.name || m.memberName || m.fullName || 'सदस्य') : 'सदस्य',
                     memberId: m ? (m.id || '') : '',
@@ -1412,6 +1423,7 @@
 
                 if (titleInput) titleInput.value = '';
                 if (fileInput) fileInput.value = '';
+                const kwInput = document.getElementById('mem_upload_pdf_keywords'); if (kwInput) kwInput.value = '';
 
                 Swal.fire(
                     'यशस्वी!',

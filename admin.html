@@ -279,6 +279,10 @@
         .forgot-admin-btn{width:100%;margin-top:10px;padding:11px 14px;border:0;border-radius:12px;background:#eef4ff;color:#0b3d91;font-weight:700;cursor:pointer;}
         .forgot-admin-btn:hover{filter:brightness(.97);}
 </style>
+
+<style id="xray-mobile-upgrade">
+@media (max-width:600px){body{overflow-x:hidden}.login-wrapper{width:calc(100% - 24px);padding:28px 18px}.login-wrapper h2{font-size:1.35rem}.input-box{margin-bottom:14px}.login-wrapper button{min-height:48px}.tab-menu{padding:8px;gap:5px}.tab-btn{padding:9px 12px;font-size:.8rem}.panel-header{padding:11px 12px}.panel-body{padding:12px!important}.form-row{display:flex;flex-direction:column;gap:10px}.form-row>*{width:100%!important;box-sizing:border-box}.btn-action{min-height:42px}.table-responsive,.panel-body{overflow-x:auto}}
+</style>
 </head>
 <body class="no-screenshot">
 
@@ -2320,7 +2324,7 @@
     if(tabId === 'tab-letterpad') { window.renderLetterPadAdmin(); window.renderLetters(); }
     if(tabId === 'tab-template-builder') { window.renderTemplateBuilderList(); }
     if(tabId === 'tab-fees') { window.renderFees(); }
-    if(tabId === 'tab-member-folders') { window.renderSixFolders(); window.renderMemberFilesList(); }
+    if(tabId === 'tab-member-folders') { window.renderSixFolders(); window.renderMemberFilesList(); window.renderPendingMemberFiles(); }
     if(tabId === 'tab-voting') { window.renderPolls(); }
     if(tabId === 'tab-grievances') { window.renderGrievances(); }
     if(tabId === 'tab-info-gather') { window.renderGatheredInfo(); }
@@ -5148,6 +5152,45 @@ setInterval(()=>{const b=document.getElementById("masterAdminTabBtn");if(b)b.sty
 
 
             // १. प्रलंबित सदस्य PDF मंजूर करण्याचे फंक्शन
+
+// MEMBER PDF APPROVAL QUEUE — members can upload, admin alone publishes
+window.renderPendingMemberFiles = async function() {
+    const tbody = document.getElementById('pendingMemberFilesTableBody');
+    if (!tbody) return;
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Pending PDF तपासत आहे...</td></tr>';
+    try {
+        const snap = await getDocs(collection(db, 'member_files'));
+        const pending = [];
+        snap.forEach(d => { const x=d.data()||{}; if (String(x.status||'Pending').toLowerCase()==='pending') pending.push({id:d.id,...x}); });
+        pending.sort((a,b)=>(b.timestamp||b.createdAt||0)-(a.timestamp||a.createdAt||0));
+        tbody.innerHTML = pending.map((f,i)=>`
+          <tr>
+            <td>${i+1}</td>
+            <td><b>${String(f.uploadedBy||'सदस्य').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}</b><br><small>${String(f.memberId||'')}</small></td>
+            <td><b>${String(f.fileName||'PDF').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}</b><br><a href="${f.fileUrl||'#'}" target="_blank" rel="noopener">PDF पाहा</a></td>
+            <td>${f.uploadedAt||'-'}</td>
+            <td style="text-align:center;white-space:nowrap;">
+              <button class="btn-action bg-success" onclick="approveMemberFile('${f.id}', ${JSON.stringify(String(f.fileName||'PDF'))})"><i class="fa fa-check"></i> मंजूर</button>
+              <button class="btn-action bg-danger" onclick="rejectMemberFile('${f.id}', ${JSON.stringify(String(f.fileName||'PDF'))})"><i class="fa fa-times"></i> नकार</button>
+            </td>
+          </tr>`).join('') || '<tr><td colspan="5" style="text-align:center;color:#64748b;">सध्या कोणतीही Pending PDF नाही.</td></tr>';
+    } catch(e) {
+        console.error('Pending PDF queue:',e);
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:#dc2626;">Pending PDF लोड करता आली नाही: ${String(e.message||e)}</td></tr>`;
+    }
+};
+
+window.rejectMemberFile = async function(fileId, fileName) {
+    const ok = await Swal.fire({title:'PDF नाकारायची?', text:`"${fileName}" ही PDF प्रकाशित केली जाणार नाही.`, icon:'warning', showCancelButton:true, confirmButtonText:'होय, नकार द्या', cancelButtonText:'रद्द'});
+    if(!ok.isConfirmed) return;
+    try {
+      await updateDoc(doc(db,'member_files',fileId), { status:'Rejected', rejectedBy:currentLoggedInAdminName, rejectedAt:new Date().toLocaleString('mr-IN') });
+      await window.logAdminActivity(`Rejected member PDF: ${fileName}`);
+      await window.renderPendingMemberFiles();
+      Swal.fire('नाकारले','PDF Pending यादीतून काढली आहे.','info');
+    } catch(e) { Swal.fire('Error',e.message,'error'); }
+};
+
 window.approveMemberFile = async function(fileId, fileName) {
     if (!confirm(`"${fileName}" ही PDF मंजूर करून सर्व सदस्यांना नोटिफिकेशन पाठवायचे का?`)) return;
 
