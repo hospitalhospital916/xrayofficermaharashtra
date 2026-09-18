@@ -59,40 +59,59 @@
     <div class="login-icon"><i class="fa-solid fa-user-lock"></i></div>
     <h2>लॉगिन पोर्टल</h2>
     <p class="subtitle">क्ष किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र</p>
-    <div style="margin:15px 0;padding:12px 14px;border-radius:12px;background:linear-gradient(135deg,#eff6ff,#f8fafc);border:1px solid #bfdbfe;text-align:left;color:#334155;font-size:.8rem;line-height:1.55;">
-      <b style="color:#0B3D91;">🔐 मोबाईल + पासवर्ड लॉगिन</b><br>
-      <b>लॉगिन:</b> नोंदणीकृत <b>१० अंकी मोबाईल नंबर</b> आणि पासवर्ड वापरा.<br>
-      <b>प्रारंभिक पासवर्ड:</b> तुमच्या नावातील पहिले नाव + <b>@1234</b> (उदा. <b>Mahesh@1234</b>).<br>
-      <span style="color:#64748b;">सदस्यांसाठी ई-मेल/Google Login वापरला जाणार नाही. नवीन सदस्यांना Admin मंजुरीनंतरच Login करता येईल.</span>
+    <div style="margin:15px 0;padding:12px 14px;border-radius:12px;background:#eff6ff;border:1px solid #bfdbfe;text-align:left;color:#334155;font-size:.82rem;line-height:1.55;">
+      <b style="color:#0B3D91;">🔐 सदस्य लॉगिन</b><br>नोंदणीकृत मोबाईल नंबर आणि Password वापरून लॉगिन करा. सदस्यांसाठी ई-मेल/Google/OTP आवश्यक नाही.
     </div>
-    <div class="input-box"><i class="fa-solid fa-mobile-screen-button input-icon"></i><input type="tel" id="mobile" inputmode="numeric" maxlength="10" placeholder="१० अंकी मोबाईल नंबर" required autocomplete="username"></div>
-    <div class="input-box"><i class="fa-solid fa-lock input-icon"></i><input type="password" id="password" placeholder="पासवर्ड (उदा. Mahesh@1234)" required autocomplete="current-password"><i class="fa-solid fa-eye toggle-password" id="togglePassword"></i></div>
-    <div class="extra-links"><label style="cursor:pointer;"><input type="checkbox"> मला लक्षात ठेवा</label><a href="javascript:void(0)">पासवर्ड विसरलात?</a></div>
-    <button id="loginBtn" style="margin-top:20px;">लॉगिन करा</button><div id="messageBox"></div>
-    <div class="register-link">नवीन सदस्य आहात? <a href="member-registration.html">येथे नोंदणी करा</a></div>
+
+    <!-- Email/Password Login Section -->
+    <div class="input-box">
+      <i class="fa-solid fa-envelope input-icon"></i>
+      <input type="text" id="email" style="display:none" placeholder="१० अंकी मोबाईल नंबर" required autocomplete="username">
+    </div>
+    
+    <div class="input-box">
+      <i class="fa-solid fa-lock input-icon"></i>
+      <input type="password" id="password" placeholder="पासवर्ड (Password)" required>
+      <i class="fa-solid fa-eye toggle-password" id="togglePassword"></i>
+    </div>
+
+    <div class="extra-links">
+      <label style="cursor:pointer;"><input type="checkbox"> मला लक्षात ठेवा</label>
+      <a href="javascript:void(0)">पासवर्ड विसरलात?</a>
+    </div>
+
+    <button id="loginBtn" style="margin-top: 20px;">लॉगिन करा</button>
+    <div id="messageBox"></div>
+
+    <div class="register-link">
+      नवीन सदस्य आहात? <a href="member-registration.html">येथे नोंदणी करा</a>
+    </div>
   </div>
 
   <div id="forgotPasswordModal" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.65);z-index:9999;align-items:center;justify-content:center;padding:20px;">
     <div style="width:min(430px,100%);background:#fff;border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.25);overflow:hidden;">
-      <div style="padding:18px 20px;background:linear-gradient(135deg,#0B3D91,#2563eb);color:#fff;display:flex;justify-content:space-between;align-items:center;"><div><b style="font-size:1.05rem;">🔐 पासवर्ड विसरलात?</b><div style="font-size:.78rem;opacity:.9;margin-top:3px;">Admin कडे Password Reset Request</div></div><button id="closeForgotPassword" type="button" style="border:0;background:transparent;color:#fff;font-size:1.5rem;cursor:pointer;">&times;</button></div>
-      <div style="padding:20px;"><p style="margin:0 0 14px;color:#475569;font-size:.88rem;line-height:1.5;">तुमचा <b>नोंदणीकृत मोबाईल नंबर</b> टाका. तुमची Password Reset Request थेट Admin कडे जाईल.</p><input id="forgotIdentifier" type="tel" inputmode="numeric" maxlength="10" placeholder="१० अंकी मोबाईल नंबर" autocomplete="tel" style="width:100%;box-sizing:border-box;padding:13px;border:1px solid #cbd5e1;border-radius:10px;font-size:1rem;"><button id="sendForgotBtn" type="button" style="width:100%;margin-top:14px;padding:13px;border:0;border-radius:10px;background:#16a34a;color:#fff;font-weight:700;cursor:pointer;">📩 Admin कडे Reset Request पाठवा</button><div id="forgotMessage" style="margin-top:12px;font-size:.85rem;line-height:1.45;"></div><div style="margin-top:14px;padding:10px;background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;color:#9a3412;font-size:.78rem;">ई-मेलची गरज नाही. Password reset साठी फक्त नोंदणीकृत मोबाईल नंबर वापरा.</div></div>
+      <div style="padding:18px 20px;background:linear-gradient(135deg,#0B3D91,#2563eb);color:#fff;display:flex;justify-content:space-between;align-items:center;">
+        <div><b style="font-size:1.05rem;">🔐 पासवर्ड विसरलात?</b><div style="font-size:.78rem;opacity:.9;margin-top:3px;">तुमच्या नोंदणीकृत ई-मेलवर सुरक्षित लिंक</div></div>
+        <button id="closeForgotPassword" type="button" style="border:0;background:transparent;color:#fff;font-size:1.5rem;cursor:pointer;">&times;</button>
+      </div>
+      <div style="padding:20px;">
+        <p style="margin:0 0 14px;color:#475569;font-size:.88rem;line-height:1.5;">तुमचा <b>ई-मेल किंवा मोबाईल नंबर</b> टाका. सिस्टम तुमच्या सदस्य नोंदीतील verified/updated ई-मेल शोधून त्यावर password reset link पाठवेल.</p>
+        <input id="forgotIdentifier" type="text" placeholder="ई-मेल किंवा १० अंकी मोबाईल नंबर" autocomplete="username" style="width:100%;box-sizing:border-box;padding:13px;border:1px solid #cbd5e1;border-radius:10px;font-size:1rem;">
+        <button id="sendForgotBtn" type="button" style="width:100%;margin-top:14px;padding:13px;border:0;border-radius:10px;background:#16a34a;color:#fff;font-weight:700;cursor:pointer;">📩 Reset Link पाठवा</button>
+        <div id="forgotMessage" style="margin-top:12px;font-size:.85rem;line-height:1.45;"></div>
+        <div style="margin-top:14px;padding:10px;background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;color:#9a3412;font-size:.78rem;">ई-मेल अजून Profile मध्ये अपडेट केलेला नसेल, तर आधी Profile मधून स्वतःचा ई-मेल अपडेट करा.</div>
+      </div>
     </div>
   </div>
 
   <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-import { getAuth, signInWithCustomToken, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-const firebaseConfig={apiKey:"AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk",authDomain:"xrayunionmah.firebaseapp.com",projectId:"xrayunionmah",storageBucket:"xrayunionmah.firebasestorage.app",messagingSenderId:"763805226978",appId:"1:763805226978:web:6bae81a0b6358b47d88bbb"};
-const auth=getAuth(initializeApp(firebaseConfig)); setPersistence(auth,browserLocalPersistence).catch(()=>{});
-const API='https://us-central1-xrayunionmah.cloudfunctions.net'; const $=id=>document.getElementById(id); const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
-const mobile=v=>{let x=String(v||'').replace(/\D/g,'');if(x.length===12&&x.startsWith('91'))x=x.slice(2);return x;};
-async function post(path,body){const r=await fetch(API+path,{method:'POST',mode:'cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const t=await r.text();let j={};try{j=JSON.parse(t)}catch{}if(!r.ok)throw new Error(j.error||('Server error '+r.status));return j;}
-function msg(t){$('messageBox').innerHTML=t;}
-$('togglePassword')?.addEventListener('click',function(){const i=$('password'),show=i.type==='password';i.type=show?'text':'password';this.classList.toggle('fa-eye-slash',show);});
-$('loginBtn')?.addEventListener('click',async()=>{const m=mobile($('mobile')?.value),p=$('password')?.value||'';if(!/^\d{10}$/.test(m))return msg('<span style="color:#dc2626">⚠️ १० अंकी मोबाईल नंबर टाका.</span>');if(!p)return msg('<span style="color:#dc2626">⚠️ पासवर्ड टाका.</span>');const b=$('loginBtn');b.disabled=true;msg('⏳ सुरक्षित लॉगिन तपासत आहे...');try{const j=await post('/memberLogin',{mobile:m,password:p});await signInWithCustomToken(auth,j.token);localStorage.setItem('memberSession',JSON.stringify(j.member));msg('<span style="color:green">✅ लॉगिन यशस्वी. डॅशबोर्ड उघडत आहे...</span>');setTimeout(()=>location.replace('member-dashboard.html'),250);}catch(e){msg('<span style="color:#dc2626">❌ '+esc(e.message)+'</span>');}finally{b.disabled=false;}});
-$('password')?.addEventListener('keydown',e=>{if(e.key==='Enter')$('loginBtn')?.click()}); $('mobile')?.addEventListener('input',e=>e.target.value=e.target.value.replace(/\D/g,'').slice(0,10));
-const forgot=[...document.querySelectorAll('a')].find(a=>a.textContent.includes('पासवर्ड विसरलात'));const modal=$('forgotPasswordModal');forgot?.addEventListener('click',e=>{e.preventDefault();modal.style.display='flex';$('forgotIdentifier').value=$('mobile')?.value||'';$('forgotIdentifier').focus();});$('closeForgotPassword')?.addEventListener('click',()=>modal.style.display='none');
-$('sendForgotBtn')?.addEventListener('click',async()=>{const m=mobile($('forgotIdentifier')?.value);if(!/^\d{10}$/.test(m))return $('forgotMessage').innerHTML='<span style="color:#dc2626">⚠️ १० अंकी मोबाईल नंबर टाका.</span>';const b=$('sendForgotBtn');b.disabled=true;b.textContent='⏳ Request पाठवत आहे...';try{const j=await post('/memberForgotPasswordRequest',{mobile:m});$('forgotMessage').innerHTML='<span style="color:#15803d;font-weight:700">✅ '+esc(j.message)+'</span>';}catch(e){$('forgotMessage').innerHTML='<span style="color:#dc2626">❌ '+esc(e.message)+'</span>';}finally{b.disabled=false;b.textContent='📩 Admin कडे Reset Request पाठवा';}});
+const $=id=>document.getElementById(id);
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+const normalizeMobile=v=>{let x=String(v??'').replace(/\D/g,'');if(x.length===12&&x.startsWith('91'))x=x.slice(2);return x;};
+const fnUrl='https://asia-south1-xrayunionmah.cloudfunctions.net/memberLogin';
+$('loginBtn')?.addEventListener('click',async()=>{const mobile=normalizeMobile($('email')?.value);const password=$('password')?.value||'';if(!/^\d{10}$/.test(mobile)||!password)return $('messageBox').innerHTML='<span style="color:#dc2626">कृपया १० अंकी मोबाईल नंबर आणि Password टाका.</span>';const b=$('loginBtn');b.disabled=true;$('messageBox').innerHTML='लॉगिन तपासत आहे...';try{const r=await fetch(fnUrl,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mobile,password})});const d=await r.json();if(!r.ok||!d.ok)throw new Error(d.error||'लॉगिन अयशस्वी.');localStorage.setItem('memberSession',JSON.stringify(d.member));if(d.sessionToken)localStorage.setItem('memberSessionToken',d.sessionToken);if(d.mustChangePassword){localStorage.setItem('forceMemberPasswordChange','1');alert('तुमचा प्रारंभिक Password अजून बदललेला नाही. कृपया Dashboard मध्ये Password बदला.');}location.href='member-dashboard.html';}catch(e){$('messageBox').innerHTML='<span style="color:#dc2626">❌ '+esc(e.message)+'</span>';}finally{b.disabled=false;}});
+$('togglePassword')?.addEventListener('click',()=>{$('password').type=$('password').type==='password'?'text':'password';});
+const forgot=[...document.querySelectorAll('a')].find(a=>a.textContent.includes('पासवर्ड विसरलात'));forgot?.addEventListener('click',async e=>{e.preventDefault();const mobile=normalizeMobile(prompt('नोंदणीकृत १० अंकी मोबाईल नंबर टाका:')||'');if(!/^\d{10}$/.test(mobile))return alert('वैध मोबाईल नंबर टाका.');try{const r=await fetch('https://asia-south1-xrayunionmah.cloudfunctions.net/memberRequestPasswordReset',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mobile})});const d=await r.json();alert(d.message||d.error||'Request पाठवली.');}catch(err){alert('Reset request पाठवता आली नाही.');}});
 </script>
 </body>
 </html>

@@ -405,7 +405,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
         import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
-        
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 
         // FIREBASE CONFIGURATION (माहिती ॲडमिन पॅनेलशी जुळणारी)
         const firebaseConfig = {
@@ -420,7 +420,7 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-
+        const auth = getAuth(app);
 
         // आरोग्य मंडळ आणि जिल्ह्यांचे मॅपिंग
         const mandalData = {
@@ -508,11 +508,11 @@
                 const docUrl = await uploadToCloudinary(docFile);
                 const otherUrl = await uploadToCloudinary(otherFile);
 
-                // २. Member Firebase Authentication account तयार करू नका.
-                // Member authentication = Mobile + Password; initial password is Pass@1234.
+                // २. Firebase Authentication account तयार करा — आता लॉगिनची एकच सुरक्षित पद्धत
                 const email = document.getElementById('email').value.trim().toLowerCase();
+                const authCredential = await createUserWithEmailAndPassword(auth, email, pass);
 
-                // ३. Firestore 'members' कलेक्शनमध्ये pending member डेटा सेव्ह करा
+                // ३. Firestore 'members' कलेक्शनमध्ये डेटा सेव्ह करा
                 // पासवर्ड Firestore मध्ये सेव्ह केला जात नाही.
                 await addDoc(collection(db, "members"), {
                     name: document.getElementById('name').value.trim(),
@@ -529,12 +529,10 @@
                     retireDate: document.getElementById('retireDate').value,
                     mobile: document.getElementById('mobile').value.trim(),
                     email: email,
-                    uid: null,
-                    authVersion: 4,
-                    isDefaultEmail: !email,
+                    uid: authCredential.user.uid,
+                    authVersion: 2,
+                    isDefaultEmail: false,
                     emailUpdated: false,
-                    loginEnabled: false,
-                    mustChangePassword: true,
                     address: document.getElementById('address').value.trim(),
                     remarks: document.getElementById('remarks').value.trim(),
                     photoUrl: photoUrl,

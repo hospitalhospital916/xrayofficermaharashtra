@@ -444,7 +444,7 @@
                     <label>पासवर्ड (Password):</label>
                     <div class="login-input-wrapper">
                         <i class="fa fa-lock icon-left"></i>
-                        <input type="password" id="loginPassword" class="no-prefix" value="Pass@1234" placeholder="पासवर्ड टाका" onkeydown="if(event.key === 'Enter') loginMemberWithMobileAndPassword();">
+                        <input type="password" id="loginPassword" class="no-prefix" value="Pass@123" placeholder="पासवर्ड टाका" onkeydown="if(event.key === 'Enter') loginMemberWithMobileAndPassword();">
                     </div>
                     <div style="text-align: right; margin-top: 6px;">
                         <a href="javascript:void(0)" onclick="openForgotPasswordModal()" style="font-size: 0.82rem; color: #0B3D91; font-weight: bold; text-decoration: underline;">
@@ -453,7 +453,7 @@
                     </div>
                 </div>
 
-                <div style="margin:6px 0 10px;padding:9px 12px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:9px;color:#1e3a8a;font-size:.82rem;text-align:center;"><b>प्रारंभिक पासवर्ड: Pass@1234</b><br>पहिल्या लॉगिननंतर Profile मधून स्वतःचा ई-मेल अपडेट करा.</div>
+                <div style="margin:6px 0 10px;padding:9px 12px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:9px;color:#1e3a8a;font-size:.82rem;text-align:center;"><b>प्रारंभिक पासवर्ड: Pass@123</b><br>पहिल्या लॉगिननंतर Profile मधून स्वतःचा ई-मेल अपडेट करा.</div>
                 <button type="button" onclick="loginMemberWithMobileAndPassword()"><i class="fa fa-sign-in-alt me-1"></i> सुरक्षित लॉगिन करा</button>
             </div>
             
@@ -1843,9 +1843,9 @@
         window.loginMemberWithMobileAndPassword = async function() {
             const identifier = document.getElementById('loginMobileNumber').value.trim().toLowerCase();
             const passwordInput = document.getElementById('loginPassword').value;
-            const DEFAULT_PASSWORD = 'Pass@1234';
+            const DEFAULT_PASSWORD = 'Pass@123';
             if(!identifier) return Swal.fire('लॉगिन माहिती आवश्यक', 'ई-मेल किंवा १० अंकी मोबाईल नंबर टाका.', 'warning');
-            if(!passwordInput) return Swal.fire('पासवर्ड आवश्यक आहे', 'प्रारंभिक पासवर्ड Pass@1234 आहे.', 'warning');
+            if(!passwordInput) return Swal.fire('पासवर्ड आवश्यक आहे', 'प्रारंभिक पासवर्ड Pass@123 आहे.', 'warning');
             Swal.fire({ title: 'सुरक्षित लॉगिन तपासत आहे...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
             try {
                 let mData = null;
@@ -1901,7 +1901,7 @@
                 Swal.close();
                 const code = e?.code || '';
                 let msg = e?.message || 'लॉगिन अयशस्वी.';
-                if(code === 'auth/invalid-credential' || code === 'auth/wrong-password') msg = 'ई-मेल/मोबाईल किंवा पासवर्ड चुकीचा आहे. प्रारंभिक पासवर्ड: Pass@1234';
+                if(code === 'auth/invalid-credential' || code === 'auth/wrong-password') msg = 'ई-मेल/मोबाईल किंवा पासवर्ड चुकीचा आहे. प्रारंभिक पासवर्ड: Pass@123';
                 if(code === 'auth/invalid-email') msg = 'कृपया वैध ई-मेल किंवा १० अंकी मोबाईल नंबर टाका.';
                 Swal.fire('लॉगिन अयशस्वी', msg, 'error');
             }

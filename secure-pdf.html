@@ -11,7 +11,7 @@ const auth=getAuth(app),db=getFirestore(app),qs=new URLSearchParams(location.sea
 const id=qs.get('id'),collectionName=qs.get('collection')||'circulars';
 document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&['p','s','u','c','a'].includes(e.key.toLowerCase()))e.preventDefault();if(e.key==='PrintScreen')navigator.clipboard?.writeText('').catch(()=>{})});
 ['copy','cut','selectstart','dragstart'].forEach(x=>document.addEventListener(x,e=>e.preventDefault()));
-async function getMember(u){let name=u.displayName||'अधिकृत सदस्य',mobile='नोंदणीकृत सदस्य';try{let s=await getDocs(query(collection(db,'members'),where('uid','==',u.uid)));if(!s.empty){const m=s.docs[0].data();name=m.name||m.fullName||m['पूर्ण नाव']||name;mobile=m.mobile||m.mobileNumber||m.phone||m['मोबाईल']||mobile}}catch(_){}return{name,mobile}}
+async function getMember(u){let name=u.displayName||'अधिकृत सदस्य',mobile='नोंदणीकृत सदस्य';try{const q=query(collection(db,'members'),where('email','==',u.email));const s=await getDocs(q);if(!s.empty){const m=s.docs[0].data();name=m.name||m.fullName||m['पूर्ण नाव']||name;mobile=m.mobile||m.mobileNumber||m.phone||m['मोबाईल']||mobile}}catch(_){}return{name,mobile}}
 function stamp(m){const n=new Date();return `क्ष-किरण वैज्ञानिक अधिकारी संघटना\n${m.name} | ${m.mobile}\n${n.toLocaleDateString('mr-IN')} ${n.toLocaleTimeString('mr-IN')}`}
 async function render(u){
  if(!id)throw new Error('दस्तऐवज ओळख उपलब्ध नाही.');
