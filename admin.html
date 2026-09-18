@@ -820,7 +820,7 @@
 <div id="tab-master-admin" class="tab-content"><div class="panel"><div class="panel-header"><span>🛡️ मास्टर ॲडमिन • Storage & Security Control</span></div><div class="panel-body">
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-bottom:15px"><div class="dash-card-mini"><h3>Firebase records</h3><h2 id="mFirestoreCount">—</h2></div><div class="dash-card-mini"><h3>Cloudinary usage</h3><h2 id="mCloudUsage">—</h2></div></div>
 <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:14px;margin-bottom:15px"><b>फक्त Master Admin</b><p style="margin:5px 0;color:#334155">सब-ॲडमिनला permanent delete अधिकार नाही. Master कडून cleanup केल्यावर audit log तयार होईल.</p></div>
-<button class="btn-action bg-info" onclick="masterRefreshUsage()">🔄 Storage तपासा</button> <button class="btn-action bg-warning" onclick="masterCleanupOldLogs()">🧹 जुने logs साफ करा</button> <button class="btn-action bg-danger" onclick="masterOpenDanger()">⚠️ Permanent cleanup</button>
+<button class="btn-action bg-info" onclick="masterRefreshUsage()">🔄 Storage तपासा</button> <button class="btn-action bg-success" onclick="masterResetAllMemberPasswords()">🔐 सर्व सदस्यांचा प्रारंभिक पासवर्ड सेट करा</button> <button class="btn-action bg-warning" onclick="masterCleanupOldLogs()">🧹 जुने logs साफ करा</button> <button class="btn-action bg-danger" onclick="masterOpenDanger()">⚠️ Permanent cleanup</button>
 <div id="masterDanger" style="display:none;margin-top:15px;border:2px solid #ef4444;border-radius:12px;padding:15px"><b>Permanent cleanup</b><p>सुरक्षेसाठी CONFIRM लिहा. सदस्य/circular data bulk delete केला जाणार नाही.</p><input id="masterConfirm" placeholder="CONFIRM" style="padding:8px"><button class="btn-action bg-danger" onclick="masterRunCleanup()">Proceed</button></div>
 </div></div></div><div id="tab-dash" class="tab-content active">
     <div class="dash-cards-grid">
@@ -1465,6 +1465,24 @@
     </div>
 </div>
 
+<div class="panel" style="margin-bottom:20px; border-top:5px solid #0B3D91;">
+ <div class="panel-header"><span><i class="fa-solid fa-cloud-arrow-up"></i> Cloudinary PDF Centre — Admin Upload & Search</span><span class="badge bg-info">Admin Only</span></div>
+ <div class="panel-body">
+  <div style="background:#eff6ff;border:1px solid #bfdbfe;padding:12px;border-radius:10px;margin-bottom:14px;"><b>Cloudinary Storage:</b> Admin PDF थेट Cloudinary वर अपलोड करू शकतो. सदस्यांनी अपलोड केलेल्या PDF आधी <b>Pending</b> राहतील आणि Admin मंजूर केल्यानंतरच प्रकाशित होतील.</div>
+  <div class="form-row">
+   <input id="admin_cloud_pdf_title" class="form-control" placeholder="PDF चे शीर्षक">
+   <input id="admin_cloud_pdf_keywords" class="form-control" placeholder="Keywords (comma separated)">
+   <input id="admin_cloud_pdf_file" type="file" accept="application/pdf,.pdf" class="form-control">
+   <button class="btn-action bg-success" onclick="adminUploadCloudinaryPDF()"><i class="fa fa-upload"></i> Cloudinary वर अपलोड</button>
+  </div>
+  <div class="form-row" style="margin-top:10px;">
+   <input id="cloudinary_pdf_search" class="form-control" placeholder="PDF नाव / keyword / public ID शोधा..." onkeyup="if(event.key==='Enter') searchCloudinaryPDFs()">
+   <button class="btn-action bg-primary" onclick="searchCloudinaryPDFs()"><i class="fa fa-search"></i> Cloudinary Search</button>
+   <button class="btn-action bg-info" onclick="searchCloudinaryPDFs(true)"><i class="fa fa-refresh"></i> सर्व PDF</button>
+  </div>
+  <div id="cloudinaryPdfSearchResults" style="margin-top:15px;"></div>
+ </div>
+</div>
 <div style="background:#fffbeb; border:1px solid #fde68a; padding:15px; border-radius:8px; margin-bottom:20px;">
     <h4 style="color:#b45309; margin-bottom:10px;"><i class="fa fa-clock"></i> सदस्यांनी पाठवलेल्या प्रलंबित (Pending) PDF फाईल्स</h4>
     <table style="font-size:0.88rem;">
@@ -5121,9 +5139,31 @@ window.rejectProfileEdit = async function(reqId) {
         window.openProfileRequestsModal();
     }
 }; 
+// ==========================================================
+// CLOUDINARY PDF CENTRE — ADMIN UPLOAD + SERVER-SIDE SEARCH
+// ==========================================================
+const CLOUDINARY_FN_BASE="https://us-central1-xrayunionmah.cloudfunctions.net";
+window.adminUploadCloudinaryPDF=async function(){
+ if(!auth.currentUser)return Swal.fire('Login आवश्यक','','warning');
+ const file=document.getElementById('admin_cloud_pdf_file')?.files?.[0]; const title=document.getElementById('admin_cloud_pdf_title')?.value.trim(); const keywords=document.getElementById('admin_cloud_pdf_keywords')?.value.trim();
+ if(!file||!title)return Swal.fire('माहिती अपूर्ण','PDF आणि शीर्षक निवडा.','warning');
+ if(file.type!=='application/pdf'&&!/\\.pdf$/i.test(file.name))return Swal.fire('चुकीची फाईल','फक्त PDF स्वीकारली जाईल.','warning');
+ try{Swal.fire({title:'Cloudinary वर PDF अपलोड होत आहे...',allowOutsideClick:false,didOpen:()=>Swal.showLoading()}); const url=await window.uploadToCloudinary(file); await addDoc(collection(db,'member_files'),{folderId:'f1',fileName:title,fileUrl:url,keywords:keywords||'',visibility:'All Members',status:'Approved',source:'Admin-Cloudinary',uploadedBy:currentLoggedInAdminName||'Admin',uploadedAt:new Date().toLocaleDateString('mr-IN'),timestamp:Date.now(),createdAt:Date.now()}); await window.logAdminActivity('Admin Cloudinary PDF upload: '+title); document.getElementById('admin_cloud_pdf_file').value=''; document.getElementById('admin_cloud_pdf_title').value=''; document.getElementById('admin_cloud_pdf_keywords').value=''; Swal.fire('यशस्वी','PDF Cloudinary वर अपलोड व प्रकाशित झाली.','success'); await loadData(); await searchCloudinaryPDFs(true); }catch(e){Swal.fire('त्रुटी',e.message||String(e),'error')}
+};
+window.searchCloudinaryPDFs=async function(all=false){
+ const box=document.getElementById('cloudinaryPdfSearchResults'); if(!box)return; const q=all?'':(document.getElementById('cloudinary_pdf_search')?.value||'').trim(); box.innerHTML='<div style="padding:12px;text-align:center;">Cloudinary Search सुरू...</div>';
+ try{const r=await fetch(CLOUDINARY_FN_BASE+'/cloudinaryPdfSearch',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+await auth.currentUser.getIdToken(true)},body:JSON.stringify({q,max_results:100})}); const j=await r.json(); if(!r.ok)throw new Error(j.error||'Search failed'); const rows=(j.resources||[]).map((x,i)=>`<tr><td>${i+1}</td><td><b>${String(x.filename||x.public_id||'PDF').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}</b></td><td>${x.created_at?new Date(x.created_at).toLocaleString('mr-IN'):'-'}</td><td>${x.bytes?Math.round(x.bytes/1024):'-'} KB</td><td><button class="btn-action bg-primary" onclick="window.open('${x.secure_url||'#'}','_blank')">View</button></td></tr>`).join(''); box.innerHTML=`<div style="margin-bottom:8px;font-weight:700;">${j.total_count||0} PDF सापडल्या</div><div style="overflow:auto"><table><thead><tr><th>#</th><th>PDF</th><th>Upload</th><th>Size</th><th>Action</th></tr></thead><tbody>${rows||'<tr><td colspan="5" style="text-align:center">PDF सापडली नाही.</td></tr>'}</tbody></table></div>`; }catch(e){box.innerHTML='<div style="padding:12px;color:#b91c1c;">Search error: '+String(e.message||e)+'</div>'}
+};
+
 // MASTER ADMIN STORAGE CONTROL
 const MASTER_FN_BASE="https://us-central1-xrayunionmah.cloudfunctions.net";
 async function masterToken(){if(!auth.currentUser)throw new Error("Login required");return await auth.currentUser.getIdToken(true)}
+window.masterResetAllMemberPasswords=async function(){
+ if(!isSuperAdmin)return Swal.fire('नकार','Master Admin आवश्यक.','error');
+ const ok=await Swal.fire({title:'सर्व सदस्यांचे पासवर्ड बदलायचे?',html:'सर्व active/approved सदस्यांचा सध्याचा password <b>Pass@123</b> केला जाईल.<br><br>यानंतर सदस्य स्वतःचा password बदलू शकतात.',icon:'warning',showCancelButton:true,confirmButtonText:'होय, सेट करा',cancelButtonText:'रद्द'});
+ if(!ok.isConfirmed)return;
+ try{Swal.fire({title:'सर्व सदस्यांचे password update होत आहेत...',allowOutsideClick:false,didOpen:()=>Swal.showLoading()});const r=await fetch(MASTER_FN_BASE+'/masterSetMemberDefaultPasswords',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+await masterToken()},body:JSON.stringify({confirm:'SET_DEFAULT_PASSWORDS'})});const j=await r.json();if(!r.ok)throw new Error(j.error||'Update failed');await logAdminActivity('Master Admin: reset all member passwords');Swal.fire('पूर्ण','Updated: '+j.updated+' | Created: '+j.created+' | Reset: '+j.reset+' | Skipped: '+j.skipped,'success')}catch(e){Swal.fire('त्रुटी',e.message,'error')}
+};
 window.masterRefreshUsage=async function(){
  if(!isSuperAdmin)return Swal.fire("नकार","Master Admin आवश्यक.","error");
  try{

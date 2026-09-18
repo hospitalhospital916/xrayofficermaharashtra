@@ -39,3 +39,7 @@
 - status
 - createdAt
 
+
+
+## 2026-09-18 Final PDF/Cloudinary update
+Admin Cloudinary PDF upload + server-side Cloudinary PDF search added. Member PDF uploads stay Pending until Admin approval. Master Admin can trigger the default password reset function from the dashboard. See CLOUDINARY_PDF_ADMIN_SEARCH_SETUP.md.
