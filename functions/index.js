@@ -36,7 +36,6 @@ exports.telegramPdfUpload = onRequest({secrets:["TELEGRAM_BOT_TOKEN"],cors:true,
  }catch(e){logger.error(e);res.status(401).json({ok:false,error:e.message});}
 });
 
-
 // ==========================================================
 // MEMBER PASSWORD ADMIN CONTROLS
 // - Individual default/custom password reset
@@ -191,6 +190,7 @@ exports.masterSetMemberDefaultPasswords = onRequest({cors:true}, async (req,res)
     return res.status(500).json({ok:false,error:e.message || String(e)});
   }
 });
+
 
 exports.masterStorageOverview = onRequest({secrets:["CLOUDINARY_API_KEY","CLOUDINARY_API_SECRET","CLOUDINARY_CLOUD_NAME"],cors:true},async(req,res)=>{
  try{const u=await auth(req);if(u.email!=="hangemahesh498@gmail.com")return res.status(403).json({ok:false,error:"Master Admin only"});
