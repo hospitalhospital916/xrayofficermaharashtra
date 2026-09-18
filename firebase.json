@@ -4,7 +4,19 @@
     "ignore": [
       "firebase.json",
       "**/.*",
-      "**/node_modules/**"
+      "**/node_modules/**",
+      ".git/**",
+      ".github/**",
+      "android/**",
+      "functions/**",
+      "**/*.sh",
+      "**/*.bat",
+      "**/*.ps1",
+      "**/*.exe",
+      "**/*.dll",
+      "**/*.so",
+      "**/*.a",
+      "**/*.o"
     ],
     "cleanUrls": true,
     "headers": [
