@@ -138,6 +138,28 @@ const $ = id => document.getElementById(id);
 const msg = text => { $('messageBox').innerHTML = text; };
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
 const norm = v => String(v ?? '').trim().toLowerCase();
+const normalizeMobile = v => { let x=String(v??'').trim().replace(/\s|-/g,''); if(x.startsWith('+91')) x=x.slice(3); if(x.startsWith('91') && x.length===12) x=x.slice(2); return x; };
+
+async function findMemberByMobile(value) {
+  const mobile = normalizeMobile(value);
+  if (!/^\d{10}$/.test(mobile)) return null;
+  const fields = ['mobile','मोबाईल','मोबाईल नंबर','मोबाईल क्रमांक','mobileNumber','phone','phoneNumber'];
+  for (const field of fields) {
+    for (const candidate of [mobile, Number(mobile)]) {
+      try {
+        const snap = await findByField('members', field, candidate);
+        if (!snap.empty) return snap.docs[0];
+      } catch (e) {
+        if (e?.code === 'permission-denied') throw e;
+      }
+    }
+  }
+  return null;
+}
+
+function withTimeout(promise, ms=20000) {
+  return Promise.race([promise, new Promise((_,reject)=>setTimeout(()=>reject(new Error('Firebase कडून प्रतिसाद मिळण्यास जास्त वेळ लागला. Internet/Firebase connection तपासा.')),ms))]);
+}
 
 const togglePassword = $('togglePassword');
 const passwordInput = $('password');
@@ -273,13 +295,8 @@ $('loginBtn')?.addEventListener('click', async () => {
     const isMobile = /^\d{10}$/.test(identifier.replace(/^\+91/, ''));
 
     if (isMobile) {
-      const mobile = identifier.replace(/^\+91/, '');
-      let snap = await findByField('members','mobile',mobile);
-      if (snap.empty) snap = await findByField('members','मोबाईल',mobile);
-      if (snap.empty) snap = await findByField('members','mobile',Number(mobile));
-      if (snap.empty) snap = await findByField('members','मोबाईल',Number(mobile));
-      if (snap.empty) throw new Error('हा मोबाईल नंबर सदस्य नोंदीमध्ये सापडला नाही.');
-      memberDoc = snap.docs[0];
+      memberDoc = await findMemberByMobile(identifier);
+      if (!memberDoc) throw new Error('हा मोबाईल नंबर सदस्य नोंदीमध्ये सापडला नाही. कृपया Admin कडे तुमचा मोबाईल नंबर तपासून घ्या.');
       const data = memberDoc.data() || {};
       if (memberBlocked(data)) throw new Error('तुमचा सदस्य लॉगिन अॅक्सेस सध्या बंद/प्रलंबित आहे.');
       const storedEmail = norm(data.email || data.ईमेल);
@@ -290,13 +307,13 @@ $('loginBtn')?.addEventListener('click', async () => {
 
       // First/default login: create a unique Firebase Auth account for this member.
       try {
-        const cred = await signInWithEmailAndPassword(auth, loginEmail, password);
+        const cred = await withTimeout(signInWithEmailAndPassword(auth, loginEmail, password));
         await routeSignedInUser(cred.user);
         return;
       } catch (authError) {
         if (password !== DEFAULT_PASSWORD) throw authError;
         if (authError?.code !== 'auth/user-not-found' && authError?.code !== 'auth/invalid-credential') throw authError;
-        const cred = await createUserWithEmailAndPassword(auth, loginEmail, DEFAULT_PASSWORD);
+        const cred = await withTimeout(createUserWithEmailAndPassword(auth, loginEmail, DEFAULT_PASSWORD));
         await updateDoc(doc(db,'members',memberDoc.id), {
           uid: cred.user.uid,
           authEmail: loginEmail,
@@ -325,7 +342,11 @@ $('loginBtn')?.addEventListener('click', async () => {
     if (code === 'auth/invalid-credential' || code === 'auth/wrong-password') message = 'ई-मेल/मोबाईल किंवा पासवर्ड चुकीचा आहे. नव्या सदस्यांसाठी प्रारंभिक पासवर्ड: Pass@123';
     if (code === 'auth/email-already-in-use') message = 'या सदस्याचे Firebase खाते आधीच आहे. नोंदणीकृत ई-मेल/पासवर्ड वापरा.';
     if (code === 'auth/invalid-email') message = 'कृपया वैध ई-मेल किंवा १० अंकी मोबाईल नंबर टाका.';
-    msg('<span style="color:#dc2626">❌ ' + esc(message) + '</span>');
+    if (code === 'auth/network-request-failed') message = 'Internet/Firebase connection मध्ये अडचण आहे. Internet सुरू आहे का ते तपासा.';
+    if (code === 'auth/operation-not-allowed') message = 'Firebase Console मध्ये Email/Password Authentication सुरू केलेले नाही.';
+    if (code === 'auth/too-many-requests') message = 'खूप प्रयत्न झाले आहेत. काही वेळाने पुन्हा प्रयत्न करा.';
+    if (code === 'permission-denied') message = 'Firebase Firestore Rules मुळे सदस्याची नोंद वाचता आली नाही.';
+    msg('<div style="color:#dc2626">❌ ' + esc(message) + '</div><div style="margin-top:6px;font-size:.78rem;color:#64748b">जर काहीच संदेश दिसत नसेल तर हा page जुना deploy झालेला असू शकतो.</div>');
   } finally { btn.disabled = false; }
 });
 
@@ -361,12 +382,9 @@ sendForgotBtn?.addEventListener('click', async () => {
     let email = identifier;
     const digits = identifier.replace(/^\+91/, '');
     if (/^\d{10}$/.test(digits)) {
-      let snap = await findByField('members','mobile',digits);
-      if (snap.empty) snap = await findByField('members','मोबाईल',digits);
-      if (snap.empty) snap = await findByField('members','mobile',Number(digits));
-      if (snap.empty) snap = await findByField('members','मोबाईल',Number(digits));
-      if (snap.empty) throw new Error('हा मोबाईल नंबर सदस्य नोंदीमध्ये सापडला नाही.');
-      const data = snap.docs[0].data() || {};
+      const memberDoc = await findMemberByMobile(identifier);
+      if (!memberDoc) throw new Error('हा मोबाईल नंबर सदस्य नोंदीमध्ये सापडला नाही.');
+      const data = memberDoc.data() || {};
       email = norm(data.email || data.ईमेल || data.authEmail);
       if (!email || email === '1234@gmail.com' || data.isDefaultEmail === true || email.endsWith('@xrayunion.local')) {
         throw new Error('या सदस्याचा स्वतःचा ई-मेल अजून Profile मध्ये अपडेट केलेला नाही. प्रथम Profile मधून ई-मेल अपडेट करून verify करा.');
