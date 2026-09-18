@@ -2061,6 +2061,8 @@
         const app = firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         const auth = firebase.auth();
+        // Keep Admin login session stable across page reloads.
+        auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(err => console.warn("Admin auth persistence:", err));
 
         // Compatibility wrappers: keep the existing app logic unchanged while
         // using the non-module Firebase SDK, which is more reliable for simple
@@ -2742,17 +2744,17 @@
                 title: `🔐 सदस्याचा पासवर्ड सेट करा`,
                 html: `
                     <div style="text-align:left; font-size:0.9rem;">
-                        <p><b>सदस्य:</b> ${m.name || '-'}</p>
+                        <p><b>सदस्य:</b> ${m.name || m.पूर्ण_नाव || '-'}</p>
                         <p><b>ईमेल:</b> ${m.email || 'अद्याप अपडेट केलेला नाही'}</p>
-                        <p><b>मोबाईल:</b> ${m.mobile || '-'}</p>
+                        <p><b>मोबाईल:</b> ${m.mobile || m.मोबाईल || '-'}</p>
                         <hr style="margin:10px 0;">
                         <label style="display:flex;gap:8px;align-items:center;margin-bottom:10px;">
                           <input type="checkbox" id="cred_use_default" checked>
                           <b>डिफॉल्ट पासवर्ड वापरा: Pass@123</b>
                         </label>
-                        <label><b>किंवा नवीन पासवर्ड:</b></label>
-                        <input id="cred_new_pass" class="swal2-input" value="Pass@123" placeholder="किमान 6 अक्षरे">
-                        <small style="color:#64748b;">डिफॉल्ट पासवर्ड सेट केल्यास सदस्याला पहिल्या लॉगिननंतर पासवर्ड बदलणे बंधनकारक राहील.</small>
+                        <label><b>किंवा स्वतःचा नवीन पासवर्ड:</b></label>
+                        <input id="cred_new_pass" class="swal2-input" value="Pass@123" placeholder="किमान 6 अक्षरे" disabled>
+                        <small style="color:#64748b;">डिफॉल्ट पासवर्ड दिल्यास पहिल्या login नंतर नवीन password बदलणे आवश्यक राहील.</small>
                     </div>
                 `,
                 focusConfirm: false,
@@ -2762,45 +2764,35 @@
                 didOpen: () => {
                     const cb=document.getElementById('cred_use_default');
                     const inp=document.getElementById('cred_new_pass');
-                    cb?.addEventListener('change',()=>{ inp.value=cb.checked?'Pass@123':''; inp.disabled=cb.checked; });
+                    cb?.addEventListener('change',()=>{
+                        if (cb.checked) { inp.value='Pass@123'; inp.disabled=true; }
+                        else { inp.value=''; inp.disabled=false; inp.focus(); }
+                    });
                 },
                 preConfirm: () => {
-                    const useDefault=document.getElementById('cred_use_default')?.checked;
-                    let p = (useDefault ? 'Pass@123' : document.getElementById('cred_new_pass')?.value || '').trim();
+                    const useDefault=!!document.getElementById('cred_use_default')?.checked;
+                    const p=(useDefault ? 'Pass@123' : document.getElementById('cred_new_pass')?.value || '').trim();
                     if(!p || p.length < 6) { Swal.showValidationMessage('पासवर्ड किमान 6 अक्षरांचा असावा.'); return false; }
-                    return { pass: p, isDefault: useDefault };
+                    return { pass:p, isDefault:useDefault };
                 }
             });
 
-            if (formValues) {
-                let newPass = formValues.pass;
-                try {
-                    Swal.fire({title:'Firebase Password अपडेट करत आहे...',allowOutsideClick:false,didOpen:()=>Swal.showLoading()});
-                    const token = await auth.currentUser.getIdToken(true);
-                    const r = await fetch(MASTER_FN_BASE + '/adminSetMemberPassword', {
-                        method:'POST', mode:'cors', headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
-                        body:JSON.stringify({memberId, password:newPass, forcePasswordChange:!!formValues.isDefault})
-                    });
-                    const raw = await r.text(); let j={}; try{j=JSON.parse(raw)}catch(_){ }
-                    if(!r.ok) throw new Error(j.error || ('Server error '+r.status));
-                    await window.logAdminActivity(`${formValues.isDefault ? 'Default Pass@123' : 'Custom'} password set for: ${m.name}`);
-                    Swal.fire('यशस्वी', `${m.name || 'सदस्य'} यांचा ${formValues.isDefault ? 'डिफॉल्ट Pass@123' : 'नवीन'} पासवर्ड सेट झाला.`, 'success');
-                } catch(e) {
-                    Swal.fire('पासवर्ड अपडेट अयशस्वी', e.message || String(e), 'error');
-                    return;
-                }
-            }
-        };
-
-                let win = window.open('', '_blank');
-                win.document.write(`<html><head><title>Credentials_${m.name}</title></head><body>${credHtml}</body></html>`);
-                setTimeout(() => win.print(), 400);
-
-                if(m.email) {
-                    let subject = encodeURIComponent("क्ष-किरण वैज्ञानिक अधिकारी संघटना - लॉगिन क्रेडेंशियल्स");
-                    let body = encodeURIComponent(`नमस्कार ${m.name},\n\nआपला संघटना लॉगिन पासवर्ड: ${newPass}\nवेबसाईट: https://xrayunionmah.web.app\n\nधन्यवाद!`);
-                    window.location.href = `mailto:${m.email}?subject=${subject}&body=${body}`;
-                }
+            if (!formValues) return;
+            const newPass=formValues.pass;
+            try {
+                if(!auth.currentUser) throw new Error('Admin login session उपलब्ध नाही. कृपया पुन्हा Admin Login करा.');
+                Swal.fire({title:'Firebase Password अपडेट करत आहे...',allowOutsideClick:false,didOpen:()=>Swal.showLoading()});
+                const token=await auth.currentUser.getIdToken(true);
+                const r=await fetch(MASTER_FN_BASE+'/adminSetMemberPassword',{
+                    method:'POST',mode:'cors',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+                    body:JSON.stringify({memberId,password:newPass,forcePasswordChange:!!formValues.isDefault})
+                });
+                const raw=await r.text(); let j={}; try{j=JSON.parse(raw)}catch(_){ }
+                if(!r.ok) throw new Error(j.error || ('Server error '+r.status));
+                await window.logAdminActivity(`${formValues.isDefault?'Default Pass@123':'Custom'} password set for: ${m.name || m.पूर्ण_नाव || memberId}`);
+                Swal.fire('यशस्वी',`${m.name || m.पूर्ण_नाव || 'सदस्य'} यांचा ${formValues.isDefault?'डिफॉल्ट Pass@123':'नवीन'} पासवर्ड सेट झाला.`,'success');
+            } catch(e) {
+                Swal.fire('पासवर्ड अपडेट अयशस्वी',e.message || String(e),'error');
             }
         };
 
@@ -5243,37 +5235,22 @@ const MASTER_FN_BASE="https://us-central1-xrayunionmah.cloudfunctions.net";
 async function masterToken(){if(!auth.currentUser)throw new Error("Login required");return await auth.currentUser.getIdToken(true)}
 window.masterResetAllMemberPasswords=async function(){
  if(!isSuperAdmin)return Swal.fire('नकार','Master Admin आवश्यक.','error');
- const ok=await Swal.fire({title:'डिफॉल्ट पासवर्ड सेट करायचा?',html:'फक्त <b>Approved/Active</b> सदस्य ज्यांचा ई-मेल अजून <b>update + verify</b> झालेला नाही, त्यांचाच password <b>Pass@123</b> केला जाईल.<br><br>ज्यांचा ई-मेल व्यवस्थित update व verified आहे त्यांना <b>skip</b> केले जाईल.<br><br>नंतर सदस्याला स्वतःचा password बदलणे बंधनकारक असेल.',icon:'warning',showCancelButton:true,confirmButtonText:'होय, सेट करा',cancelButtonText:'रद्द'});
+ const ok=await Swal.fire({title:'डिफॉल्ट पासवर्ड सेट करायचा?',html:'फक्त <b>Approved/Active</b> सदस्य ज्यांचा ई-मेल अजून <b>update + verify</b> झालेला नाही, त्यांचाच password <b>Pass@123</b> केला जाईल.<br><br>ज्यांचा ई-मेल व्यवस्थित update व verified आहे त्यांना <b>Skip</b> केले जाईल.',icon:'warning',showCancelButton:true,confirmButtonText:'होय, सेट करा',cancelButtonText:'रद्द'});
  if(!ok.isConfirmed)return;
  try{
-  Swal.fire({title:'सर्व सदस्यांचे प्रारंभिक password update होत आहेत...',html:'कृपया हे पान बंद करू नका.<br><small>Firebase Authentication records तपासले जात आहेत...</small>',allowOutsideClick:false,didOpen:()=>Swal.showLoading()});
+  Swal.fire({title:'डिफॉल्ट password update होत आहे...',html:'कृपया हे पान बंद करू नका.',allowOutsideClick:false,didOpen:()=>Swal.showLoading()});
   const token=await masterToken();
-  if(!token) throw new Error('Firebase Admin session मिळाली नाही. कृपया Master Admin म्हणून पुन्हा login करा.');
   const r=await fetch(MASTER_FN_BASE+'/masterSetMemberDefaultPasswords',{method:'POST',mode:'cors',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({confirm:'SET_DEFAULT_PASSWORDS'})});
-  const raw=await r.text(); let j={}; try{j=JSON.parse(raw)}catch(_){}
+  const raw=await r.text(); let j={}; try{j=JSON.parse(raw)}catch(_){ }
   if(!r.ok) throw new Error(j.error||('Server error '+r.status+'. Cloud Function deploy/region तपासा.'));
-  await logAdminActivity('Master Admin: reset all member passwords');
-  Swal.fire({icon:'success',title:'पूर्ण झाले',html:`Updated: <b>${j.updated||0}</b><br>Created: <b>${j.created||0}</b><br>Reset: <b>${j.reset||0}</b><br>ई-मेल व्यवस्थित असल्यामुळे Skip: <b>${j.skippedVerifiedEmail||0}</b><br>इतर Skip: <b>${j.skipped||0}</b>${j.errors?.length?`<br><span style="color:#b91c1c">Errors: ${j.errors.length}</span>`:''}`});
+  await logAdminActivity('Master Admin: selective default password reset');
+  Swal.fire({icon:'success',title:'पूर्ण झाले',html:`Updated: <b>${j.updated||0}</b><br>Created: <b>${j.created||0}</b><br>Reset: <b>${j.reset||0}</b><br>ई-मेल verified असल्यामुळे Skip: <b>${j.skippedVerifiedEmail||0}</b><br>इतर Skip: <b>${j.skipped||0}</b>${j.errors?.length?`<br><span style="color:#b91c1c">Errors: ${j.errors.length}</span>`:''}`});
  }catch(e){
   console.error('masterSetMemberDefaultPasswords failed:',e);
-  const m=String(e?.message||e);
-  const hint=(m==='Failed to fetch'||m.includes('NetworkError'))
-    ? '<br><br><small>Cloud Function उपलब्ध/Deploy आहे का ते तपासा: <b>masterSetMemberDefaultPasswords</b><br>Firebase Functions deploy केल्यानंतर पुन्हा प्रयत्न करा.</small>' : '';
-  Swal.fire({icon:'error',title:'Reset झाले नाही',html:'<div style="text-align:left">'+m.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))+hint+'</div>'});
+  Swal.fire('डिफॉल्ट पासवर्ड अयशस्वी',e.message||String(e),'error');
  }
 };
-window.masterRefreshUsage=async function(){
- if(!isSuperAdmin)return Swal.fire("नकार","Master Admin आवश्यक.","error");
- try{
-  const cols=["members","member_files","gallery","circulars","chat_messages","admin_logs","member_logs"];let n=0;
-  for(const c of cols){try{n+=(await getDocs(collection(db,c))).size}catch(_){}}
-  document.getElementById("mFirestoreCount").textContent=n+" records";
-  const r=await fetch(MASTER_FN_BASE+"/masterStorageOverview",{headers:{Authorization:"Bearer "+await masterToken()}});
-  const u=await r.json(); const bytes=u.storage?.used_bytes||u.storage?.used_bytes_total||0;
-  document.getElementById("mCloudUsage").textContent=bytes?(Math.round(bytes/1024/1024)+" MB"):"Not configured";
-  Swal.fire("Storage check","Firebase संदर्भ: "+n+" records. Cloudinary usage server कडून तपासले.","success");
- }catch(e){Swal.fire("त्रुटी",e.message,"error")}
-};
+
 window.masterCleanupOldLogs=async function(){
  if(!isSuperAdmin)return;const x=await Swal.fire({title:"जुने logs साफ करायचे?",text:"120 दिवसांपेक्षा जुने logs delete होतील.",icon:"warning",showCancelButton:true,confirmButtonText:"होय"});
  if(!x.isConfirmed)return;await autoDeleteOldLogs();await logAdminActivity("Master Admin: old logs cleanup");Swal.fire("पूर्ण","जुने logs साफ केले.","success")
