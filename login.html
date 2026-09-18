@@ -59,6 +59,11 @@
     <div class="login-icon"><i class="fa-solid fa-user-lock"></i></div>
     <h2>लॉगिन पोर्टल</h2>
     <p class="subtitle">क्ष किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र</p>
+    <div style="margin:15px 0;padding:12px 14px;border-radius:12px;background:linear-gradient(135deg,#eff6ff,#f8fafc);border:1px solid #bfdbfe;text-align:left;color:#334155;font-size:.8rem;line-height:1.55;">
+      <b style="color:#0B3D91;">🔐 सुरक्षित ई-मेल सूचना</b><br>
+      <b>प्रारंभिक लॉगिन:</b> नोंदणीकृत मोबाईल नंबर + <b>Pass@123</b> वापरा. जुन्या सदस्यांसाठी <b>1234@gmail.com</b> हा फक्त डिफॉल्ट/उदाहरण ई-मेल आहे. पहिल्या लॉगिननंतर Profile मधून स्वतःचा ई-मेल अपडेट करा. ई-मेल verify झाल्यानंतर पुढील लॉगिनसाठी तुमचा स्वतःचा ई-मेल आणि One-Click Google Login वापरता येईल.
+    </div>
+
 
     <!-- Google Login Section -->
     <button type="button" class="btn-google" id="googleLoginBtn">
@@ -73,12 +78,12 @@
     <!-- Email/Password Login Section -->
     <div class="input-box">
       <i class="fa-solid fa-envelope input-icon"></i>
-      <input type="email" id="email" placeholder="ईमेल आयडी (Email)" required>
+      <input type="text" id="email" placeholder="ई-मेल किंवा १० अंकी मोबाईल नंबर" required autocomplete="username">
     </div>
     
     <div class="input-box">
       <i class="fa-solid fa-lock input-icon"></i>
-      <input type="password" id="password" placeholder="पासवर्ड (Password)" required>
+      <input type="password" id="password" value="Pass@123" placeholder="पासवर्ड (Password)" required>
       <i class="fa-solid fa-eye toggle-password" id="togglePassword"></i>
     </div>
 
@@ -95,9 +100,25 @@
     </div>
   </div>
 
+  <div id="forgotPasswordModal" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.65);z-index:9999;align-items:center;justify-content:center;padding:20px;">
+    <div style="width:min(430px,100%);background:#fff;border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.25);overflow:hidden;">
+      <div style="padding:18px 20px;background:linear-gradient(135deg,#0B3D91,#2563eb);color:#fff;display:flex;justify-content:space-between;align-items:center;">
+        <div><b style="font-size:1.05rem;">🔐 पासवर्ड विसरलात?</b><div style="font-size:.78rem;opacity:.9;margin-top:3px;">तुमच्या नोंदणीकृत ई-मेलवर सुरक्षित लिंक</div></div>
+        <button id="closeForgotPassword" type="button" style="border:0;background:transparent;color:#fff;font-size:1.5rem;cursor:pointer;">&times;</button>
+      </div>
+      <div style="padding:20px;">
+        <p style="margin:0 0 14px;color:#475569;font-size:.88rem;line-height:1.5;">तुमचा <b>ई-मेल किंवा मोबाईल नंबर</b> टाका. सिस्टम तुमच्या सदस्य नोंदीतील verified/updated ई-मेल शोधून त्यावर password reset link पाठवेल.</p>
+        <input id="forgotIdentifier" type="text" placeholder="ई-मेल किंवा १० अंकी मोबाईल नंबर" autocomplete="username" style="width:100%;box-sizing:border-box;padding:13px;border:1px solid #cbd5e1;border-radius:10px;font-size:1rem;">
+        <button id="sendForgotBtn" type="button" style="width:100%;margin-top:14px;padding:13px;border:0;border-radius:10px;background:#16a34a;color:#fff;font-weight:700;cursor:pointer;">📩 Reset Link पाठवा</button>
+        <div id="forgotMessage" style="margin-top:12px;font-size:.85rem;line-height:1.45;"></div>
+        <div style="margin-top:14px;padding:10px;background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;color:#9a3412;font-size:.78rem;">ई-मेल अजून Profile मध्ये अपडेट केलेला नसेल, तर आधी Profile मधून स्वतःचा ई-मेल अपडेट करा.</div>
+      </div>
+    </div>
+  </div>
+
   <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, signOut, setPersistence, browserLocalPersistence, sendPasswordResetEmail, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithRedirect, getRedirectResult, signOut, setPersistence, browserLocalPersistence, sendPasswordResetEmail, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 import { getFirestore, collection, query, where, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -185,8 +206,20 @@ async function routeSignedInUser(user) {
     return;
   }
 
-  const memberDoc = await findMember(email);
-  if (!memberDoc) throw new Error('हा ई-मेल सदस्य किंवा ॲडमिन खात्यात नोंदणीकृत नाही.');
+  let memberDoc = await findMember(email);
+  if (!memberDoc && user.uid) {
+    try {
+      const uidSnap = await findByField('members','uid',user.uid);
+      if (!uidSnap.empty) memberDoc = uidSnap.docs[0];
+    } catch (e) { console.warn('UID member lookup skipped:', e?.message); }
+  }
+  if (!memberDoc) {
+    try {
+      const authEmailSnap = await findByField('members','authEmail',email);
+      if (!authEmailSnap.empty) memberDoc = authEmailSnap.docs[0];
+    } catch (e) { console.warn('authEmail lookup skipped:', e?.message); }
+  }
+  if (!memberDoc) throw new Error('हा ई-मेल/मोबाईल सदस्य किंवा ॲडमिन खात्यात नोंदणीकृत नाही.');
   const data = memberDoc.data() || {};
   if (memberBlocked(data)) {
     if (norm(data.status || data.स्थिती) === 'pending' || norm(data.status || data.स्थिती) === 'प्रलंबित')
@@ -201,8 +234,8 @@ $('googleLoginBtn')?.addEventListener('click', async () => {
   const btn = $('googleLoginBtn'); btn.disabled = true;
   msg('<span style="color:#2563eb"><i class="fa-solid fa-spinner fa-spin"></i> Google ऑथेंटिकेशन होत आहे...</span>');
   try {
-    const result = await signInWithPopup(auth, new GoogleAuthProvider());
-    await routeSignedInUser(result.user);
+    await signInWithRedirect(auth, new GoogleAuthProvider());
+
   } catch (error) {
     await signOut(auth).catch(()=>{});
     msg('<span style="color:#dc2626">❌ ' + esc(error.message || 'Google लॉगिन अपयशी.') + '</span>');
@@ -210,90 +243,158 @@ $('googleLoginBtn')?.addEventListener('click', async () => {
 });
 
 $('loginBtn')?.addEventListener('click', async () => {
-  const email = norm($('email')?.value);
+  const identifier = norm($('email')?.value);
   const password = $('password')?.value ?? '';
   const btn = $('loginBtn');
-  if (!email || !password) { msg('<span style="color:#dc2626">⚠️ कृपया ईमेल आणि पासवर्ड टाका.</span>'); return; }
+  if (!identifier || !password) { msg('<span style="color:#dc2626">⚠️ कृपया ई-मेल/मोबाईल आणि पासवर्ड टाका.</span>'); return; }
   btn.disabled = true;
   msg('<span style="color:#2563eb"><i class="fa-solid fa-spinner fa-spin"></i> सुरक्षित लॉगिन तपासत आहे...</span>');
+  const DEFAULT_PASSWORD = 'Pass@123';
   try {
-    // प्रथम Firebase Authentication — नवीन सदस्यांसाठी मुख्य पद्धत.
-    try {
-      let cred;
+    let memberDoc = null;
+    let loginEmail = identifier;
+    const isMobile = /^\d{10}$/.test(identifier.replace(/^\+91/, ''));
+
+    if (isMobile) {
+      const mobile = identifier.replace(/^\+91/, '');
+      let snap = await findByField('members','mobile',mobile);
+      if (snap.empty) snap = await findByField('members','मोबाईल',mobile);
+      if (snap.empty) snap = await findByField('members','mobile',Number(mobile));
+      if (snap.empty) snap = await findByField('members','मोबाईल',Number(mobile));
+      if (snap.empty) throw new Error('हा मोबाईल नंबर सदस्य नोंदीमध्ये सापडला नाही.');
+      memberDoc = snap.docs[0];
+      const data = memberDoc.data() || {};
+      if (memberBlocked(data)) throw new Error('तुमचा सदस्य लॉगिन अॅक्सेस सध्या बंद/प्रलंबित आहे.');
+      const storedEmail = norm(data.email || data.ईमेल);
+      const authEmail = norm(data.authEmail);
+      const isDefaultEmail = !storedEmail || storedEmail === '1234@gmail.com' || data.isDefaultEmail === true;
+      if (!isDefaultEmail && storedEmail) loginEmail = storedEmail;
+      else loginEmail = authEmail || `member-${memberDoc.id}@xrayunion.local`;
+
+      // First/default login: create a unique Firebase Auth account for this member.
       try {
-        cred = await signInWithEmailAndPassword(auth, email, password);
+        const cred = await signInWithEmailAndPassword(auth, loginEmail, password);
+        await routeSignedInUser(cred.user);
+        return;
       } catch (authError) {
-        // Master Admin account first-time bootstrap: only for the configured master email.
-        if (authError?.code === 'auth/user-not-found' && email === 'hangemahesh498@gmail.com') {
-          try {
-            cred = await createUserWithEmailAndPassword(auth, email, password);
-          } catch (createError) {
-            if (createError?.code === 'auth/email-already-in-use') throw authError;
-            throw createError;
-          }
-        } else {
-          throw authError;
-        }
+        if (password !== DEFAULT_PASSWORD) throw authError;
+        if (authError?.code !== 'auth/user-not-found' && authError?.code !== 'auth/invalid-credential') throw authError;
+        const cred = await createUserWithEmailAndPassword(auth, loginEmail, DEFAULT_PASSWORD);
+        await updateDoc(doc(db,'members',memberDoc.id), {
+          uid: cred.user.uid,
+          authEmail: loginEmail,
+          authVersion: 3,
+          defaultPasswordEnabled: true,
+          password: null,
+          pass: null
+        });
+        await routeSignedInUser(cred.user);
+        return;
       }
-      await routeSignedInUser(cred.user);
-      return;
-    } catch (authError) {
-      await signOut(auth).catch(()=>{});
-
-      // जुने सदस्य: पूर्वी Firestore मध्ये pass/password असलेल्या records चे
-      // एकदाच Firebase Authentication मध्ये सुरक्षित migration.
-      const code = authError?.code || '';
-      if (code === 'auth/user-not-found' || code === 'auth/invalid-credential') {
-        const memberDoc = await findMember(email);
-        if (memberDoc) {
-          const data = memberDoc.data() || {};
-          const legacyPass = String(data.password || data.pass || '');
-          const status = norm(data.status || data.स्थिती);
-          const access = norm(data.access || data.अॅक्सेस);
-
-          if (status === 'pending' || status === 'प्रलंबित') {
-            throw new Error('तुमचा सदस्य अर्ज अजून ॲडमिनच्या मंजुरीच्या प्रतीक्षेत आहे.');
-          }
-          if (access === 'disabled' || access === 'बंद') {
-            throw new Error('तुमचा लॉगिन अॅक्सेस बंद आहे. ॲडमिनशी संपर्क साधा.');
-          }
-
-          if (legacyPass && legacyPass === password) {
-            try {
-              const cred = await createUserWithEmailAndPassword(auth, email, password);
-              await updateMemberAfterMigration(memberDoc.id, cred.user.uid, email);
-              await routeSignedInUser(cred.user);
-              return;
-            } catch (migrationError) {
-              if (migrationError?.code === 'auth/email-already-in-use') {
-                // Auth account exists, therefore the supplied password is not valid.
-                throw new Error('ईमेल किंवा पासवर्ड चुकीचा आहे.');
-              }
-              throw migrationError;
-            }
-          }
-        }
-      }
-
-      const text = code === 'auth/wrong-password' || code === 'auth/invalid-credential' ||
-                   code === 'auth/user-not-found' || code === 'auth/invalid-email'
-        ? 'ईमेल किंवा पासवर्ड चुकीचा आहे.'
-        : (authError.message || 'लॉगिन अयशस्वी.');
-      throw new Error(text);
     }
+
+    // Real email login after the member has updated and verified their email.
+    let cred;
+    try {
+      cred = await signInWithEmailAndPassword(auth, loginEmail, password);
+    } catch (authError) {
+      if (authError?.code === 'auth/user-not-found' && loginEmail === 'hangemahesh498@gmail.com') {
+        cred = await createUserWithEmailAndPassword(auth, loginEmail, password);
+      } else {
+        throw authError;
+      }
+    }
+    await routeSignedInUser(cred.user);
   } catch (error) {
-    msg('<span style="color:#dc2626">❌ ' + esc(error.message || 'लॉगिन अयशस्वी.') + '</span>');
+    await signOut(auth).catch(()=>{});
+    const code = error?.code || '';
+    let message = error?.message || 'लॉगिन अयशस्वी.';
+    if (code === 'auth/invalid-credential' || code === 'auth/wrong-password') message = 'ई-मेल/मोबाईल किंवा पासवर्ड चुकीचा आहे. नव्या सदस्यांसाठी प्रारंभिक पासवर्ड: Pass@123';
+    if (code === 'auth/email-already-in-use') message = 'या सदस्याचे Firebase खाते आधीच आहे. नोंदणीकृत ई-मेल/पासवर्ड वापरा.';
+    if (code === 'auth/invalid-email') message = 'कृपया वैध ई-मेल किंवा १० अंकी मोबाईल नंबर टाका.';
+    msg('<span style="color:#dc2626">❌ ' + esc(message) + '</span>');
   } finally { btn.disabled = false; }
 });
 
-// Forgot password link
+// Forgot password: supports registered email OR mobile number.
 const forgot = [...document.querySelectorAll('a')].find(a => a.textContent.includes('पासवर्ड विसरलात'));
-forgot?.addEventListener('click', async (e) => {
-  e.preventDefault(); const email = norm($('email')?.value);
-  if (!email) return msg('<span style="color:#d97706">ℹ️ आधी ईमेल टाका, मग "पासवर्ड विसरलात?" पुन्हा दाबा.</span>');
-  try { await sendPasswordResetEmail(auth,email); msg('<span style="color:green">✅ पासवर्ड रीसेट लिंक ईमेलवर पाठवली आहे.</span>'); }
-  catch(e) { msg('<span style="color:#dc2626">❌ ' + esc(e.message) + '</span>'); }
+const forgotModal = $('forgotPasswordModal');
+const forgotIdentifier = $('forgotIdentifier');
+const forgotMessage = $('forgotMessage');
+const sendForgotBtn = $('sendForgotBtn');
+const closeForgotPassword = $('closeForgotPassword');
+
+function openForgotPassword() {
+  if (!forgotModal) return;
+  forgotModal.style.display = 'flex';
+  if (forgotIdentifier) {
+    forgotIdentifier.value = norm($('email')?.value);
+    setTimeout(() => forgotIdentifier.focus(), 50);
+  }
+  if (forgotMessage) forgotMessage.innerHTML = '';
+}
+function closeForgotPasswordModal() { if (forgotModal) forgotModal.style.display = 'none'; }
+forgot?.addEventListener('click', e => { e.preventDefault(); openForgotPassword(); });
+closeForgotPassword?.addEventListener('click', closeForgotPasswordModal);
+forgotModal?.addEventListener('click', e => { if (e.target === forgotModal) closeForgotPasswordModal(); });
+
+sendForgotBtn?.addEventListener('click', async () => {
+  let identifier = norm(forgotIdentifier?.value);
+  if (!identifier) { if (forgotMessage) forgotMessage.innerHTML = '<span style="color:#b45309">⚠️ ई-मेल किंवा मोबाईल नंबर टाका.</span>'; return; }
+  sendForgotBtn.disabled = true;
+  sendForgotBtn.textContent = '⏳ तपासत आहे...';
+  if (forgotMessage) forgotMessage.innerHTML = '';
+  try {
+    let email = identifier;
+    const digits = identifier.replace(/^\+91/, '');
+    if (/^\d{10}$/.test(digits)) {
+      let snap = await findByField('members','mobile',digits);
+      if (snap.empty) snap = await findByField('members','मोबाईल',digits);
+      if (snap.empty) snap = await findByField('members','mobile',Number(digits));
+      if (snap.empty) snap = await findByField('members','मोबाईल',Number(digits));
+      if (snap.empty) throw new Error('हा मोबाईल नंबर सदस्य नोंदीमध्ये सापडला नाही.');
+      const data = snap.docs[0].data() || {};
+      email = norm(data.email || data.ईमेल || data.authEmail);
+      if (!email || email === '1234@gmail.com' || data.isDefaultEmail === true || email.endsWith('@xrayunion.local')) {
+        throw new Error('या सदस्याचा स्वतःचा ई-मेल अजून Profile मध्ये अपडेट केलेला नाही. प्रथम Profile मधून ई-मेल अपडेट करून verify करा.');
+      }
+    }
+    if (!email.includes('@') || email.endsWith('@xrayunion.local')) throw new Error('कृपया वैध नोंदणीकृत ई-मेल आयडी टाका.');
+    await sendPasswordResetEmail(auth, email);
+    if (forgotMessage) forgotMessage.innerHTML = '<span style="color:#15803d;font-weight:700">✅ Password reset link तुमच्या नोंदणीकृत ई-मेलवर पाठवली आहे. Inbox/Spam तपासा आणि लिंकवरून नवीन पासवर्ड सेट करा.</span>';
+  } catch (error) {
+    console.error('Password reset error:', error);
+    let message = error?.message || 'Reset link पाठवता आली नाही.';
+    if (error.code === 'auth/invalid-email') message = 'कृपया वैध ई-मेल आयडी टाका.';
+    if (error.code === 'auth/user-not-found') message = 'या ई-मेलसाठी Firebase खाते सापडले नाही. Profile मधील ई-मेल verify केले आहे का ते तपासा.';
+    if (forgotMessage) forgotMessage.innerHTML = '<span style="color:#dc2626">❌ ' + esc(message) + '</span>';
+  } finally {
+    sendForgotBtn.disabled = false;
+    sendForgotBtn.textContent = '📩 Reset Link पाठवा';
+  }
 });
+
+  async function handleGoogleRedirect() {
+    try {
+      const result = await getRedirectResult(auth);
+      if (!result || !result.user) return;
+      const email = (result.user.email || '').trim().toLowerCase();
+      if (!email) throw new Error('Google ई-मेल उपलब्ध नाही.');
+      let q = query(collection(db,'members'), where('email','==',email));
+      let snap = await getDocs(q);
+      if (snap.empty) { q = query(collection(db,'members'), where('ईमेल','==',email)); snap = await getDocs(q); }
+      if (snap.empty) { await signOut(auth); throw new Error('हा Google ई-मेल सदस्य नोंदीमध्ये सापडला नाही.'); }
+      const m = {id:snap.docs[0].id,...snap.docs[0].data()};
+      const storedUid = String(m.uid||'');
+      if (storedUid && storedUid !== result.user.uid) { await signOut(auth); throw new Error('या ई-मेलशी दुसरे Firebase खाते जोडलेले आहे.'); }
+      if (!storedUid) await updateDoc(doc(db,'members',m.id),{uid:result.user.uid,googleLinked:true,authVersion:3,lastLoginAt:Date.now()});
+      window.location.href='member-dashboard.html';
+    } catch(e) {
+      const box=document.getElementById('messageBox');
+      if(box) box.innerHTML='<span style="color:#dc2626">❌ '+(e.message||'Google लॉगिन अपयशी.')+'</span>';
+    }
+  }
+  handleGoogleRedirect();
 </script>
 </body>
 </html>
