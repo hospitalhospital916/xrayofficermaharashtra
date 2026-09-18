@@ -5162,7 +5162,22 @@ window.masterResetAllMemberPasswords=async function(){
  if(!isSuperAdmin)return Swal.fire('नकार','Master Admin आवश्यक.','error');
  const ok=await Swal.fire({title:'सर्व सदस्यांचे पासवर्ड बदलायचे?',html:'सर्व active/approved सदस्यांचा सध्याचा password <b>Pass@123</b> केला जाईल.<br><br>यानंतर सदस्य स्वतःचा password बदलू शकतात.',icon:'warning',showCancelButton:true,confirmButtonText:'होय, सेट करा',cancelButtonText:'रद्द'});
  if(!ok.isConfirmed)return;
- try{Swal.fire({title:'सर्व सदस्यांचे password update होत आहेत...',allowOutsideClick:false,didOpen:()=>Swal.showLoading()});const r=await fetch(MASTER_FN_BASE+'/masterSetMemberDefaultPasswords',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+await masterToken()},body:JSON.stringify({confirm:'SET_DEFAULT_PASSWORDS'})});const j=await r.json();if(!r.ok)throw new Error(j.error||'Update failed');await logAdminActivity('Master Admin: reset all member passwords');Swal.fire('पूर्ण','Updated: '+j.updated+' | Created: '+j.created+' | Reset: '+j.reset+' | Skipped: '+j.skipped,'success')}catch(e){Swal.fire('त्रुटी',e.message,'error')}
+ try{
+  Swal.fire({title:'सर्व सदस्यांचे प्रारंभिक password update होत आहेत...',html:'कृपया हे पान बंद करू नका.<br><small>Firebase Authentication records तपासले जात आहेत...</small>',allowOutsideClick:false,didOpen:()=>Swal.showLoading()});
+  const token=await masterToken();
+  if(!token) throw new Error('Firebase Admin session मिळाली नाही. कृपया Master Admin म्हणून पुन्हा login करा.');
+  const r=await fetch(MASTER_FN_BASE+'/masterSetMemberDefaultPasswords',{method:'POST',mode:'cors',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({confirm:'SET_DEFAULT_PASSWORDS'})});
+  const raw=await r.text(); let j={}; try{j=JSON.parse(raw)}catch(_){}
+  if(!r.ok) throw new Error(j.error||('Server error '+r.status+'. Cloud Function deploy/region तपासा.'));
+  await logAdminActivity('Master Admin: reset all member passwords');
+  Swal.fire({icon:'success',title:'पूर्ण झाले',html:`Updated: <b>${j.updated||0}</b><br>Created: <b>${j.created||0}</b><br>Reset: <b>${j.reset||0}</b><br>Skipped: <b>${j.skipped||0}</b>${j.errors?.length?`<br><span style="color:#b91c1c">Errors: ${j.errors.length}</span>`:''}`});
+ }catch(e){
+  console.error('masterSetMemberDefaultPasswords failed:',e);
+  const m=String(e?.message||e);
+  const hint=(m==='Failed to fetch'||m.includes('NetworkError'))
+    ? '<br><br><small>Cloud Function उपलब्ध/Deploy आहे का ते तपासा: <b>masterSetMemberDefaultPasswords</b><br>Firebase Functions deploy केल्यानंतर पुन्हा प्रयत्न करा.</small>' : '';
+  Swal.fire({icon:'error',title:'Reset झाले नाही',html:'<div style="text-align:left">'+m.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))+hint+'</div>'});
+ }
 };
 window.masterRefreshUsage=async function(){
  if(!isSuperAdmin)return Swal.fire("नकार","Master Admin आवश्यक.","error");
