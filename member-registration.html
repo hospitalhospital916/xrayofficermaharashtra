@@ -332,8 +332,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label><i class="fa fa-envelope"></i> ई-मेल आयडी (Email ID) *</label>
-                    <input type="email" id="email" placeholder="example@gmail.com" required>
+                    <label><i class="fa fa-envelope"></i> ई-मेल आयडी (ऐच्छिक संपर्क)</label>
+                    <input type="email" id="email" placeholder="example@gmail.com">
                 </div>
 
                 <div class="form-group full-width">
@@ -377,20 +377,11 @@
 
             </div>
 
-            <!-- ५. लॉगिन पासवर्ड -->
-            <div class="section-title"><i class="fa fa-lock"></i> ५. सदस्य लॉगिन पासवर्ड</div>
-            <div class="form-grid">
-                <div class="form-group">
-                    <label><i class="fa fa-key"></i> लॉगिन पासवर्ड निवडा *</label>
-                    <input type="password" id="pass" minlength="6" placeholder="किमान ६ अक्षरे किंवा अंक" required>
-                </div>
-
-                <div class="form-group">
-                    <label><i class="fa fa-check-circle"></i> पासवर्ड पुन्हा टाका *</label>
-                    <input type="password" id="confirmPass" minlength="6" placeholder="पासवर्डची खात्री करा" required>
-                </div>
+            <!-- ५. सदस्य लॉगिन पासवर्ड -->
+            <div class="section-title"><i class="fa fa-lock"></i> ५. सदस्य लॉगिन</div>
+            <div style="padding:12px 14px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;color:#1e3a8a;font-size:.88rem;line-height:1.6;margin-bottom:15px;">
+              <b>पासवर्ड सिस्टम आपोआप तयार होईल:</b> तुमच्या नावातील पहिले नाव + <b>@1234</b>. नोंदणी Pending राहील आणि Admin मंजुरीनंतर मोबाईल + हा password वापरून Login करता येईल.
             </div>
-
             <button type="submit" class="btn-submit" id="submitBtn">
                 <i class="fa fa-paper-plane"></i> ऑनलाइन नोंदणी सबमिट करा
             </button>
@@ -404,9 +395,8 @@
     <!-- FIREBASE REALTIME SYNC & CLOUDINARY ENGINE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
-        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-
+        
+        
         // FIREBASE CONFIGURATION (माहिती ॲडमिन पॅनेलशी जुळणारी)
         const firebaseConfig = {
             apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk",
@@ -420,8 +410,7 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        const auth = getAuth(app);
-
+        
         // आरोग्य मंडळ आणि जिल्ह्यांचे मॅपिंग
         const mandalData = {
             "पुणे मंडळ": ["पुणे", "सातारा", "सोलापूर"],
@@ -479,85 +468,29 @@
             throw new Error("फाईल अपलोड अपूर्ण राहिली.");
         }
 
-        // फॉर्म सबमिट हँडलर
+        // फॉर्म सबमिट हँडलर — Email/Firebase Email Auth पूर्णपणे काढले आहे.
+        const API='https://us-central1-xrayunionmah.cloudfunctions.net';
+        async function postRegister(body){const r=await fetch(API+'/memberRegister',{method:'POST',mode:'cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});const t=await r.text();let j={};try{j=JSON.parse(t)}catch{}if(!r.ok)throw new Error(j.error||('Server error '+r.status));return j;}
         document.getElementById('memberRegForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-
-            const pass = document.getElementById('pass').value;
-            const confirmPass = document.getElementById('confirmPass').value;
-
-            if (pass !== confirmPass) {
-                Swal.fire('पासवर्ड चुकीचा आहे', 'पासवर्ड आणि पासवर्ड खात्री दोन्ही जुळत नाहीत.', 'error');
-                return;
-            }
-
-            Swal.fire({
-                title: 'माहिती व कागदपत्रे अपलोड होत आहेत...',
-                text: 'कृपया काही सेकंद वाट पहा.',
-                allowOutsideClick: false,
-                didOpen: () => Swal.showLoading()
-            });
-
+            Swal.fire({title:'माहिती व कागदपत्रे अपलोड होत आहेत...',text:'कृपया काही सेकंद वाट पहा.',allowOutsideClick:false,didOpen:()=>Swal.showLoading()});
             try {
-                // १. फाईल्स Cloudinary वर अपलोड करा
-                const photoFile = document.getElementById('photoFile').files[0];
-                const docFile = document.getElementById('docFile').files[0];
-                const otherFile = document.getElementById('otherFile').files[0];
-
-                const photoUrl = await uploadToCloudinary(photoFile);
-                const docUrl = await uploadToCloudinary(docFile);
-                const otherUrl = await uploadToCloudinary(otherFile);
-
-                // २. Firebase Authentication account तयार करा — आता लॉगिनची एकच सुरक्षित पद्धत
-                const email = document.getElementById('email').value.trim().toLowerCase();
-                const authCredential = await createUserWithEmailAndPassword(auth, email, pass);
-
-                // ३. Firestore 'members' कलेक्शनमध्ये डेटा सेव्ह करा
-                // पासवर्ड Firestore मध्ये सेव्ह केला जात नाही.
-                await addDoc(collection(db, "members"), {
-                    name: document.getElementById('name').value.trim(),
-                    dob: document.getElementById('dob').value,
-                    category: document.getElementById('category').value,
-                    bloodGroup: document.getElementById('bloodGroup').value.trim(),
-                    aadhaar: document.getElementById('aadhaar').value.trim(),
-                    sevarthId: document.getElementById('sevarthId').value.trim(),
-                    designation: document.getElementById('designation').value,
-                    mandal: document.getElementById('mandal').value,
-                    district: document.getElementById('district').value,
-                    workplace: document.getElementById('workplace').value.trim(),
-                    joinDate: document.getElementById('joinDate').value,
-                    retireDate: document.getElementById('retireDate').value,
-                    mobile: document.getElementById('mobile').value.trim(),
-                    email: email,
-                    uid: authCredential.user.uid,
-                    authVersion: 2,
-                    isDefaultEmail: false,
-                    emailUpdated: false,
-                    address: document.getElementById('address').value.trim(),
-                    remarks: document.getElementById('remarks').value.trim(),
-                    photoUrl: photoUrl,
-                    docUrl: docUrl,
-                    otherUrl: otherUrl,
-                    status: "Pending", // ॲडमिन मंजुरीसाठी
-                    feeStatus: "Unpaid",
-                    isMember: true,
-                    registeredAt: serverTimestamp()
-                });
-
-                Swal.fire({
-                    icon: 'success',
-                    title: 'नोंदणी यशस्वी झाली!',
-                    text: 'तुमची नोंदणी यशस्वीरीत्या झाली आहे. ॲडमिनच्या मंजुरीनंतर तुम्हाला सदस्य लॉगिन करता येईल.',
-                    confirmButtonText: 'ओके'
-                }).then(() => {
-                    document.getElementById('memberRegForm').reset();
-                    window.location.href = "member-dashboard.html";
-                });
-
-            } catch (error) {
-                console.error("Registration Error:", error);
-                Swal.fire('त्रुटी आली', 'नोंदणी करताना अडचण आली: ' + error.message, 'error');
-            }
+                const photoFile=document.getElementById('photoFile').files[0], docFile=document.getElementById('docFile').files[0], otherFile=document.getElementById('otherFile').files[0];
+                const photoUrl=await uploadToCloudinary(photoFile), docUrl=await uploadToCloudinary(docFile), otherUrl=await uploadToCloudinary(otherFile);
+                const name=document.getElementById('name').value.trim();
+                const body={
+                  name, dob:document.getElementById('dob').value, category:document.getElementById('category').value,
+                  bloodGroup:document.getElementById('bloodGroup').value.trim(), aadhaar:document.getElementById('aadhaar').value.trim(), sevarthId:document.getElementById('sevarthId').value.trim(),
+                  designation:document.getElementById('designation').value, mandal:document.getElementById('mandal').value, district:document.getElementById('district').value,
+                  workplace:document.getElementById('workplace').value.trim(), joinDate:document.getElementById('joinDate').value, retireDate:document.getElementById('retireDate').value,
+                  mobile:document.getElementById('mobile').value.trim(), email:document.getElementById('email')?.value.trim().toLowerCase()||'', address:document.getElementById('address').value.trim(), remarks:document.getElementById('remarks').value.trim(),
+                  photoUrl,docUrl,otherUrl
+                };
+                // Include dynamic fields if the form contains them.
+                document.querySelectorAll('#dynamicFieldsContainer input,#dynamicFieldsContainer select,#dynamicFieldsContainer textarea').forEach(el=>{if(el.id)body[el.id.replace(/^dyn_/,'')]=el.type==='file'?'':el.value;});
+                const j=await postRegister(body);
+                Swal.fire({icon:'success',title:'नोंदणी यशस्वी!',html:`<div style="line-height:1.7"><p>तुमची नोंदणी <b>Pending</b> आहे. Admin मंजुरीनंतरच Login सुरू होईल.</p><p><b>मोबाईल:</b> ${name?body.mobile:'-'}</p><p><b>प्रारंभिक पासवर्ड:</b> <span style="font-size:1.15rem;color:#0B3D91"><b>${j.defaultPassword}</b></span></p><p style="color:#64748b">हा password जतन करून ठेवा. Admin मंजुरीनंतर वापरा.</p></div>`,confirmButtonText:'ठीक आहे'}).then(()=>{document.getElementById('memberRegForm').reset();window.location.href='login.html';});
+            } catch(error){console.error('Registration Error:',error);Swal.fire('त्रुटी आली',error.message||'नोंदणी करताना अडचण आली.','error');}
         });
     </script>
 </body>

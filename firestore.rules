@@ -5,13 +5,15 @@ service cloud.firestore {
       return request.auth != null;
     }
     function isSuperAdmin() {
-      return isLoggedIn() && request.auth.token.email == 'hangemahesh498@gmail.com';
+      return isLoggedIn() && (request.auth.token.adminType == 'master' || request.auth.token.adminEmail == 'hangemahesh498@gmail.com' || request.auth.token.email == 'hangemahesh498@gmail.com');
     }
 
     match /chat_messages/{document=**} { allow read, write: if true; }
-    match /members/{document=**} {
-      allow read, create, update: if true;
-      allow delete: if isLoggedIn();
+    match /members/{memberId} {
+      allow read: if isLoggedIn();
+      allow create: if isLoggedIn();
+      allow update: if isLoggedIn() && (isSuperAdmin() || request.auth.uid == resource.data.uid || request.auth.token.role == 'admin');
+      allow delete: if isLoggedIn() && (isSuperAdmin() || request.auth.token.role == 'admin');
     }
     match /profile_edit_requests/{document=**} {
       allow create, read: if true;
@@ -54,10 +56,11 @@ service cloud.firestore {
     match /member_documents/{document=**} { allow read, write: if isLoggedIn(); }
     match /member_requests/{document=**} { allow read, write: if isLoggedIn(); }
     match /support_tickets/{document=**} { allow read, write: if isLoggedIn(); }
+    match /password_reset_requests/{document=**} { allow read, write: if false; }
     match /admins/{document=**} {
       allow read: if isLoggedIn();
       allow write: if isSuperAdmin();
     }
-    match /{document=**} { allow read, write: if isLoggedIn(); }
+    match /{document=**} { allow read, write: if false; }
   }
 }
