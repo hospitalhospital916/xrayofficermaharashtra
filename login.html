@@ -202,7 +202,8 @@ async function findAdmin(email) {
 function memberBlocked(data) {
   const status = norm(data?.status || data?.स्थिती);
   const access = norm(data?.access || data?.अॅक्सेस);
-  return status === 'pending' || status === 'प्रलंबित' || access === 'disabled' || access === 'बंद';
+  const loginDisabled = data?.loginEnabled === false;
+  return status === 'pending' || status === 'प्रलंबित' || access === 'disabled' || access === 'बंद' || loginDisabled;
 }
 
 async function routeSignedInUser(user) {
@@ -270,7 +271,7 @@ $('googleLoginBtn')?.addEventListener('click', async () => {
     const memberDoc = await findMember(entered);
     if (!memberDoc) throw new Error('हा ई-मेल सदस्य नोंदीमध्ये सापडला नाही.');
     const data = memberDoc.data() || {};
-    if (memberBlocked(data)) throw new Error('तुमचा सदस्य लॉगिन अॅक्सेस सध्या बंद/प्रलंबित आहे.');
+    if (memberBlocked(data)) throw new Error(data.loginEnabled === false ? 'तुमचा लॉगिन अॅक्सेस ॲडमिनने बंद केला आहे.' : 'तुमचा सदस्य लॉगिन अॅक्सेस सध्या बंद/प्रलंबित आहे.');
     const storedEmail = norm(data.email || data.ईमेल || data.authEmail);
     if (!storedEmail || storedEmail !== entered) throw new Error('या सदस्यासाठी verified ई-मेल उपलब्ध नाही. Profile मधून ई-मेल अपडेट करा.');
     await signInWithRedirect(auth, new GoogleAuthProvider());
@@ -298,7 +299,7 @@ $('loginBtn')?.addEventListener('click', async () => {
       memberDoc = await findMemberByMobile(identifier);
       if (!memberDoc) throw new Error('हा मोबाईल नंबर सदस्य नोंदीमध्ये सापडला नाही. कृपया Admin कडे तुमचा मोबाईल नंबर तपासून घ्या.');
       const data = memberDoc.data() || {};
-      if (memberBlocked(data)) throw new Error('तुमचा सदस्य लॉगिन अॅक्सेस सध्या बंद/प्रलंबित आहे.');
+      if (memberBlocked(data)) throw new Error(data.loginEnabled === false ? 'तुमचा लॉगिन अॅक्सेस ॲडमिनने बंद केला आहे.' : 'तुमचा सदस्य लॉगिन अॅक्सेस सध्या बंद/प्रलंबित आहे.');
       const storedEmail = norm(data.email || data.ईमेल);
       const authEmail = norm(data.authEmail);
       const isDefaultEmail = !storedEmail || storedEmail === '1234@gmail.com' || data.isDefaultEmail === true;

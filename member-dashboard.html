@@ -1321,7 +1321,7 @@
     <!-- FIREBASE & CORE SCRIPT ENGINE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, signOut, sendPasswordResetEmail, signInWithEmailAndPassword, createUserWithEmailAndPassword, verifyBeforeUpdateEmail, reload, setPersistence, browserLocalPersistence, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+        import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, signOut, sendPasswordResetEmail, signInWithEmailAndPassword, createUserWithEmailAndPassword, verifyBeforeUpdateEmail, updatePassword, reload, setPersistence, browserLocalPersistence, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
         import { getFirestore, collection, addDoc, getDocs, doc, query, where, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -1666,13 +1666,14 @@
             } catch (e) { console.error("Member Log Error:", e); }
         };
         window.addEventListener('DOMContentLoaded', () => {
+            // localStorage is only a cache; Firebase Auth must be present before opening the dashboard.
+            // This prevents a manually edited memberSession from granting dashboard access.
             let savedSession = localStorage.getItem("memberSession");
             if(savedSession) {
                 try {
-                    window.currentMember = JSON.parse(savedSession);
-                    document.getElementById('loginOverlay').style.display = 'none';
-                    document.getElementById('appContent').style.display = 'flex';
-                    window.initMemberDashboard();
+                    const cached = JSON.parse(savedSession);
+                    if (!cached?.id) throw new Error('Invalid cached session');
+                    window.currentMember = null;
                 } catch(e) { localStorage.removeItem("memberSession"); }
             }
 
@@ -1809,14 +1810,29 @@
 
         // Existing Firebase session is restored automatically — no login popup/window.
         onAuthStateChanged(auth, async (user) => {
-            if (!user || !user.email) return;
-            if (window.currentMember) return;
+            if (!user || !user.email || window.currentMember) return;
             try {
-                const raw = localStorage.getItem("memberSession");
-                if (raw) return;
-                await finishGoogleMemberLogin(user);
+                // Rehydrate the member from Firestore using the authenticated UID/email.
+                let snap = await getDocs(query(collection(db, 'members'), where('uid', '==', user.uid)));
+                if (snap.empty) snap = await getDocs(query(collection(db, 'members'), where('email', '==', String(user.email).trim().toLowerCase())));
+                if (snap.empty) snap = await getDocs(query(collection(db, 'members'), where('ईमेल', '==', String(user.email).trim().toLowerCase())));
+                if (snap.empty) throw new Error('Firebase account सदस्य नोंदीशी जोडलेले नाही.');
+                const d = snap.docs[0];
+                const m = {id:d.id, ...d.data()};
+                const status = String(m.status || m.स्थिती || '').trim().toLowerCase();
+                if (status === 'pending' || status === 'प्रलंबित') throw new Error('तुमचा सदस्य अर्ज अजून ॲडमिनच्या मंजुरीच्या प्रतीक्षेत आहे.');
+                if (m.loginEnabled === false) throw new Error('तुमचा लॉगिन अॅक्सेस ॲडमिनने बंद केला आहे.');
+                m.uid = user.uid;
+                delete m.password; delete m.pass;
+                window.currentMember = m;
+                localStorage.setItem('memberSession', JSON.stringify(m));
+                document.getElementById('loginOverlay').style.display = 'none';
+                document.getElementById('appContent').style.display = 'flex';
+                await window.initMemberDashboard();
             } catch (e) {
-                // Do not block the normal email/password login screen.
+                await signOut(auth).catch(()=>{});
+                localStorage.removeItem('memberSession');
+                window.currentMember = null;
                 console.warn('Existing Firebase session was not restored:', e.message);
             }
         });
@@ -1870,7 +1886,7 @@
                 const status = String(mData.status || mData.स्थिती || '').trim().toLowerCase();
                 const access = String(mData.access || mData.अॅक्सेस || '').trim().toLowerCase();
                 if(status === 'pending' || status === 'प्रलंबित') throw new Error('तुमचा सदस्य अर्ज अजून ॲडमिनच्या मंजुरीच्या प्रतीक्षेत आहे.');
-                if(access === 'disabled' || access === 'बंद') throw new Error('तुमचा लॉगिन अॅक्सेस बंद आहे. ॲडमिनशी संपर्क साधा.');
+                if(access === 'disabled' || access === 'बंद' || mData.loginEnabled === false) throw new Error('तुमचा लॉगिन अॅक्सेस ॲडमिनने बंद केला आहे.');
                 mData.uid = credential.user.uid;
                 if(!mData.authEmail) mData.authEmail = authEmail;
                 delete mData.password; delete mData.pass;
@@ -1922,6 +1938,33 @@
             document.getElementById('appContent').style.display = 'none';
             document.getElementById('loginOverlay').style.display = 'flex';
             document.getElementById('loginPassword').value = '';
+        };
+
+        window.forceMemberPasswordChange = async function(memberData) {
+            if (!memberData?.forcePasswordChange || !auth.currentUser) return;
+            const result = await Swal.fire({
+                title:'🔐 नवीन पासवर्ड सेट करा',
+                html:'<div style="text-align:left;color:#475569">सुरक्षिततेसाठी प्रारंभिक पासवर्ड बदलणे आवश्यक आहे.</div><input id="newMemberPass1" type="password" class="swal2-input" placeholder="नवीन पासवर्ड (किमान 6)"><input id="newMemberPass2" type="password" class="swal2-input" placeholder="पासवर्ड पुन्हा टाका">',
+                allowOutsideClick:false, allowEscapeKey:false, showCancelButton:false, confirmButtonText:'पासवर्ड बदला',
+                preConfirm: async () => {
+                    const a=document.getElementById('newMemberPass1')?.value || '';
+                    const b=document.getElementById('newMemberPass2')?.value || '';
+                    if(a.length<6) { Swal.showValidationMessage('पासवर्ड किमान 6 अक्षरांचा असावा.'); return false; }
+                    if(a!==b) { Swal.showValidationMessage('दोन्ही पासवर्ड समान नाहीत.'); return false; }
+                    try {
+                        await updatePassword(auth.currentUser,a);
+                        await updateDoc(doc(db,'members',memberData.id),{forcePasswordChange:false,defaultPasswordEnabled:false,passwordChangedAt:Date.now(),password:null,pass:null});
+                        return true;
+                    } catch(e) { Swal.showValidationMessage(e.message || 'पासवर्ड बदलता आला नाही.'); return false; }
+                }
+            });
+            if(result.isConfirmed) {
+                memberData.forcePasswordChange=false;
+                memberData.defaultPasswordEnabled=false;
+                delete memberData.password; delete memberData.pass;
+                localStorage.setItem('memberSession',JSON.stringify(memberData));
+                Swal.fire('यशस्वी','तुमचा नवीन पासवर्ड सेव्ह झाला आहे.','success');
+            }
         };
 
         window.initMemberDashboard = async function() {
@@ -1993,6 +2036,11 @@
             window.loadPolls();
             window.loadTemplatesAndAutoLetters();
             
+            // Master/Admin reset केलेला प्रारंभिक पासवर्ड असल्यास पहिल्याच लॉगिननंतर बदलणे बंधनकारक.
+            if (m.forcePasswordChange && auth.currentUser) {
+                await window.forceMemberPasswordChange(m);
+            }
+
             // ई-मेल तपासणी पॉप-अप कॉल
             window.checkDefaultEmailAndUpdate(m);
         };

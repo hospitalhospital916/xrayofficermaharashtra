@@ -582,6 +582,7 @@
                         <label><input type="checkbox" value="member_add"> ➕ नवीन सदस्य जोडा</label>
                         <label><input type="checkbox" value="member_edit"> ✏️ सदस्य एडिट करा</label>
                         <label><input type="checkbox" value="member_delete"> 🗑️ सदस्य डिलीट करा</label>
+                        <label><input type="checkbox" value="member_approve"> ✅ सदस्य मंजूर/नाकार करा</label>
                         <label><input type="checkbox" value="poll_manage"> 🗳️ पोल व प्रश्न व्यवस्थापन</label>
                         <label><input type="checkbox" value="notice_manage"> 📢 नोटीस मॅनेज करा</label>
                         <label><input type="checkbox" value="popup_manage"> 🔔 पॉप-अप बदलणे</label>
@@ -866,11 +867,12 @@
                     
                     <div class="panel-body" style="background:#f1f5f9; border-bottom:1px solid #cbd5e1; padding-bottom:10px;">
                         <div class="form-row no-print" style="margin-bottom: 10px;">
-                            <input type="text" id="searchName" class="form-control" placeholder="🔍 नाव, मोबाईल शोधा..." onkeyup="renderMembers()" style="flex:2;">
+                            <input type="text" id="searchName" class="form-control" placeholder="🔍 नाव, मोबाईल, ईमेल, जिल्हा, मंडळ, कर्मचारी ID शोधा..." onkeyup="renderMembers()" style="flex:2;">
                             <select id="filterStatus" class="form-control" onchange="renderMembers()">
                                 <option value="All">सर्व स्टेटस (All)</option>
                                 <option value="Approved">मान्य (Approved)</option>
                                 <option value="Pending">प्रलंबित (Pending)</option>
+                                <option value="Rejected">नाकारलेले (Rejected)</option>
                             </select>
                         </div>
                         <div class="form-row no-print">
@@ -2403,7 +2405,7 @@
                 } else {
                     subAdminAccessRegion = 'All';
                     subAdminPermissions = [
-                        'dashboard', 'members', 'member_add', 'member_edit', 'member_delete',
+                        'dashboard', 'members', 'member_add', 'member_edit', 'member_delete', 'member_approve',
                         'employees', 'committee', 'gallery', 'icard', 'letterpad', 'template_builder',
                         'notices', 'fees', 'cancel_receipt', 'member_folders', 'voting', 'poll_manage',
                         'grievances', 'info_gather', 'assoc_hub', 'index_mgmt', 'member_mgmt',
@@ -2692,8 +2694,9 @@
             let total=0, apprv=0, pend=0, paid=0;
             window.membersData.forEach(m => { 
                 if(m.isMember !== false) { 
-                    if(subAdminAccessRegion === "All" || m.mandal === subAdminAccessRegion) {
-                        total++; if(m.status === 'Approved') apprv++; else pend++; if(m.feeStatus === 'Paid') paid++; 
+                    if(subAdminAccessRegion === "All" || m.mandal === subAdminAccessRegion || m.मंडळ === subAdminAccessRegion) {
+                        const st = String(m.status || m.स्थिती || '').trim().toLowerCase();
+                        total++; if(st === 'approved' || st === 'मंजूर' || st === 'मान्य') apprv++; else if(st === 'pending' || st === 'प्रलंबित') pend++; if(m.feeStatus === 'Paid' || m.फी_स्थिती === 'भरले') paid++; 
                     }
                 }
             });
@@ -2760,8 +2763,20 @@
 
             if (formValues) {
                 let newPass = formValues.pass;
-                await updateDoc(doc(db, "members", memberId), { pass: newPass });
-                await window.logAdminActivity(`Updated Password & Sent Credentials for: ${m.name}`);
+                try {
+                    Swal.fire({title:'Firebase Password अपडेट करत आहे...',allowOutsideClick:false,didOpen:()=>Swal.showLoading()});
+                    const token = await auth.currentUser.getIdToken(true);
+                    const r = await fetch(MASTER_FN_BASE + '/adminSetMemberPassword', {
+                        method:'POST', mode:'cors', headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+                        body:JSON.stringify({memberId, password:newPass})
+                    });
+                    const raw = await r.text(); let j={}; try{j=JSON.parse(raw)}catch(_){ }
+                    if(!r.ok) throw new Error(j.error || ('Server error '+r.status));
+                    await window.logAdminActivity(`Updated Firebase Password for: ${m.name}`);
+                } catch(e) {
+                    Swal.fire('पासवर्ड अपडेट अयशस्वी', e.message || String(e), 'error');
+                    return;
+                }
 
                 let credHtml = `
                     <div style="padding:30px; font-family:'Mukta',sans-serif; border:3px solid #0B3D91; border-radius:12px;">
@@ -2975,65 +2990,71 @@ window.uploadToCloudinary = async (file) => {
         };
 
         window.renderMembers = function() {
-            let s = document.getElementById('searchName')?.value.toLowerCase() || ''; 
-            let fStatus = document.getElementById('filterStatus')?.value || 'All'; 
-            let fMandal = document.getElementById('filterMandal')?.value || 'All'; 
+            let s = (document.getElementById('searchName')?.value || '').trim().toLowerCase();
+            let fStatus = document.getElementById('filterStatus')?.value || 'All';
+            let fMandal = document.getElementById('filterMandal')?.value || 'All';
             let fDist = document.getElementById('filterDistrict')?.value || 'All';
             let fSen = document.getElementById('filterSeniority')?.value || 'All';
-            
+            const normText = v => String(v ?? '').trim().toLowerCase();
+            const canApprove = isSuperAdmin || subAdminPermissions.includes('member_approve');
+
             let fil = window.membersData.filter(m => {
                 if (m.isMember === false) return false;
-                if (subAdminAccessRegion !== "All" && m.mandal !== subAdminAccessRegion) return false;
-                if (fStatus !== 'All' && m.status !== fStatus) return false;
-                if (fMandal !== 'All' && m.mandal !== fMandal) return false;
-                if (fDist !== 'All' && fDist !== '' && m.district !== fDist) return false;
-                if (s && !((m.name||'').toLowerCase().includes(s) || (m.mobile||'').includes(s))) return false; 
+                const rowStatusRaw = String(m.status || m.स्थिती || '').trim().toLowerCase();
+                const rowStatus = (rowStatusRaw === 'मंजूर' || rowStatusRaw === 'मान्य') ? 'Approved' : ((rowStatusRaw === 'प्रलंबित') ? 'Pending' : ((rowStatusRaw === 'नाकारले' || rowStatusRaw === 'नाकारलेले') ? 'Rejected' : (m.status || 'Pending')));
+                if (subAdminAccessRegion !== "All" && m.mandal !== subAdminAccessRegion && m.मंडळ !== subAdminAccessRegion) return false;
+                if (fStatus !== 'All' && rowStatus !== fStatus) return false;
+                if (fMandal !== 'All' && m.mandal !== fMandal && m.मंडळ !== fMandal) return false;
+                if (fDist !== 'All' && fDist !== '' && m.district !== fDist && m.जिल्हा !== fDist) return false;
+                if (s) {
+                    const hay = [m.name,m.fullName,m.पूर्ण_नाव,m.mobile,m.मोबाईल,m.email,m.ईमेल,m.employeeId,m.employeeNo,m.sevarthId,m.सेवार्थ_आयडी,m.district,m.जिल्हा,m.mandal,m.मंडळ,m.workplace,m.designation,m.पद]
+                        .map(normText).join(' ');
+                    if (!hay.includes(s)) return false;
+                }
                 return true;
             });
-            
-            if(fSen === 'Senior') { fil.sort((a,b) => new Date(a.joinDate || '2099-01-01') - new Date(b.joinDate || '2099-01-01')); } 
-            else { fil.sort((a,b) => (a.name||'').localeCompare(b.name||'')); }
+
+            if(fSen === 'Senior') fil.sort((a,b) => new Date(a.joinDate || '2099-01-01') - new Date(b.joinDate || '2099-01-01'));
+            else fil.sort((a,b) => normText(a.name || a.पूर्ण_नाव).localeCompare(normText(b.name || b.पूर्ण_नाव)));
 
             let defImg = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
             if(document.getElementById('tableTotalCount')) document.getElementById('tableTotalCount').innerText = `एकूण दर्शविलेले सदस्य: ${fil.length}`;
-            
             let canEdit = isSuperAdmin || subAdminPermissions.includes('member_edit');
             let canDelete = isSuperAdmin || subAdminPermissions.includes('member_delete');
-
             let tbody = document.getElementById('membersBody');
             if(!tbody) return;
 
             tbody.innerHTML = fil.map((m,i) => {
-                let statusBadge = m.status === 'Approved' ? '<span class="badge bg-success">Approved</span>' : (m.status === 'Pending' ? '<span class="badge bg-warning">Pending</span>' : '<span class="badge bg-danger">Rejected</span>');
+                const statusRaw = String(m.status || m.स्थिती || '').trim().toLowerCase();
+                const status = (statusRaw === 'मंजूर' || statusRaw === 'मान्य') ? 'Approved' : ((statusRaw === 'प्रलंबित') ? 'Pending' : ((statusRaw === 'नाकारले' || statusRaw === 'नाकारलेले') ? 'Rejected' : (m.status || 'Pending')));
+                let statusBadge = status === 'Approved' ? '<span class="badge bg-success">Approved</span>' : (status === 'Pending' ? '<span class="badge bg-warning">Pending</span>' : '<span class="badge bg-danger">Rejected</span>');
+                let loginBadge = m.loginEnabled === false ? '<span class="badge bg-danger" style="margin-left:4px;">Login बंद</span>' : '<span class="badge bg-success" style="margin-left:4px;">Login चालू</span>';
                 let tblImg = m.photoUrl || defImg;
-                
                 let editBtn = canEdit ? `<button class="btn-action bg-primary" onclick="openFullEditModal('${m.id}','members')" title="एडिट"><i class="fa fa-pen"></i></button>` : '';
                 let delBtn = canDelete ? `<button class="btn-action bg-danger" onclick="deleteSingleMember('${m.id}')" title="डिलीट"><i class="fa fa-trash"></i></button>` : '';
-
+                let approvalBtns = canApprove && status === 'Pending' ? `
+                    <button class="btn-action bg-success" onclick="approveMember('${m.id}')" title="सदस्य मंजूर करा"><i class="fa fa-check"></i></button>
+                    <button class="btn-action bg-danger" onclick="rejectMember('${m.id}')" title="सदस्य नाकारा"><i class="fa fa-times"></i></button>` : '';
                 return `<tr>
                     <td>${i + 1}</td>
-                    <td><input type="checkbox" class="mem-chk" value="${m.mobile}" data-id="${m.id}" data-email="${m.email||''}"></td>
-                    <td>
-                        <div class="mem-name-cell" onclick="viewProfileModal('${m.id}')">
-                            <img src="${tblImg}" class="mem-thumb">
-                            <div><b>${m.name||'-'}</b><br><small>${m.designation||'-'}</small></div>
-                        </div>
-                    </td>
-                    <td>${m.mobile||'-'}</td>
-                    <td>${m.workplace||'-'}</td>
-                    <td><b>${m.district||'-'}</b></td>
-                    <td><small>${m.mandal||'-'}</small></td>
-                    <td><small>${m.joinDate||'-'}</small></td>
-                    <td>${statusBadge}</td>
-                    <td class="no-print" style="white-space:nowrap;">
-                        <button class="btn-action bg-info" onclick="viewProfileModal('${m.id}')"><i class="fa fa-eye"></i></button>
-                        <button class="btn-action bg-wa" onclick="window.open('https://wa.me/91${m.mobile}', '_blank')"><i class="fa fa-whatsapp"></i></button>
-                        <button class="btn-action bg-warning" onclick="openSendCredentialsModal('${m.id}')" title="क्रेडेंशियल्स पाठवा"><i class="fa fa-key"></i></button>
-                        ${editBtn}
-                        ${delBtn}
+                    <td><input type="checkbox" class="mem-chk" value="${m.mobile || m.मोबाईल || ''}" data-id="${m.id}" data-email="${m.email || m.ईमेल || ''}"></td>
+                    <td><div class="mem-name-cell" onclick="viewProfileModal('${m.id}')"><img src="${tblImg}" class="mem-thumb"><div><b>${m.name || m.पूर्ण_नाव || '-'}</b><br><small>${m.designation || m.पद || '-'}</small></div></div></td>
+                    <td>${m.mobile || m.मोबाईल || '-'}<br><small>${m.email || m.ईमेल || '-'}</small></td>
+                    <td>${m.workplace || m.पत्ता || '-'}</td>
+                    <td><b>${m.district || m.जिल्हा || '-'}</b></td>
+                    <td><small>${m.mandal || m.मंडळ || '-'}</small></td>
+                    <td><small>${m.joinDate || m.रुजू_दिनांक || '-'}</small></td>
+                    <td>${statusBadge}${loginBadge}</td>
+                    <td class="no-print" style="white-space:nowrap; text-align:center;">
+                        ${approvalBtns}
+                        <button class="btn-action bg-info" onclick="viewProfileModal('${m.id}')" title="प्रोफाईल पहा"><i class="fa fa-eye"></i></button>
+                        <button class="btn-action bg-wa" onclick="window.open('https://wa.me/91${String(m.mobile || m.मोबाईल || '').replace(/\D/g,'')}', '_blank')" title="WhatsApp"><i class="fa fa-whatsapp"></i></button>
+                        <button class="btn-action bg-warning" onclick="openSendCredentialsModal('${m.id}')" title="क्रेडेंशियल्स / पासवर्ड"><i class="fa fa-key"></i></button>
+                        <button class="btn-action ${m.loginEnabled === false ? 'bg-success' : 'bg-danger'}" onclick="toggleMemberLoginStatus('${m.id}', ${m.loginEnabled !== false})" title="Login ${m.loginEnabled === false ? 'चालू' : 'बंद'}"><i class="fa fa-power-off"></i></button>
+                        ${editBtn}${delBtn}
                     </td>
                 </tr>`;
-            }).join('') || '<tr><td colspan="10" style="text-align:center;">डेटा उपलब्ध नाही</td></tr>';
+            }).join('') || '<tr><td colspan="10" style="text-align:center; padding:25px;">डेटा उपलब्ध नाही</td></tr>';
         };
 
         window.toggleSelectAll = (el) => { document.querySelectorAll('.mem-chk').forEach(cb => cb.checked = el.checked); };
@@ -5085,6 +5106,70 @@ window.openProfileRequestsModal = function() {
     }
 
     document.getElementById('profileRequestsModalOverlay').style.display = 'flex';
+};
+
+// ==========================================================
+// MEMBER APPROVAL QUEUE — Pending -> Approved / Rejected
+// ==========================================================
+window.approveMember = async function(memberId) {
+    if (!(isSuperAdmin || subAdminPermissions.includes('member_approve'))) return Swal.fire('नकार', 'तुमच्याकडे सदस्य मंजुरीचा अधिकार नाही.', 'error');
+    const m = (window.membersData || []).find(x => x.id === memberId);
+    if (!m) return Swal.fire('त्रुटी', 'सदस्य सापडला नाही.', 'error');
+    const ok = await Swal.fire({
+        title: 'सदस्य मंजूर करायचा?',
+        html: `<div style="text-align:left"><b>नाव:</b> ${String(m.name || m.पूर्ण_नाव || '-')}<br><b>मोबाईल:</b> ${String(m.mobile || m.मोबाईल || '-')}<br><br>मंजुरीनंतर सदस्याचा <b>Login चालू</b> केला जाईल.</div>`,
+        icon: 'question', showCancelButton: true, confirmButtonText: 'होय, मंजूर करा', cancelButtonText: 'रद्द करा'
+    });
+    if (!ok.isConfirmed) return;
+    try {
+        Swal.fire({title:'सदस्य मंजूर करत आहे...',allowOutsideClick:false,didOpen:()=>Swal.showLoading()});
+        await updateDoc(doc(db,'members',memberId), {
+            status:'Approved', loginEnabled:true, approvedBy:currentLoggedInAdminName || 'Admin',
+            approvedAt:Date.now(), rejectedAt:null, rejectedBy:null
+        });
+        await window.logAdminActivity(`Member Approved: ${m.name || m.पूर्ण_नाव || memberId}`);
+        await loadData();
+        Swal.fire('मंजूर झाले!', `${m.name || m.पूर्ण_नाव || 'सदस्य'} यांचे सदस्यत्व मंजूर झाले. Login आता चालू आहे.`, 'success');
+    } catch(e) { Swal.fire('मंजुरी अयशस्वी', e.message || String(e), 'error'); }
+};
+
+window.rejectMember = async function(memberId) {
+    if (!(isSuperAdmin || subAdminPermissions.includes('member_approve'))) return Swal.fire('नकार', 'तुमच्याकडे सदस्य मंजुरीचा अधिकार नाही.', 'error');
+    const m = (window.membersData || []).find(x => x.id === memberId);
+    if (!m) return Swal.fire('त्रुटी', 'सदस्य सापडला नाही.', 'error');
+    const result = await Swal.fire({
+        title:'सदस्य अर्ज नाकारायचा?', input:'textarea', inputPlaceholder:'नकाराचे कारण (पर्यायी)',
+        showCancelButton:true, confirmButtonText:'होय, नकार द्या', cancelButtonText:'रद्द करा', confirmButtonColor:'#ef4444'
+    });
+    if (!result.isConfirmed) return;
+    try {
+        await updateDoc(doc(db,'members',memberId), {
+            status:'Rejected', loginEnabled:false, rejectedBy:currentLoggedInAdminName || 'Admin',
+            rejectedAt:Date.now(), rejectionReason:result.value || ''
+        });
+        await window.logAdminActivity(`Member Rejected: ${m.name || m.पूर्ण_नाव || memberId}`);
+        await loadData();
+        Swal.fire('अर्ज नाकारला', 'सदस्य Login बंद करण्यात आले आहे.', 'info');
+    } catch(e) { Swal.fire('नकार अयशस्वी', e.message || String(e), 'error'); }
+};
+
+window.openPendingRequests = async function() {
+    if (!(isSuperAdmin || subAdminPermissions.includes('member_approve') || subAdminPermissions.includes('members'))) return;
+    const tbody = document.getElementById('pendingRequestsBody');
+    if (!tbody) return;
+    const pending = (window.membersData || []).filter(m => { const st=String(m.status || m.स्थिती || '').trim().toLowerCase(); return m.isMember !== false && (st==='pending' || st==='प्रलंबित'); });
+    tbody.innerHTML = pending.length ? pending.map((m,i) => `
+        <tr>
+          <td>${i+1}</td>
+          <td><b>${m.name || m.पूर्ण_नाव || '-'}</b><br><small>${m.designation || m.पद || '-'}</small></td>
+          <td>${m.mobile || m.मोबाईल || '-'}<br><small>${m.email || m.ईमेल || '-'}</small></td>
+          <td>${m.district || m.जिल्हा || '-'} / ${m.mandal || m.मंडळ || '-'}</td>
+          <td style="white-space:nowrap;">
+            <button class="btn-action bg-info" onclick="viewProfileModal('${m.id}')" title="पूर्ण माहिती"><i class="fa fa-eye"></i></button>
+            ${((isSuperAdmin || subAdminPermissions.includes('member_approve')) ? `<button class="btn-action bg-success" onclick="approveMember('${m.id}'); closeModal('pendingModalOverlay')" title="मंजूर"><i class="fa fa-check"></i> मंजूर</button><button class="btn-action bg-danger" onclick="rejectMember('${m.id}'); closeModal('pendingModalOverlay')" title="नकार"><i class="fa fa-times"></i> नकार</button>` : '')}
+          </td>
+        </tr>`).join('') : '<tr><td colspan="5" style="text-align:center;padding:25px;">सध्या कोणतेही Pending सदस्य नाहीत.</td></tr>';
+    document.getElementById('pendingModalOverlay').style.display = 'flex';
 };
 
 // ३. ॲडमिनने 'मंजूर करा' वर क्लिक केल्यावर नोंदणी फॉर्मची सर्व २०+ माहिती मूळ प्रोफाईलला सेव्ह करणे
