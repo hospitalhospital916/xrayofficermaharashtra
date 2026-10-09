@@ -65,8 +65,8 @@
 
     <!-- Email/Password Login Section -->
     <div class="input-box">
-      <i class="fa-solid fa-envelope input-icon"></i>
-      <input type="text" id="email" style="display:none" placeholder="१० अंकी मोबाईल नंबर" required autocomplete="username">
+      <i class="fa-solid fa-phone input-icon"></i>
+      <input type="tel" id="email" inputmode="numeric" maxlength="10" pattern="[0-9]{10}" placeholder="१० अंकी मोबाईल नंबर" required autocomplete="username" aria-label="नोंदणीकृत १० अंकी मोबाईल नंबर">
     </div>
     
     <div class="input-box">
@@ -108,6 +108,7 @@
 const $=id=>document.getElementById(id);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
 const normalizeMobile=v=>{let x=String(v??'').replace(/\D/g,'');if(x.length===12&&x.startsWith('91'))x=x.slice(2);return x;};
+$('email')?.addEventListener('input',()=>{$('email').value=$('email').value.replace(/\D/g,'').slice(0,10);});
 const fnUrl='https://asia-south1-xrayunionmah.cloudfunctions.net/memberLogin';
 $('loginBtn')?.addEventListener('click',async()=>{const mobile=normalizeMobile($('email')?.value);const password=$('password')?.value||'';if(!/^\d{10}$/.test(mobile)||!password)return $('messageBox').innerHTML='<span style="color:#dc2626">कृपया १० अंकी मोबाईल नंबर आणि Password टाका.</span>';const b=$('loginBtn');b.disabled=true;$('messageBox').innerHTML='लॉगिन तपासत आहे...';try{const r=await fetch(fnUrl,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mobile,password})});const d=await r.json();if(!r.ok||!d.ok)throw new Error(d.error||'लॉगिन अयशस्वी.');localStorage.setItem('memberSession',JSON.stringify(d.member));if(d.sessionToken)localStorage.setItem('memberSessionToken',d.sessionToken);if(d.mustChangePassword){localStorage.setItem('forceMemberPasswordChange','1');alert('तुमचा प्रारंभिक Password अजून बदललेला नाही. कृपया Dashboard मध्ये Password बदला.');}location.href='member-dashboard.html';}catch(e){$('messageBox').innerHTML='<span style="color:#dc2626">❌ '+esc(e.message)+'</span>';}finally{b.disabled=false;}});
 $('togglePassword')?.addEventListener('click',()=>{$('password').type=$('password').type==='password'?'text':'password';});
