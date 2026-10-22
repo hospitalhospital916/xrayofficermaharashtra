@@ -411,11 +411,7 @@
                 <div class="email-security-icon"><i class="fa-solid fa-shield-halved"></i></div>
                 <div>
                     <div class="email-security-title">सुरक्षित ई-मेल लॉगिन सूचना</div>
-                    <div class="email-security-text">
-                        अनेक जुन्या सदस्यांच्या नोंदीमध्ये अजून स्वतःचा ई-मेल नाही. <b>1234@gmail.com</b> हा फक्त डिफॉल्ट/उदाहरण ई-मेल दाखवण्यासाठी आहे.
-                        लॉगिन झाल्यानंतर <b>प्रोफाईल → प्रोफाईल एडिट</b> मधून तुमचा स्वतःचा चालू ई-मेल अपडेट करा.
-                        ई-मेल पडताळणी पूर्ण झाल्यावर पुढील लॉगिनसाठी तोच ई-मेल वापरता येईल.
-                    </div>
+                    <div class="email-security-text">लॉगिनसाठी ई-मेल अपडेट करणे आवश्यक नाही. ई-मेल अपडेट हा Profile मधील ऐच्छिक पर्याय आहे.</div>
                 </div>
             </div>
             <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 15px;">Google किंवा ई-मेल/पासवर्डद्वारे सुरक्षित लॉगिन करा</p>
@@ -453,7 +449,7 @@
                     </div>
                 </div>
 
-                <div style="margin:6px 0 10px;padding:9px 12px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:9px;color:#1e3a8a;font-size:.82rem;text-align:center;"><b>प्रारंभिक पासवर्ड: Pass@1234</b><br>पहिल्या लॉगिननंतर Profile मधून स्वतःचा ई-मेल अपडेट करा.</div>
+                <div style="margin:6px 0 10px;padding:9px 12px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:9px;color:#1e3a8a;font-size:.82rem;text-align:center;">ॲडमिनने दिलेला पासवर्ड वापरा. ई-मेल अपडेट करणे आवश्यक नाही.</div>
                 <button type="button" onclick="loginMemberWithMobileAndPassword()"><i class="fa fa-sign-in-alt me-1"></i> सुरक्षित लॉगिन करा</button>
             </div>
             
@@ -1908,26 +1904,7 @@
         };
 
         // ३. ई-मेल अपडेट / default-email guidance
-        window.checkDefaultEmailAndUpdate = function(memberData) {
-            const email = String(memberData?.email || '').trim().toLowerCase();
-            const isPlaceholder = !email || email === '1234@gmail.com' || memberData?.isDefaultEmail === true;
-            if (isPlaceholder) {
-                setTimeout(() => {
-                    Swal.fire({
-                        icon: 'info',
-                        title: 'तुमचा ई-मेल अपडेट करा',
-                        html: `<div style="text-align:left;line-height:1.65">
-                            <p><b>सध्या डिफॉल्ट ई-मेल:</b> 1234@gmail.com</p>
-                            <p>हा फक्त जुन्या/ई-मेल नसलेल्या सदस्यांसाठी प्रारंभिक संदर्भ आहे. कृपया <b>प्रोफाईल → प्रोफाईल एडिट</b> मध्ये तुमचा स्वतःचा चालू ई-मेल द्या.</p>
-                            <p style="color:#166534"><b>पुढे:</b> ई-मेल verify झाल्यानंतर तोच ई-मेल Firebase Authentication आणि One-Click Google Login साठी वापरला जाईल.</p>
-                        </div>`,
-                        confirmButtonText: 'प्रोफाईल अपडेट करा',
-                        showCancelButton: true,
-                        cancelButtonText: 'नंतर'
-                    }).then(r => { if (r.isConfirmed) window.openSelfEditModal(); });
-                }, 500);
-            }
-        };
+        window.checkDefaultEmailAndUpdate = function(_memberData) { /* Email update is optional; do not show a compulsory popup. */ };
 
         window.logoutMember = async function() {
             if (window.currentMember) {
@@ -2041,8 +2018,7 @@
                 await window.forceMemberPasswordChange(m);
             }
 
-            // ई-मेल तपासणी पॉप-अप कॉल
-            window.checkDefaultEmailAndUpdate(m);
+            // ई-मेल अपडेट ऐच्छिक आहे; कोणताही compulsory popup दाखवू नका.
         };
 
         // ==========================================
