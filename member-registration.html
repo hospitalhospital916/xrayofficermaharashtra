@@ -125,7 +125,6 @@
             box-shadow: 0 0 0 3px rgba(15, 44, 89, 0.12);
         }
 
-        /* Document Upload Slots Styling */
         .pdf-slots-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -382,12 +381,12 @@
             <div class="form-grid">
                 <div class="form-group">
                     <label><i class="fa fa-key"></i> लॉगिन पासवर्ड निवडा *</label>
-                    <input type="password" id="pass" minlength="6" placeholder="किमान ६ अक्षरे किंवा अंक" required>
+                    <input type="password" id="pass" minlength="4" placeholder="किमान ४ अक्षरे किंवा अंक" required>
                 </div>
 
                 <div class="form-group">
                     <label><i class="fa fa-check-circle"></i> पासवर्ड पुन्हा टाका *</label>
-                    <input type="password" id="confirmPass" minlength="6" placeholder="पासवर्डची खात्री करा" required>
+                    <input type="password" id="confirmPass" minlength="4" placeholder="पासवर्डची खात्री करा" required>
                 </div>
             </div>
 
@@ -405,9 +404,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
         import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
-        
 
-        // FIREBASE CONFIGURATION (माहिती ॲडमिन पॅनेलशी जुळणारी)
         const firebaseConfig = {
             apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk",
             authDomain: "xrayunionmah.firebaseapp.com",
@@ -421,8 +418,6 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-
-        // आरोग्य मंडळ आणि जिल्ह्यांचे मॅपिंग
         const mandalData = {
             "पुणे मंडळ": ["पुणे", "सातारा", "सोलापूर"],
             "नागपूर मंडळ": ["नागपूर", "भंडारा", "वर्धा", "गोंदिया", "चंद्रपूर", "गडचिरोली"],
@@ -434,7 +429,6 @@
             "ठाणे मंडळ": ["ठाणे", "पालघर", "रायगड", "मुंबई शहर", "मुंबई उपनगर"]
         };
 
-        // मंडळ बदलल्यावर जिल्हे डायनामिक दाखवणे
         window.updateDistrictDropdown = function() {
             const mandalVal = document.getElementById('mandal').value;
             const distSelect = document.getElementById('district');
@@ -451,7 +445,6 @@
             distSelect.innerHTML = html;
         };
 
-        // फाईल साईझ ४०० KB पेक्षा कमी असल्याची खात्री करणे
         window.checkFileSize = function(input, maxKB) {
             if (input.files && input.files.length > 0) {
                 let fileSize = input.files[0].size / 1024;
@@ -462,7 +455,6 @@
             }
         };
 
-        // Cloudinary वर फाईल्स डायरेक्ट अपलोड करणे (ॲडमिन पॅनेलशी जुळणारे)
         async function uploadToCloudinary(file) {
             if (!file) return "";
             const cloudName = "jjavsdh5";
@@ -479,12 +471,12 @@
             throw new Error("फाईल अपलोड अपूर्ण राहिली.");
         }
 
-        // फॉर्म सबमिट हँडलर
+        // FORM SUBMIT HANDLER - DIRECT FIRESTORE PASSWORD SAVE
         document.getElementById('memberRegForm').addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            const pass = document.getElementById('pass').value;
-            const confirmPass = document.getElementById('confirmPass').value;
+            const pass = document.getElementById('pass').value.trim();
+            const confirmPass = document.getElementById('confirmPass').value.trim();
 
             if (pass !== confirmPass) {
                 Swal.fire('पासवर्ड चुकीचा आहे', 'पासवर्ड आणि पासवर्ड खात्री दोन्ही जुळत नाहीत.', 'error');
@@ -499,7 +491,7 @@
             });
 
             try {
-                // १. फाईल्स Cloudinary वर अपलोड करा
+                // 1. Files upload to Cloudinary
                 const photoFile = document.getElementById('photoFile').files[0];
                 const docFile = document.getElementById('docFile').files[0];
                 const otherFile = document.getElementById('otherFile').files[0];
@@ -508,12 +500,10 @@
                 const docUrl = await uploadToCloudinary(docFile);
                 const otherUrl = await uploadToCloudinary(otherFile);
 
-                // २. Member Firebase Authentication account तयार करू नका.
-                // Member authentication = Mobile + Password; initial password is Pass@1234.
                 const email = document.getElementById('email').value.trim().toLowerCase();
+                const mobile = document.getElementById('mobile').value.trim();
 
-                // ३. Firestore 'members' कलेक्शनमध्ये pending member डेटा सेव्ह करा
-                // पासवर्ड Firestore मध्ये सेव्ह केला जात नाही.
+                // 2. Save complete member data with password to Firestore 'members' collection
                 await addDoc(collection(db, "members"), {
                     name: document.getElementById('name').value.trim(),
                     dob: document.getElementById('dob').value,
@@ -527,33 +517,31 @@
                     workplace: document.getElementById('workplace').value.trim(),
                     joinDate: document.getElementById('joinDate').value,
                     retireDate: document.getElementById('retireDate').value,
-                    mobile: document.getElementById('mobile').value.trim(),
+                    mobile: mobile,
                     email: email,
-                    uid: null,
-                    authVersion: 4,
-                    isDefaultEmail: !email,
-                    emailUpdated: false,
-                    loginEnabled: false,
-                    mustChangePassword: true,
+                    // Direct Firestore Password Fields:
+                    pass: pass,
+                    password: pass,
+                    status: "Pending", // Admin kade approval sathi
+                    loginEnabled: false, // Admin approve kelyavar true hoil
+                    feeStatus: "Unpaid",
+                    isMember: true,
                     address: document.getElementById('address').value.trim(),
                     remarks: document.getElementById('remarks').value.trim(),
                     photoUrl: photoUrl,
                     docUrl: docUrl,
                     otherUrl: otherUrl,
-                    status: "Pending", // ॲडमिन मंजुरीसाठी
-                    feeStatus: "Unpaid",
-                    isMember: true,
                     registeredAt: serverTimestamp()
                 });
 
                 Swal.fire({
                     icon: 'success',
                     title: 'नोंदणी यशस्वी झाली!',
-                    text: 'तुमची नोंदणी यशस्वीरीत्या झाली आहे. ॲडमिनच्या मंजुरीनंतर तुम्हाला सदस्य लॉगिन करता येईल.',
-                    confirmButtonText: 'ओके'
+                    text: 'तुमची नोंदणी यशस्वीरीत्या झाली आहे. ॲडमिनने मंजूर केल्यानंतर तुम्ही निवडलेल्या पासवर्डने लॉगिन करू शकाल.',
+                    confirmButtonText: 'लॉगिन पानावर जा'
                 }).then(() => {
                     document.getElementById('memberRegForm').reset();
-                    window.location.href = "member-dashboard.html";
+                    window.location.href = "login.html";
                 });
 
             } catch (error) {
