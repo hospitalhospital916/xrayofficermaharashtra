@@ -2817,7 +2817,9 @@
             const m = (window.membersData || []).find(x => x.id === memberId);
             if (!m) return;
             const curPass = m.pass || m.password || m.पासवर्ड || 'Pass@1234';
-            if (passInput) passInput.value = curPass;
+            if (passInput && (!passInput.value || passInput.value === 'Pass@1234')) {
+                passInput.value = curPass;
+            }
             statusLine.style.display = 'block';
             statusLine.innerHTML = `👤 निवडलेला सदस्य: <b>${m.name || m.पूर्ण_नाव || '-'}</b> | मोबाईल: <b>${m.mobile || m.मोबाईल || '-'}</b> | सध्याचा पासवर्ड: <span style="background:#fff; padding:2px 8px; border-radius:4px; color:#0B3D91; border:1px solid #cbd5e1;">${curPass}</span>`;
         };
@@ -2839,9 +2841,18 @@
 
             await updateDoc(doc(db, "members", memberId), payload);
 
-            const idx = (window.membersData || []).findIndex(x => x.id === memberId);
-            if (idx !== -1) {
-                window.membersData[idx] = { ...window.membersData[idx], ...payload };
+            const targetMem = (window.membersData || []).find(x => x.id === memberId);
+            const targetMob = String(targetMem?.mobile || targetMem?.मोबाईल || '').replace(/\D/g, '').slice(-10);
+
+            for (let i = 0; i < (window.membersData || []).length; i++) {
+                const item = window.membersData[i];
+                const itemMob = String(item.mobile || item.मोबाईल || '').replace(/\D/g, '').slice(-10);
+                if (item.id === memberId || (targetMob && targetMob.length === 10 && itemMob === targetMob)) {
+                    if (item.id !== memberId) {
+                        await updateDoc(doc(db, "members", item.id), payload).catch(() => {});
+                    }
+                    window.membersData[i] = { ...window.membersData[i], ...payload };
+                }
             }
         };
 
@@ -2878,8 +2889,8 @@
 
                 Swal.fire({
                     icon: 'success',
-                    title: 'पासवर्ड यशस्वीरित्या सेट झाला!',
-                    html: `एकूण <b>${targetIds.length}</b> सदस्यांचा नवीन पासवर्ड <b>${newPass}</b> आपल्या पॅनेलवर सुरक्षित सेव्ह झाला आहे.`
+                    title: 'पासवर्ड यशस्वीरित्या बदलला!',
+                    html: `एकूण <b>${targetIds.length}</b> सदस्यांचा नवीन पासवर्ड <b style="color:#0B3D91;font-size:1.1rem;">${newPass}</b> सुरक्षित सेव्ह झाला आहे. आता सदस्य या पासवर्डने तात्काळ लॉगिन करू शकतात.`
                 });
             } catch (e) {
                 Swal.fire('त्रुटी', e.message || String(e), 'error');
@@ -2915,7 +2926,7 @@
             const newPass = (document.getElementById('top_reset_new_pass')?.value || 'Pass@1234').trim() || 'Pass@1234';
             const ok = await Swal.fire({
                 title: 'सर्व सदस्यांचा पासवर्ड सेट करायचा?',
-                html: `सर्व सदस्यांचा पासवर्ड फायरबेस सर्व्हरकडे न जाता थेट आपल्या पॅनेलवर <b>${newPass}</b> असा सेट केला जाईल.`,
+                html: `सर्व सदस्यांचा पासवर्ड थेट आपल्या पॅनेलवर <b>${newPass}</b> असा सेट केला जाईल.`,
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonText: 'होय, इथेच सेट करा',
@@ -2954,72 +2965,75 @@
             const currentPass = m.pass || m.password || m.पासवर्ड || 'Pass@1234';
 
             const { value: formValues } = await Swal.fire({
-                title: `🔐 सदस्याचा पासवर्ड इथेच रिसेट करा`,
+                title: `🔐 पासवर्ड बदला / रिसेट करा`,
                 html: `
                     <div style="text-align:left; font-size:0.92rem;">
                         <p><b>सदस्य:</b> ${m.name || m.पूर्ण_नाव || '-'}</p>
                         <p><b>मोबाईल:</b> ${m.mobile || m.मोबाईल || '-'}</p>
-                        <p><b>ईमेल:</b> ${m.email || m.ईमेल || 'अद्याप अपडेट केलेला नाही'}</p>
                         <p style="margin-top:6px; background:#eff6ff; padding:8px; border-radius:6px; border:1px solid #bfdbfe;">
                             <b>सध्याचा पासवर्ड:</b> <span style="color:#0B3D91; font-weight:800; font-size:1rem;">${currentPass}</span>
                         </p>
                         <hr style="margin:10px 0;">
-                        <label style="display:flex;gap:8px;align-items:center;margin-bottom:10px;cursor:pointer;">
-                          <input type="checkbox" id="cred_use_default" checked>
-                          <b>डिफॉल्ट पासवर्ड वापरा: Pass@1234</b>
-                        </label>
-                        <label><b>किंवा स्वतःचा नवीन पासवर्ड टाका:</b></label>
-                        <input id="cred_new_pass" class="swal2-input" value="Pass@1234" placeholder="किमान 4 अक्षरे" disabled style="margin:8px 0; width:100%;">
-                        <small style="color:#047857; font-weight:600;">✓ हा पासवर्ड फायरबेस सर्व्हरकडे न जाता थेट आपल्या पॅनेलवरच सेव्ह होईल.</small>
+                        <label style="font-weight:800; color:#1e293b; display:block; margin-bottom:6px;">नवीन पासवर्ड टाका (किमान ४ अक्षरे):</label>
+                        <div style="display:flex; gap:6px; align-items:center; margin-bottom:10px;">
+                            <input id="cred_new_pass" type="text" class="swal2-input" value="${currentPass}" placeholder="नवीन पासवर्ड टाईप करा" style="margin:0; flex:1; font-weight:800; color:#0B3D91;">
+                            <button type="button" id="btn_set_def_pass" class="btn-action bg-warning" style="padding:10px 12px; color:#000; white-space:nowrap;">Pass@1234 करा</button>
+                        </div>
+                        <small style="color:#047857; font-weight:700;">✓ तुम्ही इथे जो पासवर्ड टाकाल, त्याच पासवर्डने सदस्य तात्काळ लॉगिन करू शकेल.</small>
                     </div>
                 `,
                 focusConfirm: false,
                 showCancelButton: true,
-                confirmButtonText: 'पासवर्ड इथेच सेव्ह करा',
+                confirmButtonText: '💾 पासवर्ड सेव्ह करा',
                 cancelButtonText: 'रद्द करा',
                 didOpen: () => {
-                    const cb=document.getElementById('cred_use_default');
-                    const inp=document.getElementById('cred_new_pass');
-                    cb?.addEventListener('change',()=>{
-                        if (cb.checked) { inp.value='Pass@1234'; inp.disabled=true; }
-                        else { inp.value=currentPass; inp.disabled=false; inp.focus(); }
+                    const inp = document.getElementById('cred_new_pass');
+                    const defBtn = document.getElementById('btn_set_def_pass');
+                    if (inp) { inp.focus(); inp.select(); }
+                    defBtn?.addEventListener('click', () => {
+                        if (inp) inp.value = 'Pass@1234';
                     });
                 },
                 preConfirm: () => {
-                    const useDefault=!!document.getElementById('cred_use_default')?.checked;
-                    const p=(useDefault ? 'Pass@1234' : document.getElementById('cred_new_pass')?.value || '').trim();
-                    if(!p || p.length < 4) { Swal.showValidationMessage('पासवर्ड किमान ४ अक्षरांचा असावा.'); return false; }
-                    return { pass:p, isDefault:useDefault };
+                    const p = (document.getElementById('cred_new_pass')?.value || '').trim();
+                    if(!p || p.length < 4) {
+                        Swal.showValidationMessage('कृपया किमान ४ अक्षरांचा पासवर्ड टाका.');
+                        return false;
+                    }
+                    return { pass: p, isDefault: (p === 'Pass@1234') };
                 }
             });
 
             if (!formValues) return;
-            const newPass=formValues.pass;
+            const newPass = formValues.pass;
             try {
-                Swal.fire({title:'पासवर्ड पॅनेलवर सेव्ह होत आहे...',allowOutsideClick:false,didOpen:()=>Swal.showLoading()});
+                Swal.fire({title:'नवीन पासवर्ड सेव्ह होत आहे...', allowOutsideClick:false, didOpen:()=>Swal.showLoading()});
                 await window.saveMemberPasswordDirectly(memberId, newPass, formValues.isDefault);
-                await window.logAdminActivity(`${formValues.isDefault?'Default Pass@1234':'Custom'} password set locally for: ${m.name || m.पूर्ण_नाव || memberId}`);
+                await window.logAdminActivity(`Password updated to '${newPass}' for: ${m.name || m.पूर्ण_नाव || memberId}`);
 
+                if (document.getElementById('top_reset_new_pass')) {
+                    document.getElementById('top_reset_new_pass').value = newPass;
+                }
                 window.populateTopResetDropdown();
                 window.syncTopResetMemberInfo();
                 window.renderMembers();
 
                 const mob = String(m.mobile || m.मोबाईल || '').replace(/\D/g, '');
                 const waMsg = `नमस्कार *${m.name || m.पूर्ण_नाव || 'सदस्य'}*,
-तुमचा संघटना पोर्टल लॉगिन पासवर्ड रिसेट करण्यात आला आहे.
-📱 *लॉगिन आयडी:* ${m.mobile || m.email || '-'}
+तुमचा संघटना पोर्टल लॉगिन पासवर्ड अपडेट करण्यात आला आहे.
+📱 *लॉगिन मोबाईल:* ${m.mobile || m.मोबाईल || '-'}
 🔑 *नवीन पासवर्ड:* ${newPass}`;
 
                 Swal.fire({
                     icon: 'success',
-                    title: 'पासवर्ड सेट झाला!',
+                    title: 'पासवर्ड यशस्वीरित्या बदलला!',
                     html: `
-                        <p><b>${m.name || m.पूर्ण_नाव || 'सदस्य'}</b> यांचा नवीन पासवर्ड <b>${newPass}</b> इथेच सेव्ह झाला आहे.</p>
-                        ${mob ? `<a href="https://wa.me/91${mob}?text=${encodeURIComponent(waMsg)}" target="_blank" class="btn-action bg-wa" style="margin-top:12px; padding:10px 16px; text-decoration:none; display:inline-flex;"><i class="fa fa-whatsapp"></i> WhatsApp वर पासवर्ड पाठवा</a>` : ''}
+                        <p><b>${m.name || m.पूर्ण_नाव || 'सदस्य'}</b> यांचा नवीन पासवर्ड <b style="color:#0B3D91;font-size:1.1rem;">${newPass}</b> सेव्ह झाला आहे.</p>
+                        ${mob ? `<a href="https://wa.me/91${mob}?text=${encodeURIComponent(waMsg)}" target="_blank" class="btn-action bg-wa" style="margin-top:12px; padding:10px 16px; text-decoration:none; display:inline-flex;"><i class="fa fa-whatsapp"></i> WhatsApp वर नवीन पासवर्ड पाठवा</a>` : ''}
                     `
                 });
             } catch(e) {
-                Swal.fire('पासवर्ड अपडेट अयशस्वी',e.message || String(e),'error');
+                Swal.fire('पासवर्ड अपडेट अयशस्वी', e.message || String(e), 'error');
             }
         };
 
@@ -3186,13 +3200,21 @@ window.uploadToCloudinary = async (file) => {
                     p.pass = enteredPass;
                     p.password = enteredPass;
                     p.पासवर्ड = enteredPass;
+                    p.forcePasswordChange = (enteredPass === 'Pass@1234');
+                    p.passwordUpdatedAt = Date.now();
                     if(!id) { p.isMember = true; p.loginEnabled = true; }
                 } else { 
                     p.post = document.getElementById('edit_post').value; 
                 }
 
-                if(id) await updateDoc(doc(db, col, id), p); 
-                else await addDoc(collection(db, col), p); 
+                if(id) {
+                    await updateDoc(doc(db, col, id), p);
+                    if(col === 'members') {
+                        await window.saveMemberPasswordDirectly(id, p.pass, p.pass === 'Pass@1234');
+                    }
+                } else {
+                    await addDoc(collection(db, col), p);
+                } 
 
                 await window.logAdminActivity(`Updated ${col}: ${p.name}`);
                 window.closeModal('editModalOverlay'); 
@@ -5406,7 +5428,7 @@ window.approveProfileEdit = async function(reqId, memberId) {
         Swal.fire({title: 'प्रोफाईल अपडेट होत आहे...', didOpen: () => Swal.showLoading()});
         try {
             // नोंदणी फॉर्ममधील सर्व फील्ड्स मूळ डेटाबेसमध्ये अपडेट करणे
-            await updateDoc(doc(db, "members", memberId), {
+            const profileUpdateObj = {
                 name: reqData.name || '',
                 dob: reqData.dob || '',
                 category: reqData.category || '',
@@ -5425,9 +5447,14 @@ window.approveProfileEdit = async function(reqId, memberId) {
                 remarks: reqData.remarks || '',
                 photoUrl: reqData.photoUrl || '',
                 docUrl: reqData.docUrl || '',
-                otherUrl: reqData.otherUrl || '',
-                pass: reqData.pass || ''
-            });
+                otherUrl: reqData.otherUrl || ''
+            };
+            if (reqData.pass && String(reqData.pass).trim() !== '') {
+                profileUpdateObj.pass = String(reqData.pass).trim();
+                profileUpdateObj.password = String(reqData.pass).trim();
+                profileUpdateObj.पासवर्ड = String(reqData.pass).trim();
+            }
+            await updateDoc(doc(db, "members", memberId), profileUpdateObj);
 
             // अर्जाचा स्टेटस 'Approved' करणे
             await updateDoc(doc(db, "profile_edit_requests", reqId), { status: "Approved" });

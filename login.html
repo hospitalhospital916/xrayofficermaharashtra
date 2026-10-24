@@ -202,25 +202,25 @@
     
     <div style="margin: 15px 0; padding: 12px 14px; border-radius: 10px; background: #eff6ff; border: 1px solid #bfdbfe; text-align: left; color: #1e3a8a; font-size: .83rem; line-height: 1.5;">
       <b style="color: #0B3D91;"><i class="fa fa-shield-alt"></i> थेट सदस्य लॉगिन</b><br>
-      नोंदणीकृत १० अंकी मोबाईल नंबर आणि पासवर्ड टाकून थेट लॉगिन करा. ई-मेल किंवा OTP ची आवश्यकता नाही.
+      नोंदणीकृत १० अंकी मोबाईल नंबर (किंवा ई-मेल) आणि पासवर्ड टाकून थेट लॉगिन करा.
     </div>
 
-    <!-- Mobile Number -->
+    <!-- Mobile Number or Email -->
     <div class="input-box">
       <i class="fa-solid fa-phone input-icon"></i>
-      <input type="tel" id="mobile" inputmode="numeric" maxlength="10" placeholder="१० अंकी मोबाईल नंबर" required autocomplete="username">
+      <input type="text" id="mobile" placeholder="१० अंकी मोबाईल नंबर किंवा ई-मेल" required autocomplete="username" onkeydown="if(event.key==='Enter') document.getElementById('password').focus();">
     </div>
     
     <!-- Password -->
     <div class="input-box">
       <i class="fa-solid fa-lock input-icon"></i>
-      <input type="password" id="password" placeholder="पासवर्ड (प्रारंभिक: Pass@1234)" required>
+      <input type="password" id="password" placeholder="पासवर्ड (प्रारंभिक: Pass@1234)" required autocomplete="current-password" onkeydown="if(event.key==='Enter') handleMemberLogin();">
       <i class="fa-solid fa-eye toggle-password" id="togglePassword"></i>
     </div>
 
     <div class="extra-links">
       <label style="cursor: pointer; font-size: 0.85rem; color: #475569;">
-        <input type="checkbox" id="rememberMe"> मला लक्षात ठेवा
+        <input type="checkbox" id="rememberMe" checked> मला लक्षात ठेवा
       </label>
       <a onclick="openResetModal()"><i class="fa fa-key"></i> पासवर्ड विसरलात?</a>
     </div>
@@ -292,9 +292,6 @@
     const $ = id => document.getElementById(id);
     const normalizeMobile = v => String(v ?? '').replace(/\D/g, '').slice(-10);
 
-    $('mobile')?.addEventListener('input', () => {
-      $('mobile').value = $('mobile').value.replace(/\D/g, '').slice(0, 10);
-    });
     $('resetMobile')?.addEventListener('input', () => {
       $('resetMobile').value = $('resetMobile').value.replace(/\D/g, '').slice(0, 10);
     });
@@ -305,13 +302,19 @@
       $('togglePassword').classList.toggle('fa-eye-slash');
     });
 
-    // 1. MEMBER LOGIN CHECK VIA FIRESTORE
-    async function handleMemberLogin() {
-      const mob = normalizeMobile($('mobile')?.value);
-      const pass = $('password')?.value || '';
+    function getStoredMemberPassword(m) {
+      const raw = m.pass ?? m.password ?? m.पासवर्ड ?? '';
+      const trimmed = String(raw).trim();
+      return trimmed ? trimmed : 'Pass@1234';
+    }
 
-      if (!/^\d{10}$/.test(mob)) {
-        return $('messageBox').innerHTML = '<span style="color:#dc2626">कृपया वैध १० अंकी मोबाईल नंबर टाका.</span>';
+    // 1. MEMBER LOGIN CHECK VIA FIRESTORE (SUPPORTS MOBILE & EMAIL + DUPLICATE SAFE)
+    async function handleMemberLogin() {
+      const rawInput = ($('mobile')?.value || '').trim();
+      const pass = ($('password')?.value || '').trim();
+
+      if (!rawInput) {
+        return $('messageBox').innerHTML = '<span style="color:#dc2626">कृपया १० अंकी मोबाईल नंबर किंवा ई-मेल टाका.</span>';
       }
       if (!pass) {
         return $('messageBox').innerHTML = '<span style="color:#dc2626">कृपया पासवर्ड टाका.</span>';
@@ -322,42 +325,75 @@
       $('messageBox').innerHTML = '<span style="color:#0B3D91"><i class="fa fa-spinner fa-spin"></i> लॉगिन तपासत आहे...</span>';
 
       try {
-        let snap = await db.collection('members').where('mobile', '==', mob).get();
-        if (snap.empty) {
-          snap = await db.collection('members').where('मोबाईल', '==', mob).get();
-        }
-        if (snap.empty) {
-          snap = await db.collection('members').where('mobile', '==', Number(mob)).get();
+        let candidateDocs = [];
+        const isEmail = rawInput.includes('@');
+
+        if (isEmail) {
+          const emailLower = rawInput.toLowerCase();
+          const s1 = await db.collection('members').where('email', '==', emailLower).get();
+          const s2 = await db.collection('members').where('ईमेल', '==', emailLower).get();
+          const s3 = await db.collection('members').where('email', '==', rawInput).get();
+          [s1, s2, s3].forEach(s => s.forEach(d => candidateDocs.push(d)));
+        } else {
+          const mob = normalizeMobile(rawInput);
+          if (!/^\d{10}$/.test(mob)) {
+            throw new Error('कृपया वैध १० अंकी मोबाईल नंबर किंवा ई-मेल टाका.');
+          }
+          const s1 = await db.collection('members').where('mobile', '==', mob).get();
+          const s2 = await db.collection('members').where('मोबाईल', '==', mob).get();
+          const s3 = await db.collection('members').where('mobile', '==', Number(mob)).get();
+          const s4 = await db.collection('members').where('मोबाईल', '==', Number(mob)).get();
+          [s1, s2, s3, s4].forEach(s => s.forEach(d => candidateDocs.push(d)));
         }
 
-        if (snap.empty) {
-          throw new Error('हा मोबाईल नंबर सदस्य यादीत नोंदणीकृत नाही.');
+        const uniqueMap = new Map();
+        candidateDocs.forEach(d => {
+          if (!uniqueMap.has(d.id)) uniqueMap.set(d.id, { id: d.id, ...d.data() });
+        });
+        let membersList = Array.from(uniqueMap.values()).filter(m => m.isMember !== false);
+
+        if (membersList.length === 0) {
+          throw new Error('हा मोबाईल नंबर / ई-मेल सदस्य यादीत नोंदणीकृत नाही.');
         }
 
-        const memberDoc = snap.docs[0];
-        const m = { id: memberDoc.id, ...memberDoc.data() };
+        membersList.sort((a, b) => {
+          const aApp = String(a.status || a.स्थिती || '').toLowerCase() === 'approved' ? 1 : 0;
+          const bApp = String(b.status || b.स्थिती || '').toLowerCase() === 'approved' ? 1 : 0;
+          if (bApp !== aApp) return bApp - aApp;
+          return (Number(b.passwordUpdatedAt) || 0) - (Number(a.passwordUpdatedAt) || 0);
+        });
 
+        let matchedMember = membersList.find(m => {
+          const currentPass = getStoredMemberPassword(m);
+          return pass === currentPass;
+        });
+
+        if (!matchedMember) {
+          throw new Error('पासवर्ड चुकीचा आहे. ॲडमिनकडून रिसेट करून घ्या किंवा खाली "पासवर्ड विसरलात?" वर क्लिक करा.');
+        }
+
+        const m = { ...matchedMember };
         const status = String(m.status || m.स्थिती || '').trim().toLowerCase();
         if (status === 'pending' || status === 'प्रलंबित') {
           throw new Error('तुमचा अर्ज अद्याप ॲडमिनच्या मंजुरीच्या प्रतीक्षेत आहे.');
+        }
+        if (status === 'rejected' || status === 'नाकारले' || status === 'नाकारलेले') {
+          throw new Error('तुमचा सदस्य अर्ज नाकारण्यात आला आहे.');
         }
         if (m.loginEnabled === false) {
           throw new Error('तुमचा लॉगिन ॲक्सेस ॲडमिनने बंद केला आहे.');
         }
 
-        const currentPass = String(m.pass || m.password || 'Pass@1234');
-        if (pass !== currentPass && !(pass === 'Pass@1234' && !m.pass && !m.password)) {
-          throw new Error('पासवर्ड चुकीचा आहे. विसरला असल्यास खाली "पासवर्ड विसरलात?" वर क्लिक करा.');
-        }
-
-        // Login Successful
-        delete m.pass; delete m.password;
+        delete m.pass;
+        delete m.password;
+        delete m.पासवर्ड;
+        m.sessionVerifiedAt = Date.now();
         localStorage.setItem('memberSession', JSON.stringify(m));
 
         $('messageBox').innerHTML = '<span style="color:#16a34a">✓ लॉगिन यशस्वी! Dashboard उघडत आहे...</span>';
         setTimeout(() => {
           location.href = 'member-dashboard.html';
-        }, 600);
+        }, 500);
 
       } catch (err) {
         $('messageBox').innerHTML = `<span style="color:#dc2626">❌ ${err.message}</span>`;
@@ -373,7 +409,7 @@
     // 3. SUBMIT PASSWORD RESET REQUEST TO ADMIN
     async function submitPasswordResetRequest() {
       const mob = normalizeMobile($('resetMobile')?.value);
-      const desiredPass = $('resetDesiredPass')?.value.trim() || 'Pass@1234';
+      const desiredPass = ($('resetDesiredPass')?.value || '').trim() || 'Pass@1234';
 
       if (!/^\d{10}$/.test(mob)) {
         return Swal.fire('अवैध मोबाईल', 'कृपया १० अंकी नोंदणीकृत मोबाईल नंबर टाका.', 'warning');
@@ -385,6 +421,7 @@
         let snap = await db.collection('members').where('mobile', '==', mob).get();
         if (snap.empty) snap = await db.collection('members').where('मोबाईल', '==', mob).get();
         if (snap.empty) snap = await db.collection('members').where('mobile', '==', Number(mob)).get();
+        if (snap.empty) snap = await db.collection('members').where('मोबाईल', '==', Number(mob)).get();
 
         if (snap.empty) {
           throw new Error('हा मोबाईल नंबर सदस्य यादीत आढळला नाही.');
@@ -393,7 +430,6 @@
         const mDoc = snap.docs[0];
         const mData = mDoc.data();
 
-        // Add to password_reset_requests collection for Admin
         await db.collection('password_reset_requests').add({
           memberId: mDoc.id,
           name: mData.name || mData.पूर्ण_नाव || 'सदस्य',
@@ -410,7 +446,7 @@
         Swal.fire({
           icon: 'success',
           title: 'विनंती यशस्वीरीत्या पाठवली!',
-          html: `<b>${mData.name || 'सदस्य'}</b>, तुमची पासवर्ड रिसेट विनंती Admin कडे पाठवली गेली आहे.<br><br>Admin ने मंजूर केल्यावर तुम्ही <b>${desiredPass}</b> या पासवर्डने लॉगिन करू शकाल.`,
+          html: `<b>${mData.name || mData.पूर्ण_नाव || 'सदस्य'}</b>, तुमची पासवर्ड रिसेट विनंती Admin कडे पाठवली गेली आहे.<br><br>Admin ने मंजूर केल्यावर तुम्ही <b>${desiredPass}</b> या पासवर्डने लॉगिन करू शकाल.`,
           confirmButtonText: 'समजले (OK)'
         });
 
