@@ -458,6 +458,13 @@
                     <div class="form-row" id="feeStatusDiv">
                         <div><label>फी स्टेटस</label><select id="edit_fee" class="form-control"><option value="Paid">Paid</option><option value="Unpaid">Unpaid</option></select></div>
                         <div><label>Approval स्टेटस</label><select id="edit_status" class="form-control"><option value="Approved">Approved</option><option value="Pending">Pending</option><option value="Rejected">Rejected</option></select></div>
+                        <div>
+                            <label style="color:var(--primary); font-weight:bold;"><i class="fa fa-key"></i> लॉगिन पासवर्ड (Password)</label>
+                            <div style="display:flex; gap:6px;">
+                                <input type="text" id="edit_pass" class="form-control" placeholder="उदा. Pass@1234" value="Pass@1234">
+                                <button type="button" class="btn-action bg-warning" style="white-space:nowrap; color:#000;" onclick="document.getElementById('edit_pass').value='Pass@1234'">डिफॉल्ट</button>
+                            </div>
+                        </div>
                     </div>
 
                     <button type="submit" class="btn-save" style="width:100%; font-size:1.2rem; padding:12px; margin-top:15px; justify-content:center;"><i class="fa fa-save"></i> माहिती सेव्ह करा</button>
@@ -487,6 +494,7 @@
                     <p><b>जिल्हा व मंडळ:</b> <span id="prof_dist_man"></span></p>
                     <p><b>रुजू दिनांक:</b> <span id="prof_join"></span></p>
                     <p><b>आधार क्र.:</b> <span id="prof_aadhaar"></span></p>
+                    <p><b>लॉगिन पासवर्ड:</b> <span id="prof_password" style="font-weight:800; color:var(--primary); background:#eef4ff; padding:2px 8px; border-radius:6px;"></span></p>
                     <p><b>स्टेटस:</b> <span id="prof_status"></span></p>
                     <div style="margin-top:15px; display:flex; gap:10px; flex-wrap:wrap;">
                         <a id="prof_doc_link" href="#" target="_blank" class="btn-action bg-info" style="display:none; text-decoration:none;"><i class="fa fa-file-pdf"></i> मुख्य कागदपत्र पाहा</a>
@@ -865,6 +873,45 @@
                         </div>
                     </div>
                     
+                    <!-- 🔐 झटपट सदस्य पासवर्ड रिसेट व नियंत्रण पॅनेल (वरच उपलब्ध) -->
+                    <div class="panel-body no-print" style="background:linear-gradient(135deg, #eff6ff, #fef3c7); border-bottom:2px solid #f59e0b; padding:14px 20px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:10px;">
+                            <h4 style="color:#0B3D91; font-weight:800; margin:0; font-size:1.05rem;">
+                                <i class="fa fa-key" style="color:#d97706;"></i> सदस्यांचा पासवर्ड इथेच रिसेट / सेट करा (फायरबेसकडे न जाता थेट आपल्या पॅनेलवर)
+                            </h4>
+                            <span class="badge bg-success" style="font-size:0.78rem; padding:5px 10px;">
+                                <i class="fa fa-check-circle"></i> डायरेक्ट पॅनेल पासवर्ड सिस्टीम सक्रिय
+                            </span>
+                        </div>
+                        <div class="form-row" style="margin-bottom:0; align-items:flex-end; gap:10px;">
+                            <div style="flex:2; min-width:220px;">
+                                <label style="font-size:0.84rem; font-weight:700; color:#1e293b; display:block; margin-bottom:4px;">१. सदस्य शोधा / निवडा (किंवा खालील टेबलमध्ये टिक ☑ करा):</label>
+                                <select id="top_reset_member_select" class="form-control" onchange="syncTopResetMemberInfo()" style="background:#fff; font-weight:600;">
+                                    <option value="">-- सदस्य निवडा (किंवा खालील यादीतून टिक करा) --</option>
+                                </select>
+                            </div>
+                            <div style="flex:1.2; min-width:170px;">
+                                <label style="font-size:0.84rem; font-weight:700; color:#1e293b; display:block; margin-bottom:4px;">२. नवीन / रिसेट पासवर्ड:</label>
+                                <div style="display:flex; gap:6px;">
+                                    <input type="text" id="top_reset_new_pass" class="form-control" value="Pass@1234" placeholder="नवीन पासवर्ड टाका" style="background:#fff; font-weight:800; color:#0B3D91;">
+                                    <button type="button" class="btn-action bg-info" onclick="document.getElementById('top_reset_new_pass').value='Pass@1234'" title="डिफॉल्ट Pass@1234 ठेवा" style="white-space:nowrap;">Pass@1234</button>
+                                </div>
+                            </div>
+                            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                                <button type="button" class="btn-action bg-success" onclick="resetPasswordFromTopBar()" style="padding:10px 16px; font-size:0.92rem;">
+                                    <i class="fa fa-save"></i> पासवर्ड इथेच सेट करा
+                                </button>
+                                <button type="button" class="btn-action bg-warning" onclick="resetAllMembersPasswordLocal()" style="padding:10px 14px; font-size:0.88rem; color:#000;">
+                                    <i class="fa fa-users-cog"></i> सर्वांना डिफॉल्ट (Pass@1234) करा
+                                </button>
+                                <button type="button" class="btn-action bg-wa" onclick="sendTopResetWhatsApp()" style="padding:10px 14px; font-size:0.88rem;">
+                                    <i class="fa fa-whatsapp"></i> WhatsApp पाठवा
+                                </button>
+                            </div>
+                        </div>
+                        <div id="top_reset_status_line" style="margin-top:8px; font-size:0.84rem; color:#047857; font-weight:700; display:none;"></div>
+                    </div>
+
                     <div class="panel-body" style="background:#f1f5f9; border-bottom:1px solid #cbd5e1; padding-bottom:10px;">
                         <div class="form-row no-print" style="margin-bottom: 10px;">
                             <input type="text" id="searchName" class="form-control" placeholder="🔍 नाव, मोबाईल, ईमेल, जिल्हा, मंडळ, कर्मचारी ID शोधा..." onkeyup="renderMembers()" style="flex:2;">
@@ -2736,43 +2783,212 @@
             } catch(e) { Swal.fire('Error', e.message, 'error'); }
         };
 
+        // ==========================================================
+        // डायरेक्ट पॅनेल पासवर्ड रिसेट सिस्टीम (Firebase Cloud कडे न जाता इथेच सेव्ह)
+        // ==========================================================
+        window.populateTopResetDropdown = function() {
+            const sel = document.getElementById('top_reset_member_select');
+            if (!sel) return;
+            const currentVal = sel.value;
+            let html = '<option value="">-- सदस्य निवडा (किंवा खालील यादीतून टिक करा) --</option>';
+            (window.membersData || []).forEach(m => {
+                if (m.isMember === false) return;
+                if (subAdminAccessRegion !== "All" && m.mandal !== subAdminAccessRegion && m.मंडळ !== subAdminAccessRegion) return;
+                const name = m.name || m.पूर्ण_नाव || 'सदस्य';
+                const mob = m.mobile || m.मोबाईल || '-';
+                const dist = m.district || m.जिल्हा || '-';
+                const curPass = m.pass || m.password || m.पासवर्ड || 'Pass@1234';
+                html += `<option value="${m.id}">${name} (${mob} - ${dist}) [सध्याचा पासवर्ड: ${curPass}]</option>`;
+            });
+            sel.innerHTML = html;
+            if (currentVal) sel.value = currentVal;
+        };
+
+        window.syncTopResetMemberInfo = function() {
+            const sel = document.getElementById('top_reset_member_select');
+            const statusLine = document.getElementById('top_reset_status_line');
+            const passInput = document.getElementById('top_reset_new_pass');
+            if (!sel || !statusLine) return;
+            const memberId = sel.value;
+            if (!memberId) {
+                statusLine.style.display = 'none';
+                return;
+            }
+            const m = (window.membersData || []).find(x => x.id === memberId);
+            if (!m) return;
+            const curPass = m.pass || m.password || m.पासवर्ड || 'Pass@1234';
+            if (passInput) passInput.value = curPass;
+            statusLine.style.display = 'block';
+            statusLine.innerHTML = `👤 निवडलेला सदस्य: <b>${m.name || m.पूर्ण_नाव || '-'}</b> | मोबाईल: <b>${m.mobile || m.मोबाईल || '-'}</b> | सध्याचा पासवर्ड: <span style="background:#fff; padding:2px 8px; border-radius:4px; color:#0B3D91; border:1px solid #cbd5e1;">${curPass}</span>`;
+        };
+
+        window.saveMemberPasswordDirectly = async function(memberId, newPass, isDefault = false) {
+            const cleanPass = String(newPass || 'Pass@1234').trim();
+            const payload = {
+                pass: cleanPass,
+                password: cleanPass,
+                पासवर्ड: cleanPass,
+                forcePasswordChange: !!isDefault,
+                mustChangePassword: !!isDefault,
+                isDefaultPassword: !!isDefault,
+                loginEnabled: true,
+                passwordUpdatedAt: Date.now(),
+                passwordUpdatedDate: new Date().toLocaleString('mr-IN'),
+                passwordResetBy: currentLoggedInAdminName || 'Admin'
+            };
+
+            await updateDoc(doc(db, "members", memberId), payload);
+
+            const idx = (window.membersData || []).findIndex(x => x.id === memberId);
+            if (idx !== -1) {
+                window.membersData[idx] = { ...window.membersData[idx], ...payload };
+            }
+        };
+
+        window.resetPasswordFromTopBar = async function() {
+            const selId = document.getElementById('top_reset_member_select')?.value || '';
+            const checkedBoxes = Array.from(document.querySelectorAll('.mem-chk:checked'));
+            const checkedIds = checkedBoxes.map(cb => cb.dataset.id).filter(Boolean);
+            const newPass = (document.getElementById('top_reset_new_pass')?.value || '').trim();
+
+            if (!newPass || newPass.length < 4) {
+                return Swal.fire('सूचना', 'कृपया किमान ४ अक्षरांचा पासवर्ड टाका.', 'warning');
+            }
+
+            let targetIds = [];
+            if (checkedIds.length > 0) {
+                targetIds = checkedIds;
+            } else if (selId) {
+                targetIds = [selId];
+            } else {
+                return Swal.fire('सदस्य निवडा', 'कृपया वरच्या यादीतून सदस्य निवडा किंवा खालील टेबलमधील सदस्यासमोर टिक (☑) करा.', 'warning');
+            }
+
+            const isDefault = (newPass === 'Pass@1234');
+            Swal.fire({ title: 'पासवर्ड इथेच सेव्ह होत आहे...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+            try {
+                for (const id of targetIds) {
+                    await window.saveMemberPasswordDirectly(id, newPass, isDefault);
+                }
+                await window.logAdminActivity(`पॅनेलवरून ${targetIds.length} सदस्यांचा पासवर्ड (${newPass}) सेट केला`);
+                window.populateTopResetDropdown();
+                window.syncTopResetMemberInfo();
+                window.renderMembers();
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'पासवर्ड यशस्वीरित्या सेट झाला!',
+                    html: `एकूण <b>${targetIds.length}</b> सदस्यांचा नवीन पासवर्ड <b>${newPass}</b> आपल्या पॅनेलवर सुरक्षित सेव्ह झाला आहे.`
+                });
+            } catch (e) {
+                Swal.fire('त्रुटी', e.message || String(e), 'error');
+            }
+        };
+
+        window.sendTopResetWhatsApp = function() {
+            const selId = document.getElementById('top_reset_member_select')?.value || '';
+            const checkedBoxes = Array.from(document.querySelectorAll('.mem-chk:checked'));
+            const targetId = selId || (checkedBoxes[0]?.dataset?.id || '');
+
+            if (!targetId) {
+                return Swal.fire('सदस्य निवडा', 'WhatsApp पाठवण्यासाठी कृपया वरच्या ड्रॉपडाऊनमधून सदस्य निवडा किंवा टेबलमध्ये टिक करा.', 'warning');
+            }
+            const m = (window.membersData || []).find(x => x.id === targetId);
+            if (!m) return;
+
+            const mob = String(m.mobile || m.मोबाईल || '').replace(/\D/g, '');
+            if (!mob) return Swal.fire('मोबाईल नाही', 'या सदस्याचा मोबाईल क्रमांक उपलब्ध नाही.', 'warning');
+
+            const pass = m.pass || m.password || m.पासवर्ड || document.getElementById('top_reset_new_pass')?.value || 'Pass@1234';
+            const msg = `नमस्कार *${m.name || m.पूर्ण_नाव || 'सदस्य'}*,
+
+क्ष-किरण वैज्ञानिक अधिकारी संघटना पोर्टलवरील तुमचा लॉगिन तपशील खालीलप्रमाणे आहे:
+📱 *लॉगिन मोबाईल / ईमेल:* ${m.mobile || m.email || '-'}
+🔑 *पासवर्ड:* ${pass}
+
+कृपया लॉगिन करून आपली माहिती तपासावी.`;
+            window.open(`https://wa.me/91${mob}?text=${encodeURIComponent(msg)}`, '_blank');
+        };
+
+        window.resetAllMembersPasswordLocal = async function() {
+            const newPass = (document.getElementById('top_reset_new_pass')?.value || 'Pass@1234').trim() || 'Pass@1234';
+            const ok = await Swal.fire({
+                title: 'सर्व सदस्यांचा पासवर्ड सेट करायचा?',
+                html: `सर्व सदस्यांचा पासवर्ड फायरबेस सर्व्हरकडे न जाता थेट आपल्या पॅनेलवर <b>${newPass}</b> असा सेट केला जाईल.`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'होय, इथेच सेट करा',
+                cancelButtonText: 'रद्द करा'
+            });
+            if (!ok.isConfirmed) return;
+
+            Swal.fire({ title: 'सर्व सदस्यांचा पासवर्ड अपडेट होत आहे...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+            try {
+                let count = 0;
+                for (const m of (window.membersData || [])) {
+                    if (m.isMember === false) continue;
+                    if (subAdminAccessRegion !== "All" && m.mandal !== subAdminAccessRegion && m.मंडळ !== subAdminAccessRegion) continue;
+                    await window.saveMemberPasswordDirectly(m.id, newPass, newPass === 'Pass@1234');
+                    count++;
+                }
+                await window.logAdminActivity(`सर्व ${count} सदस्यांचा पासवर्ड (${newPass}) पॅनेलवर सेट केला`);
+                window.populateTopResetDropdown();
+                window.renderMembers();
+                Swal.fire('पूर्ण झाले!', `एकूण ${count} सदस्यांचा पासवर्ड यशस्वीरित्या '${newPass}' सेट करण्यात आला.`, 'success');
+            } catch (e) {
+                Swal.fire('त्रुटी', e.message || String(e), 'error');
+            }
+        };
+
         window.openSendCredentialsModal = async function(memberId) {
-            let m = window.membersData.find(x => x.id === memberId);
+            let m = (window.membersData || []).find(x => x.id === memberId);
             if(!m) return;
 
+            const topSel = document.getElementById('top_reset_member_select');
+            if (topSel) {
+                topSel.value = memberId;
+                window.syncTopResetMemberInfo();
+            }
+
+            const currentPass = m.pass || m.password || m.पासवर्ड || 'Pass@1234';
+
             const { value: formValues } = await Swal.fire({
-                title: `🔐 सदस्याचा पासवर्ड सेट करा`,
+                title: `🔐 सदस्याचा पासवर्ड इथेच रिसेट करा`,
                 html: `
-                    <div style="text-align:left; font-size:0.9rem;">
+                    <div style="text-align:left; font-size:0.92rem;">
                         <p><b>सदस्य:</b> ${m.name || m.पूर्ण_नाव || '-'}</p>
-                        <p><b>ईमेल:</b> ${m.email || 'अद्याप अपडेट केलेला नाही'}</p>
                         <p><b>मोबाईल:</b> ${m.mobile || m.मोबाईल || '-'}</p>
+                        <p><b>ईमेल:</b> ${m.email || m.ईमेल || 'अद्याप अपडेट केलेला नाही'}</p>
+                        <p style="margin-top:6px; background:#eff6ff; padding:8px; border-radius:6px; border:1px solid #bfdbfe;">
+                            <b>सध्याचा पासवर्ड:</b> <span style="color:#0B3D91; font-weight:800; font-size:1rem;">${currentPass}</span>
+                        </p>
                         <hr style="margin:10px 0;">
-                        <label style="display:flex;gap:8px;align-items:center;margin-bottom:10px;">
+                        <label style="display:flex;gap:8px;align-items:center;margin-bottom:10px;cursor:pointer;">
                           <input type="checkbox" id="cred_use_default" checked>
                           <b>डिफॉल्ट पासवर्ड वापरा: Pass@1234</b>
                         </label>
-                        <label><b>किंवा स्वतःचा नवीन पासवर्ड:</b></label>
-                        <input id="cred_new_pass" class="swal2-input" value="Pass@1234" placeholder="किमान 6 अक्षरे" disabled>
-                        <small style="color:#64748b;">डिफॉल्ट पासवर्ड दिल्यास पहिल्या login नंतर नवीन password बदलणे आवश्यक राहील.</small>
+                        <label><b>किंवा स्वतःचा नवीन पासवर्ड टाका:</b></label>
+                        <input id="cred_new_pass" class="swal2-input" value="Pass@1234" placeholder="किमान 4 अक्षरे" disabled style="margin:8px 0; width:100%;">
+                        <small style="color:#047857; font-weight:600;">✓ हा पासवर्ड फायरबेस सर्व्हरकडे न जाता थेट आपल्या पॅनेलवरच सेव्ह होईल.</small>
                     </div>
                 `,
                 focusConfirm: false,
                 showCancelButton: true,
-                confirmButtonText: 'पासवर्ड सेट करा',
+                confirmButtonText: 'पासवर्ड इथेच सेव्ह करा',
                 cancelButtonText: 'रद्द करा',
                 didOpen: () => {
                     const cb=document.getElementById('cred_use_default');
                     const inp=document.getElementById('cred_new_pass');
                     cb?.addEventListener('change',()=>{
                         if (cb.checked) { inp.value='Pass@1234'; inp.disabled=true; }
-                        else { inp.value=''; inp.disabled=false; inp.focus(); }
+                        else { inp.value=currentPass; inp.disabled=false; inp.focus(); }
                     });
                 },
                 preConfirm: () => {
                     const useDefault=!!document.getElementById('cred_use_default')?.checked;
                     const p=(useDefault ? 'Pass@1234' : document.getElementById('cred_new_pass')?.value || '').trim();
-                    if(!p || p.length < 6) { Swal.showValidationMessage('पासवर्ड किमान 6 अक्षरांचा असावा.'); return false; }
+                    if(!p || p.length < 4) { Swal.showValidationMessage('पासवर्ड किमान ४ अक्षरांचा असावा.'); return false; }
                     return { pass:p, isDefault:useDefault };
                 }
             });
@@ -2780,17 +2996,28 @@
             if (!formValues) return;
             const newPass=formValues.pass;
             try {
-                if(!auth.currentUser) throw new Error('Admin login session उपलब्ध नाही. कृपया पुन्हा Admin Login करा.');
-                Swal.fire({title:'Firebase Password अपडेट करत आहे...',allowOutsideClick:false,didOpen:()=>Swal.showLoading()});
-                const token=await auth.currentUser.getIdToken(true);
-                const r=await fetch(MASTER_FN_BASE+'/adminSetMemberPassword',{
-                    method:'POST',mode:'cors',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
-                    body:JSON.stringify({memberId,password:newPass,forcePasswordChange:!!formValues.isDefault})
+                Swal.fire({title:'पासवर्ड पॅनेलवर सेव्ह होत आहे...',allowOutsideClick:false,didOpen:()=>Swal.showLoading()});
+                await window.saveMemberPasswordDirectly(memberId, newPass, formValues.isDefault);
+                await window.logAdminActivity(`${formValues.isDefault?'Default Pass@1234':'Custom'} password set locally for: ${m.name || m.पूर्ण_नाव || memberId}`);
+
+                window.populateTopResetDropdown();
+                window.syncTopResetMemberInfo();
+                window.renderMembers();
+
+                const mob = String(m.mobile || m.मोबाईल || '').replace(/\D/g, '');
+                const waMsg = `नमस्कार *${m.name || m.पूर्ण_नाव || 'सदस्य'}*,
+तुमचा संघटना पोर्टल लॉगिन पासवर्ड रिसेट करण्यात आला आहे.
+📱 *लॉगिन आयडी:* ${m.mobile || m.email || '-'}
+🔑 *नवीन पासवर्ड:* ${newPass}`;
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'पासवर्ड सेट झाला!',
+                    html: `
+                        <p><b>${m.name || m.पूर्ण_नाव || 'सदस्य'}</b> यांचा नवीन पासवर्ड <b>${newPass}</b> इथेच सेव्ह झाला आहे.</p>
+                        ${mob ? `<a href="https://wa.me/91${mob}?text=${encodeURIComponent(waMsg)}" target="_blank" class="btn-action bg-wa" style="margin-top:12px; padding:10px 16px; text-decoration:none; display:inline-flex;"><i class="fa fa-whatsapp"></i> WhatsApp वर पासवर्ड पाठवा</a>` : ''}
+                    `
                 });
-                const raw=await r.text(); let j={}; try{j=JSON.parse(raw)}catch(_){ }
-                if(!r.ok) throw new Error(j.error || ('Server error '+r.status));
-                await window.logAdminActivity(`${formValues.isDefault?'Default Pass@1234':'Custom'} password set for: ${m.name || m.पूर्ण_नाव || memberId}`);
-                Swal.fire('यशस्वी',`${m.name || m.पूर्ण_नाव || 'सदस्य'} यांचा ${formValues.isDefault?'डिफॉल्ट Pass@1234':'नवीन'} पासवर्ड सेट झाला.`,'success');
             } catch(e) {
                 Swal.fire('पासवर्ड अपडेट अयशस्वी',e.message || String(e),'error');
             }
@@ -2859,6 +3086,7 @@ window.uploadToCloudinary = async (file) => {
 
             document.getElementById('editModalTitle').innerText = colName === 'members' ? "नवीन सदस्य जोडा" : "नवीन कर्मचारी जोडा";
             document.getElementById('feeStatusDiv').style.display = colName === 'members' ? 'flex' : 'none';
+            if(document.getElementById('edit_pass')) document.getElementById('edit_pass').value = 'Pass@1234';
             document.getElementById('editModalOverlay').style.display = 'flex';
         };
 
@@ -2904,6 +3132,7 @@ window.uploadToCloudinary = async (file) => {
                 document.getElementById('feeStatusDiv').style.display = 'flex'; 
                 document.getElementById('edit_fee').value = m.feeStatus || 'Unpaid'; 
                 document.getElementById('edit_status').value = m.status || 'Approved'; 
+                if(document.getElementById('edit_pass')) document.getElementById('edit_pass').value = m.pass || m.password || m.पासवर्ड || 'Pass@1234';
             } else {
                 document.getElementById('feeStatusDiv').style.display = 'none';
             }
@@ -2953,7 +3182,11 @@ window.uploadToCloudinary = async (file) => {
                     p.designation = document.getElementById('edit_post').value; 
                     p.feeStatus = document.getElementById('edit_fee').value; 
                     p.status = document.getElementById('edit_status').value; 
-                    if(!id) p.isMember = true; 
+                    let enteredPass = (document.getElementById('edit_pass')?.value || 'Pass@1234').trim() || 'Pass@1234';
+                    p.pass = enteredPass;
+                    p.password = enteredPass;
+                    p.पासवर्ड = enteredPass;
+                    if(!id) { p.isMember = true; p.loginEnabled = true; }
                 } else { 
                     p.post = document.getElementById('edit_post').value; 
                 }
@@ -3045,6 +3278,7 @@ window.uploadToCloudinary = async (file) => {
                     </td>
                 </tr>`;
             }).join('') || '<tr><td colspan="10" style="text-align:center; padding:25px;">डेटा उपलब्ध नाही</td></tr>';
+            if (typeof window.populateTopResetDropdown === 'function') window.populateTopResetDropdown();
         };
 
         window.toggleSelectAll = (el) => { document.querySelectorAll('.mem-chk').forEach(cb => cb.checked = el.checked); };
@@ -4057,6 +4291,7 @@ window.initLiveChatEngine = () => {
             document.getElementById('prof_dist_man').innerText = `${m.district || '-'} / ${m.mandal || '-'}`;
             document.getElementById('prof_join').innerText = m.joinDate || '-';
             document.getElementById('prof_aadhaar').innerText = m.aadhaar || '-';
+            if(document.getElementById('prof_password')) document.getElementById('prof_password').innerText = m.pass || m.password || m.पासवर्ड || 'Pass@1234';
             document.getElementById('prof_status').innerHTML = m.status === 'Approved' ? '<span class="badge bg-success">Approved</span>' : '<span class="badge bg-warning">Pending</span>';
 
             document.getElementById('profileModalOverlay').style.display = 'flex';
@@ -5235,20 +5470,7 @@ const MASTER_FN_BASE="https://us-central1-xrayunionmah.cloudfunctions.net";
 async function masterToken(){if(!auth.currentUser)throw new Error("Login required");return await auth.currentUser.getIdToken(true)}
 window.masterResetAllMemberPasswords=async function(){
  if(!isSuperAdmin)return Swal.fire('नकार','Master Admin आवश्यक.','error');
- const ok=await Swal.fire({title:'डिफॉल्ट पासवर्ड सेट करायचा?',html:'फक्त <b>Approved/Active</b> सदस्य ज्यांचा ई-मेल अजून <b>update + verify</b> झालेला नाही, त्यांचाच password <b>Pass@1234</b> केला जाईल.<br><br>ज्यांचा ई-मेल व्यवस्थित update व verified आहे त्यांना <b>Skip</b> केले जाईल.',icon:'warning',showCancelButton:true,confirmButtonText:'होय, सेट करा',cancelButtonText:'रद्द'});
- if(!ok.isConfirmed)return;
- try{
-  Swal.fire({title:'डिफॉल्ट password update होत आहे...',html:'कृपया हे पान बंद करू नका.',allowOutsideClick:false,didOpen:()=>Swal.showLoading()});
-  const token=await masterToken();
-  const r=await fetch(MASTER_FN_BASE+'/masterSetMemberDefaultPasswords',{method:'POST',mode:'cors',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({confirm:'SET_DEFAULT_PASSWORDS'})});
-  const raw=await r.text(); let j={}; try{j=JSON.parse(raw)}catch(_){ }
-  if(!r.ok) throw new Error(j.error||('Server error '+r.status+'. Cloud Function deploy/region तपासा.'));
-  await logAdminActivity('Master Admin: selective default password reset');
-  Swal.fire({icon:'success',title:'पूर्ण झाले',html:`Updated: <b>${j.updated||0}</b><br>Created: <b>${j.created||0}</b><br>Reset: <b>${j.reset||0}</b><br>ई-मेल verified असल्यामुळे Skip: <b>${j.skippedVerifiedEmail||0}</b><br>इतर Skip: <b>${j.skipped||0}</b>${j.errors?.length?`<br><span style="color:#b91c1c">Errors: ${j.errors.length}</span>`:''}`});
- }catch(e){
-  console.error('masterSetMemberDefaultPasswords failed:',e);
-  Swal.fire('डिफॉल्ट पासवर्ड अयशस्वी',e.message||String(e),'error');
- }
+ await window.resetAllMembersPasswordLocal();
 };
 
 window.masterCleanupOldLogs=async function(){
