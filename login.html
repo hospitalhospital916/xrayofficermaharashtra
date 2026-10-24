@@ -5,53 +5,193 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>लॉगिन - क्ष किरण संघटना</title>
   
-  <!-- FontAwesome Icons for Eye Icon -->
+  <!-- FontAwesome Icons & SweetAlert2 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <style>
-    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #eef2f7; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+    body { 
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+      background: #eef2f7; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      min-height: 100vh; 
+      margin: 0; 
+      padding: 15px; 
+    }
     
-    .login-wrapper { background: white; padding: 40px 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 100%; max-width: 380px; text-align: center; border-top: 6px solid #0B3D91; position: relative; }
+    .login-wrapper { 
+      background: white; 
+      padding: 40px 30px; 
+      border-radius: 14px; 
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
+      width: 100%; 
+      max-width: 400px; 
+      text-align: center; 
+      border-top: 6px solid #0B3D91; 
+      position: relative; 
+    }
     
-    .login-icon { background: #0B3D91; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.8rem; margin: -70px auto 20px auto; box-shadow: 0 4px 10px rgba(11, 61, 145, 0.4); border: 4px solid white; }
+    .login-icon { 
+      background: #0B3D91; 
+      color: white; 
+      width: 65px; 
+      height: 65px; 
+      border-radius: 50%; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      font-size: 1.8rem; 
+      margin: -70px auto 20px auto; 
+      box-shadow: 0 4px 10px rgba(11, 61, 145, 0.4); 
+      border: 4px solid white; 
+    }
     
-    h2 { color: #0B3D91; margin-top: 0; margin-bottom: 5px; font-size: 1.6rem; }
-    p.subtitle { color: #666; font-size: 0.9rem; margin-bottom: 25px; }
+    h2 { 
+      color: #0B3D91; 
+      margin-top: 0; 
+      margin-bottom: 5px; 
+      font-size: 1.6rem; 
+      font-weight: 800; 
+    }
+    p.subtitle { 
+      color: #64748b; 
+      font-size: 0.9rem; 
+      margin-bottom: 20px; 
+      font-weight: 600; 
+    }
 
-    .input-box { position: relative; margin-bottom: 20px; text-align: left; }
-    .input-box i.input-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #888; }
-    .input-box input { width: 100%; padding: 12px 15px 12px 40px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem; outline: none; box-sizing: border-box; transition: 0.3s; }
-    .input-box input:focus { border-color: #0B3D91; box-shadow: 0 0 8px rgba(11, 61, 145, 0.2); }
+    .input-box { 
+      position: relative; 
+      margin-bottom: 18px; 
+      text-align: left; 
+    }
+    .input-box i.input-icon { 
+      position: absolute; 
+      left: 15px; 
+      top: 50%; 
+      transform: translateY(-50%); 
+      color: #64748b; 
+      font-size: 1.1rem; 
+    }
+    .input-box input { 
+      width: 100%; 
+      padding: 12px 15px 12px 42px; 
+      border: 2px solid #cbd5e1; 
+      border-radius: 8px; 
+      font-size: 1rem; 
+      outline: none; 
+      box-sizing: border-box; 
+      transition: 0.3s; 
+      font-weight: 600; 
+    }
+    .input-box input:focus { 
+      border-color: #0B3D91; 
+      box-shadow: 0 0 8px rgba(11, 61, 145, 0.2); 
+    }
     
-    /* Password Eye Icon */
-    .toggle-password { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #888; }
-    .toggle-password:hover { color: #0B3D91; }
+    .toggle-password { 
+      position: absolute; 
+      right: 15px; 
+      top: 50%; 
+      transform: translateY(-50%); 
+      cursor: pointer; 
+      color: #888; 
+    }
+    .toggle-password:hover { 
+      color: #0B3D91; 
+    }
 
-    button { width: 100%; background: #0B3D91; color: white; border: none; padding: 14px; border-radius: 8px; font-size: 1.1rem; cursor: pointer; font-weight: bold; transition: 0.3s; box-shadow: 0 4px 10px rgba(11, 61, 145, 0.2); }
-    button:hover { background: #082a63; transform: translateY(-2px); box-shadow: 0 6px 15px rgba(11, 61, 145, 0.3); }
-    button:disabled { background: #999; cursor: not-allowed; transform: none; box-shadow: none; }
+    button.btn-login { 
+      width: 100%; 
+      background: #0B3D91; 
+      color: white; 
+      border: none; 
+      padding: 13px; 
+      border-radius: 8px; 
+      font-size: 1.1rem; 
+      cursor: pointer; 
+      font-weight: bold; 
+      transition: 0.3s; 
+      box-shadow: 0 4px 10px rgba(11, 61, 145, 0.2); 
+    }
+    button.btn-login:hover { 
+      background: #082a63; 
+      transform: translateY(-2px); 
+    }
+    button.btn-login:disabled { 
+      background: #94a3b8; 
+      cursor: not-allowed; 
+      transform: none; 
+    }
 
-    .btn-google { background: #4285F4; color: white; margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 10px; }
-    .btn-google:hover { background: #3367d6; }
-
-    .divider { margin: 18px 0; text-align: center; position: relative; }
-    .divider span { background: white; padding: 0 10px; color: #777; font-size: 0.85rem; font-weight: bold; }
-    .divider hr { position: absolute; top: 50%; left: 0; right: 0; z-index: -1; margin: 0; border: 0; border-top: 1px solid #ccc; }
-
-    #messageBox { margin-top: 15px; font-size: 0.95rem; font-weight: bold; min-height: 20px; }
+    .extra-links { 
+      margin-top: 15px; 
+      font-size: 0.9rem; 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+    }
+    .extra-links a { 
+      color: #0B3D91; 
+      text-decoration: none; 
+      font-weight: 700; 
+      cursor: pointer; 
+    }
+    .extra-links a:hover { 
+      text-decoration: underline; 
+    }
     
-    .extra-links { margin-top: 20px; font-size: 0.9rem; display: flex; justify-content: space-between; }
-    .extra-links a { color: #0B3D91; text-decoration: none; font-weight: 600; }
-    .extra-links a:hover { text-decoration: underline; }
-    
-    .register-link { display: block; margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee; font-size: 0.9rem; color: #555; }
-    .register-link a { color: #28a745; font-weight: bold; text-decoration: none; }
-    .register-link a:hover { text-decoration: underline; }
+    .register-link { 
+      display: block; 
+      margin-top: 20px; 
+      padding-top: 15px; 
+      border-top: 1px solid #e2e8f0; 
+      font-size: 0.9rem; 
+      color: #475569; 
+      font-weight: 600; 
+    }
+    .register-link a { 
+      color: #16a34a; 
+      font-weight: 800; 
+      text-decoration: none; 
+    }
+    .register-link a:hover { 
+      text-decoration: underline; 
+    }
+
+    /* Modal Overlay */
+    .custom-modal-overlay { 
+      position: fixed; 
+      inset: 0; 
+      background: rgba(15,23,42,.65); 
+      z-index: 9999; 
+      display: none; 
+      align-items: center; 
+      justify-content: center; 
+      padding: 15px; 
+    }
+    .custom-modal { 
+      width: min(440px, 100%); 
+      background: #fff; 
+      border-radius: 16px; 
+      box-shadow: 0 20px 60px rgba(0,0,0,.25); 
+      overflow: hidden; 
+      text-align: left; 
+    }
+    .modal-head { 
+      padding: 16px 20px; 
+      background: linear-gradient(135deg, #0B3D91, #2563eb); 
+      color: #fff; 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+    }
+    .modal-body { 
+      padding: 20px; 
+    }
   </style>
-
-<style id="xray-mobile-upgrade">
-@media (max-width:600px){body{overflow-x:hidden}.login-wrapper{width:calc(100% - 24px);padding:28px 18px}.login-wrapper h2{font-size:1.35rem}.input-box{margin-bottom:14px}.login-wrapper button{min-height:48px}.tab-menu{padding:8px;gap:5px}.tab-btn{padding:9px 12px;font-size:.8rem}.panel-header{padding:11px 12px}.panel-body{padding:12px!important}.form-row{display:flex;flex-direction:column;gap:10px}.form-row>*{width:100%!important;box-sizing:border-box}.btn-action{min-height:42px}.table-responsive,.panel-body{overflow-x:auto}}
-</style>
 </head>
 <body>
 
@@ -59,60 +199,228 @@
     <div class="login-icon"><i class="fa-solid fa-user-lock"></i></div>
     <h2>लॉगिन पोर्टल</h2>
     <p class="subtitle">क्ष किरण वैज्ञानिक अधिकारी संघटना, महाराष्ट्र</p>
-    <div style="margin:15px 0;padding:12px 14px;border-radius:12px;background:#eff6ff;border:1px solid #bfdbfe;text-align:left;color:#334155;font-size:.82rem;line-height:1.55;">
-      <b style="color:#0B3D91;">🔐 सदस्य लॉगिन</b><br>नोंदणीकृत मोबाईल नंबर आणि ॲडमिनने दिलेला Password वापरून लॉगिन करा. ई-मेल अपडेट करणे आवश्यक नाही.
+    
+    <div style="margin: 15px 0; padding: 12px 14px; border-radius: 10px; background: #eff6ff; border: 1px solid #bfdbfe; text-align: left; color: #1e3a8a; font-size: .83rem; line-height: 1.5;">
+      <b style="color: #0B3D91;"><i class="fa fa-shield-alt"></i> थेट सदस्य लॉगिन</b><br>
+      नोंदणीकृत १० अंकी मोबाईल नंबर आणि पासवर्ड टाकून थेट लॉगिन करा. ई-मेल किंवा OTP ची आवश्यकता नाही.
     </div>
 
-    <!-- Email/Password Login Section -->
+    <!-- Mobile Number -->
     <div class="input-box">
       <i class="fa-solid fa-phone input-icon"></i>
-      <input type="tel" id="email" inputmode="numeric" maxlength="10" pattern="[0-9]{10}" placeholder="१० अंकी मोबाईल नंबर" required autocomplete="username" aria-label="नोंदणीकृत १० अंकी मोबाईल नंबर">
+      <input type="tel" id="mobile" inputmode="numeric" maxlength="10" placeholder="१० अंकी मोबाईल नंबर" required autocomplete="username">
     </div>
     
+    <!-- Password -->
     <div class="input-box">
       <i class="fa-solid fa-lock input-icon"></i>
-      <input type="password" id="password" placeholder="पासवर्ड (Password)" required>
+      <input type="password" id="password" placeholder="पासवर्ड (प्रारंभिक: Pass@1234)" required>
       <i class="fa-solid fa-eye toggle-password" id="togglePassword"></i>
     </div>
 
     <div class="extra-links">
-      <label style="cursor:pointer;"><input type="checkbox"> मला लक्षात ठेवा</label>
-      <a href="javascript:void(0)">पासवर्ड विसरलात?</a>
+      <label style="cursor: pointer; font-size: 0.85rem; color: #475569;">
+        <input type="checkbox" id="rememberMe"> मला लक्षात ठेवा
+      </label>
+      <a onclick="openResetModal()"><i class="fa fa-key"></i> पासवर्ड विसरलात?</a>
     </div>
 
-    <button id="loginBtn" style="margin-top: 20px;">लॉगिन करा</button>
-    <div id="messageBox"></div>
+    <button id="loginBtn" class="btn-login" style="margin-top: 20px;" onclick="handleMemberLogin()">
+      <i class="fa fa-sign-in-alt"></i> लॉगिन करा
+    </button>
+    <div id="messageBox" style="margin-top: 12px; font-weight: bold; font-size: 0.9rem;"></div>
 
     <div class="register-link">
-      नवीन सदस्य आहात? <a href="member-registration.html">येथे नोंदणी करा</a>
+      नवीन सदस्य आहात? <a href="member-registration.html"><i class="fa fa-user-plus"></i> येथे नोंदणी करा</a>
+    </div>
+    <div style="margin-top: 10px;">
+      <a href="index.html" style="color: #64748b; font-size: 0.85rem; text-decoration: none; font-weight: 600;">
+        <i class="fa fa-arrow-left"></i> मुख्य वेबसाईटवर जा
+      </a>
     </div>
   </div>
 
-  <div id="forgotPasswordModal" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.65);z-index:9999;align-items:center;justify-content:center;padding:20px;">
-    <div style="width:min(430px,100%);background:#fff;border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.25);overflow:hidden;">
-      <div style="padding:18px 20px;background:linear-gradient(135deg,#0B3D91,#2563eb);color:#fff;display:flex;justify-content:space-between;align-items:center;">
-        <div><b style="font-size:1.05rem;">🔐 पासवर्ड विसरलात?</b><div style="font-size:.78rem;opacity:.9;margin-top:3px;">तुमच्या नोंदणीकृत ई-मेलवर सुरक्षित लिंक</div></div>
-        <button id="closeForgotPassword" type="button" style="border:0;background:transparent;color:#fff;font-size:1.5rem;cursor:pointer;">&times;</button>
+  <!-- PASSWORD RESET REQUEST MODAL (DIRECT ADMIN APPROVAL) -->
+  <div id="resetModal" class="custom-modal-overlay">
+    <div class="custom-modal">
+      <div class="modal-head">
+        <div>
+          <b style="font-size: 1.1rem;"><i class="fa fa-user-shield"></i> पासवर्ड रिसेट विनंती</b>
+          <div style="font-size: .78rem; opacity: .9; margin-top: 2px;">Admin कडे मंजुरीसाठी विनंती पाठवा</div>
+        </div>
+        <button type="button" onclick="closeResetModal()" style="border:0; background:transparent; color:#fff; font-size:1.6rem; cursor:pointer;">&times;</button>
       </div>
-      <div style="padding:20px;">
-        <p style="margin:0 0 14px;color:#475569;font-size:.88rem;line-height:1.5;">तुमचा <b>ई-मेल किंवा मोबाईल नंबर</b> टाका. सिस्टम तुमच्या सदस्य नोंदीतील verified/updated ई-मेल शोधून त्यावर password reset link पाठवेल.</p>
-        <input id="forgotIdentifier" type="text" placeholder="ई-मेल किंवा १० अंकी मोबाईल नंबर" autocomplete="username" style="width:100%;box-sizing:border-box;padding:13px;border:1px solid #cbd5e1;border-radius:10px;font-size:1rem;">
-        <button id="sendForgotBtn" type="button" style="width:100%;margin-top:14px;padding:13px;border:0;border-radius:10px;background:#16a34a;color:#fff;font-weight:700;cursor:pointer;">📩 Reset Link पाठवा</button>
-        <div id="forgotMessage" style="margin-top:12px;font-size:.85rem;line-height:1.45;"></div>
-        <div style="margin-top:14px;padding:10px;background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;color:#9a3412;font-size:.78rem;">पासवर्ड विसरल्यास ॲडमिनशी संपर्क साधा. ई-मेल अपडेट करणे अनिवार्य नाही.</div>
+      <div class="modal-body">
+        <p style="margin: 0 0 12px; color: #475569; font-size: .88rem; line-height: 1.5;">
+          तुमचा नोंदणीकृत <b>१० अंकी मोबाईल नंबर</b> टाका. तुमची विनंती थेट Admin पॅनेलवर जाईल आणि Admin ने मंजूर केल्यावर तुमचा पासवर्ड सक्रिय होईल.
+        </p>
+        
+        <label style="font-size: 0.85rem; font-weight: bold; color: #1e293b; display: block; margin-bottom: 5px;">नोंदणीकृत मोबाईल नंबर:</label>
+        <input id="resetMobile" type="tel" maxlength="10" placeholder="१० अंकी मोबाईल नंबर" style="width:100%; box-sizing:border-box; padding:12px; border:2px solid #cbd5e1; border-radius:8px; font-size:1rem; font-weight:bold; margin-bottom:12px;">
+
+        <label style="font-size: 0.85rem; font-weight: bold; color: #1e293b; display: block; margin-bottom: 5px;">इच्छित नवीन पासवर्ड (पर्यायी):</label>
+        <input id="resetDesiredPass" type="text" placeholder="डिफॉल्ट: Pass@1234" style="width:100%; box-sizing:border-box; padding:12px; border:2px solid #cbd5e1; border-radius:8px; font-size:1rem; margin-bottom:15px;">
+
+        <button id="sendResetBtn" type="button" onclick="submitPasswordResetRequest()" style="width:100%; padding:13px; border:0; border-radius:8px; background:#16a34a; color:#fff; font-weight:800; font-size:1rem; cursor:pointer;">
+          <i class="fa fa-paper-plane"></i> Admin कडे विनंती पाठवा
+        </button>
+
+        <div style="margin-top: 15px; padding: 10px; background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; color: #92400e; font-size: .8rem;">
+          <i class="fa fa-info-circle"></i> <b>टीप:</b> विनंती पाठवल्यानंतर Admin कडून ती तात्काळ मंजूर करून नवीन पासवर्ड सेट केला जाईल.
+        </div>
       </div>
     </div>
   </div>
 
-  <script type="module">
-const $=id=>document.getElementById(id);
-const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
-const normalizeMobile=v=>{let x=String(v??'').replace(/\D/g,'');if(x.length===12&&x.startsWith('91'))x=x.slice(2);return x;};
-$('email')?.addEventListener('input',()=>{$('email').value=$('email').value.replace(/\D/g,'').slice(0,10);});
-const fnUrl='https://asia-south1-xrayunionmah.cloudfunctions.net/memberLogin';
-$('loginBtn')?.addEventListener('click',async()=>{const mobile=normalizeMobile($('email')?.value);const password=$('password')?.value||'';if(!/^\d{10}$/.test(mobile)||!password)return $('messageBox').innerHTML='<span style="color:#dc2626">कृपया १० अंकी मोबाईल नंबर आणि Password टाका.</span>';const b=$('loginBtn');b.disabled=true;$('messageBox').innerHTML='लॉगिन तपासत आहे...';try{const r=await fetch(fnUrl,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mobile,password})});const d=await r.json();if(!r.ok||!d.ok)throw new Error(d.error||'लॉगिन अयशस्वी.');localStorage.setItem('memberSession',JSON.stringify(d.member));if(d.sessionToken)localStorage.setItem('memberSessionToken',d.sessionToken);if(d.mustChangePassword){localStorage.setItem('forceMemberPasswordChange','1');alert('तुमचा प्रारंभिक Password अजून बदललेला नाही. कृपया Dashboard मध्ये Password बदला.');}location.href='member-dashboard.html';}catch(e){$('messageBox').innerHTML='<span style="color:#dc2626">❌ '+esc(e.message)+'</span>';}finally{b.disabled=false;}});
-$('togglePassword')?.addEventListener('click',()=>{$('password').type=$('password').type==='password'?'text':'password';});
-const forgot=[...document.querySelectorAll('a')].find(a=>a.textContent.includes('पासवर्ड विसरलात'));forgot?.addEventListener('click',async e=>{e.preventDefault();const mobile=normalizeMobile(prompt('नोंदणीकृत १० अंकी मोबाईल नंबर टाका:')||'');if(!/^\d{10}$/.test(mobile))return alert('वैध मोबाईल नंबर टाका.');try{const r=await fetch('https://asia-south1-xrayunionmah.cloudfunctions.net/memberRequestPasswordReset',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({mobile})});const d=await r.json();alert(d.message||d.error||'Request पाठवली.');}catch(err){alert('Reset request पाठवता आली नाही.');}});
-</script>
+  <!-- FIREBASE SCRIPTS (ONLY FIRESTORE DATABASE) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBVRXAra9pKpXbZYO4YkvbhuyWlKL8QVyk",
+      authDomain: "xrayunionmah.firebaseapp.com",
+      projectId: "xrayunionmah",
+      storageBucket: "xrayunionmah.firebasestorage.app",
+      messagingSenderId: "763805226978",
+      appId: "1:763805226978:web:6bae81a0b6358b47d88bbb",
+      measurementId: "G-EQS6WH6XLF"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    const $ = id => document.getElementById(id);
+    const normalizeMobile = v => String(v ?? '').replace(/\D/g, '').slice(-10);
+
+    $('mobile')?.addEventListener('input', () => {
+      $('mobile').value = $('mobile').value.replace(/\D/g, '').slice(0, 10);
+    });
+    $('resetMobile')?.addEventListener('input', () => {
+      $('resetMobile').value = $('resetMobile').value.replace(/\D/g, '').slice(0, 10);
+    });
+
+    $('togglePassword')?.addEventListener('click', () => {
+      const p = $('password');
+      p.type = p.type === 'password' ? 'text' : 'password';
+      $('togglePassword').classList.toggle('fa-eye-slash');
+    });
+
+    // 1. MEMBER LOGIN CHECK VIA FIRESTORE
+    async function handleMemberLogin() {
+      const mob = normalizeMobile($('mobile')?.value);
+      const pass = $('password')?.value || '';
+
+      if (!/^\d{10}$/.test(mob)) {
+        return $('messageBox').innerHTML = '<span style="color:#dc2626">कृपया वैध १० अंकी मोबाईल नंबर टाका.</span>';
+      }
+      if (!pass) {
+        return $('messageBox').innerHTML = '<span style="color:#dc2626">कृपया पासवर्ड टाका.</span>';
+      }
+
+      const btn = $('loginBtn');
+      btn.disabled = true;
+      $('messageBox').innerHTML = '<span style="color:#0B3D91"><i class="fa fa-spinner fa-spin"></i> लॉगिन तपासत आहे...</span>';
+
+      try {
+        let snap = await db.collection('members').where('mobile', '==', mob).get();
+        if (snap.empty) {
+          snap = await db.collection('members').where('मोबाईल', '==', mob).get();
+        }
+        if (snap.empty) {
+          snap = await db.collection('members').where('mobile', '==', Number(mob)).get();
+        }
+
+        if (snap.empty) {
+          throw new Error('हा मोबाईल नंबर सदस्य यादीत नोंदणीकृत नाही.');
+        }
+
+        const memberDoc = snap.docs[0];
+        const m = { id: memberDoc.id, ...memberDoc.data() };
+
+        const status = String(m.status || m.स्थिती || '').trim().toLowerCase();
+        if (status === 'pending' || status === 'प्रलंबित') {
+          throw new Error('तुमचा अर्ज अद्याप ॲडमिनच्या मंजुरीच्या प्रतीक्षेत आहे.');
+        }
+        if (m.loginEnabled === false) {
+          throw new Error('तुमचा लॉगिन ॲक्सेस ॲडमिनने बंद केला आहे.');
+        }
+
+        const currentPass = String(m.pass || m.password || 'Pass@1234');
+        if (pass !== currentPass && !(pass === 'Pass@1234' && !m.pass && !m.password)) {
+          throw new Error('पासवर्ड चुकीचा आहे. विसरला असल्यास खाली "पासवर्ड विसरलात?" वर क्लिक करा.');
+        }
+
+        // Login Successful
+        delete m.pass; delete m.password;
+        localStorage.setItem('memberSession', JSON.stringify(m));
+
+        $('messageBox').innerHTML = '<span style="color:#16a34a">✓ लॉगिन यशस्वी! Dashboard उघडत आहे...</span>';
+        setTimeout(() => {
+          location.href = 'member-dashboard.html';
+        }, 600);
+
+      } catch (err) {
+        $('messageBox').innerHTML = `<span style="color:#dc2626">❌ ${err.message}</span>`;
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    // 2. FORGOT PASSWORD MODAL CONTROLS
+    window.openResetModal = () => { $('resetModal').style.display = 'flex'; };
+    window.closeResetModal = () => { $('resetModal').style.display = 'none'; };
+
+    // 3. SUBMIT PASSWORD RESET REQUEST TO ADMIN
+    async function submitPasswordResetRequest() {
+      const mob = normalizeMobile($('resetMobile')?.value);
+      const desiredPass = $('resetDesiredPass')?.value.trim() || 'Pass@1234';
+
+      if (!/^\d{10}$/.test(mob)) {
+        return Swal.fire('अवैध मोबाईल', 'कृपया १० अंकी नोंदणीकृत मोबाईल नंबर टाका.', 'warning');
+      }
+
+      Swal.fire({ title: 'विनंती पाठवत आहे...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+      try {
+        let snap = await db.collection('members').where('mobile', '==', mob).get();
+        if (snap.empty) snap = await db.collection('members').where('मोबाईल', '==', mob).get();
+        if (snap.empty) snap = await db.collection('members').where('mobile', '==', Number(mob)).get();
+
+        if (snap.empty) {
+          throw new Error('हा मोबाईल नंबर सदस्य यादीत आढळला नाही.');
+        }
+
+        const mDoc = snap.docs[0];
+        const mData = mDoc.data();
+
+        // Add to password_reset_requests collection for Admin
+        await db.collection('password_reset_requests').add({
+          memberId: mDoc.id,
+          name: mData.name || mData.पूर्ण_नाव || 'सदस्य',
+          mobile: mob,
+          district: mData.district || mData.जिल्हा || '-',
+          mandal: mData.mandal || mData.मंडळ || '-',
+          desiredPass: desiredPass,
+          status: 'Pending',
+          timestamp: Date.now(),
+          dateString: new Date().toLocaleString('mr-IN')
+        });
+
+        closeResetModal();
+        Swal.fire({
+          icon: 'success',
+          title: 'विनंती यशस्वीरीत्या पाठवली!',
+          html: `<b>${mData.name || 'सदस्य'}</b>, तुमची पासवर्ड रिसेट विनंती Admin कडे पाठवली गेली आहे.<br><br>Admin ने मंजूर केल्यावर तुम्ही <b>${desiredPass}</b> या पासवर्डने लॉगिन करू शकाल.`,
+          confirmButtonText: 'समजले (OK)'
+        });
+
+        $('resetMobile').value = '';
+        $('resetDesiredPass').value = '';
+
+      } catch (err) {
+        Swal.fire('त्रुटी', err.message, 'error');
+      }
+    }
+  </script>
 </body>
 </html>
