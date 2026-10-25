@@ -289,7 +289,7 @@
         <h5 id="out_dist_title" contenteditable="true">DIST GADCHIROLI</h5>
         <div class="report-title" contenteditable="true">PRESCRIPTION AUDIT REPORT (X-RAY SERVICES)</div>
         <div class="fw-bold mt-1" style="font-size: 0.85rem;">
-            Audit Month & Year: <span class="fw-bold" id="out_month_display" contenteditable="true">November 2025</span>
+            Audit Month & Year: <span class="fw-bold" id="out_month_display" contenteditable="true">September 2026</span>
             <span id="out_audit_date_span" style="display: none;" contenteditable="true"> | Audit Date: <span id="out_audit_date_val">--</span></span>
         </div>
         <p class="mb-0 mt-1" style="font-size: 0.72rem;" contenteditable="true">
@@ -336,9 +336,9 @@
     <p contenteditable="true"><strong>Sampling Technique:</strong> Simple random sampling technique used.</p>
     <p contenteditable="true">
         <strong>Distribution:</strong> Half of the sample (<span id="out_half1" class="fw-bold">29</span>) taken from the first two weeks 
-        (<span id="out_fn1_str">1-15 Nov: 70 total X-Rays</span>) 
-        and half (<span id="out_half2" class="fw-bold">29</span>) from the remaining two weeks (<span id="out_fn2_str">16-30 Nov: 70 total X-Rays</span>) of 
-        <span id="out_month_str" class="fw-bold">November 2025</span>.
+        (<span id="out_fn1_str">1-15 Sep: 70 total X-Rays</span>) 
+        and half (<span id="out_half2" class="fw-bold">29</span>) from the remaining two weeks (<span id="out_fn2_str">16-30 Sep: 70 total X-Rays</span>) of 
+        <span id="out_month_str" class="fw-bold">September 2026</span>.
     </p>
 
     <!-- Section 4 -->
@@ -410,12 +410,18 @@
 </div>
 
 <script>
-const monthRange = [
-    "January 2025", "February 2025", "March 2025", "April 2025", "May 2025", "June 2025", 
-    "July 2025", "August 2025", "September 2025", "October 2025", "November 2025", "December 2025",
-    "January 2026", "February 2026", "March 2026", "April 2026", "May 2026", "June 2026",
-    "July 2026", "August 2026"
+const monthNames = [
+    "January", "February", "March", "April", "May", "June", 
+    "July", "August", "September", "October", "November", "December"
 ];
+
+// २०२५ ते २०३५ पर्यंतचे सर्व महिने (यात September 2026 आणि पुढील सर्व महिने/वर्षे समाविष्ट आहेत)
+const monthRange = [];
+for (let y = 2025; y <= 2035; y++) {
+    for (let m of monthNames) {
+        monthRange.push(`${m} ${y}`);
+    }
+}
 
 window.onload = function() {
     initMonthSelect();
@@ -424,22 +430,29 @@ window.onload = function() {
 
 function initMonthSelect() {
     const sel = document.getElementById('in_month');
-    sel.innerHTML = monthRange.map(m => `<option value="${m}">${m}</option>`).join('');
-    sel.value = "November 2025";
+    let optionsHtml = monthRange.map(m => `<option value="${m}">${m}</option>`).join('');
+    // आवश्यकतेनुसार नवीन महिना/वर्ष थेट टाकण्याचा पर्याय
+    optionsHtml += `<option value="__custom__">➕ नवीन महिना / वर्ष जोडा (Custom)...</option>`;
+    sel.innerHTML = optionsHtml;
+    sel.value = "September 2026";
 }
 
 function getDaysInMonth(monthStr) {
     if (!monthStr) return 30;
     const parts = monthStr.split(' ');
     const monthName = parts[0];
-    const year = parseInt(parts[1]) || 2025;
+    const year = parseInt(parts[1]) || 2026;
     
     const monthDaysMap = {
         "January": 31,
         "February": ((year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0)) ? 29 : 28,
         "March": 31, "April": 30, "May": 31, "June": 30,
         "July": 31, "August": 31, "September": 30, "October": 31,
-        "November": 30, "December": 31
+        "November": 30, "December": 31,
+        "Jan": 31, "Feb": ((year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0)) ? 29 : 28,
+        "Mar": 31, "Apr": 30, "May": 31, "Jun": 30,
+        "Jul": 31, "Aug": 31, "Sep": 30, "Sept": 30, "Oct": 31,
+        "Nov": 30, "Dec": 31
     };
     return monthDaysMap[monthName] || 30;
 }
@@ -754,6 +767,25 @@ function getStorageKey() {
 }
 
 function onMonthSelect() {
+    const sel = document.getElementById('in_month');
+    if (sel.value === "__custom__") {
+        const customVal = prompt("महिना आणि वर्ष प्रविष्ट करा (उदा. September 2026 किंवा October 2026):");
+        if (customVal && customVal.trim() !== "") {
+            const trimmed = customVal.trim();
+            let existingOption = Array.from(sel.options).find(opt => opt.value.toLowerCase() === trimmed.toLowerCase());
+            if (!existingOption) {
+                const newOpt = document.createElement("option");
+                newOpt.value = trimmed;
+                newOpt.text = trimmed;
+                sel.insertBefore(newOpt, sel.lastElementChild);
+                sel.value = trimmed;
+            } else {
+                sel.value = existingOption.value;
+            }
+        } else {
+            sel.value = "September 2026";
+        }
+    }
     loadCurrentMonthData();
 }
 
